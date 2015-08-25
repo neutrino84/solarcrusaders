@@ -1,0 +1,35 @@
+{
+  "private": true,
+  "name": "solar-crusaders",
+  "version": "0.0.1",
+  "description": "A multiplayer strategy game featuring 4X gameplay, sandbox universe, and simulated virtual economy.",
+  "author": "Oliver J Dyla",
+  "contributors": [],
+  "dependencies": {
+    "express": "4.13.x",
+    "compression": "1.5.x",
+    "morgan": "1.6.x",
+    "serve-favicon": "2.3.x",
+    "body-parser": "1.13.x",
+    "jade": "1.11.x",
+    "stripe": "3.7.x",
+
+    "brfs": "1.4.x",
+    "bundle-collapser": "1.2.x",
+
+    "earcut": "2.0.x",
+    "async": "1.4.x",
+    "resource-loader": "1.6.x",
+    "object-assign": "4.0.x",
+    "eventemitter3": "1.1.x"
+  },
+  "devDependencies": {
+    "grunt": "0.4.x",
+    "grunt-develop": "0.4.x",
+    "grunt-browserify": "4.0.x",
+    "grunt-contrib-concat": "0.5.x",
+    "grunt-contrib-watch": "0.6.x",
+    "grunt-contrib-uglify": "0.9.x",
+    "grunt-contrib-compress": "0.13.x"
+  }
+}

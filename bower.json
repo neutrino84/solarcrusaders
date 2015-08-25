@@ -1,0 +1,9 @@
+{
+    "private": true,
+    "name": "solarcrusaders",
+    "version": "0.0.1",
+    "dependencies": {
+        "pixi.js": "dev"
+    },
+    "devDependencies": {}
+}
