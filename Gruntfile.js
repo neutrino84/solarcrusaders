@@ -4,7 +4,7 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
 
-    browserify: {
+    'browserify': {
       pixi: {
         src: [],
         dest: 'public/build/pixi.js',
@@ -60,7 +60,7 @@ module.exports = function(grunt) {
       }
     },
 
-    concat: {
+    'concat': {
       dev: {
         dest: 'public/build/app.js',
         src: [
@@ -72,7 +72,7 @@ module.exports = function(grunt) {
       }
     },
 
-    uglify: {
+    'uglify': {
       options: {
         mangle: {
           screw_ie8: true
@@ -111,7 +111,7 @@ module.exports = function(grunt) {
       }
     },
 
-    watch: {
+    'watch': {
       dev: {
         files: ['app.js', 'public/build/solar.js', 'public/build/engine.js'],
         tasks: ['concat:dev'],
@@ -119,13 +119,14 @@ module.exports = function(grunt) {
       }
     },
 
-    develop: {
+    'develop': {
       server: {
-        file: 'app.js'
+        file: 'app.js',
+        nodeArgs: ['--debug']
       }
     },
 
-    compress: {
+    'compress': {
       app: {
         options: {
           mode: 'gzip'
@@ -137,6 +138,20 @@ module.exports = function(grunt) {
           ext: '.min.gz.js'
         }]
       }
+    },
+    
+    'node-inspector': {
+      dev: {
+        options: {
+          'web-port': 1337,
+          'web-host': 'localhost',
+          'debug-port': 5858,
+          'save-live-edit': true,
+          'no-preload': true,
+          'stack-trace-limit': 4,
+          'hidden': ['node_modules']
+        }
+      }
     }
   });
 
@@ -146,6 +161,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-compress');
+  grunt.loadNpmTasks('grunt-node-inspector');
 
   grunt.registerTask('default', [
     'browserify:pixi',
@@ -153,7 +169,18 @@ module.exports = function(grunt) {
     'browserify:engine',
     'browserify:solar',
     'concat:dev',
-    'develop', 'watch:dev'
+    'develop:server',
+    'watch:dev'
+  ]);
+
+  grunt.registerTask('debug', [
+    'browserify:pixi',
+    'browserify:socket',
+    'browserify:engine',
+    'browserify:solar',
+    'concat:dev',
+    'develop:server',
+    'node-inspector:dev'
   ]);
 
   grunt.registerTask('build', [
