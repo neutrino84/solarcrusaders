@@ -4,9 +4,15 @@ var path = require('path'),
     favicon = require('serve-favicon'),
     bodyParser = require('body-parser'),
     app = express(),
+    server = require('http').createServer(app),
+    io = require('socket.io')(server),
     publicDir = path.resolve('public'),
     viewsDir = path.resolve('views'),
     production = Boolean(process.env.PRODUCTION);
+
+io.on('connection', function() {
+  console.log('connection established');
+});
 
 app.set('views', viewsDir);
 app.set('view engine', 'jade');
@@ -23,4 +29,4 @@ app.get('/', function(req, res, next) {
   });
 });
 
-app.listen(3000);
+server.listen(3000);
