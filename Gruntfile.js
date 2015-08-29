@@ -15,6 +15,15 @@ module.exports = function(grunt) {
           transform: ['brfs']
         }
       },
+      socket: {
+        src: [],
+        dest: 'public/build/socket.js',
+        options: {
+          alias: {
+            socket: './node_modules/socket.io/lib/client.js'
+          }
+        }
+      },
       engine: {
         src: [],
         dest: 'public/build/engine.js',
@@ -42,6 +51,7 @@ module.exports = function(grunt) {
         options: {
           alias: {
             pixi: './public/js/pixi.js',
+            socket: './node_modules/socket.io/lib/client.js',
             engine: './public/js/engine/index.js'
           },
           transform: ['brfs'],
@@ -55,6 +65,7 @@ module.exports = function(grunt) {
         dest: 'public/build/app.js',
         src: [
           'public/build/pixi.js',
+          'public/build/socket.js',
           'public/build/engine.js',
           'public/build/solar.js'
         ]
@@ -138,6 +149,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('default', [
     'browserify:pixi',
+    'browserify:socket',
     'browserify:engine',
     'browserify:solar',
     'concat:dev',
