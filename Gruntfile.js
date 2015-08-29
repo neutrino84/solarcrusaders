@@ -20,7 +20,7 @@ module.exports = function(grunt) {
         dest: 'public/build/socket.js',
         options: {
           alias: {
-            socket: './node_modules/socket.io/lib/client.js'
+            socket: './node_modules/socket.io/node_modules/socket.io-client'
           }
         }
       },
@@ -28,7 +28,7 @@ module.exports = function(grunt) {
         src: [],
         dest: 'public/build/engine.js',
         options: {
-          external: ['pixi'],
+          external: ['pixi', 'socket'],
           watch: true,
           alias: {
             engine: './public/js/engine/index.js'
@@ -51,7 +51,7 @@ module.exports = function(grunt) {
         options: {
           alias: {
             pixi: './public/js/pixi.js',
-            socket: './node_modules/socket.io/lib/client.js',
+            socket: './node_modules/socket.io/node_modules/socket.io-client',
             engine: './public/js/engine/index.js'
           },
           transform: ['brfs'],
