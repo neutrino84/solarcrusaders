@@ -120,7 +120,10 @@ module.exports = function(grunt) {
     },
 
     'develop': {
-      server: {
+      dev: {
+        file: 'app.js'
+      },
+      debug: {
         file: 'app.js',
         nodeArgs: ['--debug']
       }
@@ -169,7 +172,7 @@ module.exports = function(grunt) {
     'browserify:engine',
     'browserify:solar',
     'concat:dev',
-    'develop:server',
+    'develop:dev',
     'watch:dev'
   ]);
 
@@ -179,7 +182,7 @@ module.exports = function(grunt) {
     'browserify:engine',
     'browserify:solar',
     'concat:dev',
-    'develop:server',
+    'develop:debug',
     'node-inspector:dev'
   ]);
 
