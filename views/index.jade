@@ -1,12 +1,20 @@
 extends layouts/base
 block content
+  include partials/facebook
+
   #content
+    .share
+      .box
+        .facebook
+          .fb-like(data-href='http://solarcrusaders.com', data-layout='button_count', data-action='like', data-show-faces='false', data-share='true')
+        .twitter
+          a.twitter-share-button(href='https://twitter.com/share', data-url='http://solarcrusaders.com/', data-text='Solar Crusaders - Open World FTL-like Online Game', data-via='SolarCrusaders', data-hashtags='gamedev')
     .dialog
       .box
         h1 watch on youtube
         a(href='https://www.youtube.com/watch?v=3mURrVKerHg')
           img(src='/imgs/game/play.png')
-        #dialog
+        div(id='dialog')
 
   //- script(type='text/javascript', src='/build/pixi.js')
   //- script(type='text/javascript', src='/build/socket.js')

@@ -25,6 +25,40 @@ body {
 
 #content.error { background: none; }
 
+/*
+ * Share Buttons Styles
+ */
+.share {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  display: none;
+}
+
+.share .box {
+  position: relative;
+  top: 2px;
+  left: -116px;
+  width: 232px;
+  height: 28px;
+}
+
+.share .box .facebook {
+  float: left;
+  width: 122px;
+  height: 24px;
+}
+
+.share .box .twitter {
+  float: left;
+  width: 81px;
+  height: 20px;
+  margin: 4px 0 0 4px;
+}
+
+/*
+ * Dialog Redirect
+ */
 .dialog {
   position: absolute;
   top: 50%;
@@ -62,9 +96,16 @@ body {
   font-size: 1.2rem;
 }
 
+/*
+ * Display Flags
+ */
 #content.error .dialog { display: block; }
+#content.running .share { display: block; }
 
-@media screen and (max-width: 500px) /* Mobile */ {
+/*
+ * Mobile
+ */
+@media screen and (max-width: 500px) {
   #content {
     background-size: 94% auto;
   }
