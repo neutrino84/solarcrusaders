@@ -7,7 +7,7 @@ var path = require('path'),
     app = express(),
     server = require('http').createServer(app),
     io = require('socket.io')(server),
-    ios = require('socket.io-express-session'),
+    iosess = require('socket.io-express-session'),
     publicDir = path.resolve('public'),
     viewsDir = path.resolve('views'),
     production = Boolean(process.env.PRODUCTION),
@@ -39,7 +39,7 @@ app.get('/', function(req, res, next) {
   });
 });
 
-io.use(ios(sess));
+io.use(iosess(sess));
 io.on('connection', function(socket) {
   var session = socket.handshake.session;
 
