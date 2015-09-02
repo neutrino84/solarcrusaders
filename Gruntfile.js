@@ -113,8 +113,8 @@ module.exports = function(grunt) {
 
     'watch': {
       dev: {
-        files: ['app.js', 'public/build/solar.js', 'public/build/engine.js'],
-        tasks: ['concat:dev'],
+        files: ['app.js', 'views/**/*', 'public/build/solar.js', 'public/build/engine.js'],
+        tasks: ['concat:dev', 'develop:dev'],
         options: { nospawn: true }
       }
     },
