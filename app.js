@@ -32,11 +32,10 @@ app.use(express.static(publicDir));
 app.use(sess);
 
 app.get('/', function(req, res, next) {
-  var session = req.session;
-      session.hello = 'hi bobby';
   res.render('index', {
     title: 'Solar Crusaders',
-    description: 'A multiplayer strategy game featuring 4X gameplay, sandbox universe, and simulated virtual economy.'
+    description: 'A multiplayer strategy game featuring 4X gameplay, sandbox universe, and simulated virtual economy.',
+    production: production
   });
 });
 
@@ -45,7 +44,6 @@ io.on('connection', function(socket) {
   var session = socket.handshake.session;
 
   console.log('connection established');
-  console.log(session.hello);
 });
 
 server.listen(3000);
