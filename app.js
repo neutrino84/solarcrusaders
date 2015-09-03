@@ -39,6 +39,14 @@ app.get('/', function(req, res, next) {
   });
 });
 
+app.get('*', function(req, res, next) {
+  res.render('index', {
+    title: 'Solar Crusaders',
+    description: 'A multiplayer strategy game featuring 4X gameplay, sandbox universe, and simulated virtual economy.',
+    production: production
+  });
+});
+
 io.use(iosess(sess));
 io.on('connection', function(socket) {
   var session = socket.handshake.session;
