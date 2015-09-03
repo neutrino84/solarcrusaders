@@ -38,22 +38,29 @@ body {
 .share .box {
   position: relative;
   top: 2px;
-  left: -116px;
-  width: 232px;
+  left: -126px;
+  width: 252px;
   height: 28px;
 }
 
 .share .box .facebook {
   float: left;
-  width: 122px;
+  width: 94px;
   height: 24px;
 }
 
 .share .box .twitter {
   float: left;
-  width: 81px;
+  width: 62px;
   height: 20px;
   margin: 4px 0 0 4px;
+}
+
+.share .box .tumblr {
+  float: left;
+  width: 81px;
+  height: 20px;
+  margin: 4px 0 0 0;
 }
 
 /*
