@@ -3,14 +3,16 @@ block content
   include partials/facebook
 
   #content
-    .share
+    .share(id='share')
       .box
         .facebook
-          .fb-like(data-href='http://solarcrusaders.com', data-layout='button', data-action='like', data-show-faces='false', data-share='true')
+          a.fb-like(data-href='http://solarcrusaders.com', data-layout='button', data-action='like', data-show-faces='false', data-share='true')
         .twitter
           a.twitter-share-button(href='https://twitter.com/share', data-url='http://solarcrusaders.com', data-text='Solar Crusaders, an open world FTL-like online video game', data-via='SolarCrusaders', data-hashtags='gamedev', data-count='none')
         .tumblr
           a.tumblr-share-button(data-color='white', data-notes='none', data-href='http://solarcrusaders.com' href='https://embed.tumblr.com/share')
+      .box.text
+        a(href='http://blog.solarcrusaders.com/') solar crusaders blog
     .dialog
       .box
         h1 watch on youtube
