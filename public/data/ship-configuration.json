@@ -1,0 +1,280 @@
+{
+  "vessel-x01": {
+    "oribit": { "radius": 128 },
+    "size": 1.0,
+    "speed": 2.0,
+    "engine": {
+      "exaust": {
+        "sprite": "engine-smoke",
+        "frequency": 25,
+        "offset": -58.0,
+        "scale": { "startX": 0.1, "endX": 0.6, "startY": 0.1, "endY": 0.6, "rate": 500 },
+        "alpha": { "start": 1.0, "end": 0.0, "rate": 750 },
+        "tint": { "start": "0x00FF00", "end": "0x000000", "rate": 500 },
+        "rotation": { "min": -6, "max": 6 },
+        "vector": { "x": -0.25, "y": -0.25 }
+      },
+      "glows": [
+        {
+          "sprite": "engine-glow",
+          "tint": "0x00CC00",
+          "scale": { "startX": 0.01, "endX": 0.1, "startY": 0.3, "endY": 0.3 },
+          "position": { "x": 118, "y": 56 },
+          "rotation": -10
+        }, {
+          "sprite": "engine-glow",
+          "tint": "0x00CC00",
+          "scale": { "startX": 0.01, "endX": 0.1, "startY": 0.3, "endY": 0.3 },
+          "position": { "x": 118, "y": 76 },
+          "rotation": 10
+        }, {
+          "sprite": "engine-glow",
+          "tint": "0x33FF33",
+          "scale": { "startX": 0.1, "endX": 0.2, "startY": 0.3, "endY": 0.3 },
+          "position": { "x": 118, "y": 66 },
+          "rotation": 0
+        }
+      ],
+      "trails": [
+        { "position": { "x": 84, "y": 16 }},
+        { "position": { "x": 94, "y": 26 }},
+        { "position": { "x": 94, "y": 106 }},
+        { "position": { "x": 84, "y": 116 }}
+      ]
+    },
+    "targeting": {
+      "turrets": [
+        {
+          "sprite": "laser-a",
+          "cooldown": 1500,
+          "pivot": { "x": 32, "y": 32 },
+          "position": { "x": 64, "y": 16 },
+          "scale": { "x": 0.6 , "y": 0.6 },
+          "type": "laser",
+          "laser": {
+            "sprite": "laser-blue"
+          }
+        }, {
+          "sprite": "laser-a",
+          "cooldown": 1500,
+          "pivot": { "x": 32, "y": 32 },
+          "position": { "x": 64, "y": 115 },
+          "scale": { "x": 0.6 , "y": 0.6 },
+          "type": "laser",
+          "laser": {
+            "sprite": "laser-blue"
+          }
+        }, {
+          "sprite": "laser-a",
+          "cooldown": 1500,
+          "pivot": { "x": 32, "y": 32 },
+          "position": { "x": 36, "y": 31 },
+          "scale": { "x": 0.6 , "y": 0.6 },
+          "type": "laser",
+          "laser": {
+            "sprite": "laser-blue"
+          }
+        }, {
+          "sprite": "laser-a",
+          "cooldown": 1500,
+          "pivot": { "x": 32, "y": 32 },
+          "position": { "x": 36, "y": 100 },
+          "scale": { "x": 0.6 , "y": 0.6 },
+          "type": "laser",
+          "laser": {
+            "sprite": "laser-blue"
+          }
+        }
+      ]
+    }
+  },
+  "vessel-x02": {
+    "oribit": { "radius": 192 },
+    "size": 1.0,
+    "speed": 1.0,
+    "engine": {
+      "exaust": {
+        "sprite": "engine-smoke",
+        "frequency": 150,
+        "offset": -112.0,
+        "scale": { "startX": 0.25, "endX": 3.0, "startY": 0.25, "endY": 3.0, "rate": 3000 },
+        "alpha": { "start": 1.0, "end": 0.0, "rate": 3000 },
+        "tint": { "start": "0xFF3333", "end": "0x222222", "rate": 500 },
+        "rotation": { "min": -6, "max": 6 },
+        "vector": { "x": 0.5, "y": 0.5 }
+      },
+      "glows": [{
+        "sprite": "engine-glow",
+        "tint": "0xFF0000",
+        "scale": { "startX": 0.1, "endX": 0.2, "startY": 0.35, "endY": 0.45 },
+        "position": { "x": 220, "y": 109 },
+        "rotation": -10
+      }, {
+        "sprite": "engine-glow",
+        "tint": "0xFF0000",
+        "scale": { "startX": 0.1, "endX": 0.2, "startY": 0.35, "endY": 0.45 },
+        "position": { "x": 220, "y": 149 },
+        "rotation": 10
+      },{
+        "sprite": "engine-glow",
+        "tint": "0xFF0000",
+        "scale": { "startX": 0.1, "endX": 0.2, "startY": 0.5, "endY": 0.45 },
+        "position": { "x": 230, "y": 124 },
+        "rotation": -10
+      }, {
+        "sprite": "engine-glow",
+        "tint": "0xFF0000",
+        "scale": { "startX": 0.1, "endX": 0.2, "startY": 0.5, "endY": 0.45 },
+        "position": { "x": 230, "y": 134 },
+        "rotation": 10
+      }, {
+        "sprite": "engine-glow",
+        "tint": "0xFF0000",
+        "scale": { "startX": 0.05, "endX": 0.4, "startY": 0.35, "endY": 0.6 },
+        "position": { "x": 230, "y": 129 },
+        "rotation": 0
+      }],
+      "trails": [{
+        "position": { "x": 220, "y": 90 }
+      }, {
+        "position": { "x": 220, "y": 170 }
+      },{
+        "position": { "x": 160, "y": 54 }
+      }, {
+        "position": { "x": 160, "y": 202 }
+      }]
+    },
+    "targeting": {
+      "turrets": [
+        {
+          "sprite": "laser-a",
+          "cooldown": 1500,
+          "pivot": { "x": 32, "y": 32 },
+          "position": { "x": 64, "y": 104 },
+          "scale": { "x": 0.6 , "y": 0.6 },
+          "type": "laser",
+          "laser": {
+            "sprite": "laser-red"
+          }
+        }, {
+          "sprite": "laser-a",
+          "cooldown": 1500,
+          "pivot": { "x": 32, "y": 32 },
+          "position": { "x": 64, "y": 154 },
+          "scale": { "x": 0.6 , "y": 0.6 },
+          "type": "laser",
+          "laser": {
+            "sprite": "laser-red"
+          }
+        }
+      ]
+    }
+  },
+  "vessel-x03": {
+    "oribit": { "radius": 256 },
+    "size": 1.0,
+    "speed": 2.0,
+    "engine": {
+      "exaust": {
+        "sprite": "engine-smoke",
+        "frequency": 50,
+        "offset": -62.0,
+        "scale": { "startX": 0.1, "endX": 0.5, "startY": 0.1, "endY": 0.5, "rate": 500 },
+        "alpha": { "start": 1.0, "end": 0.0, "rate": 500 },
+        "tint": { "start": "0xFFFFFF", "end": "0x3333FF", "rate": 500 },
+        "rotation": { "min": -40, "max": 40 },
+        "vector": { "x": -1.0, "y": -1.0 }
+      },
+      "glows": [{
+        "sprite": "engine-glow",
+        "tint": "0x9999FF",
+        "scale": { "startX": 0.1, "endX": 0.2, "startY": 0.25, "endY": 0.4 },
+        "position": { "x": 120, "y": 64 },
+        "rotation": 0
+      }],
+      "trails": [{
+        "position": { "x": 116, "y": 48 }
+      }, {
+        "position": { "x": 116, "y": 80 }
+      },{
+        "position": { "x": 72, "y": 14 }
+      }, {
+        "position": { "x": 72, "y": 114 }
+      }]
+    },
+    "targeting": {
+      "turrets": []
+    }
+  },
+  "vessel-x04": {
+    "oribit": { "radius": 96 },
+    "size": 0.3,
+    "speed": 4.0,
+    "engine": {
+      "exaust": {
+        "sprite": "engine-smoke",
+        "frequency": 10,
+        "offset": -45.0,
+        "scale": { "startX": 0.05, "endX": 0.1, "startY": 0.05, "endY": 0.1, "rate": 1000 },
+        "alpha": { "start": 1.0, "end": 0.0, "rate": 1000 },
+        "tint": { "start": "0xFF9966", "end": "0x333333", "rate": 750 },
+        "rotation": { "min": -6, "max": 6 },
+        "vector": { "x": 1.0, "y": 1.0 }
+      },
+      "glows": [{
+        "sprite": "engine-glow",
+        "tint": "0xFF6633",
+        "scale": { "startX": 0.02, "endX": 0.14, "startY": 0.3, "endY": 0.35 },
+        "position": { "x": 103, "y": 64 },
+        "rotation": 0
+      }]
+    },
+    "targeting": {
+      "turrets": []
+    }
+  },
+  "vessel-x05": {
+    "oribit": { "radius": 128 },
+    "size": 0.5,
+    "speed": 3.5,
+    "engine": {
+      "exaust": {
+        "sprite": "engine-smoke",
+        "frequency": 10,
+        "offset": -48.0,
+        "scale": { "startX": 0.1, "endX": 0.2, "startY": 0.1, "endY": 0.2, "rate": 500 },
+        "alpha": { "start": 1.0, "end": 0.0, "rate": 500 },
+        "tint": { "start": "0xFFFFFF", "end": "0x3333FF", "rate": 250 },
+        "rotation": { "min": -6, "max": 6 },
+        "vector": { "x": 0.0, "y": 0.0 }
+      },
+      "glows": [{
+        "sprite": "engine-glow",
+        "tint": "0x6666CC",
+        "scale": { "startX": 0.025, "endX": 0.16, "startY": 0.2, "endY": 0.3 },
+        "position": { "x": 106, "y": 54 },
+        "rotation": -15
+      }, {
+        "sprite": "engine-glow",
+        "tint": "0x6666CC",
+        "scale": { "startX": 0.025, "endX": 0.16, "startY": 0.2, "endY": 0.3 },
+        "position": { "x": 106, "y": 74 },
+        "rotation": 15
+      }, {
+        "sprite": "engine-glow",
+        "tint": "0x9999FF",
+        "scale": { "startX": 0.1, "endX": 0.26, "startY": 0.2, "endY": 0.3 },
+        "position": { "x": 106, "y": 64 },
+        "rotation": 0
+      }],
+      "trails": [{
+        "position": { "x": 110, "y": 96 }
+      }, {
+        "position": { "x": 110, "y": 32 }
+      }]
+    },
+    "targeting": {
+      "turrets": []
+    }
+  }
+}
