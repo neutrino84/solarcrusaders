@@ -1,0 +1,129 @@
+#!/usr/bin/env node
+
+var colors = require('colors'),
+    cproc = require('child_process'),
+    argv = require('minimist')(process.argv.slice(2)),
+    fs = require('fs'),
+    async = require('async'),
+
+    getRunningPid = function(callback) {
+      fs.readFile(__dirname + '/pidfile', {
+        encoding: 'utf-8'
+      }, function(err, pid) {
+        if(err) {
+          return callback(err);
+        }
+
+        try {
+          process.kill(parseInt(pid, 10), 0);
+          callback(null, parseInt(pid, 10));
+        } catch(e) {
+          callback(e);
+        }
+      });
+    };
+
+switch(process.argv[2]) {
+  case 'status':
+    getRunningPid(function(err, pid) {
+      if(!err) {
+        process.stdout.write('\nSolar Crusaders Running '.bold + '(pid '.cyan + pid.toString().cyan + ')\n'.cyan);
+        process.stdout.write('\t"' + './solarcrusaders stop'.yellow + '" to stop the Solar Crusaders server\n');
+        process.stdout.write('\t"' + './solarcrusaders log'.yellow + '" to view server output\n');
+        process.stdout.write('\t"' + './solarcrusaders restart'.yellow + '" to restart Solar Crusaders\n\n');
+      } else {
+        process.stdout.write('\nSolar Crusaders is not running\n'.bold);
+        process.stdout.write('\t"' + './solarcrusaders start'.yellow + '" to launch the Solar Crusaders server\n\n'.reset);
+      }
+    })
+    break;
+
+  case 'start':
+    process.stdout.write('\nStarting Solar Crusaders\n'.bold);
+    process.stdout.write('  "' + './solarcrusaders stop'.yellow + '" to stop the Solar Crusaders server\n');
+    process.stdout.write('  "' + './solarcrusaders log'.yellow + '" to view server output\n');
+    process.stdout.write('  "' + './solarcrusaders restart'.yellow + '" to restart Solar Crusaders\n\n'.reset);
+
+    // Spawn a new Solar Crusaders process
+    cproc.fork(__dirname + '/loader.js', {
+      env: process.env
+    });
+    break;
+
+  case 'stop':
+    getRunningPid(function(err, pid) {
+      if(!err) {
+        process.kill(pid, 'SIGTERM');
+        process.stdout.write('Stopping Solar Crusaders. Goodbye!\n')
+      } else {
+        process.stdout.write('Solar Crusaders is already stopped.\n');
+      }
+    });
+    break;
+
+  case 'restart':
+    getRunningPid(function(err, pid) {
+      if(!err) {
+        process.kill(pid, 'SIGHUP');
+      } else {
+        process.stdout.write('Solar Crusaders could not be restarted, as a running instance could not be found.');
+      }
+    });
+    break;
+
+  case 'reload':
+    getRunningPid(function(err, pid) {
+      if(!err) {
+        process.kill(pid, 'SIGUSR2');
+      } else {
+        process.stdout.write('Solar Crusaders could not be reloaded, as a running instance could not be found.');
+      }
+    });
+    break;
+
+  case 'log':
+    process.stdout.write('\nType '.red + 'Ctrl-C '.bold + 'to exit'.red);
+    process.stdout.write('\n\n'.reset);
+    cproc.spawn('tail', ['-F', './logs/output.log'], {
+      cwd: __dirname,
+      stdio: 'inherit'
+    });
+    break;
+
+  case 'redis':
+    process.stdout.write('\nType '.red + 'Ctrl-C '.bold + 'to exit'.red);
+    process.stdout.write('\n\n'.reset);
+    cproc.spawn('redis-server', ['./redis.conf'], {
+      cwd: __dirname,
+      stdio: 'inherit'
+    });
+    break;
+
+  case 'dev-loader':
+    process.env.NODE_ENV = 'development';
+    cproc.fork(__dirname + '/loader.js', ['--no-daemon', '--no-silent'], {
+      env: process.env,
+      execArgv: ['--debug']
+    });
+    break;
+
+  case 'dev-app':
+    process.env.NODE_ENV = 'development';
+    process.env.port = 4567;
+    cproc.fork(__dirname + '/app.js', ['--no-daemon', '--no-silent'], {
+      env: process.env,
+      execArgv: ['--debug']
+    });
+    break;
+
+  default:
+    process.stdout.write('Usage: ./solarcrusaders {start|stop|reload|restart|log|dev}\n\n');
+    process.stdout.write('\t' + 'start'.yellow + '\tStart the Solar Crusaders server\n');
+    process.stdout.write('\t' + 'stop'.yellow + '\tStops the Solar Crusaders server\n');
+    process.stdout.write('\t' + 'reload'.yellow + '\Reloads Solar Crusaders\n');
+    process.stdout.write('\t' + 'restart'.yellow + '\tRestarts Solar Crusaders\n');
+    process.stdout.write('\t' + 'log'.yellow + '\tOpens the logging interface (useful for debugging)\n');
+    process.stdout.write('\t' + 'dev'.yellow + '\tStart Solar Crusaders in interactive development mode\n');
+    process.stdout.write('\n'.reset);
+    break;
+}
