@@ -19,8 +19,37 @@ block content
         a(href='https://www.youtube.com/watch?v=3mURrVKerHg')
           img(src='/imgs/game/play.png')
         div(id='dialog')
+    .modal(id='registration-login')
+      .box
+        .register(id='registration-start')
+          h1 player registration
+          h2 welcome to the universe
+          p username:
+          .input
+            input(type='text', id='registration-username')
+          p e-mail:
+          .input
+            input(type='text', id='registration-email')
+          p password:
+          .input
+            input(type='password', id='registration-pass1')
+          p re-enter password:
+          .input
+            input(type='password', id='registration-pass2')
+          .error(id='registration-error')
+          .buttons
+            button(type='button', id='registration-submit') Complete Registration
+            button(type='button', id='registration-cancel') Cancel
+        .completed(id='registration-done')
+          h1 registration completed
+          h2 you will recieve further instructions once testing begins!
+          .splash
+          .buttons
+            button(type='button', id='registration-cancel') Done
+
 
   //- script(type='text/javascript', src='/build/pixi.js')
+  //- script(type='text/javascript', src='/build/xhr.js')
   //- script(type='text/javascript', src='/build/socket.js')
   //- script(type='text/javascript', src='/build/engine.js')
   //- script(type='text/javascript', src='/build/solar.js')

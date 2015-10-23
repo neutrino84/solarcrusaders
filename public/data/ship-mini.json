@@ -54,6 +54,7 @@
 
             },
          "spacing":0,
+         "tilecount":32,
          "tileheight":16,
          "tilewidth":16
         }, 
@@ -69,6 +70,7 @@
 
             },
          "spacing":0,
+         "tilecount":12,
          "tileheight":16,
          "tilewidth":16
         }, 
@@ -84,6 +86,7 @@
 
             },
          "spacing":0,
+         "tilecount":4,
          "tileheight":16,
          "tilewidth":16
         }],

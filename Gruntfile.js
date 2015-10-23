@@ -5,6 +5,24 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
 
     'browserify': {
+      socket: {
+        src: [],
+        dest: 'public/build/socket.js',
+        options: {
+          alias: {
+            socket: './node_modules/socket.io/node_modules/socket.io-client'
+          }
+        }
+      },
+      xhr: {
+        src: [],
+        dest: 'public/build/xhr.js',
+        options: {
+          alias: {
+            xhr: './node_modules/xhr'
+          }
+        }
+      },
       pixi: {
         src: [],
         dest: 'public/build/pixi.js',
@@ -13,15 +31,6 @@ module.exports = function(grunt) {
             pixi: './public/js/pixi.js'
           },
           transform: ['brfs']
-        }
-      },
-      socket: {
-        src: [],
-        dest: 'public/build/socket.js',
-        options: {
-          alias: {
-            socket: './node_modules/socket.io/node_modules/socket.io-client'
-          }
         }
       },
       engine: {
@@ -40,7 +49,7 @@ module.exports = function(grunt) {
         src: ['public/js/index.js'],
         dest: 'public/build/solar.js',
         options: {
-          external: ['pixi', 'engine'],
+          external: ['pixi', 'engine', 'xhr'],
           watch: true,
           transform: ['brfs']
         }
@@ -51,6 +60,7 @@ module.exports = function(grunt) {
         options: {
           alias: {
             pixi: './public/js/pixi.js',
+            xhr: './node_modules/xhr',
             socket: './node_modules/socket.io/node_modules/socket.io-client',
             engine: './public/js/engine/index.js'
           },
@@ -64,8 +74,9 @@ module.exports = function(grunt) {
       dev: {
         dest: 'public/build/app.js',
         src: [
-          'public/build/pixi.js',
           'public/build/socket.js',
+          'public/build/xhr.js',
+          'public/build/pixi.js',
           'public/build/engine.js',
           'public/build/solar.js'
         ]
@@ -113,7 +124,7 @@ module.exports = function(grunt) {
 
     'watch': {
       dev: {
-        files: ['app.js', 'views/**/*', 'public/build/solar.js', 'public/build/engine.js'],
+        files: ['views/**/*', 'public/build/solar.js', 'public/build/engine.js'],
         tasks: ['concat:dev', 'develop:dev'],
         options: { nospawn: true }
       }
@@ -121,12 +132,15 @@ module.exports = function(grunt) {
 
     'develop': {
       dev: {
-        file: 'app.js'
-      },
-      debug: {
         file: 'app.js',
-        nodeArgs: ['--debug']
-      }
+        env: { NODE_ENV: 'development', port: 4567 },
+        args: ['--no-daemon', '--no-silent'],
+        nodeArgs: []
+      }//,
+      // debug: {
+      //   file: 'app.js',
+      //   nodeArgs: ['--debug']
+      // }
     },
 
     'compress': {
@@ -167,8 +181,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-node-inspector');
 
   grunt.registerTask('default', [
-    'browserify:pixi',
     'browserify:socket',
+    'browserify:xhr',
+    'browserify:pixi',
     'browserify:engine',
     'browserify:solar',
     'concat:dev',
@@ -176,18 +191,24 @@ module.exports = function(grunt) {
     'watch:dev'
   ]);
 
-  grunt.registerTask('debug', [
-    'browserify:pixi',
-    'browserify:socket',
-    'browserify:engine',
-    'browserify:solar',
-    'concat:dev',
-    'develop:debug',
-    'node-inspector:dev'
-  ]);
+  // grunt.registerTask('debug', [
+  //   'browserify:socket',
+  //   'browserify:pixi',
+  //   'browserify:engine',
+  //   'browserify:solar',
+  //   'concat:dev',
+  //   'develop:debug',
+  //   'node-inspector:dev'
+  // ]);
 
   grunt.registerTask('build', [
+    'browserify:socket',
+    'browserify:xhr',
+    'browserify:pixi',
+    'browserify:engine',
+    'browserify:solar',
     'browserify:production',
+    'concat:dev',
     'uglify:app',
     'compress:app'
   ]);
