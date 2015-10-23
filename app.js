@@ -1,57 +1,16 @@
-var path = require('path'),
-    express = require('express'),
-    session = require('express-session'),
-    compression = require('compression'),
-    favicon = require('serve-favicon'),
-    bodyParser = require('body-parser'),
-    app = express(),
-    server = require('http').createServer(app),
-    io = require('socket.io')(server),
-    iosess = require('socket.io-express-session'),
-    publicDir = path.resolve('public'),
-    viewsDir = path.resolve('views'),
-    production = Boolean(process.env.PRODUCTION),
-    sess = session({
-      name: 'solar.sid',
-      secret: '4wWyR5Fq2vtKxq2mEjXkpEYM=4j-hz=X',
-      cookie: { path: '/', httpOnly: true, secure: false, maxAge: 86400000 },
-      saveUninitialized: true,
-      proxy: true,
-      resave: false,
-      rolling: true
-    });
 
-app.set('trust proxy', 1);
-app.set('views', viewsDir);
-app.set('view engine', 'jade');
+var Application = require('./src/Application'),
+    app = global.app = new Application(),
+    debugArgIdx, debugArgs = ['--debug', '--debug-brk'];
 
-app.use(favicon(publicDir + '/favicon.ico', { maxAge: 0 }));
-app.use(bodyParser.json());
-app.use(compression());
-app.use(express.static(publicDir));
-app.use(sess);
+app.init();
+app.start();
 
-app.get('/', function(req, res, next) {
-  res.render('index', {
-    title: 'Solar Crusaders',
-    description: 'A multiplayer strategy game featuring 4X gameplay, sandbox universe, and simulated virtual economy.',
-    production: production
-  });
-});
-
-app.get('*', function(req, res, next) {
-  res.render('index', {
-    title: 'Solar Crusaders',
-    description: 'A multiplayer strategy game featuring 4X gameplay, sandbox universe, and simulated virtual economy.',
-    production: production
-  });
-});
-
-io.use(iosess(sess));
-io.on('connection', function(socket) {
-  var session = socket.handshake.session;
-
-  console.log('connection established');
-});
-
-server.listen(3000);
+// disable debug
+// server on children
+for(var a in debugArgs) {
+  debugArgIdx = process.execArgv.indexOf(debugArgs[a]);
+  if(debugArgIdx !== -1) {
+    process.execArgv.splice(debugArgIdx, 1);
+  }
+}

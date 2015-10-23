@@ -1,0 +1,13 @@
+{
+  "silent": true,
+  "daemon": true,
+  "url": "http://localhost:4567",
+  "secret": "121daf16-401d-409b-8b63-12232c0a211c",
+  "database": "redis",
+  "redis": {
+    "host": "127.0.0.1",
+    "port": "6379",
+    "password": "",
+    "database": "0"
+  }
+}
