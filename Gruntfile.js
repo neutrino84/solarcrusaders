@@ -59,11 +59,13 @@ module.exports = function(grunt) {
         dest: 'public/build/app.js',
         options: {
           alias: {
-            pixi: './public/js/pixi.js',
             xhr: './node_modules/xhr',
-            socket: './node_modules/socket.io/node_modules/socket.io-client',
-            engine: './public/js/engine/index.js'
+            socket: './node_modules/socket.io/node_modules/socket.io-client'
           },
+          require: [
+            ['./public/js/engine/index.js', { expose: 'engine', plugin: [require('bundle-collapser/plugin')] }],
+            ['./public/js/pixi.js', { expose: 'pixi', plugin: [require('bundle-collapser/plugin')] }]
+          ],
           transform: ['brfs'],
           plugin: [require('bundle-collapser/plugin')]
         }
@@ -202,13 +204,7 @@ module.exports = function(grunt) {
   // ]);
 
   grunt.registerTask('build', [
-    'browserify:socket',
-    'browserify:xhr',
-    'browserify:pixi',
-    'browserify:engine',
-    'browserify:solar',
     'browserify:production',
-    'concat:dev',
     'uglify:app',
     'compress:app'
   ]);
