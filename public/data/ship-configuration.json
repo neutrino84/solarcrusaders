@@ -15,23 +15,11 @@
         "vector": { "x": -0.25, "y": -0.25 }
       },
       "glows": [
-        {
+       {
           "sprite": "engine-glow",
-          "tint": "0x00CC00",
-          "scale": { "startX": 0.01, "endX": 0.1, "startY": 0.3, "endY": 0.3 },
-          "position": { "x": 118, "y": 56 },
-          "rotation": -10
-        }, {
-          "sprite": "engine-glow",
-          "tint": "0x00CC00",
-          "scale": { "startX": 0.01, "endX": 0.1, "startY": 0.3, "endY": 0.3 },
-          "position": { "x": 118, "y": 76 },
-          "rotation": 10
-        }, {
-          "sprite": "engine-glow",
-          "tint": "0x33FF33",
-          "scale": { "startX": 0.1, "endX": 0.2, "startY": 0.3, "endY": 0.3 },
-          "position": { "x": 118, "y": 66 },
+          "tint": "0x3399FF",
+          "scale": { "startX": 0.10, "endX": 0.16, "startY": 0.2, "endY": 0.4 },
+          "position": { "x": 116, "y": 66 },
           "rotation": 0
         }
       ],
