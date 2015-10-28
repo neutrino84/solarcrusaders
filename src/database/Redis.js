@@ -2,8 +2,8 @@
 var winston = require('winston'),
     nconf = require('nconf'),
     path = require('path'),
-    session = require('express-session'),
     redis = require('redis'),
+    session = require('express-session'),
     connectRedis = require('connect-redis')(session);
 
 function Redis() {};
@@ -14,7 +14,8 @@ Redis.prototype.init = function(next) {
   this.createConnection();
   this.sessionStore = new connectRedis({
     client: this.client,
-    ttl: 60 * 60 * 24 * 14
+    ttl: 60 * 60 * 24 * 14,
+    db: parseInt(nconf.get('redis:database'), 10)
   });
 
   if(typeof next === 'function') {
@@ -72,9 +73,7 @@ Redis.prototype.end = function() {
 
 Redis.prototype.info = function(callback) {
   this.client.info(function(err, data) {
-    if(err) {
-      return callback(err);
-    }
+    if(err) { return callback(err); }
 
     var lines = data.toString().split("\r\n").sort();
     var redisData = {};

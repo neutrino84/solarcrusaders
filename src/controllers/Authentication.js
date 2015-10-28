@@ -14,6 +14,7 @@ function Authentication() {
   this.password = new Password();
   this.passport = new LocalStrategy({ passReqToCallback: true }, this.localLogin.bind(this));
   this.config = global.app.configuration.settings;
+  this.database = global.app.database;
 
   passport.use(this.passport);
 };
@@ -50,6 +51,11 @@ Authentication.prototype.login = function(req, res, next) {
     if(!userData) {
       return next(new Error('[[error:no-credentials]]'));
     }
+
+    // store session
+    req.session.user = userData;
+    
+    // serve response
     res.json({
       info: info,
       user: userData
@@ -101,8 +107,20 @@ Authentication.prototype.localLogin = function(req, username, password, next) {
   ], next);
 };
 
-Authentication.prototype.logout = function() {
-  //..
+Authentication.prototype.logout = function(req, res, next) {
+  var uid, session = req.session;
+  if(session.user) {
+    uid = parseInt(session.user.uid, 10);
+    if(uid > 0) {
+      this.database.sessionStore.destroy(req.session.id, function(err) {
+        if(err) { return next(err); }        
+        req.logout();
+        res.json({ info: 'success' });
+      });
+    }
+  } else {
+    return next(new Error('[[error:not-logged-in]]'));
+  }
 };
 
 module.exports = Authentication;
