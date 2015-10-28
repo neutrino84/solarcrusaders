@@ -112,7 +112,7 @@ Authentication.prototype.logout = function(req, res, next) {
   if(session.user) {
     uid = parseInt(session.user.uid, 10);
     if(uid > 0) {
-      this.database.sessionStore.destroy(req.session.id, function(err) {
+      this.database.sessionStore.destroy(req.sessionID, function(err) {
         if(err) { return next(err); }        
         req.logout();
         res.json({ info: 'success' });
