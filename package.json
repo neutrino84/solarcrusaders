@@ -22,6 +22,7 @@
     "morgan": "1.6.x",
     "express": "4.13.x",
     "express-session": "1.11.x",
+    "cookie-parser": "1.4.x",
     "compression": "1.6.x",
     "serve-favicon": "2.3.x",
     "body-parser": "1.14.x",
