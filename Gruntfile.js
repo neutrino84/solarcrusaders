@@ -137,7 +137,7 @@ module.exports = function(grunt) {
         file: 'app.js',
         env: { NODE_ENV: 'development', port: 4567 },
         args: ['--no-daemon', '--no-silent'],
-        nodeArgs: []
+        nodeArgs: ['--debug']
       }//,
       // debug: {
       //   file: 'app.js',
