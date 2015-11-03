@@ -4,6 +4,7 @@ logs
 
 # Build
 public/build
+src/libs
 
 # Redis conf
 redis.conf
