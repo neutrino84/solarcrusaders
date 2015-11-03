@@ -23,7 +23,7 @@ module.exports = function(User) {
 
   User.createDefaultData = function() {
     var userData = Utils.extend({}, User.DefaultData);
-        userData.timestamp = global.Date.now();
+        userData.joindate = global.Date.now();
         userData.uuid = uuid.v4();
     return userData;
   };
