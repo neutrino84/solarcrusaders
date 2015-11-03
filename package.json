@@ -18,6 +18,7 @@
     "passport-local": "1.0.x",
     "bcryptjs": "2.3.0",
     "xregexp": "3.0.x",
+    "uuid": "2.0.x",
 
     "morgan": "1.6.x",
     "express": "4.13.x",
