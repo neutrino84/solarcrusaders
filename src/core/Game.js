@@ -1,5 +1,6 @@
 
-var IntervalManager = require('./IntervalManager');
+var IntervalManager = require('./IntervalManager'),
+    Clock = require('../client/engine/time/Clock');
 
 function Game(config) {
   if(!config) { config = {}; }
@@ -25,16 +26,19 @@ Game.prototype.boot = function() {
   this.isBooted = true;
   this._kickstart = true;
 
+  this.clock = new Clock(this);
+  this.clock.boot();
+
   // calls game update
   this.intervalManager = new IntervalManager(this);
   this.intervalManager.start();
 };
 
 Game.prototype.update = function(time) {
-  // this.clock.update(time);
+  this.clock.update(time);
 
   if(this._kickstart) {
-    // this.updateLogic(this.clock.desiredFpsMult);
+    this.updateLogic(this.clock.desiredFpsMult);
     this._kickstart = false;
     return;
   }
@@ -45,10 +49,8 @@ Game.prototype.update = function(time) {
       this._nextFpsNotification = this.clock.time + 10000;
       // this.emit('fpsProblem');
     }
-
     this._deltaTime = 0;
     this._spiraling = 0;
-
   } else {
     var count = 0,
         slowStep = this.clock.slowMotion * 1000.0 / this.clock.desiredFps;
