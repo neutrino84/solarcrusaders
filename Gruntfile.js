@@ -28,7 +28,7 @@ module.exports = function(grunt) {
         dest: 'public/build/pixi.js',
         options: {
           alias: {
-            pixi: './public/js/pixi.js'
+            pixi: './src/client/pixi.js'
           },
           transform: ['brfs']
         }
@@ -40,13 +40,13 @@ module.exports = function(grunt) {
           external: ['pixi', 'socket'],
           watch: true,
           alias: {
-            engine: './public/js/engine/index.js'
+            engine: './src/client/engine/index.js'
           },
           transform: ['brfs']
         }
       },
       solar: {
-        src: ['public/js/index.js'],
+        src: ['src/client/index.js'],
         dest: 'public/build/solar.js',
         options: {
           external: ['pixi', 'engine', 'xhr'],
@@ -55,7 +55,7 @@ module.exports = function(grunt) {
         }
       },
       production: {
-        src: ['public/js/index.js'],
+        src: ['src/client/index.js'],
         dest: 'public/build/app.js',
         options: {
           alias: {
@@ -63,8 +63,8 @@ module.exports = function(grunt) {
             socket: './node_modules/socket.io/node_modules/socket.io-client'
           },
           require: [
-            ['./public/js/engine/index.js', { expose: 'engine', plugin: [require('bundle-collapser/plugin')] }],
-            ['./public/js/pixi.js', { expose: 'pixi', plugin: [require('bundle-collapser/plugin')] }]
+            ['./src/client/engine/index.js', { expose: 'engine', plugin: [require('bundle-collapser/plugin')] }],
+            ['./src/client/pixi.js', { expose: 'pixi', plugin: [require('bundle-collapser/plugin')] }]
           ],
           transform: ['brfs'],
           plugin: [require('bundle-collapser/plugin')]
