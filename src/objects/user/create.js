@@ -1,26 +1,36 @@
 
-var async = require('async'),
+var uuid = require('uuid'),
+    async = require('async'),
     validator = require('validator'),
     Sanitation = require('../../utils/Sanitation'),
     Validator = require('../../utils/Validator'),
-    Password = require('../../utils/Password');
+    Password = require('../../utils/Password'),
+    Utils = require('../../utils');
     // groups = require('../groups'),
     // notifications = require('../notification');
 
 module.exports = function(User) {
+  User.DefaultData = {
+    // 'picture': gravatar,
+    // 'gravatarpicture': gravatar,
+    'name': '',
+    'type': 'user',
+    'reputation': 0,
+    'banned': 0,
+    'status': 'online',
+    'consistent': 0
+  }; 
+
+  User.createDefaultData = function() {
+    var userData = Utils.extend({}, User.DefaultData);
+        userData.timestamp = global.Date.now();
+        userData.uuid = uuid.v4();
+    return userData;
+  };
+
   User.prototype.create = function(data, callback) {
     // var gravatar = User.createGravatarURLFromEmail(data.email);
-    var timestamp = data.timestamp || Date.now();
-    var userData = {
-      'joindate': timestamp,
-      // 'picture': gravatar,
-      // 'gravatarpicture': gravatar,
-      'name': '',
-      'reputation': 0,
-      'banned': 0,
-      'status': 'online',
-      'consistent': 0
-    };
+    var userData = User.createDefaultData();
 
     async.waterfall([
       function(next) {
