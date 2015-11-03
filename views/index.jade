@@ -10,7 +10,10 @@ block content
     if !user
       .login(id='login-form')
         .box
-          .form
+          .title
+            a(href='http://blog.solarcrusaders.com/') development blog
+            a(href='http://forums.solarcrusaders.com/') forums
+          .form(style='display:none')
             label email
             .input
               input(type='text', id='login-email')
