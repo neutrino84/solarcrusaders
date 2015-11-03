@@ -5,9 +5,9 @@ logs
 # Build
 public/build
 
-
 # Redis conf
 redis.conf
+dump.rdb
 
 # Runtime data
 pids
