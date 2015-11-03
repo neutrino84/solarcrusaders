@@ -7,7 +7,8 @@ var path = require('path'),
 
     configFilePath = path.join(__dirname, '/../config.json'),
 
-    Database = require('./database')
+    Game = require('./core/Game'),
+    Database = require('./database'),
     Configuration = require('./utils/Configuration');
 
 function Application() {
@@ -53,6 +54,12 @@ Application.prototype.start = function() {
       var configuration = self.configuration = new Configuration();
           configuration.init(next);
       winston.info('[Application] Configuration loading...');
+    },
+    function(next) {
+      var game = self.game = new Game();
+          game.init();
+      next();
+      winston.info('[Application] Game engine started...');
     },
     function(next) {
       var server = self.server = require('./Server');

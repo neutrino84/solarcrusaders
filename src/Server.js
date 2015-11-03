@@ -15,15 +15,19 @@ var path = require('path'),
     iosess = require('socket.io-express-session'),
     iorouter = require('socket.io-events')(),
 
+    User = require('./objects/user'),
     Authentication = require('./controllers/Authentication'),
     
     publicDir = path.resolve('public'),
     viewsDir = path.resolve('views'),
+
+    game = global.app.game,
+    database = global.app.database,
     
     production = Boolean(process.env.PRODUCTION),
     sess = session({
       name: 'solar.sid',
-      store: global.app.database.sessionStore,
+      store: database.sessionStore,
       secret: nconf.get('secret'),
       cookie: { path: '/', httpOnly: true, secure: false, maxAge: 86400000 },
       saveUninitialized: true,
@@ -63,6 +67,13 @@ app.post('/logout', function(req, res, next) {
 /*
  * Core Routes
  */
+// app.get('/', function(req, res, next) {
+//   if(!req.session.user || (!req.session.user.uid && !req.session.user.uuid)) {
+//     req.session.user = User.createDefaultData();
+//   }
+//   next();
+// });
+
 app.get('/', function(req, res, next) {
   res.render('index', {
     title: 'Solar Crusaders',
@@ -111,5 +122,14 @@ iorouter.on(function(err, sock, args, next) {
   });
   next();
 });
+
+// io.on('connection', function(socket) {
+//   var session = socket.handshake.session,
+//       user = session.user;
+//   game.sector.add(user);
+//   socket.on('disconnect', function() {
+//     game.sector.remove(user);
+//   });
+// });
 
 module.exports = server;

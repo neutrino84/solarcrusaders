@@ -8,7 +8,7 @@ function IntervalManager(game) {
 
   this._onLoop = null;
   this._onUpdate = null;
-  this._immediateID = null;
+  this._timeoutID = null;
 };
 
 IntervalManager.prototype.constructor = IntervalManager;
@@ -18,18 +18,18 @@ IntervalManager.prototype.start = function() {
   this._onLoop = function() {
     return self.updateImmediate();
   };
-  this._immediateID = global.setImmediate(this._onLoop);
+  this._timeoutID = global.setTimeout(this._onLoop, 0);
 };
 
 IntervalManager.prototype.stop = function() {
   this.isRunning = false;
-  global.clearImmediate(this._immediateID);
+  global.clearTimeout(this._timeoutID);
 };
 
 IntervalManager.prototype.updateImmediate = function() {
   this._endTime = global.Date.now();
   this.game.update(this._endTime - this._startTime);
-  this._immediateID = global.setImmediate(this._onLoop);
+  this._timeoutID = global.setTimeout(this._onLoop, 0);
   this._startTime = global.Date.now();
 };
 

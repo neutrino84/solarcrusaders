@@ -1,11 +1,13 @@
 
 var IntervalManager = require('./IntervalManager'),
-    Clock = require('../client/engine/time/Clock');
+    Clock = require('../client/engine/time/Clock'),
+    Sector = require('../objects/sector');
 
-function Game(config) {
-  if(!config) { config = {}; }
+function Game() {
+  this.config = global.app.configuration;
+  this.database = global.app.database;
 
-  this.config = config;
+  this.sector = new Sector(this);
 
   this.isBooted = false;
   this.forceSingleUpdate = false;
@@ -20,18 +22,18 @@ function Game(config) {
 
 Game.prototype.constructor = Game;
 
-Game.prototype.boot = function() {
+Game.prototype.init = function() {
   if(this.isBooted) { return; }
 
-  this.isBooted = true;
-  this._kickstart = true;
+  // this.isBooted = true;
+  // this._kickstart = true;
 
-  this.clock = new Clock(this);
-  this.clock.boot();
+  // this.clock = new Clock(this);
+  // this.clock.boot();
 
-  // calls game update
-  this.intervalManager = new IntervalManager(this);
-  this.intervalManager.start();
+  // // calls game update
+  // this.intervalManager = new IntervalManager(this);
+  // this.intervalManager.start();
 };
 
 Game.prototype.update = function(time) {
@@ -88,7 +90,7 @@ Game.prototype.update = function(time) {
 };
 
 Game.prototype.updateLogic = function() {
-  //..
+  this.sector.update();
 };
 
 Game.prototype.destroy = function() {
