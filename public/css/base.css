@@ -36,48 +36,92 @@ textarea, input { outline: none; }
 #content.error { background: none; }
 
 /*
- * Share Buttons Styles
+ * Login Styles
  */
-.share {
+.login {
   position: absolute;
   left: 50%;
   top: 0;
-  display: none;
+  height: 0;
+  width: 0;
 }
 
-.share .box {
+.login .box {
   position: relative;
-  top: 2px;
-  left: -110px;
-  width: 220px;
-  height: 28px;
-}
-
-.share .box.text {
-  font-size: 11px;
-  font-weight: bold;
-  text-transform: uppercase;
+  top: 0;
+  left: -310px;
+  width: 620px;
+  height: 70px;
   text-align: center;
+  background: url('../imgs/game/login-bg.png') top center no-repeat;
 }
 
-.share .box .facebook {
-  float: left;
-  width: 94px;
-  height: 24px;
+.login .box .form {
+  height: 19px;
+  padding: 8px 0 0 118px;
 }
 
-.share .box .twitter {
+.login .box .input {
   float: left;
-  width: 62px;
-  height: 20px;
-  margin: 4px 0 0 4px;
+  width: 100px;
+  margin: 0 6px;
+  padding: 2px;
+  background: #645d50;
+  border-top: solid 1px #3d3931;
+  border-right: solid 1px #3d3931;
+  border-bottom: solid 1px #7a7469;
+  border-left: solid 1px #7a7469;
 }
 
-.share .box .tumblr {
+.login .box .buttons {
   float: left;
-  width: 58px;
-  height: 20px;
-  margin: 4px 0 0 0;
+}
+
+.login .box label {
+  display: block;
+  float: left;
+  padding: 2;
+  margin: 0;
+  color: #fff;
+  font-size: 10px;
+  line-height: 19px;
+  text-transform: uppercase;
+}
+
+.login .box input {
+  display: block;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  color: #fff;
+  border: none;
+  background: none;
+}
+
+.login .box button {
+  display: block;
+  height: 19px;
+  padding: 2px 4px;
+  margin: 0;
+  color: #fff;
+  font-size: 10px;
+  line-height: 13px;
+  text-transform: uppercase;
+  background: #645d50;
+  border-bottom: solid 1px #3d3931;
+  border-left: solid 1px #3d3931;
+  border-top: solid 1px #7a7469;
+  border-right: solid 1px #7a7469;
+}
+
+.login .register {
+  position: relative;
+  left: -164px;
+  top: -28px;
+  width: 328px;
+  height: 72px;
+  cursor: pointer;
+  background: url('../imgs/game/register-button.png') center top no-repeat;
 }
 
 /*
