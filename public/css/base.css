@@ -56,17 +56,6 @@ textarea, input { outline: none; }
   background: url('../imgs/game/login-bg.png') top center no-repeat;
 }
 
-.login .box .title {
-  height: 19px;
-  padding: 8px 0 0 0;
-  font-size: 14px;
-  text-transform: uppercase;
-}
-
-.login .box .title a {
-  padding: 0 10px;
-}
-
 .login .box .form {
   height: 19px;
   padding: 8px 0 0 118px;
