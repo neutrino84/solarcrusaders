@@ -3,7 +3,8 @@ var Authentication = require('./controllers/Authentication');
 function Routes(app) {
   this.app = app;
   this.express = app.server.express;
-  this.authentication = new Authentication();
+  
+  this.authentication = new Authentication(this);
 };
 
 Routes.prototype.constructor = Routes;
