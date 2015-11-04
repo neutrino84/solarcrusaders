@@ -1,135 +1,107 @@
 var path = require('path'),
-    nconf = require('nconf'),
+    http = require('http'),
     express = require('express'),
     session = require('express-session'),
     compression = require('compression'),
     favicon = require('serve-favicon'),
     bodyParser = require('body-parser'),
     cookieParser = require('cookie-parser'),
-    winston = require('winston'),
     
-    app = express(),
-    server = require('http').createServer(app),
-    
-    io = require('socket.io')(server),
-    iosess = require('socket.io-express-session'),
-    iorouter = require('socket.io-events')(),
-
-    User = require('./objects/user'),
+    // Model = require('./objets/Model'),
     Authentication = require('./controllers/Authentication'),
     
     publicDir = path.resolve('public'),
-    viewsDir = path.resolve('views'),
+    viewsDir = path.resolve('views');
 
-    game = global.app.game,
-    database = global.app.database,
-    
-    production = Boolean(process.env.PRODUCTION),
-    sess = session({
-      name: 'solar.sid',
-      store: database.sessionStore,
-      secret: nconf.get('secret'),
-      cookie: { path: '/', httpOnly: true, secure: false, maxAge: 86400000 },
-      saveUninitialized: true,
-      proxy: true,
-      resave: false,
-      rolling: true
-    }),
+function Server(app) {
+  this.app = app;
+  this.database = app.database;
 
-    authentication = new Authentication();
-
-app.set('trust proxy', 1);
-app.set('views', viewsDir);
-app.set('view engine', 'jade');
-
-app.use(favicon(publicDir + '/favicon.ico', { maxAge: 0 }));
-app.use(bodyParser.json());
-app.use(cookieParser());
-app.use(compression());
-app.use(express.static(publicDir));
-app.use(sess);
-
-/*
- * API Calls
- */
-app.post('/login', function(req, res, next) {
-  authentication.login(req, res, next);
-});
-
-app.post('/register', function(req, res, next) {
-  authentication.register(req, res, next);
-});
-
-app.post('/logout', function(req, res, next) {
-  authentication.logout(req, res, next);
-});
-
-/*
- * Core Routes
- */
-// app.get('/', function(req, res, next) {
-//   if(!req.session.user || (!req.session.user.uid && !req.session.user.uuid)) {
-//     req.session.user = User.createDefaultData();
-//   }
-//   next();
-// });
-
-app.get('/', function(req, res, next) {
-  res.render('index', {
-    title: 'Solar Crusaders',
-    description: 'A multiplayer strategy game featuring 4X gameplay, sandbox universe, and simulated virtual economy.',
-    production: production,
-    user: req.session.user && req.session.user.uid ? true : false
+  this.express = express();
+  this.session = session({
+    name: 'solar.sid',
+    store: app.database.sessionStore,
+    secret: app.nconf.get('secret'),
+    cookie: { path: '/', httpOnly: true, secure: false, maxAge: 86400000 },
+    saveUninitialized: true,
+    proxy: true,
+    resave: false,
+    rolling: true
   });
-});
 
-app.get('*', function(req, res, next) {
-  res.redirect('/');
-});
+  this.http = http.createServer(this.express);
 
-app.use(function(err, req, res, next) {
-  winston.error('[Server] ' + err.message);
-  res.json({
-    error: err.message
+  // controllers
+  this.authentication = new Authentication();
+};
+
+Server.prototype.constructor = Server;
+
+Server.prototype.init = function(next) {
+  var self = this;
+
+  this.express.set('trust proxy', 1);
+  this.express.set('views', viewsDir);
+  this.express.set('view engine', 'jade');
+
+  this.express.use(favicon(publicDir + '/favicon.ico', { maxAge: 0 }));
+  this.express.use(bodyParser.json());
+  this.express.use(cookieParser());
+  this.express.use(compression());
+  this.express.use(express.static(publicDir));
+  this.express.use(this.session);
+
+  /*
+   * API Calls
+   */
+  this.express.post('/login', function(req, res, next) {
+    self.authentication.login(req, res, next);
   });
-});
 
-/*
- * SocketIO Routes
- */
-io.use(iosess(sess));
-io.use(iorouter);
-
-iorouter.on('ping', function(sock, args, next) {
-  sock.emit('pong', {
-    time: 0
+  this.express.post('/register', function(req, res, next) {
+    self.authentication.register(req, res, next);
   });
-});
 
-iorouter.on('user', function(sock, args, next) {
-  sock.emit(args[0], {
-    user: sock.sock.handshake.session.user
+  this.express.post('/logout', function(req, res, next) {
+    self.authentication.logout(req, res, next);
   });
-});
 
-iorouter.on(function(sock, args) {
-  winston.info('[Server] Uncaught socket message: ' + args[0]);
-});
+  /*
+   * Core Routes
+   */
+  // this.express.get('/', function(req, res, next) {
+  //   // create guest user
+  //   if(!req.session.user || (!req.session.user.uid && !req.session.user.uuid)) {
+  //     req.session.user = User.createDefaultData();
+  //   }
+  //   next();
+  // });
 
-iorouter.on(function(err, sock, args, next) {
-  sock.emit(args[0], {
-    error: error.message
+  this.express.get('/', function(req, res, next) {
+    res.render('index', {
+      title: 'Solar Crusaders',
+      description: 'A multiplayer strategy game featuring 4X gameplay, sandbox universe, and simulated virtual economy.',
+      production: Boolean(process.env.PRODUCTION),
+      user: req.session.user && req.session.user.uid ? true : false
+    });
   });
+
+  this.express.get('*', function(req, res, next) {
+    res.redirect('/');
+  });
+
+  this.express.use(function(err, req, res, next) {
+    self.app.winston.error('[Server] ' + err.message);
+    res.json({
+      error: err.message
+    });
+  });
+
   next();
-});
+};
 
-// io.on('connection', function(socket) {
-//   var session = socket.handshake.session,
-//       user = session.user;
-//   game.sector.add(user);
-//   socket.on('disconnect', function() {
-//     game.sector.remove(user);
-//   });
-// });
+Server.prototype.listen = function(port) {
+  this.http.listen(port);
+};
 
-module.exports = server;
+module.exports = Server;

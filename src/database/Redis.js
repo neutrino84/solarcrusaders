@@ -6,7 +6,9 @@ var winston = require('winston'),
     session = require('express-session'),
     connectRedis = require('connect-redis')(session);
 
-function Redis() {};
+function Redis(app) {
+  this.app = app;
+};
 
 Redis.prototype.constructor = Redis;
 

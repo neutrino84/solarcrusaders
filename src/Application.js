@@ -7,14 +7,18 @@ var path = require('path'),
 
     configFilePath = path.join(__dirname, '/../config.json'),
 
-    Game = require('./core/Game'),
     Database = require('./database'),
-    Configuration = require('./utils/Configuration');
+    Configuration = require('./Configuration'),
+    Server = require('./Server'),
+    Sockets = require('./Sockets'),
+    Game = require('./core/Game');
 
 function Application() {
-  this.server = null;
-  this.database = null;
   this.configuration = null;
+  this.database = null;
+  this.server = null;
+  this.sockets = null;
+  this.game = null;
 };
 
 Application.prototype.constructor = Application;
@@ -32,6 +36,9 @@ Application.prototype.init = function() {
     nconf.set('isPrimary', 'true');
     nconf.set('isCluster', 'false');
   }
+
+  this.nconf = nconf;
+  this.winston = winston;
   
   // add process listeners
   process.on('SIGTERM', this.shutdown.bind(this));
@@ -44,28 +51,44 @@ Application.prototype.init = function() {
 
 Application.prototype.start = function() {
   var self = this;
+
+  // start
   async.waterfall([
     function(next) {
-      var database = self.database = new Database();
-          database.init(next);
-      winston.info('[Application] Database client starting...');
+      self.database = new Database(self);
+      self.database.init(next);
+
+      winston.info('[Application] Connected database client...');
     },
     function(next) {
-      var configuration = self.configuration = new Configuration();
-          configuration.init(next);
-      winston.info('[Application] Configuration loading...');
+      self.configuration = new Configuration(self);
+      self.configuration.init(next);
+
+      winston.info('[Application] Loaded configuration...');
     },
     function(next) {
-      var game = self.game = new Game();
-          game.init();
+      self.game = new Game(self);
+      self.game.init(next);
+
+      winston.info('[Application] Started game engine...');
+    },
+    function(next) {
+      self.server = new Server(self);
+      self.server.init(next);
+      
+      winston.info('[Application] Starting web engine...');
+    },
+    function(next) {
+      self.sockets = new Sockets(self);
+      self.sockets.init(next);
+
+      winston.info('[Application] Starting sockets engine...');
+    },
+    function(next) {
+      self.server.listen(process.env.port);
       next();
-      winston.info('[Application] Game engine started...');
-    },
-    function(next) {
-      var server = self.server = require('./Server');
-          server.listen(process.env.port);
-      next();
-      winston.info('[Application] Starting webserver on port ' + process.env.port + ' [' + global.process.pid + ']');
+
+      winston.info('[Application] Listening on port ' + process.env.port + ' [' + global.process.pid + ']');
     }
   ], function(err) {
     if(err) {
