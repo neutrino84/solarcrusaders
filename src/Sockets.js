@@ -38,15 +38,6 @@ Socket.prototype.init = function(next) {
     next();
   });
 
-  this.io.on('connection', function(socket) {
-    var session = socket.handshake.session,
-        user = session.user;
-    // game.sector.add(user);
-    socket.on('disconnect', function() {
-      // game.sector.remove(user);
-    });
-  });
-
   next();
 };
 
