@@ -1,49 +1,57 @@
 
-var winston = require('winston'),
-    IntervalManager = require('./IntervalManager'),
-    Clock = require('../client/engine/time/Clock'),
-    SectorManager = require('../objects/sector/SectorManager');
+var Timeout = require('./Timeout'),
+    Clock = require('./Clock'),
+    Model = require('../objects/Model'),
+    SectorManager = require('./SectorManager');
 
-function Game() {
-  this.config = global.app.configuration;
-  this.database = global.app.database;
+function Game(app) {
+  this.app = app;
+  this.winston = app.winston;
+  this.database = app.database;
+  this.sockets = app.sockets;
 
   this.isBooted = false;
+  this.kickstart = true;
   this.forceSingleUpdate = false;
+
+  this.clock = new Clock(this);
+  this.model = new Model(this);
+  this.sectorManager = new SectorManager(this);
 
   this._deltaTime = 0;
   this._lastCount = 0;
   this._spiraling = 0;
-  this._kickstart = true;
-  this._nextFpsNotification = 0;
+  this._nextFpsNotification = 5000;
 };
 
 Game.prototype.constructor = Game;
 
-Game.prototype.init = function() {
+Game.prototype.init = function(next) {
   if(this.isBooted) { return; }
 
+  var self = this;
+
   this.isBooted = true;
-  this._kickstart = true;
+  this.kickstart = true;
 
-
-  this.clock = new Clock(this);
-  this.sectorManager = new SectorManager(this);
-
-  this.clock.boot();
+  this.clock.init();
+  this.model.init();
   this.sectorManager.init();
 
   // calls game update
-  this.intervalManager = new IntervalManager(this);
-  this.intervalManager.start();
+  this.timeout = new Timeout(this);
+  this.timeout.start();
+
+  //
+  next();
 };
 
 Game.prototype.update = function(time) {
   this.clock.update(time);
 
-  if(this._kickstart) {
+  if(this.kickstart) {
     this.updateLogic(this.clock.desiredFpsMult);
-    this._kickstart = false;
+    this.kickstart = false;
     return;
   }
 
@@ -51,7 +59,7 @@ Game.prototype.update = function(time) {
     if(this.clock.time > this._nextFpsNotification) {
       // only permit one fps notification per 10 seconds
       this._nextFpsNotification = this.clock.time + 10000;
-      winston.warn('[Game] FPS is spiraling in game loop!');
+      this.winston.warn('[Game] Event loop has stressed at current load!');
     }
     this._deltaTime = 0;
     this._spiraling = 0;
@@ -92,11 +100,6 @@ Game.prototype.update = function(time) {
 
 Game.prototype.updateLogic = function() {
   this.sectorManager.update();
-};
-
-Game.prototype.destroy = function() {
-  this.intervalManager.stop();
-  this.isBooted = false;
 };
 
 module.exports = Game;
