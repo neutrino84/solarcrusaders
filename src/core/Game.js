@@ -1,17 +1,15 @@
 
-var IntervalManager = require('./IntervalManager'),
-    // Clock = require('../client/engine/time/Clock'),
-    Sector = require('../objects/sector');
+var winston = require('winston'),
+    IntervalManager = require('./IntervalManager'),
+    Clock = require('../client/engine/time/Clock'),
+    SectorManager = require('../objects/sector/SectorManager');
 
 function Game() {
   this.config = global.app.configuration;
   this.database = global.app.database;
 
-  this.sector = new Sector(this);
-
   this.isBooted = false;
   this.forceSingleUpdate = false;
-  this.currentUpdateID = 0;
 
   this._deltaTime = 0;
   this._lastCount = 0;
@@ -25,15 +23,19 @@ Game.prototype.constructor = Game;
 Game.prototype.init = function() {
   if(this.isBooted) { return; }
 
-  // this.isBooted = true;
-  // this._kickstart = true;
+  this.isBooted = true;
+  this._kickstart = true;
 
-  // this.clock = new Clock(this);
-  // this.clock.boot();
 
-  // // calls game update
-  // this.intervalManager = new IntervalManager(this);
-  // this.intervalManager.start();
+  this.clock = new Clock(this);
+  this.sectorManager = new SectorManager(this);
+
+  this.clock.boot();
+  this.sectorManager.init();
+
+  // calls game update
+  this.intervalManager = new IntervalManager(this);
+  this.intervalManager.start();
 };
 
 Game.prototype.update = function(time) {
@@ -49,7 +51,7 @@ Game.prototype.update = function(time) {
     if(this.clock.time > this._nextFpsNotification) {
       // only permit one fps notification per 10 seconds
       this._nextFpsNotification = this.clock.time + 10000;
-      // this.emit('fpsProblem');
+      winston.warn('[Game] FPS is spiraling in game loop!');
     }
     this._deltaTime = 0;
     this._spiraling = 0;
@@ -67,7 +69,6 @@ Game.prototype.update = function(time) {
 
     while(this._deltaTime >= slowStep) {
       this._deltaTime -= slowStep;
-      this.currentUpdateID = count;
       this.updateLogic(this.clock.desiredFpsMult);
 
       count++;
@@ -90,7 +91,7 @@ Game.prototype.update = function(time) {
 };
 
 Game.prototype.updateLogic = function() {
-  this.sector.update();
+  this.sectorManager.update();
 };
 
 Game.prototype.destroy = function() {
