@@ -11,7 +11,8 @@ var path = require('path'),
     Configuration = require('./Configuration'),
     Server = require('./Server'),
     Sockets = require('./Sockets'),
-    Game = require('./core/Game');
+    Game = require('./core/Game'),
+    Routes = require('./Routes');
 
 function Application() {
   this.configuration = null;
@@ -67,12 +68,6 @@ Application.prototype.start = function() {
       winston.info('[Application] Loaded configuration...');
     },
     function(next) {
-      self.game = new Game(self);
-      self.game.init(next);
-
-      winston.info('[Application] Started game engine...');
-    },
-    function(next) {
       self.server = new Server(self);
       self.server.init(next);
       
@@ -83,6 +78,18 @@ Application.prototype.start = function() {
       self.sockets.init(next);
 
       winston.info('[Application] Starting sockets engine...');
+    },
+    function(next) {
+      self.game = new Game(self);
+      self.game.init(next);
+
+      winston.info('[Application] Started game engine...');
+    },
+    function(next) {
+      self.routes = new Routes(self);
+      self.routes.init(next);
+
+      winston.info('[Application] Linking routes...');
     },
     function(next) {
       self.server.listen(process.env.port);

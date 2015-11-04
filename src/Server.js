@@ -7,9 +7,6 @@ var path = require('path'),
     bodyParser = require('body-parser'),
     cookieParser = require('cookie-parser'),
     
-    // Model = require('./objets/Model'),
-    Authentication = require('./controllers/Authentication'),
-    
     publicDir = path.resolve('public'),
     viewsDir = path.resolve('views');
 
@@ -30,9 +27,6 @@ function Server(app) {
   });
 
   this.http = http.createServer(this.express);
-
-  // controllers
-  this.authentication = new Authentication();
 };
 
 Server.prototype.constructor = Server;
@@ -50,52 +44,6 @@ Server.prototype.init = function(next) {
   this.express.use(compression());
   this.express.use(express.static(publicDir));
   this.express.use(this.session);
-
-  /*
-   * API Calls
-   */
-  this.express.post('/login', function(req, res, next) {
-    self.authentication.login(req, res, next);
-  });
-
-  this.express.post('/register', function(req, res, next) {
-    self.authentication.register(req, res, next);
-  });
-
-  this.express.post('/logout', function(req, res, next) {
-    self.authentication.logout(req, res, next);
-  });
-
-  /*
-   * Core Routes
-   */
-  // this.express.get('/', function(req, res, next) {
-  //   // create guest user
-  //   if(!req.session.user || (!req.session.user.uid && !req.session.user.uuid)) {
-  //     req.session.user = User.createDefaultData();
-  //   }
-  //   next();
-  // });
-
-  this.express.get('/', function(req, res, next) {
-    res.render('index', {
-      title: 'Solar Crusaders',
-      description: 'A multiplayer strategy game featuring 4X gameplay, sandbox universe, and simulated virtual economy.',
-      production: Boolean(process.env.PRODUCTION),
-      user: req.session.user && req.session.user.uid ? true : false
-    });
-  });
-
-  this.express.get('*', function(req, res, next) {
-    res.redirect('/');
-  });
-
-  this.express.use(function(err, req, res, next) {
-    self.app.winston.error('[Server] ' + err.message);
-    res.json({
-      error: err.message
-    });
-  });
 
   next();
 };
