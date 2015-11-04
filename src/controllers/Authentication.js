@@ -9,7 +9,9 @@ var winston = require('winston'),
     Sanitation = require('../utils/Sanitation'),
     Password = require('../utils/Password');
 
-function Authentication() {
+function Authentication(routes) {
+  this.routes = routes;
+
   this.user = new User();
   this.password = new Password();
   this.passport = new LocalStrategy({ passReqToCallback: true }, this.localLogin.bind(this));
@@ -17,6 +19,17 @@ function Authentication() {
   this.database = global.app.database;
 
   passport.use(this.passport);
+
+  // create guest user
+  var self = this;
+  this.routes.express.get('/', function(req, res, next) {
+    if(!req.session.user) {
+      var guest = User.createDefaultData();
+          guest.uid = 0;
+      req.session.user = guest;
+    }
+    next();
+  });
 };
 
 Authentication.prototype.constructor = Authentication;
