@@ -188,7 +188,7 @@ textarea, input { outline: none; }
   height: 70%;
   top: 15%;
   left: 20%;
-  overflow: scroll;
+  overflow: auto;
   background: rgba(0, 0, 0, 0.75);
 }
 
