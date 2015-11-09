@@ -1,0 +1,143 @@
+
+var engine = require('engine'),
+    
+    Panel = require('../ui/Panel'),
+    Layout = require('../ui/Layout'),
+
+    Auth = require('../net/Auth'),
+    
+    BorderLayout = require('../ui/layouts/BorderLayout'),
+    FlowLayout = require('../ui/layouts/FlowLayout'),
+    StackLayout = require('../ui/layouts/StackLayout'),
+    
+    HeaderPane = require('../ui/panes/HeaderPane'),
+    // LeftPane = require('../ui/panes/LeftPane'),
+    RightPane = require('../ui/panes/RightPane'),
+    ShipPane = require('../ui/panes/ShipPane'),
+
+    Selection = require('../ui/components/Selection'),
+
+    RegistrationForm = require('../ui/html/RegistrationForm'),
+    LoginForm = require('../ui/html/LoginForm');
+
+function GUIState() {};
+
+GUIState.prototype = Object.create(engine.State.prototype);
+GUIState.prototype.constructor = engine.State;
+
+GUIState.prototype.init = function() {
+  this.auth = new Auth(this.game);
+};
+
+GUIState.prototype.preload = function() {
+  // load font
+  this.game.load.image('vt323', 'imgs/game/fonts/vt323.png');
+
+  // this.game.load.image('icon1', 'imgs/game/icons/icon-x01.png');
+  // this.game.load.image('icon2', 'imgs/game/icons/icon-x02.png');
+  // this.game.load.image('icon3', 'imgs/game/icons/icon-x03.png');
+  // this.game.load.image('icon4', 'imgs/game/icons/icon-x04.png');
+
+  // tilemap
+  this.game.load.image('deck', 'imgs/game/tilesets/deck-mini.png');
+  this.game.load.image('wall', 'imgs/game/tilesets/wall-mini.png');
+  this.game.load.image('grid', 'imgs/game/tilesets/grid-mini.png');
+  
+  this.game.load.tilemap('ship', 'data/ship-mini.json');
+
+  // spritesheet
+  this.game.load.spritesheet('crew', 'imgs/game/spritesheets/crew-mini.png', 16, 16);
+  this.game.load.spritesheet('door', 'imgs/game/spritesheets/door-mini.png', 16, 16);
+
+  // ship outline
+  this.game.load.image('ship-outline', 'imgs/game/ships/vessel-x01-outline.png');
+};
+
+GUIState.prototype.create = function() {
+  var self = this,
+      game = this.game,
+      name = 'the aurora';
+      
+  // this.leftPane = new LeftPane(game);
+  this.rightPane = new RightPane(game);
+  this.headerPane = new HeaderPane(game);
+  this.shipPane = new ShipPane(game, name);
+  this.center = new Panel(game, new FlowLayout(Layout.LEFT, Layout.TOP, Layout.VERTICAL, 6));
+  this.bottom = new Panel(game, new FlowLayout(Layout.CENTER, Layout.TOP, Layout.HORIZONTAL, 6))
+  this.base = new Panel(game, new BorderLayout(0, 0));
+
+  this.selection = new Selection(game);
+
+  this.root = new Panel(game, new StackLayout());
+  this.root.setSize(game.width, game.height);
+  this.root.visible = false;
+
+  this.center.visible = this.auth.isUser();
+  this.center.setPadding(6);
+  this.center.addPanel(Layout.STRETCH, this.headerPane);
+  this.center.addPanel(Layout.LEFT, this.shipPane);
+
+  this.bottom.addPanel(Layout.NONE, this.rightPane);
+
+  this.base.addPanel(Layout.BOTTOM, this.bottom);
+  this.base.addPanel(Layout.CENTER, this.center);
+  // this.base.addPanel(Layout.LEFT, this.leftPane);
+
+  this.root.addPanel(Layout.STRETCH, this.selection);
+  this.root.addPanel(Layout.STRETCH, this.base);
+
+  // add root to stage
+  this.game.stage.addChild(this.root);
+
+  if(!this.auth.isUser()) {
+    this.registrationForm = new RegistrationForm(game);
+    this.loginForm = new LoginForm(game);
+    this.game.on('gui/login', this.login, this);
+  }
+
+  // listen for fps problems
+  // this.game.on('fpsProblem', this._fpsProblem, this);
+};
+
+GUIState.prototype.login = function() {
+  this.auth.invalidate();
+
+  // show ui
+  this.base.visible = true;
+  this.refresh();
+
+  this.registrationForm.destroy();
+  this.loginForm.destroy();
+  this.loginForm = undefined;
+  this.registrationForm = undefined;
+
+  game.net.reconnect();
+};
+
+GUIState.prototype.refresh = function() {
+  this.toggle(true);
+}
+
+GUIState.prototype.toggle = function(force) {
+  this.root.visible = force !== undefined ? force : !this.root.visible;
+  
+  // repaint gui
+  if(this.root.visible) {
+    this.root.validate();
+    this.root.repaint();
+  }
+}
+
+GUIState.prototype.resize = function(width, height) {
+  if(this.root !== undefined) {
+    this.root.setSize(width, height);
+    this.root.validate();
+    this.root.repaint();
+  }
+};
+
+GUIState.prototype._fpsProblem = function() {
+  console.log('dropped a frame');
+};
+
+module.exports = GUIState;

@@ -1,0 +1,62 @@
+
+var CONST = {
+  VERSION: require('../../../package.json').version,
+
+  SPRITE: 0,
+  BUTTON: 1,
+  IMAGE: 2,
+  GRAPHICS: 3,
+  TEXT: 4,
+  TILESPRITE: 5,
+  BITMAPTEXT: 6,
+  GROUP: 7,
+  RENDERTEXTURE: 8,
+  TILEMAP: 9,
+  TILEMAPLAYER: 10,
+  TILEMAPSPRITE: 27,
+  EMITTER: 11,
+  POLYGON: 12,
+  BITMAPDATA: 13,
+  CANVAS_FILTER: 14,
+  WEBGL_FILTER: 15,
+  ELLIPSE: 16,
+  SPRITEBATCH: 17,
+  RETROFONT: 18,
+  POINTER: 19,
+  STRIP: 20,
+  CIRCLE: 21,
+  RECTANGLE: 22,
+  LINE: 23,
+  MATRIX: 24,
+  POINT: 25,
+  ROUNDEDRECTANGLE: 26,
+
+  Loader: {
+    TEXTURE_ATLAS_JSON_ARRAY: 0,
+    TEXTURE_ATLAS_JSON_HASH: 1,
+    TEXTURE_ATLAS_XML_STARLING: 2
+  },
+
+  BlendMode: {
+    NORMAL: 0,
+    ADD: 1,
+    MULTIPLY: 2,
+    SCREEN: 3,
+    OVERLAY: 4,
+    DARKEN: 5,
+    LIGHTEN: 6,
+    COLOR_DODGE: 7,
+    COLOR_BURN: 8,
+    HARD_LIGHT: 9,
+    SOFT_LIGHT: 10,
+    DIFFERENCE: 11,
+    EXCLUSION: 12,
+    HUE: 13,
+    SATURATION: 14,
+    COLOR: 15,
+    LUMINOSITY: 16
+  }
+  
+};
+
+module.exports = CONST;
