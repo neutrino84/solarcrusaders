@@ -90,7 +90,7 @@ LoadingState.prototype.create = function() {
   };
 
   // add gui to stage
-  // this.game.stage.addChild(this.root);
+  this.game.stage.addChild(this.root);
 };
 
 LoadingState.prototype.loadingStart = function() {
