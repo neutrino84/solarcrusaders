@@ -127,8 +127,6 @@ SectorManager.prototype.update = function() {
 };
 
 SectorManager.prototype.generateRandomShips = function() {
-  console.log('generate random ships');
-
   var ship, position, guid,
       iterator = {
         'vessel-x01': { count: 2 },
