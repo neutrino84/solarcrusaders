@@ -59,6 +59,8 @@ Authentication.prototype.register = function(req, res, next) {
 };
 
 Authentication.prototype.login = function(req, res, next) {
+  return next(new Error('[[error:server-locked]]'));
+  
   passport.authenticate('local', function(err, userData, info) {
     if(err) { return next(err); }
     if(!userData) {
