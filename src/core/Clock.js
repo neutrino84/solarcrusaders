@@ -25,7 +25,7 @@ function Clock(game) {
   this._timers = [];
 };
 
-Clock.DESIRED_FPS = 0.5;
+Clock.DESIRED_FPS = 5;
 
 Clock.prototype.constructor = Clock;
 
@@ -69,6 +69,12 @@ Clock.prototype.update = function(time) {
 
   // time when the next call is expected if using timers
   // this.timeExpected = time + this.timeToCall;
+
+  this.events.update(this.time);
+
+  if(this._timers.length) {
+    this.updateTimers();
+  }
 };
 
 Clock.prototype.refresh = function() {
