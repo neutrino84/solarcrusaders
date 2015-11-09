@@ -3,6 +3,7 @@ var Authentication = require('./controllers/Authentication');
 function Routes(app) {
   this.app = app;
   this.express = app.server.express;
+  this.iorouter = app.sockets.iorouter;
   
   this.authentication = new Authentication(this);
 };
@@ -48,6 +49,30 @@ Routes.prototype.init = function(next) {
     res.json({
       error: err.message
     });
+  });
+
+  // Socket.IO Routes
+  this.iorouter.on('ping', function(sock, args, next) {
+    sock.emit('pong', {
+      time: 0
+    });
+  });
+
+  this.iorouter.on('user', function(sock, args, next) {
+    sock.emit(args[0], {
+      user: sock.sock.handshake.session.user
+    });
+  });
+
+  this.iorouter.on(function(sock, args) {
+    self.app.winston.info('[Server] Uncaught socket message: ' + args[0]);
+  });
+
+  this.iorouter.on(function(err, sock, args, next) {
+    sock.emit(args[0], {
+      error: error.message
+    });
+    next();
   });
 
   next();

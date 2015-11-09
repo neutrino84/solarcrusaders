@@ -15,29 +15,6 @@ Socket.prototype.init = function(next) {
   this.io.use(this.iosess(this.server.session));
   this.io.use(this.iorouter);
 
-  this.iorouter.on('ping', function(sock, args, next) {
-    sock.emit('pong', {
-      time: 0
-    });
-  });
-
-  this.iorouter.on('user', function(sock, args, next) {
-    sock.emit(args[0], {
-      user: sock.sock.handshake.session.user
-    });
-  });
-
-  this.iorouter.on(function(sock, args) {
-    winston.info('[Server] Uncaught socket message: ' + args[0]);
-  });
-
-  this.iorouter.on(function(err, sock, args, next) {
-    sock.emit(args[0], {
-      error: error.message
-    });
-    next();
-  });
-
   next();
 };
 

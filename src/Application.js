@@ -132,7 +132,7 @@ Application.prototype.shutdown = function(code) {
     winston.info('[Application] Database connection closed.');
   }
   if(this.server !== null) {
-    this.server.close();
+    this.server.http.close();
     winston.info('[Application] Web server closed.');
   }
   winston.info('[Application] Shutdown complete.');
