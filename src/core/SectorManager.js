@@ -149,7 +149,7 @@ SectorManager.prototype.generateRandomShips = function() {
       ship.position = this._generateRandomPositionInView();
       ship.rotation = global.Math.random() * global.Math.PI;
       ship.config = engine.ShipConfiguration[key];
-      ship.throttle = ship.config.speed;
+      ship.throttle = ship.config.speed * (global.Math.random() * 4 + 1);
       ship.movement = new client.Movement(ship);
     }
   }
