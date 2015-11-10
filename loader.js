@@ -17,6 +17,11 @@ fs.open(configFilePath, 'r', function(err) {
       file: configFilePath
     });
 
+    loader = new Loader(nconf);
+    loader.init();
+    loader.displayStartupMessages();
+    loader.start();
+
     if(nconf.get('daemon') !== 'false' && nconf.get('daemon') !== false) {
       if(File.existsSync(pidFilePath)) {
         try {
@@ -35,11 +40,6 @@ fs.open(configFilePath, 'r', function(err) {
 
       fs.writeFile(__dirname + '/pidfile', process.pid);
     }
-
-    loader = global.loader = new Loader(nconf);
-    loader.init();
-    loader.displayStartupMessages();
-    loader.start();
   } else {
     console.log('Missing master configuation file.');
   }
