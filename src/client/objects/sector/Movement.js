@@ -130,6 +130,8 @@ Movement.prototype.generateData = function(paths) {
 };
 
 Movement.prototype.drawData = function(color) {
+  if(!this.trajectoryGraphics) { return; }
+  
   var frameData = this.animation.frameData,
       color = color || 0x3366FF;
   for(var f in frameData) {
