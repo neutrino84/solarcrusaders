@@ -66,11 +66,13 @@ Button.prototype.on = function(name, callback, context) {
 Button.prototype._inputUp = function() {
   this.bg.tint = 0xFFFFFF;
   this.label.bg.tint = 0xFFFFFF;
+  this.emit('inputUp', this);
 };
 
 Button.prototype._inputDown = function() {
   this.bg.tint = 0xaaccFF;
   this.label.bg.tint = 0xaaccFF;
+  this.emit('inputDown', this);
 };
 
 Button.prototype._inputOver = function() {

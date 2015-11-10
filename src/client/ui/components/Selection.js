@@ -27,4 +27,12 @@ Selection.prototype.doLayout = function() {};
 //   this.game.emit('gui/sector/selected', rectangle);
 // };
 
+Selection.prototype.start = function() {
+  this.selection.start();
+}
+
+Selection.prototype.stop = function() {
+  this.selection.stop();
+}
+
 module.exports = Selection;

@@ -14,7 +14,9 @@ var engine = require('engine'),
     // LeftPane = require('../ui/panes/LeftPane'),
     RightPane = require('../ui/panes/RightPane'),
     ShipPane = require('../ui/panes/ShipPane'),
-
+      
+    Alert = require('../ui/components/Alert'),
+    Modal = require('../ui/components/Modal'),
     Selection = require('../ui/components/Selection'),
 
     RegistrationForm = require('../ui/html/RegistrationForm'),
@@ -27,6 +29,9 @@ GUIState.prototype.constructor = engine.State;
 
 GUIState.prototype.init = function() {
   this.auth = new Auth(this.game);
+
+  // add listeners
+  this.game.on('gui/modal', this.modal, this);
 };
 
 GUIState.prototype.preload = function() {
@@ -63,10 +68,15 @@ GUIState.prototype.create = function() {
   this.headerPane = new HeaderPane(game);
   this.shipPane = new ShipPane(game, name);
   this.center = new Panel(game, new FlowLayout(Layout.LEFT, Layout.TOP, Layout.VERTICAL, 6));
-  this.bottom = new Panel(game, new FlowLayout(Layout.CENTER, Layout.TOP, Layout.HORIZONTAL, 6))
+  this.bottom = new Panel(game, new FlowLayout(Layout.CENTER, Layout.TOP, Layout.HORIZONTAL, 6));
   this.base = new Panel(game, new BorderLayout(0, 0));
 
   this.selection = new Selection(game);
+
+  this.modalComponent = new Modal(game);
+  this.modalComponent.visible = false;
+
+  this.alertComponent = new Alert(game);
 
   this.root = new Panel(game, new StackLayout());
   this.root.setSize(game.width, game.height);
@@ -85,6 +95,7 @@ GUIState.prototype.create = function() {
 
   this.root.addPanel(Layout.STRETCH, this.selection);
   this.root.addPanel(Layout.STRETCH, this.base);
+  this.root.addPanel(Layout.STRETCH, this.modalComponent);
 
   // add root to stage
   this.game.stage.addChild(this.root);
@@ -95,6 +106,8 @@ GUIState.prototype.create = function() {
     this.game.on('gui/login', this.login, this);
   }
 
+  this.game.on('gui/modal', this.modal, this);
+
   // listen for fps problems
   // this.game.on('fpsProblem', this._fpsProblem, this);
 };
@@ -104,7 +117,7 @@ GUIState.prototype.login = function() {
 
   // show ui
   this.base.visible = true;
-  this.refresh();
+  this.modal(false);
 
   this.registrationForm.destroy();
   this.loginForm.destroy();
@@ -112,6 +125,7 @@ GUIState.prototype.login = function() {
   this.registrationForm = undefined;
 
   game.net.reconnect();
+  game.removeListener('gui/login');
 };
 
 GUIState.prototype.refresh = function() {
@@ -127,6 +141,26 @@ GUIState.prototype.toggle = function(force) {
     this.root.repaint();
   }
 }
+
+GUIState.prototype.modal = function(show, content, lock) {
+  if(typeof show !== 'boolean') { show = true; };
+  if(content === undefined) { content = new Panel(game, new StackLayout()); }
+  if(lock === undefined) { lock = false; }
+
+  if(lock && show) {
+    this.selection.stop();
+    this.game.input.keyboard.stop();
+  } else {
+    this.selection.start();
+    this.game.input.keyboard.start();
+  }
+
+  this.modalComponent.empty();
+  this.modalComponent.addPanel(Layout.USE_PS_SIZE, content);
+  this.modalComponent.visible = show;
+
+  this.refresh();
+};
 
 GUIState.prototype.resize = function(width, height) {
   if(this.root !== undefined) {

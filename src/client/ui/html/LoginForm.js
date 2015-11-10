@@ -93,7 +93,7 @@ LoginForm.prototype._login = function() {
         switch(error) {
           case '[[error:invalid-credentials]]':
           default:
-            alert(error);
+            self.game.emit('gui/alert', 'the servers have not yet opened\nplease check back soon');
             break;
         }
       } else if(user) {

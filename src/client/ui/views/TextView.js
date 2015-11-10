@@ -52,6 +52,8 @@ function TextView(game, text, settings) {
   this.fontTexture = new engine.RetroFont(game, this.settings.fontName, this.settings);
   this.fontTexture.multiLine = true;
   this.fontTexture.text = text;
+  this.fontTexture.customSpacingX = this.settings.characterSpacing || 0;
+  this.fontTexture.customSpacingY = this.settings.lineSpacing || 0;
   
   // set tint
   this.tint = this.settings.tint;
