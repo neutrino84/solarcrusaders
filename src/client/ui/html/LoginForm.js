@@ -74,6 +74,9 @@ LoginForm.prototype._register = function() {
 
 LoginForm.prototype._login = function() {
   var self = this;
+
+  this.formElement.style.display = 'none';
+
   if(this.passwordElement.value !== '' && this.emailElement.value !== '') {
     xhr({
       method: 'post',
@@ -105,12 +108,14 @@ LoginForm.prototype._login = function() {
             self.game.emit('gui/alert', 'an unknown error has occurred\nplease try again later');
             break;
         }
+        this.formElement.style.display = '';
       } else if(user) {
         self.game.emit('gui/login', user);
       }
     });
   } else {
-    
+    this.formElement.style.display = '';
+    self.game.emit('gui/alert', 'you have not entered valid login credentials');
   }
 };
 

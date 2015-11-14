@@ -114,7 +114,7 @@ GUIState.prototype.login = function() {
   this.auth.invalidate();
 
   // show ui
-  this.base.visible = true;
+  this.center.visible = true;
   this.modal(false);
 
   this.registrationForm.destroy();

@@ -35,7 +35,7 @@ function ShipManager(game) {
 
   // authentication
   game.auth.on('user', this._user, this);
-  game.auth.on('disconnect', this._disonnected, this);
+  game.auth.on('invalidated', this._invalidated, this);
 
   // networking
   // TODO: move to client/net/Sector.js
@@ -102,25 +102,6 @@ ShipManager.prototype._sync = function(data) {
   }
 };
 
-ShipManager.prototype._plotted = function(data) {
-  var ship = this.ships[data.uuid];
-  if(ship !== undefined) {
-    ship.rotation = data.rotation;
-    ship.position.set(data.current.x, data.current.y);
-    ship.movement.throttle = data.throttle;
-    ship.movement.plot(data.destination, data.current, data.previous);
-    // ship.movement.drawData(0xFF3300);
-  }
-};
-
-ShipManager.prototype._destroyed = function(data) {
-  //.. ship logged off or destroyed
-};
-
-ShipManager.prototype._disonnected = function() {
-
-};
-
 ShipManager.prototype.update = function() {
 
 };
@@ -141,6 +122,11 @@ ShipManager.prototype.createShip = function(data) {
   this.shipsGroup.add(ship);
 
   return ship;
+};
+
+ShipManager.prototype.removeShip = function() {
+  // ship = ships[s];
+  // ship.destroy();
 };
 
 ShipManager.prototype.removeShips = function() {
@@ -196,8 +182,9 @@ ShipManager.prototype.destroy = function() {
       socket = this.socket;
 
   game.removeListener('gui/sector/selected', this._selected);
+
   auth.removeListener('user', this._user)
-  auth.removeListener('disconnected', this._disonnected);
+  auth.removeListener('invalidated', this._invalidated);
   
   socket.removeListener('sync', this._syncBind);
   socket.removeListener('plotted', this._plottedBind);
@@ -207,6 +194,25 @@ ShipManager.prototype.destroy = function() {
     this._syncBind = this._plottedBind =
     this._destroyedBind = undefined;
 
+  this.removeShips();
+};
+
+ShipManager.prototype._plotted = function(data) {
+  var ship = this.ships[data.uuid];
+  if(ship !== undefined) {
+    ship.rotation = data.rotation;
+    ship.position.set(data.current.x, data.current.y);
+    ship.movement.throttle = data.throttle;
+    ship.movement.plot(data.destination, data.current, data.previous);
+    // ship.movement.drawData(0xFF3300);
+  }
+};
+
+ShipManager.prototype._destroyed = function(data) {
+  // remove a ship
+};
+
+ShipManager.prototype._invalidated = function() {
   this.removeShips();
 };
 
