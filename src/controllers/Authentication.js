@@ -24,7 +24,7 @@ function Authentication(routes) {
   var self = this;
   this.routes.express.get('/', function(req, res, next) {
     if(!req.session.user) {
-      var guest = User.createDefaultData();
+      var guest = self.user.createDefaultData();
           guest.uid = 0;
       req.session.user = guest;
     }

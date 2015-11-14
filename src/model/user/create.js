@@ -21,7 +21,7 @@ module.exports = function(User) {
     'consistent': 0
   }; 
 
-  User.createDefaultData = function() {
+  User.prototype.createDefaultData = function() {
     var userData = Utils.extend({}, User.DefaultData);
         userData.joindate = global.Date.now();
         userData.uuid = uuid.v4();
@@ -30,7 +30,7 @@ module.exports = function(User) {
 
   User.prototype.create = function(data, callback) {
     // var gravatar = User.createGravatarURLFromEmail(data.email);
-    var userData = User.createDefaultData();
+    var userData = this.createDefaultData();
 
     async.waterfall([
       function(next) {
@@ -47,10 +47,6 @@ module.exports = function(User) {
       this.persist.bind(this)
     ], callback);
   };
-
-  // User.prototype.sanitize = function() {
-  //   //..
-  // },
 
   User.prototype.validate = function(password, userData, callback) {
     var self = this;
