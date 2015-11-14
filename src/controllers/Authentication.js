@@ -143,7 +143,7 @@ Authentication.prototype.logAttempt = function(ip, callback) {
           callback(new Error('[[error:ip-locked]]'));
         });
       } else {
-        database.pexpire('attempts:' + ip, 1000 * 60 * 60);
+        database.pexpire('attempts:' + ip, duration);
         callback();
       }
     });

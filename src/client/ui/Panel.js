@@ -58,6 +58,7 @@ Panel.prototype.invalidate = function() {
     this.parent.invalidate();
   } else if(this.parent && !this.parent.invalidate) {
     this.validate();
+    this.repaint();
   }
 };
 
@@ -78,7 +79,7 @@ Panel.prototype.validate = function() {
   }
 };
 
-Panel.prototype.validateMetric = function(){
+Panel.prototype.validateMetric = function() {
   if(this.isValid === false) {
     if(this.recalc) {
       this.recalc();

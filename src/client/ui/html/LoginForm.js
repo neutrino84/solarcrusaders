@@ -108,9 +108,9 @@ LoginForm.prototype._login = function() {
             self.game.emit('gui/alert', 'an unknown error has occurred\nplease try again later');
             break;
         }
-        this.formElement.style.display = '';
+        self.formElement.style.display = '';
       } else if(user) {
-        self.game.emit('gui/login', user);
+        self.game.emit('gui/loggedin', user);
       }
     });
   } else {

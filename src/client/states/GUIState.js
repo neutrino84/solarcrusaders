@@ -80,7 +80,6 @@ GUIState.prototype.create = function() {
   this.root.setSize(game.width, game.height);
   this.root.visible = false;
 
-  this.center.visible = this.auth.isUser();
   this.center.setPadding(6);
   this.center.addPanel(Layout.STRETCH, this.headerPane);
   this.center.addPanel(Layout.LEFT, this.shipPane);
@@ -99,10 +98,15 @@ GUIState.prototype.create = function() {
   this.game.stage.addChild(this.root);
 
   if(!this.auth.isUser()) {
+    this.center.visible = false;
     this.registrationForm = new RegistrationForm(game);
     this.loginForm = new LoginForm(game);
-    this.game.on('gui/login', this.login, this);
+    this.game.on('gui/loggedin', this._loggedin, this);
+  } else {
+    self.login();
   }
+
+  this.auth.on('user', this.login, this);
 
   this.game.on('gui/modal', this.modal, this);
 
@@ -111,19 +115,13 @@ GUIState.prototype.create = function() {
 };
 
 GUIState.prototype.login = function() {
-  this.auth.invalidate();
-
-  // show ui
+  // show login ui
   this.center.visible = true;
-  this.modal(false);
+  this.center.invalidate();
 
-  this.registrationForm.destroy();
-  this.loginForm.destroy();
-  this.loginForm = undefined;
-  this.registrationForm = undefined;
-
-  game.net.reconnect();
-  game.removeListener('gui/login');
+  if(this.modalComponent.visible) {
+    this.modal(false);
+  }
 };
 
 GUIState.prototype.refresh = function() {
@@ -135,8 +133,9 @@ GUIState.prototype.toggle = function(force) {
   
   // repaint gui
   if(this.root.visible) {
-    this.root.validate();
-    this.root.repaint();
+    this.root.invalidate();
+    // this.root.validate();
+    // this.root.repaint();
   }
 }
 
@@ -163,9 +162,17 @@ GUIState.prototype.modal = function(show, content, lock) {
 GUIState.prototype.resize = function(width, height) {
   if(this.root !== undefined) {
     this.root.setSize(width, height);
-    this.root.validate();
-    this.root.repaint();
+    // this.root.validate();
+    // this.root.repaint();
+    this.root.invalidate();
   }
+};
+
+GUIState.prototype._loggedin = function() {
+  this.registrationForm.destroy();
+  this.loginForm.destroy();
+  this.loginForm = this.registrationForm = undefined;
+  this.game.removeListener('gui/loggedin', this._loggedin);
 };
 
 GUIState.prototype._fpsProblem = function() {
