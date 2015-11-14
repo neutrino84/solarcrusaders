@@ -1,5 +1,4 @@
 
-
 function Socket(app) {
   this.app = app;
   this.server = app.server;
@@ -17,12 +16,17 @@ Socket.prototype.init = function(next) {
 
   // add socket id to user
   this.io.on('connection', function(socket) {
-    var session = socket.handshake.session,
-        user = session.user;
-    user.socket = socket.id;
+    var handshake = socket.handshake
+        session = handshake.session
+    session.socket = socket.id;
+    session.save();
   });
 
   next();
+};
+
+Socket.prototype.getSocketById = function(id) {
+  return this.io.sockets.connected[id];
 };
 
 module.exports = Socket;
