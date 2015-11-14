@@ -217,7 +217,6 @@ Game.prototype.updateRender = function(elapsedTime) {
   // render scene and state
   // this.state.preRender(elapsedTime);
   this.renderer.render(this.stage);
-  // this.state.render(elapsedTime);
 };
 
 Game.prototype.destroy = function() {
