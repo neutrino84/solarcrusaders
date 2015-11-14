@@ -1,5 +1,6 @@
 
-var pixi = require('pixi');
+var pixi = require('pixi'),
+    Group = require('../../core/Group');
 
 function Destroy() {};
 
@@ -12,12 +13,12 @@ Destroy.prototype = {
 
     this.destroyPhase = true;
 
-    if(this.events) {
-      this.events.onDestroy$dispatch(this);
-    }
+    // if(this.events) {
+    //   this.events.onDestroy$dispatch(this);
+    // }
 
     if(this.parent) {
-      if(this.parent instanceof Phaser.Group) {
+      if(this.parent instanceof Group) {
         this.parent.remove(this);
       } else {
         this.parent.removeChild(this);
@@ -73,7 +74,7 @@ Destroy.prototype = {
     this.renderable = false;
 
     // pixi level destroy
-    pixi.Sprite.destroy(this);
+    pixi.Sprite.prototype.destroy.call(this);
 
     this.destroyPhase = false;
     this.pendingDestroy = false;
