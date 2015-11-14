@@ -4,6 +4,7 @@ require('./polyfill');
 var pixi = require('pixi'),
     engine = require('engine'),
     LoadingState = require('./states/LoadingState'),
+    Auth = require('./net/Auth'),
     startGameEngine = function() {
       var game = new engine.Game({
             parent: 'content',
@@ -11,6 +12,9 @@ var pixi = require('pixi'),
             // forceFXAA: true
           }),
           loadingState = new LoadingState();
+
+      // begin auth procedure
+      game.auth = new Auth(game);
 
       // create game state
       game.state.add('loader', loadingState, true, true);

@@ -4,8 +4,6 @@ var engine = require('engine'),
     Panel = require('../ui/Panel'),
     Layout = require('../ui/Layout'),
 
-    Auth = require('../net/Auth'),
-    
     BorderLayout = require('../ui/layouts/BorderLayout'),
     FlowLayout = require('../ui/layouts/FlowLayout'),
     StackLayout = require('../ui/layouts/StackLayout'),
@@ -28,7 +26,7 @@ GUIState.prototype = Object.create(engine.State.prototype);
 GUIState.prototype.constructor = engine.State;
 
 GUIState.prototype.init = function() {
-  this.auth = new Auth(this.game);
+  this.auth = this.game.auth;
 
   // add listeners
   this.game.on('gui/modal', this.modal, this);

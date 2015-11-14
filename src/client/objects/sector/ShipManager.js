@@ -33,10 +33,15 @@ function ShipManager(game) {
     game.camera.unfollow();
   }, this);
 
+  // authentication
+  game.auth.on('user', this._user, this);
+  game.auth.on('disconnect', this._disonnected, this);
+
   // networking
+  // TODO: move to client/net/Sector.js
   this.socket.on('sync', this._syncBind = this._sync.bind(this));
   this.socket.on('plotted', this._plottedBind = this._plotted.bind(this));
-  this.socket.on('disconnected', this._disonnectedBind = this._disonnected.bind(this));
+  this.socket.on('destroyed', this._destroyedBind = this._destroyed.bind(this));
 
   // subscribe to messages
   game.on('gui/sector/selected', this._selected, this);
@@ -44,6 +49,10 @@ function ShipManager(game) {
 
 ShipManager.prototype = Object.create(EventEmitter.prototype);
 ShipManager.prototype.constructor = ShipManager;
+
+ShipManager.prototype._user = function(response) {
+  this.user = response.user || {};
+};
 
 ShipManager.prototype._sync = function(data) {
   var ship, cached,
@@ -104,13 +113,16 @@ ShipManager.prototype._plotted = function(data) {
   }
 };
 
+ShipManager.prototype._destroyed = function(data) {
+  //.. ship logged off or destroyed
+};
+
 ShipManager.prototype._disonnected = function() {
-  var ship,
-      ships = data.ships;
-  for(var s in ships) {
-    ship = ships[s];
-    ship.destroy();
-  }
+
+};
+
+ShipManager.prototype.update = function() {
+
 };
 
 ShipManager.prototype.createShip = function(data) {
@@ -126,18 +138,19 @@ ShipManager.prototype.createShip = function(data) {
       ship.trajectoryGraphics = this.trajectoryGraphics;
       ship.fxGroup = this.fxGroup;
 
-  // if(data.destination) {
-    // if(engine.Point.distance(data.destination, ship.position) > plotThreshold) {}
-    // if(data.moving) {
-    // ship.movement.plot(data.destination, data.current, data.previous);
-    // ship.movement.drawData();
-    // }
-  // }
-
   this.shipsGroup.add(ship);
 
   return ship;
-}
+};
+
+ShipManager.prototype.removeShips = function() {
+  var ship,
+      ships = this.ships;
+  for(var s in ships) {
+    ship = ships[s];
+    ship.destroy();
+  }
+};
 
 ShipManager.prototype.createShips = function() {
   // for(var key in iterator) {
@@ -178,14 +191,23 @@ ShipManager.prototype.createShips = function() {
 };
 
 ShipManager.prototype.destroy = function() {
-  this.game.removeListener('gui/sector/selected', this._selected);
-  this.game.net.socket.removeListener('sync', this._syncBind);
-  this.game.net.socket.removeListener('plotted', this._plottedBind);
-  this.game.net.socket.removeListener('disconnected', this._disonnectedBind);
+  var game = this.game,
+      auth = this.game.auth,
+      socket = this.socket;
+
+  game.removeListener('gui/sector/selected', this._selected);
+  auth.removeListener('user', this._user)
+  auth.removeListener('disconnected', this._disonnected);
+  
+  socket.removeListener('sync', this._syncBind);
+  socket.removeListener('plotted', this._plottedBind);
+  socket.removeListener('destroyed', this._destroyedBind);
 
   this.game = this.socket =
-    this._selected = this._syncBind = this._plottedBind =
-    this._disonnectedBind = undefined;
+    this._syncBind = this._plottedBind =
+    this._destroyedBind = undefined;
+
+  this.removeShips();
 };
 
 ShipManager.prototype._selected = function(pointer, rectangle) {
@@ -222,12 +244,12 @@ ShipManager.prototype._selected = function(pointer, rectangle) {
     this.trajectoryGraphics.alpha = 1.0;
 
     for(var i=0; i<selected.length; i++) {
-      if(selected[i].isPlayer) {
-        // this.game.net.socket.emit('plot', {
-        //   uuid: selected[i].uuid,
-        //   destination: point
-        // });
-      }
+      // if(selected[i].isPlayer) {
+        this.game.net.socket.emit('plot', {
+          uuid: selected[i].uuid,
+          destination: point
+        });
+      // }
     }
 
     this.trajectoryTween = this.game.tweens.create(this.trajectoryGraphics);
