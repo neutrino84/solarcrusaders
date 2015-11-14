@@ -15,6 +15,13 @@ Socket.prototype.init = function(next) {
   this.io.use(this.iosess(this.server.session));
   this.io.use(this.iorouter);
 
+  // add socket id to user
+  this.io.on('connection', function(socket) {
+    var session = socket.handshake.session,
+        user = session.user;
+    user.socket = socket.id;
+  });
+
   next();
 };
 

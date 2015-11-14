@@ -24,7 +24,7 @@ Routes.prototype.init = function(next) {
     self.authentication.register(req, res, next);
   });
 
-  this.express.post('/logout', function(req, res, next) {
+  this.express.get('/logout', function(req, res, next) {
     self.authentication.logout(req, res, next);
   });
 
