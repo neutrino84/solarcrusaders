@@ -10,7 +10,7 @@ var engine = require('engine'),
 
 function Alert(game, settings) {
   Pane.call(this, game, {
-    padding: [4],
+    padding: [4, 4, 8, 4],
     border: [0],
     layout: { gap: 0 },
     bg: {
@@ -95,8 +95,10 @@ function Alert(game, settings) {
 Alert.prototype = Object.create(Pane.prototype);
 Alert.prototype.constructor = Alert;
 
-Alert.prototype.alert = function(message) {
-  this.message.text = message;
+Alert.prototype.alert = function(message, confirmation, title) {
+  this.title.text = title || 'alert';
+  this.message.text = message || '';
+  this.button.text = confirmation || 'close';
   this.game.emit('gui/modal', true, this, true);
 };
 
