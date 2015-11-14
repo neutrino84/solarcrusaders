@@ -132,6 +132,34 @@ Group.prototype.forEach = function(callback, callbackContext, checkExists) {
   }
 };
 
+Group.prototype.remove = function (child, destroy, silent) {
+  if(destroy === undefined) { destroy = false; }
+  if(silent === undefined) { silent = false; }
+
+  if(this.children.length === 0 || this.children.indexOf(child) === -1) {
+    return false;
+  }
+
+  // if(!silent && child.events && !child.destroyPhase) {
+  //   child.events.onRemovedFromGroup$dispatch(child, this);
+  // }
+
+  var removed = this.removeChild(child);
+  // this.removeFromHash(child);
+
+  // this.updateZ();
+
+  // if(this.cursor === child) {
+  //   this.next();
+  // }
+
+  if(destroy && removed) {
+    removed.destroy(true);
+  }
+
+  return true;
+};
+
 Group.prototype.removeAll = function(destroy, silent) {
   if(destroy === undefined) { destroy = false; }
   if(silent === undefined) { silent = false; }
@@ -147,7 +175,7 @@ Group.prototype.removeAll = function(destroy, silent) {
     }
 
     removed = this.removeChild(this.children[0]);
-    this.removeFromHash(removed);
+    // this.removeFromHash(removed);
 
     if(destroy && removed) {
       removed.destroy(true);
