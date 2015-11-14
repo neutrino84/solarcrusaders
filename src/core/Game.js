@@ -1,13 +1,13 @@
 
 var Timeout = require('./Timeout'),
     Clock = require('./Clock'),
-    Model = require('../objects/Model'),
     SectorManager = require('./SectorManager');
 
 function Game(app) {
   this.app = app;
   this.winston = app.winston;
   this.database = app.database;
+  this.model = app.model;
   this.sockets = app.sockets;
 
   this.isBooted = false;
@@ -15,7 +15,6 @@ function Game(app) {
   this.forceSingleUpdate = false;
 
   this.clock = new Clock(this);
-  this.model = new Model(this);
   this.sectorManager = new SectorManager(this);
 
   this._deltaTime = 0;
@@ -35,7 +34,6 @@ Game.prototype.init = function(next) {
   this.kickstart = true;
 
   this.clock.init();
-  this.model.init();
   this.sectorManager.init();
 
   // calls game update

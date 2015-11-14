@@ -10,7 +10,17 @@ var Sanitation = {
   trimTrailingDash: /-$/g,
   trimLeadingDash: /^-/g,
   isLatin: /^[\w\d\s.,\-@]+$/,
-  languageKeyRegex: /\[\[[\w]+:.+\]\]/
+  languageKeyRegex: /\[\[[\w]+:.+\]\]/,
+  ipRegex: /[^\d\.]/g,
+  redisRegex: /:/g
+};
+
+Sanitation.ip = function(ip) {
+  return ip.replace(Sanitation.ipRegex, '');
+};
+
+Sanitation.redis = function(key) {
+  return key.replace(Sanitation.redisRegex, '');
 };
 
 Sanitation.slugify = function(str, preserveCase) {

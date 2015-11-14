@@ -92,8 +92,17 @@ LoginForm.prototype._login = function() {
       if(error) {
         switch(error) {
           case '[[error:invalid-credentials]]':
+            self.game.emit('gui/alert', 'you have entered invalid login credentials\nonly 5 login attempts allowed');
+            break;
+          case '[[error:user-banned]]':
+            self.game.emit('gui/alert', 'your account has been banned\nplease contact support');
+            break;
+          case '[[error:ip-locked]]':
+            self.game.emit('gui/alert', 'you are temporarily blocked for too many logins\nplease try again later');
+            break;
+          case '[[error:unknown-error]]':
           default:
-            self.game.emit('gui/alert', 'the servers have not yet opened\nplease check back soon');
+            self.game.emit('gui/alert', 'an unknown error has occurred\nplease try again later');
             break;
         }
       } else if(user) {
