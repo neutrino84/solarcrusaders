@@ -57,14 +57,13 @@ GUIState.prototype.preload = function() {
 };
 
 GUIState.prototype.create = function() {
-  var self = this,
-      game = this.game,
+  var game = this.game,
       name = 'the aurora';
       
   // this.leftPane = new LeftPane(game);
   this.rightPane = new RightPane(game);
   this.headerPane = new HeaderPane(game);
-  this.shipPane = new ShipPane(game, name);
+  // this.shipPane = new ShipPane(game, name);
   this.center = new Panel(game, new FlowLayout(Layout.LEFT, Layout.TOP, Layout.VERTICAL, 6));
   this.bottom = new Panel(game, new FlowLayout(Layout.CENTER, Layout.TOP, Layout.HORIZONTAL, 6));
   this.base = new Panel(game, new BorderLayout(0, 0));
@@ -82,7 +81,7 @@ GUIState.prototype.create = function() {
 
   this.center.setPadding(6);
   this.center.addPanel(Layout.STRETCH, this.headerPane);
-  this.center.addPanel(Layout.LEFT, this.shipPane);
+  // this.center.addPanel(Layout.LEFT, this.shipPane);
 
   this.bottom.addPanel(Layout.NONE, this.rightPane);
 
@@ -97,28 +96,27 @@ GUIState.prototype.create = function() {
   // add root to stage
   this.game.stage.addChild(this.root);
 
-  if(!this.auth.isUser()) {
-    this.center.visible = false;
-    this.registrationForm = new RegistrationForm(game);
-    this.loginForm = new LoginForm(game);
-    this.game.on('gui/loggedin', this._loggedin, this);
-  } else {
-    self.login();
-  }
+  // login gui
+  this.login();
 
   this.auth.on('user', this.login, this);
+  this.auth.on('disconnected', this._disconnected, this);
 
   this.game.on('gui/modal', this.modal, this);
-
-  // listen for fps problems
   // this.game.on('fpsProblem', this._fpsProblem, this);
 };
 
 GUIState.prototype.login = function() {
   // show login ui
-  this.center.visible = true;
-  this.center.invalidate();
-
+  if(this.auth.isUser()) {
+    this.center.visible = true;
+    this.center.invalidate();
+  } else {
+    this.center.visible = false;
+    this.registrationForm = new RegistrationForm(game);
+    this.loginForm = new LoginForm(game);
+    this.game.on('gui/loggedin', this._loggedin, this);
+  }
   if(this.modalComponent.visible) {
     this.modal(false);
   }
@@ -134,8 +132,6 @@ GUIState.prototype.toggle = function(force) {
   // repaint gui
   if(this.root.visible) {
     this.root.invalidate();
-    // this.root.validate();
-    // this.root.repaint();
   }
 }
 
@@ -162,8 +158,6 @@ GUIState.prototype.modal = function(show, content, lock) {
 GUIState.prototype.resize = function(width, height) {
   if(this.root !== undefined) {
     this.root.setSize(width, height);
-    // this.root.validate();
-    // this.root.repaint();
     this.root.invalidate();
   }
 };
@@ -173,6 +167,11 @@ GUIState.prototype._loggedin = function() {
   this.loginForm.destroy();
   this.loginForm = this.registrationForm = undefined;
   this.game.removeListener('gui/loggedin', this._loggedin);
+};
+
+GUIState.prototype._disconnected = function() {
+  var message = 'connection to the server has been lost\nattempting to reconnect';
+  this.alertComponent.alert(message, false, 'connection lost');
 };
 
 GUIState.prototype._fpsProblem = function() {
