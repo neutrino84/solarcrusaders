@@ -1,4 +1,6 @@
-var Authentication = require('./controllers/Authentication');
+
+var Authentication = require('./controllers/Authentication'),
+    Ping = require('./controllers/Ping');
 
 function Routes(app) {
   this.app = app;
@@ -6,6 +8,7 @@ function Routes(app) {
   this.iorouter = app.sockets.iorouter;
   
   this.authentication = new Authentication(this);
+  this.ping = new Ping(this);
 };
 
 Routes.prototype.constructor = Routes;
@@ -17,6 +20,7 @@ Routes.prototype.init = function(next) {
    * Initialize controllers
    */
   this.authentication.init();
+  this.ping.init();
 
   /*
    * API Calls
@@ -57,20 +61,6 @@ Routes.prototype.init = function(next) {
   /*
    * Core IO Routes
    */
-  this.iorouter.on('ping', function(sock, args, next) {
-    sock.emit('pong', { now: global.Date.now() });
-  });
-
-  this.iorouter.on('user', function(sockets, args, next) {
-    var sock = sockets.sock,
-        session = sock.handshake.session;
-    session.reload(function() {
-      sockets.emit('user', {
-        user: sockets.sock.handshake.session.user
-      });
-    });
-  });
-
   this.iorouter.on(function(sock, args) {
     self.app.winston.info('[Server] Uncaught socket message: ' + args[0]);
   });
