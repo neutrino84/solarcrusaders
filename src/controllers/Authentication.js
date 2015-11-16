@@ -23,13 +23,14 @@ function Authentication(routes) {
 Authentication.prototype.constructor = Authentication;
 
 Authentication.prototype.init = function() {
+  var self = this;
+
   this.routes.express.use(passport.initialize());
   this.routes.express.use(passport.session());
 
   passport.use(this.passport);
 
   // create guest user
-  var self = this;
   this.routes.express.get('/', function(req, res, next) {
     if(!req.session.user) {
       var guest = self.user.createDefaultData();
@@ -38,6 +39,17 @@ Authentication.prototype.init = function() {
       req.session.save();
     }
     next();
+  });
+
+  // send socket the session
+  this.routes.iorouter.on('user', function(sockets, args, next) {
+    var sock = sockets.sock,
+        session = sock.handshake.session;
+    sock.handshake.session.reload(function() {
+      sockets.emit('user', {
+        user: sockets.sock.handshake.session.user
+      });
+    });
   });
 };
 
