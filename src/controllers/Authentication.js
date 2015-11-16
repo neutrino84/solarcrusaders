@@ -12,11 +12,19 @@ function Authentication(routes) {
   this.routes = routes;
 
   this.user = app.model.user;
+  this.config = global.app.configuration.settings;
+  this.database = global.app.database;
+  this.server = global.app.server;
 
   this.password = new Password();
   this.passport = new LocalStrategy({ passReqToCallback: true }, this.localLogin.bind(this));
-  this.config = global.app.configuration.settings;
-  this.database = global.app.database;
+};
+
+Authentication.prototype.constructor = Authentication;
+
+Authentication.prototype.init = function() {
+  this.routes.express.use(passport.initialize());
+  this.routes.express.use(passport.session());
 
   passport.use(this.passport);
 
@@ -27,12 +35,11 @@ function Authentication(routes) {
       var guest = self.user.createDefaultData();
           guest.uid = 0;
       req.session.user = guest;
+      req.session.save();
     }
     next();
   });
 };
-
-Authentication.prototype.constructor = Authentication;
 
 Authentication.prototype.register = function(req, res, next) {
   var self = this,
@@ -66,12 +73,13 @@ Authentication.prototype.login = function(req, res, next) {
     }
 
     // store session
-    req.session.user = userData;
-    
     // serve response
-    res.json({
-      info: info,
-      user: userData
+    req.session.user = userData;
+    req.session.save(function() {
+      res.json({
+        info: info,
+        user: userData
+      });
     });
   })(req, res, next);
 };
@@ -85,7 +93,7 @@ Authentication.prototype.localLogin = function(req, username, password, next) {
 
   async.waterfall([
     function(next) {
-      self.logAttempt(ip, next);
+      self.user.logAttempt(ip, next);
     },
     function(next) {
       if(username && Validator.isEmailValid(username)) {
@@ -121,41 +129,12 @@ Authentication.prototype.localLogin = function(req, username, password, next) {
   ], next);
 };
 
-Authentication.prototype.logAttempt = function(ip, callback) {
-  var self = this,
-      database = this.database,
-      duration = 1000 * 60 * (self.config.lockoutDuration || 60);
-  database.exists('lockout:' + ip, function(err, exists) {
-    if(err) { return callback(err); }
-    if(exists) { return callback(new Error('[[error:ip-locked]]')); }
-
-    database.increment('attempts:' + ip, function(err, attempts) {
-      if(err) { return callback(err); }
-
-      if((self.config.maxLoginAttempts || 5) < attempts) {
-        // Lock out the account
-        database.set('lockout:' + ip, '', function(err) {
-          if(err) { return callback(err); }
-
-          database.delete('attempts:' + ip);            
-          database.pexpire('lockout:' + ip, duration);
-          
-          callback(new Error('[[error:ip-locked]]'));
-        });
-      } else {
-        database.pexpire('attempts:' + ip, duration);
-        callback();
-      }
-    });
-  });
-};
-
 Authentication.prototype.logout = function(req, res, next) {
   var uid, session = req.session;
   if(session.user) {
     uid = parseInt(session.user.uid, 10);
     if(uid > 0) {
-      this.database.sessionStore.destroy(req.sessionID, function(err) {
+      this.server.sessionStore.destroy(req.sessionID, function(err) {
         if(err) { return next(err); }        
         req.logout();
         res.json({ info: 'success' });

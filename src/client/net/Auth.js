@@ -11,7 +11,7 @@ function Auth(game) {
   this.socket.on('connect', this._login.bind(this));
   this.socket.on('disconnect', this._disconnected.bind(this));
 
-  this.game.on('gui/loggedin', this._loggedin, this);
+  this.game.on('gui/loggedin', this._login, this);
   this.game.on('gui/logout', this._logout, this);
 
   // if we connect really fast

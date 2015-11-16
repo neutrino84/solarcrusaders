@@ -96,7 +96,7 @@ GUIState.prototype.create = function() {
   // add root to stage
   this.game.stage.addChild(this.root);
 
-  // login gui
+  // login
   this.login();
 
   this.auth.on('user', this.login, this);
@@ -107,7 +107,6 @@ GUIState.prototype.create = function() {
 };
 
 GUIState.prototype.login = function() {
-  // show login ui
   if(this.auth.isUser()) {
     this.center.visible = true;
     this.center.invalidate();
@@ -124,7 +123,7 @@ GUIState.prototype.login = function() {
 
 GUIState.prototype.refresh = function() {
   this.toggle(true);
-}
+};
 
 GUIState.prototype.toggle = function(force) {
   this.root.visible = force !== undefined ? force : !this.root.visible;
@@ -133,7 +132,7 @@ GUIState.prototype.toggle = function(force) {
   if(this.root.visible) {
     this.root.invalidate();
   }
-}
+};
 
 GUIState.prototype.modal = function(show, content, lock) {
   if(typeof show !== 'boolean') { show = true; };

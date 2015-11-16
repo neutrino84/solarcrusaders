@@ -14,6 +14,11 @@ Routes.prototype.init = function(next) {
   var self = this;
 
   /*
+   * Initialize controllers
+   */
+  this.authentication.init();
+
+  /*
    * API Calls
    */
   this.express.post('/login', function(req, res, next) {
@@ -49,16 +54,20 @@ Routes.prototype.init = function(next) {
     res.json({ error: err.message });
   });
 
-  // Socket.IO Routes
+  /*
+   * Core IO Routes
+   */
   this.iorouter.on('ping', function(sock, args, next) {
-    sock.emit('pong', {
-      time: 0
-    });
+    sock.emit('pong', { now: global.Date.now() });
   });
 
-  this.iorouter.on('user', function(sock, args, next) {
-    sock.emit(args[0], {
-      user: sock.sock.handshake.session.user
+  this.iorouter.on('user', function(sockets, args, next) {
+    var sock = sockets.sock,
+        session = sock.handshake.session;
+    session.reload(function() {
+      sockets.emit('user', {
+        user: sockets.sock.handshake.session.user
+      });
     });
   });
 

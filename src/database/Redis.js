@@ -1,24 +1,17 @@
 
 var winston = require('winston'),
-    nconf = require('nconf'),
     path = require('path'),
-    redis = require('redis'),
-    session = require('express-session'),
-    connectRedis = require('connect-redis')(session);
+    redis = require('redis');
 
 function Redis(app) {
-  this.app = app;
+  this.app = global.app;
+  this.nconf = global.app.nconf;
 };
 
 Redis.prototype.constructor = Redis;
 
 Redis.prototype.init = function(next) {
   this.createConnection();
-  this.sessionStore = new connectRedis({
-    client: this.client,
-    ttl: 60 * 60 * 24 * 14,
-    db: parseInt(nconf.get('redis:database'), 10)
-  });
 
   if(typeof next === 'function') {
     this.client.once('ready', function() {
@@ -31,18 +24,18 @@ Redis.prototype.init = function(next) {
 Redis.prototype.createConnection = function(options) {
   var index,
       options = options || {},
-      host = nconf.get('redis:host'),
-      port = nconf.get('redis:port');
+      host = this.nconf.get('redis:host'),
+      port = this.nconf.get('redis:port');
   
   this.client = redis.createClient(port, host, options);
   this.client.on('error', this.error);
   this.client.on('end', this.end);
   
-  if(nconf.get('redis:password')) {
-    this.client.auth(nconf.get('redis:password'));
+  if(this.nconf.get('redis:password')) {
+    this.client.auth(this.nconf.get('redis:password'));
   }
   
-  index = parseInt(nconf.get('redis:database'), 10);
+  index = parseInt(this.nconf.get('redis:database'), 10);
   if(index) {
     this.client.select(index, function(error) {
       if(error) {
