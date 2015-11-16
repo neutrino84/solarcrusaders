@@ -16,12 +16,13 @@ var path = require('path'),
     Routes = require('./Routes');
 
 function Application() {
-  this.configuration = null;
   this.database = null;
+  this.configuration = null;
   this.model = null;
   this.server = null;
   this.sockets = null;
   this.game = null;
+  this.routes = null;
 };
 
 Application.prototype.constructor = Application;
