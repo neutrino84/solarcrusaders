@@ -28,6 +28,7 @@ Application.prototype.constructor = Application;
 
 Application.prototype.init = function() {
   global.env = process.env.NODE_ENV || 'production';
+  process.env.port = process.env.port || 4567;
 
   nconf.argv().env('__');
   nconf.file({ file: configFilePath });
