@@ -7,13 +7,16 @@ function ShipManager(game) {
   this.game = game;
   this.model = game.model;
   this.winston = game.winston;
-  this.io = game.sockets.io;
+  this.sockets = game.sockets;
   this.iorouter = game.sockets.iorouter;
 
   this.ships = {};
 
+  this.game.on('ship/add', this.add, this);
+  this.game.on('ship/remove', this.remove, this);
+
   // activate ai
-  this.game.clock.events.loop(10000, this._updateAI, this);
+  // this.game.clock.events.loop(10000, this._updateAI, this);
 };
 
 ShipManager.prototype.constructor = ShipManager;
@@ -22,19 +25,51 @@ ShipManager.prototype.init = function() {
   var self = this;
 
   // navigation
-  // this.iorouter.on('plot', this.plot.bind(this));
+  this.sockets.iorouter.on('plot', this.plot.bind(this));
 
   // generate npcs
-  this.generateRandomShips();
+  // this.generateRandomShips();
+};
+
+ShipManager.prototype.add = function(ship) {
+  if(this.ships[ship.uuid]) { return; }
+
+  var x = global.parseInt(ship.x, 10),
+      y = global.parseInt(ship.y, 10);
+
+  ship.game = this.game;
+  ship.throttle = global.parseInt(ship.throttle, 10);
+  ship.rotation = global.parseInt(ship.rotation, 10);
+  ship.config = engine.ShipConfiguration[ship.chasis];
+  ship.position = new engine.Point(x, y);
+  ship.movement = new client.Movement(ship);
+
+  this.ships[ship.uuid] = ship;
+};
+
+ShipManager.prototype.remove = function(ship) {
+  if(!this.ships[ship.uuid]) { return; }
+  delete this.ships[ship.uuid];
+
+  var s = this.ships[ship.uuid];
+      s.movement.destroy();
+
+  s.user = undefined;
+  s.movement = undefined;
+  s.game = undefined;
+  s.position = undefined;
+  s.config = undefined;
+};
+
+ShipManager.prototype.create = function(ship) {
+
 };
 
 ShipManager.prototype.plot = function(sock, args, next) {
-  var session = sock.sock.handshake.session,
-      user = session.user,
-      course = args[1],
-      destination = course.destination,
-      uuid = course.uuid,
-      ship = this.ships[uuid],
+  var user = sock.sock.handshake.session.user,
+      s = args[1],
+      destination = s.destination,
+      ship = this.ships[s.uuid],
       point = new engine.Point(destination.x, destination.y);
   
   if(ship.user && ship.user.uuid === user.uuid) {
@@ -45,7 +80,7 @@ ShipManager.prototype.plot = function(sock, args, next) {
 
     ship.movement.plot(destination, ship.movement.startPosition, previous);
 
-    this.io.sockets.emit('plotted', {
+    this.sockets.io.sockets.emit('plotted', {
       uuid: ship.uuid,
       destination: destination,
       throttle: ship.throttle,
@@ -58,7 +93,6 @@ ShipManager.prototype.plot = function(sock, args, next) {
 
 ShipManager.prototype.update = function() {
   var ship, previous, movement,
-      users = this.users,
       ships = this.ships,
       arr = [];
 
@@ -83,10 +117,7 @@ ShipManager.prototype.update = function() {
     });
   }
 
-  //.. TODO: create delay
-  // this.io.sockets.emit('sync', {
-  //   ships: arr
-  // });
+  this.sockets.io.sockets.emit('sync', { ships: arr });
 };
 
 ShipManager.prototype.generateRandomShips = function() {

@@ -22,12 +22,12 @@ SectorManager.prototype.init = function() {
   var self = this;
 
   this.userManager.init();
-  // this.shipManager.init();
+  this.shipManager.init();
 };
 
 SectorManager.prototype.update = function() {
   this.userManager.update();
-  // this.shipManager.update();
+  this.shipManager.update();
 };
 
 module.exports = SectorManager;
