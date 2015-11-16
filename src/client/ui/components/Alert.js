@@ -98,7 +98,11 @@ Alert.prototype.constructor = Alert;
 Alert.prototype.alert = function(message, confirmation, title) {
   this.title.text = title || 'alert';
   this.message.text = message || '';
-  this.button.text = confirmation || 'close';
+  if(confirmation === false) {
+    this.button.visible = false;
+  } else {
+    this.button.text = confirmation || 'close';
+  }
   this.game.emit('gui/modal', true, this, true);
 };
 
