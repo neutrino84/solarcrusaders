@@ -1,5 +1,6 @@
 
-var Timeout = require('./Timeout'),
+var EventEmitter = require('eventemitter3'),
+    Timeout = require('./Timeout'),
     Clock = require('./Clock'),
     SectorManager = require('./SectorManager');
 
@@ -21,8 +22,11 @@ function Game(app) {
   this._lastCount = 0;
   this._spiraling = 0;
   this._nextFpsNotification = 5000;
+
+  EventEmitter.call(this);
 };
 
+Game.prototype = Object.create(EventEmitter.prototype);
 Game.prototype.constructor = Game;
 
 Game.prototype.init = function(next) {
