@@ -6,6 +6,7 @@ function Routes(app) {
   this.app = app;
   this.express = app.server.express;
   this.iorouter = app.sockets.iorouter;
+  this.io = app.sockets.io;
   
   this.authentication = new Authentication(this);
   this.ping = new Ping(this);

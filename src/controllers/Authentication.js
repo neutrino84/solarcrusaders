@@ -11,9 +11,8 @@ var winston = require('winston'),
 function Authentication(routes) {
   this.routes = routes;
 
+  this.game = app.game;
   this.user = app.model.user;
-  this.config = global.app.configuration.settings;
-  this.database = global.app.database;
   this.server = global.app.server;
 
   this.password = new Password();
@@ -41,7 +40,15 @@ Authentication.prototype.init = function() {
     next();
   });
 
-  // send socket the session
+  // monitor socket disconnect
+  this.routes.io.on('connection', function(socket) {
+    self.game.emit('auth/login', socket.handshake.session.user);
+    socket.on('disconnect', function() {
+      self.game.emit('auth/logout', socket.handshake.session.user);
+    });
+  });
+
+  // send socket the session user
   this.routes.iorouter.on('user', function(sockets, args, next) {
     var sock = sockets.sock,
         session = sock.handshake.session;
@@ -78,13 +85,18 @@ Authentication.prototype.register = function(req, res, next) {
 };
 
 Authentication.prototype.login = function(req, res, next) {
+  var self = this;
   passport.authenticate('local', function(err, userData, info) {
     if(err) { return next(err); }
     if(!userData) {
       return next(new Error('[[error:no-credentials]]'));
     }
 
-    // store session
+    // notify game
+    self.game.emit('auth/logout', req.session.user);
+    self.game.emit('auth/login', userData);
+
+   // store session
     // serve response
     req.session.user = userData;
     req.session.save(function() {
@@ -142,12 +154,18 @@ Authentication.prototype.localLogin = function(req, username, password, next) {
 };
 
 Authentication.prototype.logout = function(req, res, next) {
-  var uid, session = req.session;
+  var uid, self = this,
+      session = req.session;
   if(session.user) {
     uid = parseInt(session.user.uid, 10);
     if(uid > 0) {
       this.server.sessionStore.destroy(req.sessionID, function(err) {
-        if(err) { return next(err); }        
+        if(err) { return next(err); }    
+
+        // notify game
+        self.game.emit('auth/logout', session.user);    
+        
+        // logout
         req.logout();
         res.json({ info: 'success' });
       });
