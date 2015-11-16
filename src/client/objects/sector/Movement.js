@@ -129,6 +129,19 @@ Movement.prototype.generateData = function(paths) {
   return data;
 };
 
+Movement.prototype.destroy = function() {
+  this.animation.stop();
+  this.animation.removeListener('complete', this._movementComplete);
+  this.animation.destroy();
+
+  this.parent = undefined;
+  this.game = undefined;
+  this.config = undefined;
+  this.throttle = undefined;
+  this.destination = undefined;
+  this.animation = undefined;
+};
+
 Movement.prototype.drawData = function(color) {
   if(!this.trajectoryGraphics) { return; }
   

@@ -134,10 +134,10 @@ Animation.prototype.updateCurrentFrame = function() {
 Animation.prototype.destroy = function() {
   if(!this._frameData) { return; }
 
-  this.game = null;
-  this._parent = null;
-  this._frameData = null;
-  this.currentFrame = null;
+  this.game = undefined;
+  this._parent = undefined;
+  this._frameData = undefined;
+  this.currentFrame = undefined;
   this.isPlaying = false;
 };
 
