@@ -3,7 +3,7 @@
     "name": "solarcrusaders",
     "version": "0.0.1",
     "dependencies": {
-        "pixi.js": "3.0.5"
+        "pixi.js": "dev"
     },
     "devDependencies": {}
 }
