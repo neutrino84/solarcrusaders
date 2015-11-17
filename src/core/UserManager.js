@@ -36,6 +36,7 @@ UserManager.prototype.add = function(user) {
       if(err) { throw new Error(err); }
       for(var s in ships) {
         ships[s].user = user;
+        u.ships.push(ships[s]);
         self.game.emit('ship/add', ships[s]);
       }
     });

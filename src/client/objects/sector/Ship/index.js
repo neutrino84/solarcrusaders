@@ -1,10 +1,11 @@
 
 var engine = require('engine'),
+    TextView = require('../../../ui/views/TextView'),
     Movement = require('../Movement'),
     // Trails = require('./Trails'),
     EngineCore = require('./EngineCore'),
     ShieldGenerator = require('./ShieldGenerator'),
-    TargetingComputer = require('./TargetingComputer');//,
+    TargetingComputer = require('./TargetingComputer');
 
     // ExplosionEmitter = require('../emitters/ExplosionEmitter'),
     // ShockwaveEmitter = require('../emitters/ShockwaveEmitter');
@@ -27,12 +28,8 @@ function Ship(manager, key) {
   this.movement = new Movement(this);
   this.circle = new engine.Circle(this.pivot.x, this.pivot.y, global.Math.sqrt(this.getBounds().perimeter * 3));
 
-  this.health = 100;
-
-  this.selected = false;
-  this.follow = null;
-  this.isPlayer = false;
-  this.autopilotPositionInView = global.Math.random() > 0.5 ? true : false;
+  this._selected = false;
+  this._hull = 100;
 
   // input activation
   // this.inputEnabled = true;
@@ -89,10 +86,15 @@ Ship.prototype.boot = function() {
   if(this.name === 'vessel-x01') {
     this.shieldGenerator.create();
   }
-};
 
-Ship.prototype.autopilot = function() {
-  // this.autoPilotTimer = this.manager.game.clock.events.loop(this.isPlayer ? 7500 : 5000, this.plotRandomCourse, this);
+  if(this.username) {
+    this.label = new TextView(this.game, this.username);
+    this.label.pivot.set(this.label.width / 2, -this.height / 2 - 12);
+    this.label.tint = this.isPlayer ? 0x339933 : 0x336699;
+    this.fxGroup.addChild(this.label);
+  }
+
+  this.deselect();
 };
 
 Ship.prototype.update = function() {
@@ -103,6 +105,10 @@ Ship.prototype.update = function() {
   movement.update();
 
   if(this.renderable && !this.disabled) {
+    if(this.label) {
+      this.label.position.set(this.x, this.y);
+    }
+
     speed = movement.speed;
 
     // this.trails.update(); // performance killer
@@ -115,17 +121,24 @@ Ship.prototype.update = function() {
 };
 
 Ship.prototype.select = function() {
-  this.selected = true;
+  this._selected = true;
   this.graphics.clear();
-  this.graphics.lineStyle(3.0 / this.scale.x, this.isPlayer ? 0x33FF66 : 0x336699, this.isPlayer ? 0.5 : 0.5);
+  this.graphics.lineStyle(3.0 / this.scale.x, this.isPlayer ? 0x33FF66 : 0x336699, this.isPlayer ? 0.6 : 0.5);
   this.graphics.beginFill(this.isPlayer ? 0x33FF66 : 0x336699, 0.25);
   this.graphics.drawCircle(this.pivot.x, this.pivot.y, this.width / this.scale.x / 1.8); //(0, 0, this.width / this.scale.x, this.height / this.scale.y);
   this.graphics.endFill();
 };
 
 Ship.prototype.deselect = function() {
-  this.selected = false;
+  this._selected = false;
   this.graphics.clear();
+
+  if(this.isPlayer) {
+    this.graphics.lineStyle(2.0 / this.scale.x, 0x33FF66, 0.4);
+    this.graphics.beginFill(0x33FF66, 0.1);
+    this.graphics.drawCircle(this.pivot.x, this.pivot.y, this.width / this.scale.x / 1.8);
+    this.graphics.endFill();
+  }
 };
 
 Ship.prototype.damage = function(position) {
@@ -201,37 +214,31 @@ Ship.prototype.damage = function(position) {
   this.addChild(damage);
 };
 
-Ship.prototype.plotRandomCourse = function(force) {
-  // var circle, position,
-  //     follow = this.follow;
-  // if(follow) {
-  //   circle = new engine.Circle(follow.position.x, follow.position.y, 128);
-  //   if(!this.selected && !circle.contains(this.x, this.y)) {
-  //     this.movement.plot(circle.random());
-  //   }
-  // } else if(this.selected === false) {
-  //   if(Math.random() > 0.75 || force) {
-  //     this.movement.throttle = this.isPlayer ? 3.0 : global.Math.random() * 2.0 + 1.0;
-  //     this.movement.plot(
-  //       this.autopilotPositionInView ? this._generateRandomPositionInView() : this._generateRandomPosition()
-  //     );
-  //   }
-  // }
+Ship.prototype.destroy = function() {
+  this.manager = undefined;
+  this.game = undefined;
+  this.config = undefined;
+  this.movement = undefined;
+  this.circle = undefined;
+
+  if(this.label) {
+    this.label.destroy();
+  }
+
+  engine.Sprite.prototype.destroy.call(this);
 };
 
-Ship.prototype._generateRandomPositionInView = function() {
-  // for debug purposes only
-  // TODO: make this actually use camera.view
-  var randX = global.Math.random() * 1024 - 512,
-      randY = global.Math.random() * 1024 - 512;
-  return new engine.Point(2048 + randX, 2048 + randY);
-};
+Object.defineProperty(Ship.prototype, 'isPlayer', {
+  get: function() {
+    return this.user && this.game.auth.user.uuid === this.user;
+  }
+});
 
-Ship.prototype._generateRandomPosition = function() {
-  var randX = global.Math.random() * 2048 - 1024,
-      randY = global.Math.random() * 2048 - 1024;
-  return new engine.Point(2048 + randX, 2048 + randY);
-};
+Object.defineProperty(Ship.prototype, 'selected', {
+  get: function() {
+    return this._selected;
+  }
+});
 
 Object.defineProperty(Ship.prototype, 'trajectoryGraphics', {
   set: function(value) {

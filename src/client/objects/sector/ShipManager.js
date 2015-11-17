@@ -13,7 +13,7 @@ function ShipManager(game) {
   this.trajectoryGroup = new engine.Group(game);
   
   this.fxGroup = new engine.Group(game);
-  this.fxGroup.blendMode = engine.BlendMode.ADD;
+  // this.fxGroup.blendMode = engine.BlendMode.ADD;
 
   // trajectoryGraphics
   this.trajectoryGraphics = new engine.Graphics(game);
@@ -21,12 +21,11 @@ function ShipManager(game) {
 
   // ships
   this.ships = {};
-  this.playerShips = {};
 
   // add ships to world
+  game.world.add(this.trajectoryGroup);
   game.world.add(this.shipsGroup);
   game.world.add(this.fxGroup);
-  game.world.add(this.trajectoryGroup);
 
   // stop follow
   game.input.once('keydown', function() {
@@ -34,7 +33,6 @@ function ShipManager(game) {
   }, this);
 
   // authentication
-  game.auth.on('user', this._user, this);
   game.auth.on('invalidated', this._invalidated, this);
 
   // networking
@@ -49,10 +47,6 @@ function ShipManager(game) {
 
 ShipManager.prototype = Object.create(EventEmitter.prototype);
 ShipManager.prototype.constructor = ShipManager;
-
-ShipManager.prototype._user = function(response) {
-  this.user = response.user || {};
-};
 
 ShipManager.prototype._sync = function(data) {
   var ship, cached,
@@ -111,30 +105,33 @@ ShipManager.prototype.createShip = function(data) {
       plotThreshold = ship.config.oribit.radius * 2;
       
       ship.uuid = data.uuid;
+      ship.user = data.user;
+      ship.username = data.username;
+      ship.fxGroup = this.fxGroup;
+
       ship.boot();
 
       ship.movement.throttle = data.throttle;
       ship.position.set(data.current.x, data.current.y);
       ship.rotation = data.rotation;
       ship.trajectoryGraphics = this.trajectoryGraphics;
-      ship.fxGroup = this.fxGroup;
 
   this.shipsGroup.add(ship);
 
   return ship;
 };
 
-ShipManager.prototype.removeShip = function() {
-  // ship = ships[s];
-  // ship.destroy();
+ShipManager.prototype.removeShip = function(ship) {
+  var s = this.ships[ship.uuid];
+      s.destroy();
+  delete this.ships[ship.uuid];
 };
 
 ShipManager.prototype.removeShips = function() {
   var ship,
       ships = this.ships;
   for(var s in ships) {
-    ship = ships[s];
-    ship.destroy();
+    this.removeShip(ships[s]);
   }
 };
 
@@ -208,8 +205,8 @@ ShipManager.prototype._plotted = function(data) {
   }
 };
 
-ShipManager.prototype._destroyed = function(data) {
-  // remove a ship
+ShipManager.prototype._destroyed = function(ship) {
+  this.removeShip(ship);
 };
 
 ShipManager.prototype._invalidated = function() {
@@ -217,30 +214,27 @@ ShipManager.prototype._invalidated = function() {
 };
 
 ShipManager.prototype._selected = function(pointer, rectangle) {
-  var point,
-      selected = [],
+  var point, selected = [], ship,
       camera = this.game.camera,
       playerShip = this.playerShip;
 
-  this.shipsGroup.forEach(
-    function(child) {
-      if(pointer.button === engine.Mouse.LEFT_BUTTON) {
-        if(child.overlap(rectangle)) {
-          child.select();
-          if(!child.isPlayer) {
-            //.. TODO: manage targeted
-            // playerShip.target = child;
-            // child.target = playerShip;
-          }
-        } else {
-          child.deselect();
-        }
-      }
-      if(child.selected && pointer.button === engine.Mouse.RIGHT_BUTTON && rectangle.volume <= 300) {
-        selected.push(child);
+  this.shipsGroup.forEach(function(child) {
+    if(pointer.button === engine.Mouse.LEFT_BUTTON) {
+      if(child.overlap(rectangle)) {
+        child.select();
+        // if(!child.isPlayer) {
+          //.. TODO: manage targeted
+          // playerShip.target = child;
+          // child.target = playerShip;
+        // }
+      } else {
+        child.deselect();
       }
     }
-  );
+    if(child.selected && pointer.button === engine.Mouse.RIGHT_BUTTON && rectangle.volume <= 300) {
+      selected.push(child);
+    }
+  });
 
   if(selected.length > 0) {
     point = game.world.worldTransform.applyInverse(rectangle);
@@ -250,12 +244,18 @@ ShipManager.prototype._selected = function(pointer, rectangle) {
     this.trajectoryGraphics.alpha = 1.0;
 
     for(var i=0; i<selected.length; i++) {
-      // if(selected[i].isPlayer) {
+      ship = selected[i];
+      if(ship.isPlayer) {
+        ship.movement.plot(point);
         this.game.net.socket.emit('plot', {
-          uuid: selected[i].uuid,
+          uuid: ship.uuid,
           destination: point
         });
-      // }
+        
+        if(ship.movement.valid) {
+          ship.movement.drawDebug();
+        }
+      }
     }
 
     this.trajectoryTween = this.game.tweens.create(this.trajectoryGraphics);
