@@ -74,6 +74,9 @@
           }
         }
       ]
+    },
+    "shields": {
+      
     }
   },
   "vessel-x02": {
@@ -91,46 +94,50 @@
         "rotation": { "min": -6, "max": 6 },
         "vector": { "x": 0.5, "y": 0.5 }
       },
-      "glows": [{
-        "sprite": "engine-glow",
-        "tint": "0xFF0000",
-        "scale": { "startX": 0.1, "endX": 0.2, "startY": 0.35, "endY": 0.45 },
-        "position": { "x": 220, "y": 109 },
-        "rotation": -10
-      }, {
-        "sprite": "engine-glow",
-        "tint": "0xFF0000",
-        "scale": { "startX": 0.1, "endX": 0.2, "startY": 0.35, "endY": 0.45 },
-        "position": { "x": 220, "y": 149 },
-        "rotation": 10
-      },{
-        "sprite": "engine-glow",
-        "tint": "0xFF0000",
-        "scale": { "startX": 0.1, "endX": 0.2, "startY": 0.5, "endY": 0.45 },
-        "position": { "x": 230, "y": 124 },
-        "rotation": -10
-      }, {
-        "sprite": "engine-glow",
-        "tint": "0xFF0000",
-        "scale": { "startX": 0.1, "endX": 0.2, "startY": 0.5, "endY": 0.45 },
-        "position": { "x": 230, "y": 134 },
-        "rotation": 10
-      }, {
-        "sprite": "engine-glow",
-        "tint": "0xFF0000",
-        "scale": { "startX": 0.05, "endX": 0.4, "startY": 0.35, "endY": 0.6 },
-        "position": { "x": 230, "y": 129 },
-        "rotation": 0
-      }],
-      "trails": [{
-        "position": { "x": 220, "y": 90 }
-      }, {
-        "position": { "x": 220, "y": 170 }
-      },{
-        "position": { "x": 160, "y": 54 }
-      }, {
-        "position": { "x": 160, "y": 202 }
-      }]
+      "glows": [
+        {
+          "sprite": "engine-glow",
+          "tint": "0xFF0000",
+          "scale": { "startX": 0.1, "endX": 0.2, "startY": 0.35, "endY": 0.45 },
+          "position": { "x": 220, "y": 109 },
+          "rotation": -10
+        }, {
+          "sprite": "engine-glow",
+          "tint": "0xFF0000",
+          "scale": { "startX": 0.1, "endX": 0.2, "startY": 0.35, "endY": 0.45 },
+          "position": { "x": 220, "y": 149 },
+          "rotation": 10
+        },{
+          "sprite": "engine-glow",
+          "tint": "0xFF0000",
+          "scale": { "startX": 0.1, "endX": 0.2, "startY": 0.5, "endY": 0.45 },
+          "position": { "x": 230, "y": 124 },
+          "rotation": -10
+        }, {
+          "sprite": "engine-glow",
+          "tint": "0xFF0000",
+          "scale": { "startX": 0.1, "endX": 0.2, "startY": 0.5, "endY": 0.45 },
+          "position": { "x": 230, "y": 134 },
+          "rotation": 10
+        }, {
+          "sprite": "engine-glow",
+          "tint": "0xFF0000",
+          "scale": { "startX": 0.05, "endX": 0.4, "startY": 0.35, "endY": 0.6 },
+          "position": { "x": 230, "y": 129 },
+          "rotation": 0
+        }
+      ],
+      "trails": [
+        {
+          "position": { "x": 220, "y": 90 }
+        }, {
+          "position": { "x": 220, "y": 170 }
+        },{
+          "position": { "x": 160, "y": 54 }
+        }, {
+          "position": { "x": 160, "y": 202 }
+        }
+      ]
     },
     "targeting": {
       "turrets": [
@@ -156,10 +163,13 @@
           }
         }
       ]
+    },
+    "shields": {
+      
     }
   },
   "vessel-x03": {
-    "oribit": { "radius": 256 },
+    "oribit": { "radius": 96 },
     "size": 1.0,
     "speed": 2.0,
     "engine": {
@@ -192,6 +202,9 @@
     },
     "targeting": {
       "turrets": []
+    },
+    "shields": {
+      
     }
   },
   "vessel-x04": {
@@ -212,13 +225,16 @@
       "glows": [{
         "sprite": "engine-glow",
         "tint": "0xFF6633",
-        "scale": { "startX": 0.02, "endX": 0.14, "startY": 0.3, "endY": 0.35 },
-        "position": { "x": 103, "y": 64 },
+        "scale": { "startX": 1.0, "endX": 1.0, "startY": 1.0, "endY": 1.0 },
+        "position": { "x": 102, "y": 64 },
         "rotation": 0
       }]
     },
     "targeting": {
       "turrets": []
+    },
+    "shields": {
+      
     }
   },
   "vessel-x05": {
@@ -263,6 +279,9 @@
     },
     "targeting": {
       "turrets": []
+    },
+    "shields": {
+      
     }
   }
 }
