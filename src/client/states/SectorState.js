@@ -68,13 +68,22 @@ SectorState.prototype.preload = function() {
 // loadRender = function() {};
 
 SectorState.prototype.create = function() {
-  var sensitivity = 1000,
+  var self = this,
+      sensitivity = 1000,
       mouse = game.input.mouse;
       mouse.capture = true;
       mouse.mouseWheelCallback = function(event) {
+        // disable mousewheel
+        return;
+
         var delta = event.deltaY / sensitivity,
             scale = engine.Math.clamp(this.world.scale.x - delta, 0.5, 1.2),
             gridLayer = global.state.gridLayer;
+
+        // stop zoom
+        if(self.zoom.isRunning) {
+          self.zoom.stop();
+        }
 
         this.world.scale.set(scale, scale);
         
@@ -90,7 +99,7 @@ SectorState.prototype.create = function() {
   this.gui = game.state.getBackgroundState('gui');
 
   this.game.world.setBounds(0, 0, 4096, 4096);
-  this.game.world.scale.set(0.5, 0.5);
+  this.game.world.scale.set(1.0, 1.0);
 
   this.game.camera.bounds = null;
   this.game.camera.focusOnXY(2048, 2048);
@@ -115,15 +124,15 @@ SectorState.prototype.create = function() {
   //   }, 2000);
   // }
 
-  // start zoom in
-  var zoom = this.game.tweens.create(this.game.world.scale);
-      zoom.to({x: 1.0, y: 1.0}, 8000, engine.Easing.Quadratic.InOut, true);
-      zoom.on('complete', function() {
-        this.gridLayer.visible = true;
+  // // start zoom in
+  // this.zoom = this.game.tweens.create(this.game.world.scale);
+  // this.zoom.to({x: 1.0, y: 1.0}, 8000, engine.Easing.Quadratic.InOut, true);
+  // this.zoom.on('complete', function() {
+  //   this.gridLayer.visible = true;
 
-        // share buttons
-        // this.share = new Share();
-      }, this);
+  //   // share buttons
+  //   // this.share = new Share();
+  // }, this);
 
   // show gui
   this.gui && this.gui.toggle(true);
@@ -134,7 +143,7 @@ SectorState.prototype.createGrid = function() {
   this.grid = new engine.Tilemap(this.game, 'sector');
   this.grid.addTilesetImage('sector');
   this.gridLayer = this.grid.createLayer('grid', this.game.width, this.game.height);
-  this.gridLayer.visible = false;
+  // this.gridLayer.visible = false;
 };
 
 SectorState.prototype.createSector = function() {
