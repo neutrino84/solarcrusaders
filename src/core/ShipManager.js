@@ -1,7 +1,8 @@
 
 var uuid = require('uuid'),
     engine = require('engine')
-    client = require('client');
+    client = require('client'),
+    Utils = require('../utils');
 
 function ShipManager(game) {
   this.game = game;
@@ -14,6 +15,7 @@ function ShipManager(game) {
 
   this.game.on('ship/add', this.add, this);
   this.game.on('ship/remove', this.remove, this);
+  this.game.on('ship/create', this.create, this);
 
   // activate ai
   this.game.clock.events.loop(10000, this._updateAI, this);
@@ -66,8 +68,20 @@ ShipManager.prototype.remove = function(ship) {
   });
 };
 
-ShipManager.prototype.create = function(ship) {
-
+ShipManager.prototype.create = function(ship, position, chasis) {
+  var s = this.model.ship,
+      def = s.createDefaultData();
+  if(chasis !== undefined) { ship.chasis = chasis; }
+  switch(position) {
+    default:
+    case 'random':
+      position = this._generateRandomPositionInView();
+    case Object:
+      ship.x = position.x;
+      ship.y = position.y;
+      break;
+  }
+  this.add(Utils.extend(ship, def, false));
 };
 
 ShipManager.prototype.plot = function(sock, args, next) {
@@ -117,7 +131,7 @@ ShipManager.prototype.generateRandomShips = function() {
         'vessel-x01': { count: 1 },
         'vessel-x02': { count: 1 },
         'vessel-x03': { count: 1 },
-        'vessel-x04': { count: 15 },
+        'vessel-x04': { count: 20 },
         'vessel-x05': { count: 5 }
       };
   for(var key in iterator) {
@@ -130,7 +144,7 @@ ShipManager.prototype.generateRandomShips = function() {
         y: position.y,
         rotation: global.Math.random() * global.Math.PI,
         chasis: key,
-        throttle: config.speed * (global.Math.random() * 4 + 1)
+        throttle: config.speed
       };
       this.add(data);
     }
@@ -169,9 +183,9 @@ ShipManager.prototype._updateAI = function() {
 
 ShipManager.prototype._generateRandomPositionInView = function() {
   // for debug purposes only
-  // var randX = global.Math.random() * 2048 - 1024,
-  //     randY = global.Math.random() * 2048 - 1024;
-  // return new engine.Point(2048 + randX, 2048 + randY);
+  var randX = global.Math.random() * 1024 - 512,
+      randY = global.Math.random() * 1024 - 512;
+  return new engine.Point(2048 + randX, 2048 + randY);
 };
 
 ShipManager.prototype._generateRandomPosition = function() {

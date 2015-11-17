@@ -5,21 +5,29 @@ var uuid = require('uuid'),
 
 module.exports = function(Ship) {
   Ship.DefaultData = {
-    //.. not read
+    sector: 1,
+    chasis: 'vessel-x04',
+    x: 2048,
+    y: 2048,
+    throttle: 1.0,
+    rotation: 0.0
   }; 
 
-  Ship.createDefaultData = function() {
-    var shipData = Utils.extend({}, Ship.DefaultData);
+  Ship.prototype.createDefaultData = function() {
+    var shipData = Utils.extend({}, Ship.DefaultData); // copy
         shipData.uuid = uuid.v4();
     return shipData;
   };
 
-  Ship.create = function(data, callback) {
-    var shipData = Ship.createDefaultData();
+  Ship.prototype.create = function(data, callback) {
+    var shipData = Utils.extend(data, Ship.createDefaultData());
 
+    //.. TODO
+
+    callback(shipData);
   };
 
-  Ship.persist = function(shipData) {
+  Ship.prototype.persist = function(shipData) {
     var self = this;
     async.waterfall([
       function(next) {

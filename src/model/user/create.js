@@ -25,6 +25,8 @@ module.exports = function(User) {
     var userData = Utils.extend({}, User.DefaultData);
         userData.joindate = global.Date.now();
         userData.uuid = uuid.v4();
+        userData.username = 'guest-' +
+          global.Math.floor(global.Math.random() * 10000000);
     return userData;
   };
 

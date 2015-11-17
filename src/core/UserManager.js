@@ -27,7 +27,7 @@ UserManager.prototype.init = function() {
 UserManager.prototype.add = function(user) {
   if(this.users[user.uuid]) { return; }
 
-  var self = this,
+  var self = this, ship,
       u = this.users[user.uuid] = user;
       u.ships = [];
 
@@ -35,28 +35,18 @@ UserManager.prototype.add = function(user) {
     this.model.ship.getShipsByUid(user.uid, function(err, ships) {
       if(err) { throw new Error(err); }
       for(var s in ships) {
-        ships[s].user = user;
-        u.ships.push(ships[s]);
-        self.game.emit('ship/add', ships[s]);
+        ship = ships[s];
+        ship.user = user;
+        u.ships.push(ship);
+        self.game.emit('ship/add', ship);
       }
     });
   } else {
-  //   uid = uuid.v4();
-  //   ship = self.ships[uid] = {
-  //     uuid: uid,
-  //     chasis: 'vessel-x04',
-  //     sector: 1
-  //   };
-  //   ship.user = object;
-  //   ship.game = self.game;
-  //   ship.human = true;
-  //   ship.throttle = engine.ShipConfiguration[ship.chasis].speed;
-  //   ship.position = new engine.Point(2048, 2048);
-  //   ship.rotation = global.Math.random() * global.Math.PI;
-  //   ship.config = engine.ShipConfiguration[ship.chasis];
-  //   ship.movement = new client.Movement(ship);
-
-  //   object.ships.push(ship.uuid);
+    ship = {};
+    ship.user = user;
+    ship.throttle = 3.0;
+    u.ships.push(ship);
+    self.game.emit('ship/create', ship);
   }
 };
 
