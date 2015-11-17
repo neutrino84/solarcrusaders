@@ -96,32 +96,10 @@ SectorState.prototype.create = function() {
   game.camera.bounds = null;
   game.camera.focusOnXY(2048, 2048);
 
-  //.. tilemap test
-  this.grid = new engine.Tilemap(game, 'sector');
-  this.grid.addTilesetImage('sector');
-  this.gridLayer = this.grid.createLayer('grid', game.width, game.height);
-  this.gridLayer.visible = false;
-  //..
-
   // create sector
+  this.createGrid();
   this.createSector();
-  // this.createStations();
-  this.createShips();
-
-  //.. test culling
-  // this.ship = new engine.Sprite(game, 'vessel-x02');
-  // this.ship.position.set(2048, 2048);
-  // this.ship.pivot.set(128, 128);
-  // this.ship.autoCull = true;
-  // this.ship.rotation = global.Math.PI;
-  // game.world.add(this.ship);
-
-  //.. ship test
-  // this.shipTilemap = new engine.Tilemap(game, 'ship');
-  // this.shipTilemap.addTilesetImage('deck');
-  // this.shipTilemap.addTilesetImage('wall');
-  // this.shipTilemapLayer = this.shipTilemap.createSprite('deck');
-  //..
+  this.createManagers();
 
   // AUDIO TEST
   this.sound = game.sound.add('background', 0.5, true);
@@ -152,35 +130,25 @@ SectorState.prototype.create = function() {
   this.gui && this.gui.toggle(true);
 };
 
+SectorState.prototype.createGrid = function() {
+  this.grid = new engine.Tilemap(this.game, 'sector');
+  this.grid.addTilesetImage('sector');
+  this.gridLayer = this.grid.createLayer('grid', this.game.width, this.game.height);
+  this.gridLayer.visible = false;
+};
+
 SectorState.prototype.createSector = function() {
-  var game = this.game;
-
-  this.background = new Background(game, game.width, game.height);
+  this.background = new Background(this.game, this.game.width, this.game.height);
   
-  self.planet = new Planet(game, 'eamon');
-  self.planet.position.set(0, 0);
+  this.planet = new Planet(this.game, 'eamon');
+  this.planet.position.set(0, 0);
   
-  game.world.background.add(self.planet);
-
-  game.stage.addChildAt(this.background, 0);
+  this.game.world.background.add(this.planet);
+  this.game.stage.addChildAt(this.background, 0);
 };
 
-SectorState.prototype.createShips = function() {
-  // networking and ship movement
+SectorState.prototype.createManagers = function() {
   this.shipManager = new ShipManager(this.game);
-  // this.shipManager.createShips();
-  // this.shipManager.startAI();
-};
-
-SectorState.prototype.createStations = function() {
-  var game = this.game;
-
-  this.station1 = new engine.Sprite(game, 'station-mining');
-  this.station1.pivot.set(256, 256);
-  this.station1.position.set(2048 + 256, 2048);
-
-  // game.world.add(this.station1);
-  game.world.foreground.add(this.station1);
 };
 
 SectorState.prototype.update = function() {
