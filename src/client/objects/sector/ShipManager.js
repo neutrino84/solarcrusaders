@@ -57,7 +57,7 @@ ShipManager.prototype._sync = function(data) {
     cached = this.ships[ship.uuid];
     if(cached === undefined) {
       cached = this.ships[ship.uuid] = this.createShip(ship);
-    } else if(engine.Point.distance(ship.current, cached.position) > 64) {
+    } else if(engine.Point.distance(ship.current, cached.position) > 128) {
       cached.rotation = ship.rotation;
       cached.position.set(ship.current.x, ship.current.y);
       cached.movement.throttle = ship.throttle;
