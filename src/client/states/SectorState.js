@@ -69,7 +69,6 @@ SectorState.prototype.preload = function() {
 
 SectorState.prototype.create = function() {
   var sensitivity = 1000,
-      game = this.game,
       mouse = game.input.mouse;
       mouse.capture = true;
       mouse.mouseWheelCallback = function(event) {
@@ -90,11 +89,11 @@ SectorState.prototype.create = function() {
   // store gui reference
   this.gui = game.state.getBackgroundState('gui');
 
-  game.world.setBounds(0, 0, 4096, 4096);
-  game.world.scale.set(0.5, 0.5);
+  this.game.world.setBounds(0, 0, 4096, 4096);
+  this.game.world.scale.set(0.5, 0.5);
 
-  game.camera.bounds = null;
-  game.camera.focusOnXY(2048, 2048);
+  this.game.camera.bounds = null;
+  this.game.camera.focusOnXY(2048, 2048);
 
   // create sector
   this.createGrid();
@@ -117,7 +116,7 @@ SectorState.prototype.create = function() {
   // }
 
   // start zoom in
-  var zoom = game.tweens.create(game.world.scale);
+  var zoom = this.game.tweens.create(this.game.world.scale);
       zoom.to({x: 1.0, y: 1.0}, 8000, engine.Easing.Quadratic.InOut, true);
       zoom.on('complete', function() {
         this.gridLayer.visible = true;
@@ -128,6 +127,7 @@ SectorState.prototype.create = function() {
 
   // show gui
   this.gui && this.gui.toggle(true);
+  this.game.emit('gui/message', 'ubaidia prime');
 };
 
 SectorState.prototype.createGrid = function() {

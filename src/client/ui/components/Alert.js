@@ -81,7 +81,7 @@ function Alert(game, settings) {
   this.title = new Label(game, 'alert', this.settings.title);
   this.message = new Label(game, '', this.settings.message);
   this.button = new Button(game, 'close', this.settings.button);
-  this.button.on('inputUp', this.close, this);
+  this.button.on('inputUp', this._close, this);
 
   this.addView(this.bg);
 
@@ -89,13 +89,13 @@ function Alert(game, settings) {
   this.addPanel(Layout.USE_PS_SIZE, this.message);
   this.addPanel(Layout.USE_PS_SIZE, this.button);
 
-  this.game.on('gui/alert', this.alert, this);
+  this.game.on('gui/alert', this._alert, this);
 };
 
 Alert.prototype = Object.create(Pane.prototype);
 Alert.prototype.constructor = Alert;
 
-Alert.prototype.alert = function(message, confirmation, title) {
+Alert.prototype._alert = function(message, confirmation, title) {
   this.title.text = title || 'alert';
   this.message.text = message || '';
   if(confirmation === false) {
@@ -106,7 +106,7 @@ Alert.prototype.alert = function(message, confirmation, title) {
   this.game.emit('gui/modal', true, this, true);
 };
 
-Alert.prototype.close = function() {
+Alert.prototype._close = function() {
   this.game.emit('gui/modal', false);
 };
 

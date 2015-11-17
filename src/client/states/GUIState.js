@@ -14,6 +14,7 @@ var engine = require('engine'),
     ShipPane = require('../ui/panes/ShipPane'),
       
     Alert = require('../ui/components/Alert'),
+    AlertMessage = require('../ui/components/AlertMessage'),
     Modal = require('../ui/components/Modal'),
     Selection = require('../ui/components/Selection'),
 
@@ -21,6 +22,8 @@ var engine = require('engine'),
     LoginForm = require('../ui/html/LoginForm');
 
 function GUIState() {};
+
+GUIState.DISCONNECT_MESSAGE = 'connection to the server has been lost\nattempting to reconnect';
 
 GUIState.prototype = Object.create(engine.State.prototype);
 GUIState.prototype.constructor = engine.State;
@@ -74,6 +77,7 @@ GUIState.prototype.create = function() {
   this.modalComponent.visible = false;
 
   this.alertComponent = new Alert(game);
+  this.alertMessageComponent = new AlertMessage(game);
 
   this.root = new Panel(game, new StackLayout());
   this.root.setSize(game.width, game.height);
@@ -134,10 +138,11 @@ GUIState.prototype.toggle = function(force) {
   }
 };
 
-GUIState.prototype.modal = function(show, content, lock) {
+GUIState.prototype.modal = function(show, content, lock, visible) {
   if(typeof show !== 'boolean') { show = true; };
   if(content === undefined) { content = new Panel(game, new StackLayout()); }
   if(lock === undefined) { lock = false; }
+  if(visible === undefined) { visible = true; }
 
   if(lock && show) {
     this.selection.stop();
@@ -150,6 +155,7 @@ GUIState.prototype.modal = function(show, content, lock) {
   this.modalComponent.empty();
   this.modalComponent.addPanel(Layout.USE_PS_SIZE, content);
   this.modalComponent.visible = show;
+  this.modalComponent.bg.settings.fillAlpha = visible ? 0.8 : 0.0;
 
   this.refresh();
 };
@@ -169,8 +175,7 @@ GUIState.prototype._loggedin = function() {
 };
 
 GUIState.prototype._disconnected = function() {
-  var message = 'connection to the server has been lost\nattempting to reconnect';
-  this.alertComponent.alert(message, false, 'connection lost');
+  this.game.emit('gui/alert', GUIState.DISCONNECT_MESSAGE, false, 'connection lost');
 };
 
 GUIState.prototype._fpsProblem = function() {

@@ -103,6 +103,9 @@ LoginForm.prototype._login = function() {
           case '[[error:ip-locked]]':
             self.game.emit('gui/alert', 'you are temporarily blocked for too many logins\nplease try again later');
             break;
+          case '[[error:server-locked]]':
+            self.game.emit('gui/alert', 'the server is temporarily locked to new logins');
+            break;
           case '[[error:unknown-error]]':
           default:
             self.game.emit('gui/alert', 'an unknown error has occurred\nplease try again later');
