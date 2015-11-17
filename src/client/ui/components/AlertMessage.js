@@ -19,7 +19,7 @@ function AlertMessage(game, settings) {
       radius: 0.0
     },
     message: {
-      padding: [10, 12, 10, 10],
+      padding: [5, 7, 5, 5],
       border: [0],
       text: {
         fontName: 'medium',
@@ -59,9 +59,9 @@ AlertMessage.prototype._message = function(message) {
 
   this.alpha = 1.0;
   this.messageTween = this.game.tweens.create(this);
-  this.messageTween.to({ alpha: 0.0 }, 2500, engine.Easing.Quadratic.Out);
+  this.messageTween.to({ alpha: 0.0 }, 3500, engine.Easing.Quadratic.Out);
   this.messageTween.on('complete', this._close, this);
-  this.messageTween.delay(6000);
+  this.messageTween.delay(3000);
   this.messageTween.start();
 
   this.game.emit('gui/modal', true, this, false, false);

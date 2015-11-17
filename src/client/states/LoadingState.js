@@ -116,8 +116,8 @@ LoadingState.prototype.loadingComplete = function() {
   // remove loading screen
   if(!this.game.state.hasPendingState) {
     this.tween = this.game.tweens.create(this.root);
-    this.tween.to({ alpha: 0.0 }, 3000);
-    this.tween.delay(500);
+    this.tween.to({ alpha: 0.0 }, 5000);
+    this.tween.delay(1500);
     this.tween.start();
 
     this.image.visible = false;
