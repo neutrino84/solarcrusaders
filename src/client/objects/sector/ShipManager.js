@@ -62,7 +62,6 @@ ShipManager.prototype._sync = function(data) {
       cached.position.set(ship.current.x, ship.current.y);
       cached.movement.throttle = ship.throttle;
 
-      // cached.movement.animation.stop();
       if(ship.moving) {
         cached.movement.plot(ship.destination, ship.current, ship.previous);
         // if(!cached.movement.valid) {
@@ -121,56 +120,18 @@ ShipManager.prototype.createShip = function(data) {
   return ship;
 };
 
-ShipManager.prototype.removeShip = function(ship) {
+ShipManager.prototype.remove = function(ship) {
   var s = this.ships[ship.uuid];
       s.destroy();
   delete this.ships[ship.uuid];
 };
 
-ShipManager.prototype.removeShips = function() {
+ShipManager.prototype.removeAll = function() {
   var ship,
       ships = this.ships;
   for(var s in ships) {
-    this.removeShip(ships[s]);
+    this.remove(ships[s]);
   }
-};
-
-ShipManager.prototype.createShips = function() {
-  // for(var key in iterator) {
-  //   for(var i=0; i<iterator[key].count; i++) {
-  //     ship = new Ship(this, key);
-      
-  //     ship.boot();
-  //     ship.trajectoryGraphics = this.trajectoryGraphics;
-  //     ship.fxGroup = this.fxGroup;
-
-  //     this.shipsGroup.add(ship);
-  //   }
-  //   if(key === 'vessel-x01') {
-  //     ship.position.set(2048 - 128, 2048 - 128);
-  //     this.playerShip = ship;
-  //     ship.isPlayer = true;
-  //     ship.autopilotPositionInView = true;
-  //     // ship.select();
-  //     game.camera.focusOn(ship);
-  //     game.camera.follow(ship);
-  //   }
-  // }
-
-  // drones
-  // must have all init 
-  // functions from above...
-  // for(var i=0; i<1; i++) {
-  //   ship = new Ship(this, 'vessel-x05');
-    
-  //   ship.boot();
-  //   ship.fxGroup = this.fxGroup;
-  //   ship.follow = this.playerShip;
-  //   ship.isPlayer = true;
-  //   ship.trajectoryGraphics = this.trajectoryGraphics;
-
-  //   this.shipsGroup.add(ship);
-  // }
 };
 
 ShipManager.prototype.destroy = function() {
@@ -191,7 +152,7 @@ ShipManager.prototype.destroy = function() {
     this._syncBind = this._plottedBind =
     this._destroyedBind = undefined;
 
-  this.removeShips();
+  this.removeAll();
 };
 
 ShipManager.prototype._plotted = function(data) {
@@ -201,16 +162,15 @@ ShipManager.prototype._plotted = function(data) {
     ship.position.set(data.current.x, data.current.y);
     ship.movement.throttle = data.throttle;
     ship.movement.plot(data.destination, data.current, data.previous);
-    // ship.movement.drawData(0xFF3300);
   }
 };
 
 ShipManager.prototype._destroyed = function(ship) {
-  this.removeShip(ship);
+  this.remove(ship);
 };
 
 ShipManager.prototype._disconnected = function() {
-  this.removeShips();
+  this.removeAll();
 };
 
 ShipManager.prototype._selected = function(pointer, rectangle) {
