@@ -90,7 +90,7 @@ Ship.prototype.boot = function() {
   if(this.username) {
     this.label = new TextView(this.game, this.username);
     this.label.pivot.set(this.label.width / 2, -this.height / 2 - 12);
-    this.label.tint = this.isPlayer ? 0x339933 : 0x336699;
+    this.label.tint = this.isPlayer ? 0x33FF33 : 0x3399FF;
     this.fxGroup.addChild(this.label);
   }
 
