@@ -117,6 +117,11 @@ ShipManager.prototype.createShip = function(data) {
 
   this.shipsGroup.add(ship);
 
+  if(ship.user === this.game.auth.user.uuid) {
+    ship.select();
+    this.game.camera.follow(ship);
+  }
+
   return ship;
 };
 
@@ -129,6 +134,11 @@ ShipManager.prototype.remove = function(ship) {
 ShipManager.prototype.removeAll = function() {
   var ship,
       ships = this.ships;
+
+  // unfollow
+  this.game.camera.unfollow();
+
+  // remove all ships
   for(var s in ships) {
     this.remove(ships[s]);
   }
@@ -175,8 +185,7 @@ ShipManager.prototype._disconnected = function() {
 
 ShipManager.prototype._selected = function(pointer, rectangle) {
   var point, selected = [], ship,
-      camera = this.game.camera,
-      playerShip = this.playerShip;
+      camera = this.game.camera;
 
   this.shipsGroup.forEach(function(child) {
     if(pointer.button === engine.Mouse.LEFT_BUTTON) {
@@ -188,7 +197,9 @@ ShipManager.prototype._selected = function(pointer, rectangle) {
           // child.target = playerShip;
         // }
       } else {
-        child.deselect();
+        if(!child.isPlayer) {
+          child.deselect();
+        }
       }
     }
     if(child.selected && pointer.button === engine.Mouse.RIGHT_BUTTON && rectangle.volume <= 300) {
