@@ -95,8 +95,8 @@ Movement.prototype.generateData = function(paths) {
       paths = paths || [
         new ArcPath(this, 0.0, 1.0, engine.Easing.Default),
         // new ArcPath(this, 0.1, 1.0),
-        // new LinearPath(this, 0.0, 0.75),
-        new LinearPath(this, 0.0, 1.0,  engine.Easing.Default)
+        new LinearPath(this, 0.0, 0.75),
+        new LinearPath(this, 0.75, 1.0, engine.Easing.Quadratic.Out)
       ],
       length = paths.length;
 
