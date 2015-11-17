@@ -33,7 +33,7 @@ function ShipManager(game) {
   }, this);
 
   // authentication
-  game.auth.on('invalidated', this._invalidated, this);
+  game.auth.on('disconnected', this._disconnected, this);
 
   // networking
   // TODO: move to client/net/Sector.js
@@ -181,7 +181,7 @@ ShipManager.prototype.destroy = function() {
   game.removeListener('gui/sector/selected', this._selected);
 
   auth.removeListener('user', this._user)
-  auth.removeListener('invalidated', this._invalidated);
+  auth.removeListener('disconnected', this._disconnected);
   
   socket.removeListener('sync', this._syncBind);
   socket.removeListener('plotted', this._plottedBind);
@@ -209,7 +209,7 @@ ShipManager.prototype._destroyed = function(ship) {
   this.removeShip(ship);
 };
 
-ShipManager.prototype._invalidated = function() {
+ShipManager.prototype._disconnected = function() {
   this.removeShips();
 };
 
