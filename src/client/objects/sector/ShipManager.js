@@ -85,15 +85,15 @@ ShipManager.prototype._sync = function(data) {
       // }
     }
 
-    this.trajectoryGraphics.lineStyle(0);
-    this.trajectoryGraphics.beginFill(0x00FF00, 1.0)
-    this.trajectoryGraphics.drawCircle(cached.position.x, cached.position.y, 4);
-    this.trajectoryGraphics.endFill();
+    // this.trajectoryGraphics.lineStyle(0);
+    // this.trajectoryGraphics.beginFill(0x00FF00, 1.0)
+    // this.trajectoryGraphics.drawCircle(cached.position.x, cached.position.y, 4);
+    // this.trajectoryGraphics.endFill();
 
-    this.trajectoryGraphics.lineStyle(0);
-    this.trajectoryGraphics.beginFill(0xFF0000, 1.0)
-    this.trajectoryGraphics.drawCircle(ship.current.x, ship.current.y, 2);
-    this.trajectoryGraphics.endFill();
+    // this.trajectoryGraphics.lineStyle(0);
+    // this.trajectoryGraphics.beginFill(0xFF0000, 1.0)
+    // this.trajectoryGraphics.drawCircle(ship.current.x, ship.current.y, 2);
+    // this.trajectoryGraphics.endFill();
 
     // var frame = cached.movement.animation.frame;
     // if(frame) {
@@ -232,9 +232,9 @@ ShipManager.prototype._selected = function(pointer, rectangle) {
   if(selected.length > 0) {
     point = game.world.worldTransform.applyInverse(rectangle);
     
-    // this.trajectoryTween && this.trajectoryTween.stop();
-    // this.trajectoryGraphics.clear();
-    // this.trajectoryGraphics.alpha = 1.0;
+    this.trajectoryTween && this.trajectoryTween.stop();
+    this.trajectoryGraphics.clear();
+    this.trajectoryGraphics.alpha = 1.0;
 
     for(var i=0; i<selected.length; i++) {
       ship = selected[i];
@@ -245,15 +245,15 @@ ShipManager.prototype._selected = function(pointer, rectangle) {
           destination: point
         });
 
-        // if(ship.movement.valid) {
-        //   ship.movement.drawDebug();
-        // }
+        if(ship.movement.valid) {
+          ship.movement.drawDebug();
+        }
       }
     }
 
-    // this.trajectoryTween = this.game.tweens.create(this.trajectoryGraphics);
-    // this.trajectoryTween.to({ alpha: 0.0 }, 500, engine.Easing.Quadratic.InOut);
-    // this.trajectoryTween.start();
+    this.trajectoryTween = this.game.tweens.create(this.trajectoryGraphics);
+    this.trajectoryTween.to({ alpha: 0.0 }, 500, engine.Easing.Quadratic.InOut);
+    this.trajectoryTween.start();
   }
 };
 
