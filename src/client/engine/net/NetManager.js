@@ -83,4 +83,10 @@ Object.defineProperty(NetManager.prototype, 'rtt', {
   }
 });
 
+Object.defineProperty(NetManager.prototype, 'ping', {
+  get: function() {
+    return this.latency.rtt / 2;
+  }
+});
+
 module.exports = NetManager;

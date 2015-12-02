@@ -8,6 +8,7 @@ function Latency(game) {
   this.rtt = 100;
 
   this.socket.on('pong', this.pong.bind(this));
+  this.socket.on('drip', this.drip.bind(this));
 };
 
 Latency.prototype.constructor = Latency;
@@ -22,9 +23,13 @@ Latency.prototype.stop = function() {
   this.timer && this.game.clock.events.remove(this.timer);
 };
 
+Latency.prototype.drip = function() {
+  this.socket.emit('drop');
+};
+
 Latency.prototype.ping = function() {
   this.startTime = this.game.clock.time;
-  this.socket.emit('ping');
+  this.socket.emit('ping'); 
 };
 
 Latency.prototype.pong = function() {
