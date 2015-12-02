@@ -18,7 +18,7 @@ function ShipManager(game) {
   this.game.on('ship/create', this.create, this);
 
   // activate ai
-  this.game.clock.events.loop(10000, this._updateAI, this);
+  this.game.clock.events.loop(6000, this._updateAI, this) && this._updateAI();
 };
 
 ShipManager.prototype.constructor = ShipManager;
@@ -128,16 +128,16 @@ ShipManager.prototype.update = function() {
 ShipManager.prototype.generateRandomShips = function() {
   var data, position, config,
       iterator = {
-        'vessel-x01': { count: 1 },
-        'vessel-x02': { count: 1 },
-        'vessel-x03': { count: 1 },
-        'vessel-x04': { count: 20 },
-        'vessel-x05': { count: 5 }
+        'vessel-x01': { count: 0 },
+        'vessel-x02': { count: 0 },
+        'vessel-x03': { count: 0 },
+        'vessel-x04': { count: 5 },
+        'vessel-x05': { count: 0 }
       };
   for(var key in iterator) {
     for(var i=0; i<iterator[key].count; i++) {
       config = engine.ShipConfiguration[key];
-      position = this._generateRandomPosition();
+      position = this._generateRandomPositionInView();
       data = {
         uuid: uuid.v4(),
         x: position.x,
@@ -160,6 +160,7 @@ ShipManager.prototype._plot = function(ship, destination) {
 
   this.sockets.io.sockets.emit('plotted', {
     uuid: ship.uuid,
+    user: ship.user ? ship.user.uuid : null,
     destination: destination,
     throttle: ship.throttle,
     rotation: ship.rotation,
@@ -175,7 +176,7 @@ ShipManager.prototype._updateAI = function() {
   for(var s in ships) {
     ship = ships[s];
     if(!ship.user && global.Math.random() > 0.5) {
-      destination = this._generateRandomPosition();
+      destination = this._generateRandomPositionInView();
       this._plot(ship, destination);
     }
   }

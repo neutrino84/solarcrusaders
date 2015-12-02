@@ -8,6 +8,7 @@ function ShipManager(game) {
 
   // initialize
   this.game = game;
+  this.net = game.net;
   this.socket = game.net.socket;
   this.shipsGroup = new engine.Group(game);
   this.trajectoryGroup = new engine.Group(game);
@@ -50,14 +51,15 @@ ShipManager.prototype.constructor = ShipManager;
 
 ShipManager.prototype._sync = function(data) {
   var ship, cached,
+      offset, vector,
       ships = data.ships,
       length = ships.length;
   for(var s=0; s<length; s++) {
     ship = ships[s];
-    cached = this.ships[ship.uuid];
-    if(cached === undefined) {
-      cached = this.ships[ship.uuid] = this.createShip(ship);
-    } else if(engine.Point.distance(ship.current, cached.position) > 128) {
+    cached = this.ships[ship.uuid] ? this.ships[ship.uuid] : this.ships[ship.uuid] = this.createShip(ship);
+    offset = engine.Point.distance(ship.current, cached.movement.current);
+
+    if(offset > 64) {
       cached.rotation = ship.rotation;
       cached.position.set(ship.current.x, ship.current.y);
       cached.movement.throttle = ship.throttle;
@@ -70,6 +72,9 @@ ShipManager.prototype._sync = function(data) {
         // }
         // cached.movement.drawData();
       } else {
+
+        // cached.offset.set(0, 0);
+
         cached.movement.animation.stop();
       }
 
@@ -79,6 +84,16 @@ ShipManager.prototype._sync = function(data) {
       // } else {
       // }
     }
+
+    this.trajectoryGraphics.lineStyle(0);
+    this.trajectoryGraphics.beginFill(0x00FF00, 1.0)
+    this.trajectoryGraphics.drawCircle(cached.position.x, cached.position.y, 4);
+    this.trajectoryGraphics.endFill();
+
+    this.trajectoryGraphics.lineStyle(0);
+    this.trajectoryGraphics.beginFill(0xFF0000, 1.0)
+    this.trajectoryGraphics.drawCircle(ship.current.x, ship.current.y, 2);
+    this.trajectoryGraphics.endFill();
 
     // var frame = cached.movement.animation.frame;
     // if(frame) {
@@ -133,10 +148,11 @@ ShipManager.prototype.remove = function(ship) {
 
 ShipManager.prototype.removeAll = function() {
   var ship,
-      ships = this.ships;
+      ships = this.ships,
+      camera = this.game.camera;
 
   // unfollow
-  this.game.camera.unfollow();
+  camera.unfollow();
 
   // remove all ships
   for(var s in ships) {
@@ -151,7 +167,6 @@ ShipManager.prototype.destroy = function() {
 
   game.removeListener('gui/sector/selected', this._selected);
 
-  auth.removeListener('user', this._user)
   auth.removeListener('disconnected', this._disconnected);
   
   socket.removeListener('sync', this._syncBind);
@@ -166,8 +181,10 @@ ShipManager.prototype.destroy = function() {
 };
 
 ShipManager.prototype._plotted = function(data) {
-  var ship = this.ships[data.uuid];
-  if(ship !== undefined) {
+  var auth = this.game.auth,
+      ship = this.ships[data.uuid],
+      startTime = this.net.ping;
+  if(ship !== undefined && ship.user !== auth.user.uuid) {
     ship.rotation = data.rotation;
     ship.position.set(data.current.x, data.current.y);
     ship.movement.throttle = data.throttle;
@@ -176,6 +193,11 @@ ShipManager.prototype._plotted = function(data) {
 };
 
 ShipManager.prototype._destroyed = function(ship) {
+  var camera = this.game.camera,
+      target = camera.target; 
+  if(target && ship.uuid === target.uuid) {
+    camera.unfollow();
+  }
   this.remove(ship);
 };
 
@@ -210,9 +232,9 @@ ShipManager.prototype._selected = function(pointer, rectangle) {
   if(selected.length > 0) {
     point = game.world.worldTransform.applyInverse(rectangle);
     
-    this.trajectoryTween && this.trajectoryTween.stop();
-    this.trajectoryGraphics.clear();
-    this.trajectoryGraphics.alpha = 1.0;
+    // this.trajectoryTween && this.trajectoryTween.stop();
+    // this.trajectoryGraphics.clear();
+    // this.trajectoryGraphics.alpha = 1.0;
 
     for(var i=0; i<selected.length; i++) {
       ship = selected[i];
@@ -222,16 +244,16 @@ ShipManager.prototype._selected = function(pointer, rectangle) {
           uuid: ship.uuid,
           destination: point
         });
-        
-        if(ship.movement.valid) {
-          ship.movement.drawDebug();
-        }
+
+        // if(ship.movement.valid) {
+        //   ship.movement.drawDebug();
+        // }
       }
     }
 
-    this.trajectoryTween = this.game.tweens.create(this.trajectoryGraphics);
-    this.trajectoryTween.to({ alpha: 0.0 }, 500, engine.Easing.Quadratic.InOut);
-    this.trajectoryTween.start();
+    // this.trajectoryTween = this.game.tweens.create(this.trajectoryGraphics);
+    // this.trajectoryTween.to({ alpha: 0.0 }, 500, engine.Easing.Quadratic.InOut);
+    // this.trajectoryTween.start();
   }
 };
 

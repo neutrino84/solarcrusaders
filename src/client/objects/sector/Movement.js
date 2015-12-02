@@ -47,7 +47,8 @@ Movement.prototype.update = function() {
   }
 };
 
-Movement.prototype.plot = function(point, current, previous) {
+Movement.prototype.plot = function(point, current, previous, delay) {
+  this.delay = delay | 0;
   this.startPosition = current ? current : this.parent.position;
   this.lastPosition = previous ? previous : this.previous;
 
@@ -86,9 +87,10 @@ Movement.prototype.plotLinear = function(point, current) {
 
 Movement.prototype.generateData = function(paths) {
   var self = this,
-      dt, duration, finalDuration = 0, path, complete,
+      completeDuration = 0,
+      delay = 0,
+      dt, duration, path, complete,
       percent, value,
-      start, end, interpolate,
       point, data = [],
       fps = (1 / Movement.FRAMERATE) * 1000,
       isPlaying = this.animation.isPlaying,
@@ -105,18 +107,22 @@ Movement.prototype.generateData = function(paths) {
     dt = 0;
     path = paths[p];
     duration = path.duration;
-    finalDuration += duration;
+    completeDuration += duration;
     complete = false;
 
     do {
       dt += fps;
+      delay += fps;
       percent = global.Math.min(dt / duration, 1);
 
       value = path.easing(percent);
       interpolated = path.start + ((path.end - path.start) * value);
       point = path.interpolate(this, interpolated);
 
-      data.push({ x: point.x, y: point.y });
+      // 
+      if(delay > this.delay) {
+        data.push({ x: point.x, y: point.y });
+      }
 
       if(percent === 1) {
         complete = true;
@@ -124,7 +130,7 @@ Movement.prototype.generateData = function(paths) {
     } while(!complete);
   }
 
-  this.duration = finalDuration;
+  this.duration = completeDuration;
 
   return data;
 };
@@ -262,6 +268,12 @@ Movement.prototype._generateLastPosition = function() {
     this.startPosition.x + (100 * global.Math.cos(rotation)),
     this.startPosition.y + (100 * global.Math.sin(rotation)))
 };
+
+Object.defineProperty(Movement.prototype, 'current', {
+  get: function() {
+    return this.animation.frame ? this.animation.frame : this.parent.position;
+  }
+});
 
 Object.defineProperty(Movement.prototype, 'previous', {
   get: function() {
