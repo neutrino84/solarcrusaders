@@ -1,15 +1,16 @@
 
 var Authentication = require('./controllers/Authentication'),
-    Ping = require('./controllers/Ping');
+    Latency = require('./controllers/Latency');
 
 function Routes(app) {
   this.app = app;
   this.express = app.server.express;
   this.iorouter = app.sockets.iorouter;
   this.io = app.sockets.io;
+  this.game = app.game;
   
   this.authentication = new Authentication(this);
-  this.ping = new Ping(this);
+  this.latency = new Latency(this);
 };
 
 Routes.prototype.constructor = Routes;
@@ -21,7 +22,7 @@ Routes.prototype.init = function(next) {
    * Initialize controllers
    */
   this.authentication.init();
-  this.ping.init();
+  this.latency.init();
 
   /*
    * API Calls

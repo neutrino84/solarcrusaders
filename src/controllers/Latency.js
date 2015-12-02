@@ -1,10 +1,10 @@
 
-function Ping(routes) {
+function Latency(routes) {
   this.routes = routes;
   this.game = routes.game;
 };
 
-Ping.prototype.init = function(next) {
+Latency.prototype.init = function(next) {
   var timer,
       self = this;
 
@@ -24,17 +24,17 @@ Ping.prototype.init = function(next) {
   this.routes.iorouter.on('drop', this.drop.bind(this));
 };
 
-Ping.prototype.drip = function() {
+Latency.prototype.drip = function() {
   var now = global.Date.now(),
       session = this.handshake.session;
       session.drip = now;
   this.emit('drip');
 };
 
-Ping.prototype.drop = function(sock, args, next) {
+Latency.prototype.drop = function(sock, args, next) {
   var session = sock.sock.handshake.session;
       session.drop = global.Date.now();
       session.rtt = session.drip - session.drop;
 };
 
-module.exports = Ping;
+module.exports = Latency;
