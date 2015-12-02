@@ -250,20 +250,4 @@ Object.defineProperty(Ship.prototype, 'trajectoryGraphics', {
   }
 });
 
-// Ship.prototype._inputOver = function() {
-//   console.log('over', arguments);
-// };
-
-// Ship.prototype._inputOut = function() {
-//   console.log('out', arguments);
-// };
-
-// Ship.prototype._inputDown = function() {
-//   console.log('down', arguments);
-// };
-
-// Ship.prototype._inputUp = function() {
-//   console.log('up', arguments);
-// };
-
 module.exports = Ship;
