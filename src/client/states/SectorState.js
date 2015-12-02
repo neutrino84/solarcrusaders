@@ -70,10 +70,9 @@ SectorState.prototype.preload = function() {
 SectorState.prototype.create = function() {
   var self = this,
       sensitivity = 1000,
-      mouse = game.input.mouse;
+      mouse = this.game.input.mouse;
       mouse.capture = true;
       mouse.mouseWheelCallback = function(event) {
-        // disable mousewheel
         return;
 
         var delta = event.deltaY / sensitivity,
@@ -81,7 +80,7 @@ SectorState.prototype.create = function() {
             gridLayer = global.state.gridLayer;
 
         // stop zoom
-        if(self.zoom.isRunning) {
+        if(self.zoom && self.zoom.isRunning) {
           self.zoom.stop();
         }
 
@@ -223,6 +222,7 @@ SectorState.prototype.resize = function(width, height) {
 SectorState.prototype.shutdown = function() {
   this.stage.removeChild(this.background);
   this.background.destroy();
+  this.gridLayer.destroy();
 };
 
 module.exports = SectorState;
