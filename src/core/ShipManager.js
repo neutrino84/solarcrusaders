@@ -128,16 +128,16 @@ ShipManager.prototype.update = function() {
 ShipManager.prototype.generateRandomShips = function() {
   var data, position, config,
       iterator = {
-        'vessel-x01': { count: 0 },
-        'vessel-x02': { count: 0 },
-        'vessel-x03': { count: 0 },
-        'vessel-x04': { count: 5 },
-        'vessel-x05': { count: 0 }
+        'vessel-x01': { count: 1 },
+        'vessel-x02': { count: 1 },
+        'vessel-x03': { count: 1 },
+        'vessel-x04': { count: 25 },
+        'vessel-x05': { count: 5 }
       };
   for(var key in iterator) {
     for(var i=0; i<iterator[key].count; i++) {
       config = engine.ShipConfiguration[key];
-      position = this._generateRandomPositionInView();
+      position = this._generateRandomPosition();
       data = {
         uuid: uuid.v4(),
         x: position.x,
@@ -176,7 +176,7 @@ ShipManager.prototype._updateAI = function() {
   for(var s in ships) {
     ship = ships[s];
     if(!ship.user && global.Math.random() > 0.5) {
-      destination = this._generateRandomPositionInView();
+      destination = this._generateRandomPosition();
       this._plot(ship, destination);
     }
   }
