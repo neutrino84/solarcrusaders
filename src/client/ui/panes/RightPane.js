@@ -71,7 +71,7 @@ function RightPane(game, settings) {
     })
 
   this.versionText = new Label(game,
-    'v1070', {
+    'v1072', {
       padding: [6, 8],
       text: {
         fontName: 'medium',
