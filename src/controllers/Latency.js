@@ -16,7 +16,6 @@ Latency.prototype.init = function(next) {
   this.routes.io.on('connection', function(socket) {
     var timer = self.game.clock.events.loop(3000, self.drip, socket);
     socket.on('disconnect', function() {
-      console.log('removed timer');
       self.game.clock.events.remove(timer);
     });
   });
