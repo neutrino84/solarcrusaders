@@ -48,13 +48,15 @@ ShipManager.prototype._sync = function(data) {
   var ship, cached,
       offset, vector,
       ships = data.ships,
-      length = ships.length;
+      length = ships.length,
+      created;
   for(var s=0; s<length; s++) {
     ship = ships[s];
+    created = !this.ships[ship.uuid];
     cached = this.ships[ship.uuid] ? this.ships[ship.uuid] : this.ships[ship.uuid] = this.createShip(ship);
     offset = engine.Point.distance(ship.current, cached.movement.current);
 
-    if(offset > 64) {
+    if(offset > 64 || created) {
       cached.rotation = ship.rotation;
       cached.position.set(ship.current.x, ship.current.y);
       cached.movement.throttle = ship.throttle;
@@ -67,17 +69,8 @@ ShipManager.prototype._sync = function(data) {
         // }
         // cached.movement.drawData();
       } else {
-
-        // cached.offset.set(0, 0);
-
         cached.movement.animation.stop();
       }
-
-      // if(ship.moving) {
-        // cached.movement.plot(ship.destination, ship.current, ship.previous);
-        // cached.position.set(ship.destination.x, ship.destination.y);
-      // } else {
-      // }
     }
 
     // this.trajectoryGraphics.lineStyle(0);
