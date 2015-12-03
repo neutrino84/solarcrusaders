@@ -28,16 +28,11 @@ function ShipManager(game) {
   game.world.add(this.shipsGroup);
   game.world.add(this.fxGroup);
 
-  // stop follow
-  game.input.once('keydown', function() {
-    game.camera.unfollow();
-  }, this);
-
   // authentication
   game.auth.on('disconnected', this._disconnected, this);
 
   // networking
-  // TODO: move to client/net/Sector.js
+  // TODO: move to client/net/Sector.js... maybe not?
   this.socket.on('sync', this._syncBind = this._sync.bind(this));
   this.socket.on('plotted', this._plottedBind = this._plotted.bind(this));
   this.socket.on('destroyed', this._destroyedBind = this._destroyed.bind(this));
@@ -115,8 +110,10 @@ ShipManager.prototype.update = function() {
 };
 
 ShipManager.prototype.createShip = function(data) {
-  var ship = new Ship(this, data.chasis),
-      plotThreshold = ship.config.oribit.radius * 2;
+  var game = this.game,
+
+      ship = new Ship(this, data.chasis);//,
+      // plotThreshold = ship.config.oribit.radius * 2;
       
       ship.uuid = data.uuid;
       ship.user = data.user;
@@ -132,9 +129,12 @@ ShipManager.prototype.createShip = function(data) {
 
   this.shipsGroup.add(ship);
 
-  if(ship.user === this.game.auth.user.uuid) {
+  if(ship.user === game.auth.user.uuid) {
     ship.select();
-    this.game.camera.follow(ship);
+    game.camera.follow(ship);
+    game.input.once('keydown', function() {
+      game.camera.unfollow();
+    }, this);
   }
 
   return ship;
