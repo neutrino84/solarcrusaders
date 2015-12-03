@@ -18,9 +18,21 @@
        {
           "sprite": "engine-glow",
           "tint": "0x3399FF",
-          "scale": { "startX": 0.10, "endX": 0.16, "startY": 0.2, "endY": 0.4 },
+          "scale": { "startX": 0.10, "endX": 0.18, "startY": 0.2, "endY": 0.44 },
           "position": { "x": 116, "y": 66 },
           "rotation": 0
+        },{
+          "sprite": "engine-glow",
+          "tint": "0x3399FF",
+          "scale": { "startX": 0.10, "endX": 0.14, "startY": 0.2, "endY": 0.5 },
+          "position": { "x": 116, "y": 56 },
+          "rotation": 15
+        },{
+          "sprite": "engine-glow",
+          "tint": "0x3399FF",
+          "scale": { "startX": 0.10, "endX": 0.14, "startY": 0.2, "endY": 0.5 },
+          "position": { "x": 116, "y": 76 },
+          "rotation": -15
         }
       ],
       "trails": [
