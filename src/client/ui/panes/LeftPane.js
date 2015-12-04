@@ -1,5 +1,6 @@
 
-var engine = require('engine'),
+var xhr = require('xhr'),
+    engine = require('engine'),
     Layout = require('../Layout'),
     Pane = require('../components/Pane'),
     ButtonIcon = require('../components/ButtonIcon');
@@ -19,17 +20,32 @@ function LeftPane(game, settings) {
   });
 
   this.icon1 = new ButtonIcon(game, 'icon1'),
-  this.icon2 = new ButtonIcon(game, 'icon2'),
-  this.icon3 = new ButtonIcon(game, 'icon3'),
-  this.icon4 = new ButtonIcon(game, 'icon4');
+  this.icon1.on('inputUp', this._logout, this);
 
-  this.addPanel(Layout.NONE, this.icon4);
-  this.addPanel(Layout.NONE, this.icon2);
-  this.addPanel(Layout.NONE, this.icon3);
   this.addPanel(Layout.NONE, this.icon1);
 };
 
 LeftPane.prototype = Object.create(Pane.prototype);
 LeftPane.prototype.constructor = LeftPane;
+
+LeftPane.prototype._logout = function() {
+  var self = this,
+      header = {
+        method: 'get',
+        uri: '/logout',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      };
+  xhr(header, function(err, resp, body) {
+    var response = JSON.parse(body),
+        user = response.user,
+        error = err || response.error;
+    if(error) {
+      self.game.emit('gui/alert', 'an unknown error has occurred');
+    }
+    self.game.emit('gui/logout');
+  });
+};
 
 module.exports = LeftPane;

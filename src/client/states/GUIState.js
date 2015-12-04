@@ -9,7 +9,7 @@ var engine = require('engine'),
     StackLayout = require('../ui/layouts/StackLayout'),
     
     HeaderPane = require('../ui/panes/HeaderPane'),
-    // LeftPane = require('../ui/panes/LeftPane'),
+    LeftPane = require('../ui/panes/LeftPane'),
     RightPane = require('../ui/panes/RightPane'),
     ShipPane = require('../ui/panes/ShipPane'),
       
@@ -39,10 +39,8 @@ GUIState.prototype.preload = function() {
   // load font
   this.game.load.image('vt323', 'imgs/game/fonts/vt323.png');
 
-  // this.game.load.image('icon1', 'imgs/game/icons/icon-x01.png');
-  // this.game.load.image('icon2', 'imgs/game/icons/icon-x02.png');
-  // this.game.load.image('icon3', 'imgs/game/icons/icon-x03.png');
-  // this.game.load.image('icon4', 'imgs/game/icons/icon-x04.png');
+  // load icons
+  this.game.load.image('icon1', 'imgs/game/icons/icon-x01.png');
 
   // tilemap
   this.game.load.image('deck', 'imgs/game/tilesets/deck-mini.png');
@@ -62,14 +60,6 @@ GUIState.prototype.preload = function() {
 GUIState.prototype.create = function() {
   var game = this.game,
       name = 'the aurora';
-      
-  // this.leftPane = new LeftPane(game);
-  this.rightPane = new RightPane(game);
-  this.headerPane = new HeaderPane(game);
-  // this.shipPane = new ShipPane(game, name);
-  this.center = new Panel(game, new FlowLayout(Layout.LEFT, Layout.TOP, Layout.VERTICAL, 6));
-  this.bottom = new Panel(game, new FlowLayout(Layout.CENTER, Layout.TOP, Layout.HORIZONTAL, 6));
-  this.base = new Panel(game, new BorderLayout(0, 0));
 
   this.selection = new Selection(game);
 
@@ -78,23 +68,34 @@ GUIState.prototype.create = function() {
 
   this.alertComponent = new Alert(game);
   this.alertMessageComponent = new AlertMessage(game);
+  
+  this.basePanel = new Panel(game, new BorderLayout(0, 0));
+  this.centerPanel = new Panel(game, new BorderLayout(0, 0));
+      
+  this.leftPane = new LeftPane(game);
+  this.rightPane = new RightPane(game);
+  this.headerPane = new HeaderPane(game);
+
+  this.shipPanel = new Panel(game, new FlowLayout(Layout.LEFT, Layout.TOP, Layout.VERTICAL, 6));
+  this.shipPanel.setPadding(6);
+  this.shipPanel.addPanel(Layout.LEFT, this.shipPane = new ShipPane(game, name));
+
+  this.topPanel = new Panel(game, new FlowLayout(Layout.CENTER, Layout.TOP, Layout.HORIZONTAL, 6));
+  this.topPanel.addPanel(Layout.NONE, this.rightPane);
 
   this.root = new Panel(game, new StackLayout());
   this.root.setSize(game.width, game.height);
   this.root.visible = false;
 
-  this.center.setPadding(6);
-  this.center.addPanel(Layout.STRETCH, this.headerPane);
-  // this.center.addPanel(Layout.LEFT, this.shipPane);
-
-  this.bottom.addPanel(Layout.NONE, this.rightPane);
-
-  this.base.addPanel(Layout.BOTTOM, this.bottom);
-  this.base.addPanel(Layout.CENTER, this.center);
-  // this.base.addPanel(Layout.LEFT, this.leftPane);
+  // this.centerPanel.addPanel(Layout.TOP, this.headerPane);
+  this.centerPanel.addPanel(Layout.CENTER, this.shipPanel);
+  this.centerPanel.addPanel(Layout.LEFT, this.leftPane);
+  
+  this.basePanel.addPanel(Layout.TOP, this.topPanel);
 
   this.root.addPanel(Layout.STRETCH, this.selection);
-  this.root.addPanel(Layout.STRETCH, this.base);
+  this.root.addPanel(Layout.STRETCH, this.basePanel);
+  this.root.addPanel(Layout.STRETCH, this.centerPanel);
   this.root.addPanel(Layout.STRETCH, this.modalComponent);
 
   // add root to stage
@@ -112,10 +113,10 @@ GUIState.prototype.create = function() {
 
 GUIState.prototype.login = function() {
   if(this.auth.isUser()) {
-    this.center.visible = true;
-    this.center.invalidate();
+    this.centerPanel.visible = true;
+    this.centerPanel.invalidate();
   } else {
-    this.center.visible = false;
+    this.centerPanel.visible = false;
     this.registrationForm = new RegistrationForm(game);
     this.loginForm = new LoginForm(game);
     this.game.on('gui/loggedin', this._loggedin, this);

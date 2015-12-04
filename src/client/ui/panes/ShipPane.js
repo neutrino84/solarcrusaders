@@ -22,28 +22,28 @@ function ShipPane(game, string, settings) {
   // create tilemap component
   this.tilemapComponent = new Tilemap(game, 'ship', ['grid', 'deck', 'wall']);
 
-  this.crew1 = new engine.Sprite(game, 'crew');
-  this.crew1.animations.add('work', [0,1,2,3,4,5], 6, true);
-  this.crew1.animations.play('work');
-  this.crew1.pivot.set(8,8);
-  this.crew1.position.set(10 * 16 + 6, 6 * 16 + 8);
-  this.crew1.rotation = -global.Math.PI / 2;
+  // this.crew1 = new engine.Sprite(game, 'crew');
+  // this.crew1.animations.add('work', [0,1,2,3,4,5], 6, true);
+  // this.crew1.animations.play('work');
+  // this.crew1.pivot.set(8,8);
+  // this.crew1.position.set(10 * 16 + 6, 6 * 16 + 8);
+  // this.crew1.rotation = -global.Math.PI / 2;
 
-  this.crew2 = new engine.Sprite(game, 'crew');
-  this.crew2.animations.add('work', [2,3,4,5,0,1], 6, true);
-  this.crew2.animations.play('work');
-  this.crew2.pivot.set(8,8);
-  this.crew2.position.set(9 * 16 + 8, 6 * 16 + 7);
+  // this.crew2 = new engine.Sprite(game, 'crew');
+  // this.crew2.animations.add('work', [2,3,4,5,0,1], 6, true);
+  // this.crew2.animations.play('work');
+  // this.crew2.pivot.set(8,8);
+  // this.crew2.position.set(9 * 16 + 8, 6 * 16 + 7);
   
-  this.crew3 = new engine.Sprite(game, 'crew');
-  this.crew3.animations.add('work', [2,5,3,4,1,0], 6, true);
-  this.crew3.animations.play('work');
-  this.crew3.pivot.set(8,8);
-  this.crew3.position.set(5 * 16 + 8, 6 * 16 + 7);
+  // this.crew3 = new engine.Sprite(game, 'crew');
+  // this.crew3.animations.add('work', [2,5,3,4,1,0], 6, true);
+  // this.crew3.animations.play('work');
+  // this.crew3.pivot.set(8,8);
+  // this.crew3.position.set(5 * 16 + 8, 6 * 16 + 7);
 
-  this.tilemapComponent.addChild(this.crew1);
-  this.tilemapComponent.addChild(this.crew2);
-  this.tilemapComponent.addChild(this.crew3);
+  // this.tilemapComponent.addChild(this.crew1);
+  // this.tilemapComponent.addChild(this.crew2);
+  // this.tilemapComponent.addChild(this.crew3);
 
   // create doors
   var door, doors = [
