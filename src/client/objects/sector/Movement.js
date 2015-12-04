@@ -24,7 +24,7 @@ function Movement(parent) {
   EventEmitter.call(this);
 }
 
-Movement.FRAMERATE = 70;
+Movement.FRAMERATE = 60;
 Movement.SPEED_CONSTANT = 30.0;
 
 Movement.prototype = Object.create(EventEmitter.prototype);
@@ -101,7 +101,6 @@ Movement.prototype.generateData = function(paths) {
         new LinearPath(this, 0.75, 1.0, engine.Easing.Quadratic.Out)
       ],
       length = paths.length;
-
 
   for(var p=0; p<length; p++) {
     dt = 0;
