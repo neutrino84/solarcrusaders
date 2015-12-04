@@ -18,51 +18,31 @@ function TilemapSprite(game, tilemap, index, width, height) {
 
   this.canvas = Canvas.create(width, height);
   this.context = this.canvas.getContext('2d');
-
   this.texture = new pixi.Texture(new pixi.BaseTexture(this.canvas));
 
-  // this.pivot.set(width / 2, height / 2);
-
-  this.renderSettings = {
-    // enableScrollDelta: true,
-    copyCanvas: null
-  };
-
-  // this.debug = false;
+  this.debug = false;
   this.exists = true;
 
-  // this.debugSettings = {
-  //   missingImageFill: 'rgb(255,255,255)',
-  //   debuggedTileOverfill: 'rgba(0,255,0,0.4)',
-
-  //   forceFullRedraw: true,
-
-  //   debugAlpha: 0.5,
-  //   facingEdgeStroke: 'rgba(0,255,0,1)',
-  //   collidingTileOverfill: 'rgba(0,255,0,0.2)'
-  // };
-
-  // this.scrollFactorX = 1;
-  // this.scrollFactorY = 1;
+  this.debugSettings = {
+    missingImageFill: 'rgb(255,255,255)',
+    debuggedTileOverfill: 'rgba(0,255,0,0.4)'
+  };
 
   this.dirty = true;
   this.rayStepRate = 4;
 
-  // this._wrap = false;
   this._mc = {
-
-    // Used to bypass rendering without reliance on `dirty` and detect changes.
-    // scrollX: 0,
-    // scrollY: 0,
+    // used to bypass rendering without
+    // reliance on `dirty` and detect changes.
     renderWidth: 0,
     renderHeight: 0,
 
     tileWidth: tilemap.tileWidth,
     tileHeight: tilemap.tileHeight,
 
-    // Collision width/height (pixels)
-    // What purpose do these have? Most things use tile width/height directly.
-    // This also only extends collisions right and down.       
+    // collision width/height (pixels)
+    // what purpose do these have? Most things use tile width/height directly.
+    // this also only extends collisions right and down.       
     cw: tilemap.tileWidth,
     ch: tilemap.tileHeight,
 
@@ -70,33 +50,15 @@ function TilemapSprite(game, tilemap, index, width, height) {
     tilesets: []
   };
 
-  // this._scrollX = 0;
-  // this._scrollY = 0;
   this._results = [];
-
-  // if(!Device.canvasBitBltShift) {
-  //   this.renderSettings.copyCanvas = TilemapSprite.ensureSharedCopyCanvas();
-  // }
-
-  // this.fixedToCamera = true;
 };
 
 TilemapSprite.prototype = Object.create(Sprite.prototype);
 TilemapSprite.prototype.constructor = TilemapSprite;
 
-// TilemapSprite.sharedCopyCanvas = null;
-// TilemapSprite.ensureSharedCopyCanvas = function() {
-//   if(!this.sharedCopyCanvas) {
-//     this.sharedCopyCanvas = Canvas.create(2, 2);
-//   }
-//   return this.sharedCopyCanvas;
-// };
-
 TilemapSprite.prototype.postUpdate = function() {
   Sprite.prototype.postUpdate.call(this);
 
-  // prepare tilemap
-  // for render
   this.render();
 };
 
@@ -105,72 +67,14 @@ TilemapSprite.prototype.destroy = function() {
   Sprite.prototype.destroy.call(this);
 };
 
-TilemapSprite.prototype.resize = function(width, height) {
-  // this.canvas.width = width;
-  // this.canvas.height = height;
-
-  // this.texture.frame.width = width;
-  // this.texture.frame.height = height;
-
-  // this.texture.width = width;
-  // this.texture.height = height;
-
-  // this.texture.crop.width = width;
-  // this.texture.crop.height = height;
-
-  // this.texture.baseTexture.width = width;
-  // this.texture.baseTexture.height = height;
-
-  // this.texture.update();
-  // this.texture.requiresUpdate = true;
-
-  // this.texture._updateUvs();
-
-  // this.dirty = true;
-};
-
-// TilemapSprite.prototype.resizeWorld = function() {
-//   this.game.world.setBounds(0, 0, this.layer.widthInPixels * this.scale.x, this.layer.heightInPixels * this.scale.y);
-// };
-
-TilemapSprite.prototype._fixX = function(x) {
-  if(x < 0) { x = 0; }
-  // if(this.scrollFactorX === 1) {
-    return x;
-  // }
-  // return this._scrollX + (x - (this._scrollX / this.scrollFactorX));
-};
-
-// TilemapSprite.prototype._unfixX = function(x) {
-//   if(this.scrollFactorX === 1) {
-//     return x;
-//   }
-//   return (this._scrollX / this.scrollFactorX) + (x - this._scrollX);
-// };
-
-TilemapSprite.prototype._fixY = function(y) {
-  if(y < 0) { y = 0; }
-  // if(this.scrollFactorY === 1) {
-    return y;
-  // }
-  // return this._scrollY + (y - (this._scrollY / this.scrollFactorY));
-};
-
-// TilemapSprite.prototype._unfixY = function(y) {
-//   if(this.scrollFactorY === 1) {
-//     return y;
-//   }
-//   return (this._scrollY / this.scrollFactorY) + (y - this._scrollY);
-// };
+TilemapSprite.prototype.resize = function(width, height) {};
 
 TilemapSprite.prototype.getTileX = function(x) {
-  // var tileWidth = this.tileWidth * this.scale.x;
-  return global.Math.floor(this._fixX(x) / this._mc.tileWidth);
+  return global.Math.floor(x / this._mc.tileWidth);
 };
 
 TilemapSprite.prototype.getTileY = function(y) {
-  // var tileHeight = this.tileHeight * this.scale.y;
-  return global.Math.floor(this._fixY(y) / this._mc.tileHeight);
+  return global.Math.floor(y / this._mc.tileHeight);
 };
 
 TilemapSprite.prototype.getTileXY = function(x, y, point) {
@@ -216,10 +120,6 @@ TilemapSprite.prototype.getTiles = function(x, y, width, height, collides, inter
 
   var fetchAll = !(collides || interestingFace);
 
-  //  Adjust the x,y coordinates for scrollFactor
-  x = this._fixX(x);
-  y = this._fixY(y);
-
   //  Convert the pixel values into tile coordinates
   var tx = global.Math.floor(x / (this._mc.cw * this.scale.x));
   var ty = global.Math.floor(y / (this._mc.ch * this.scale.y));
@@ -249,17 +149,17 @@ TilemapSprite.prototype.getTiles = function(x, y, width, height, collides, inter
 TilemapSprite.prototype.resolveTileset = function(tileIndex) {
   var tilesets = this._mc.tilesets;
 
-  //  Try for dense array if reasonable
+  // try for dense array if reasonable
   if(tileIndex < 2000) {
     while(tilesets.length < tileIndex) {
       tilesets.push(undefined);
     }
   }
 
-  var setIndex = this.map.tiles[tileIndex] && this.map.tiles[tileIndex][2];
-  if(setIndex != null) { // number: not null or undefined
-    var tileset = this.map.tilesets[setIndex];
-
+  var tileset,
+      setIndex = this.map.tiles[tileIndex] && this.map.tiles[tileIndex][2];
+  if(setIndex != null) {
+    tileset = this.map.tilesets[setIndex];
     if(tileset && tileset.containsTileIndex(tileIndex)) {
       return (tilesets[tileIndex] = tileset);
     }
@@ -275,53 +175,22 @@ TilemapSprite.prototype.resetTilesetCache = function() {
   }
 };
 
-TilemapSprite.prototype.setScale = function(xScale, yScale) {
-  xScale = xScale || 1;
-  yScale = yScale || xScale;
-
-  for(var y = 0; y < this.layer.data.length; y++) {
-    var row = this.layer.data[y];
-
-    for(var x = 0; x < row.length; x++) {
-      var tile = row[x];
-
-      tile.width = this.map.tileWidth * xScale;
-      tile.height = this.map.tileHeight * yScale;
-
-      tile.worldX = tile.x * tile.width;
-      tile.worldY = tile.y * tile.height;
-    }
-  }
-
-  this.scale.setTo(xScale, yScale);
-};
-
 TilemapSprite.prototype.renderRegion = function(scrollX, scrollY, left, top, right, bottom) {
-  var context = this.context;
-
-  var width = this.layer.width;
-  var height = this.layer.height;
-  var tw = this._mc.tileWidth;
-  var th = this._mc.tileHeight;
-
-  var tilesets = this._mc.tilesets;
-  var lastAlpha = NaN;
-  if(!this._wrap) {
-    if(left <= right) {// Only adjust if going to render
-      left = global.Math.max(0, left);
-      right = global.Math.min(width - 1, right);
-    }
-    if(top <= bottom) {
-      top = global.Math.max(0, top);
-      bottom = global.Math.min(height - 1, bottom);
-    }
-  }
+  var context = this.context,
+      width = this.layer.width,
+      height = this.layer.height,
+      tw = this._mc.tileWidth,
+      th = this._mc.tileHeight,
+      tilesets = this._mc.tilesets,
+      lastAlpha = NaN;
  
   // top-left pixel of top-left cell
   var baseX = (left * tw) - scrollX;
   var baseY = (top * th) - scrollY;
 
-  // Fix normStartX/normStartY such it is normalized [0..width/height). This allows a simple conditional and decrement to always keep in range [0..width/height) during the loop. The major offset bias is to take care of negative values.
+  // fix normStartX / normStartY such it is normalized [0..width/height).
+  // this allows a simple conditional and decrement to always keep in range [0..width/height)
+  // during the loop. The major offset bias is to take care of negative values.
   var normStartX = (left + ((1 << 20) * width)) % width;
   var normStartY = (top + ((1 << 20) * height)) % height;
 
@@ -332,23 +201,22 @@ TilemapSprite.prototype.renderRegion = function(scrollX, scrollY, left, top, rig
 
   context.fillStyle = this.tileColor;
 
-  for(y = normStartY, ymax = bottom - top, ty = baseY;
-    ymax >= 0;
-    y++, ymax--, ty += th) {
+  for(y=normStartY, ymax=bottom-top, ty=baseY;
+      ymax>=0;
+      y++, ymax--, ty+=th) {
 
     if(y >= height) { y -= height; }
 
     var row = this.layer.data[y];
-    for(x = normStartX, xmax = right - left, tx = baseX;
+    for(x=normStartX, xmax=right-left, tx=baseX;
       xmax >= 0;
-      x++, xmax--, tx += tw) {
+      x++, xmax--, tx+=tw) {
 
       if(x >= width) { x -= width; }
 
       var tile = row[x];
-      if(!tile || tile.index < 0) {
-        continue;
-      }
+
+      if(!tile || tile.index < 0) { continue; }
 
       var index = tile.index;
       var set = tilesets[index];
@@ -356,7 +224,8 @@ TilemapSprite.prototype.renderRegion = function(scrollX, scrollY, left, top, rig
         set = this.resolveTileset(index);
       }
 
-      //  Setting the globalAlpha is 'surprisingly expensive' in Chrome (38)
+      // setting the globalAlpha is
+      // surprisingly expensive in Chrome
       if(tile.alpha !== lastAlpha && !this.debug) {
         context.globalAlpha = tile.alpha;
         lastAlpha = tile.alpha;
@@ -391,20 +260,16 @@ TilemapSprite.prototype.renderRegion = function(scrollX, scrollY, left, top, rig
 };
 
 TilemapSprite.prototype.renderFull = function() {
-  var scrollX = 0;//this._mc.scrollX;
-  var scrollY = 0;//this._mc.scrollY;
-
-  var renderW = this.canvas.width;
-  var renderH = this.canvas.height;
-
-  var tw = this._mc.tileWidth;
-  var th = this._mc.tileHeight;
-
-  var left = 0; //global.Math.floor(scrollX / tw);
-  var right = global.Math.floor((renderW - 1) / tw); //global.Math.floor((renderW - 1 + scrollX) / tw);
-  var top = 0; //global.Math.floor(scrollY / th);
-  var bottom = global.Math.floor((renderH - 1) / th); //global.Math.floor((renderH - 1 + scrollY) / th);
-
+  var scrollX = 0,
+      scrollY = 0,
+      renderW = this.canvas.width,
+      renderH = this.canvas.height,
+      tw = this._mc.tileWidth,
+      th = this._mc.tileHeight,
+      left = 0,
+      top = 0,
+      right = global.Math.floor((renderW - 1) / tw),
+      bottom = global.Math.floor((renderH - 1) / th);
   this.context.clearRect(0, 0, renderW, renderH);
   this.renderRegion(scrollX, scrollY, left, top, right, bottom);
 };
@@ -412,71 +277,19 @@ TilemapSprite.prototype.renderFull = function() {
 TilemapSprite.prototype.render = function() {
   var redrawAll = false;
 
-  if(!this.visible) {
-    return;
-  }
-
+  if(!this.visible) { return; }
   if(this.dirty || this.layer.dirty) {
     this.layer.dirty = false;
     redrawAll = true;
   }
 
-  // var renderWidth = this.canvas.width; // Use Sprite.width/height?
-  // var renderHeight = this.canvas.height;
-
-  // //  Scrolling bias; whole pixels only
-  // var scrollX = this._scrollX | 0;
-  // var scrollY = this._scrollY | 0;
-
-  // var mc = this._mc;
-  // var shiftX = mc.scrollX - scrollX; // Negative when scrolling right/down
-  // var shiftY = mc.scrollY - scrollY;
-
-  if(!redrawAll) { //&&
-      // shiftX === 0 && shiftY === 0 &&
-      // mc.renderWidth === renderWidth && mc.renderHeight === renderHeight) {
-    //  No reason to redraw map, looking at same thing and not invalidated.
-    return;
-  }
+  if(!redrawAll) { return; }
 
   this.context.save();
-  
-  // mc.scrollX = scrollX;
-  // mc.scrollY = scrollY;
-
-  // if(mc.renderWidth !== renderWidth || mc.renderHeight !== renderHeight) {
-  //   //  Could support automatic canvas resizing
-  //   mc.renderWidth = renderWidth;
-  //   mc.renderHeight = renderHeight;
-  // }
-
-  // if(this.debug) {
-  //   this.context.globalAlpha = this.debugSettings.debugAlpha;
-
-  //   if(this.debugSettings.forceFullRedraw) {
-  //     redrawAll = true;
-  //   }
-  // }
-
-  // if(!redrawAll &&
-  //     this.renderSettings.enableScrollDelta && (
-  //     global.Math.abs(shiftX) + global.Math.abs(shiftY)) < global.Math.min(renderWidth, renderHeight)) {
-  //   this.renderDeltaScroll(shiftX, shiftY);
-  // } else {
-    // Too much change or otherwise requires full render
-    this.renderFull();
-  // }
-
-  // if(this.debug) {
-  //   this.context.globalAlpha = 1;
-  //   this.renderDebug();
-  // }
-
+  this.renderFull();
   this.texture.update();
   this.dirty = false;
   this.context.restore();
-
-  return true;
 };
 
 module.exports = TilemapSprite;
