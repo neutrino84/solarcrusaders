@@ -23,6 +23,7 @@ var Device = require('./system/Device'),
     Tilemap = require('./tilemap/Tilemap'),
     TilemapLayer = require('./tilemap/TilemapLayer'),
     TilemapSprite = require('./tilemap/TilemapSprite'),
+    TilemapPathing = require('./tilemap/TilemapPathing'),
     Tileset = require('./tilemap/Tileset'),
     Tile = require('./tilemap/Tile');
 
@@ -63,6 +64,7 @@ var core = module.exports =
     Tilemap: Tilemap,
     TilemapLayer: TilemapLayer,
     TilemapSprite: TilemapSprite,
+    TilemapPathing: TilemapPathing,
     Tileset: Tileset,
     Tile: Tile,
 
