@@ -39,8 +39,7 @@ TilemapPathing.prototype.updateMap = function() {
       tile = this._tilemap.layers[this._layerIndex].data[y][x];
       index = tile.index - tileset.firstgid;
 
-      if(tile.index < 0)
-        continue;
+      if(tile.index < 0) { continue; }
 
       properties = tileset.tileProperties[index];
       walkable = properties && properties.walkable === 'true' ? true : false;
@@ -304,6 +303,8 @@ TilemapPathing.TilemapPathingPath = function(nodes, start, goal) {
   this.goal = goal || null;
   this.visited = [];
 };
+
+module.exports = TilemapPathing;
 
 /*
 Phaser.Utils.Debug.prototype.pathingInfo = function(astar, x, y, color, showVisited) {
