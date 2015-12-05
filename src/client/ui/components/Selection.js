@@ -9,7 +9,7 @@ function Selection(game) {
 
   this.selection = new SelectionView(game);
   this.selection.start();
-  // this.selection.on('selected', this._selected, this);
+  this.selection.on('selected', this._selected, this);
 
   this.addView(this.selection);
 };
@@ -23,9 +23,9 @@ Selection.prototype.calcPreferredSize = function(target) {
 
 Selection.prototype.doLayout = function() {};
 
-// Selection.prototype._selected = function(rectangle) {
-//   this.game.emit('gui/sector/selected', rectangle);
-// };
+Selection.prototype._selected = function(pointer, rectangle) {
+  this.game.emit('gui/selected', pointer, rectangle);
+};
 
 Selection.prototype.start = function() {
   this.selection.start();

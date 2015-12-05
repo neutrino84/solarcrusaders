@@ -246,7 +246,7 @@ SelectionView.prototype._stopDrag = function(pointer) {
   }
 
   // emit selected bounding rect
-  this.game.emit('gui/sector/selected', pointer, rect);
+  this.emit('selected', pointer, rect);
 
   // clear rect
   this.clear();

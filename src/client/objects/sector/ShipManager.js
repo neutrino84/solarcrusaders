@@ -39,7 +39,7 @@ function ShipManager(game) {
   this.socket.on('ship/destroyed', this._destroyedBind = this._destroyed.bind(this));
 
   // subscribe to messages
-  game.on('gui/sector/selected', this._selected, this);
+  game.on('gui/selected', this._selected, this);
 }
 
 ShipManager.prototype = Object.create(EventEmitter.prototype);
@@ -163,7 +163,7 @@ ShipManager.prototype.destroy = function() {
       auth = this.game.auth,
       socket = this.socket;
 
-  game.removeListener('gui/sector/selected', this._selected);
+  game.removeListener('gui/selected', this._selected);
 
   auth.removeListener('disconnected', this._disconnected);
   
