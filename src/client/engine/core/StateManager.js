@@ -6,7 +6,7 @@ function StateManager(game, state) {
 
   this.states = {};
   this.backgroundStates = {};
-  this.current = '';
+  this._current = '';
 
   this._pendingBackgroundStates = [];
   this._pendingState = state || null;
@@ -59,7 +59,7 @@ StateManager.prototype.add = function(key, state, autoStart, background) {
 };
 
 StateManager.prototype.remove = function(key) {
-  if(this.current === key) {
+  if(this._current === key) {
     this.callbackContext = null;
   }
   delete this.states[key];
@@ -92,7 +92,7 @@ StateManager.prototype.restart = function(clearWorld, clearCache) {
   if(clearWorld === undefined) { clearWorld = true; }
   if(clearCache === undefined) { clearCache = false; }
 
-  this._pendingState = this.current;
+  this._pendingState = this._current;
   this._clearWorld = clearWorld;
   this._clearCache = clearCache;
 
@@ -102,7 +102,7 @@ StateManager.prototype.restart = function(clearWorld, clearCache) {
 };
 
 StateManager.prototype.clearCurrentState = function() {
-  if(this.current) {
+  if(this._current) {
     if(this.callbackContext.shutdown) {
       this.callbackContext.shutdown();
     }
@@ -143,15 +143,15 @@ StateManager.prototype.setCurrentBackgroundState = function(key) {
 };
 
 StateManager.prototype.setCurrentState = function(key) {
-  // set current context
+  // set key
+  this._current = key;
+  this._created = false;
+  
+  // set context
   this.callbackContext = this.states[key];
-  this.current = key;
 
   // inject game instance
   this.states[key].game = this.game;
-
-  // reset
-  this._created = false;
 
   // current and pendingState should equal each other
   if(this.callbackContext.init) {
@@ -164,10 +164,6 @@ StateManager.prototype.setCurrentState = function(key) {
   }
 
   this.game._kickstart = true;
-};
-
-StateManager.prototype.getCurrentState = function() {
-  return this.states[this.current];
 };
 
 StateManager.prototype.getBackgroundState = function(key) {
@@ -193,16 +189,16 @@ StateManager.prototype.preUpdate = function() {
       this.backgroundLoadComplete();
     }
   } else if(this._pendingState && this.game.isBooted) {
-    var previousStateKey = this.current;
+    var previousStateKey = this._current;
 
     // get rid of old
     // state if we have one
     this.clearCurrentState();
     this.setCurrentState(this._pendingState);
 
-    // this.onStateChange.dispatch(this.current, previousStateKey);
+    this.emit('stateChange', this._current, previousStateKey);
 
-    if(this.current !== this._pendingState) {
+    if(this._current !== this._pendingState) {
       return;
     } else {
       this._pendingState = null;
@@ -322,10 +318,17 @@ StateManager.prototype.destroy = function() {
 
   this.game = null;
   this.states = {};
-  this.current = '';
   this.backgroundStates = {};
+
+  this._current = '';
   this._pendingState = null;
 }
+
+Object.defineProperty(StateManager.prototype, 'current', {
+  get: function() {
+    return this.states[this._current];
+  }
+});
 
 Object.defineProperty(StateManager.prototype, 'hasPendingState', {
   get: function() {
