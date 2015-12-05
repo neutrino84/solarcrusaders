@@ -5,6 +5,7 @@ var pixi = require('pixi'),
     engine = require('engine'),
     LoadingState = require('./states/LoadingState'),
     Auth = require('./net/Auth'),
+    ShipNetManager = require('./net/ShipNetManager'),
     startGameEngine = function() {
       var game = new engine.Game({
             parent: 'content',
@@ -13,8 +14,9 @@ var pixi = require('pixi'),
           }),
           loadingState = new LoadingState();
 
-      // begin auth procedure
+      // activate net code
       game.auth = new Auth(game);
+      game.shipNetManager = new ShipNetManager(game);
 
       // create game state
       game.state.add('loader', loadingState, true, true);

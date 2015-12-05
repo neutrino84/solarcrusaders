@@ -10,9 +10,10 @@ function ShipManager(game) {
   this.game = game;
   this.net = game.net;
   this.socket = game.net.socket;
+  this.shipNetManager = game.shipNetManager;
+
   this.shipsGroup = new engine.Group(game);
-  this.trajectoryGroup = new engine.Group(game);
-  
+  this.trajectoryGroup = new engine.Group(game);  
   this.fxGroup = new engine.Group(game);
   // this.fxGroup.blendMode = engine.BlendMode.ADD;
 
@@ -33,9 +34,9 @@ function ShipManager(game) {
 
   // networking
   // TODO: move to client/net/Sector.js... maybe not?
-  this.socket.on('sync', this._syncBind = this._sync.bind(this));
-  this.socket.on('plotted', this._plottedBind = this._plotted.bind(this));
-  this.socket.on('destroyed', this._destroyedBind = this._destroyed.bind(this));
+  this.socket.on('ship/sync', this._syncBind = this._sync.bind(this));
+  this.socket.on('ship/plotted', this._plottedBind = this._plotted.bind(this));
+  this.socket.on('ship/destroyed', this._destroyedBind = this._destroyed.bind(this));
 
   // subscribe to messages
   game.on('gui/sector/selected', this._selected, this);
@@ -45,31 +46,34 @@ ShipManager.prototype = Object.create(EventEmitter.prototype);
 ShipManager.prototype.constructor = ShipManager;
 
 ShipManager.prototype._sync = function(data) {
-  var ship, cached,
-      offset, vector,
+  var ship, cached, offset,
       ships = data.ships,
       length = ships.length,
-      created;
+      details, created;
   for(var s=0; s<length; s++) {
     ship = ships[s];
-    created = !this.ships[ship.uuid];
-    cached = this.ships[ship.uuid] ? this.ships[ship.uuid] : this.ships[ship.uuid] = this.createShip(ship);
-    offset = engine.Point.distance(ship.current, cached.movement.current);
+    details = this.shipNetManager.getShipDataByUuid(ship.uuid);
 
-    if(offset > 64 || created) {
-      cached.rotation = ship.rotation;
-      cached.position.set(ship.current.x, ship.current.y);
-      cached.movement.throttle = ship.throttle;
+    if(details) {
+      created = !this.ships[ship.uuid];
+      cached = this.ships[ship.uuid] ? this.ships[ship.uuid] : this.ships[ship.uuid] = this.create(ship, details);
+      offset = engine.Point.distance(ship.current, cached.movement.current);
 
-      if(ship.moving) {
-        cached.movement.plot(ship.destination, ship.current, ship.previous);
-        // if(!cached.movement.valid) {
-        //   console.log('plot linear');
-        //   cached.movement.plotLinear(ship.destination, ship.current, ship.previous);
-        // }
-        // cached.movement.drawData();
-      } else {
-        cached.movement.animation.stop();
+      if(offset > 64 || created) {
+        cached.rotation = ship.rotation;
+        cached.position.set(ship.current.x, ship.current.y);
+        cached.movement.throttle = ship.throttle;
+
+        if(ship.moving) {
+          cached.movement.plot(ship.destination, ship.current, ship.previous);
+          // if(!cached.movement.valid) {
+          //   console.log('plot linear');
+          //   cached.movement.plotLinear(ship.destination, ship.current, ship.previous);
+          // }
+          // cached.movement.drawData();
+        } else {
+          cached.movement.animation.stop();
+        }
       }
     }
 
@@ -102,15 +106,14 @@ ShipManager.prototype.update = function() {
 
 };
 
-ShipManager.prototype.createShip = function(data) {
+ShipManager.prototype.create = function(data, details) {
   var game = this.game,
 
-      ship = new Ship(this, data.chasis);//,
-      // plotThreshold = ship.config.oribit.radius * 2;
+      ship = new Ship(this, details.chasis);
       
       ship.uuid = data.uuid;
-      ship.user = data.user;
-      ship.username = data.username;
+      ship.user = details.user;
+      ship.username = details.username;
       ship.fxGroup = this.fxGroup;
 
       ship.boot();
@@ -162,9 +165,9 @@ ShipManager.prototype.destroy = function() {
 
   auth.removeListener('disconnected', this._disconnected);
   
-  socket.removeListener('sync', this._syncBind);
-  socket.removeListener('plotted', this._plottedBind);
-  socket.removeListener('destroyed', this._destroyedBind);
+  socket.removeListener('ship/sync', this._syncBind);
+  socket.removeListener('ship/plotted', this._plottedBind);
+  socket.removeListener('ship/destroyed', this._destroyedBind);
 
   this.game = this.socket =
     this._syncBind = this._plottedBind =
@@ -233,7 +236,7 @@ ShipManager.prototype._selected = function(pointer, rectangle) {
       ship = selected[i];
       if(ship.isPlayer) {
         ship.movement.plot(point);
-        this.game.net.socket.emit('plot', {
+        this.socket.emit('ship/plot', {
           uuid: ship.uuid,
           destination: point
         });

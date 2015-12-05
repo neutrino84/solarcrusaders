@@ -26,8 +26,9 @@ ShipManager.prototype.constructor = ShipManager;
 ShipManager.prototype.init = function() {
   var self = this;
 
-  // navigation
-  this.sockets.iorouter.on('plot', this.plot.bind(this));
+  // io router
+  this.sockets.iorouter.on('ship/data', this.data.bind(this));
+  this.sockets.iorouter.on('ship/plot', this.plot.bind(this));
 
   // generate npcs
   this.generateRandomShips();
@@ -63,7 +64,7 @@ ShipManager.prototype.remove = function(ship) {
   s.position = undefined;
   s.config = undefined;
 
-  this.sockets.io.sockets.emit('destroyed', {
+  this.sockets.io.sockets.emit('ship/destroyed', {
     uuid: ship.uuid
   });
 };
@@ -95,6 +96,32 @@ ShipManager.prototype.plot = function(sock, args, next) {
   }
 };
 
+ShipManager.prototype.data = function(sock, args, next) {
+  var self = this, ship,
+      uuids = args[1].uuids,
+      ships = [];
+  for(var u in uuids) {
+    ship = this.ships[uuids[u]];
+    if(ship) {
+      ships.push({
+        id: ship.id,
+        uuid: ship.uuid,
+        user: ship.user ? ship.user.uuid : null,
+        username: ship.user ? ship.user.username : null,
+        chasis: ship.chasis,
+        sector: ship.sector,
+        x: ship.x,
+        y: ship.y,
+        throttle: ship.throttle,
+        rotation: ship.rottion
+      });
+    }
+  }
+  sock.emit('ship/data', {
+    ships: ships
+  });
+};
+
 ShipManager.prototype.update = function() {
   var ship, previous, movement,
       ships = this.ships,
@@ -110,9 +137,6 @@ ShipManager.prototype.update = function() {
 
     arr.push({
       uuid: ship.uuid,
-      user: ship.user ? ship.user.uuid : null,
-      username: ship.user ? ship.user.username : null,
-      chasis: ship.chasis,
       throttle: ship.throttle,
       rotation: ship.rotation,
       previous: previous,
@@ -122,7 +146,7 @@ ShipManager.prototype.update = function() {
     });
   }
 
-  this.sockets.io.sockets.emit('sync', { ships: arr });
+  this.sockets.io.sockets.emit('ship/sync', { ships: arr });
 };
 
 ShipManager.prototype.generateRandomShips = function() {
@@ -137,14 +161,14 @@ ShipManager.prototype.generateRandomShips = function() {
   for(var key in iterator) {
     for(var i=0; i<iterator[key].count; i++) {
       config = engine.ShipConfiguration[key];
-      position = this._generateRandomPosition();
+      position = this._generateRandomPositionInView();
       data = {
         uuid: uuid.v4(),
         x: position.x,
         y: position.y,
         rotation: global.Math.random() * global.Math.PI,
         chasis: key,
-        throttle: config.speed
+        throttle: 0.8 + (global.Math.random() * 3)
       };
       this.add(data);
     }
@@ -158,9 +182,8 @@ ShipManager.prototype._plot = function(ship, destination) {
 
   ship.movement.plot(destination, ship.movement.startPosition, previous);
 
-  this.sockets.io.sockets.emit('plotted', {
+  this.sockets.io.sockets.emit('ship/plotted', {
     uuid: ship.uuid,
-    user: ship.user ? ship.user.uuid : null,
     destination: destination,
     throttle: ship.throttle,
     rotation: ship.rotation,
