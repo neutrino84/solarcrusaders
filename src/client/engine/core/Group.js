@@ -30,67 +30,62 @@ Group.SORT_DESCENDING = 1;
 Group.prototype = Object.create(pixi.Container.prototype);
 Group.prototype.constructor = Group;
 
-Group.prototype.add =
-  function(child, silent) {
-    if(silent === undefined) { silent = false; }
+Group.prototype.add = function(child, silent) {
+  if(silent === undefined) { silent = false; }
 
-    if(child.parent !== this) {
-      this.addChild(child);
-      child.z = this.children.length;
+  if(child.parent !== this) {
+    this.addChild(child);
+    child.z = this.children.length;
 
-      if(!silent && child.onAddedToGroup) {
-        child.onAddedToGroup(this);
-      }
-
-      if(this.cursor === null) {
-        this.cursor = child;
-      }
+    if(!silent && child.onAddedToGroup) {
+      child.onAddedToGroup(this);
     }
 
-    return child;
-  };
-
-Group.prototype.getFirstExists =
-  function(exists) {
-    if(typeof exists !== 'boolean') {
-      exists = true;
+    if(this.cursor === null) {
+      this.cursor = child;
     }
-    return this.iterate('exists', exists, Group.RETURN_CHILD);
-  };
+  }
 
-Group.prototype.iterate =
-  function(key, value, returnType, callback, callbackContext, args) {
-    if(returnType === Group.RETURN_TOTAL && this.children.length === 0) {
-      return 0;
-    }
+  return child;
+};
 
-    var total = 0;
-    for(var i = 0; i < this.children.length; i++) {
-      if(this.children[i][key] === value) {
-        total++;
+Group.prototype.getFirstExists = function(exists) {
+  if(typeof exists !== 'boolean') {
+    exists = true;
+  }
+  return this.iterate('exists', exists, Group.RETURN_CHILD);
+};
 
-        if(callback) {
-          if(args) {
-            args[0] = this.children[i];
-            callback.apply(callbackContext, args);
-          } else {
-            callback.call(callbackContext, this.children[i]);
-          }
-        }
+Group.prototype.iterate = function(key, value, returnType, callback, callbackContext, args) {
+  if(returnType === Group.RETURN_TOTAL && this.children.length === 0) { return 0; }
 
-        if(returnType === Group.RETURN_CHILD) {
-          return this.children[i];
+  var total = 0;
+  for(var i = 0; i < this.children.length; i++) {
+    if(this.children[i][key] === value) {
+      total++;
+
+      if(callback) {
+        if(args) {
+          args[0] = this.children[i];
+          callback.apply(callbackContext, args);
+        } else {
+          callback.call(callbackContext, this.children[i]);
         }
       }
-    }
 
-    if(returnType === Group.RETURN_TOTAL) {
-      return total;
+      if(returnType === Group.RETURN_CHILD) {
+        return this.children[i];
+      }
     }
+  }
 
-    // RETURN_CHILD or RETURN_NONE
-    return null;
-  };
+  if(returnType === Group.RETURN_TOTAL) {
+    return total;
+  }
+
+  // RETURN_CHILD or RETURN_NONE
+  return null;
+};
 
 Group.prototype.filter = function(predicate, checkExists) {
   var child, index = -1,
@@ -132,13 +127,11 @@ Group.prototype.forEach = function(callback, callbackContext, checkExists) {
   }
 };
 
-Group.prototype.remove = function (child, destroy, silent) {
+Group.prototype.remove = function(child, destroy, silent) {
   if(destroy === undefined) { destroy = false; }
   if(silent === undefined) { silent = false; }
 
-  if(this.children.length === 0 || this.children.indexOf(child) === -1) {
-    return false;
-  }
+  if(this.children.length === 0 || this.children.indexOf(child) === -1) { return false; }
 
   // if(!silent && child.events && !child.destroyPhase) {
   //   child.events.onRemovedFromGroup$dispatch(child, this);
@@ -164,9 +157,7 @@ Group.prototype.removeAll = function(destroy, silent) {
   if(destroy === undefined) { destroy = false; }
   if(silent === undefined) { silent = false; }
 
-  if(this.children.length === 0) {
-    return;
-  }
+  if(this.children.length === 0) { return; }
 
   var removed;
   do {
@@ -185,64 +176,60 @@ Group.prototype.removeAll = function(destroy, silent) {
   this.cursor = null;
 };
 
-Group.prototype.preUpdate =
-  function() {
-    if(this.pendingDestroy) {
-      this.destroy();
-      return false;
+Group.prototype.preUpdate = function() {
+  if(this.pendingDestroy) {
+    this.destroy();
+    return false;
+  }
+
+  if(!this.exists || !this.parent.exists) {
+    this.renderOrderID = -1;
+    return false;
+  }
+
+  var i = this.children.length;
+  while (i--) {
+    this.children[i].preUpdate();
+  }
+
+  return true;
+};
+
+Group.prototype.update = function() {
+  var i = this.children.length;
+  while (i--) {
+    this.children[i].update();
+  }
+};
+
+Group.prototype.postUpdate = function() {
+  var i = this.children.length;
+  while (i--) {
+    this.children[i].postUpdate();
+  }
+};
+
+Group.prototype.destroy = function(destroyChildren, soft) {
+  if(this.game === null || this.ignoreDestroy) { return; }
+  if(destroyChildren === undefined) { destroyChildren = true; }
+  if(soft === undefined) { soft = false; }
+
+  this.onDestroy && this.onDestroy(destroyChildren, soft);
+  
+  this.removeAll(destroyChildren);
+
+  this.cursor = null;
+  this.filters = null;
+  this.pendingDestroy = false;
+
+  if(!soft) {
+    if(this.parent) {
+      this.parent.removeChild(this);
     }
-
-    if(!this.exists || !this.parent.exists) {
-      this.renderOrderID = -1;
-      return false;
-    }
-
-    var i = this.children.length;
-    while (i--) {
-      this.children[i].preUpdate();
-    }
-
-    return true;
-  };
-
-Group.prototype.update =
-  function() {
-    var i = this.children.length;
-    while (i--) {
-      this.children[i].update();
-    }
-  };
-
-Group.prototype.postUpdate =
-  function() {
-    var i = this.children.length;
-    while (i--) {
-      this.children[i].postUpdate();
-    }
-  };
-
-Group.prototype.destroy =
-  function(destroyChildren, soft) {
-    if(this.game === null || this.ignoreDestroy) { return; }
-    if(destroyChildren === undefined) { destroyChildren = true; }
-    if(soft === undefined) { soft = false; }
-
-    this.onDestroy && this.onDestroy(destroyChildren, soft);
-    
-    this.removeAll(destroyChildren);
-
-    this.cursor = null;
-    this.filters = null;
-    this.pendingDestroy = false;
-
-    if(!soft) {
-      if(this.parent) {
-        this.parent.removeChild(this);
-      }
-      this.game = null;
-      this.exists = false;
-      pixi.Container.prototype.destroy(this);
-    }  
+    this.game = null;
+    this.exists = false;
+    pixi.Container.prototype.destroy(this);
+  }  
 };
 
 module.exports = Group;
