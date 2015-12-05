@@ -41,8 +41,8 @@ ShipManager.prototype.add = function(ship) {
       y = global.parseInt(ship.y, 10);
 
   ship.game = this.game;
-  ship.throttle = global.parseInt(ship.throttle, 10);
-  ship.rotation = global.parseInt(ship.rotation, 10);
+  ship.throttle = global.parseFloat(ship.throttle);
+  ship.rotation = global.parseFloat(ship.rotation);
   ship.config = engine.ShipConfiguration[ship.chasis];
   ship.position = new engine.Point(x, y);
   ship.movement = new client.Movement(ship);
