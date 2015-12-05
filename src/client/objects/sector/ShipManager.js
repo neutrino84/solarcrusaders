@@ -222,8 +222,10 @@ ShipManager.prototype._selected = function(pointer, rectangle) {
         }
       }
     }
-    if(child.selected && pointer.button === engine.Mouse.RIGHT_BUTTON && rectangle.volume <= 300) {
-      selected.push(child);
+    if(pointer.button === engine.Mouse.RIGHT_BUTTON) {
+      if(child.selected && rectangle.volume <= 300) {
+        selected.push(child);
+      }
     }
   });
 
