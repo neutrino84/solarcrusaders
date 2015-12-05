@@ -52,6 +52,8 @@ ShipManager.prototype._sync = function(data) {
       details, created;
   for(var s=0; s<length; s++) {
     ship = ships[s];
+    
+    // load ship details
     details = this.shipNetManager.getShipDataByUuid(ship.uuid);
 
     if(details) {
