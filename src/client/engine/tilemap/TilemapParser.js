@@ -5,25 +5,15 @@ var Tile = require('./Tile'),
 
 var TilemapParser = {
 
-  parse: function(game, key, tileWidth, tileHeight, width, height) {
-    if(tileWidth === undefined) { tileWidth = 32; }
-    if(tileHeight === undefined) { tileHeight = 32; }
-    if(width === undefined) { width = 10; }
-    if(height === undefined) { height = 10; }
-
-    if(key === undefined) {
-      return this.getEmptyData();
-    }
-
-    if(key === null) {
-      return this.getEmptyData(tileWidth, tileHeight, width, height);
-    }
-
+  parse: function(game, key, mixin) {
+    if(key === undefined) { return this.getEmptyData(); }
+    if(mixin === undefined) { mixin = {}; }
+    
     var map = game.cache.getTilemapData(key);
     if(map) {
-      return this.parseTiledJSON(map.data);
+      return this.parseTiledJSON(Class.mixin(mixin, map.data));
     } else {
-      console.warn('TilemapParser.parse - No map data found for key ' + key);
+      throw new Error('TilemapParser.parse - No map data found for key ' + key);
     }
   },
 
@@ -230,9 +220,7 @@ var TilemapParser = {
     // Images
     var images = [];
     for(var i = 0; i < json.layers.length; i++) {
-      if(json.layers[i].type !== 'imagelayer') {
-        continue;
-      }
+      if(json.layers[i].type !== 'imagelayer') { continue; }
 
       var image = {
         name: json.layers[i].name,
@@ -299,9 +287,7 @@ var TilemapParser = {
     }
 
     for(var i = 0; i < json.layers.length; i++) {
-      if(json.layers[i].type !== 'objectgroup') {
-        continue;
-      }
+      if(json.layers[i].type !== 'objectgroup') { continue; }
 
       objects[json.layers[i].name] = [];
       collision[json.layers[i].name] = [];

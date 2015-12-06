@@ -6,13 +6,11 @@ var TilemapParser = require('./TilemapParser'),
     Sprite = require('../display/Sprite'),
     ArrayUtils = require('../utils/ArrayUtils');
 
-function Tilemap(game, key, tileWidth, tileHeight, width, height) {
+function Tilemap(game, key, mixin) {
   this.game = game;
   this.key = key;
 
-  var data = TilemapParser.parse(this.game, key, tileWidth, tileHeight, width, height);
-  
-  if(data === null) { return; }
+  var data = this.parse(key, mixin);
 
   this.width = data.width;
   this.height = data.height;
@@ -58,6 +56,10 @@ Tilemap.WEST = 3;
 
 Tilemap.prototype = {
 
+  parse: function(key, mixin) {
+    return TilemapParser.parse(this.game, key, mixin);
+  },
+
   create: function(name, width, height, tileWidth, tileHeight, group) {
     if(group === undefined) { group = this.game.world; }
 
@@ -100,15 +102,11 @@ Tilemap.prototype = {
       key = tileset;
     }
 
-    // if(key instanceof Phaser.BitmapData) {
-    //   img = key.canvas;
-    // } else {
-      if(!this.game.cache.checkImageKey(key)) {
-        console.warn('Tilemap.addTilesetImage: Invalid image key given: "' + key + '"');
-        return null;
-      }
-      img = this.game.cache.getImage(key);
-    // }
+    if(!this.game.cache.checkImageKey(key)) {
+      console.warn('Tilemap.addTilesetImage: Invalid image key given: "' + key + '"');
+      return null;
+    }
+    img = this.game.cache.getImage(key);
 
     var idx = this.getTilesetIndex(tileset);
     if(idx === null) {
@@ -998,10 +996,8 @@ Tilemap.prototype = {
 
   destroy: function() {
     this.removeAllLayers();
-    this.data = [];
     this.game = null;
   }
-
 };
 
 Tilemap.prototype.constructor = Tilemap;

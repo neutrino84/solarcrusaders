@@ -26,7 +26,7 @@ function Tileset(name, firstgid, width, height, margin, spacing, properties) {
 
 Tileset.prototype = {
 
-  draw: function (context, x, y, index) {
+  draw: function(context, x, y, index) {
     //  Correct the tile index for the set and bias for interlacing
     var coordIndex = (index - this.firstgid) << 1;
 
@@ -45,19 +45,19 @@ Tileset.prototype = {
     }
   },
 
-  containsTileIndex: function (tileIndex) {
+  containsTileIndex: function(tileIndex) {
     return (
       tileIndex >= this.firstgid &&
       tileIndex < (this.firstgid + this.total)
     );
   },
 
-  setImage: function (image) {
+  setImage: function(image) {
     this.image = image;
     this.updateTileData(image.width, image.height);
   },
 
-  setSpacing: function (margin, spacing) {
+  setSpacing: function(margin, spacing) {
     this.tileMargin = margin | 0;
     this.tileSpacing = spacing | 0;
 
@@ -66,7 +66,7 @@ Tileset.prototype = {
     }
   },
 
-  updateTileData: function (imageWidth, imageHeight) {
+  updateTileData: function(imageWidth, imageHeight) {
     // May be fractional values
     var rowCount = (imageHeight - this.tileMargin * 2 + this.tileSpacing) / (this.tileHeight + this.tileSpacing);
     var colCount = (imageWidth - this.tileMargin * 2 + this.tileSpacing) / (this.tileWidth + this.tileSpacing);
