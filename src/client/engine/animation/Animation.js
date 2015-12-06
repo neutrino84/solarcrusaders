@@ -1,11 +1,13 @@
 
+var EventEmitter = require('eventemitter3');
+
 function Animation(game, parent, name, frameData, frames, frameRate, loop) {
   if(loop === undefined) { loop = false; }
 
   this.game = game;
   this.name = name;
+  this.parent = parent;
 
-  this._parent = parent;
   this._frameData = frameData;
   this._frames = [];
   this._frames = this._frames.concat(frames);
@@ -20,38 +22,34 @@ function Animation(game, parent, name, frameData, frames, frameRate, loop) {
   this.isPaused = false;
 
   this._pauseStartTime = 0;
-
   this._frameIndex = 0;
   this._frameDiff = 0;
   this._frameSkip = 1;
 
   this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
 
-  // this.onStart = new Phaser.Signal();
-  // this.onUpdate = null;
-  // this.onComplete = new Phaser.Signal();
-  // this.onLoop = new Phaser.Signal();
-
   //  Set-up some event listeners
-  // this.game.onPause.add(this.onPause, this);
-  // this.game.onResume.add(this.onResume, this);
+  // this.game.on('pause', this.onPause, this);
+  // this.game.on('resume', this.onResume, this);
+
+  EventEmitter.call(this);
 };
 
 Animation.prototype = {
 
   play: function(frameRate, loop, killOnComplete) {
     if(typeof frameRate === 'number') {
-      //  If they set a new frame rate then use it, otherwise use the one set on creation
+      // if they set a new frame rate then use it, otherwise use the one set on creation
       this.delay = 1000 / frameRate;
     }
 
     if(typeof loop === 'boolean') {
-      //  If they set a new loop value then use it, otherwise use the one set on creation
+      // if they set a new loop value then use it, otherwise use the one set on creation
       this.loop = loop;
     }
 
     if(killOnComplete !== undefined) {
-      //  Remove the parent sprite once the animation has finished?
+      // remove the parent sprite once the animation has finished?
       this.killOnComplete = killOnComplete;
     }
 
@@ -64,14 +62,13 @@ Animation.prototype = {
     this._timeNextFrame = this.game.clock.time + this.delay;
 
     this._frameIndex = 0;
-    this.updateCurrentFrame(false, true);
+    this.updateCurrentFrame(true);
 
-    // this._parent.events.onAnimationStart$dispatch(this._parent, this);
+    this.emit('start', this.parent, this);
 
-    // this.onStart.dispatch(this._parent, this);
-
-    this._parent.animations.currentAnim = this;
-    this._parent.animations.currentFrame = this.currentFrame;
+    this.parent.emit('animationStart', this);
+    this.parent.animations.currentAnim = this;
+    this.parent.animations.currentFrame = this.currentFrame;
 
     return this;
   },
@@ -89,12 +86,13 @@ Animation.prototype = {
 
     this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
 
-    this._parent.setFrame(this.currentFrame);
+    this.parent.setFrame(this.currentFrame);
 
-    this._parent.animations.currentAnim = this;
-    this._parent.animations.currentFrame = this.currentFrame;
+    this.emit('start', this.parent, this);
 
-    // this.onStart.dispatch(this._parent, this);
+    this.parent.emit('animationStart', this);
+    this.parent.animations.currentAnim = this;
+    this.parent.animations.currentFrame = this.currentFrame;
   },
 
   setFrame: function(frameId, useLocalFrameIndex) {
@@ -104,7 +102,7 @@ Animation.prototype = {
       useLocalFrameIndex = false;
     }
 
-    //  Find the index to the desired frame.
+    // find the index to the desired frame.
     if(typeof frameId === 'string') {
       for (var i = 0; i < this._frames.length; i++) {
         if(this._frameData.getFrame(this._frames[i]).name === frameId) {
@@ -124,10 +122,11 @@ Animation.prototype = {
     }
 
     if(frameIndex) {
-      //  Set the current frame index to the found index. Subtract 1 so that it animates to the desired frame on update.
+      // set the current frame index to the found index.
+      // subtract 1 so that it animates to the desired frame on update.
       this._frameIndex = frameIndex - 1;
 
-      //  Make the animation update at next update
+      // make the animation update at next update
       this._timeNextFrame = this.game.clock.time;
 
       this.update();
@@ -144,12 +143,12 @@ Animation.prototype = {
 
     if(resetFrame) {
       this.currentFrame = this._frameData.getFrame(this._frames[0]);
-      this._parent.setFrame(this.currentFrame);
+      this.parent.setFrame(this.currentFrame);
     }
 
     if(dispatchComplete) {
-      // this._parent.events.onAnimationComplete$dispatch(this._parent, this);
-      // this.onComplete.dispatch(this._parent, this);
+      this.parent.emit('animationComplete', this);
+      this.emit('complete', this.parent, this);
     }
   },
 
@@ -173,7 +172,6 @@ Animation.prototype = {
 
       //  Lagging?
       this._frameDiff = this.game.clock.time - this._timeNextFrame;
-
       this._timeLastFrame = this.game.clock.time;
 
       if(this._frameDiff > this.delay) {
@@ -184,7 +182,6 @@ Animation.prototype = {
 
       //  And what's left now?
       this._timeNextFrame = this.game.clock.time + (this.delay - this._frameDiff);
-
       this._frameIndex += this._frameSkip;
 
       if(this._frameIndex >= this._frames.length) {
@@ -195,58 +192,46 @@ Animation.prototype = {
 
           //  Instead of calling updateCurrentFrame we do it here instead
           if(this.currentFrame) {
-            this._parent.setFrame(this.currentFrame);
+            this.parent.setFrame(this.currentFrame);
           }
 
           this.loopCount++;
-          // this._parent.events.onAnimationLoop$dispatch(this._parent, this);
-          // this.onLoop.dispatch(this._parent, this);
 
-          if(this.onUpdate) {
-            // this.onUpdate.dispatch(this, this.currentFrame);
+          // dispatch events
+          // this.parent.emit('animationLoop', this);
+          // this.emit('loop', this.parent, this);
 
-            // False ifthe animation was destroyed from within a callback
-            return !!this._frameData;
-          } else {
-            return true;
-          }
+          return true;
         } else {
           this.complete();
           return false;
         }
       } else {
-        return this.updateCurrentFrame(true);
+        return this.updateCurrentFrame();
       }
     }
 
     return false;
   },
 
-  updateCurrentFrame: function(signalUpdate, fromPlay) {
+  updateCurrentFrame: function(fromPlay) {
     if(fromPlay === undefined) { fromPlay = false; }
 
     if(!this._frameData) {
-      // The animation is already destroyed, probably from a callback
+      // the animation is already destroyed, probably from a callback
       return false;
     }
-        
-    //  Previous index
+
+    // previous index
     var idx = this.currentFrame.index;
 
     this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
 
     if(this.currentFrame && (fromPlay || (!fromPlay && idx !== this.currentFrame.index))) {
-      this._parent.setFrame(this.currentFrame);
+      this.parent.setFrame(this.currentFrame);
     }
 
-    if(this.onUpdate && signalUpdate) {
-      // this.onUpdate.dispatch(this, this.currentFrame);
-
-      // False ifthe animation was destroyed from within a callback
-      return !!this._frameData;
-    } else {
-      return true;
-    }
+    return true;
   },
 
   next: function(quantity) {
@@ -263,7 +248,7 @@ Animation.prototype = {
 
     if(frame !== this._frameIndex) {
       this._frameIndex = frame;
-      this.updateCurrentFrame(true);
+      this.updateCurrentFrame();
     }
   },
 
@@ -281,7 +266,7 @@ Animation.prototype = {
 
     if(frame !== this._frameIndex) {
       this._frameIndex = frame;
-      this.updateCurrentFrame(true);
+      this.updateCurrentFrame();
     }
   },
 
@@ -291,28 +276,19 @@ Animation.prototype = {
   },
 
   destroy: function() {
-    if(!this._frameData) {
-      // Already destroyed
-      return;
-    }
+    if(!this._frameData) { return; }
 
-    // this.game.onPause.remove(this.onPause, this);
-    // this.game.onResume.remove(this.onResume, this);
+    // this.game.removeListener('pause', this.onPause, this);
+    // this.game.removeListener('resume', this.onResume, this);
 
     this.game = null;
-    this._parent = null;
+    this.parent = null;
     this._frames = null;
     this._frameData = null;
     this.currentFrame = null;
     this.isPlaying = false;
 
-    // this.onStart.dispose();
-    // this.onLoop.dispose();
-    // this.onComplete.dispose();
-
-    // if(this.onUpdate) {
-    //   this.onUpdate.dispose();
-    // }
+    this.removeAllListeners();
   },
 
   complete: function() {
@@ -323,12 +299,11 @@ Animation.prototype = {
     this.isFinished = true;
     this.paused = false;
 
-    // this._parent.events.onAnimationComplete$dispatch(this._parent, this);
-
-    // this.onComplete.dispatch(this._parent, this);
+    this.parent.on('animationComplete', this);
+    this.on('complete', this.parent, this);
 
     if(this.killOnComplete) {
-      this._parent.kill();
+      this.parent.kill();
     }
   }
 };
@@ -374,11 +349,7 @@ Object.defineProperty(Animation.prototype, 'frame', {
 
     if(this.currentFrame !== null) {
       this._frameIndex = value;
-      this._parent.setFrame(this.currentFrame);
-
-      if(this.onUpdate) {
-        // this.onUpdate.dispatch(this, this.currentFrame);
-      }
+      this.parent.setFrame(this.currentFrame);
     }
   }
 });
@@ -395,48 +366,19 @@ Object.defineProperty(Animation.prototype, 'speed', {
   }
 });
 
-Object.defineProperty(Animation.prototype, 'enableUpdate', {
-  get: function() {
-    return (this.onUpdate !== null);
-  },
-
-  set: function(value) {
-    if(value && this.onUpdate === null) {
-      this.onUpdate = new Phaser.Signal();
-    } else if(!value && this.onUpdate !== null) {
-      this.onUpdate.dispose();
-      this.onUpdate = null;
-    }
-  }
-});
-
-Animation.generateFrameNames = function(prefix, start, stop, suffix, zeroPad) {
+Animation.generateFrameNames = function(prefix, start, stop, suffix) {
   if(suffix === undefined) { suffix = ''; }
 
   var output = [];
   var frame = '';
   if(start < stop) {
     for (var i = start; i <= stop; i++) {
-      if(typeof zeroPad === 'number') {
-        //  str, len, pad, dir
-        frame = Phaser.Utils.pad(i.toString(), zeroPad, '0', 1);
-      } else {
-        frame = i.toString();
-      }
-
-      frame = prefix + frame + suffix;
+      frame = prefix + i.toString() + suffix;
       output.push(frame);
     }
   } else {
     for (var i = start; i >= stop; i--) {
-      if(typeof zeroPad === 'number') {
-        //  str, len, pad, dir
-        frame = Phaser.Utils.pad(i.toString(), zeroPad, '0', 1);
-      } else {
-        frame = i.toString();
-      }
-
-      frame = prefix + frame + suffix;
+      frame = prefix + i.toString() + suffix;
       output.push(frame);
     }
   }
