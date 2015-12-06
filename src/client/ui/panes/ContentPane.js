@@ -89,4 +89,8 @@ ContentPane.prototype.addContent = function(constraint, panel) {
   this.content.addPanel(constraint, panel);
 };
 
+ContentPane.prototype.removeContent = function(panel) {
+  this.content.removePanel(panel);
+};
+
 module.exports = ContentPane;
