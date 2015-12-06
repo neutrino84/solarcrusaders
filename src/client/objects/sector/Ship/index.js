@@ -11,18 +11,20 @@ var engine = require('engine'),
     // ShockwaveEmitter = require('../emitters/ShockwaveEmitter');
 
 function Ship(manager, key) {
-  engine.Sprite.call(this, manager.game, key);
+  engine.Sprite.call(this, manager.game, 'ship-atlas');
 
   this.name = key;
   this.manager = manager;
   this.game = manager.game;
   this.config = manager.game.cache.getJSON('ship-configuration', false)[key];
 
+  this.frame = this.name + '.png';
+
   this.throttle = 0.0; // get from server
   this.rotation = 0.0; // get from server
   this.position = new engine.Point(); // get from server
   
-  this.pivot.set(this.texture.width / 2, this.texture.height / 2);
+  this.pivot.set(this.texture.frame.width / 2, this.texture.frame.height / 2);
   this.scale.set(this.config.size, this.config.size);
 
   this.movement = new Movement(this);
@@ -83,9 +85,9 @@ Ship.prototype.boot = function() {
   this.engineCore.create();
   this.targetingComputer.create();
 
-  if(this.name === 'vessel-x01') {
-    this.shieldGenerator.create();
-  }
+  // if(this.name === 'vessel-x01') {
+  //   this.shieldGenerator.create();
+  // }
 
   if(this.username) {
     this.label = new TextView(this.game, this.username);

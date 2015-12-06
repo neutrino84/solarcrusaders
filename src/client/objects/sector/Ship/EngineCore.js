@@ -28,7 +28,8 @@ EngineCore.prototype.create = function() {
   for(var g in config) {
     c = config[g];
 
-    glow = new engine.Sprite(parent.game, c.sprite);
+    glow = new engine.Sprite(parent.game, 'ship-atlas');
+    glow.frame = c.sprite + '.png';
     glow.pivot.set(128, 64);
     glow.rotation = global.Math.PI + engine.Math.degToRad(c.rotation);
     glow.position.set(c.position.x, c.position.y);
