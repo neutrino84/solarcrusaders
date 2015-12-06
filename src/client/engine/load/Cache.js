@@ -1,4 +1,5 @@
 var pixi = require('pixi'),
+    Loader = require('./Loader'),
     Frame = require('../animation/Frame'),
     FrameData = require('../animation/FrameData'),
     AnimationParser = require('../animation/AnimationParser'),
@@ -209,6 +210,30 @@ Cache.prototype = {
       base: new pixi.BaseTexture(data),
       frameData: AnimationParser.spriteSheet(this.game, data, frameWidth, frameHeight, frameMax, margin, spacing)
     };
+
+    this._cache.image[key] = obj;
+    this._resolveURL(url, obj);
+  },
+
+  addTextureAtlas: function (key, url, data, atlasData, format) {
+    var obj = {
+      key: key,
+      url: url,
+      data: data,
+      base: new pixi.BaseTexture(data)
+    };
+
+    if(format === Loader.TEXTURE_ATLAS_JSON_PYXEL) {
+      // currently unsupported
+      obj.frameData = AnimationParser.JSONDataPyxel(this.game, atlasData, key);
+    } else {
+      // let's just work it out from the frames array
+      if(Array.isArray(atlasData.frames)) {
+        obj.frameData = AnimationParser.JSONData(this.game, atlasData, key);
+      } else {
+        obj.frameData = AnimationParser.JSONDataHash(this.game, atlasData, key);
+      }
+    }
 
     this._cache.image[key] = obj;
     this._resolveURL(url, obj);
@@ -557,6 +582,10 @@ Cache.prototype = {
 
   removeSpriteSheet: function(key) {
     delete this._cache.spriteSheet[key];
+  },
+
+  removeTextureAtlas: function (key) {
+    delete this._cache.atlas[key];
   },
 
   _resolveURL: function(url, data) {

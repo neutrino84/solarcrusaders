@@ -54,7 +54,7 @@ Loader.prototype.constructor = Loader;
 
 Loader.prototype.checkKeyExists = function(type, key) {
   return this.getAssetIndex(type, key) > -1;
-},
+};
 
 Loader.prototype.getAssetIndex = function(type, key) {
   var bestFound = -1;
@@ -73,7 +73,7 @@ Loader.prototype.getAssetIndex = function(type, key) {
   }
 
   return bestFound;
-},
+};
 
 Loader.prototype.getAsset = function(type, key) {
   var fileIndex = this.getAssetIndex(type, key);
@@ -86,7 +86,7 @@ Loader.prototype.getAsset = function(type, key) {
   }
 
   return false;
-},
+};
 
 Loader.prototype.reset = function(hard, clearEvents) {
   if(clearEvents === undefined) { clearEvents = false; }
@@ -109,7 +109,7 @@ Loader.prototype.reset = function(hard, clearEvents) {
     // might remove this ability
     this.removeAllListeners();
   }
-},
+};
 
 Loader.prototype.addToFileList = function(type, key, url, properties, overwrite, extension) {
   if(overwrite === undefined) { overwrite = false; }
@@ -161,31 +161,31 @@ Loader.prototype.addToFileList = function(type, key, url, properties, overwrite,
   }
 
   return this;
-},
+};
 
 Loader.prototype.replaceInFileList = function(type, key, url, properties) {
   return this.addToFileList(type, key, url, properties, true);
-},
+};
 
 Loader.prototype.image = function(key, url, overwrite) {
   return this.addToFileList('image', key, url, undefined, overwrite, '.png');
-},
+};
 
 Loader.prototype.text = function(key, url, overwrite) {
   return this.addToFileList('text', key, url, undefined, overwrite, '.txt');
-},
+};
 
 Loader.prototype.json = function(key, url, overwrite) {
   return this.addToFileList('json', key, url, undefined, overwrite, '.json');
-},
+};
 
 Loader.prototype.shader = function(key, url, overwrite) {
   return this.addToFileList('shader', key, url, undefined, overwrite, '.frag');
-},
+};
 
 Loader.prototype.xml = function(key, url, overwrite) {
   return this.addToFileList('xml', key, url, undefined, overwrite, '.xml');
-},
+};
 
 Loader.prototype.script = function(key, url, callback, callbackContext) {
   if(callback === undefined) { callback = false; }
@@ -194,7 +194,7 @@ Loader.prototype.script = function(key, url, callback, callbackContext) {
     syncPoint: true, callback: callback,
     callbackContext: callbackContext
   }, false, '.js');
-},
+};
 
 Loader.prototype.binary = function(key, url, callback, callbackContext) {
   if(callback === undefined) { callback = false; }
@@ -203,7 +203,7 @@ Loader.prototype.binary = function(key, url, callback, callbackContext) {
     callback: callback,
     callbackContext: callbackContext
   }, false, '.bin');
-},
+};
 
 Loader.prototype.spritesheet = function(key, url, frameWidth, frameHeight, frameMax, margin, spacing) {
   if(frameMax === undefined) { frameMax = -1; }
@@ -213,7 +213,7 @@ Loader.prototype.spritesheet = function(key, url, frameWidth, frameHeight, frame
     frameWidth: frameWidth, frameHeight: frameHeight,
     frameMax: frameMax, margin: margin, spacing: spacing
   }, false, '.png');
-},
+};
 
 Loader.prototype.audio = function(key, urls, autoDecode) {
   if(this.game.sound.noAudio) {
@@ -224,7 +224,7 @@ Loader.prototype.audio = function(key, urls, autoDecode) {
     urls = [urls];
   }
   return this.addToFileList('audio', key, urls, { buffer: null, autoDecode: autoDecode });
-},
+};
 
 Loader.prototype.audiosprite = function(key, urls, jsonURL, jsonData, autoDecode) {
   if(this.game.sound.noAudio) {
@@ -249,7 +249,7 @@ Loader.prototype.audiosprite = function(key, urls, jsonURL, jsonData, autoDecode
   }
 
   return this;
-},
+};
 
 Loader.prototype.tilemap = function(key, url, data) {
   if(url === undefined) { url = null; }
@@ -265,7 +265,43 @@ Loader.prototype.tilemap = function(key, url, data) {
   }
 
   return this;
-},
+};
+
+Loader.prototype.atlasJSONArray = function(key, textureURL, atlasURL, atlasData) {
+  return this.atlas(key, textureURL, atlasURL, atlasData, Loader.TEXTURE_ATLAS_JSON_ARRAY);
+};
+
+Loader.prototype.atlasJSONHash = function(key, textureURL, atlasURL, atlasData) {
+  return this.atlas(key, textureURL, atlasURL, atlasData, Loader.TEXTURE_ATLAS_JSON_HASH);
+};
+
+Loader.prototype.atlas = function(key, textureURL, atlasURL, atlasData, format) {
+  if(textureURL === undefined || textureURL === null) { textureURL = key + '.png'; }
+  if(atlasURL === undefined) { atlasURL = null; }
+  if(atlasData === undefined) { atlasData = null; }
+  if(format === undefined) { format = Loader.TEXTURE_ATLAS_JSON_ARRAY; }
+
+  if(!atlasURL && !atlasData) {
+    atlasURL = key + '.json';
+  }
+
+  // a url to a json file has been given
+  if(atlasURL) {
+    this.addToFileList('textureatlas', key, textureURL, { atlasURL: atlasURL, format: format });
+  } else {
+    switch(format) {
+      // a json string or object has been given
+      case Loader.TEXTURE_ATLAS_JSON_ARRAY:
+        if(typeof atlasData === 'string') {
+          atlasData = JSON.parse(atlasData);
+        }
+        break;
+    }
+    this.addToFileList('textureatlas', key, textureURL, { atlasURL: null, atlasData: atlasData, format: format });
+  }
+
+  return this;
+};
 
 Loader.prototype.withSyncPoint = function(callback, callbackContext) {
   this._withSyncPointDepth++;
@@ -275,7 +311,7 @@ Loader.prototype.withSyncPoint = function(callback, callbackContext) {
     this._withSyncPointDepth--;
   }
   return this;
-},
+};
 
 Loader.prototype.addSyncPoint = function(type, key) {
   var asset = this.getAsset(type, key);
@@ -283,7 +319,7 @@ Loader.prototype.addSyncPoint = function(type, key) {
     asset.file.syncPoint = true;
   }
   return this;
-},
+};
 
 Loader.prototype.removeFile = function(type, key) {
   var asset = this.getAsset(type, key);
@@ -292,12 +328,12 @@ Loader.prototype.removeFile = function(type, key) {
       this._fileList.splice(asset.index, 1);
     }
   }
-},
+};
 
 Loader.prototype.removeAll = function() {
   this._fileList.length = 0;
   this._flightQueue.length = 0;
-},
+};
 
 Loader.prototype.start = function() {
   if(this.isLoading) { return; }
@@ -307,7 +343,7 @@ Loader.prototype.start = function() {
 
   this.updateProgress();
   this.processLoadQueue();
-},
+};
 
 Loader.prototype.processLoadQueue = function() {
   if(!this.isLoading) {
@@ -394,7 +430,7 @@ Loader.prototype.processLoadQueue = function() {
     }, 2000);
   }
 
-},
+};
 
 Loader.prototype.finishedLoading = function(abnormal) {
   if(this.hasLoaded) {
@@ -412,7 +448,7 @@ Loader.prototype.finishedLoading = function(abnormal) {
 
   this.emit('loadcomplete');
   this.reset();
-},
+};
 
 Loader.prototype.asyncComplete = function(file, errorMessage) {
   if(errorMessage === undefined) { errorMessage = ''; }
@@ -427,7 +463,7 @@ Loader.prototype.asyncComplete = function(file, errorMessage) {
   }
 
   this.processLoadQueue();
-},
+};
 
 Loader.prototype.transformUrl = function(url, file) {
   if(!url) { return false; }
@@ -436,12 +472,13 @@ Loader.prototype.transformUrl = function(url, file) {
   } else {
     return this.baseURL + file.path + url;
   }
-},
+};
 
 Loader.prototype.loadFile = function(file) {
   switch(file.type) {
     case 'image':
     case 'spritesheet':
+    case 'textureatlas':
       this.loadImageTag(file);
       break;
 
@@ -482,7 +519,7 @@ Loader.prototype.loadFile = function(file) {
       break;
   }
 
-},
+};
 
 Loader.prototype.loadImageTag = function(file) {
   var self = this;
@@ -518,7 +555,7 @@ Loader.prototype.loadImageTag = function(file) {
     file.data.onerror = null;
     this.fileComplete(file);
   }
-},
+};
 
 Loader.prototype.loadAudioTag = function(file) {
   var self = this;
@@ -552,7 +589,7 @@ Loader.prototype.loadAudioTag = function(file) {
     file.data.addEventListener('canplaythrough', playThroughEvent, false);
     file.data.load();
   }
-},
+};
 
 Loader.prototype.xhrLoad = function(file, url, type, onload, onerror) {
   var xhr = new XMLHttpRequest();
@@ -596,7 +633,7 @@ Loader.prototype.xhrLoad = function(file, url, type, onload, onerror) {
   file.requestUrl = url;
 
   xhr.send();
-},
+};
 
 Loader.prototype.getAudioURL = function(urls) {
   if(this.game.sound.noAudio) { return null; }
@@ -631,7 +668,7 @@ Loader.prototype.getAudioURL = function(urls) {
   }
 
   return null;
-},
+};
 
 Loader.prototype.fileError = function(file, xhr, reason) {
   var url = file.requestUrl || this.transformUrl(file.url, file);
@@ -646,17 +683,34 @@ Loader.prototype.fileError = function(file, xhr, reason) {
   }
 
   this.asyncComplete(file, message);
-},
+};
 
 Loader.prototype.fileComplete = function(file, xhr) {
   var loadNext = true;
-  switch (file.type) {
+  switch(file.type) {
     case 'image':
       this.cache.addImage(file.key, file.url, file.data);
       break;
 
     case 'spritesheet':
       this.cache.addSpriteSheet(file.key, file.url, file.data, file.frameWidth, file.frameHeight, file.frameMax, file.margin, file.spacing);
+      break;
+
+    case 'textureatlas':
+      if(file.atlasURL == null) {
+        this.cache.addTextureAtlas(file.key, file.url, file.data, file.atlasData, file.format);
+      } else {
+        // load the JSON before carrying on with the next file
+        loadNext = false;
+
+        if(file.format == Loader.TEXTURE_ATLAS_JSON_ARRAY ||
+            file.format == Loader.TEXTURE_ATLAS_JSON_HASH ||
+            file.format == Loader.TEXTURE_ATLAS_JSON_PYXEL) {
+          this.xhrLoad(file, this.transformUrl(file.atlasURL, file), 'text', this.jsonLoadComplete);
+        } else {
+          throw new Error('Loader - Invalid Texture Atlas format: ' + file.format);
+        }
+      }
       break;
 
     case 'audio':
@@ -711,7 +765,7 @@ Loader.prototype.fileComplete = function(file, xhr) {
   if(loadNext) {
     this.asyncComplete(file);
   }
-},
+};
 
 Loader.prototype.jsonLoadComplete = function(file, xhr) {
   var data = JSON.parse(xhr.responseText);
@@ -719,9 +773,11 @@ Loader.prototype.jsonLoadComplete = function(file, xhr) {
     this.cache.addTilemap(file.key, file.url, data);
   } else if(file.type === 'json') {
     this.cache.addJSON(file.key, file.url, data);
+  } else if(file.type === 'textureatlas') {
+    this.cache.addTextureAtlas(file.key, file.url, file.data, data, file.format);
   }
   this.asyncComplete(file);
-},
+};
 
 Loader.prototype.xmlLoadComplete = function(file, xhr) {
   // Always try parsing the content as XML, regardless of actually response type
@@ -740,7 +796,7 @@ Loader.prototype.xmlLoadComplete = function(file, xhr) {
   }
 
   this.asyncComplete(file);
-},
+};
 
 Loader.prototype.parseXml = function(data) {
   var xml;
@@ -763,27 +819,27 @@ Loader.prototype.parseXml = function(data) {
   } else {
     return xml;
   }
-},
+};
 
 Loader.prototype.updateProgress = function() {
   //.. update loading sprite
-},
+};
 
 Loader.prototype.totalLoadedFiles = function() {
   return this._loadedFileCount;
-},
+};
 
 Loader.prototype.totalQueuedFiles = function() {
   return this._totalFileCount - this._loadedFileCount;
-},
+};
 
 Loader.prototype.totalLoadedPacks = function() {
   return this._totalPackCount;
-},
+};
 
 Loader.prototype.totalQueuedPacks = function() {
   return this._totalPackCount - this._loadedPackCount;
-}
+};
 
 Object.defineProperty(Loader.prototype, 'progressRaw', {
   get: function() {
@@ -808,4 +864,3 @@ Object.defineProperty(Loader.prototype, 'progress', {
 Loader.prototype.constructor = Loader;
 
 module.exports = Loader;
-
