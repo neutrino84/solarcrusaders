@@ -147,8 +147,8 @@ function RightPane(game, settings) {
 
   // this.addPanel(Layout.STRETCH, this.disclaimerText);
   // this.addPanel(Layout.CENTER, this.wipText);
-  this.addPanel(Layout.CENTER, this.instructionsText);
-  this.addPanel(Layout.CENTER, this.instructionsText2);
+  // this.addPanel(Layout.CENTER, this.instructionsText);
+  // this.addPanel(Layout.CENTER, this.instructionsText2);
 
   // create timer
   game.clock.events.loop(1000, this._updateInfo, this);
