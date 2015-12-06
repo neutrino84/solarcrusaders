@@ -265,6 +265,12 @@ Object.defineProperty(AnimationManager.prototype, 'frame', {
         this.sprite.setFrame(this.currentFrame);
       }
     }
+    if(typeof value === 'string'  && this._frameData && this._frameData.getFrame(value) !== null) {
+      this.currentFrame = this._frameData.getFrameByName(value);
+      if(this.currentFrame) {
+        this.sprite.setFrame(this.currentFrame);
+      }
+    }
   }
 });
 
