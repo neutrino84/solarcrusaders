@@ -24,6 +24,10 @@ a:hover { color: #fff; }
 
 textarea, input { outline: none; }
 
+canvas {
+  cursor: url('../imgs/game/cursor.png') 0 0, auto;
+}
+
 /*
  * General Styles
  */

@@ -80,11 +80,6 @@ Input.prototype.boot = function() {
     function(key, event) { this.emit('keypress', key, event); }
   );
 
-  // this.onDown = new Phaser.Signal();
-  // this.onUp = new Phaser.Signal();
-  // this.onTap = new Phaser.Signal();
-  // this.onHold = new Phaser.Signal();
-
   this.scale = new Point(1, 1);
   this.speed = new Point();
   this.position = new Point();
@@ -164,20 +159,7 @@ Input.prototype.reset = function(hard) {
   }
 
   if(hard) {
-    // this.onDown.dispose();
-    // this.onUp.dispose();
-    // this.onTap.dispose();
-    // this.onHold.dispose();
-    // this.onDown = new Phaser.Signal();
-    // this.onUp = new Phaser.Signal();
-    // this.onTap = new Phaser.Signal();
-    // this.onHold = new Phaser.Signal();
-
-    this.removeAllListeners('onDown');
-    this.removeAllListeners('onUp');
-    this.removeAllListeners('onTap');
-    this.removeAllListeners('onHold');
-
+    this.removeAllListeners();
     this.moveCallbacks = [];
   }
 

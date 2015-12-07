@@ -41,7 +41,6 @@ function ButtonIcon(game, key, settings) {
   this.bg = new BackgroundView(game, this.settings.bg);
   this.bg.inputEnabled = true;
   this.bg.input.priorityID = 2;
-  this.bg.input.useHandCursor = true;
   this.bg.alpha = 0.75;
 
   // event handling

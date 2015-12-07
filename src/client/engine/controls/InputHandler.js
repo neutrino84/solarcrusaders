@@ -175,7 +175,7 @@ InputHandler.prototype = {
   destroy: function() {
     if(this.sprite) {
       if(this._setHandCursor) {
-        this.game.canvas.style.cursor = 'default';
+        this.game.canvas.style.cursor = '';
         this._setHandCursor = false;
       }
 
@@ -437,7 +437,7 @@ InputHandler.prototype = {
         data.timeOut = this.game.clock.time;
 
     if(this.useHandCursor && data.isDragged === false) {
-      this.game.canvas.style.cursor = 'default';
+      this.game.canvas.style.cursor = '';
       this._setHandCursor = false;
     }
 
@@ -508,7 +508,7 @@ InputHandler.prototype = {
       data.isOver = isOver;
 
       if(!isOver && this.useHandCursor) {
-        this.game.canvas.style.cursor = 'default';
+        this.game.canvas.style.cursor = '';
         this._setHandCursor = false;
       }
 
