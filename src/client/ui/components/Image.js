@@ -14,8 +14,7 @@ function Image(game, key, settings) {
     bg: {
       fillAlpha: 0.75,
       color: 0x3868b8,
-      borderSize: 0.0,
-      blendMode: engine.BlendMode.SCREEN
+      borderSize: 0.0
     }
   });
 
@@ -28,8 +27,8 @@ function Image(game, key, settings) {
   this.setPadding.apply(this, this.settings.padding);
   this.setBorder.apply(this, this.settings.border);
 
-  this.bg = new BackgroundView(game, settings.bg);
-  this.image = new ImageView(game, key);
+  this.bg = new BackgroundView(game, this.settings.bg);
+  this.image = new ImageView(game, key, this.settings.frame);
 
   this.addView(this.bg);
   this.addView(this.image);

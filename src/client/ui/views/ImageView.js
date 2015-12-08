@@ -3,8 +3,8 @@ var engine = require('engine'),
     View = require('../View'),
     Sprite = engine.Sprite;
 
-function ImageView(game, key) {
-  Sprite.call(this, game, key);
+function ImageView(game, key, frame) {
+  Sprite.call(this, game, key, frame);
   View.call(this);
 };
 
