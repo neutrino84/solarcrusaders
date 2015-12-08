@@ -29,6 +29,7 @@ BackgroundView.prototype.constructor = BackgroundView;
 
 BackgroundView.prototype.paint = function(top, left, bottom, right) {
   var size = this.settings.size ? this.settings.size : this.parent.size,
+      offset = this.settings.offset ? this.settings.offset : { x: 0, y: 0 },
       settings = this.settings,
       drawMethod = settings.radius > 0 ? 'drawRoundedRect' : 'drawRect';
 
@@ -41,7 +42,7 @@ BackgroundView.prototype.paint = function(top, left, bottom, right) {
     this.beginFill(settings.color, settings.fillAlpha);
   }
   if(settings.fillAlpha > 0 || (settings.borderSize > 0 && settings.borderAlpha > 0)) {
-    this[drawMethod](0, 0, size.width, size.height, settings.radius);
+    this[drawMethod](offset.x, offset.y, size.width, size.height, settings.radius);
   }
   if(settings.fillAlpha > 0) {
     this.endFill();
@@ -50,7 +51,7 @@ BackgroundView.prototype.paint = function(top, left, bottom, right) {
   if(settings.highlight) {
     this.lineStyle(0);
     this.beginFill(settings.highlight, 0.75);
-    this[drawMethod](1, 1, size.width - 2, size.height / 2 - 2, settings.radius - 2);
+    this[drawMethod](offset.x + 1, offset.y + 1, size.width - 2, size.height / 2 - 2, global.Math.max(0, settings.radius - 2));
     this.endFill();
   }
 };
