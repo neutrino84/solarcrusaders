@@ -166,6 +166,7 @@ Panel.prototype.setSize = function(width, height) {
     this.size.width = width;
     this.size.height = height;
     
+    this.isValid = false;
     this.isLayoutValid = false;
     this.resize(width, height);
   }
