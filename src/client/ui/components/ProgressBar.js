@@ -34,7 +34,7 @@ function ProgressBar(game, settings) {
       this.settings.width,
       this.settings.height);
   } else {
-    throw('ProgressBar component must set a preferred size');
+    throw new Error('ProgressBar component must set a preferred size');
   }
 
   // style
