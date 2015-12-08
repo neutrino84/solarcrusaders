@@ -19,7 +19,7 @@ function ProgressButtonIcon(game, key, settings) {
 
   this.progress = new BackgroundView(game,
     Class.mixin(settings.progress, {
-      color: 0x999999,
+      color: 0xf4f4f4,
       borderSize: 0.0,
       blendMode: engine.BlendMode.ADD
     }
