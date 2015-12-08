@@ -16,10 +16,11 @@ function Turret(parent, config) {
   this.position = new engine.Point();
   this._tempPosition = new engine.Point();
 
-  this.sprite = new engine.Sprite(this.game, config.sprite);
+  this.sprite = new engine.Sprite(this.game, 'ship-atlas');
   this.sprite.position.set(config.position.x, config.position.y);
   this.sprite.pivot.set(config.pivot.x, config.pivot.y);
   this.sprite.scale.set(config.scale.x, config.scale.y);
+  this.sprite.frame = config.sprite + '.png';
 
   this.manager = this.create(config.type);
 
