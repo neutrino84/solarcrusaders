@@ -123,7 +123,8 @@ switch(process.argv[2]) {
     process.stdout.write('\t' + 'reload'.yellow + '\Reloads Solar Crusaders\n');
     process.stdout.write('\t' + 'restart'.yellow + '\tRestarts Solar Crusaders\n');
     process.stdout.write('\t' + 'log'.yellow + '\tOpens the logging interface (useful for debugging)\n');
-    process.stdout.write('\t' + 'dev'.yellow + '\tStart Solar Crusaders in interactive development mode\n');
+    process.stdout.write('\t' + 'dev-app'.yellow + '\tStart Solar Crusaders in interactive development mode\n');
+    process.stdout.write('\t' + 'dev-loader'.yellow + '\tStart Solar Crusaders in complete development mode\n');
     process.stdout.write('\n'.reset);
     break;
 }
