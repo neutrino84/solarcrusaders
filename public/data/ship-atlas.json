@@ -9,7 +9,7 @@
 	"sourceSize": {"w":128,"h":128},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"laser-a.png":
+"engine-highlight.png":
 {
 	"frame": {"x":128,"y":0,"w":64,"h":64},
 	"rotated": false,
@@ -18,9 +18,18 @@
 	"sourceSize": {"w":64,"h":64},
 	"pivot": {"x":0.5,"y":0.5}
 },
+"turret-a.png":
+{
+	"frame": {"x":192,"y":0,"w":64,"h":64},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
+	"sourceSize": {"w":64,"h":64},
+	"pivot": {"x":0.5,"y":0.5}
+},
 "vessel-x01.png":
 {
-	"frame": {"x":192,"y":0,"w":128,"h":128},
+	"frame": {"x":256,"y":0,"w":128,"h":128},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
@@ -47,20 +56,20 @@
 },
 "vessel-x04.png":
 {
-	"frame": {"x":384,"y":128,"w":128,"h":128},
+	"frame": {"x":384,"y":128,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
-	"sourceSize": {"w":128,"h":128},
+	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
+	"sourceSize": {"w":64,"h":64},
 	"pivot": {"x":0.5,"y":0.5}
 },
 "vessel-x05.png":
 {
-	"frame": {"x":0,"y":384,"w":128,"h":128},
+	"frame": {"x":448,"y":128,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
-	"sourceSize": {"w":128,"h":128},
+	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
+	"sourceSize": {"w":64,"h":64},
 	"pivot": {"x":0.5,"y":0.5}
 }},
 "meta": {
@@ -70,6 +79,6 @@
 	"format": "RGBA8888",
 	"size": {"w":512,"h":512},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:33edfe9e70fbe43585cded7dfdf2614c:5befc74e012a5431d9845ceffc620680:50f622fd4bec5be3abd7fa3de1a06e0f$"
+	"smartupdate": "$TexturePacker:SmartUpdate:2a70f6e9ed15942417d48466f04f50bb:842a776850c9e6a67bc2fe9fbb2ce433:50f622fd4bec5be3abd7fa3de1a06e0f$"
 }
 }
