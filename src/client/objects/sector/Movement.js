@@ -294,7 +294,7 @@ Object.defineProperty(Movement.prototype, 'throttle', {
 
 Object.defineProperty(Movement.prototype, 'linearSpeed', {
   get: function() {
-    return this._linearSpeed || (this._throttle * (Movement.SPEED_CONSTANT / this.config.speed));
+    return this._linearSpeed || (this._throttle * (Movement.SPEED_CONSTANT / this.config.stats.speed));
   }
 });
 
@@ -328,7 +328,7 @@ Object.defineProperty(Movement.prototype, 'maxSpeed', {
     if(this._maxSpeed) {
       return this._maxSpeed;
     }
-    return this._maxSpeed = 1 / (Movement.SPEED_CONSTANT / this.config.speed);
+    return this._maxSpeed = 1 / (Movement.SPEED_CONSTANT / this.config.stats.speed);
   }
 });
 
