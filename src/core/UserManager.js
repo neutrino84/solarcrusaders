@@ -1,7 +1,8 @@
 
 var uuid = require('uuid'),
     engine = require('engine')
-    client = require('client');
+    client = require('client'),
+    Utils = require('../utils');
 
 function UserManager(game) {
   this.game = game;
@@ -28,27 +29,27 @@ UserManager.prototype.add = function(user) {
   if(this.users[user.uuid]) { return; }
 
   var self = this, ship,
-      u = this.users[user.uuid] = user;
+      u = this.users[user.uuid] = Utils.extend({}, user);
       u.ships = [];
 
-  if(user.uid > 0) {
-    this.model.ship.getShipsByUid(user.uid, function(err, ships) {
-      if(err) { throw new Error(err); }
-      for(var s in ships) {
-        ship = ships[s];
-        ship.user = user;
-        u.ships.push(ship);
-        self.game.emit('ship/add', ship);
-      }
-    });
-  } else {
+  // if(user.uid > 0) {
+  //   this.model.ship.getShipsByUid(user.uid, function(err, ships) {
+  //     if(err) { throw new Error(err); }
+  //     for(var s in ships) {
+  //       ship = ships[s];
+  //       ship.user = user;
+  //       u.ships.push(ship);
+  //       self.game.emit('ship/add', ship);
+  //     }
+  //   });
+  // } else {
     ship = {};
     ship.user = user;
-    ship.throttle = global.Math.random() * 3 + 0.8;
-    ship.chasis = 'vessel-x0' + (global.Math.floor(global.Math.random() * 5) + 1);
+    ship.throttle = 1.0; // global.Math.random() * 3 + 0.8;
+    ship.chasis = 'vessel-x01'; // + (global.Math.floor(global.Math.random() * 5) + 1);
     u.ships.push(ship);
     self.game.emit('ship/create', ship);
-  }
+  // }
 };
 
 UserManager.prototype.remove = function(user) {

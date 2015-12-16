@@ -4,9 +4,11 @@ module.exports = {
     if(!add || typeof add !== 'object') { return origin; }
     var keys = Object.keys(add),
         i = keys.length;
-    while (i--) {
+    while(i--) {
       if(exists !== undefined) {
-        if(!origin[keys[i]]) {
+        if(exists === false && !origin[keys[i]]) {
+          origin[keys[i]] = add[keys[i]];
+        } else if(exists === true && origin[keys[i]]) {
           origin[keys[i]] = add[keys[i]];
         }
       } else {

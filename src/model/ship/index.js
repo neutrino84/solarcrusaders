@@ -15,6 +15,9 @@ Ship.prototype.getShipsByUid = function(uid, callback) {
     },
     function(uids, next) {
       self.getShipsData(uids, next);
+    },
+    function(ships, next) {
+      next(null, ships);
     }
   ], callback);
 };
