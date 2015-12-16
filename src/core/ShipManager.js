@@ -21,7 +21,7 @@ function ShipManager(game) {
 
   // activate ai
   this.game.clock.events.loop(1000, this._updateBattles, this);
-  this.game.clock.events.loop(10000, this._updateAI, this) && this._updateAI();
+  this.game.clock.events.loop(5000, this._updateAI, this) && this._updateAI();
 };
 
 ShipManager.prototype.constructor = ShipManager;
@@ -144,25 +144,43 @@ ShipManager.prototype.update = function() {
 };
 
 ShipManager.prototype.generateRandomShips = function() {
-  var data, config,
-      iterator = {
+  var iterator = {
         'vessel-x01': { count: 2 },
         'vessel-x02': { count: 2 },
         'vessel-x03': { count: 2 },
         'vessel-x04': { count: 30 },
-        'vessel-x05': { count: 10 }
+        'vessel-x05': { count: 14 }
       };
   for(var key in iterator) {
     for(var i=0; i<iterator[key].count; i++) {
-      config = engine.ShipConfiguration[key];
-      data = {
-        rotation: global.Math.random() * global.Math.PI,
-        chasis: key,
-        throttle: 0.8 + (global.Math.random() * 3)
-      };
-      this.create(data);
+      this.generateShip(key);
     }
   }
+};
+
+ShipManager.prototype.generateRandomShip = function() {
+  var rnd = global.Math.random(),
+      chassis;
+  if(rnd < 0.04) {
+    chassis = 'vessel-x01';
+  } else if(rnd < 0.08) {
+    chassis = 'vessel-x02';
+  } else if(rnd < 0.12) {
+    chassis = 'vessel-x03';
+  } else if(rnd < 0.60) {
+    chassis = 'vessel-x04';
+  } else {
+    chassis = 'vessel-x05';
+  }
+  this.generateShip(chassis);
+};
+
+ShipManager.prototype.generateShip = function(chassis) {
+  this.create({
+    rotation: global.Math.random() * global.Math.PI,
+    chasis: chassis,
+    throttle: 0.8 + (global.Math.random() * 3)
+  });
 };
 
 ShipManager.prototype._plot = function(ship, destination) {
@@ -206,7 +224,10 @@ ShipManager.prototype._updateBattles = function() {
           origin: origin.uuid,
           target: target.uuid
         });
+        
+        // destroy ship
         if(target.health <= 0) {
+          this.generateRandomShip();
           delete this.battles[origin.uuid] && this.remove(target);
         }
       } else {
@@ -233,7 +254,7 @@ ShipManager.prototype._updateAI = function() {
       destination = this._generateRandomPosition();
       this._plot(ship, destination);
       random = this._getRandomShip();
-      if(global.Math.random() > 0.5 && random !== ship) {
+      if(random !== ship) {
         switch(ship.chasis) {
           case 'vessel-x01':
           case 'vessel-x02':
