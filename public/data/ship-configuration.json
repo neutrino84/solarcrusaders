@@ -1,8 +1,16 @@
 {
   "vessel-x01": {
-    "oribit": { "radius": 128 },
     "size": 1.0,
-    "speed": 2.0,
+    "oribit": { "radius": 128 },
+    "stats": {
+      "health": 100,
+      "heal": 0.01,
+      "speed": 2.0,
+      "accuracy": 0.5,
+      "evasion": 0.1,
+      "reactor": 100,
+      "durability": 1000
+    },
     "engine": {
       "exaust": {
         "sprite": "engine-smoke",
@@ -18,19 +26,19 @@
        {
           "sprite": "engine-glow",
           "tint": "0x3399FF",
-          "scale": { "startX": 0.10, "endX": 0.18, "startY": 0.2, "endY": 0.44 },
+          "scale": { "startX": 0.10, "endX": 0.12, "startY": 0.2, "endY": 0.6 },
           "position": { "x": 116, "y": 66 },
           "rotation": 0
         },{
           "sprite": "engine-glow",
           "tint": "0x3399FF",
-          "scale": { "startX": 0.10, "endX": 0.14, "startY": 0.2, "endY": 0.5 },
+          "scale": { "startX": 0.10, "endX": 0.08, "startY": 0.2, "endY": 0.3 },
           "position": { "x": 116, "y": 56 },
           "rotation": 15
         },{
           "sprite": "engine-glow",
           "tint": "0x3399FF",
-          "scale": { "startX": 0.10, "endX": 0.14, "startY": 0.2, "endY": 0.5 },
+          "scale": { "startX": 0.10, "endX": 0.08, "startY": 0.2, "endY": 0.3 },
           "position": { "x": 116, "y": 76 },
           "rotation": -15
         }
@@ -45,8 +53,7 @@
     "targeting": {
       "turrets": [
         {
-          "sprite": "laser-a",
-          "cooldown": 1500,
+          "sprite": "turret-a",
           "pivot": { "x": 32, "y": 32 },
           "position": { "x": 64, "y": 16 },
           "scale": { "x": 0.6 , "y": 0.6 },
@@ -55,8 +62,7 @@
             "sprite": "laser-blue"
           }
         }, {
-          "sprite": "laser-a",
-          "cooldown": 1500,
+          "sprite": "turret-a",
           "pivot": { "x": 32, "y": 32 },
           "position": { "x": 64, "y": 115 },
           "scale": { "x": 0.6 , "y": 0.6 },
@@ -65,8 +71,7 @@
             "sprite": "laser-blue"
           }
         }, {
-          "sprite": "laser-a",
-          "cooldown": 1500,
+          "sprite": "turret-a",
           "pivot": { "x": 32, "y": 32 },
           "position": { "x": 36, "y": 31 },
           "scale": { "x": 0.6 , "y": 0.6 },
@@ -75,8 +80,7 @@
             "sprite": "laser-blue"
           }
         }, {
-          "sprite": "laser-a",
-          "cooldown": 1500,
+          "sprite": "turret-a",
           "pivot": { "x": 32, "y": 32 },
           "position": { "x": 36, "y": 100 },
           "scale": { "x": 0.6 , "y": 0.6 },
@@ -358,7 +362,7 @@
                  "name":"",
                  "properties":
                     {
-
+                        "system": "pilot"
                     },
                  "rotation":0,
                  "type":"",
@@ -373,7 +377,7 @@
                  "name":"",
                  "properties":
                     {
-
+                        "system": "engine"
                     },
                  "rotation":0,
                  "type":"",
@@ -418,7 +422,7 @@
                  "name":"",
                  "properties":
                     {
-
+                        "system": "targeting"
                     },
                  "rotation":0,
                  "type":"",
@@ -524,9 +528,17 @@
     }
   },
   "vessel-x02": {
-    "oribit": { "radius": 192 },
     "size": 1.0,
-    "speed": 1.0,
+    "oribit": { "radius": 192 },
+    "stats": {
+      "health": 500,
+      "heal": 0.005,
+      "speed": 1.0,
+      "accuracy": 0.8,
+      "evasion": 0.01,
+      "reactor": 200,
+      "durability": 2000
+    },
     "engine": {
       "exaust": {
         "sprite": "engine-smoke",
@@ -586,8 +598,7 @@
     "targeting": {
       "turrets": [
         {
-          "sprite": "laser-a",
-          "cooldown": 1500,
+          "sprite": "turret-a",
           "pivot": { "x": 32, "y": 32 },
           "position": { "x": 64, "y": 104 },
           "scale": { "x": 0.6 , "y": 0.6 },
@@ -596,14 +607,41 @@
             "sprite": "laser-red"
           }
         }, {
-          "sprite": "laser-a",
-          "cooldown": 1500,
+          "sprite": "turret-a",
           "pivot": { "x": 32, "y": 32 },
           "position": { "x": 64, "y": 154 },
           "scale": { "x": 0.6 , "y": 0.6 },
           "type": "laser",
           "laser": {
             "sprite": "laser-red"
+          }
+        },
+        {
+          "sprite": "turret-a",
+          "pivot": { "x": 32, "y": 32 },
+          "position": { "x": 98, "y": 85 },
+          "scale": { "x": 0.6 , "y": 0.6 },
+          "type": "laser",
+          "laser": {
+            "sprite": "laser-red"
+          }
+        }, {
+          "sprite": "turret-a",
+          "pivot": { "x": 32, "y": 32 },
+          "position": { "x": 98, "y": 172 },
+          "scale": { "x": 0.6 , "y": 0.6 },
+          "type": "laser",
+          "laser": {
+            "sprite": "laser-red"
+          }
+        }, {
+          "sprite": "turret-a",
+          "pivot": { "x": 32, "y": 32 },
+          "position": { "x": 172, "y": 128 },
+          "scale": { "x": 0.6 , "y": 0.6 },
+          "type": "laser",
+          "laser": {
+            "sprite": "laser-blue"
           }
         }
       ]
@@ -613,9 +651,17 @@
     }
   },
   "vessel-x03": {
-    "oribit": { "radius": 128 },
     "size": 1.0,
-    "speed": 2.0,
+    "oribit": { "radius": 128 },
+    "stats": {
+      "health": 100,
+      "heal": 0.01,
+      "speed": 2.25,
+      "accuracy": 0.25,
+      "evasion": 0.25,
+      "reactor": 100,
+      "durability": 1000
+    },
     "engine": {
       "exaust": {
         "sprite": "engine-smoke",
@@ -647,20 +693,18 @@
     "targeting": {
       "turrets": [
         {
-          "sprite": "laser-a",
-          "cooldown": 1500,
+          "sprite": "turret-a",
           "pivot": { "x": 32, "y": 32 },
-          "position": { "x": 68, "y": 32 },
+          "position": { "x": 68, "y": 94 },
           "scale": { "x": 0.5 , "y": 0.5 },
           "type": "laser",
           "laser": {
             "sprite": "laser-blue"
           }
         }, {
-          "sprite": "laser-a",
-          "cooldown": 1500,
+          "sprite": "turret-a",
           "pivot": { "x": 32, "y": 32 },
-          "position": { "x": 68, "y": 99 },
+          "position": { "x": 68, "y": 34 },
           "scale": { "x": 0.5 , "y": 0.5 },
           "type": "laser",
           "laser": {
@@ -924,7 +968,7 @@
                  "name":"",
                  "properties":
                     {
-
+                        "system": "engine"
                     },
                  "rotation":0,
                  "type":"",
@@ -939,7 +983,7 @@
                  "name":"",
                  "properties":
                     {
-
+                        "system": "*"
                     },
                  "rotation":0,
                  "type":"",
@@ -954,7 +998,7 @@
                  "name":"",
                  "properties":
                     {
-
+                        "system": "pilot"
                     },
                  "rotation":0,
                  "type":"",
@@ -1089,7 +1133,7 @@
                  "name":"",
                  "properties":
                     {
-
+                        "system": "targeting"
                     },
                  "rotation":0,
                  "type":"",
@@ -1135,9 +1179,17 @@
     }
   },
   "vessel-x04": {
+    "size": 1.0,
     "oribit": { "radius": 96 },
-    "size": 0.3,
-    "speed": 4.0,
+    "stats": {
+      "health": 30,
+      "heal": 0.1,
+      "speed": 4.0,
+      "accuracy": 0.5,
+      "evasion": 0.5,
+      "reactor": 30,
+      "durability": 500
+    },
     "engine": {
       "exaust": {
         "sprite": "engine-smoke",
@@ -1152,8 +1204,8 @@
       "glows": [{
         "sprite": "engine-glow",
         "tint": "0xFF6633",
-        "scale": { "startX": 0.025, "endX": 0.25, "startY": 0.2, "endY": 0.6 },
-        "position": { "x": 102, "y": 64 },
+        "scale": { "startX": 0.01, "endX": 0.06, "startY": 0.04, "endY": 0.08 },
+        "position": { "x": 44, "y": 32 },
         "rotation": 0
       }]
     },
@@ -1165,9 +1217,17 @@
     }
   },
   "vessel-x05": {
+    "size": 1.0,
     "oribit": { "radius": 128 },
-    "size": 0.5,
-    "speed": 3.5,
+    "stats": {
+      "health": 50,
+      "heal": 0.05,
+      "speed": 3.5,
+      "accuracy": 0.5,
+      "evasion": 0.5,
+      "reactor": 50,
+      "durability": 500
+    },
     "engine": {
       "exaust": {
         "sprite": "engine-smoke",
@@ -1182,20 +1242,20 @@
       "glows": [{
         "sprite": "engine-glow",
         "tint": "0x6666CC",
-        "scale": { "startX": 0.025, "endX": 0.16, "startY": 0.2, "endY": 0.3 },
-        "position": { "x": 106, "y": 54 },
+        "scale": { "startX": 0.025, "endX": 0.08, "startY": 0.15, "endY": 0.25 },
+        "position": { "x": 53, "y": 27 },
         "rotation": -15
       }, {
         "sprite": "engine-glow",
         "tint": "0x6666CC",
-        "scale": { "startX": 0.025, "endX": 0.16, "startY": 0.2, "endY": 0.3 },
-        "position": { "x": 106, "y": 74 },
+        "scale": { "startX": 0.025, "endX": 0.08, "startY": 0.15, "endY": 0.25 },
+        "position": { "x": 53, "y": 37 },
         "rotation": 15
       }, {
         "sprite": "engine-glow",
         "tint": "0x9999FF",
-        "scale": { "startX": 0.1, "endX": 0.26, "startY": 0.2, "endY": 0.3 },
-        "position": { "x": 106, "y": 64 },
+        "scale": { "startX": 0.1, "endX": 0.1, "startY": 0.15, "endY": 0.25 },
+        "position": { "x": 53, "y": 32 },
         "rotation": 0
       }],
       "trails": [{
@@ -1205,7 +1265,16 @@
       }]
     },
     "targeting": {
-      "turrets": []
+      "turrets": [{
+          "sprite": "turret-a",
+          "pivot": { "x": 32, "y": 32 },
+          "position": { "x": 42, "y": 32 },
+          "scale": { "x": 0.5 , "y": 0.5 },
+          "type": "laser",
+          "laser": {
+            "sprite": "laser-blue"
+          }
+        }]
     },
     "shields": {
       
