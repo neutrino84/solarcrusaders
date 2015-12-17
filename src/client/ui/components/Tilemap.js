@@ -75,11 +75,13 @@ Tilemap.prototype.stop = function() {
 };
 
 Tilemap.prototype.target = function(displayObject) {
-  var lastTarget = this._target;
+  this._target && (this._target.renderable = false);
   this._target = displayObject;
-  if(displayObject === null) {
-    this._inputOut(lastTarget);
-  }
+  this._target.renderable = true;
+  this._target.alpha = 1.0;
+  this._targetTween && this._targetTween.stop();
+  this._targetTween = this.game.tweens.create(displayObject);
+  this._targetTween.to({ alpha: 0}, 250, engine.Easing.Default, true, 0, -1, true);
 };
 
 Tilemap.prototype.createImages = function() {
@@ -156,17 +158,18 @@ Tilemap.prototype.createCrew = function(data) {
 Tilemap.prototype.createRooms = function(data) {
   var r, room, frame, sprite, prop,
       tilemap = this.tilemap,
-      rooms = tilemap.objects.rooms;
+      rooms = tilemap.objects.rooms,
+      settings = this.settings;
   for(var r in rooms) {
     room = rooms[r];
     prop = room.properties;
   
     r = new engine.Graphics(this.game);
-    r.alpha = 0;
+    r.renderable = false;
     r.data = prop;
 
-    r.lineStyle(2, 0x6699cc, 1.0);
-    r.beginFill(0x6699cc, 0.2);
+    r.lineStyle(2, settings.player ? 0x6699cc : 0xff6666, 1.0);
+    r.beginFill(settings.player ? 0x6699cc : 0xff6666, 0.2);
     r.drawRect(room.x, room.y, room.width, room.height);
     r.endFill();
 
@@ -193,13 +196,13 @@ Tilemap.prototype.doLayout = function() {
 
 Tilemap.prototype._inputOver = function(displayObject) {
   if(this._target == displayObject) { return; }
-  displayObject.alpha = 1;
+  displayObject.renderable = true;
   this.emit('roomOver', displayObject);
 }
 
 Tilemap.prototype._inputOut = function(displayObject) {
   if(this._target == displayObject) { return; }
-  displayObject.alpha = 0;
+  displayObject.renderable = false;
   this.emit('roomOut', displayObject);
 };
 

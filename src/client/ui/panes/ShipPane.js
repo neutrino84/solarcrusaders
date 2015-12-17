@@ -13,7 +13,6 @@ function ShipPane(game, settings) {
   this.shipNetManager = game.shipNetManager;
 
   this.isPlayer = settings.player;
-  this.targeting = null;
 
   // cache
   this.cache = {};
@@ -83,13 +82,9 @@ ShipPane.prototype._untargeted = function(targeted) {
 ShipPane.prototype._roomDown = function(room) {
   var system, ship;
   if(!this.isPlayer && room && room.data) {
-    if(this.targeting) {
-      this.targeting.tilemap.target(null);
-    }
     system = room.data.system;
     ship = this.current.data;
-    this.targeting = this.current;
-    this.targeting.tilemap.target(room);
+    this.current.tilemap.target(room);
     this.game.emit('ship/target', ship.uuid, system);
   }
 };
@@ -108,7 +103,7 @@ ShipPane.prototype._selected = function(ships) {
           label: ship.name,
           ship: ship,
           data: data,
-          tilemap: new Tilemap(this.game, ship.name),
+          tilemap: new Tilemap(this.game, ship.name, { player: this.isPlayer }),
           system: new SystemPane(this.game, {
             systems: data.systems
           })
