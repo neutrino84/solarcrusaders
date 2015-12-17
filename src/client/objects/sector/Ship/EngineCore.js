@@ -5,6 +5,7 @@ function EngineCore(parent) {
   this.parent = parent;
 
   this.glows = [];
+  this.highlights = [];
 };
 
 // random flicker
@@ -20,16 +21,24 @@ EngineCore.flicker = [
 EngineCore.prototype.constructor = EngineCore;
 
 EngineCore.prototype.create = function() {
-  var glow, c,
+  var glow, highlight, c,
       glows = this.glows,
+      highlights = this.highlights,
       parent = this.parent,
       config = parent.config.engine.glows;
   
   for(var g in config) {
     c = config[g];
 
-    glow = new engine.Sprite(parent.game, 'ship-atlas');
-    glow.frame = c.sprite + '.png';
+    highlight = new engine.Sprite(parent.game, 'ship-atlas', 'engine-highlight.png');
+    highlight.pivot.set(32, 32);
+    highlight.position.set(c.position.x, c.position.y);
+    highlight.scale.set(1.25, 1.25);
+    highlight.tint = c.tint;
+    highlight.blendMode = engine.BlendMode.ADD;
+    highlight.alpha = 0;
+
+    glow = new engine.Sprite(parent.game, 'ship-atlas', c.sprite + '.png');
     glow.pivot.set(128, 64);
     glow.rotation = global.Math.PI + engine.Math.degToRad(c.rotation);
     glow.position.set(c.position.x, c.position.y);
@@ -37,19 +46,26 @@ EngineCore.prototype.create = function() {
     glow.tint = c.tint;
 
     parent.addChild(glow);
+    parent.addChild(highlight);
 
     glows.push(glow);
+    highlights.push(highlight);
   }
 }
 
 EngineCore.prototype.update = function(multiplier) {
-  var glows = this.glows,
-      length = glows.length,
+  var scale,
+      glows = this.glows,
+      highlights = this.highlights,
       parent = this.parent,
       config = parent.config.engine.glows,
       flicker = EngineCore.flicker[parent.game.clock.frames % 6];
-  for(var i=0; i<length; i++) {
-    glows[i].scale.set(multiplier * config[i].scale.endX + flicker, multiplier * config[i].scale.endY + (flicker * 3));
+  for(var g in glows) {
+    scale = config[g].scale;
+    glows[g].scale.set(multiplier * scale.endX + flicker, multiplier * scale.endY + (flicker * 3));
+  }
+  for(var h in highlights) {
+    highlights[h].alpha = multiplier;
   }
 };
 
