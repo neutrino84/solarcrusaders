@@ -70,8 +70,6 @@ Damage.prototype.destroyed = function() {
       this.glowEmitter.explode(2);
     }
   }, this);
-
-
 };
 
 Damage.prototype.destroy = function() {
