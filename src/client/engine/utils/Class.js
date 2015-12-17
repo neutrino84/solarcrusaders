@@ -114,7 +114,7 @@ var Class = {
 
     for(var key in from) {
       var o = from[key];
-      if(o.childNodes || o.cloneNode) {
+      if(o && (o.childNodes || o.cloneNode)) {
         continue;
       }
 
