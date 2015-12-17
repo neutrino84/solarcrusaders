@@ -17,9 +17,8 @@ function Ship(manager, key) {
   this.game = manager.game;
   this.config = manager.game.cache.getJSON('ship-configuration', false)[key];
 
-  this.throttle = 0.0; // get from server
-  this.rotation = 0.0; // get from server
-  this.position = new engine.Point(); // get from server
+  this.rotation = 0.0;
+  this.position = new engine.Point();
   
   this.pivot.set(this.texture.frame.width / 2, this.texture.frame.height / 2);
   this.scale.set(this.config.size, this.config.size);
