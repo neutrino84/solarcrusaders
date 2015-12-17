@@ -48,7 +48,7 @@ function ShipManager(game) {
   this.game.auth.on('disconnected', this._disconnected, this);
 
   // networking
-  // TODO: move to client/net/Sector.js... maybe not? (ShipNetManager)
+  // TODO: move to ShipNetManager... maybe not?
   this.socket.on('ship/sync', this._syncBind = this._sync.bind(this));
   this.socket.on('ship/plotted', this._plottedBind = this._plotted.bind(this));
   this.socket.on('ship/destroyed', this._destroyedBind = this._destroyed.bind(this));
@@ -239,10 +239,10 @@ ShipManager.prototype._untargeted = function(targeted) {
 };
 
 ShipManager.prototype._attack = function(data) {
-  var ship = this.ships[data.origin];
-  if(ship) {
-    ship.target = this.ships[data.target];
-    ship.targetingComputer.fire();
+  var origin = this.ships[data.origin];
+  if(origin) {
+    origin.target = this.ships[data.target];
+    origin.targetingComputer.fire();
   }
 };
 
