@@ -61,7 +61,7 @@ Damage.prototype.destroyed = function() {
     }
   }, this);
 
-  game.clock.events.repeat(250, 40, function() {
+  game.clock.events.repeat(250, 60, function() {
     if(global.Math.random() > 0.5 && ship.worldTransform) {
       point = game.world.worldTransform.applyInverse(ship.worldTransform.apply(ship.circle.random()));
       this.explosionEmitter.at({ center: point });
@@ -73,7 +73,11 @@ Damage.prototype.destroyed = function() {
 };
 
 Damage.prototype.destroy = function() {
-
+  this.ship = undefined;
+  this.game = undefined;
+  this.explosionEmitter = undefined;
+  this.flashEmitter = undefined;
+  this.glowEmitter = undefined;
 };
 
 module.exports = Damage;
