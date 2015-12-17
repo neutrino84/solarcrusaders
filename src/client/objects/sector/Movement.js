@@ -142,7 +142,6 @@ Movement.prototype.destroy = function() {
   this.parent = undefined;
   this.game = undefined;
   this.config = undefined;
-  this.throttle = undefined;
   this.destination = undefined;
   this.animation = undefined;
 };
@@ -286,6 +285,8 @@ Object.defineProperty(Movement.prototype, 'throttle', {
   },
 
   set: function(value) {
+    this._linearSpeed = null;
+    this._arcSpeed = null;
     this._throttle = value;
     this._linearSpeed = this.linearSpeed;
     this._arcSpeed = this.arcSpeed;
