@@ -6,9 +6,8 @@ var pixi = require('pixi'),
     Core = require('./components/Core'),
     InWorld = require('./components/InWorld');
 
-function Strip(game, key, frame, points) {
+function Strip(game, key, points) {
   key = key || null;
-  frame = frame || null;
   points = points || [];
 
   this.points = [];
@@ -21,7 +20,7 @@ function Strip(game, key, frame, points) {
   pixi.mesh.Rope.call(this,
     game.cache.getItem('__default', Cache.TEXTURE).texture, points);
 
-  Core.init.call(this, game, key, frame);
+  Core.init.call(this, game, key); // frame not supported
 };
 
 Strip.prototype = Object.create(pixi.mesh.Rope.prototype);
@@ -32,12 +31,12 @@ Core.install.call(
     // 'Angle',
     'Mixin',
     // 'Animation',
-    'AutoCull',
+    // 'AutoCull',
     'Bounds',
     'Destroy',
     // 'FixedToCamera',
     'LoadTexture',
-    'InWorld',
+    // 'InWorld',
     // 'InputEnabled'
     // 'Reset'
   ]
