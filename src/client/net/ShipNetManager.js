@@ -1,6 +1,7 @@
 
 var engine = require('engine'),
-    EventEmitter = require('eventemitter3');
+    EventEmitter = require('eventemitter3'),
+    ShipData = require('./ShipData');
 
 function ShipNetManager(game) {
   this.game = game;
@@ -10,6 +11,8 @@ function ShipNetManager(game) {
 
   this.socket.on('ship/sync', this._sync.bind(this));
   this.socket.on('ship/data', this._data.bind(this));
+  this.socket.on('ship/targeted', this._targeted.bind(this));
+  this.socket.on('ship/attack', this._attack.bind(this));
 
   EventEmitter.call(this);
 };
@@ -24,7 +27,11 @@ ShipNetManager.prototype.getShipDataByUuid = function(uuid) {
 ShipNetManager.prototype._data = function(data) {
   var ships = data.ships;
   for(var s in ships) {
-    this.ships[ships[s].uuid] = ships[s];
+    if(this.ships[ships[s].uuid] === undefined) {
+      this.ships[ships[s].uuid] = new ShipData(ships[s]);
+    } else {
+      this.ships[ships[s].uuid].update(data);
+    }
   }
 };
 
@@ -47,6 +54,14 @@ ShipNetManager.prototype._sync = function(data) {
       uuids: uuids
     });
   }
+};
+
+ShipNetManager.prototype._targeted = function(data) {
+  this.game.emit('ship/targeted', data);
+};
+
+ShipNetManager.prototype._attack = function(data) {
+  this.game.emit('ship/attack', data);
 };
 
 module.exports = ShipNetManager;

@@ -7,16 +7,8 @@ function TargetingComputer(parent, config) {
   this.game = parent.game;
   this.config = config;
 
-  this.on = true;
-  this.targetingMode = TargetingComputer.RANDOM;
-
   this.turrets = [];
-  this.fxGroup = parent.manager.fxGroup;
 };
-
-TargetingComputer.RANDOM = 0;
-TargetingComputer.ROOM = 1;
-TargetingComputer.WEAKNESSES = 2;
 
 TargetingComputer.prototype.constructor = TargetingComputer;
 
@@ -27,9 +19,23 @@ TargetingComputer.prototype.create = function() {
       config = this.config.turrets;
   for(var t in config) {
     turret = new Turret(this, config[t]);
+    turret.fxGroup = parent.manager.fxGroup;
+    turret.flashEmitter = parent.manager.flashEmitter;
+    turret.explosionEmitter = parent.manager.explosionEmitter;
+    turret.glowEmitter = parent.manager.glowEmitter;
     turrets.push(turret);
-    
     parent.addChild(turret.sprite);
+  }
+};
+
+TargetingComputer.prototype.fire = function() {
+  var parent = this.parent,
+      target = parent.target,
+      turrets = this.turrets;
+  if(target && turrets.length > 0 && parent.renderable) {
+    for(var t in turrets) {
+      turrets[t].fire();
+    }
   }
 };
 
@@ -38,10 +44,6 @@ TargetingComputer.prototype.update = function() {
       target = parent.target,
       turrets = this.turrets;
   if(target && turrets.length > 0) {
-    if(target.disabled) {
-      parent.target = null;
-      return;
-    }
     for(var t in turrets) {
       turrets[t].update();
     }

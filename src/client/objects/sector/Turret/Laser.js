@@ -1,14 +1,12 @@
 
-var engine = require('engine'),
-    ExplosionEmitter = require('../emitters/ExplosionEmitter'),
-    FlashEmitter = require('../emitters/FlashEmitter');
+var engine = require('engine');
 
 function Laser(parent, config) {
   this.parent = parent;
   this.game = parent.game;
   this.config = config;
 
-  this.easing = engine.Easing.Quadratic.InOut;
+  this.easing = engine.Easing.Default;
 
   this.start = new engine.Point();
   this.end = new engine.Point();
@@ -16,74 +14,70 @@ function Laser(parent, config) {
   this._start = new engine.Point();
   this._end = new engine.Point();
   
-  this.strip = new engine.Strip(this.game, config.sprite, null, [this._start, this._end]);
-  
-  this.explosionEmitter = new ExplosionEmitter(this.game);
-  this.explosionEmitter2 = new ExplosionEmitter(this.game);
-  this.flashEmitter = new FlashEmitter(this.game);
-
-  this.explosionEmitter2.setTint(0xffffff, 0x666666, 1000);
-
-  this.game.particles.add(this.explosionEmitter);
-  this.game.particles.add(this.explosionEmitter2);
-  this.game.particles.add(this.flashEmitter);
-  this.game.world.add(this.explosionEmitter2);
-  this.game.world.add(this.explosionEmitter);
-  this.game.world.add(this.flashEmitter);
+  this.strip = new engine.Strip(this.game, config.sprite, [this._start, this._end]);
 
   this.startTween = this.game.tweens.create(this._start);
   this.endTween = this.game.tweens.create(this._end);
-  this.alphaTween = this.game.tweens.create(this.strip);
-
-  this.parent.parent.fxGroup.addChild(this.strip);
 };
 
 Laser.prototype.constructor = Laser;
 
 Laser.prototype.isRunning = function() {
-  return this.startTween.isRunning || this.endTween.isRunning || this.alphaTween.isRunning;
+  return this.endTween.isRunning || this.startTween.isRunning;
 };
 
 Laser.prototype.fire = function() {
   if(this.isRunning()) { return; }
 
-  var start = engine.Line.pointAtDistance(this.start, this.end, 16);
+  var start = engine.Line.pointAtDistance(this.start, this.end, 14),
+      distance = this.start.distance(this.end) / 5;
 
   this._start.copyFrom(start);
   this._end.copyFrom(start);
 
-  this.strip.alpha = 1.0;
-  this.alphaTween = game.tweens.create(this.strip);
   this.startTween = game.tweens.create(this._start);
   this.endTween = game.tweens.create(this._end);
 
-  this.alphaTween.to({ alpha: 0.0 }, 250, this.easing, false, 50);
-  this.startTween.to({ x: this.end.x, y: this.end.y }, 200, this.easing, false, 50);
-  this.endTween.to({ x: this.end.x, y: this.end.y }, 50, this.easing, false);
+  this.startTween.to({ x: this.end.x, y: this.end.y }, distance, this.easing, false, 200);
+  this.endTween.to({ x: this.end.x, y: this.end.y }, distance, this.easing, false);
 
-  this.alphaTween.start();
   this.startTween.start();
   this.endTween.start();
 
-  this.endTween.on('complete', function() {
-    
-    this.explosionEmitter.at({ center: this.end });
-    this.explosionEmitter.explode(2);
-
-    this.explosionEmitter2.at({ center: this.end });
-    this.explosionEmitter2.explode(1);
-
-    this.flashEmitter.at({ center: this.end });
-    this.flashEmitter.explode(4);
-
-    if(this.parent.ship.target) {
-      this.parent.ship.target.damage(this.parent.target);
-    }
-  
+  this.startTween.once('complete', function() {
+    this.parent.fxGroup.removeChild(this.strip);
   }, this);
 
-  this.flashEmitter.at({ center: start });
-  this.flashEmitter.explode(8);
+  this.endTween.once('complete', function() {
+    this.parent.explosionEmitter.at({ center: this._end });
+    this.parent.explosionEmitter.explode(4);
+    
+    this.parent.flashEmitter.at({ center: this._end });
+    this.parent.flashEmitter.explode(2);
+    
+    this.parent.glowEmitter.at({ center: this._end });
+    this.parent.glowEmitter.explode(global.Math.floor(3 * global.Math.random()) + 5);
+    
+    this.parent.ship.target.damage.inflict(this.parent.target);
+  }, this);
+
+  this.parent.fxGroup.addChild(this.strip);
+};
+
+Laser.prototype.update = function() {
+  var start, end;
+  if(this.isRunning()) {
+    end = this.end;
+    start = engine.Line.pointAtDistance(this.start, end, 14);
+
+    this._start.copyFrom(start);
+    this.startTween.updateTweenData('vStart', { x: start.x, y: start.y }, 0);
+    this.startTween.updateTweenData('vEnd', { x: end.x, y: end.y }, 0);
+
+    this._end.copyFrom(end);
+    this.endTween.updateTweenData('vStart', { x: start.x, y: start.y }, 0);
+    this.endTween.updateTweenData('vEnd', { x: end.x, y: end.y }, 0);
+  }
 };
 
 module.exports = Laser;
