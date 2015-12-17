@@ -33,7 +33,7 @@ Panel.prototype.addPanel = function(constraint, panel) {
   }
 
   this.panels.push(panel);
-  this.addChild(panel);    
+  this.addChild(panel);
   this.invalidate();
 };
 

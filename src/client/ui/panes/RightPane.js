@@ -10,7 +10,7 @@ function RightPane(game, settings) {
   Pane.call(this, game, {
     width: 288,
     height: 96,
-    padding: [6],
+    padding: [0],
     layout: {
       ax: Layout.CENTER,
       ay: Layout.TOP,
@@ -70,7 +70,7 @@ function RightPane(game, settings) {
     })
 
   this.versionText = new Label(game,
-    'v1072', {
+    'v1081', {
       padding: [6, 8],
       text: {
         fontName: 'medium',
@@ -151,7 +151,7 @@ function RightPane(game, settings) {
   // this.addPanel(Layout.CENTER, this.instructionsText2);
 
   // create timer
-  game.clock.events.loop(1000, this._updateInfo, this);
+  // game.clock.events.loop(3000, this._updateInfo, this);
 };
 
 RightPane.prototype = Object.create(Pane.prototype);

@@ -25,21 +25,30 @@ function ProgressButtonIcon(game, key, settings) {
     }
   ));
 
+  this.overlay = new BackgroundView(game, {
+    borderSize: 0.0,
+    // borderColor: 0x333333,
+    fillAlpha: 0.34,
+    color: 0xffffff,
+    blendMode: engine.BlendMode.ADD
+  });
+
   ButtonIcon.call(this, game, key,
     Class.mixin(settings, {
       padding: [0, 0, 0, 4],
       bg: {
-        radius: 0.0
+        radius: 4.0
       },
       icon: {
         bg: {
           borderSize: 0.0,
-          radius: 0.0
+          radius: 4.0
         }
       }
     })
   );
 
+  this.addView(this.overlay);
   this.addView(this.progressBg);
   this.addView(this.progress);
 }
@@ -56,11 +65,18 @@ ProgressButtonIcon.prototype.setProgressBar = function(decimal) {
 ProgressButtonIcon.prototype.recalc = function() {
   var size = this.size,
       progressBgSettings = this.progressBg.settings,
-      progressSettings = this.progress.settings;
+      progressSettings = this.progress.settings,
+      overlaySettings = this.overlay.settings;
+  
   progressSettings.size = { width: 4, height: size.height * this.decimal };
   progressSettings.offset = { x: size.width - 4, y: size.height - size.height * this.decimal };
+  
   progressBgSettings.size = { width: 4, height: size.height };
   progressBgSettings.offset = { x: size.width - 4, y: 0 };
+
+  overlaySettings.size = { width: size.width - 8, height: size.height - 4 };
+  overlaySettings.offset = { x: 2, y: 2 };
+  overlaySettings.radius = 4;
 };
 
 module.exports = ProgressButtonIcon;

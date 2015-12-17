@@ -54,14 +54,17 @@ function AlertMessage(game, settings) {
 AlertMessage.prototype = Object.create(Pane.prototype);
 AlertMessage.prototype.constructor = AlertMessage;
 
-AlertMessage.prototype._message = function(message) {
+AlertMessage.prototype._message = function(message, duration, delay) {
+  duration = duration || 3500;
+  delay = delay || 3000;
+
   this.message.text = message || '';
 
   this.alpha = 1.0;
   this.messageTween = this.game.tweens.create(this);
-  this.messageTween.to({ alpha: 0.0 }, 3500, engine.Easing.Quadratic.Out);
+  this.messageTween.to({ alpha: 0.0 }, duration, engine.Easing.Quadratic.Out);
   this.messageTween.on('complete', this._close, this);
-  this.messageTween.delay(3000);
+  this.messageTween.delay(delay);
   this.messageTween.start();
 
   this.game.emit('gui/modal', true, this, false, false);

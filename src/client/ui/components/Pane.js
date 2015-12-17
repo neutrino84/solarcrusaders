@@ -2,6 +2,7 @@
 var engine = require('engine'),
     Panel = require('../Panel'),
     Layout = require('../Layout'),
+    BorderLayout = require('../layouts/BorderLayout'),
     FlowLayout = require('../layouts/FlowLayout'),
     BackgroundView = require('../views/BackgroundView'),
     Class = engine.Class;
@@ -25,11 +26,19 @@ function Pane(game, settings) {
     }
   });
 
-  // create layout
-  this.layout = new FlowLayout(
-    this.settings.layout.ax, this.settings.layout.ay,
-    this.settings.layout.direction, this.settings.layout.gap);
-
+  // layout
+  switch(this.settings.layout.type) {
+    case 'border':
+      this.layout = new BorderLayout(
+        this.settings.layout.ax, this.settings.layout.ay);
+      break;
+    default:
+      this.layout = new FlowLayout(
+        this.settings.layout.ax, this.settings.layout.ay,
+        this.settings.layout.direction, this.settings.layout.gap);
+      break;
+  }
+  
   // set size
   if(this.settings.width || this.settings.height) {
     this.setPreferredSize(
@@ -37,12 +46,12 @@ function Pane(game, settings) {
       this.settings.height);
   }
 
-  // style
+  this.bg = new BackgroundView(game, this.settings.bg);
+
   this.setPadding.apply(this, this.settings.padding);
   this.setBorder.apply(this, this.settings.border);
 
-  // build button
-  this.addView(new BackgroundView(game, this.settings.bg));
+  this.addView(this.bg);
 };
 
 Pane.prototype = Object.create(Panel.prototype);

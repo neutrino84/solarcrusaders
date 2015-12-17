@@ -3,7 +3,7 @@ var engine = require('engine'),
     Panel = require('../Panel'),
     Layout = require('../Layout'),
     Pane = require('../components/Pane'),
-    Label = require('../components/Label'),
+    Button = require('../components/Button'),
     BorderLayout = require('../layouts/BorderLayout'),
     BackgroundView = require('../views/BackgroundView'),
     Class = engine.Class;
@@ -13,8 +13,6 @@ function ContentPane(game, string, settings) {
 
   // default styles
   this.settings = Class.mixin(settings, {
-    // width: 288,
-    // height: 192,
     padding: [1, 4],
     border: [0],
     bg: {
@@ -28,6 +26,11 @@ function ContentPane(game, string, settings) {
       width: 17,
       height: 17,
       padding: [0],
+      layout: {
+        type: 'border',
+        ax: 0,
+        ay: 0
+      },
       bg: {
         fillAlpha: 1.0,
         color: 0x002040,
@@ -46,18 +49,27 @@ function ContentPane(game, string, settings) {
         blendMode: engine.BlendMode.MULTIPLY
       }
     },
-    label: {
-      padding: [6, 8],
-      border: [0],
-      text: {
-        fontName: 'small'
-      },
+    button: {
+      padding: [0],
       bg: {
         highlight: 0x002040,
         color: 0x3868b8,
         fillAlpha: 0.5,
         blendMode: engine.BlendMode.ADD,
-        borderSize: 0
+        borderSize: 0,
+        radius: 0
+      },
+      label: {
+        padding: [6, 8],
+        border: [0],
+        text: {
+          fontName: 'small'
+        },
+        bg: {
+          borderSize: 0,
+          fillAlpha: 0.0,
+          radius: 0
+        }
       }
     }
   });
@@ -73,13 +85,15 @@ function ContentPane(game, string, settings) {
   this.bg = new BackgroundView(game, this.settings.bg);
   this.title = new Pane(game, this.settings.title);
   this.content = new Pane(game, this.settings.content);
-  this.label = new Label(game, string, this.settings.label);
+  this.button = new Button(game, string, this.settings.button);
+  
+  this.label = this.button.label;
 
   this.addView(this.bg);
 
   this.addPanel(Layout.CENTER, this.content);
   this.content.addPanel(Layout.STRETCH, this.title);
-  this.title.addPanel(Layout.NONE, this.label);
+  this.title.addPanel(Layout.LEFT, this.button);
 };
 
 ContentPane.prototype = Object.create(Panel.prototype);

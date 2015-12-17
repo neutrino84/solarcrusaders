@@ -33,7 +33,8 @@ function BottomPane(game, string, settings) {
         blendMode: engine.BlendMode.MULTIPLY
       },
       layout: {
-        direction: Layout.HORIZONTAL
+        direction: Layout.HORIZONTAL,
+        gap: 4
       }
     }
   });
@@ -52,10 +53,10 @@ function BottomPane(game, string, settings) {
   this.addView(this.bg);
   this.addPanel(Layout.CENTER, this.content);
 
-  this.iconWithBar1 = new ProgressButtonIcon(game, 'icon1', {});
-  this.iconWithBar1.on('inputUp', this._clicked1, this);
-  
-  this.content.addPanel(Layout.NONE, this.iconWithBar1);
+  for(var i=4; i>0; i--) {
+    var weapon = this.create();
+    this.content.addPanel(Layout.NONE, weapon);
+  }
 };
 
 BottomPane.prototype = Object.create(Panel.prototype);
@@ -65,8 +66,18 @@ BottomPane.prototype.addContent = function(constraint, panel) {
   this.content.addPanel(constraint, panel);
 };
 
-BottomPane.prototype._clicked1 = function() {
-  this.iconWithBar1.setProgressBar(this.iconWithBar1.percentage / 100 + 0.2);
+BottomPane.prototype.create = function(data) {
+  return new ProgressButtonIcon(game,
+    'ship-atlas', {
+      disabled: true,
+      icon: {
+        padding: [0],
+        width: 32,
+        height: 32,
+        frame: 'turret-a.png'
+      }
+    }
+  );
 };
 
 module.exports = BottomPane;

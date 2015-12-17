@@ -38,6 +38,10 @@ function ButtonIcon(game, key, settings) {
 
   this.image = new Image(game, key, this.settings.icon);
 
+  if(this.settings.disabled) {
+    this.disabled = true;
+  }
+
   this.bg = new BackgroundView(game, this.settings.bg);
   this.bg.inputEnabled = true;
   this.bg.input.priorityID = 2;
@@ -62,25 +66,48 @@ ButtonIcon.prototype.on = function(name, callback, context) {
 };
 
 ButtonIcon.prototype._inputUp = function() {
-  this.bg.tint = 0xFFFFFF;
-  this.image.bg.tint = 0xFFFFFF;
-  // this.emit('inputUp', this);
+  if(this.disabled) { return; }
+
+  this.bg.tint = 0xffffff;
+  this.image.bg.tint = 0xffffff;
+  this.emit('inputUp', this);
 };
 
 ButtonIcon.prototype._inputDown = function() {
-  this.bg.tint = 0xaaccFF;
-  this.image.bg.tint = 0xaaccFF;
-  // this.emit('inputDown', this);
+  if(this.disabled) { return; }
+
+  this.bg.tint = 0xaaccee;
+  this.image.bg.tint = 0xaaccee;
+  this.emit('inputDown', this);
 };
 
 ButtonIcon.prototype._inputOver = function() {
+  if(this.disabled) { return; }
+
   this.bg.alpha = 1.0;
   this.image.alpha = 1.0;
 };
 
 ButtonIcon.prototype._inputOut = function() {
+  if(this.disabled) { return; }
+
   this.bg.alpha = 0.75;
   this.image.alpha = 0.9;
 };
+
+Object.defineProperty(ButtonIcon.prototype, 'disabled', {
+  set: function(value) {
+    if(value === false) {
+      this.image.alpha = 1.0;
+    } else {
+      this.image.alpha = 0.25;
+    }
+    this._disabled = value;
+  },
+
+  get: function() {
+    return this._disabled;
+  }
+});
 
 module.exports = ButtonIcon;
