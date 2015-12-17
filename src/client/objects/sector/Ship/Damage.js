@@ -39,8 +39,11 @@ Damage.prototype.inflict = function(position) {
 Damage.prototype.destroyed = function() {
   var point,
       game = this.game,
-      ship = this.ship;
-      ship.destroyed = true;
+      ship = this.ship,
+      point = engine.Line.pointAtDistance(ship.position, ship.movement.destination, 100);
+
+  ship.destroyed = true;
+  ship.movement.plot(point);
 
   // burned
   ship.tint = 0x666666;
@@ -68,10 +71,7 @@ Damage.prototype.destroyed = function() {
     }
   }, this);
 
-  // destroyed
-  game.clock.events.add(2000, function() {
-    ship.movement.throttle = 10.0;
-  });
+
 };
 
 Damage.prototype.destroy = function() {
