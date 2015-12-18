@@ -135,11 +135,17 @@ Movement.prototype.generateData = function(paths) {
 };
 
 Movement.prototype.getForwardFrameByFrames = function(frames) {
-  var animation = this.animation,
+  var parent = this.parent,
+      animation = this.animation,
       frameIndex = animation.frameIndex,
       frameTotal = animation.frameTotal,
-      index = global.Math.min(frameTotal, frameIndex + frames);
-  return animation.frameData[index];
+      index = global.Math.min(frameTotal-1, frameIndex + frames);
+
+  if(animation.frameData[index] !== undefined) {
+    return animation.frameData[index];
+  } else {
+    return parent.position;
+  }
 };
 
 Movement.prototype.destroy = function() {
