@@ -21,12 +21,12 @@ LoadingState.prototype.preload = function() {
 };
 
 LoadingState.prototype.init = function() {
-
+  
 };
 
 LoadingState.prototype.create = function() {
   var game = this.game,
-      guiState = new GUIState(),
+      guiState = this.gui = new GUIState(),
       sectorState = new SectorState();
 
   // load game
@@ -117,7 +117,7 @@ LoadingState.prototype.loadingComplete = function() {
   if(!this.game.state.hasPendingState) {
     this.tween = this.game.tweens.create(this.root);
     this.tween.to({ alpha: 0.0 }, 5000);
-    this.tween.delay(1500);
+    this.tween.delay(2000);
     this.tween.start();
 
     this.image.visible = false;
