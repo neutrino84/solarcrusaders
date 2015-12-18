@@ -56,16 +56,16 @@
 },
 "vessel-x04.png":
 {
-	"frame": {"x":384,"y":128,"w":64,"h":64},
+	"frame": {"x":384,"y":128,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
-	"sourceSize": {"w":64,"h":64},
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+	"sourceSize": {"w":32,"h":32},
 	"pivot": {"x":0.5,"y":0.5}
 },
 "vessel-x05.png":
 {
-	"frame": {"x":448,"y":128,"w":64,"h":64},
+	"frame": {"x":416,"y":128,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -79,6 +79,6 @@
 	"format": "RGBA8888",
 	"size": {"w":512,"h":512},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:2a70f6e9ed15942417d48466f04f50bb:842a776850c9e6a67bc2fe9fbb2ce433:50f622fd4bec5be3abd7fa3de1a06e0f$"
+	"smartupdate": "$TexturePacker:SmartUpdate:57cd13751e3d1529829922288aa9408a:1db4c4938c2d97873f8a838887fc9ba2:50f622fd4bec5be3abd7fa3de1a06e0f$"
 }
 }
