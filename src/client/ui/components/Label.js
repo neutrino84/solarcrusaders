@@ -35,6 +35,17 @@ Label.prototype.doLayout = function() {
   this.textView.position.set(this.left, this.top);
 };
 
+Object.defineProperty(Label.prototype, 'tint', {
+  get: function() {
+    return this.textView.tint;
+  },
+
+  set: function(value) {
+    this.textView.tint = value;
+    this.invalidate();
+  }
+});
+
 Object.defineProperty(Label.prototype, 'text', {
   get: function() {
     return this.textView.fontTexture.text;

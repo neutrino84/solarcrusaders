@@ -40,7 +40,7 @@ Damage.prototype.destroyed = function() {
   var point,
       game = this.game,
       ship = this.ship,
-      point = engine.Line.pointAtDistance(ship.position, ship.movement.destination, 100);
+      point = ship.movement.getForwardFrameByFrames(120);
 
   ship.destroyed = true;
   ship.movement.plot(point);

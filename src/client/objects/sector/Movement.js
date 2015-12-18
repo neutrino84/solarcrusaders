@@ -134,6 +134,14 @@ Movement.prototype.generateData = function(paths) {
   return data;
 };
 
+Movement.prototype.getForwardFrameByFrames = function(frames) {
+  var animation = this.animation,
+      frameIndex = animation.frameIndex,
+      frameTotal = animation.frameTotal,
+      index = global.Math.min(frameTotal, frameIndex + frames);
+  return animation.frameData[index];
+};
+
 Movement.prototype.destroy = function() {
   this.animation.stop();
   this.animation.removeListener('complete', this._movementComplete);

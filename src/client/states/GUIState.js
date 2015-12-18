@@ -65,14 +65,16 @@ GUIState.prototype.preload = function() {
   // ship outline
   this.game.load.image('vessel-x01-outline', 'imgs/game/ships/vessel-x01-outline.png');
   this.game.load.image('vessel-x03-outline', 'imgs/game/ships/vessel-x03-outline.png');
+  this.game.load.image('vessel-x04-outline', 'imgs/game/ships/vessel-x04-outline.png');
+  this.game.load.image('vessel-x05-outline', 'imgs/game/ships/vessel-x05-outline.png');
 };
 
 GUIState.prototype.create = function() {
   var game = this.game;
 
   this.selection = new Selection(game);
-  this.labels = new engine.Group(game);
-  this.labels.visible = false;
+  this.hud = new engine.Group(game);
+  this.hud.visible = false;
 
   this.modalComponent = new Modal(game);
   this.modalComponent.visible = false;
@@ -122,7 +124,7 @@ GUIState.prototype.create = function() {
   this.root.setSize(game.width, game.height);
   this.root.visible = false;
 
-  this.root.addChild(this.labels);
+  this.root.addChild(this.hud);
 
   this.root.addPanel(Layout.STRETCH, this.selection);
   this.root.addPanel(Layout.STRETCH, this.basePanel);
@@ -165,7 +167,7 @@ GUIState.prototype.refresh = function() {
 };
 
 GUIState.prototype.toggle = function(force) {
-  this.labels.visible = this.root.visible =
+  this.hud.visible = this.root.visible =
     force !== undefined ? force : !this.root.visible;
   
   // repaint gui

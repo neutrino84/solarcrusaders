@@ -15,7 +15,7 @@ function ShipManager(game) {
   this.socket = game.net.socket;
   this.shipNetManager = game.shipNetManager;
 
-  this.labelsGroup = null;
+  this.hudGroup = null;
   this.shipsGroup = new engine.Group(game);
   this.trajectoryGroup = new engine.Group(game);
   this.fxGroup = new engine.Group(game);
@@ -135,19 +135,18 @@ ShipManager.prototype.update = function() {
 
 ShipManager.prototype.create = function(data, details) {
   var game = this.game,
-
       ship = new Ship(this, details.chasis);
-      
-      ship.uuid = data.uuid;
-      ship.user = details.user;
-      ship.username = details.username;
 
-      ship.boot();
+  ship.uuid = data.uuid;
+  ship.user = details.user;
+  ship.username = details.username;
+  ship.health = details.health;
+  ship.position.set(data.current.x, data.current.y);
+  ship.rotation = data.rotation;
+  ship.movement.throttle = data.throttle;
+  ship.movement.trajectoryGraphics = this.trajectoryGraphics;
 
-      ship.movement.throttle = data.throttle;
-      ship.position.set(data.current.x, data.current.y);
-      ship.rotation = data.rotation;
-      ship.trajectoryGraphics = this.trajectoryGraphics;
+  ship.boot();
 
   this.shipsGroup.add(ship);
 
@@ -239,10 +238,12 @@ ShipManager.prototype._untargeted = function(targeted) {
 };
 
 ShipManager.prototype._attack = function(data) {
-  var origin = this.ships[data.origin];
-  if(origin) {
-    origin.target = this.ships[data.target];
+  var origin = this.ships[data.origin],
+      target = this.ships[data.target];
+  if(origin && target && data.type === 'hit') {
+    origin.target = target;
     origin.targetingComputer.fire();
+    target.data(data);
   }
 };
 
@@ -277,6 +278,7 @@ ShipManager.prototype._destroyed = function(ship) {
       s = this.ships[ship.uuid];
   if(s !== undefined) {
     s.damage.destroyed();
+    s.data({ health: 0 });
     tween = game.tweens.create(s);
     tween.to({ alpha: 0 }, 5000, engine.Easing.Default, false, 15000);
     tween.once('complete', function() {

@@ -1,12 +1,11 @@
 
 var engine = require('engine'),
-    TextView = require('../../../ui/views/TextView'),
     Movement = require('../Movement'),
-    // Trails = require('./Trails'),
     EngineCore = require('./EngineCore'),
     ShieldGenerator = require('./ShieldGenerator'),
     TargetingComputer = require('./TargetingComputer'),
-    Damage = require('./Damage');
+    Damage = require('./Damage'),
+    Hud = require('../../../ui/components/Hud');
 
 function Ship(manager, key) {
   engine.Sprite.call(this, manager.game, 'ship-atlas', key + '.png');
@@ -23,6 +22,7 @@ function Ship(manager, key) {
   this.pivot.set(this.texture.frame.width / 2, this.texture.frame.height / 2);
   this.scale.set(this.config.size, this.config.size);
 
+  this.hud = new Hud(this);
   this.damage = new Damage(this);
   this.movement = new Movement(this);
   this.circle = new engine.Circle(this.pivot.x, this.pivot.y, global.Math.sqrt(this.getBounds().perimeter * 3));
@@ -34,7 +34,6 @@ function Ship(manager, key) {
   this.checkWorldBounds = true;
 
   // core ship classes
-  // this.trails = new Trails(this);
   this.engineCore = new EngineCore(this);
   this.targetingComputer = new TargetingComputer(this, this.config.targeting);
   this.shieldGenerator = new ShieldGenerator(this);
@@ -49,22 +48,18 @@ Ship.prototype = Object.create(engine.Sprite.prototype);
 Ship.prototype.constructor = Ship;
 
 Ship.prototype.boot = function() {
-  // this.trails.create();
   this.engineCore.create();
   this.targetingComputer.create();
+  // this.shieldGenerator.create();
+  this.hud.create();
+  this.manager.hudGroup.addChild(this.hud);
+};
 
-  // if(this.name === 'vessel-x01') {
-  //   this.shieldGenerator.create();
-  // }
-
-  if(this.username) {
-    this.label = new TextView(this.game, this.username, { fontName: 'medium' });
-    this.label.tint = this.isPlayer ? 0x33FF33 : 0x3399FF;
-    this.labelsGroup = this.manager.labelsGroup;
-    this.labelsGroup.addChild(this.label);
+Ship.prototype.data = function(data) {
+  if(data.health !== undefined) {
+    this.health = data.health;
+    this.hud.healthBar.setProgressBar(data.health / this.config.stats.health);
   }
-
-  this.deselect();
 };
 
 Ship.prototype.update = function() {
@@ -75,15 +70,9 @@ Ship.prototype.update = function() {
   movement.update();
 
   if(this.renderable && !this.disabled) {
-    if(this.label) {
-      transform = this.game.world.worldTransform.apply(this.position);
-      this.label.pivot.set(this.label.width / 2, -this.height / 2 * this.game.world.scale.x - 12);
-      this.label.position.set(transform.x, transform.y);
-    }
-
     speed = movement.speed;
 
-    // this.trails.update(); // performance killer
+    this.hud.update();
     this.targetingComputer.update();
 
     if(speed > 0) {
@@ -94,6 +83,7 @@ Ship.prototype.update = function() {
 
 Ship.prototype.select = function() {
   this._selected = true;
+  this.hud.healthBar.renderable = true;
   this.graphics.clear();
   this.graphics.lineStyle(3.0 / this.scale.x, this.isPlayer ? 0x33FF66 : 0x336699, this.isPlayer ? 0.6 : 0.5);
   this.graphics.beginFill(this.isPlayer ? 0x33FF66 : 0x336699, 0.25);
@@ -103,8 +93,8 @@ Ship.prototype.select = function() {
 
 Ship.prototype.deselect = function() {
   this._selected = false;
+  this.hud.healthBar.renderable = false;
   this.graphics.clear();
-
   if(this.isPlayer) {
     this.graphics.lineStyle(2.0 / this.scale.x, 0x33FF66, 0.4);
     this.graphics.beginFill(0x33FF66, 0.1);
@@ -114,17 +104,19 @@ Ship.prototype.deselect = function() {
 };
 
 Ship.prototype.destroy = function() {
+  this.hud.destroy();
+  this.damage.destroy();
+  this.movement.destroy();
+
+  this.manager.hudGroup.removeChild(this.hud);
+
   this.manager = undefined;
   this.game = undefined;
   this.config = undefined;
   this.movement = undefined;
   this.circle = undefined;
-
-  if(this.label) {
-    this.label.destroy();
-  }
-
-  this.damage.destroy();
+  this.hud = undefined;
+  this.damage = undefined;
 
   engine.Sprite.prototype.destroy.call(this);
 };
@@ -138,16 +130,6 @@ Object.defineProperty(Ship.prototype, 'isPlayer', {
 Object.defineProperty(Ship.prototype, 'selected', {
   get: function() {
     return this._selected;
-  }
-});
-
-Object.defineProperty(Ship.prototype, 'trajectoryGraphics', {
-  set: function(value) {
-    this.movement.trajectoryGraphics = value;
-  },
-
-  get: function() {
-    return this.movement.trajectoryGraphics;
   }
 });
 

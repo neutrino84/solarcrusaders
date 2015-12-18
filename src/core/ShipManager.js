@@ -21,7 +21,7 @@ function ShipManager(game) {
 
   // activate ai
   this.game.clock.events.loop(1000, this._updateBattles, this);
-  this.game.clock.events.loop(5000, this._updateAI, this) && this._updateAI();
+  this.game.clock.events.loop(10000, this._updateAI, this);
 };
 
 ShipManager.prototype.constructor = ShipManager;
@@ -73,8 +73,9 @@ ShipManager.prototype.create = function(ship, position) {
 ShipManager.prototype.target = function(sock, args, next) {
   var user = sock.sock.handshake.session.user,
       s = args[1],
-      ship = this.ships[s.origin];
-  if(ship && ship.user && ship.user.uuid === user.uuid) {
+      ship = this.ships[s.origin],
+      target = this.ships[s.target];
+  if(target && ship && ship.user && ship.user.uuid === user.uuid) {
     this.battles[s.origin] = s;
     this.sockets.io.sockets.emit('ship/targeted', s);
   }
@@ -109,7 +110,8 @@ ShipManager.prototype.data = function(sock, args, next) {
         y: ship.y,
         throttle: ship.throttle,
         rotation: ship.rottion,
-        systems: ship.systems
+        systems: ship.systems,
+        health: ship.health
       });
     }
   }
@@ -156,6 +158,9 @@ ShipManager.prototype.generateRandomShips = function() {
       this.generateShip(key);
     }
   }
+
+  // start ai
+  this._updateAI()
 };
 
 ShipManager.prototype.generateRandomShip = function() {
@@ -218,17 +223,18 @@ ShipManager.prototype._updateBattles = function() {
 
       if(global.Math.random() <= accuracy && global.Math.random() >= evasion) {
         //.. hit
-        target.health -= global.Math.floor(global.Math.random() * 50); // weapon damage
+        target.health -= global.Math.floor(global.Math.random() * 50) + 25; // weapon damage
         this.sockets.io.sockets.emit('ship/attack', {
           type: 'hit',
           origin: origin.uuid,
-          target: target.uuid
+          target: target.uuid,
+          health: target.health
         });
         
         // destroy ship
         if(target.health <= 0) {
+          this.remove(target);
           this.generateRandomShip();
-          delete this.battles[origin.uuid] && this.remove(target);
         }
       } else {
         //.. miss
@@ -239,7 +245,7 @@ ShipManager.prototype._updateBattles = function() {
         });
       }
     } else {
-      //.. cancel battle
+      delete this.battles[b];
     }
   }
 };
