@@ -140,7 +140,6 @@ Movement.prototype.getForwardFrameByFrames = function(frames) {
       frameIndex = animation.frameIndex,
       frameTotal = animation.frameTotal,
       index = global.Math.min(frameTotal-1, frameIndex + frames);
-
   if(animation.frameData[index] !== undefined) {
     return animation.frameData[index];
   } else {
