@@ -234,7 +234,7 @@ Game.prototype.destroy = function() {
   this.load = null;
   this.sound = null;
   this.stage = null;
-  this.time = null;
+  this.clock = null;
   this.world = null;
   this.isBooted = false;
 
@@ -259,5 +259,46 @@ Game.prototype.gameResumed = function(event) {
     this.emit('resume', event);
   }
 };
+
+Game.prototype.focusLoss = function(event) {
+  this.emit('blur', event);
+  if(!this.stage.disableVisibilityChange) {
+    this.gamePaused(event);
+  }
+};
+
+Game.prototype.focusGain = function(event) {
+  this.emit('focus', event);
+  if(!this.stage.disableVisibilityChange) {
+    this.gameResumed(event);
+  }
+};
+
+Object.defineProperty(Game.prototype, 'paused', {
+  get: function() {
+    return this._paused;
+  },
+
+  set: function(value) {
+    if(value === true) {
+      if(this._paused === false) {
+        this._paused = true;
+        this.sound.setMute();
+        this.clock.gamePaused();
+        this.emit('pause', event);
+      }
+      this._codePaused = true;
+    } else {
+      if(this._paused) {
+        this._paused = false;
+        this.input.reset();
+        this.sound.unsetMute();
+        this.clock.gameResumed();
+        this.emit('resume', event);
+      }
+      this._codePaused = false;
+    }
+  }
+});
 
 module.exports = Game;
