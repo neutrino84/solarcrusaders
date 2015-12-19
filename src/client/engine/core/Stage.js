@@ -36,7 +36,7 @@ Stage.prototype.update = function() {
 
 Stage.prototype.postUpdate = function() {
   // if(this.game.world.camera.target) {
-  //   // this.game.world.camera.target.postUpdate();
+  //   this.game.world.camera.target.postUpdate();
   //   this.game.world.camera.update();
 
   //   var i = this.children.length;
