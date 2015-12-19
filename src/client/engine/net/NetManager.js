@@ -29,6 +29,24 @@ NetManager.prototype = {
     this.socket.on('event', this._event.bind(this));
     this.socket.on('error', this._error.bind(this));
     this.socket.on('disconnect', this._disconnect.bind(this));
+
+    // pause/resume
+    this.game.on('pause', this.pause, this);
+    this.game.on('resume', this.resume, this);
+  },
+
+  pause: function() {
+    if(this.socket.subs) {
+      // clean subscriptions to avoid reconnections
+      for (var i = 0; i < this.socket.subs.length; i++) {
+        this.socket.subs[i].destroy();
+      }
+      this.socket.subs = null;
+    }
+  },
+
+  resume: function() {
+    this.socket.subEvents();
   },
 
   connect: function() {
