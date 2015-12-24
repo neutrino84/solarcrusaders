@@ -1,7 +1,7 @@
 
 var engine = require('engine'),
     client = require('client'),
-    Utils = require('../../Utils');
+    Utils = require('../../utils');
 
 function Ship(manager, ship) {
   this.manager = manager;
