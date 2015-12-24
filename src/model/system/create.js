@@ -5,6 +5,9 @@ var uuid = require('uuid'),
 
 module.exports = function(System) {
   System.DefaultData = {
+    stats: {
+      health: 100
+    },
     ship: null,
     type: '*',
     modifier: 1.1,

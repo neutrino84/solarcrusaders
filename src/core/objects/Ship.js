@@ -1,6 +1,7 @@
 
 var engine = require('engine'),
-    client = require('client');
+    client = require('client'),
+    Utils = require('../../Utils');
 
 function Ship(manager, ship) {
   this.manager = manager;
@@ -17,6 +18,8 @@ function Ship(manager, ship) {
   this.position = new engine.Point(global.parseFloat(ship.x), global.parseFloat(ship.y));
   this.movement = new client.Movement(this);
 
+  ship = Utils.extend(ship, this.config.stats, false);
+
   this._id = global.parseInt(ship.id, 10);
   this._sector = global.parseInt(ship.sector, 10);
   this._health = global.parseFloat(ship.health);
@@ -25,21 +28,37 @@ function Ship(manager, ship) {
   this._evasion = global.parseFloat(ship.evasion);
   this._reactor = global.parseFloat(ship.reactor);
   this._durability = global.parseFloat(ship.durability);
+  this._speed = global.parseFloat(ship.speed);
+
+  // this will probably replace
+  // above system creation...
+  // get data from ship layout
+  var layer, objects, room, types = ['reactor'],
+      layers = this.config.tilemap.layers;
+  this.rooms = [];
+  for(var l in layers) {
+    layer = layers[l];
+    if(layer.name === 'rooms' && layer.type === 'objectgroup') {
+      objects = layer.objects;
+      for(var o in objects) {
+        room = objects[o];
+        this.rooms.push(room.properties);
+        room.properties.system && types.push(room.properties.system);
+      }
+    }
+  }
 
   // speed - engine
   // accuracy - targeting
   // evasion - pilot
-  if(ship.systems === undefined) {
-    var system, type,
-        types = ['pilot', 'engine', 'targeting', 'reactor'];
-    this.systems = {};
-    for(var t in types) {
-      type = types[t];
-      system = this.model.system.createDefaultData();
-      system.type = type;
-      system.ship = ship.uid;
-      this.systems[type] = system;
-    }
+  var system, type;
+  this.systems = {};
+  for(var t in types) {
+    type = types[t];
+    system = this.model.system.createDefaultData();
+    system.type = type;
+    system.ship = ship.uid;
+    this.systems[type] = system;
   }
 
   // default weapons
@@ -80,14 +99,21 @@ Object.defineProperty(Ship.prototype, 'heal', {
 
 Object.defineProperty(Ship.prototype, 'accuracy', {
   get: function() {
-    return this._accuracy;
+    var engine = this.systems['targeting'],
+        modifier = engine ? engine.modifier : 1.0,
+        health = engine ? engine.health / engine.stats.health :
+          this.health / this.config.stats.health;
+    return this._accuracy * modifier * global.Math.max(health, 0.5);
   }
 });
 
-
 Object.defineProperty(Ship.prototype, 'evasion', {
   get: function() {
-    return this._evasion;
+    var pilot = this.systems['pilot'],
+        modifier = pilot ? pilot.modifier : 1.0,
+        health = pilot ? pilot.health / pilot.stats.health :
+          this.health / this.config.stats.health;
+    return this._evasion * modifier * global.Math.max(health, 0.5);
   }
 });
 
@@ -101,7 +127,6 @@ Object.defineProperty(Ship.prototype, 'reactor', {
   }
 });
 
-
 Object.defineProperty(Ship.prototype, 'durability', {
   get: function() {
     return this._durability;
@@ -109,6 +134,18 @@ Object.defineProperty(Ship.prototype, 'durability', {
 
   set: function(value) {
     this._durability = value;
+  }
+});
+
+Object.defineProperty(Ship.prototype, 'speed', {
+  get: function() {
+    var engine = this.systems['engine'],
+        modifier = engine ? engine.modifier : 1.0;
+    return this._speed;
+  },
+
+  set: function(value) {
+    this._speed = value;
   }
 });
 

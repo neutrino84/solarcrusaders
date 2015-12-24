@@ -20,6 +20,7 @@ function ShipManager(game) {
   this.game.on('ship/create', this.create, this);
 
   // activate ai
+  this.game.clock.events.loop(1000, this._updateShips, this);
   this.game.clock.events.loop(1000, this._updateBattles, this);
   this.game.clock.events.loop(10000, this._updateAI, this);
 };
@@ -111,12 +112,13 @@ ShipManager.prototype.data = function(sock, args, next) {
         throttle: ship.throttle,
         rotation: ship.rottion,
         systems: ship.systems,
-        health: ship.health
+        health: ship.health,
+        speed: ship.speed
       });
     }
   }
   sock.emit('ship/data', {
-    ships: ships
+    type: 'sync', ships: ships
   });
 };
 
@@ -147,11 +149,11 @@ ShipManager.prototype.update = function() {
 
 ShipManager.prototype.generateRandomShips = function() {
   var iterator = {
-        'vessel-x01': { count: 2 },
-        'vessel-x02': { count: 2 },
-        'vessel-x03': { count: 2 },
-        'vessel-x04': { count: 30 },
-        'vessel-x05': { count: 14 }
+        'vessel-x01': { count: 1 },
+        'vessel-x02': { count: 1 },
+        'vessel-x03': { count: 3 },
+        'vessel-x04': { count: 10 },
+        'vessel-x05': { count: 10 }
       };
   for(var key in iterator) {
     for(var i=0; i<iterator[key].count; i++) {
@@ -184,7 +186,7 @@ ShipManager.prototype.generateShip = function(chassis) {
   this.create({
     rotation: global.Math.random() * global.Math.PI,
     chasis: chassis,
-    throttle: 0.8 + (global.Math.random() * 3)
+    throttle: 1.0 + (global.Math.random() * 3)
   });
 };
 
@@ -205,10 +207,31 @@ ShipManager.prototype._plot = function(ship, destination) {
   });
 };
 
+ShipManager.prototype._updateShips = function() {
+  var ship, delta,
+      ships = this.ships,
+      update, updates = [];
+  for(var s in ships) {
+    ship = ships[s];
+    if(ship.health < ship.config.stats.health) {
+      delta = ship.health * ship.heal;
+      ship.health += delta;
+      update = { uuid: ship.uuid, health: ship.health, amount: delta };
+      updates.push(update);
+    }
+  }
+  if(updates.length > 0) {
+    this.sockets.io.sockets.emit('ship/data', {
+      type: 'update', ships: updates
+    });
+  }
+};
+
 ShipManager.prototype._updateBattles = function() {
-  var battle, origin, target,
+  var battle, origin, target, distance, delta,
       accuracy, evasion,
-      battles = this.battles;
+      battles = this.battles,
+      update, updates = [];
   for(var b in battles) {
     battle = battles[b];
     origin = this.ships[battle.origin];
@@ -216,30 +239,49 @@ ShipManager.prototype._updateBattles = function() {
 
     // check exist
     if(origin && target) {
-      if(origin.position.distance(target.position) > 512) { continue; } // weapon range
-     
+      distance = origin.position.distance(target.position);
+
+      if(distance > 384) { continue; } // weapons out of range
+      
       accuracy = origin.accuracy;
       evasion = target.evasion;
 
       if(global.Math.random() <= accuracy && global.Math.random() >= evasion) {
         //.. hit
-        target.health -= global.Math.floor(global.Math.random() * 50) + 25; // weapon damage
+        delta = global.Math.floor(global.Math.random() * 7.5 + 2.5);
+        update = { uuid: target.uuid };
+        update.health = target.health = target.health - delta; // weapon damage
+
+        if(battle.room && target.systems[battle.room]) {
+          update.systems = {};
+          update.systems[battle.room] = {
+            health: global.Math.max(0, target.systems[battle.room].health - 20)
+          };
+          target.systems[battle.room].health = update.systems[battle.room].health;
+        }
+
         this.sockets.io.sockets.emit('ship/attack', {
           type: 'hit',
+          id: battle.id,
+          room: battle.room,
           origin: origin.uuid,
           target: target.uuid,
-          health: target.health
+          damage: delta
         });
         
         // destroy ship
         if(target.health <= 0) {
           this.remove(target);
           this.generateRandomShip();
+        } else {
+          updates.push(update);
         }
       } else {
         //.. miss
         this.sockets.io.sockets.emit('ship/attack', {
           type: 'miss',
+          id: battle.id,
+          room: battle.room,
           origin: origin.uuid,
           target: target.uuid
         });
@@ -248,32 +290,51 @@ ShipManager.prototype._updateBattles = function() {
       delete this.battles[b];
     }
   }
+  if(updates.length > 0) {
+    this.sockets.io.sockets.emit('ship/data', {
+      type: 'update', ships: updates
+    });
+  }
 };
 
 ShipManager.prototype._updateAI = function() {
-  var random, ship, destination,
-      ships = this.ships,
+  var b, battle, random, ship, room,
+      destination, origin,
+      ships = this.ships, target,
       arr = [];
   for(var s in ships) {
     ship = ships[s];
+    b = this.battles[ship.uuid];
+    
     if(!ship.user && global.Math.random() > 0.5) {
       destination = this._generateRandomPosition();
       this._plot(ship, destination);
       random = this._getRandomShip();
-      if(random !== ship) {
+      if(random !== ship && global.Math.random() > 0.5) {
         switch(ship.chasis) {
           case 'vessel-x01':
           case 'vessel-x02':
           case 'vessel-x03':
+          // case 'vessel-x04':
           case 'vessel-x05':
-            this.battles[ship.uuid] = {
-              origin: ship.uuid,
-              target: random.uuid,
-              room: 'pilot'
-            };
+            target = ships[random.uuid];
+            if(target) {
+              room = global.Math.floor(global.Math.random() * target.rooms.length);
+              battle = { origin: ship.uuid, target: target.uuid, id: room, room: target.rooms[room].system };
+              this.sockets.io.sockets.emit('ship/targeted', battle);
+              this.battles[ship.uuid] = battle;
+            }
             break;
           default: break;
         }
+      }
+    } else if(ship.user && b) {
+      target = this.ships[b.target];
+      if(target && !target.user && target.systems['targeting']) {
+        room = global.Math.floor(global.Math.random() * ship.rooms.length);
+        battle = { origin: target.uuid, target: ship.uuid, id: room, room: ship.rooms[room].system };
+        this.sockets.io.sockets.emit('ship/targeted', battle);
+        this.battles[target.uuid] = battle;
       }
     }
   }

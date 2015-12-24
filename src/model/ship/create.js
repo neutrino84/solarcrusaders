@@ -11,14 +11,14 @@ module.exports = function(Ship) {
     x: 2048,
     y: 2048,
     throttle: 1.0,
-    rotation: 0.0,
-    health: 100,
-    heal: 0.01,       // 
-    speed: 1.0,       // engine
-    accuracy: 0.5,    // targeting
-    evasion: 0.1,     // pilot
-    reactor: 100,     // battery
-    durability: 1000  // 
+    rotation: 0.0
+    // health: 100,
+    // heal: 0.01,       // 
+    // speed: 1.0,       // engine
+    // accuracy: 0.5,    // targeting
+    // evasion: 0.1,     // pilot
+    // reactor: 100,     // battery
+    // durability: 1000  // 
   };
 
   Ship.prototype.createDefaultData = function() {
