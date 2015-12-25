@@ -14,6 +14,7 @@ function ShipManager(game) {
 
   this.ships = {};
   this.battles = {};
+  this.count = {};
 
   this.game.on('ship/add', this.add, this);
   this.game.on('ship/remove', this.remove, this);
@@ -42,6 +43,7 @@ ShipManager.prototype.init = function() {
 ShipManager.prototype.add = function(ship) {
   if(!this.ships[ship.uuid]) {
     this.ships[ship.uuid] = new Ship(this, ship);
+    (this.count[ship.chasis] && this.count[ship.chasis]++) || (this.count[ship.chasis] = 1);
   }
 };
 
@@ -49,7 +51,10 @@ ShipManager.prototype.remove = function(ship) {
   var s;
   if(this.ships[ship.uuid]) {
     s = this.ships[ship.uuid];
+
     delete this.ships[ship.uuid] && s.destroy();
+
+    this.count[ship.chasis] && this.count[ship.chasis]--;
     this.sockets.io.sockets.emit('ship/destroyed', {
       uuid: ship.uuid
     });
@@ -168,11 +173,11 @@ ShipManager.prototype.generateRandomShips = function() {
 ShipManager.prototype.generateRandomShip = function() {
   var rnd = global.Math.random(),
       chassis;
-  if(rnd < 0.04) {
+  if(rnd < 0.04 && this.count['vessel-x01'] === 0) {
     chassis = 'vessel-x01';
-  } else if(rnd < 0.08) {
+  } else if(rnd < 0.08 && this.count['vessel-x02'] === 0) {
     chassis = 'vessel-x02';
-  } else if(rnd < 0.12) {
+  } else if(rnd < 0.12 && this.count['vessel-x03'] === 2) {
     chassis = 'vessel-x03';
   } else if(rnd < 0.60) {
     chassis = 'vessel-x04';
@@ -229,7 +234,7 @@ ShipManager.prototype._updateShips = function() {
 
 ShipManager.prototype._updateBattles = function() {
   var battle, origin, target, distance, delta,
-      accuracy, evasion,
+      accuracy, evasion, system,
       battles = this.battles,
       update, updates = [];
   for(var b in battles) {
@@ -248,16 +253,26 @@ ShipManager.prototype._updateBattles = function() {
 
       if(global.Math.random() <= accuracy && global.Math.random() >= evasion) {
         //.. hit
-        delta = global.Math.floor(global.Math.random() * 7.5 + 2.5);
+        delta = global.Math.floor(global.Math.random() * 10 + 5);
+        
         update = { uuid: target.uuid };
         update.health = target.health = target.health - delta; // weapon damage
 
-        if(battle.room && target.systems[battle.room]) {
+        system = target.systems[battle.room];
+
+        if(battle.room && system) {
+          system.health = global.Math.max(0, system.health - 20);
+
           update.systems = {};
           update.systems[battle.room] = {
-            health: global.Math.max(0, target.systems[battle.room].health - 20)
+            health: system.health
           };
-          target.systems[battle.room].health = update.systems[battle.room].health;
+
+          switch(battle.room) {
+            case 'engine':
+              update.speed = target.speed;
+              break;
+          }
         }
 
         this.sockets.io.sockets.emit('ship/attack', {

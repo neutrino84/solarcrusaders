@@ -72,13 +72,10 @@ Ship.prototype.constructor = Ship;
 Ship.prototype.destroy = function() {
   this.movement.destroy();
 
-  this.game = undefined;
-  this.user = undefined;
-  this.movement = undefined;
-  this.position = undefined;
-  this.config = undefined;
-  this.systems = undefined;
-  this.model = undefined;
+  this.manager = this.game =
+    this.movement = this.user =
+    this.position = this.config =
+    this.systems = this.model = undefined;
 };
 
 Object.defineProperty(Ship.prototype, 'health', {
@@ -140,8 +137,10 @@ Object.defineProperty(Ship.prototype, 'durability', {
 Object.defineProperty(Ship.prototype, 'speed', {
   get: function() {
     var engine = this.systems['engine'],
-        modifier = engine ? engine.modifier : 1.0;
-    return this._speed;
+        modifier = engine ? engine.modifier : 1.0,
+        health = engine ? engine.health / engine.stats.health :
+          this.health / this.config.stats.health;
+    return this._speed * modifier * global.Math.max(health, 0.25);
   },
 
   set: function(value) {
