@@ -31,8 +31,8 @@ function Ship(manager, ship) {
 
   this.types = ['reactor'];
   this.rooms = [];
+  this.turrets = [];
   this.systems = {};
-  this.turrets = {};
 
   // create
   this.createRooms();
@@ -84,7 +84,15 @@ Ship.prototype.createSystems = function() {
 };
 
 Ship.prototype.createTurrets = function() {
-  //.
+  var turret,
+      turrets = this.config.targeting.turrets;
+  for(var t in turrets) {
+    turret = turrets[t];
+    this.turrets.push({
+      type: turret.type,
+      damage: 2
+    });
+  }
 };
 
 Ship.prototype.destroy = function() {
@@ -132,6 +140,19 @@ Object.defineProperty(Ship.prototype, 'heal', {
   }
 });
 
+Object.defineProperty(Ship.prototype, 'damage', {
+  get: function() {
+    return this._damage || (
+      this._damage = (function(turrets) {
+        var damage = 0;
+        for(var t in turrets) {
+          damage += turrets[t].damage;
+        }
+        return damage;
+      })(this.turrets));
+  }
+});
+
 Object.defineProperty(Ship.prototype, 'accuracy', {
   get: function() {
     var engine = this.systems['targeting'],
@@ -148,7 +169,7 @@ Object.defineProperty(Ship.prototype, 'evasion', {
         modifier = pilot ? pilot.modifier : 1.0,
         health = pilot ? pilot.health / pilot.stats.health :
           this.health / this.config.stats.health;
-    return this._evasion * modifier * global.Math.max(health, 0.5);
+    return this._evasion * modifier * global.Math.max(health, 0.2);
   }
 });
 

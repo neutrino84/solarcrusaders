@@ -161,11 +161,11 @@ ShipManager.prototype.update = function() {
 
 ShipManager.prototype.generateRandomShips = function() {
   var iterator = {
-        'vessel-x01': { count: 3 },
+        'vessel-x01': { count: 2 },
         'vessel-x02': { count: 2 },
-        'vessel-x03': { count: 3 },
-        'vessel-x04': { count: 20 },
-        'vessel-x05': { count: 10 }
+        'vessel-x03': { count: 2 },
+        'vessel-x04': { count: 10 },
+        'vessel-x05': { count: 5 }
       };
   for(var key in iterator) {
     for(var i=0; i<iterator[key].count; i++) {
@@ -260,7 +260,7 @@ ShipManager.prototype._updateBattles = function() {
 
       if(global.Math.random() <= accuracy && global.Math.random() >= evasion) {
         //.. hit
-        delta = global.Math.floor(global.Math.random() * 10 + 5);
+        delta = global.Math.floor(global.Math.random() * (origin.damage + (origin.damage / 2)));
         
         update = { uuid: target.uuid };
         update.health = target.health = target.health - delta; // weapon damage
