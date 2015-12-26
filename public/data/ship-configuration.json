@@ -503,7 +503,7 @@
     "size": 1.0,
     "oribit": { "radius": 192 },
     "stats": {
-      "health": 500,
+      "health": 300,
       "heal": 0.005,
       "speed": 1.0,
       "accuracy": 0.8,
@@ -1150,7 +1150,7 @@
     "size": 1.0,
     "oribit": { "radius": 128 },
     "stats": {
-      "health": 100,
+      "health": 150,
       "heal": 0.01,
       "speed": 2.25,
       "accuracy": 0.5,
@@ -1652,10 +1652,10 @@
     "oribit": { "radius": 96 },
     "stats": {
       "health": 10,
-      "heal": 0.1,
+      "heal": 0.025,
       "speed": 4.0,
       "accuracy": 0.5,
-      "evasion": 0.5,
+      "evasion": 0.65,
       "reactor": 30,
       "durability": 500
     },
