@@ -16,7 +16,6 @@ function Ship(manager, ship) {
   this.throttle = global.parseFloat(ship.throttle);
   this.rotation = global.parseFloat(ship.rotation);
   this.position = new engine.Point(global.parseFloat(ship.x), global.parseFloat(ship.y));
-  this.movement = new client.Movement(this);
 
   ship = Utils.extend(ship, this.config.stats, false);
 
@@ -30,44 +29,63 @@ function Ship(manager, ship) {
   this._durability = global.parseFloat(ship.durability);
   this._speed = global.parseFloat(ship.speed);
 
-  // this will probably replace
-  // above system creation...
-  // get data from ship layout
-  var layer, objects, room, types = ['reactor'],
-      layers = this.config.tilemap.layers;
+  this.types = ['reactor'];
   this.rooms = [];
+  this.systems = {};
+  this.turrets = {};
+
+  // create
+  this.createRooms();
+  this.createSystems();
+  this.createTurrets();
+
+  this.movement = new client.Movement(this);
+};
+
+Ship.prototype.constructor = Ship;
+
+Ship.prototype.createRooms = function() {
+  var layer, objects, room, properties,
+      layers = this.config.tilemap.layers;
   for(var l in layers) {
     layer = layers[l];
+
     if(layer.name === 'rooms' && layer.type === 'objectgroup') {
       objects = layer.objects;
       for(var o in objects) {
         room = objects[o];
-        this.rooms.push(room.properties);
-        room.properties.system && types.push(room.properties.system);
+        properties = room.properties;
+
+        if(properties.system) {
+          this.types.push(properties.system);
+        }
+
+        this.rooms.push(properties);
       }
     }
   }
+};
 
+Ship.prototype.createSystems = function() {
   // speed - engine
   // accuracy - targeting
   // evasion - pilot
-  var system, type;
-  this.systems = {};
+  var system, type,
+      types = this.types;
   for(var t in types) {
     type = types[t];
+
     system = this.model.system.createDefaultData();
     system.type = type;
-    system.ship = ship.uid;
-    this.systems[type] = system;
-  }
+    system.ship = this._uid;
 
-  // default weapons
-  if(ship.turrets === undefined) {
-    this.turrets = {};
+    this.systems[type] = system;
   }
 };
 
-Ship.prototype.constructor = Ship;
+Ship.prototype.createTurrets = function() {
+  //.
+};
 
 Ship.prototype.destroy = function() {
   this.movement.destroy();
@@ -77,6 +95,26 @@ Ship.prototype.destroy = function() {
     this.position = this.config =
     this.systems = this.model = undefined;
 };
+
+Object.defineProperty(Ship.prototype, 'reactor', {
+  get: function() {
+    return this._reactor;
+  },
+
+  set: function(value) {
+    this._reactor = value;
+  }
+});
+
+Object.defineProperty(Ship.prototype, 'durability', {
+  get: function() {
+    return this._durability;
+  },
+
+  set: function(value) {
+    this._durability = value;
+  }
+});
 
 Object.defineProperty(Ship.prototype, 'health', {
   get: function() {
@@ -114,37 +152,12 @@ Object.defineProperty(Ship.prototype, 'evasion', {
   }
 });
 
-Object.defineProperty(Ship.prototype, 'reactor', {
-  get: function() {
-    return this._reactor;
-  },
-
-  set: function(value) {
-    this._reactor = value;
-  }
-});
-
-Object.defineProperty(Ship.prototype, 'durability', {
-  get: function() {
-    return this._durability;
-  },
-
-  set: function(value) {
-    this._durability = value;
-  }
-});
-
 Object.defineProperty(Ship.prototype, 'speed', {
   get: function() {
     var engine = this.systems['engine'],
         modifier = engine ? engine.modifier : 1.0,
-        health = engine ? engine.health / engine.stats.health :
-          this.health / this.config.stats.health;
-    return this._speed * modifier * global.Math.max(health, 0.25);
-  },
-
-  set: function(value) {
-    this._speed = value;
+        health = engine ? engine.health / engine.stats.health : 1.0;
+    return this._speed * modifier * global.Math.max(health, 0.5);
   }
 });
 

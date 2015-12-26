@@ -19,7 +19,6 @@ function Movement(parent) {
   
   // animation
   this.animation = new Animation(parent.game, parent.position, []);
-  this.animation.on('complete', this._movementComplete, this);
 
   EventEmitter.call(this);
 }
@@ -29,6 +28,11 @@ Movement.SPEED_CONSTANT = 30.0;
 
 Movement.prototype = Object.create(EventEmitter.prototype);
 Movement.prototype.constructor = Movement;
+
+Movement.prototype.reset = function() {
+  this._linearSpeed = null;
+  this._arcSpeed = null;
+};
 
 Movement.prototype.update = function() {
   this.animation.update();
@@ -49,14 +53,15 @@ Movement.prototype.update = function() {
 
 Movement.prototype.plot = function(point, current, previous, delay) {
   this.delay = delay | 0;
+
   this.startPosition = current ? current : this.parent.position;
   this.lastPosition = previous ? previous : this.previous;
 
-  this.destination.copyFrom(point);
+  point && this.destination.copyFrom(point);
 
   this.oribital = this._findTangentCircle();
 
-  if(!this.oribital.contains(point.x, point.y)) {
+  if(!this.oribital.contains(this.destination.x, this.destination.y)) {
     this.valid = true;
     this.tangentPoint = this._findTangentPoint(this.destination, this.oribital);
 
@@ -72,17 +77,6 @@ Movement.prototype.plot = function(point, current, previous, delay) {
   } else {
     this.valid = false;
   }
-};
-
-Movement.prototype.plotLinear = function(point, current) {
-  this.destination.copyFrom(point);
-  this.tangentPoint = new engine.Point(current.x, current.y);
-  this.linearLength = this.tangentPoint.distance(this.destination);
-  this.totalLength = this.linearLength;
-
-  this.animation.stop();
-  this.animation.play(this.generateData([
-    new LinearPath(this, 0.0, 1.0,  engine.Easing.Default)]), this.duration);
 };
 
 Movement.prototype.generateData = function(paths) {
@@ -143,20 +137,21 @@ Movement.prototype.getForwardFrameByFrames = function(frames) {
   if(animation.isPlaying && animation.frameData[index] !== undefined) {
     return animation.frameData[index];
   } else {
-    return parent.position;
+    return null;
   }
 };
 
 Movement.prototype.destroy = function() {
   this.animation.stop();
-  this.animation.removeListener('complete', this._movementComplete);
   this.animation.destroy();
 
-  this.parent = undefined;
-  this.game = undefined;
-  this.config = undefined;
-  this.destination = undefined;
-  this.animation = undefined;
+  this.removeAllListeners();
+
+  this.parent = this.game =
+    this.config = this.destination =
+    this.animation = this.startPosition =
+    this.lastPosition = this.oribital =
+    this.tangentPoint = undefined;
 };
 
 Movement.prototype.drawData = function(color) {
@@ -205,10 +200,6 @@ Movement.prototype.drawDebug = function() {
   // this.trajectoryGraphics.lineStyle(1.0, 0xFFFFFF, 0.5);
   // this.trajectoryGraphics.moveTo(this.destination.x, this.destination.y);
   // this.trajectoryGraphics.lineTo(this.tangentPoint.x, this.tangentPoint.y);
-};
-
-Movement.prototype._movementComplete = function() {
-  this.animation.reset();
 };
 
 Movement.prototype._findTangentCircle = function() {
@@ -274,21 +265,31 @@ Movement.prototype._findArcLength = function(a, b, circle) { // function(a1, a2,
 };
 
 Movement.prototype._generateLastPosition = function() {
-  var rotation = this.parent.rotation;
+  var rotation = this.parent.rotation,
+      start = this.start;
   return new engine.Point(
-    this.startPosition.x + (100 * global.Math.cos(rotation)),
-    this.startPosition.y + (100 * global.Math.sin(rotation)))
+    start.x + (100 * global.Math.cos(rotation)),
+    start.y + (100 * global.Math.sin(rotation)));
 };
+
+Object.defineProperty(Movement.prototype, 'start', {
+  get: function() {
+    return this.startPosition ?
+      this.startPosition : this.parent.position.clone();
+  }
+});
 
 Object.defineProperty(Movement.prototype, 'current', {
   get: function() {
-    return this.animation.frame ? this.animation.frame : this.parent.position;
+    return this.animation.frame ?
+      this.animation.frame : this.parent.position.clone();
   }
 });
 
 Object.defineProperty(Movement.prototype, 'previous', {
   get: function() {
-    return this.animation.lastFrame ? this.animation.lastFrame : this._generateLastPosition();
+    return this.animation.lastFrame ?
+      this.animation.lastFrame : this._generateLastPosition();
   }
 });
 
@@ -308,13 +309,22 @@ Object.defineProperty(Movement.prototype, 'throttle', {
 
 Object.defineProperty(Movement.prototype, 'linearSpeed', {
   get: function() {
-    return this._linearSpeed || (this._throttle * (Movement.SPEED_CONSTANT / this.config.stats.speed));
+    return this._linearSpeed || (this._throttle * (Movement.SPEED_CONSTANT / this.parent.speed));
   }
 });
 
 Object.defineProperty(Movement.prototype, 'arcSpeed', {
   get: function() {
     return this._arcSpeed || (this.config.oribit.radius / this.linearSpeed);
+  }
+});
+
+Object.defineProperty(Movement.prototype, 'maxSpeed', {
+  get: function() {
+    if(this._maxSpeed) {
+      return this._maxSpeed;
+    }
+    return this._maxSpeed = 1 / (Movement.SPEED_CONSTANT / this.config.stats.speed);
   }
 });
 
@@ -337,15 +347,6 @@ Object.defineProperty(Movement.prototype, 'speed', {
   }
 });
 
-Object.defineProperty(Movement.prototype, 'maxSpeed', {
-  get: function() {
-    if(this._maxSpeed) {
-      return this._maxSpeed;
-    }
-    return this._maxSpeed = 1 / (Movement.SPEED_CONSTANT / this.config.stats.speed);
-  }
-});
-
 Object.defineProperty(Movement.prototype, 'vector', {
   get: function() {
     var animation = this.animation,
@@ -361,7 +362,6 @@ Object.defineProperty(Movement.prototype, 'vector', {
     return new engine.Point(x2 - x1, y2 - y1);
   }
 });
-
 
 Object.defineProperty(Movement.prototype, 'angle', {
   get: function() {

@@ -67,7 +67,9 @@ ShipManager.prototype.create = function(ship, position) {
   switch(position) {
     default:
     case 'random':
-      position = this._generateRandomPositionInView();
+      position = ship.user ?
+        this._generateRandomPositionInView() :
+        this._generateRandomPosition();
     case Object:
       ship.x = position.x;
       ship.y = position.y;
@@ -128,24 +130,29 @@ ShipManager.prototype.data = function(sock, args, next) {
 };
 
 ShipManager.prototype.update = function() {
-  var ship, previous, movement,
+  var data, ship, movement, moving,
       ships = this.ships,
       arr = [];
   for(var s in ships) {
     ship = ships[s];
     movement = ship.movement;
     movement.update();
-    movement.startPosition = ship.position.clone();
-    previous = movement.previous;
-    arr.push({
+    moving = movement.animation.isPlaying;
+    
+    data = {
       uuid: ship.uuid,
       throttle: ship.throttle,
       rotation: ship.rotation,
-      previous: previous,
-      current: movement.startPosition,
-      destination: movement.destination,
-      moving: movement.animation.isPlaying
-    });
+      current: movement.current,
+      moving: moving
+    };
+
+    if(moving) {
+      data.previous = movement.previous;
+      data.destination = movement.destination;
+    }
+
+    arr.push(data);
   }
   this.sockets.io.sockets.emit('ship/sync', {
     ships: arr
@@ -154,10 +161,10 @@ ShipManager.prototype.update = function() {
 
 ShipManager.prototype.generateRandomShips = function() {
   var iterator = {
-        'vessel-x01': { count: 1 },
-        'vessel-x02': { count: 1 },
+        'vessel-x01': { count: 3 },
+        'vessel-x02': { count: 2 },
         'vessel-x03': { count: 3 },
-        'vessel-x04': { count: 10 },
+        'vessel-x04': { count: 20 },
         'vessel-x05': { count: 10 }
       };
   for(var key in iterator) {
@@ -173,9 +180,9 @@ ShipManager.prototype.generateRandomShips = function() {
 ShipManager.prototype.generateRandomShip = function() {
   var rnd = global.Math.random(),
       chassis;
-  if(rnd < 0.04 && this.count['vessel-x01'] === 0) {
+  if(rnd < 0.04 && this.count['vessel-x01'] === 2) {
     chassis = 'vessel-x01';
-  } else if(rnd < 0.08 && this.count['vessel-x02'] === 0) {
+  } else if(rnd < 0.08 && this.count['vessel-x02'] === 1) {
     chassis = 'vessel-x02';
   } else if(rnd < 0.12 && this.count['vessel-x03'] === 2) {
     chassis = 'vessel-x03';
@@ -196,18 +203,18 @@ ShipManager.prototype.generateShip = function(chassis) {
 };
 
 ShipManager.prototype._plot = function(ship, destination) {
-  var previous,
+  var previous, current,
       movement = ship.movement;
   movement.update();
-  movement.startPosition = ship.position.clone();
+  current = movement.current;
   previous = movement.previous;
-  movement.plot(destination, movement.startPosition, previous);
+  movement.plot(destination, current, previous);
   this.sockets.io.sockets.emit('ship/plotted', {
     uuid: ship.uuid,
     destination: destination,
     throttle: ship.throttle,
     rotation: ship.rotation,
-    current: movement.startPosition,
+    current: current,
     previous: previous
   });
 };
@@ -261,7 +268,7 @@ ShipManager.prototype._updateBattles = function() {
         system = target.systems[battle.room];
 
         if(battle.room && system) {
-          system.health = global.Math.max(0, system.health - 20);
+          system.health = global.Math.max(0, system.health - delta);
 
           update.systems = {};
           update.systems[battle.room] = {
@@ -270,7 +277,12 @@ ShipManager.prototype._updateBattles = function() {
 
           switch(battle.room) {
             case 'engine':
+              // target.throttle = 1.0;
+              target.movement.reset();
+              target.movement.update();
+              target.movement.plot();
               update.speed = target.speed;
+              update.throttle = target.throttle;
               break;
           }
         }
@@ -322,8 +334,12 @@ ShipManager.prototype._updateAI = function() {
     b = this.battles[ship.uuid];
     
     if(!ship.user && global.Math.random() > 0.5) {
-      destination = this._generateRandomPosition();
+      destination = global.Math.random() > 0.25 ?
+        this._generateRandomPosition() :
+        this._generateRandomPositionInView();
+      
       this._plot(ship, destination);
+      
       random = this._getRandomShip();
       if(random !== ship && global.Math.random() > 0.5) {
         switch(ship.chasis) {
@@ -364,8 +380,8 @@ ShipManager.prototype._getRandomShip = function() {
 
 ShipManager.prototype._generateRandomPositionInView = function() {
   // for debug purposes only
-  var randX = global.Math.random() * 768 - 384,
-      randY = global.Math.random() * 768 - 384;
+  var randX = global.Math.random() * 512 - 256,
+      randY = global.Math.random() * 512 - 256;
   return new engine.Point(2048 + randX, 2048 + randY);
 };
 

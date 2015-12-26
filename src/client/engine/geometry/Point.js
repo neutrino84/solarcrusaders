@@ -82,6 +82,15 @@ Point.prototype = {
     return this;
   },
 
+  toFixed: function(places) {
+    places = places || 2;
+
+    this.x = Math.roundTo(this.x, places);
+    this.y = Math.roundTo(this.y, places);
+
+    return this;
+  },
+
   clone: function(output) {
     if(typeof output === "undefined" || output === null) {
       output = new Point(this.x, this.y);
