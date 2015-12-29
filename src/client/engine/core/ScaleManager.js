@@ -86,7 +86,7 @@ function ScaleManager(game, width, height) {
   this.scaleFactorInversed = new Point(1, 1);
 
   this.windowConstraints = {
-    right: 'layout',
+    right: '',
     bottom: ''
   };
 
