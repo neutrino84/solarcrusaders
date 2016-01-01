@@ -29,6 +29,7 @@ function Emitter(game, x, y, maxParticles) {
   this.startTint = 0xFFFFFF;
   this.endTint = 0xFFFFFF;
   this.tintData = null;
+  this.tintCache = {};
 
   this.minRotation = -6;
   this.maxRotation = 6;
@@ -350,8 +351,8 @@ Emitter.prototype.setAlpha = function(min, max, rate, ease, yoyo) {
   this.autoAlpha = false;
 
   if(rate > 0 && min !== max) {
-    var tweenData = { v: min };
-    var tween = this.game.tweens.create(tweenData).to({ v: max }, rate, ease);
+    var tweenData = { v: min },
+        tween = this.game.tweens.create(tweenData).to({ v: max }, rate, ease);
         tween.yoyo(yoyo);
 
     this.alphaData = tween.generateData(60);
@@ -381,9 +382,9 @@ Emitter.prototype.setScale = function(minX, maxX, minY, maxY, rate, ease, yoyo) 
   this.autoScale = false;
 
   if(rate > 0 && ((minX !== maxX) || (minY !== maxY))) {
-    var tweenData = { x: minX, y: minY };
-    var tween = this.game.tweens.create(tweenData).to( { x: maxX, y: maxY }, rate, ease);
-    tween.yoyo(yoyo);
+    var tweenData = { x: minX, y: minY },
+        tween = this.game.tweens.create(tweenData).to( { x: maxX, y: maxY }, rate, ease);
+        tween.yoyo(yoyo);
 
     this.scaleData = tween.generateData(60);
 
@@ -404,18 +405,24 @@ Emitter.prototype.setTint = function(startTint, endTint, rate, ease, yoyo) {
   this.endTint = endTint;
   this.autoTint = false;
 
-  if(rate > 0 && (startTint !== endTint)) {
-    var tweenData = { step: 0 };
-    var tween = this.game.tweens.create(tweenData).to({ step: 100 }, rate, ease);
-    tween.yoyo(yoyo);
+  var key = startTint.toString() + endTint.toString() + rate.toString() + ease.toString() + yoyo.toString();
+  
+  if(this.tintCache[key]) {
+    this.tintData = this.tintCache[key];
+    this.autoTint = true;
+  } else if(rate > 0 && (startTint !== endTint)) {
+    var tweenData = { step: 0 },
+        tween = this.game.tweens.create(tweenData).to({ step: 100 }, rate, ease);
+        tween.yoyo(yoyo);
 
-    this.tintData = tween.generateData(60);
+    this.tintCache[key] = this.tintData = tween.generateData(60);
 
     for(var i=0; i<this.tintData.length; i++) {
       this.tintData[i].color = Color.interpolateColor(startTint, endTint, 100, this.tintData[i].step);
     }
 
-    //  Inverse it so we don't have to do array length look-ups in Particle update loops
+    // inverse it so we don't have to do array
+    // length look-ups in Particle update loops
     this.tintData.reverse();
     this.autoTint = true;
   }
