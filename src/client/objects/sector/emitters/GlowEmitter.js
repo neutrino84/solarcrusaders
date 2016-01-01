@@ -14,4 +14,8 @@ function GlowEmitter(game) {
 GlowEmitter.prototype = Object.create(engine.Emitter.prototype);
 GlowEmitter.prototype.constructor = GlowEmitter;
 
+GlowEmitter.prototype.color = function(color) {
+  this.setTint(0xFFFFFF, color || 0xFF6666, 100);
+};
+
 module.exports = GlowEmitter;
