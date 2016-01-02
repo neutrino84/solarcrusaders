@@ -49,12 +49,18 @@ Panel.prototype.addView = function(view) {
   this.invalidate();
 }
 
-Panel.prototype.invalidate = function() {
+Panel.prototype.invalidate = function(local) {
   this.isValid = false;
   this.isLayoutValid = false;
   this.cachedWidth = -1;
-
-  if(this.parent && this.parent.invalidate) {
+  
+  if(local) {
+    for(var i=0; i<this.panels.length; i++) {
+      this.panels[i].invalidate(local);
+    }
+    this.validate();
+    this.repaint();
+  } else if(this.parent && this.parent.invalidate) {
     this.parent.invalidate();
   } else if(this.parent && !this.parent.invalidate) {
     this.validate();
@@ -72,7 +78,9 @@ Panel.prototype.validate = function() {
     this.layout.doLayout(this);
 
     for(var i=0; i<this.panels.length; i++) {
-      this.panels[i].validate();
+      if(!this.panels[i].isLayoutValid) {
+        this.panels[i].validate();
+      }
     }
 
     this.isLayoutValid = true;
@@ -84,17 +92,21 @@ Panel.prototype.validateMetric = function() {
     if(this.recalc) {
       this.recalc();
     }
-    this.isValid = true;
   }
 };
 
 Panel.prototype.repaint = function() {
+  this.paint();
+
   if(this.visible === true) {
     for(var i=0; i<this.panels.length; i++) {
-      this.panels[i].repaint();
+      if(!this.panels[i].isValid) {
+        this.panels[i].repaint();
+      }
     }
   }
-  this.paint();
+  
+  this.isValid = true;
 };
 
 Panel.prototype.paint = function() {
@@ -128,7 +140,6 @@ Panel.prototype.setBorder = function(top, left, bottom, right) {
     this.border.right = right;
 
     this.invalidate();
-    this.repaint();
   }
 
   return this;
@@ -155,7 +166,6 @@ Panel.prototype.setPadding = function(top, left, bottom, right) {
     this.padding.right = right;
 
     this.invalidate();
-    this.repaint();
   }
 
   return this;
@@ -211,6 +221,15 @@ Panel.prototype.getPreferredSize = function() {
     width: this.cachedWidth,
     height: this.cachedHeight
   };
+};
+
+Panel.prototype.destroy = function() {
+  engine.Group.prototype.destroy.call(this);
+
+  this.layout = this.border = this.padding = undefined;
+  
+  this.views = [];
+  this.panels = [];
 };
 
 Object.defineProperty(Panel.prototype, 'top', {
