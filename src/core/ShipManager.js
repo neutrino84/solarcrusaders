@@ -35,6 +35,7 @@ ShipManager.prototype.init = function() {
   this.sockets.iorouter.on('ship/data', this.data.bind(this));
   this.sockets.iorouter.on('ship/plot', this.plot.bind(this));
   this.sockets.iorouter.on('ship/target', this.target.bind(this));
+  this.sockets.iorouter.on('enhancement/start', this.enhancement.bind(this));
 
   // generate npcs
   this.generateRandomShips();
@@ -43,7 +44,11 @@ ShipManager.prototype.init = function() {
 ShipManager.prototype.add = function(ship) {
   if(!this.ships[ship.uuid]) {
     this.ships[ship.uuid] = new Ship(this, ship);
-    (this.count[ship.chasis] && this.count[ship.chasis]++) || (this.count[ship.chasis] = 1);
+    if(this.count[ship.chasis]) {
+      this.count[ship.chasis]++;
+    } else {
+      this.count[ship.chasis] = 1;
+    }
   }
 };
 
@@ -80,20 +85,34 @@ ShipManager.prototype.create = function(ship, position) {
 
 ShipManager.prototype.target = function(sock, args, next) {
   var user = sock.sock.handshake.session.user,
-      s = args[1],
-      ship = this.ships[s.origin],
-      target = this.ships[s.target];
+      data = args[1],
+      ship = this.ships[data.origin],
+      target = this.ships[data.target];
   if(target && ship && ship.user && ship.user.uuid === user.uuid) {
-    this.battles[s.origin] = s;
-    this.sockets.io.sockets.emit('ship/targeted', s);
+    this.battles[data.origin] = data;
+    this.sockets.io.sockets.emit('ship/targeted', data);
+  }
+};
+
+ShipManager.prototype.enhancement = function(sock, args, next) {
+  var user = sock.sock.handshake.session.user,
+      data = args[1],
+      ship = this.ships[data.ship];
+  if(ship && ship.user && ship.user.ship === user.ship) {
+    if(!ship.activate(data.enhancement)) {
+      sock.emit('enhancement/cancelled', {
+        ship: data.ship,
+        enhancement: data.enhancement
+      });
+    }
   }
 };
 
 ShipManager.prototype.plot = function(sock, args, next) {
   var user = sock.sock.handshake.session.user,
-      s = args[1],
-      destination = s.destination,
-      ship = this.ships[s.uuid],
+      data = args[1],
+      destination = data.destination,
+      ship = this.ships[data.uuid],
       point = new engine.Point(destination.x, destination.y);
   if(ship && ship.user && ship.user.uuid === user.uuid) {
     this._plot(ship, destination);
@@ -101,11 +120,12 @@ ShipManager.prototype.plot = function(sock, args, next) {
 };
 
 ShipManager.prototype.data = function(sock, args, next) {
-  var self = this, ship,
+  var self = this, ship, enhancements,
       uuids = args[1].uuids,
       ships = [];
   for(var u in uuids) {
     ship = this.ships[uuids[u]];
+    enhancements = Object.keys(ship.enhancements.available);
     if(ship) {
       ships.push({
         id: ship.id,
@@ -120,7 +140,9 @@ ShipManager.prototype.data = function(sock, args, next) {
         rotation: ship.rottion,
         systems: ship.systems,
         health: ship.health,
-        speed: ship.speed
+        speed: ship.speed,
+        recharge: ship.recharge,
+        enhancements: enhancements
       });
     }
   }
@@ -182,7 +204,7 @@ ShipManager.prototype.generateRandomShip = function() {
       chassis;
   if(rnd < 0.04 && this.count['vessel-x01'] === 2) {
     chassis = 'vessel-x01';
-  } else if(rnd < 0.08 && this.count['vessel-x02'] === 1) {
+  } else if(rnd < 0.08 && this.count['vessel-x02'] === 0) {
     chassis = 'vessel-x02';
   } else if(rnd < 0.12 && this.count['vessel-x03'] === 2) {
     chassis = 'vessel-x03';
@@ -225,12 +247,25 @@ ShipManager.prototype._updateShips = function() {
       update, updates = [];
   for(var s in ships) {
     ship = ships[s];
+    update = { uuid: ship.uuid };
+
+    // update health
     if(ship.health < ship.config.stats.health) {
       delta = ship.health * ship.heal;
-      ship.health += delta;
-      update = { uuid: ship.uuid, health: ship.health, amount: delta };
-      updates.push(update);
+      ship.health = global.Math.min(ship.config.stats.health, ship.health + delta);
+      update.health = global.Math.round(ship.health);
+      update.hdelta = global.Math.round(delta);
     }
+
+    // update reactor
+    if(ship.reactor < ship.config.stats.reactor) {
+      delta = ship.recharge;
+      ship.reactor = global.Math.min(ship.config.stats.reactor, ship.reactor + delta);
+      update.reactor = global.Math.round(ship.reactor);
+      update.rdelta = global.Math.round(delta);
+    }
+
+    updates.push(update);
   }
   if(updates.length > 0) {
     this.sockets.io.sockets.emit('ship/data', {
@@ -253,17 +288,20 @@ ShipManager.prototype._updateBattles = function() {
     if(origin && target) {
       distance = origin.position.distance(target.position);
 
-      if(distance > 384) { continue; } // weapons out of range
+      if(distance > origin.range) { continue; } // weapons out of range
       
       accuracy = origin.accuracy;
       evasion = target.evasion;
 
       if(global.Math.random() <= accuracy && global.Math.random() >= evasion) {
         //.. hit
-        delta = global.Math.floor(global.Math.random() * (origin.damage + (origin.damage / 2)));
+        delta = global.Math.round((global.Math.random() * origin.damage) + (origin.damage / 2));
+        delta = global.Math.max(0, delta - target.armor);
         
+        target.health = global.Math.max(0, target.health - delta);
+
         update = { uuid: target.uuid };
-        update.health = target.health = target.health - delta; // weapon damage
+        update.health = target.health; // weapon damage
 
         system = target.systems[battle.room];
 
@@ -277,12 +315,14 @@ ShipManager.prototype._updateBattles = function() {
 
           switch(battle.room) {
             case 'engine':
-              // target.throttle = 1.0;
-              target.movement.reset();
-              target.movement.update();
-              target.movement.plot();
               update.speed = target.speed;
               update.throttle = target.throttle;
+              // target.throttle = 1.0;
+              target.movement.reset();
+              if(target.movement.animation.isPlaying) {
+                target.movement.update();
+                target.movement.plot();
+              }
               break;
           }
         }
@@ -325,7 +365,7 @@ ShipManager.prototype._updateBattles = function() {
 };
 
 ShipManager.prototype._updateAI = function() {
-  var b, battle, random, ship, room,
+  var b, battle, random, ship, room, health,
       destination, origin,
       ships = this.ships, target,
       arr = [];
@@ -361,11 +401,26 @@ ShipManager.prototype._updateAI = function() {
       }
     } else if(ship.user && b) {
       target = this.ships[b.target];
-      if(target && !target.user && target.systems['targeting']) {
-        room = global.Math.floor(global.Math.random() * ship.rooms.length);
-        battle = { origin: target.uuid, target: ship.uuid, id: room, room: ship.rooms[room].system };
-        this.sockets.io.sockets.emit('ship/targeted', battle);
-        this.battles[target.uuid] = battle;
+      if(target && !target.user) {
+        health = target.health / target.config.stats.health;
+        if(target.systems['targeting']) {
+          if(!this.battles[target.uuid] || this.battles[target.uuid].target !== ship.uuid) {
+            room = global.Math.floor(global.Math.random() * ship.rooms.length);
+            battle = { origin: target.uuid, target: ship.uuid, id: room, room: ship.rooms[room].system };
+            this.sockets.io.sockets.emit('ship/targeted', battle);
+            this.battles[target.uuid] = battle;
+          }
+
+        }
+        // if(target.systems['shield'] && health < 0.90) {
+        //   target.activate('shield');
+        // }
+        if(target.systems['engine'] && health < 0.5) {
+          target.activate('booster');
+        }
+        // if(target.systems['reactor'] && health < 0.2) {
+        //   target.activate('overload');
+        // }
       }
     }
   }
@@ -380,8 +435,8 @@ ShipManager.prototype._getRandomShip = function() {
 
 ShipManager.prototype._generateRandomPositionInView = function() {
   // for debug purposes only
-  var randX = global.Math.random() * 512 - 256,
-      randY = global.Math.random() * 512 - 256;
+  var randX = global.Math.random() * 1024 - 512,
+      randY = global.Math.random() * 1024 - 512;
   return new engine.Point(2048 + randX, 2048 + randY);
 };
 
