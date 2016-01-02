@@ -21,6 +21,7 @@ function Camera(game, x, y, width, height) {
   this.totalInView = 0;
 
   this._smooth = false;
+  this._shaking = 0.0;
   this._smoothSpeed = null;
   this._position = new Point();
   this._smoothPosition = new Point();
@@ -36,6 +37,18 @@ Camera.prototype.constructor = Camera;
 
 Camera.prototype.preUpdate = function() {
   this.totalInView = 0;
+};
+
+Camera.prototype.shake = function(duration) {
+  duration = duration || 500;
+
+  this._shaking = 0.0;
+
+  this.shakeTween && this.shakeTween.stop();
+  this.shakeTween = this.game.tweens.create(this);
+  this.shakeTween.to({ _shaking: 1.0 }, duration / 2);
+  this.shakeTween.yoyo(true);
+  this.shakeTween.start();
 };
 
 Camera.prototype.follow = function(target, style) {
@@ -78,6 +91,11 @@ Camera.prototype.update = function() {
 
   if(this.roundPx) {
     view.floor();
+  }
+
+  if(this._shaking) {
+    view.x += (global.Math.random() * 10 - 5) * this._shaking;
+    view.y += (global.Math.random() * 10 - 5) * this._shaking;
   }
 
   display.pivot.x = view.x + view.halfWidth;
@@ -232,6 +250,12 @@ Object.defineProperty(Camera.prototype, 'y', {
     if(this.bounds) {
       this.checkBounds();
     }
+  }
+});
+
+Object.defineProperty(Camera.prototype, 'shaking', {
+  get: function() {
+    return this._shaking;
   }
 });
 
