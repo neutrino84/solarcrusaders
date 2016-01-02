@@ -5,36 +5,16 @@ function Latency(game) {
   this.timer = undefined;
   this.startTime = 0;
   this.endTime = 0;
-  this.rtt = 100;
+  this.rtt = 0;
 
-  this.socket.on('pong', this.pong.bind(this));
-  this.socket.on('drip', this.drip.bind(this));
+  this.socket.on('ping', this.ping.bind(this));
 };
 
 Latency.prototype.constructor = Latency;
 
-Latency.prototype.start = function() {
-  this.stop();
-  this.ping();
-  this.timer = this.game.clock.events.loop(3000, this.ping, this);
-};
-
-Latency.prototype.stop = function() {
-  this.timer && this.game.clock.events.remove(this.timer);
-};
-
-Latency.prototype.drip = function() {
-  this.socket.emit('drop');
-};
-
-Latency.prototype.ping = function() {
-  this.startTime = this.game.clock.time;
-  this.socket.emit('ping'); 
-};
-
-Latency.prototype.pong = function() {
-  this.endTime = this.game.clock.time
-  this.rtt = this.endTime - this.startTime;
+Latency.prototype.ping = function(data) {
+  this.rtt = data.rtt;
+  this.socket.emit('pong');
 };
 
 module.exports = Latency;

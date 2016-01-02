@@ -20,7 +20,6 @@ NetManager.prototype = {
 
     // calc latency
     this.latency = new Latency(this.game);
-    this.latency.start();
 
     // socket events
     this.socket.on('connect', this._connect.bind(this));
@@ -31,8 +30,8 @@ NetManager.prototype = {
     this.socket.on('disconnect', this._disconnect.bind(this));
 
     // pause/resume
-    this.game.on('pause', this.pause, this);
-    this.game.on('resume', this.resume, this);
+    this.game.on('game/pause', this.pause, this);
+    this.game.on('game/resume', this.resume, this);
   },
 
   pause: function() {
