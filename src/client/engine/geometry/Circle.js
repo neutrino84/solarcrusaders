@@ -249,16 +249,22 @@ Circle.intersects = function(a, b) {
   return (Math.distance(a.x, a.y, b.x, b.y) <= (a.radius + b.radius));
 };
 
-Circle.circumferencePoint = function(a, angle, asDegrees, out) {
+Circle.circumferencePoint = function(a, angle, asDegrees, relative, out) {
   if(asDegrees === undefined) { asDegrees = false; }
+  if(relative === undefined) { relative = false; }
   if(out === undefined) { out = new Point(); }
 
   if(asDegrees === true) {
     angle = Math.degToRad(angle);
   }
 
-  out.x = a.x + a.radius * global.Math.cos(angle);
-  out.y = a.y + a.radius * global.Math.sin(angle);
+  if(!relative) {
+    out.x = a.x + a.radius * global.Math.cos(angle);
+    out.y = a.y + a.radius * global.Math.sin(angle);
+  } else {
+    out.x = a.radius * global.Math.cos(angle);
+    out.y = a.radius * global.Math.sin(angle);
+  }
 
   return out;
 };
