@@ -1,5 +1,6 @@
 var Rectangle = require('../geometry/Rectangle'),
-    Point = require('../geometry/Point');
+    Point = require('../geometry/Point'),
+    Easing = require('../tween/Easing');
 
 function Camera(game, x, y, width, height) {
   this.game = game;
@@ -12,10 +13,15 @@ function Camera(game, x, y, width, height) {
   this.bounds = new Rectangle(x, y, width, height);
 
   this.smooth = false;
+  this.smoothSpeed = 0.1;
+  this.smoothThreshhold = 64;
+
   this.roundPx = false;
   this.atLimit = { x: false, y: false };
   this.totalInView = 0;
 
+  this._smooth = false;
+  this._smoothSpeed = null;
   this._position = new Point();
   this._smoothPosition = new Point();
   this._targetPosition = new Point();
@@ -33,7 +39,7 @@ Camera.prototype.preUpdate = function() {
 };
 
 Camera.prototype.follow = function(target, style) {
-  if(style === undefined) { style = Camera.FOLLOW_LOCKON; }
+  if(style === undefined) { style = Camera.FOLLOW_SMOOTH; }
 
   this.target = target;
 
@@ -79,39 +85,48 @@ Camera.prototype.update = function() {
 };
 
 Camera.prototype.updateTarget = function() {
-  var x, y;
-
-  this._targetPosition.copyFrom(this.target);
-
-  // if(this.target.parent) {
-  //   this._targetPosition.multiply(this.target.parent.worldTransform.a, this.target.parent.worldTransform.d);
-  // }
+  var x, y,
+      smoothPosition = this._smoothPosition,
+      targetPosition = this._targetPosition;
+      targetPosition.copyFrom(this.target);
 
   if(this.deadzone) {
-    this._edge = this._targetPosition.x - this.view.x;
+    this._edge = targetPosition.x - this.view.x;
 
     if(this._edge < this.deadzone.left) {
-      x = this._targetPosition.x - this.deadzone.left;
+      x = targetPosition.x - this.deadzone.left;
     } else if(this._edge > this.deadzone.right) {
-      x = this._targetPosition.x - this.deadzone.right;
+      x = targetPosition.x - this.deadzone.right;
     }
 
-    this._edge = this._targetPosition.y - this.view.y;
+    this._edge = targetPosition.y - this.view.y;
 
     if(this._edge < this.deadzone.top) {
-      y = this._targetPosition.y - this.deadzone.top;
+      y = targetPosition.y - this.deadzone.top;
     } else if(this._edge > this.deadzone.bottom) {
-      y = this._targetPosition.y - this.deadzone.bottom;
+      y = targetPosition.y - this.deadzone.bottom;
     }
   } else {
-    x = this._targetPosition.x;
-    y = this._targetPosition.y;
+    x = targetPosition.x;
+    y = targetPosition.y;
   }
 
   if(this.smooth) {
-    this._smoothPosition = Point.interpolate(this.position, { x: x, y: y },  0.04, this._smoothPosition);
-    x = this._smoothPosition.x;
-    y = this._smoothPosition.y;
+    if(!this._smooth && targetPosition.distance(this.position) > this.smoothThreshhold) {
+      this._smooth = true;
+      this._smoothSpeed = 0;
+      this._smoothTween && this._smoothTween.stop();
+      this._smoothTween = this.game.tweens.create(this);
+      this._smoothTween.to({ _smoothSpeed: 1.0 }, 500, Easing.Default, true);
+      this._smoothTween.once('complete', function() {
+        this._smooth = false;
+      }, this);
+    }
+    if(this._smooth) {
+      smoothPosition = Point.interpolate(this.position, { x: x, y: y }, this._smoothSpeed, smoothPosition);
+      x = smoothPosition.x;
+      y = smoothPosition.y;
+    }
   }
 
   this.setPosition(x, y);
