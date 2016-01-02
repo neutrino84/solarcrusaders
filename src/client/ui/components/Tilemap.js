@@ -1,5 +1,6 @@
 
 var engine = require('engine'),
+    Room = require('../../objects/tilemap/Room'),
     Panel = require('../Panel'),
     TilemapView = require('../views/TilemapView'),
     ImageView = require('../views/ImageView'),
@@ -58,30 +59,21 @@ Tilemap.prototype.load = function() {
 };
 
 Tilemap.prototype.start = function() {
-  var room, rooms = this.rooms;
+  var rooms = this.rooms;
   for(var r in rooms) {
-    room = rooms[r];
-    room.inputEnabled = true;
-    room.input.priorityID = 3;
+    rooms[r].inputEnabled = true;
   }
 };
 
 Tilemap.prototype.stop = function() {
-  var room, rooms = this.rooms;
+  var rooms = this.rooms;
   for(var r in rooms) {
-    room = rooms[r];
-    room.inputEnabled = false;
+    rooms[r].inputEnabled = false;
   }
 };
 
-Tilemap.prototype.target = function(displayObject) {
-  this._target && (this._target.renderable = false);
-  this._target = displayObject;
-  this._target.renderable = true;
-  this._target.alpha = 1.0;
-  this._targetTween && this._targetTween.stop();
-  this._targetTween = this.game.tweens.create(displayObject);
-  this._targetTween.to({ alpha: 0}, 250, engine.Easing.Default, true, 0, -1, true);
+Tilemap.prototype.target = function(id, renderable) {
+  this.rooms[id].target(renderable);
 };
 
 Tilemap.prototype.createImages = function() {
@@ -122,7 +114,7 @@ Tilemap.prototype.createLayers = function() {
   };
 };
 
-Tilemap.prototype.createDoors = function(data) {
+Tilemap.prototype.createDoors = function() {
   var door, frame, sprite,
       tilemap = this.tilemap,
       doors = tilemap.objects.doors;
@@ -137,7 +129,7 @@ Tilemap.prototype.createDoors = function(data) {
   }
 };
 
-Tilemap.prototype.createCrew = function(data) {
+Tilemap.prototype.createCrew = function() {
   var crew, frame, sprite,
       tilemap = this.tilemap,
       members = tilemap.objects.crew;
@@ -155,29 +147,17 @@ Tilemap.prototype.createCrew = function(data) {
   }
 };
 
-Tilemap.prototype.createRooms = function(data) {
+Tilemap.prototype.createRooms = function() {
   var r, room, frame, sprite, prop,
       tilemap = this.tilemap,
       rooms = tilemap.objects.rooms,
       settings = this.settings;
   for(var r in rooms) {
-    room = rooms[r];
-    prop = room.properties;
-  
-    r = new engine.Graphics(this.game);
-    r.renderable = false;
-    r.data = prop;
+    r = new Room(this, r, rooms[r]);
 
-    r.lineStyle(2, settings.player ? 0x6699cc : 0xff6666, 1.0);
-    r.beginFill(settings.player ? 0x6699cc : 0xff6666, 0.2);
-    r.drawRect(room.x, room.y, room.width, room.height);
-    r.endFill();
+    r.on('targeted', this._targeted, this);
+    r.on('selected', this._selected, this);
 
-    r.on('inputOver', this._inputOver, this);
-    r.on('inputOut', this._inputOut, this);
-    r.on('inputDown', this._inputDown, this);
-
-    this.add(r);
     this.rooms.push(r);
   }
 };
@@ -194,23 +174,18 @@ Tilemap.prototype.doLayout = function() {
   }
 };
 
-Tilemap.prototype._inputOver = function(displayObject) {
-  if(this._target == displayObject) { return; }
-  displayObject.renderable = true;
-  this.emit('roomOver', displayObject);
-}
-
-Tilemap.prototype._inputOut = function(displayObject) {
-  if(this._target == displayObject) { return; }
-  displayObject.renderable = false;
-  this.emit('roomOut', displayObject);
+Tilemap.prototype._selected = function(room) {
+  this.emit('selected', {
+    id: this.rooms.indexOf(room),
+    system: room.data.properties.system
+  });
 };
 
-Tilemap.prototype._inputDown = function(displayObject, pointer) {
-  if(this._target == displayObject) { return; }
-  if(pointer.button === engine.Mouse.RIGHT_BUTTON) {
-    this.emit('roomDown', displayObject);
-  }
+Tilemap.prototype._targeted = function(room) {
+  this.emit('targeted', {
+    id: this.rooms.indexOf(room),
+    system: room.data.properties.system
+  });
 };
 
 module.exports = Tilemap;

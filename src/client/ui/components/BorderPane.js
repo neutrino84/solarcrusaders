@@ -8,18 +8,19 @@ var engine = require('engine'),
     Class = engine.Class;
 
 function BorderPane(game, settings) {
-  Panel.call(this, game, new BorderLayout(0, 0));
-
   // default styles
   this.settings = Class.mixin(settings, {
     padding: [0],
     border: [0],
+    gap: [0, 0],
     bg: {
       fillAlpha: 0.0,
       borderSize: 0.0,
       radius: 0.0
     }
   });
+
+  Panel.call(this, game, new BorderLayout(this.settings.gap[0], this.settings.gap[1]));
 
   if(this.settings.width || this.settings.height) {
     this.setPreferredSize(

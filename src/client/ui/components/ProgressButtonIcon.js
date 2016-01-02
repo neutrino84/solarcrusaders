@@ -1,7 +1,9 @@
 
 var engine = require('engine'),
     ButtonIcon = require('./ButtonIcon'),
+    Label = require('./Label'),
     Layout = require('../Layout'),
+    RasterLayout = require('../layouts/RasterLayout'),
     Pane = require('../components/Pane'),
     BackgroundView = require('../views/BackgroundView'),
     Panel = require('../Panel'),
@@ -25,32 +27,60 @@ function ProgressButtonIcon(game, key, settings) {
     }
   ));
 
-  this.overlay = new BackgroundView(game, {
-    borderSize: 0.0,
-    // borderColor: 0x333333,
-    fillAlpha: 0.34,
-    color: 0xffffff,
-    blendMode: engine.BlendMode.ADD
-  });
-
   ButtonIcon.call(this, game, key,
     Class.mixin(settings, {
-      padding: [0, 0, 0, 4],
+      padding: [0, 0, 0, 3],
       bg: {
-        radius: 4.0
+        radius: 4.0,
+        borderSize: 0.0
       },
       icon: {
         bg: {
+          highlight: false,
           borderSize: 0.0,
           radius: 4.0
+        }
+      },
+      hotkey: {
+        key: '',
+        padding: [1],
+        border: [0],
+        text: {
+          fontName: 'small'
+        },
+        bg: {
+          color: 0x3868b8,
+          fillAlpha: 1.0,
+          borderSize: 0.0,
+          radius: 0.0
+        }
+      },
+      count: {
+        padding: [0],
+        border: [0],
+        bg: {
+          fillAlpha: 0.0,
+          borderSize: 0.0,
+          radius: 0.0
         }
       }
     })
   );
 
-  this.addView(this.overlay);
   this.addView(this.progressBg);
   this.addView(this.progress);
+
+  this.count = new Label(game, '', this.settings.count);
+  this.hotkey = new Label(game, this.settings.hotkey.key, this.settings.hotkey);
+  
+  this.raster = new Panel(game, new RasterLayout());
+  this.raster.setPreferredSize(38, 38);
+  this.raster.addPanel(Layout.NONE, this.hotkey);
+  this.raster.addPanel(Layout.CENTER, this.count);
+
+  this.addPanel(Layout.NONE, this.raster);
+
+  this.hotkey.setLocation(-2, -2);
 }
 
 ProgressButtonIcon.prototype = Object.create(ButtonIcon.prototype);
@@ -65,18 +95,13 @@ ProgressButtonIcon.prototype.setProgressBar = function(decimal) {
 ProgressButtonIcon.prototype.recalc = function() {
   var size = this.size,
       progressBgSettings = this.progressBg.settings,
-      progressSettings = this.progress.settings,
-      overlaySettings = this.overlay.settings;
+      progressSettings = this.progress.settings;
   
-  progressSettings.size = { width: 4, height: size.height * this.decimal };
-  progressSettings.offset = { x: size.width - 4, y: size.height - size.height * this.decimal };
+  progressSettings.size = { width: 3, height: size.height * this.decimal };
+  progressSettings.offset = { x: size.width - 3, y: size.height - size.height * this.decimal };
   
-  progressBgSettings.size = { width: 4, height: size.height };
-  progressBgSettings.offset = { x: size.width - 4, y: 0 };
-
-  overlaySettings.size = { width: size.width - 8, height: size.height - 4 };
-  overlaySettings.offset = { x: 2, y: 2 };
-  overlaySettings.radius = 4;
+  progressBgSettings.size = { width: 3, height: size.height };
+  progressBgSettings.offset = { x: size.width - 3, y: 0 };
 };
 
 module.exports = ProgressButtonIcon;

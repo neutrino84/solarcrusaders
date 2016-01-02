@@ -2,7 +2,7 @@
 var Layout = require('../Layout');
 
 function RasterLayout(flag) {
-  this.flag = flag ? flag : 0;
+  this.flag = flag ? flag : Layout.USE_PS_SIZE;
 };
 
 RasterLayout.prototype.calcPreferredSize = function(target) {

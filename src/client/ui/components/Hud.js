@@ -30,6 +30,15 @@ function Hud(ship, settings) {
         borderSize: 0.0
       }
     },
+    message: {
+      text: {
+        fontName: 'medium'
+      },
+      bg: {
+        fillAlpha: 0.0,
+        borderSize: 0.0
+      }
+    },
     health: {
       width: 80,
       height: 4,
@@ -64,6 +73,8 @@ Hud.prototype.create = function() {
   var game = this.game,
       ship = this.ship;
 
+  this.ship.manager.hudGroup.addChild(this);
+
   if(this.ship.username) {
     this.label = new Label(game, ship.username, this.settings.label);
     this.label.tint = ship.isPlayer ? 0x33FF33 : 0x3399FF;
@@ -71,7 +82,7 @@ Hud.prototype.create = function() {
   }
 
   this.healthBar = new ProgressBar(this.game, this.settings.health);
-  this.healthBar.setProgressBar(ship.health / ship.config.stats.health);
+  this.healthBar.setProgressBar(ship.details.health / ship.config.stats.health);
   this.healthBar.renderable = false;
   this.addPanel(Layout.NONE, this.healthBar);
 
@@ -87,10 +98,36 @@ Hud.prototype.update = function() {
   this.position.set(transform.x, transform.y);
 };
 
+Hud.prototype.flash = function(message, color, duration, height, large) {
+  if(color === undefined) { color = 0xFFFFFF; }
+  if(height === undefined) { height = 15; }
+  if(large === undefined) { large = false; }
+
+  var ship = this.ship,
+      label = new Label(this.game, message, this.settings.message),
+      easing = engine.Easing.Quadratic.InOut,
+      tweenPosition = this.game.tweens.create(label.position),
+      tweenAlpha = this.game.tweens.create(label);
+  
+  label.tint = color;
+  label.alpha = 0.0;
+  label.pivot.set(label.width / 2, label.height / 2);
+  label.position.set(this.size.width / 2, -ship.height / 2 - 12);
+  large && label.scale.set(1.5, 1.5);
+
+  this.add(label);
+
+  tweenPosition.to({ y: label.y - height }, duration * 2 || 500, easing, true);
+  tweenAlpha.to({ alpha: 1.0 }, duration || 250, easing, true, 0, 0, true);
+  tweenAlpha.once('complete', function() {
+    this.remove(label);
+  }, this);
+};
+
 Hud.prototype.destroy = function() {
-  // this.label && this.label.destroy();
-  this.label = undefined;
-  this.game = undefined;
+  this.ship.manager.hudGroup.removeChild(this);
+  this.label = this.game = this.ship =
+    this.layout = this.settings = undefined;
 };
 
 module.exports = Hud;

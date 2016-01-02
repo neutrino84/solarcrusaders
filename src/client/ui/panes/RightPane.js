@@ -4,7 +4,8 @@ var engine = require('engine'),
     Pane = require('../components/Pane'),
     BorderPane = require('../components/BorderPane'),
     Label = require('../components/Label'),
-    Image = require('../components/Image');
+    Image = require('../components/Image'),
+    Button = require('../components/Button');
 
 function RightPane(game, settings) {
   Pane.call(this, game, {
@@ -26,132 +27,82 @@ function RightPane(game, settings) {
     }
   });
 
-  this.titleText = new Label(game,
-    'solar crusaders', {
-      padding: [6, 8],
-      bg: {
-        color: 0x840e18,
-        filleAlpha: 1.0,
-        borderSize: 0.0
-      }
-    });
-
   this.infoBorderPane = new BorderPane(game, {
+    padding: [0],
+    gap: [5, 0],
     bg: {
-      color: 0x000000,
-      fillAlpha: 1.0
+      fillAlpha: 0.0
+    }
+  });
+
+  this.infoBorderPane2 = new BorderPane(game, {
+    padding: [0],
+    gap: [5, 0],
+    bg: {
+      fillAlpha: 0.0
     }
   });
 
   this.fpsText = new Label(game,
     '60 fps', {
-      padding: [6, 8],
+      padding: [0],
       text: {
         fontName: 'medium',
         tint: 0x66aaff
       },
       bg: {
-        color: 0x000000,
-        borderSize: 0.0
+        fillAlpha: 0.0,
+        borderAlpha: 0.0
       }
     });
 
   this.pingText = new Label(game,
     '0 ping', {
-      padding: [6, 8],
+      padding: [0],
       text: {
         fontName: 'medium',
         tint: 0x66aaff
       },
       bg: {
-        color: 0x000000,
-        borderSize: 0.0
+        fillAlpha: 0.0,
+        borderAlpha: 0.0
       }
     })
 
   this.versionText = new Label(game,
-    'v1081', {
-      padding: [6, 8],
+    'solar crusaders v2021', {
+      padding: [5],
       text: {
         fontName: 'medium',
         tint: 0x66aaff
       },
       bg: {
-        color: 0x000000,
-        borderSize: 0.0
+        fillAlpha: 0.0,
+        borderAlpha: 0.0
       }
     });
 
-  // this.wipText = new Label(game,
-  //   'work in progress', {
-  //     padding: [6, 8],
-  //     text: {
-  //       fontName: 'medium'
-  //     },
-  //     bg: {
-  //       color: 0x000000,
-  //       borderSize: 0.0
-  //     }
-  //   });
+  this.registerButton = new Button(game, 'register');
+  this.registerButton.on('inputUp', this._register, this);
 
-  // this.disclaimerText = new Label(game,
-  //   'not final product', {
-  //     padding: [6, 8],
-  //     border: [0],
-  //     text: {
-  //       fontName: 'medium'
-  //     },
-  //     bg: {
-  //       color: 0x000000,
-  //       borderSize: 0.0
-  //     }
-  //   });
-
-  this.instructionsText = new Label(game,
-    'use arrow keys to move camera', {
-      padding: [6, 8],
-      border: [0],
-      text: {
-        fontName: 'medium'
-      },
-      bg: {
-        color: 0x000000,
-        fillAlpha: 1.0,
-        borderSize: 0.0
-      }
-    });
-
-  this.instructionsText2 = new Label(game,
-    'select and right click to move', {
-      padding: [6, 8],
-      border: [0],
-      text: {
-        fontName: 'medium'
-      },
-      bg: {
-        color: 0x000000,
-        fillAlpha: 1.0,
-        borderSize: 0.0
-      }
-    });
+  this.instructionsButton = new Button(game, 'instructions');
+  this.instructionsButton.on('inputUp', this._instructions, this);
 
   // add layout panels
-  this.addPanel(Layout.CENTER, this.titleText);
-
-  this.infoBorderPane.addPanel(Layout.RIGHT, this.fpsText);
-  this.infoBorderPane.addPanel(Layout.LEFT, this.versionText);
-  this.infoBorderPane.addPanel(Layout.CENTER, this.pingText);
-
   this.addPanel(Layout.CENTER, this.infoBorderPane);
-  // this.addPanel(Layout.STRETCH, this.infoBorderPane2);
 
-  // this.addPanel(Layout.STRETCH, this.disclaimerText);
-  // this.addPanel(Layout.CENTER, this.wipText);
-  // this.addPanel(Layout.CENTER, this.instructionsText);
-  // this.addPanel(Layout.CENTER, this.instructionsText2);
+  // this.infoBorderPane.addPanel(Layout.LEFT, this.registerButton);
+  this.infoBorderPane.addPanel(Layout.CENTER, this.instructionsButton);
+
+  this.addPanel(Layout.CENTER, this.versionText);
+
+  this.infoBorderPane2.addPanel(Layout.RIGHT, this.fpsText);
+  this.infoBorderPane2.addPanel(Layout.LEFT, this.pingText);
+
+  this.addPanel(Layout.CENTER, this.infoBorderPane2);
 
   // create timer
-  // game.clock.events.loop(3000, this._updateInfo, this);
+  game.clock.events.loop(500, this._updateInfo, this);
 };
 
 RightPane.prototype = Object.create(Pane.prototype);
@@ -161,9 +112,18 @@ RightPane.prototype.validate = function() {
   return Pane.prototype.validate.call(this);
 };
 
+RightPane.prototype._register = function() {
+  this.game.emit('gui/registration');
+};
+
+RightPane.prototype._instructions = function() {
+  global.document.location.href = 'http://forums.solarcrusaders.com/topic/47/battle-module-f2p-holiday-special';
+};
+
 RightPane.prototype._updateInfo = function() {
   this.fpsText.text = this.game.clock.fps + ' fps';
   this.pingText.text = this.game.net.rtt + ' rtt';
+  this.infoBorderPane2.invalidate(true);
 };
 
 module.exports = RightPane;

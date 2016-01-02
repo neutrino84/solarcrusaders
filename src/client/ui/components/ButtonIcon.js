@@ -10,6 +10,8 @@ var engine = require('engine'),
 function ButtonIcon(game, key, settings) {
   Panel.call(this, game, new StackLayout());
 
+  this._disabled = false;
+
   // default styles
   this.settings = Class.mixin(settings, {
     padding: [2],
@@ -61,10 +63,6 @@ function ButtonIcon(game, key, settings) {
 ButtonIcon.prototype = Object.create(Panel.prototype);
 ButtonIcon.prototype.constructor = ButtonIcon;
 
-ButtonIcon.prototype.on = function(name, callback, context) {
-  this.bg.on.call(this.bg, name, callback, context);
-};
-
 ButtonIcon.prototype._inputUp = function() {
   if(this.disabled) { return; }
 
@@ -95,12 +93,22 @@ ButtonIcon.prototype._inputOut = function() {
   this.image.alpha = 0.9;
 };
 
+Object.defineProperty(ButtonIcon.prototype, 'tint', {
+  set: function(value) {
+    this.image.tint = value;
+  },
+
+  get: function() {
+    return this.image.tint;
+  }
+});
+
 Object.defineProperty(ButtonIcon.prototype, 'disabled', {
   set: function(value) {
     if(value === false) {
-      this.image.alpha = 1.0;
+      this.image.tint = 0xFFFFFF;
     } else {
-      this.image.alpha = 0.25;
+      this.image.tint = 0xFF0000;
     }
     this._disabled = value;
   },

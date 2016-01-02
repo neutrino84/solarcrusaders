@@ -263,11 +263,11 @@ ShipManager.prototype._attack = function(data) {
   if(origin && target) {
     if(!origin.target) { this._targeted(data); }
     if(data.type === 'evade') {
-      target.hud.message('evading', 0xFFFFFF, 300, 5);
+      target.hud.flash('evading', 0xFFFFFF, 300, 5);
     } else if(data.type === 'miss') {
-      target.hud.message('evading', 0xFFFFFF, 300, 5);
+      target.hud.flash('evading', 0xFFFFFF, 300, 5);
     } else {
-      target.hud.message(data.damage.toString(), 0xFF0000, 200, 30, true);
+      target.hud.flash(data.damage.toString(), 0xFF0000, 200, 30, true);
       origin.targetingComputer.fire();
     }
   }

@@ -2,6 +2,7 @@
 var engine = require('engine'),
     Panel = require('../Panel'),
     Layout = require('../Layout'),
+    StackLayout = require('../layouts/StackLayout'),
     BorderLayout = require('../layouts/BorderLayout'),
     FlowLayout = require('../layouts/FlowLayout'),
     BackgroundView = require('../views/BackgroundView'),
@@ -28,6 +29,9 @@ function Pane(game, settings) {
 
   // layout
   switch(this.settings.layout.type) {
+    case 'stack':
+      this.layout = new StackLayout();
+      break;
     case 'border':
       this.layout = new BorderLayout(
         this.settings.layout.ax, this.settings.layout.ay);

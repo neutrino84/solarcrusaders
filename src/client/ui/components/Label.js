@@ -42,7 +42,6 @@ Object.defineProperty(Label.prototype, 'tint', {
 
   set: function(value) {
     this.textView.tint = value;
-    this.invalidate();
   }
 });
 
@@ -53,7 +52,6 @@ Object.defineProperty(Label.prototype, 'text', {
 
   set: function(value) {
     this.textView.fontTexture.text = value.toString();
-    this.invalidate();
   }
 });
 

@@ -26,6 +26,9 @@ function SystemPane(game, settings) {
   // button cache
   this.buttons = {};
 
+  // order
+  this.sort = ['pilot', 'engine', 'targeting', 'shield', 'teleport', 'reactor'];
+
   // initialize
   this.init();
 };
@@ -34,20 +37,25 @@ SystemPane.prototype = Object.create(Pane.prototype);
 SystemPane.prototype.constructor = SystemPane;
 
 SystemPane.prototype.init = function() {
-  var settings = this.settings,
+  var sort = this.sort,
+      settings = this.settings,
       systems = settings.systems,
       system, data;
-  for(var s in systems) {
-    data = systems[s];
-    system = this.create(s);
-    system.image.tint = 0x00FF00;
-    this.buttons[s] = system;
-    this.addPanel(Layout.NONE, system);
+  if(!systems) { return; }
+  for(var s in sort) {
+    data = systems[sort[s]];
+    if(data) {
+      system = this.create(sort[s]);
+      system.image.tint = 0x00FF00;
+      this.buttons[sort[s]] = system;
+      this.addPanel(Layout.NONE, system);
+    }
   }
 }
 
 SystemPane.prototype.create = function(type) {
-  return new ButtonIcon(game, 'icon-atlas', {
+  console.log(type);
+  return new ButtonIcon(game, 'texture-atlas', {
     padding: [0],
     bg: {
       color: 0x204060,
@@ -59,7 +67,7 @@ SystemPane.prototype.create = function(type) {
     icon: {
       padding: [1, 2, 2, 2],
       border: [0],
-      frame: type,
+      frame: 'system-' + type + '.png',
       bg: {
         highlight: false,
         fillAlpha: 0.0,

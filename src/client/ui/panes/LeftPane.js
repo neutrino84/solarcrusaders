@@ -19,7 +19,7 @@ function LeftPane(game, settings) {
     }
   });
 
-  this.icon1 = new ButtonIcon(game, 'icon1');
+  this.icon1 = new ButtonIcon(game, 'texture-atlas', { icon: { frame: 'icon-x01.png' }});
   this.icon1.on('inputUp', this._logout, this);
 
   this.addPanel(Layout.NONE, this.icon1);
