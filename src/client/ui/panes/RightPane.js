@@ -123,7 +123,7 @@ RightPane.prototype._instructions = function() {
 RightPane.prototype._updateInfo = function() {
   this.fpsText.text = this.game.clock.fps + ' fps';
   this.pingText.text = this.game.net.rtt + ' rtt';
-  this.infoBorderPane2.invalidate(true);
+  this.invalidate(true);
 };
 
 module.exports = RightPane;

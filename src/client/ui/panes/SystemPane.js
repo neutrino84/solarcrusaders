@@ -54,7 +54,6 @@ SystemPane.prototype.init = function() {
 }
 
 SystemPane.prototype.create = function(type) {
-  console.log(type);
   return new ButtonIcon(game, 'texture-atlas', {
     padding: [0],
     bg: {
