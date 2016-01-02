@@ -354,7 +354,7 @@ Pointer.prototype = {
   processInteractiveObjects: function(fromClick) {
 
     // Work out which object is on the top
-    var highestRenderOrderID = Number.MAX_VALUE,
+    var highestRenderOrderID = global.Number.MAX_VALUE,
         highestInputPriorityID = -1,
         candidateTarget = null,
         input = this.game.input;
