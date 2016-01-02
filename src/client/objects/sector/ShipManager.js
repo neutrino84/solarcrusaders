@@ -2,9 +2,11 @@
 var engine = require('engine'),
     EventEmitter = require('eventemitter3'),
     Ship = require('./Ship'),
+    Selection = require('./Selection'),
     ExplosionEmitter = require('./emitters/ExplosionEmitter'),
     FlashEmitter = require('./emitters/FlashEmitter'),
-    GlowEmitter = require('./emitters/GlowEmitter');
+    GlowEmitter = require('./emitters/GlowEmitter'),
+    ShockwaveEmitter = require('./emitters/ShockwaveEmitter');
 
 function ShipManager(game) {
   EventEmitter.call(this);
@@ -21,17 +23,20 @@ function ShipManager(game) {
   this.fxGroup = new engine.Group(game);
   this.fxGroup.blendMode = engine.BlendMode.ADD;
 
-  // trajectoryGraphics
   this.trajectoryGraphics = new engine.Graphics(game);
   this.trajectoryGroup.addChild(this.trajectoryGraphics);
+
+  this.selection = new Selection(this);
 
   this.explosionEmitter = new ExplosionEmitter(this.game);
   this.flashEmitter = new FlashEmitter(this.game);
   this.glowEmitter = new GlowEmitter(this.game);
+  this.shockwaveEmitter = new ShockwaveEmitter(this.game);
 
   this.game.particles.add(this.explosionEmitter);
   this.game.particles.add(this.flashEmitter);
   this.game.particles.add(this.glowEmitter);
+  this.game.particles.add(this.shockwaveEmitter);
 
   // ships
   this.ships = {};
@@ -42,24 +47,26 @@ function ShipManager(game) {
   this.game.world.add(this.fxGroup);
   this.game.world.add(this.explosionEmitter);
   this.game.world.add(this.flashEmitter);
+  this.game.world.add(this.shockwaveEmitter);
   this.game.world.add(this.glowEmitter);
 
   // authentication
-  this.game.auth.on('disconnected', this._disconnected, this);
+  this.game.auth.on('disconnected', this._reset, this);
 
   // networking
   // TODO: move to ShipNetManager... maybe not?
   this.socket.on('ship/sync', this._syncBind = this._sync.bind(this));
   this.socket.on('ship/plotted', this._plottedBind = this._plotted.bind(this));
-  this.socket.on('ship/destroyed', this._destroyedBind = this._destroyed.bind(this));
 
   // subscribe to messages
-  this.game.on('gui/selected', this._selected, this);
   this.game.on('ships/selected', this._select, this);
   this.game.on('ship/follow', this._follow, this);
   this.game.on('ship/targeted', this._targeted, this);
-  this.game.on('ship/untargeted', this._untargeted, this);
   this.game.on('ship/attack', this._attack, this);
+  this.game.on('ship/destroyed', this._destroyed, this);
+  this.game.on('enhancement/started', this._enstarted, this);
+  this.game.on('enhancement/stopped', this._enstopped, this);
+  this.game.on('game/pause', this._reset, this);
 }
 
 ShipManager.prototype = Object.create(EventEmitter.prototype);
@@ -81,28 +88,25 @@ ShipManager.prototype._sync = function(data) {
       cached = this.ships[ship.uuid] ? this.ships[ship.uuid] : this.ships[ship.uuid] = this.create(ship, details);
       offset = engine.Point.distance(ship.current, cached.movement.current);
 
-      if(created && cached.user === game.auth.user.uuid) {
+      if(created && cached.isPlayer) {
         this.game.emit('ship/follow', cached);
         this.game.emit('ships/selected', [cached]);
       }
 
-      if(offset > 64 || created) {
+      if(offset > 32 || created) {
         cached.rotation = ship.rotation;
         cached.position.set(ship.current.x, ship.current.y);
-        cached.movement.throttle = ship.throttle;
+        // cached.movement.throttle = ship.throttle;
 
         if(ship.moving) {
           cached.movement.plot(ship.destination, ship.current, ship.previous);
-          // if(!cached.movement.valid) {
-          //   console.log('plot linear');
-          //   cached.movement.plotLinear(ship.destination, ship.current, ship.previous);
-          // }
-          // cached.movement.drawData();
         } else {
           cached.movement.animation.stop();
         }
       }
     }
+
+    // if(!ship || !cached) { continue; }
 
     // this.trajectoryGraphics.lineStyle(0);
     // this.trajectoryGraphics.beginFill(0x00FF00, 1.0)
@@ -129,10 +133,6 @@ ShipManager.prototype._sync = function(data) {
   }
 };
 
-ShipManager.prototype.update = function() {
-
-};
-
 ShipManager.prototype.create = function(data, details) {
   var game = this.game,
       ship = new Ship(this, details.chasis);
@@ -140,7 +140,7 @@ ShipManager.prototype.create = function(data, details) {
   ship.uuid = data.uuid;
   ship.user = details.user;
   ship.username = details.username;
-  ship.health = details.health;
+  ship.details = details;
   ship.position.set(data.current.x, data.current.y);
   ship.rotation = data.rotation;
   ship.movement.throttle = data.throttle;
@@ -154,14 +154,15 @@ ShipManager.prototype.create = function(data, details) {
 };
 
 ShipManager.prototype.remove = function(ship) {
-  var game = this.game;
-      s = this.ships[ship.uuid],
-      camera = game.camera;
-      game.emit('ship/untargeted', ship);
-  if(camera.target === s) {
-    camera.unfollow();
+  var game = this.game,
+      camera = game.camera,
+      s = this.ships[ship.uuid];
+  if(s !== undefined) {
+    if(camera.target === s) {
+      camera.unfollow();
+    }
+    delete this.ships[ship.uuid] && s.destroy();
   }
-  delete this.ships[ship.uuid] && s.destroy();
 };
 
 ShipManager.prototype.removeAll = function() {
@@ -184,21 +185,36 @@ ShipManager.prototype.destroy = function() {
       socket = this.socket;
 
   auth.removeListener('disconnected', this._disconnected);
-  
-  game.removeListener('gui/selected', this._selected);
-  game.removeListener('ships/selected', this._select);
-  game.removeListener('ship/follow', this._follow);
-  game.removeListener('ship/targeted', this._targeted);
-  game.removeListener('ship/untargeted', this._untargeted);
-  game.removeListener('ship/attack', this._attack);
 
   socket.removeListener('ship/sync', this._syncBind);
   socket.removeListener('ship/plotted', this._plottedBind);
-  socket.removeListener('ship/destroyed', this._destroyedBind);
+  
+  game.removeListener('ships/selected', this._select);
+  game.removeListener('ship/follow', this._follow);
+  game.removeListener('ship/targeted', this._targeted);
+  game.removeListener('ship/attack', this._attack);
+  game.removeListener('ship/destroyed', this._destroyed);
+  game.removeListener('enhancement/started', this._enstarted);
+  game.removeListener('enhancement/stopped', this._enstopped);
+  game.removeListener('game/pause', this._reset);
 
-  this.game = this.socket =
-    this._syncBind = this._plottedBind =
-    this._destroyedBind = undefined;
+  this.selection.destroy();
+
+  this.game.particles.remove(this.explosionEmitter);
+  this.game.particles.remove(this.flashEmitter);
+  this.game.particles.remove(this.glowEmitter);
+  this.game.particles.remove(this.shockwaveEmitter);
+
+  this.game.world.remove(this.trajectoryGroup);
+  this.game.world.remove(this.shockwaveEmitter);
+  this.game.world.remove(this.shipsGroup);
+  this.game.world.remove(this.fxGroup);
+  this.game.world.remove(this.explosionEmitter);
+  this.game.world.remove(this.flashEmitter);
+  this.game.world.remove(this.glowEmitter);
+
+  this.game = this.socket = this._syncBind = 
+    this._plottedBind = undefined;
 
   this.removeAll();
 };
@@ -207,10 +223,10 @@ ShipManager.prototype._plotted = function(data) {
   var auth = this.game.auth,
       ship = this.ships[data.uuid],
       startTime = this.net.ping;
-  if(ship !== undefined && ship.user !== auth.user.uuid) {
+  if(ship !== undefined && !ship.isPlayer) {
     ship.rotation = data.rotation;
     ship.position.set(data.current.x, data.current.y);
-    ship.movement.throttle = data.throttle;
+    // ship.movement.throttle = data.throttle;
     ship.movement.plot(data.destination, data.current, data.previous);
   }
 };
@@ -220,44 +236,63 @@ ShipManager.prototype._targeted = function(targeted) {
       target = this.ships[targeted.target];
   if(origin && target) {
     origin.target = target;
+    target.targeted.push(origin);
   }
 };
 
 ShipManager.prototype._untargeted = function(targeted) {
-  var ship,
-      ships = this.ships,
+  var ship, targeted,
       target = this.ships[targeted.uuid];
-  for(var s in ships) {
-    ship = ships[s];
+  if(target !== undefined) {
+    targeted = target.targeted;
+    for(var t in targeted) {
+      ship = targeted[t];
 
-    // remove target
-    if(ship.target === target) {
-      ship.target = null;
+      // remove target
+      if(ship.target === target) {
+        ship.target = null;
+      }
     }
   }
 };
 
 ShipManager.prototype._attack = function(data) {
-  var origin = this.ships[data.origin],
+  var damage,
+      origin = this.ships[data.origin],
       target = this.ships[data.target];
-  if(origin && target && data.type === 'hit') {
-    origin.target = target;
-    origin.targetingComputer.fire();
-    target.data(data);
+  if(origin && target) {
+    if(!origin.target) { this._targeted(data); }
+    if(data.type === 'evade') {
+      target.hud.message('evading', 0xFFFFFF, 300, 5);
+    } else if(data.type === 'miss') {
+      target.hud.message('evading', 0xFFFFFF, 300, 5);
+    } else {
+      target.hud.message(data.damage.toString(), 0xFF0000, 200, 30, true);
+      origin.targetingComputer.fire();
+    }
   }
 };
 
+ShipManager.prototype._enstarted = function(data) {
+  var ship = this.ships[data.ship];
+      ship && ship.activate(data.enhancement);
+};
+
+ShipManager.prototype._enstopped = function(data) {
+  var ship = this.ships[data.ship];
+      ship && ship.deactivate(data.enhancement);
+};
+
 ShipManager.prototype._select = function(ships) {
-  var ship, all = this.ships;
+  var ship, all = this.ships,
+      player;
   for(var a in all) {
     ship = all[a];
     ship.deselect();
   }
   for(var s in ships) {
     ship = all[ships[s].uuid];
-    if(ship !== undefined) {
-      ship.select();
-    }
+    ship && ship.select();
   }
 };
 
@@ -277,72 +312,25 @@ ShipManager.prototype._destroyed = function(ship) {
       game = this.game,
       s = this.ships[ship.uuid];
   if(s !== undefined) {
+    s.target = null;
     s.damage.destroyed();
     s.data({ health: 0 });
+
     tween = game.tweens.create(s);
-    tween.to({ alpha: 0 }, 5000, engine.Easing.Default, false, 15000);
+    tween.to({ alpha: 0 }, 2500, engine.Easing.Default, false, 12500);
     tween.once('complete', function() {
       this.remove(ship);
     }, this);
     tween.start();
+
+    this.game.clock.events.add(1000, function() {
+      this._untargeted(ship);
+    }, this);
   }
 };
 
-ShipManager.prototype._disconnected = function() {
+ShipManager.prototype._reset = function() {
   this.removeAll();
-};
-
-ShipManager.prototype._selected = function(pointer, rectangle) {
-  var point, ship,
-      select = [],
-      selected = [];
-
-  this.shipsGroup.forEach(function(child) {
-    if(pointer.button === engine.Mouse.LEFT_BUTTON) {
-      if(child.overlap(rectangle)) {
-        select.push(child);
-      } else if(child.isPlayer) {
-        select.push(child);
-      }
-    }
-    if(pointer.button === engine.Mouse.RIGHT_BUTTON) {
-      if(child.selected && rectangle.volume <= 300) {
-        selected.push(child);
-      }
-    }
-  });
-
-  // always update
-  if(pointer.button === engine.Mouse.LEFT_BUTTON) {
-    this.game.emit('ships/selected', select);
-  }
-
-  if(selected.length > 0) {
-    point = game.world.worldTransform.applyInverse(rectangle);
-    
-    this.trajectoryTween && this.trajectoryTween.stop();
-    this.trajectoryGraphics.clear();
-    this.trajectoryGraphics.alpha = 1.0;
-
-    for(var i=0; i<selected.length; i++) {
-      ship = selected[i];
-      if(ship.isPlayer && !ship.destroyed) {
-        ship.movement.plot(point);
-        this.socket.emit('ship/plot', {
-          uuid: ship.uuid,
-          destination: point
-        });
-
-        if(ship.movement.valid) {
-          ship.movement.drawDebug();
-        }
-      }
-    }
-
-    this.trajectoryTween = this.game.tweens.create(this.trajectoryGraphics);
-    this.trajectoryTween.to({ alpha: 0.0 }, 500, engine.Easing.Quadratic.InOut);
-    this.trajectoryTween.start();
-  }
 };
 
 module.exports = ShipManager;
