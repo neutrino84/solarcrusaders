@@ -9,16 +9,16 @@ LoadTexture.prototype = {
   _frame: null,
 
   loadTexture: function(key, frame, stopAnimation) {
-    if(this.key === key) { return; };
-    if(frame === undefined) { frame = 0 };
-    if((stopAnimation || typeof stopAnimation === 'undefined') && this.animations) { this.animations.stop(); }
+    if((stopAnimation || typeof stopAnimation === 'undefined') && this.animations) {
+      this.animations.stop();
+    }
 
+    this.key = key;
     this.customRender = false;
     
     var setFrame = true,
         smoothed = !this.texture.baseTexture.scaleMode;
     if(key instanceof pixi.RenderTexture || key instanceof pixi.Texture) {
-      this.key = key;
       this.texture = key;
     } else {
       img = this.game.cache.getImage(key, true);
@@ -27,7 +27,7 @@ LoadTexture.prototype = {
       this.texture = new pixi.Texture(img.base);
 
       if(this.animations) {
-        setFrame = !this.animations.loadFrameData(img.frameData, frame);
+        setFrame = !this.animations.loadFrameData(img.frameData, frame || 0);
       }
     }
     
