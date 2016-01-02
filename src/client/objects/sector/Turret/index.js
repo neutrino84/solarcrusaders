@@ -14,7 +14,9 @@ function Turret(parent, config) {
   this.position = new engine.Point();
   this.apos = new engine.Point();
 
-  this.sprite = new engine.Sprite(this.game, 'ship-atlas', config.sprite + '.png');
+  this._tempPoint = new engine.Point();
+
+  this.sprite = new engine.Sprite(this.game, 'texture-atlas', config.sprite + '.png');
   this.sprite.position.set(config.position.x, config.position.y);
   this.sprite.pivot.set(config.pivot.x, config.pivot.y);
   this.sprite.scale.set(config.scale.x, config.scale.y);
@@ -35,19 +37,37 @@ Turret.prototype.create = function(type) {
   }
 };
 
-Turret.prototype.fire = function() {
-  delay = global.Math.random() * 500;
-  this.game.clock.events.add(delay, this.discharge, this);
+Turret.prototype.fire = function(index, miss) {
+  var delay = index * 75 + 100,
+      action = miss ? this.miss : this.discharge;
+  this.timer = this.game.clock.events.add(delay, action, this);
+};
+
+Turret.prototype.miss = function() {
+  var circle, delay,
+      ship = this.ship,
+      target = ship.target,
+      enhancements = this.parent.enhancements,
+      overshoot = 50;
+  if(target) {
+    circle = this.circle.setTo(target.position.x, target.position.y, target.width / 2);
+    this.target = circle.circumferencePoint(global.Math.random() * global.Math.PI, false, true, this._tempPoint);
+    this.manager.fire(true, enhancements);
+  }
 };
 
 Turret.prototype.discharge = function() {
   var circle, delay,
       ship = this.ship,
-      target = ship.target;
+      target = ship.target,
+      enhancements = this.parent.enhancements;
   if(target) {
     circle = this.circle.setTo(target.position.x, target.position.y, global.Math.sqrt(target.getBounds().perimeter));
     this.target = circle.random(true);
-    this.manager.fire();
+    this.manager.fire(false, enhancements, target.shields);
+    if(target.isPlayer && !target.shields) {
+      this.game.camera.shake();
+    }
   }
 };
 
@@ -62,12 +82,23 @@ Turret.prototype.update = function() {
 
   manager.start.copyFrom(position);
   manager.end.copyFrom(apos);
-
-  this.manager.update();
+  manager.update();
 };
 
 Turret.prototype.absoluteTargetPosition = function() {
   return engine.Point.add(this.ship.target.position, this.target, this.apos);
-}
+};
+
+Turret.prototype.destroy = function() {
+  this.timer && this.game.clock.events.remove(this.timer);
+
+  this.sprite && this.sprite.destroy();
+  this.manager && this.manager.destroy();
+  
+  this.parent = this.game = this.ship =
+    this.config = this.circle = this.target =
+    this.position = this.apos = this.sprite = 
+    this.manager = this.timer = this._tempPoint = undefined;
+};
 
 module.exports = Turret;

@@ -7,10 +7,19 @@ function TargetingComputer(parent, config) {
   this.game = parent.game;
   this.config = config;
 
+  this.enhancements = {}
   this.turrets = [];
 };
 
 TargetingComputer.prototype.constructor = TargetingComputer;
+
+TargetingComputer.prototype.enadd = function(enhancement) {
+  this.enhancements[enhancement] = true;
+};
+
+TargetingComputer.prototype.enremove = function(enhancement) {
+  delete this.enhancements[enhancement];
+};
 
 TargetingComputer.prototype.create = function() {
   var turret, config,
@@ -28,13 +37,13 @@ TargetingComputer.prototype.create = function() {
   }
 };
 
-TargetingComputer.prototype.fire = function() {
+TargetingComputer.prototype.fire = function(miss) {
   var parent = this.parent,
       target = parent.target,
       turrets = this.turrets;
-  if(target && turrets.length > 0 && parent.renderable) {
+  if(target && turrets.length > 0) {
     for(var t in turrets) {
-      turrets[t].fire();
+      turrets[t].fire(t, miss);
     }
   }
 };
@@ -48,6 +57,23 @@ TargetingComputer.prototype.update = function() {
       turrets[t].update();
     }
   }
+};
+
+TargetingComputer.prototype.destroy = function() {
+  var turret;
+
+  this.parent = this.game = this.enhancements =
+    this.config = undefined;
+
+  for(var t in this.turrets) {
+    turret = this.turrets[t];
+    turret.fxGroup = turret.flashEmitter =
+      turret.explosionEmitter =
+      turret.glowEmitter = undefined;
+    turret.destroy();
+  }
+
+  this.turrets = [];
 };
 
 module.exports = TargetingComputer;
