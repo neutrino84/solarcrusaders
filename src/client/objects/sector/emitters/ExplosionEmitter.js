@@ -11,7 +11,7 @@ function ExplosionEmitter(game) {
   this.setAlpha(1.0, 0.0, 3000);
   this.setTint(0xFF6666, 0x000000, 750);
 
-  this.makeParticles('fx-atlas', [
+  this.makeParticles('texture-atlas', [
   	'explosion-flash.png', 'explosion-a.png', 'explosion-a.png',
   	'explosion-b.png', 'explosion-c.png', 'explosion-a.png',
   	'explosion-d.png', 'explosion-d.png', 'explosion-d.png',

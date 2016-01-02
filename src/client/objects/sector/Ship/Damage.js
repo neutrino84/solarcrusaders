@@ -21,7 +21,7 @@ Damage.prototype.inflict = function(position) {
       ship = this.ship,
       rotation = global.Math.random() * global.Math.PI,
       scale = global.Math.random() * 0.5 + 0.5,
-      damage = new engine.Sprite(this.game, 'fx-atlas', 'damage-a.png');
+      damage = new engine.Sprite(this.game, 'texture-atlas', 'damage-a.png');
 
   damage.pivot.set(32, 32);
   damage.position.set(ship.pivot.x - position.x, ship.pivot.y - position.y);

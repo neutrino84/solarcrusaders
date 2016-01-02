@@ -10,7 +10,7 @@ function ShockwaveEmitter(game) {
   this.minRotation = -15;
   this.maxRotation = 15;
   this.setAlpha(1.0, 0.0, 6000);
-  this.makeParticles('fx-atlas', [
+  this.makeParticles('texture-atlas', [
   	'explosion-d.png', 'explosion-d.png',
   	'explosion-d.png', 'explosion-e.png'
   ]);
