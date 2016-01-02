@@ -217,6 +217,7 @@ Group.prototype.destroy = function(destroyChildren, soft) {
   this.onDestroy && this.onDestroy(destroyChildren, soft);
   
   this.removeAll(destroyChildren);
+  this.removeAllListeners();
 
   this.cursor = null;
   this.filters = null;
