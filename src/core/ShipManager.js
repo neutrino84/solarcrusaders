@@ -125,8 +125,8 @@ ShipManager.prototype.data = function(sock, args, next) {
       ships = [];
   for(var u in uuids) {
     ship = this.ships[uuids[u]];
-    enhancements = Object.keys(ship.enhancements.available);
     if(ship) {
+      enhancements = Object.keys(ship.enhancements.available);
       ships.push({
         id: ship.id,
         uuid: ship.uuid,
@@ -412,15 +412,15 @@ ShipManager.prototype._updateAI = function() {
           }
 
         }
-        // if(target.systems['shield'] && health < 0.90) {
-        //   target.activate('shield');
-        // }
+        if(target.systems['shield'] && health < 0.90) {
+          target.activate('shield');
+        }
         if(target.systems['engine'] && health < 0.5) {
           target.activate('booster');
         }
-        // if(target.systems['reactor'] && health < 0.2) {
-        //   target.activate('overload');
-        // }
+        if(target.systems['reactor'] && health < 0.2) {
+          target.activate('overload');
+        }
       }
     }
   }
