@@ -24,21 +24,17 @@ function Background(game, width, height) {
 Background.prototype = Object.create(pixi.Sprite.prototype);
 Background.prototype.constructor = Background;
 
-Background.prototype.preUpdate =
-  function() {};
+Background.prototype.preUpdate = function() {};
 
-Background.prototype.update =
-  function() {};
+Background.prototype.update = function() {};
 
-Background.prototype.postUpdate =
-  function() {};
+Background.prototype.postUpdate = function() {};
 
-Background.prototype.resize =
-  function(width, height) {
-    this.width = width;
-    this.height = height;
-    this.filter.setResolution(width, height);
-  };
+Background.prototype.resize = function(width, height) {
+  this.width = width;
+  this.height = height;
+  this.filter.setResolution(width, height);
+};
 
 module.exports = Background;
 
