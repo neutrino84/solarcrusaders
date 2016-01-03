@@ -9,7 +9,9 @@ var pixi = require('pixi'),
     startGameEngine = function() {
       var game = new engine.Game({
             parent: 'content',
-            antialias: true//,
+            antialias: true,
+            width: 1024,
+            height: 576
             // forceFXAA: true
           }),
           loadingState = new LoadingState();
