@@ -12,8 +12,6 @@ Reactor.prototype.create = function() {
   this.shieldSprite = new engine.Sprite(this.game, 'texture-atlas', this.parent.name + '-shields.png');
   this.shieldSprite.blendMode = engine.BlendMode.ADD;
   this.shieldSprite.tint = 0x00FF00;
-  this.shieldSprite.pivot.set(80, 80);
-  this.shieldSprite.position.set(64, 64);
 
   this.electricitySprite = new engine.Sprite(this.game, 'texture-atlas', 'reactor-electricity.png');
   this.electricitySprite.blendMode = engine.BlendMode.ADD;
@@ -23,8 +21,7 @@ Reactor.prototype.create = function() {
 };
 
 Reactor.prototype.start = function() {
-  this.shieldSprite.alpha = 0.75;
-  this.shieldSprite.scale.set(0.96, 0.96);
+  this.shieldSprite.alpha = 1.0;
 
   this.animeTween = this.game.tweens.create(this.shieldSprite);
   this.animeTween.to({ alpha: 0.5 }, 1000, engine.Easing.Quadratic.InOut);
