@@ -19,15 +19,15 @@ function RetroFont(game, key, options) {
 
   this.grabData = [];
 
-  this.fontSet = game.cache.getImage(key, true).data,
+  this.image = game.cache.getImage(key, true);
 
-  this.characterWidth = options.characterWidth || this.fontSet.width / options.chars.length;
-  this.characterHeight = options.characterHeight || this.fontSet.height;
+  this.characterWidth = options.characterWidth || this.image.data.width / options.chars.length;
+  this.characterHeight = options.characterHeight || this.image.data.height;
 
   this.characterSpacingX = options.xSpacing || 0;
   this.characterSpacingY = options.ySpacing || 0;
 
-  this.characterPerRow = options.charsPerRow || this.fontSet.width / this.characterWidth;
+  this.characterPerRow = options.charsPerRow || this.image.data.width / this.characterWidth;
 
   this.offsetX = options.xOffset || 0;
   this.offsetY = options.yOffset || 0;
@@ -40,10 +40,9 @@ function RetroFont(game, key, options) {
   this.customSpacingY = 0;
 
   this.frameData = new FrameData();
-
-  game.cache.updateFrameData(key, this._generateRects(options.chars));
-
   this.stamp = new Sprite(game, key);
+
+  this.generateFrameData(options.chars);
 
   pixi.RenderTexture.call(this, game.renderer, 100, 100, pixi.SCALE_MODES.NEAREST);
 };
@@ -158,10 +157,9 @@ RetroFont.prototype.pasteLine = function(line, x, y, customSpacingX) {
         matrix.tx = x;
         matrix.ty = y;
 
-        this.stamp.frame = this.grabData[line.charCodeAt(c)];
-        this.render(this.stamp, matrix, false, false);
+        this.stamp.setFrame(this.frameData.getFrame(this.grabData[line.charCodeAt(c)]));
 
-        //displayObject, matrix, clear, updateTransform
+        this.render(this.stamp, matrix, false, false);
 
         x += this.characterWidth + customSpacingX;
 
@@ -187,7 +185,7 @@ RetroFont.prototype.getLongestLine = function() {
 };
 
 RetroFont.prototype.removeUnsupportedCharacters = function(stripCR) {
-  var newString = "";
+  var newString = '';
   for(var c = 0; c < this.currentText.length; c++) {
     var aChar = this.currentText[c];
     var code = aChar.charCodeAt(0);
@@ -198,43 +196,22 @@ RetroFont.prototype.removeUnsupportedCharacters = function(stripCR) {
   return newString;
 };
 
-RetroFont.prototype.updateOffset = function(x, y) {
-  if(this.offsetX === x && this.offsetY === y) {
-    return;
-  }
-
-  var diffX = x - this.offsetX;
-  var diffY = y - this.offsetY;
-
-  var frames = this.game.cache.getFrameData(this.stamp.key).getFrames();
-  var i = frames.length;
-
-  while (i--) {
-    frames[i].x += diffX;
-    frames[i].y += diffY;
-  }
-
-  this.buildRetroFontText();
-};
-
-RetroFont.prototype._generateRects = function(chars) {
-  var frame,
+RetroFont.prototype.generateFrameData = function(chars) {
+  var frame, row = 0,
       currentX = this.offsetX,
-      currentY = this.offsetY,
-      r = 0;
-  for(var c = 0; c < chars.length; c++) {
+      currentY = this.offsetY;
+  for(var c=0; c<chars.length; c++) {
     frame = this.frameData.addFrame(new Frame(c, currentX, currentY, this.characterWidth, this.characterHeight));
     this.grabData[chars.charCodeAt(c)] = frame.index;
-    r++;
-    if(r === this.characterPerRow) {
-      r = 0;
+    row++;
+    if(row === this.characterPerRow) {
+      row = 0;
       currentX = this.offsetX;
       currentY += this.characterHeight + this.characterSpacingY;
     } else {
       currentX += this.characterWidth + this.characterSpacingX;
     }
   }
-  return this.frameData;
 };
 
 Object.defineProperty(RetroFont.prototype, 'text', {
