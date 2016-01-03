@@ -101,7 +101,7 @@ Alert.prototype._alert = function(message, confirmation, title) {
   if(confirmation === false) {
     this.button.visible = false;
   } else {
-    this.button.text = confirmation || 'close';
+    this.button.label.text = confirmation || 'close';
   }
   this.game.emit('gui/modal', true, this, true);
 };
