@@ -52,6 +52,15 @@ Clock.prototype.boot = function() {
   this.events.start();
 };
 
+Clock.prototype.benchmark = function() {
+  this.events.add(6000, function() {
+    this.advancedTiming = false;
+    if(this.suggestedFps < 50) {
+      this.game.emit('fpsProblem');
+    }
+  }, this);
+};
+
 Clock.prototype.add = function(timer) {
   this._timers.push(timer);
   return timer;
@@ -91,6 +100,13 @@ Clock.prototype.update = function(time) {
 
   if(this.advancedTiming) {
     this.updateAdvancedTiming();
+  } else {
+    this.frames++;
+    if(this.now > this._timeLastSecond + 1000) {
+      this.fps = global.Math.round((this.frames * 1000) / (this.now - this._timeLastSecond));
+      this._timeLastSecond = this.now;
+      this.frames = 0;
+    }
   }
 
   // Paused but still running?
