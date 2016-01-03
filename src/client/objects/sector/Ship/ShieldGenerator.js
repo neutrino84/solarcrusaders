@@ -12,7 +12,6 @@ ShieldGenerator.prototype.create = function() {
   this.shieldSprite = new engine.Sprite(this.game, 'texture-atlas', this.parent.name + '-shields.png');
   this.shieldSprite.blendMode = engine.BlendMode.ADD;
   this.shieldSprite.tint = 0x3366FF;
-  this.shieldSprite.pivot.set(16, 16);
 };
 
 ShieldGenerator.prototype.start = function() {
