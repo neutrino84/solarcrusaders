@@ -170,19 +170,22 @@ BottomPane.prototype._updateActive = function() {
 BottomPane.prototype._playerSelect = function(data) {
   var enhancement, button,
       enhancements = data.enhancements;
-  if(this.data.uuid) { return; }
-  for(var e in enhancements) {
-    enhancement = enhancements[e];
-    
-    button = this.create(enhancement, global.parseInt(e) + 1);
-    button.id = enhancement;
-    button.on('inputUp', this._select, this);
-    button.setProgressBar(1.0);
-    
-    this.buttons[enhancement] = button;
-    this.addContent(Layout.NONE, button);
+  if(this.data.uuid) {
+    this.data = data;
+  } else {
+    this.data = data;
+    for(var e in enhancements) {
+      enhancement = enhancements[e];
+      
+      button = this.create(enhancement, global.parseInt(e) + 1);
+      button.id = enhancement;
+      button.on('inputUp', this._select, this);
+      button.setProgressBar(1.0);
+      
+      this.buttons[enhancement] = button;
+      this.addContent(Layout.NONE, button);
+    }
   }
-  this.data = data;
 };
 
 module.exports = BottomPane;
