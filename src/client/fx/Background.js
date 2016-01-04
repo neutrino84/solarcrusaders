@@ -32,7 +32,6 @@ function Background(game, width, height) {
 Background.prototype = Object.create(pixi.Sprite.prototype);
 Background.prototype.constructor = Background;
 
-
 Background.prototype.preUpdate = function() {};
 
 Background.prototype.update = function() {};
