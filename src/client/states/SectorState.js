@@ -17,6 +17,7 @@ SectorState.prototype.init = function(args) {
   this.scrollVelocityY = 0;
 
   this.scrollLock = false;
+  // this.game.stage.disableVisibilityChange = true;
 };
 
 SectorState.prototype.preload = function() {
@@ -27,7 +28,7 @@ SectorState.prototype.preload = function() {
 
   // load.image('draghe', 'imgs/game/planets/draghe.jpg');
   // load.image('eamon', 'imgs/game/planets/eamon-alpha.jpg');
-  load.image('eamon', 'imgs/game/planets/daimus.jpg');
+  load.image('eamon', 'imgs/game/planets/ichor.jpg');
   load.image('clouds', 'imgs/game/planets/clouds.jpg');
 
   load.image('laser-red', 'imgs/game/fx/laser-red.png');
@@ -49,9 +50,6 @@ SectorState.prototype.preload = function() {
   // load tilemap
   // load.image('sector', 'imgs/game/tilesets/sector.png');
   // load.tilemap('sector', 'data/sector.json');
-
-  // load fx atlas
-  this.game.load.atlasJSONHash('fx-atlas', 'imgs/game/fx/fx-atlas.png', 'data/fx-atlas.json');
 };
 
 // loadUpdate = function() {};
@@ -67,7 +65,7 @@ SectorState.prototype.create = function() {
             scale = engine.Math.clamp(this.world.scale.x - delta, 0.25, 1.2);//,
             // gridLayer = global.state.gridLayer;
 
-        // stop zoom
+        if(self.game.paused) { return; }
         if(self.zoom && self.zoom.isRunning) {
           self.zoom.stop();
         }
@@ -86,7 +84,7 @@ SectorState.prototype.create = function() {
   this.gui = game.state.getBackgroundState('gui');
 
   this.game.world.setBounds(0, 0, 4096, 4096);
-  this.game.world.scale.set(0.25, 0.25);
+  this.game.world.scale.set(0.6, 0.6);
 
   this.game.camera.bounds = null;
   this.game.camera.focusOnXY(2048, 2048);
@@ -104,11 +102,13 @@ SectorState.prototype.create = function() {
 
   // start zoom in
   this.zoom = this.game.tweens.create(this.game.world.scale);
-  this.zoom.to({ x: 1.0, y: 1.0 }, 8000, engine.Easing.Quadratic.InOut, true);
+  this.zoom.to({ x: 0.8, y: 0.8 }, 6000, engine.Easing.Quadratic.InOut, true);
 
   // gui
   this.gui.toggle(true);
-  this.game.emit('gui/message', 'daimus alpha', 500, 1500);
+
+  // benchmark
+  this.game.clock.benchmark();
 };
 
 // SectorState.prototype.createGrid = function() {
