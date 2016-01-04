@@ -273,9 +273,11 @@ StateManager.prototype.pauseUpdate = function() {
     if(this.callbackContext.pauseUpdate) {
       this.callbackContext.pauseUpdate();
     }
-  } else {
-    if(this.callbackContext.loadUpdate) {
-      this.callbackContext.loadUpdate();
+  } else if(this.backgroundStateContext) {
+    if(this.backgroundStateContext.loadUpdate && !this.game.load.hasLoaded) {
+      this.backgroundStateContext.loadUpdate();
+    } else if(this.game.load.hasLoaded)  {
+      this.backgroundLoadComplete();
     }
   }
 };
