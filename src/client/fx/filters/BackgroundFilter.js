@@ -1,5 +1,6 @@
 
-var pixi = require('pixi');
+var pixi = require('pixi'),
+    engine = require('engine');
 
 // @see https://github.com/substack/brfs/issues/25
 var fs = require('fs');
@@ -41,10 +42,10 @@ BackgroundFilter.prototype.applyFilter = function(renderer, input, output){
 
   this.uniforms.time.value = this.game.clock.totalElapsedSeconds();
   
-  this.uniforms.transform.value.x = -view.x.toFixed(4);
-  this.uniforms.transform.value.y = view.y.toFixed(4);
+  this.uniforms.transform.value.x = engine.Math.roundTo(-view.x, 4);
+  this.uniforms.transform.value.y = engine.Math.roundTo(view.y, 4);
 
-  this.uniforms.scale.value = this.game.world.scale.x.toFixed(4);
+  this.uniforms.scale.value = engine.Math.roundTo(this.game.world.scale.x, 4);
 
   filterManager.applyFilter(shader, input, output);
 };
