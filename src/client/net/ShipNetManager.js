@@ -33,12 +33,14 @@ ShipNetManager.prototype.getBattleByOriginUuid = function(uuid) {
 ShipNetManager.prototype._data = function(data) {
   var ship,
       ships = data.ships;
-  for(var s in ships) {
-    ship = ships[s];
-    if(data.type === 'sync' && this.ships[ship.uuid] === undefined) {
-      this.ships[ship.uuid] = new ShipData(this.game, ship);
-    } else if(this.ships[ship.uuid]) {
-      this.ships[ship.uuid].update(ship);
+  if(this.game.cache.checkJSONKey('ship-configuration')) {
+    for(var s in ships) {
+      ship = ships[s];
+      if(data.type === 'sync' && this.ships[ship.uuid] === undefined) {
+        this.ships[ship.uuid] = new ShipData(this.game, ship);
+      } else if(this.ships[ship.uuid]) {
+        this.ships[ship.uuid].update(ship);
+      }
     }
   }
 };
