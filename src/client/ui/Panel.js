@@ -116,7 +116,11 @@ Panel.prototype.paint = function() {
 };
 
 Panel.prototype.resize = function(width, height) {
-  //.. resize
+  var panels = this.panels,
+      len = panels.length;
+  for(var i=0; i<len; i++) {
+    panels[i].resize(width, height);
+  }
 };
 
 Panel.prototype.setBorder = function(top, left, bottom, right) {

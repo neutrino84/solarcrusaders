@@ -138,9 +138,9 @@ LoadingState.prototype.update = function() {
 
 LoadingState.prototype.resize = function(width, height) {
   if(this.root !== undefined) {
+    this.root.resize(width, height);
     this.root.setSize(width, height);
-    this.root.validate();
-    this.root.repaint();
+    this.root.invalidate();
   }
 };
 
