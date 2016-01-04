@@ -1,0 +1,37 @@
+{
+	"overload": {
+		"cost": -30,
+		"cooldown": 180,
+		"active": 10,
+		"stats": {
+			"heal": { "value": 0.10 },
+			"evasion": { "value": 0.10 },
+			"recharge": { "value": 3.0 }
+		}
+	},
+	"booster": {
+		"cost": -10,
+		"cooldown": 30,
+		"active": 2,
+		"stats": {
+			"speed": { "value": 2.0 }
+		}
+	},
+	"shield": {
+		"cost": -10,
+		"cooldown": 30,
+		"active": 15,
+		"stats": {
+			"armor": { "value": 3.0 }
+		}
+	},
+	"piercing": {
+		"cost": -30,
+		"cooldown": 10,
+		"active": 2,
+		"stats": {
+			"accuracy": { "value": 0.1 },
+			"damage": { "value": 5.0 }
+		}
+	}
+}
