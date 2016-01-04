@@ -127,6 +127,10 @@ function ScaleManager(game, width, height) {
   this._updateThrottle = 0;
   this._updateThrottleReset = 100;
 
+  this._resolutionLow = 1024;
+  this._resolutionMedium = 1366;
+  this._resolutionMode = 'auto';
+
   this._parentBounds = new Rectangle();
   this._tempBounds = new Rectangle();
 
@@ -138,6 +142,16 @@ function ScaleManager(game, width, height) {
   }
 
   this.setupScale(width, height);
+
+  // auto lower resolution
+  this.game.on('fpsProblem', function() {
+    this.resolutionMode = 'low';
+
+    this.scaleMode = ScaleManager.EXACT_FIT;
+    this.fullScreenScaleMode = ScaleManager.EXACT_FIT;
+
+    this.refresh();
+  }, this);
 };
 
 ScaleManager.EXACT_FIT = 0;
@@ -294,14 +308,14 @@ ScaleManager.prototype = {
     this.queueUpdate(true);
   },
 
-  setGameSize: function(width, height) {
+  setGameSize: function(width, height, silent) {
     this._gameSize.setTo(0, 0, width, height);
-    
     if(this.currentScaleMode !== ScaleManager.RESIZE) {
       this.updateDimensions(width, height, true);
     }
-
-    this.queueUpdate(true);
+    if(!silent) {
+      this.queueUpdate(true);
+    }
   },
 
   setUserScale: function(hScale, vScale, hTrim, vTrim) {
@@ -329,10 +343,7 @@ ScaleManager.prototype = {
       // this.grid.onResize(width, height);
       // this.onSizeChange.dispatch(this, width, height);
 
-      // Per StateManager#onResizeCallback, it only occurs when in RESIZE mode.
-      if(this.currentScaleMode === ScaleManager.RESIZE) {
-        this.game.state.resize(width, height);
-      }
+      this.game.state.resize(this.game.width, this.game.height);
     }
   },
 
@@ -517,10 +528,9 @@ ScaleManager.prototype = {
       if(scaleMode === ScaleManager.EXACT_FIT) {
         this.setExactFit();
       } else if(scaleMode === ScaleManager.SHOW_ALL) {
-        if(!this.isFullScreen && this.boundingParent &&
-          this.compatibility.canExpandParent) {
-          // Try to expand parent out, but choosing maximizing dimensions.                    
-          // Then select minimize dimensions which should then honor parent
+        if(!this.isFullScreen && this.boundingParent && this.compatibility.canExpandParent) {
+          // try to expand parent out, but choosing maximizing dimensions.                    
+          // then select minimize dimensions which should then honor parent
           // maximum bound applications.
           this.setShowAll(true);
           this.resetCanvas();
@@ -650,6 +660,7 @@ ScaleManager.prototype = {
 
     var bounds = this.getParentBounds(this._tempBounds);
     this.updateDimensions(bounds.width, bounds.height, true);
+
   },
 
   reflowCanvas: function() {
@@ -723,10 +734,16 @@ ScaleManager.prototype = {
   },
 
   setExactFit: function() {
-    var bounds = this.getParentBounds(this._tempBounds);
+    var bounds = this.getParentBounds(this._tempBounds),
+        w = bounds.width,
+        h = bounds.height,
+        width = this.resolution,
+        height = this.resolution * (h / w);
 
-    this.width = bounds.width;
-    this.height = bounds.height;
+    this.setGameSize(width, height, true);
+
+    this.width = w;
+    this.height = h;
 
     if(this.isFullScreen) {
       // Max/min not honored fullscreen
@@ -985,6 +1002,29 @@ Object.defineProperty(ScaleManager.prototype, 'scaleMode', {
     }
     return this._scaleMode;
   }
+});
+
+Object.defineProperty(ScaleManager.prototype, 'resolutionMode', {
+  get: function() {
+    return this._resolutionMode;
+  },
+
+  set: function(value) {
+    this._resolutionMode = value;
+  }
+});
+
+Object.defineProperty(ScaleManager.prototype, 'resolution', {
+  get: function() {
+    switch(this._resolutionMode) {
+      case 'medium':
+        return this._resolutionMedium;
+      case 'low':
+        return this._resolutionLow;
+      default:
+        return this.bounds.width;
+    }
+  },
 });
 
 Object.defineProperty(ScaleManager.prototype, 'fullScreenScaleMode', {
