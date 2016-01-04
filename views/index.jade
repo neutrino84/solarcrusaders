@@ -7,19 +7,19 @@ block content
         a(href='https://www.youtube.com/watch?v=3mURrVKerHg')
           img(src='/imgs/game/play.png')
         div(id='dialog')
-    if !user
-      //- .login(id='login-form')
-      //-   .box
-      //-     .form
-      //-       label email
-      //-       .input
-      //-         input(type='text', id='login-email')
-      //-       label password
-      //-       .input
-      //-         input(type='password', id='login-password')
-      //-       .buttons
-      //-         button(type='button', id='login-button') Login
-      //-   .register(id='register-button')
+    //- if !user
+      .login(id='login-form')
+        .box
+          .form
+            label email
+            .input
+              input(type='text', id='login-email')
+            label password
+            .input
+              input(type='password', id='login-password')
+            .buttons
+              button(type='button', id='login-button') Login
+        .register(id='register-button')
       .modal(id='registration-login')
         .box
           .register(id='registration-start')
@@ -48,11 +48,11 @@ block content
             .buttons
               button(type='button', id='registration-cancel') Done
 
-  //- script(type='text/javascript', src='/build/pixi.js')
-  //- script(type='text/javascript', src='/build/xhr.js')
-  //- script(type='text/javascript', src='/build/socket.js')
-  //- script(type='text/javascript', src='/build/engine.js')
-  //- script(type='text/javascript', src='/build/solar.js')
+  script(type='text/javascript', src='/build/pixi.js')
+  script(type='text/javascript', src='/build/xhr.js')
+  script(type='text/javascript', src='/build/socket.js')
+  script(type='text/javascript', src='/build/engine.js')
+  script(type='text/javascript', src='/build/solar.js')
 
-  script(type='text/javascript', src='/build/app.min.js')
+  //- script(type='text/javascript', src='/build/app.min.js')
   
