@@ -506,7 +506,7 @@
     "oribit": { "radius": 192 },
     "stats": {
       "health": 300,
-      "heal": 0.005,
+      "heal": 0.001,
       "armor": 0.0,
       "speed": 1.0,
       "accuracy": 0.8,
@@ -1155,13 +1155,13 @@
     "oribit": { "radius": 128 },
     "stats": {
       "health": 150,
-      "heal": 0.01,
+      "heal": 0.005,
       "armor": 0.0,
       "speed": 2.25,
       "accuracy": 0.5,
       "evasion": 0.25,
       "reactor": 100,
-      "recharge": 0.25,
+      "recharge": 0.75,
       "durability": 1000
     },
     "engine": {
