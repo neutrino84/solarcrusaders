@@ -12,6 +12,7 @@ var engine = require('engine'),
     LeftPane = require('../ui/panes/LeftPane'),
     RightPane = require('../ui/panes/RightPane'),
     BottomPane = require('../ui/panes/BottomPane'),
+    VitalsPane = require('../ui/panes/VitalsPane'),
     ShipPane = require('../ui/panes/ShipPane'),
       
     Alert = require('../ui/components/Alert'),
@@ -25,6 +26,7 @@ var engine = require('engine'),
 function GUIState() {};
 
 GUIState.DISCONNECT_MESSAGE = 'connection to the server has been lost\nattempting to reconnect';
+GUIState.FPSPROBLEM_MESSAGE = 'the game will automatically adjust\nyour graphics settings';
 
 GUIState.prototype = Object.create(engine.State.prototype);
 GUIState.prototype.constructor = engine.State;
@@ -39,9 +41,7 @@ GUIState.prototype.init = function() {
 GUIState.prototype.preload = function() {
   // load font
   this.game.load.image('vt323', 'imgs/game/fonts/vt323.png');
-
-  // load icons
-  this.game.load.image('icon1', 'imgs/game/icons/icon-x01.png');
+  this.game.load.image('medium', 'imgs/game/fonts/medium.png');
 
   // load tilesets
   this.game.load.image('deck', 'imgs/game/tilesets/deck-mini.png');
@@ -53,10 +53,10 @@ GUIState.prototype.preload = function() {
 
   // load ship configuration
   this.game.load.json('ship-configuration', 'data/ship-configuration.json');
+  this.game.load.json('enhancement-configuration', 'data/enhancement-configuration.json');
 
   // load texture atlas
-  this.game.load.atlasJSONHash('icon-atlas', 'imgs/game/icons/icon-atlas.png', 'data/icon-atlas.json');
-  this.game.load.atlasJSONHash('ship-atlas', 'imgs/game/ships/ship-atlas.png', 'data/ship-atlas.json');
+  this.game.load.atlasJSONHash('texture-atlas', 'imgs/game/texture-atlas.png', 'data/texture-atlas.json');
 
   // spritesheet
   this.game.load.spritesheet('crew', 'imgs/game/spritesheets/crew-mini.png', 16, 16);
@@ -64,6 +64,7 @@ GUIState.prototype.preload = function() {
 
   // ship outline
   this.game.load.image('vessel-x01-outline', 'imgs/game/ships/vessel-x01-outline.png');
+  this.game.load.image('vessel-x02-outline', 'imgs/game/ships/vessel-x02-outline.png');
   this.game.load.image('vessel-x03-outline', 'imgs/game/ships/vessel-x03-outline.png');
   this.game.load.image('vessel-x04-outline', 'imgs/game/ships/vessel-x04-outline.png');
   this.game.load.image('vessel-x05-outline', 'imgs/game/ships/vessel-x05-outline.png');
@@ -89,6 +90,7 @@ GUIState.prototype.create = function() {
   this.leftPane = new LeftPane(game);
   this.rightPane = new RightPane(game);
   this.bottomPane = new BottomPane(game);
+  this.vitalsPane = new VitalsPane(game);
 
   this.shipPanel = new Panel(game, new FlowLayout(Layout.LEFT, Layout.TOP, Layout.VERTICAL, 6));
   this.shipPanel.setPadding(6);
@@ -108,9 +110,11 @@ GUIState.prototype.create = function() {
 
   this.topPanel = new Panel(game, new FlowLayout(Layout.CENTER, Layout.TOP, Layout.HORIZONTAL, 6));
   this.topPanel.addPanel(Layout.NONE, this.rightPane);
+  this.topPanel.visible = false;
 
-  this.bottomPanel = new Panel(game, new FlowLayout(Layout.CENTER, Layout.TOP, Layout.HORIZONTAL, 6));
+  this.bottomPanel = new Panel(game, new FlowLayout(Layout.CENTER, Layout.TOP, Layout.VERTICAL, 3));
   this.bottomPanel.addPanel(Layout.NONE, this.bottomPane);
+  this.bottomPanel.addPanel(Layout.NONE, this.vitalsPane);
   this.bottomPanel.visible = false;
 
   this.centerPanel.addPanel(Layout.CENTER, this.shipPanel);
@@ -141,7 +145,8 @@ GUIState.prototype.create = function() {
   this.auth.on('disconnected', this._disconnected, this);
 
   this.game.on('gui/modal', this.modal, this);
-  // this.game.on('fpsProblem', this._fpsProblem, this);
+  this.game.on('fpsProblem', this._fpsProblem, this);
+  this.game.on('game/pause', this._pause, this);
 };
 
 GUIState.prototype.login = function() {
@@ -150,6 +155,8 @@ GUIState.prototype.login = function() {
     this.centerPanel.invalidate();
     this.bottomPanel.visible = true;
     this.bottomPanel.invalidate();
+    this.topPanel.visible = true;
+    this.topPanel.invalidate();
   } else {
     this.bottomPanel.visible = false;
     this.centerPanel.visible = false;
@@ -194,6 +201,7 @@ GUIState.prototype.modal = function(show, content, lock, visible) {
   this.modalComponent.addPanel(Layout.USE_PS_SIZE, content);
   this.modalComponent.visible = show;
   this.modalComponent.bg.settings.fillAlpha = visible ? 0.8 : 0.0;
+  this.modalComponent.invalidate(true);
 
   // this.refresh();
 };
@@ -203,6 +211,10 @@ GUIState.prototype.resize = function(width, height) {
     this.root.setSize(width, height);
     this.root.invalidate();
   }
+};
+
+GUIState.prototype._pause = function() {
+  this.game.emit('gui/message', 'paused', 1000, 500);
 };
 
 GUIState.prototype._loggedin = function() {
@@ -217,7 +229,7 @@ GUIState.prototype._disconnected = function() {
 };
 
 GUIState.prototype._fpsProblem = function() {
-  console.log('dropped a frame');
+  this.game.emit('gui/alert', GUIState.FPSPROBLEM_MESSAGE, 'ok', 'performance problem');
 };
 
 module.exports = GUIState;
