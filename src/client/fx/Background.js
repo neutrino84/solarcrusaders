@@ -19,10 +19,19 @@ function Background(game, width, height) {
   this.filter.setTexture(texture);
 
   this.filters = [this.filter];
+
+  // optimize
+  this.game.on('fpsProblem', function() {
+    this.backgroundTexture = new pixi.RenderTexture(game.renderer, width, height);
+    this.backgroundTexture.render(this);
+    this.texture = this.backgroundTexture;
+    this.filters = undefined;
+  }, this);
 }
 
 Background.prototype = Object.create(pixi.Sprite.prototype);
 Background.prototype.constructor = Background;
+
 
 Background.prototype.preUpdate = function() {};
 
