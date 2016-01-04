@@ -16,7 +16,6 @@ LoadingState.prototype.constructor = engine.State;
 
 LoadingState.prototype.preload = function() {
   this.game.load.image('logo', 'imgs/game/logo.jpg');
-  this.game.load.image('medium', 'imgs/game/fonts/medium.png');
   this.game.load.image('small', 'imgs/game/fonts/small.png');
 };
 
@@ -88,9 +87,6 @@ LoadingState.prototype.create = function() {
     this.validate();
     this.repaint();
   };
-
-  // add gui to stage
-  this.game.stage.addChild(this.root);
 };
 
 LoadingState.prototype.loadingStart = function() {
@@ -98,7 +94,10 @@ LoadingState.prototype.loadingStart = function() {
   this.root.alpha = 1.0;
   this.image.visible = true;
   this.progress.visible = true;
-  this.statusLabel.visible = true;
+  this.statusLabel.visible = true; 
+
+  // add gui to stage
+  this.game.stage.addChild(this.root);
 };
 
 LoadingState.prototype.loadingProgressBar = function() {
@@ -108,17 +107,24 @@ LoadingState.prototype.loadingProgressBar = function() {
       pendingState = this.pendingState;
   this.progress.setProgressBar((loaded/total/pendingState) + (this.currentState/pendingState));
   this.statusLabel.text = file;
+  this.statusLabel.invalidate();
 };
 
 LoadingState.prototype.loadingComplete = function() {
   this.currentState++;
 
+  // move to front
+  this.game.stage.addChild(this.root);
+
   // remove loading screen
   if(!this.game.state.hasPendingState) {
     this.tween = this.game.tweens.create(this.root);
-    this.tween.to({ alpha: 0.0 }, 5000);
-    this.tween.delay(2000);
+    this.tween.to({ alpha: 0.0 }, 4000);
+    this.tween.delay(500);
     this.tween.start();
+    this.tween.once('complete', function() {
+      this.game.stage.removeChild(this.root);
+    }, this);
 
     this.image.visible = false;
     this.progress.visible = false;
