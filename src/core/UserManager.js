@@ -46,7 +46,7 @@ UserManager.prototype.add = function(user) {
     ship = {};
     ship.user = user;
     ship.throttle = 1.0; // global.Math.random() * 3 + 0.8;
-    ship.chasis = 'vessel-x01'; // + (global.Math.floor(global.Math.random() * 5) + 1);
+    ship.chasis = 'vessel-x0' + (global.Math.random() > 0.5 ? 1 : 3);
     u.ships.push(ship);
     self.game.emit('ship/create', ship);
   // }
