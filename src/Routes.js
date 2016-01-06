@@ -46,7 +46,7 @@ Routes.prototype.init = function(next) {
     res.render('index', {
       title: 'Solar Crusaders',
       description: 'A multiplayer strategy game featuring 4X gameplay, sandbox universe, and simulated virtual economy.',
-      production: Boolean(process.env.PRODUCTION),
+      production: this.app.nconf.get('production'),
       user: req.session.user && req.session.user.uid ? true : false
     });
   });
