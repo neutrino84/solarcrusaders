@@ -8,16 +8,19 @@ var engine = require('engine'),
 function Label(game, string, settings) {
   Panel.call(this, game, this);
 
+  string = string || '';
   this.settings = Class.mixin(settings, {
     padding: [6, 12],
-    border: [0]
+    border: [0],
+    bg: {},
+    text: {}
   });
 
   this.setPadding.apply(this, this.settings.padding);
   this.setBorder.apply(this, this.settings.border);
 
-  this.bg = new BackgroundView(game, settings.bg);
-  this.textView = new TextView(game, string, settings.text);
+  this.bg = new BackgroundView(game, this.settings.bg);
+  this.textView = new TextView(game, string, this.settings.text);
   
   // create label
   this.addView(this.bg);
