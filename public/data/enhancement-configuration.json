@@ -12,9 +12,9 @@
 	"booster": {
 		"cost": -10,
 		"cooldown": 30,
-		"active": 2,
+		"active": 3,
 		"stats": {
-			"speed": { "value": 2.0 }
+			"speed": { "value": 2.5 }
 		}
 	},
 	"shield": {

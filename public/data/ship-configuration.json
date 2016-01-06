@@ -1,7 +1,7 @@
 {
   "vessel-x01": {
     "size": 1.0,
-    "oribit": { "radius": 128 },
+    "oribit": { "radius": 64 },
     "stats": {
       "health": 100,
       "heal": 0.01,
@@ -503,7 +503,7 @@
   },
   "vessel-x02": {
     "size": 1.0,
-    "oribit": { "radius": 192 },
+    "oribit": { "radius": 160 },
     "stats": {
       "health": 300,
       "heal": 0.001,
@@ -1152,7 +1152,7 @@
   },
   "vessel-x03": {
     "size": 1.0,
-    "oribit": { "radius": 128 },
+    "oribit": { "radius": 64 },
     "stats": {
       "health": 150,
       "heal": 0.005,
@@ -1655,7 +1655,7 @@
   },
   "vessel-x04": {
     "size": 1.0,
-    "oribit": { "radius": 96 },
+    "oribit": { "radius": 48 },
     "stats": {
       "health": 10,
       "heal": 0.025,
@@ -1829,7 +1829,7 @@
   },
   "vessel-x05": {
     "size": 1.0,
-    "oribit": { "radius": 128 },
+    "oribit": { "radius": 48 },
     "stats": {
       "health": 20,
       "heal": 0.05,
