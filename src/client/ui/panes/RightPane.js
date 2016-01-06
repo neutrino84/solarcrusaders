@@ -70,7 +70,7 @@ function RightPane(game, settings) {
     })
 
   this.versionText = new Label(game,
-    'solar crusaders v2021', {
+    'solar crusaders v2023', {
       padding: [5],
       text: {
         fontName: 'medium',
@@ -82,7 +82,7 @@ function RightPane(game, settings) {
       }
     });
 
-  this.registerButton = new Button(game, 'register');
+  this.registerButton = new Button(game, 'beta signup');
   this.registerButton.on('inputUp', this._register, this);
 
   this.instructionsButton = new Button(game, 'instructions');
@@ -91,7 +91,7 @@ function RightPane(game, settings) {
   // add layout panels
   this.addPanel(Layout.CENTER, this.infoBorderPane);
 
-  // this.infoBorderPane.addPanel(Layout.LEFT, this.registerButton);
+  this.infoBorderPane.addPanel(Layout.LEFT, this.registerButton);
   this.infoBorderPane.addPanel(Layout.CENTER, this.instructionsButton);
 
   this.addPanel(Layout.CENTER, this.versionText);
