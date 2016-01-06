@@ -152,9 +152,8 @@ Ship.prototype.activate = function(name) {
   if(enhancement) {
     cost = this.reactor + enhancement.cost;
     if(!enhancement.activated && cost >= 0) {
-      if(name === 'piercing' && !this.manager.battles[this.uuid]) {
-        return false;
-      }
+      if(name === 'booster' && !this.movement.animation.isPlaying) { return false; }
+      if(name === 'piercing' && !this.manager.battles[this.uuid]) { return false; }
       
       enhancement.start();
       enhancement.once('deactivated', this.deactivate, this);
