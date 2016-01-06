@@ -18,6 +18,7 @@ function Ship(manager, ship) {
   this.throttle = global.parseFloat(ship.throttle);
   this.rotation = global.parseFloat(ship.rotation);
   this.position = new engine.Point(global.parseFloat(ship.x), global.parseFloat(ship.y));
+  this.interpolate = this.position.copyFrom.bind(this.position);
 
   ship = Utils.extend(ship, this.config.stats, false);
 

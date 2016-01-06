@@ -74,7 +74,7 @@ ShipManager.prototype.create = function(ship, position) {
     case 'random':
       position = ship.user ?
         this._generateRandomPositionInView() :
-        this._generateRandomPosition();
+        this._generateRandomPositionInView();
     case Object:
       ship.x = position.x;
       ship.y = position.y;
@@ -111,11 +111,9 @@ ShipManager.prototype.enhancement = function(sock, args, next) {
 ShipManager.prototype.plot = function(sock, args, next) {
   var user = sock.sock.handshake.session.user,
       data = args[1],
-      destination = data.destination,
-      ship = this.ships[data.uuid],
-      point = new engine.Point(destination.x, destination.y);
+      ship = this.ships[data.uuid];
   if(ship && ship.user && ship.user.uuid === user.uuid) {
-    this._plot(ship, destination);
+    this._plot(ship, data.destination, data.current, data.previous);
   }
 };
 
@@ -160,7 +158,6 @@ ShipManager.prototype.update = function() {
     movement = ship.movement;
     movement.update();
     moving = movement.animation.isPlaying;
-    
     data = {
       uuid: ship.uuid,
       throttle: ship.throttle,
@@ -168,12 +165,10 @@ ShipManager.prototype.update = function() {
       current: movement.current,
       moving: moving
     };
-
     if(moving) {
       data.previous = movement.previous;
       data.destination = movement.destination;
     }
-
     arr.push(data);
   }
   this.sockets.io.sockets.emit('ship/sync', {
@@ -224,12 +219,12 @@ ShipManager.prototype.generateShip = function(chassis) {
   });
 };
 
-ShipManager.prototype._plot = function(ship, destination) {
+ShipManager.prototype._plot = function(ship, destination, current, previous) {
   var previous, current,
       movement = ship.movement;
   movement.update();
-  current = movement.current;
-  previous = movement.previous;
+  current = current || movement.current;
+  previous = previous || movement.previous;
   movement.plot(destination, current, previous);
   this.sockets.io.sockets.emit('ship/plotted', {
     uuid: ship.uuid,
@@ -265,7 +260,9 @@ ShipManager.prototype._updateShips = function() {
       update.rdelta = global.Math.round(delta);
     }
 
-    updates.push(update);
+    if(delta !== undefined) {
+      updates.push(update);
+    }
   }
   if(updates.length > 0) {
     this.sockets.io.sockets.emit('ship/data', {
@@ -367,6 +364,7 @@ ShipManager.prototype._updateBattles = function() {
 ShipManager.prototype._updateAI = function() {
   var b, battle, random, ship, room, health,
       destination, origin,
+      game = this.game,
       ships = this.ships, target,
       arr = [];
   for(var s in ships) {
@@ -375,10 +373,16 @@ ShipManager.prototype._updateAI = function() {
     
     if(!ship.user && global.Math.random() > 0.5) {
       destination = global.Math.random() > 0.25 ?
-        this._generateRandomPosition() :
+        this._generateRandomPositionInView() :
         this._generateRandomPositionInView();
       
-      this._plot(ship, destination);
+      (function(game, manager, ship, destination) {
+        game.clock.events.add(global.Math.random() * 10000, function() {
+          if(manager.ships[ship.uuid]) {
+            manager._plot(ship, destination);
+          }
+        });
+      })(game, this, ship, destination);
       
       random = this._getRandomShip();
       if(random !== ship && global.Math.random() > 0.5) {
