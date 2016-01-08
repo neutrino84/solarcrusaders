@@ -89,12 +89,15 @@ Selection.prototype._selected = function(pointer, rectangle) {
     for(var i=0; i<selected.length; i++) {
       ship = selected[i];
       if(ship.isPlayer && !ship.destroyed) {
-        ship.movement.plot(point);
+        movement = ship.movement;
         this.socket.emit('ship/plot', {
           uuid: ship.uuid,
-          destination: point
+          destination: point,
+          current: movement.current,
+          previous: movement.previous,
+          rotation: ship.rotation
         });
-
+        movement.plot(point);
         if(ship.movement.valid) {
           ship.movement.drawDebug();
         }
