@@ -35,10 +35,6 @@ Camera.FOLLOW_TOPDOWN_TIGHT = 3;
 
 Camera.prototype.constructor = Camera;
 
-Camera.prototype.preUpdate = function() {
-  this.totalInView = 0;
-};
-
 Camera.prototype.shake = function(duration) {
   duration = duration || 500;
 
@@ -79,23 +75,16 @@ Camera.prototype.follow = function(target, style) {
 
 Camera.prototype.update = function() {
   var view = this.view,
-      display = this.displayObject;
+      display = this.displayObject,
+      math = global.Math;
 
-  if(this.target) {
-    this.updateTarget();
-  }
-
-  if(this.bounds) {
-    this.checkBounds();
-  }
-
-  if(this.roundPx) {
-    view.floor();
-  }
+  this.target && this.updateTarget();
+  this.bounds && this.checkBounds();
+  this.roundPx && view.floor();
 
   if(this._shaking) {
-    view.x += (global.Math.random() * 10 - 5) * this._shaking;
-    view.y += (global.Math.random() * 10 - 5) * this._shaking;
+    view.x += (math.random() * 10 - 5) * this._shaking;
+    view.y += (math.random() * 10 - 5) * this._shaking;
   }
 
   display.pivot.x = view.x + view.halfWidth;
@@ -135,7 +124,7 @@ Camera.prototype.updateTarget = function() {
       this._smoothSpeed = 0;
       this._smoothTween && this._smoothTween.stop();
       this._smoothTween = this.game.tweens.create(this);
-      this._smoothTween.to({ _smoothSpeed: 1.0 }, 500, Easing.Default, true);
+      this._smoothTween.to({ _smoothSpeed: 1.0 }, 1000, Easing.Default, true);
       this._smoothTween.once('complete', function() {
         this._smooth = false;
       }, this);
@@ -154,77 +143,73 @@ Camera.prototype.unfollow = function() {
   this.target = null;
 };
 
-Camera.prototype.focusOn =
-  function(displayObject) {
-    this.setPosition(displayObject.x, displayObject.y);
-  };
+Camera.prototype.focusOn = function(displayObject) {
+  this.setPosition(displayObject.x, displayObject.y);
+};
 
+Camera.prototype.focusOnXY = function(x, y) {
+  this.setPosition(x, y);
+};
 
-Camera.prototype.focusOnXY =
-  function(x, y) {
-    this.setPosition(x, y);
-  };
+Camera.prototype.setBoundsToWorld = function() {
+  if(this.bounds) {
+    this.bounds.copyFrom(this.game.world.bounds);
+  }
+};
 
-Camera.prototype.setBoundsToWorld =
-  function() {
-    if(this.bounds) {
-      this.bounds.copyFrom(this.game.world.bounds);
-    }
-  };
+Camera.prototype.checkBounds = function() {
+  this.atLimit.x = false;
+  this.atLimit.y = false;
 
-Camera.prototype.checkBounds =
-  function() {
-    this.atLimit.x = false;
-    this.atLimit.y = false;
+  if(this.view.x <= this.bounds.x) {
+    this.atLimit.x = true;
+    // this.view.x = this.bounds.x;
+  }
 
-    if(this.view.x <= this.bounds.x) {
-      this.atLimit.x = true;
-      // this.view.x = this.bounds.x;
-    }
+  if(this.view.right >= this.bounds.right) {
+    this.atLimit.x = true;
+    // this.view.x = this.bounds.right - this.width;
+  }
 
-    if(this.view.right >= this.bounds.right) {
-      this.atLimit.x = true;
-      // this.view.x = this.bounds.right - this.width;
-    }
+  if(this.view.y <= this.bounds.top) {
+    this.atLimit.y = true;
+    // this.view.y = this.bounds.top;
+  }
 
-    if(this.view.y <= this.bounds.top) {
-      this.atLimit.y = true;
-      // this.view.y = this.bounds.top;
-    }
+  if(this.view.bottom >= this.bounds.bottom) {
+    this.atLimit.y = true;
+    // this.view.y = this.bounds.bottom - this.height;
+  }
+};
 
-    if(this.view.bottom >= this.bounds.bottom) {
-      this.atLimit.y = true;
-      // this.view.y = this.bounds.bottom - this.height;
-    }
-  };
+Camera.prototype.setPosition = function(x, y) {
+  var view = this.view;
+      view.x = x-view.halfWidth;
+      view.y = y-view.halfHeight;
+  if(this.bounds) {
+    this.checkBounds();
+  }
+};
 
-Camera.prototype.setPosition =
-  function(x, y) {
-    var view = this.view;
+Camera.prototype.pan = function(x, y) {
+  var view = this.view;
+      view.x -= x;
+      view.y -= y;
+};
 
-    view.x = x-view.halfWidth;
-    view.y = y-view.halfHeight;
+Camera.prototype.setSize = function(width, height) {
+  var view = this.view,
+      display = this.displayObject;
+  view.width = width;
+  view.height = height;
+  display.x = view.halfWidth;
+  display.y = view.halfHeight;
+};
 
-    if(this.bounds) {
-      this.checkBounds();
-    }
-  };
-
-Camera.prototype.setSize =
-  function(width, height) {
-    var view = this.view,
-        display = this.displayObject;
-    view.width = width;
-    view.height = height;
-    display.x = view.halfWidth;
-    display.y = view.halfHeight;
-  };
-
-Camera.prototype.reset =
-  function() {
-    this.view.x = 0;
-    this.view.y = 0;
-  };
+Camera.prototype.reset = function() {
+  this.view.x = 0;
+  this.view.y = 0;
+};
 
 Object.defineProperty(Camera.prototype, 'x', {
   get: function() {
