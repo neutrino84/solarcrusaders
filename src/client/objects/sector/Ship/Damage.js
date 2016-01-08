@@ -47,19 +47,13 @@ Damage.prototype.shockwave = function() {
 Damage.prototype.destroyed = function() {
   var point,
       game = this.game,
-      ship = this.ship;//,
-      // point = ship.movement.getForwardFrameByFrames(24);
+      ship = this.ship;
 
   ship.destroyed = true;
   ship.engineCore.destroy();
 
-  // if(point) {
-  //   ship.movement.plot(point);
-  //   ship.movement.animation.once('complete', this.shockwave, this);
-  // } else {
-    ship.movement.animation.stop();
-    this.shockwave();
-  // }
+  ship.movement.animation.stop();
+  this.shockwave();
 
   // burned
   ship.tint = 0x444444;
