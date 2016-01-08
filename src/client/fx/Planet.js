@@ -11,8 +11,6 @@ function Planet(game, key) {
 
   this.game = game;
 
-  this.width = this.texture.width / 1.5;
-  this.height = this.texture.height / 1.5;
   this.pivot.set(512, 512);
 
   this.planetShader = new PlanetShader(game);
@@ -34,13 +32,9 @@ function Planet(game, key) {
 Planet.prototype = Object.create(pixi.Sprite.prototype);
 Planet.prototype.constructor = Planet;
 
-Planet.prototype.preUpdate = function() {}
-
 Planet.prototype.update = function() {
   this.shader.update();
 };
-
-Planet.prototype.postUpdate = function() {}
 
 Planet.prototype.getMipmapTexture = function(key) {
   var base = game.cache.getImage(key, true).base;
