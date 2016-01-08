@@ -27,19 +27,38 @@ function Planet(game, key) {
   this.addChild(this.glowSprite);
 
   this.shader = this.planetShader;
+
+  this.game.on('fpsProblem', this.cache, this);
 }
 
 Planet.prototype = Object.create(pixi.Sprite.prototype);
 Planet.prototype.constructor = Planet;
 
 Planet.prototype.update = function() {
-  this.shader.update();
+  this.shader && this.shader.update();
 };
 
 Planet.prototype.getMipmapTexture = function(key) {
   var base = game.cache.getImage(key, true).base;
       base.mipmap = true;
   return base;
-}
+};
+
+Planet.prototype.cache = function() {
+  this.planetTexture && this.planetTexture.destroy();
+  this.planetTexture = new pixi.RenderTexture(this.game.renderer, this.width, this.height);
+  this.planetTexture.render(this);
+  this.texture = this.planetTexture;
+  this.shader = undefined;
+  this.removeChild(this.glowSprite);
+};
+
+Planet.prototype.uncache = function() {
+
+};
+
+Planet.prototype.destroy = function() {
+
+};
 
 module.exports = Planet;
