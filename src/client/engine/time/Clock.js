@@ -55,7 +55,7 @@ Clock.prototype.boot = function() {
 Clock.prototype.benchmark = function() {
   this.events.add(6000, function() {
     this.advancedTiming = false;
-    if(this.suggestedFps < 50) {
+    if(this.suggestedFps < 57.5) {
       this.game.emit('fpsProblem');
     }
   }, this);
@@ -150,7 +150,7 @@ Clock.prototype.updateAdvancedTiming = function() {
   // occasionally recalculate the suggestedFps based on the accumulated elapsed time
   if(this._frameCount >= this._desiredFps * 2) {
     // this formula calculates suggestedFps in multiples of 5 fps
-    this.suggestedFps = global.Math.floor(200 / (this._elapsedAccumulator / this._frameCount)) * 5;
+    this.suggestedFps = global.Math.floor(400 / (this._elapsedAccumulator / this._frameCount)) * 2.5;
     this._frameCount = 0;
     this._elapsedAccumulator = 0;
   }
