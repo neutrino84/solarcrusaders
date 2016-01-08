@@ -35,17 +35,11 @@ NetManager.prototype = {
   },
 
   pause: function() {
-    if(this.socket.subs) {
-      // clean subscriptions to avoid reconnections
-      for (var i = 0; i < this.socket.subs.length; i++) {
-        this.socket.subs[i].destroy();
-      }
-      this.socket.subs = null;
-    }
+    this.disconnect();
   },
 
   resume: function() {
-    this.socket.subEvents();
+    this.connect();
   },
 
   connect: function() {
@@ -97,12 +91,6 @@ NetManager.prototype.constructor = NetManager;
 Object.defineProperty(NetManager.prototype, 'rtt', {
   get: function() {
     return this.latency.rtt;
-  }
-});
-
-Object.defineProperty(NetManager.prototype, 'ping', {
-  get: function() {
-    return this.latency.rtt / 2;
   }
 });
 
