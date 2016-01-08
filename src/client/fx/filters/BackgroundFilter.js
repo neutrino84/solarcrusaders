@@ -9,12 +9,12 @@ function BackgroundFilter(game, width, height) {
   this.game = game;
 
   this.uniforms = {
-      channel0: { type: 'sampler2D', value: 0, textureData: { wrapS: 33071, wrapT: 33071 } },
-      resolution: { type: 'v2', value: { x: width, y: height } },
-      transform: { type: 'v2', value: { x: 0, y: 0 } },
-      time: { type: 'f', value: 0 },
-      scale: { type: 'f', value: 1 }
-    };
+    channel0: { type: 'sampler2D', value: 0, textureData: { wrapS: 33071, wrapT: 33071 } },
+    resolution: { type: 'v2', value: { x: width, y: height } },
+    transform: { type: 'v2', value: { x: 0, y: 0 } },
+    time: { type: 'f', value: 0 },
+    scale: { type: 'f', value: 1 }
+  };
 
   pixi.AbstractFilter.call(this,
     fs.readFileSync(__dirname + '/BackgroundFilter.vert', 'utf8'),
@@ -29,11 +29,11 @@ BackgroundFilter.prototype.constructor = BackgroundFilter;
 BackgroundFilter.prototype.setResolution = function(width, height) {
   this.uniforms.resolution.value.x = width;
   this.uniforms.resolution.value.y = height;
-},
+};
 
 BackgroundFilter.prototype.setTexture = function(texture0) {
   this.uniforms.channel0.value = texture0;
-},
+};
 
 BackgroundFilter.prototype.applyFilter = function(renderer, input, output){
   var shader = this.getShader(renderer),
@@ -49,9 +49,5 @@ BackgroundFilter.prototype.applyFilter = function(renderer, input, output){
 
   filterManager.applyFilter(shader, input, output);
 };
-
-// BackgroundFilter.prototype.syncUniform = function(uniform) {
-  // console.log(uniform);
-// };
 
 module.exports = BackgroundFilter;
