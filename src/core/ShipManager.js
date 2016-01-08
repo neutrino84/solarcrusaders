@@ -72,9 +72,9 @@ ShipManager.prototype.create = function(ship, position) {
   switch(position) {
     default:
     case 'random':
-      position = ship.user ?
+      position = ship.user || global.Math.random() > 0.5 ?
         this._generateRandomPositionInView() :
-        this._generateRandomPositionInView();
+        this._generateRandomPosition();
     case Object:
       ship.x = position.x;
       ship.y = position.y;
@@ -372,12 +372,13 @@ ShipManager.prototype._updateAI = function() {
     b = this.battles[ship.uuid];
     
     if(!ship.user && global.Math.random() > 0.5) {
-      destination = global.Math.random() > 0.25 ?
+      destination = global.Math.random() > 0.5 ?
         this._generateRandomPositionInView() :
-        this._generateRandomPositionInView();
+        this._generateRandomPosition();
       
       (function(game, manager, ship, destination) {
-        game.clock.events.add(global.Math.random() * 10000, function() {
+        var time = global.Math.floor(global.Math.random() * 10000);
+        game.clock.events.add(time, function() {
           if(manager.ships[ship.uuid]) {
             manager._plot(ship, destination);
           }
