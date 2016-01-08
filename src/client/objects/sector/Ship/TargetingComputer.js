@@ -48,6 +48,22 @@ TargetingComputer.prototype.fire = function(miss) {
   }
 };
 
+TargetingComputer.prototype.cancel = function(miss) {
+  var game = this.game,
+      parent = this.parent,
+      target = parent.target,
+      turrets = this.turrets,
+      turret;
+  if(target && turrets.length > 0) {
+    for(var t in turrets) {
+      turret = turrets[t];
+      turret.timer && game.clock.events.remove(
+        turret.timer
+      );
+    }
+  }
+};
+
 TargetingComputer.prototype.update = function() {
   var parent = this.parent,
       target = parent.target,
