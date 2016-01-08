@@ -29,8 +29,8 @@ function Animation(game, parent, name, frameData, frames, frameRate, loop) {
   this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
 
   ////  Set-up some event listeners
-  // this.game.on('pause', this.onPause, this);
-  // this.game.on('resume', this.onResume, this);
+  this.game.on('game/pause', this.onPause, this);
+  this.game.on('game/resume', this.onResume, this);
 
   EventEmitter.call(this);
 };
