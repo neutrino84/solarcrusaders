@@ -62,14 +62,15 @@ EngineCore.prototype.update = function(multiplier) {
       game = this.game,
       parent = this.parent,
       config = parent.config.engine.glows,
-      flicker = EngineCore.flicker[game.clock.frames % 6];
+      flicker = EngineCore.flicker[game.clock.frames % 6],
+      clamped = global.Math.min(multiplier, 1.5);
   for(var g in glows) {
     scale = config[g].scale;
-    glows[g].scale.set(multiplier * scale.endX + flicker, multiplier * scale.endY + (flicker * 3));
+    glows[g].scale.set(clamped * scale.endX + flicker, clamped * scale.endY + (flicker * 3));
   }
   for(var h in highlights) {
     highlight = highlights[h];
-    highlight.alpha = global.Math.min(1.0, multiplier);
+    highlight.alpha = global.Math.min(1.0, clamped);
     
     if(this.booster) {
       center = game.world.worldTransform.applyInverse(highlight.worldTransform.apply(highlight.pivot));
