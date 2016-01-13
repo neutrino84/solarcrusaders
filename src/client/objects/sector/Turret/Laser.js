@@ -40,7 +40,8 @@ Laser.prototype.fire = function(miss, enhancements, shields) {
 
   var start = engine.Line.pointAtDistance(this.start, this.end, 14),
       distance = this.start.distance(this.end) / 4,
-      duration;
+      duration,
+      parent = this.parent;
 
   this._start.copyFrom(start);
   this._end.copyFrom(start);
@@ -60,20 +61,20 @@ Laser.prototype.fire = function(miss, enhancements, shields) {
     this.glowTween.repeat(1);
     this.glowTween.start();
     this.glowTween.once('complete', function() {
-      this.parent.flashEmitter.at({ center: this._end });
-      this.parent.flashEmitter.explode(shields ? 10 : 2);
+      parent.flashEmitter.at({ center: this._end });
+      parent.flashEmitter.explode(shields ? 10 : 2);
 
-      this.parent.glowEmitter.color(0xFF6666);
-      this.parent.glowEmitter.at({ center: this._end });
-      this.parent.glowEmitter.explode(10);
+      parent.glowEmitter.color(0xFF6666);
+      parent.glowEmitter.at({ center: this._end });
+      parent.glowEmitter.explode(10);
 
-      this.parent.explosionEmitter.at({ center: this._end });
-      this.parent.explosionEmitter.explode(10);
+      parent.explosionEmitter.at({ center: this._end });
+      parent.explosionEmitter.explode(10);
 
-      this.parent.fxGroup.removeChild(this.glowSprite);
+      parent.fxGroup.removeChild(this.glowSprite);
     }, this);
 
-    this.parent.fxGroup.addChild(this.glowSprite);
+    parent.fxGroup.addChild(this.glowSprite);
   } else {
     duration = 250;
     this.strip.texture = this.blueTexture;
@@ -86,27 +87,27 @@ Laser.prototype.fire = function(miss, enhancements, shields) {
   this.endTween.start();
 
   this.startTween.once('complete', function() {
-    this.parent.fxGroup.removeChild(this.strip);
+    parent.fxGroup.removeChild(this.strip);
   }, this);
 
   this.endTween.once('complete', function() {
-    this.parent.flashEmitter.at({ center: this._end });
-    this.parent.flashEmitter.explode(shields ? 10 : 2);
+    parent.flashEmitter.at({ center: this._end });
+    parent.flashEmitter.explode(shields ? 10 : 2);
 
     if(!miss) {
-      this.parent.glowEmitter.color(shields ? 0x336699 : 0xFF6666);
-      this.parent.glowEmitter.at({ center: this._end });
-      this.parent.glowEmitter.explode(shields ? 10 : global.Math.round(3 * global.Math.random()) + 3);
+      parent.glowEmitter.color(shields ? 0x336699 : 0xFF6666);
+      parent.glowEmitter.at({ center: this._end });
+      parent.glowEmitter.explode(shields ? 10 : global.Math.round(3 * global.Math.random()) + 3);
 
       if(!shields) {
-        this.parent.explosionEmitter.at({ center: this._end });
-        this.parent.explosionEmitter.explode(1);
-        this.parent.ship.target.damage.inflict(this.parent.target);
+        parent.explosionEmitter.at({ center: this._end });
+        parent.explosionEmitter.explode(1);
+        parent.ship.target.damage.inflict(parent.target);
       }
     }
   }, this);
   
-  this.parent.fxGroup.addChild(this.strip);
+  parent.fxGroup.addChild(this.strip);
 };
 
 Laser.prototype.update = function() {
