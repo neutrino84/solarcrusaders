@@ -102,7 +102,10 @@ Laser.prototype.fire = function(miss, enhancements, shields) {
       if(!shields) {
         parent.explosionEmitter.at({ center: this._end });
         parent.explosionEmitter.explode(1);
-        parent.ship.target.damage.inflict(parent.target);
+
+        if(parent.ship.target) {
+          parent.ship.target.damage.inflict(parent.target);
+        }
       }
     }
   }, this);
