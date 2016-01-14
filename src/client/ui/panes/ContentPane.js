@@ -23,8 +23,6 @@ function ContentPane(game, string, settings) {
       radius: 0.0
     },
     title: {
-      width: 17,
-      height: 17,
       padding: [0],
       layout: {
         type: 'border',
@@ -33,10 +31,10 @@ function ContentPane(game, string, settings) {
       },
       bg: {
         fillAlpha: 1.0,
-        color: 0x002040,
+        color: 0x666666,
         radius: 0.0,
         borderSize: 0.0,
-        blendMode: engine.BlendMode.ADD
+        blendMode: engine.BlendMode.MULTIPLY
       }
     },
     content: {
@@ -92,7 +90,7 @@ function ContentPane(game, string, settings) {
   this.addView(this.bg);
 
   this.addPanel(Layout.CENTER, this.content);
-  this.content.addPanel(Layout.STRETCH, this.title);
+  this.addPanel(Layout.TOP, this.title);
   this.title.addPanel(Layout.LEFT, this.button);
 };
 
