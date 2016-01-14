@@ -3,7 +3,7 @@ var engine = require('engine'),
     Laser = require('./Laser'),
     Missile = require('./Missile');
 
-function Turret(parent, config) {
+function Hardpoint(parent, config) {
   this.parent = parent;
   this.game = parent.game;
   this.ship = parent.parent;
@@ -24,9 +24,9 @@ function Turret(parent, config) {
   this.manager = this.create(config.type);
 };
 
-Turret.prototype.constructor = Turret;
+Hardpoint.prototype.constructor = Hardpoint;
 
-Turret.prototype.create = function(type) {
+Hardpoint.prototype.create = function(type) {
   var config = this.config[type];
   switch(type) {
     case 'missile':
@@ -37,13 +37,13 @@ Turret.prototype.create = function(type) {
   }
 };
 
-Turret.prototype.fire = function(index, miss) {
+Hardpoint.prototype.fire = function(index, miss) {
   var delay = index * 75 + 100,
       action = miss ? this.miss : this.discharge;
   this.timer = this.game.clock.events.add(delay, action, this);
 };
 
-Turret.prototype.miss = function() {
+Hardpoint.prototype.miss = function() {
   var circle, delay,
       ship = this.ship,
       target = ship.target,
@@ -56,7 +56,7 @@ Turret.prototype.miss = function() {
   }
 };
 
-Turret.prototype.discharge = function() {
+Hardpoint.prototype.discharge = function() {
   var circle, delay,
       ship = this.ship,
       target = ship.target,
@@ -71,7 +71,7 @@ Turret.prototype.discharge = function() {
   }
 };
 
-Turret.prototype.update = function() {
+Hardpoint.prototype.update = function() {
   var apos, sprite = this.sprite,
       game = this.game,
       position = this.position,
@@ -85,11 +85,11 @@ Turret.prototype.update = function() {
   manager.update();
 };
 
-Turret.prototype.absoluteTargetPosition = function() {
+Hardpoint.prototype.absoluteTargetPosition = function() {
   return engine.Point.add(this.ship.target.position, this.target, this.apos);
 };
 
-Turret.prototype.destroy = function() {
+Hardpoint.prototype.destroy = function() {
   this.timer && this.game.clock.events.remove(this.timer);
 
   this.sprite && this.sprite.destroy();
@@ -101,4 +101,4 @@ Turret.prototype.destroy = function() {
     this.manager = this.timer = this._tempPoint = undefined;
 };
 
-module.exports = Turret;
+module.exports = Hardpoint;

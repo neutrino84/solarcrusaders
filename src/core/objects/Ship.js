@@ -37,7 +37,7 @@ function Ship(manager, ship) {
   this.types = ['reactor'];
   this.timers = [];
   this.rooms = [];
-  this.turrets = [];
+  this.hardpoints = [];
   this.systems = {};
   this.enhancements = {
     active: {
@@ -58,7 +58,7 @@ function Ship(manager, ship) {
   // create
   this.createRooms();
   this.createSystems();
-  this.createTurrets();
+  this.createHardpoints();
 
   this.movement = new client.Movement(this);
 };
@@ -127,14 +127,14 @@ Ship.prototype.createSystems = function() {
   }
 };
 
-Ship.prototype.createTurrets = function() {
-  var turret,
-      turrets = this.config.targeting.turrets,
+Ship.prototype.createHardpoints = function() {
+  var hardpoint,
+      hardpoints = this.config.targeting.hardpoints,
       enhancements = this.enhancements;
-  for(var t in turrets) {
-    turret = turrets[t];
-    this.turrets.push({
-      type: turret.type,
+  for(var t in hardpoints) {
+    hardpoint = hardpoints[t];
+    this.hardpoints.push({
+      type: hardpoint.type,
       damage: 2
     });
   }
@@ -234,7 +234,7 @@ Ship.prototype.destroy = function() {
   this.manager = this.game = this.sockets =
     this.model = this.movement = this.user =
     this.position = this.config = this.systems =
-    this.enhancements = this.turrets = this.timers =
+    this.enhancements = this.hardpoints = this.timers =
     this.rooms = this.model = undefined;
 };
 
@@ -304,10 +304,10 @@ Object.defineProperty(Ship.prototype, 'armor', {
 Object.defineProperty(Ship.prototype, 'damage', {
   get: function() {
     var total = 0,
-        turrets = this.turrets,
+        hardpoints = this.hardpoints,
         damage = this.enhancements.active.damage;
-    for(var t in turrets) {
-      total += turrets[t].damage;
+    for(var t in hardpoints) {
+      total += hardpoints[t].damage;
     }
     for(var d in damage) {
       total += damage[d].stat('damage', 'value');

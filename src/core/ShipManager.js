@@ -140,6 +140,7 @@ ShipManager.prototype.data = function(sock, args, next) {
         health: ship.health,
         speed: ship.speed,
         recharge: ship.recharge,
+        hardpoints: ship.hardpoints,
         enhancements: enhancements
       });
     }

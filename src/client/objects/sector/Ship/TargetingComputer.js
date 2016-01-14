@@ -1,6 +1,6 @@
 
 var engine = require('engine'),
-    Turret = require('../Turret');
+    Hardpoint = require('../Hardpoint');
 
 function TargetingComputer(parent, config) {
   this.parent = parent;
@@ -8,7 +8,7 @@ function TargetingComputer(parent, config) {
   this.config = config;
 
   this.enhancements = {}
-  this.turrets = [];
+  this.hardpoints = [];
 };
 
 TargetingComputer.prototype.constructor = TargetingComputer;
@@ -22,28 +22,28 @@ TargetingComputer.prototype.enremove = function(enhancement) {
 };
 
 TargetingComputer.prototype.create = function() {
-  var turret, config,
+  var hardpoint, config,
       parent = this.parent,
-      turrets = this.turrets,
-      config = this.config.turrets;
+      hardpoints = this.hardpoints,
+      config = this.config.hardpoints;
   for(var t in config) {
-    turret = new Turret(this, config[t]);
-    turret.fxGroup = parent.manager.fxGroup;
-    turret.flashEmitter = parent.manager.flashEmitter;
-    turret.explosionEmitter = parent.manager.explosionEmitter;
-    turret.glowEmitter = parent.manager.glowEmitter;
-    turrets.push(turret);
-    parent.addChild(turret.sprite);
+    hardpoint = new Hardpoint(this, config[t]);
+    hardpoint.fxGroup = parent.manager.fxGroup;
+    hardpoint.flashEmitter = parent.manager.flashEmitter;
+    hardpoint.explosionEmitter = parent.manager.explosionEmitter;
+    hardpoint.glowEmitter = parent.manager.glowEmitter;
+    hardpoints.push(hardpoint);
+    parent.addChild(hardpoint.sprite);
   }
 };
 
 TargetingComputer.prototype.fire = function(miss) {
   var parent = this.parent,
       target = parent.target,
-      turrets = this.turrets;
-  if(target && turrets.length > 0) {
-    for(var t in turrets) {
-      turrets[t].fire(t, miss);
+      hardpoints = this.hardpoints;
+  if(target && hardpoints.length > 0) {
+    for(var t in hardpoints) {
+      hardpoints[t].fire(t, miss);
     }
   }
 };
@@ -52,13 +52,13 @@ TargetingComputer.prototype.cancel = function(miss) {
   var game = this.game,
       parent = this.parent,
       target = parent.target,
-      turrets = this.turrets,
-      turret;
-  if(target && turrets.length > 0) {
-    for(var t in turrets) {
-      turret = turrets[t];
-      turret.timer && game.clock.events.remove(
-        turret.timer
+      hardpoints = this.hardpoints,
+      hardpoint;
+  if(target && hardpoints.length > 0) {
+    for(var t in hardpoints) {
+      hardpoint = hardpoints[t];
+      hardpoint.timer && game.clock.events.remove(
+        hardpoint.timer
       );
     }
   }
@@ -67,29 +67,29 @@ TargetingComputer.prototype.cancel = function(miss) {
 TargetingComputer.prototype.update = function() {
   var parent = this.parent,
       target = parent.target,
-      turrets = this.turrets;
-  if(target && turrets.length > 0) {
-    for(var t in turrets) {
-      turrets[t].update();
+      hardpoints = this.hardpoints;
+  if(target && hardpoints.length > 0) {
+    for(var t in hardpoints) {
+      hardpoints[t].update();
     }
   }
 };
 
 TargetingComputer.prototype.destroy = function() {
-  var turret;
+  var hardpoint;
 
   this.parent = this.game = this.enhancements =
     this.config = undefined;
 
-  for(var t in this.turrets) {
-    turret = this.turrets[t];
-    turret.fxGroup = turret.flashEmitter =
-      turret.explosionEmitter =
-      turret.glowEmitter = undefined;
-    turret.destroy();
+  for(var t in this.hardpoints) {
+    hardpoint = this.hardpoints[t];
+    hardpoint.fxGroup = hardpoint.flashEmitter =
+      hardpoint.explosionEmitter =
+      hardpoint.glowEmitter = undefined;
+    hardpoint.destroy();
   }
 
-  this.turrets = [];
+  this.hardpoints = [];
 };
 
 module.exports = TargetingComputer;
