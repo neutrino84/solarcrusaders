@@ -53,7 +53,7 @@
       ]
     },
     "targeting": {
-      "turrets": [
+      "hardpoints": [
         {
           "sprite": "turret-a",
           "pivot": { "x": 32, "y": 32 },
@@ -572,7 +572,7 @@
       ]
     },
     "targeting": {
-      "turrets": [
+      "hardpoints": [
         {
           "sprite": "turret-a",
           "pivot": { "x": 32, "y": 32 },
@@ -1193,7 +1193,7 @@
       }]
     },
     "targeting": {
-      "turrets": [
+      "hardpoints": [
         {
           "sprite": "turret-a",
           "pivot": { "x": 32, "y": 32 },
@@ -1687,7 +1687,7 @@
       }]
     },
     "targeting": {
-      "turrets": []
+      "hardpoints": []
     },
     "shields": {
       
@@ -1878,7 +1878,7 @@
       }]
     },
     "targeting": {
-      "turrets": [{
+      "hardpoints": [{
           "sprite": "turret-a",
           "pivot": { "x": 32, "y": 32 },
           "position": { "x": 42, "y": 32 },
