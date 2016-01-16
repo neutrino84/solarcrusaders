@@ -126,9 +126,27 @@
 	"sourceSize": {"w":64,"h":64},
 	"pivot": {"x":0.5,"y":0.5}
 },
+"icon-close.png":
+{
+	"frame": {"x":320,"y":128,"w":12,"h":12},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":12,"h":12},
+	"sourceSize": {"w":12,"h":12},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"icon-edit.png":
+{
+	"frame": {"x":332,"y":128,"w":12,"h":12},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":12,"h":12},
+	"sourceSize": {"w":12,"h":12},
+	"pivot": {"x":0.5,"y":0.5}
+},
 "icon-x01.png":
 {
-	"frame": {"x":320,"y":128,"w":22,"h":22},
+	"frame": {"x":344,"y":128,"w":22,"h":22},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":22,"h":22},
@@ -137,7 +155,7 @@
 },
 "laser-piercing.png":
 {
-	"frame": {"x":342,"y":128,"w":64,"h":64},
+	"frame": {"x":366,"y":128,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -146,7 +164,7 @@
 },
 "reactor-electricity.png":
 {
-	"frame": {"x":406,"y":128,"w":64,"h":64},
+	"frame": {"x":430,"y":128,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -155,7 +173,7 @@
 },
 "system-engine.png":
 {
-	"frame": {"x":470,"y":128,"w":12,"h":12},
+	"frame": {"x":494,"y":128,"w":12,"h":12},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":12,"h":12},
@@ -164,7 +182,7 @@
 },
 "system-pilot.png":
 {
-	"frame": {"x":482,"y":128,"w":12,"h":12},
+	"frame": {"x":506,"y":128,"w":12,"h":12},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":12,"h":12},
@@ -173,7 +191,7 @@
 },
 "system-reactor.png":
 {
-	"frame": {"x":494,"y":128,"w":12,"h":12},
+	"frame": {"x":518,"y":128,"w":12,"h":12},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":12,"h":12},
@@ -182,7 +200,7 @@
 },
 "system-shield.png":
 {
-	"frame": {"x":506,"y":128,"w":12,"h":12},
+	"frame": {"x":530,"y":128,"w":12,"h":12},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":12,"h":12},
@@ -191,7 +209,7 @@
 },
 "system-targeting.png":
 {
-	"frame": {"x":518,"y":128,"w":12,"h":12},
+	"frame": {"x":542,"y":128,"w":12,"h":12},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":12,"h":12},
@@ -200,7 +218,7 @@
 },
 "system-teleport.png":
 {
-	"frame": {"x":530,"y":128,"w":12,"h":12},
+	"frame": {"x":554,"y":128,"w":12,"h":12},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":12,"h":12},
@@ -209,7 +227,7 @@
 },
 "turret-a.png":
 {
-	"frame": {"x":542,"y":128,"w":64,"h":64},
+	"frame": {"x":566,"y":128,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -218,7 +236,7 @@
 },
 "vessel-x01-shields.png":
 {
-	"frame": {"x":606,"y":128,"w":128,"h":128},
+	"frame": {"x":630,"y":128,"w":128,"h":128},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
@@ -227,7 +245,7 @@
 },
 "vessel-x01.png":
 {
-	"frame": {"x":734,"y":128,"w":128,"h":128},
+	"frame": {"x":758,"y":128,"w":128,"h":128},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
@@ -313,6 +331,6 @@
 	"format": "RGBA8888",
 	"size": {"w":1024,"h":1024},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:4eee57ea4b8b2fa3455dd0cf5ce0abda:7a8ae4801f427ffc2f9bf4ce16260760:a973cd4a72d4c90ced76930eac7fdc63$"
+	"smartupdate": "$TexturePacker:SmartUpdate:3b73c3867298df6d501493d00857698e:c4e70e511f0a294e6584775171c07ef7:a973cd4a72d4c90ced76930eac7fdc63$"
 }
 }
