@@ -18,7 +18,6 @@ function TextView(game, text, settings) {
       ySpacing: 0,
       xOffset: 1,
       yOffset: 1,
-      charsPerRow: 38,
       tint: 0xffffff
     },
     'medium': {
@@ -29,7 +28,6 @@ function TextView(game, text, settings) {
       ySpacing: 0,
       xOffset: 0,
       yOffset: 0,
-      charsPerRow: 38,
       tint: 0xffffff
     },
     'small': {
@@ -40,7 +38,6 @@ function TextView(game, text, settings) {
       ySpacing: 0,
       xOffset: 0,
       yOffset: 0,
-      charsPerRow: 38,
       tint: 0xffffff
     }
   }
