@@ -104,4 +104,19 @@ ProgressButtonIcon.prototype.recalc = function() {
   progressBgSettings.offset = { x: size.width - 3, y: 0 };
 };
 
+Object.defineProperty(ProgressButtonIcon.prototype, 'disabled', {
+  set: function(value) {
+    if(value === false) {
+      this.image.tint = 0xFFFFFF;
+    } else {
+      this.image.tint = 0xFF0000;
+    }
+    this._disabled = value;
+  },
+
+  get: function() {
+    return this._disabled;
+  }
+});
+
 module.exports = ProgressButtonIcon;
