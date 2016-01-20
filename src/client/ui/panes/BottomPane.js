@@ -55,6 +55,7 @@ function BottomPane(game, string, settings) {
 
   this.bg = new BackgroundView(game, this.settings.bg);
   this.content = new Pane(game, this.settings.content);
+  this.content.setPreferredSize(191, 46);
 
   this.addView(this.bg);
   this.addPanel(Layout.CENTER, this.content);
@@ -185,6 +186,7 @@ BottomPane.prototype._playerSelect = function(data) {
       this.buttons[enhancement] = button;
       this.addContent(Layout.NONE, button);
     }
+    this.invalidate(true);
   }
 };
 
