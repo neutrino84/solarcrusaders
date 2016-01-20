@@ -5,6 +5,7 @@ var engine = require('engine'),
     Layout = require('../Layout'),
     StackLayout = require('../layouts/StackLayout'),
     BackgroundView = require('../views/BackgroundView'),
+    ColorBlend = require('../helpers/ColorBlend'),
     Class = engine.Class;
 
 function Button(game, string, settings) {
@@ -24,7 +25,7 @@ function Button(game, string, settings) {
     label: {
       bg: {
         highlight: 0x5888d8,
-        fillAlpha: 0.75,
+        fillAlpha: 0.6,
         color: 0x3868b8,
         borderSize: 2.0,
         radius: 4.0
@@ -44,6 +45,10 @@ function Button(game, string, settings) {
   this.bg.input.priorityID = 2;
   this.bg.alpha = 0.75;
 
+  // color blend
+  this.colorBlend = new ColorBlend(game, this.bg);
+  this.colorBlend.setColor(0xFFFFFF, 0xFFFF00, 500, engine.Easing.Linear.None, true);
+
   // event handling
   this.bg.on('inputOver', this._inputOver, this);
   this.bg.on('inputOut', this._inputOut, this);
@@ -58,11 +63,17 @@ function Button(game, string, settings) {
 Button.prototype = Object.create(Panel.prototype);
 Button.prototype.constructor = Button;
 
-Button.prototype.on = function(name, callback, context) {
-  this.bg.on.call(this.bg, name, callback, context);
+Button.prototype.alert = function() {
+  this._alert = true;
+  this.bg.alpha = 1.0;
+  this.colorBlend.start();
 };
 
 Button.prototype._inputUp = function() {
+  if(this._alert) {
+    this._alert = false;
+    this.colorBlend.stop();
+  }
   this.bg.tint = 0xffffff;
   this.label.bg.tint = 0xffffff;
   this.emit('inputUp', this);
@@ -80,7 +91,9 @@ Button.prototype._inputOver = function() {
 };
 
 Button.prototype._inputOut = function() {
-  this.bg.alpha = 0.75;
+  if(!this._alert) {
+    this.bg.alpha = 0.75;
+  }
   this.label.alpha = 0.9;
 };
 

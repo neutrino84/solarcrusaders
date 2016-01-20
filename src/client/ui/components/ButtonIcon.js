@@ -5,11 +5,14 @@ var engine = require('engine'),
     Layout = require('../Layout'),
     StackLayout = require('../layouts/StackLayout'),
     BackgroundView = require('../views/BackgroundView'),
+    ColorBlend = require('../helpers/ColorBlend'),
     Class = engine.Class;
 
 function ButtonIcon(game, key, settings) {
   Panel.call(this, game, new StackLayout());
 
+  this._alert = false;
+  this._selected = false;
   this._disabled = false;
 
   // default styles
@@ -49,6 +52,10 @@ function ButtonIcon(game, key, settings) {
   this.bg.input.priorityID = 2;
   this.bg.alpha = 0.75;
 
+  // color blend
+  this.colorBlend = new ColorBlend(game, this.image);
+  this.colorBlend.setColor(0x336699, 0x33cc33, 500, engine.Easing.Quadratic.InOut, true);
+
   // event handling
   this.bg.on('inputOver', this._inputOver, this);
   this.bg.on('inputOut', this._inputOut, this);
@@ -63,12 +70,24 @@ function ButtonIcon(game, key, settings) {
 ButtonIcon.prototype = Object.create(Panel.prototype);
 ButtonIcon.prototype.constructor = ButtonIcon;
 
-ButtonIcon.prototype._inputUp = function() {
-  if(this.disabled) { return; }
+ButtonIcon.prototype.alert = function() {
+  this._alert = true;
+  this.image.alpha = 1.0;
+  this.colorBlend.start();
+};
 
-  this.bg.tint = 0xffffff;
-  this.image.bg.tint = 0xffffff;
-  this.emit('inputUp', this);
+ButtonIcon.prototype._inputUp = function() {
+  if(this.selected) {
+    this.emit('inputUp', this);
+  } else if(!this.disabled) {
+    if(this._alert) {
+      this._alert = false;
+      this.colorBlend.stop();
+    }
+    this.bg.tint = 0xffffff;
+    this.image.bg.tint = 0xffffff;
+    this.emit('inputUp', this);
+  }
 };
 
 ButtonIcon.prototype._inputDown = function() {
@@ -82,15 +101,16 @@ ButtonIcon.prototype._inputDown = function() {
 ButtonIcon.prototype._inputOver = function() {
   if(this.disabled) { return; }
 
-  this.bg.alpha = 1.0;
   this.image.alpha = 1.0;
+  this.bg.alpha = 1.0;
 };
 
 ButtonIcon.prototype._inputOut = function() {
   if(this.disabled) { return; }
-
+  if(!this._alert) {
+    this.image.alpha = 0.9;
+  }
   this.bg.alpha = 0.75;
-  this.image.alpha = 0.9;
 };
 
 Object.defineProperty(ButtonIcon.prototype, 'tint', {
@@ -103,12 +123,35 @@ Object.defineProperty(ButtonIcon.prototype, 'tint', {
   }
 });
 
+Object.defineProperty(ButtonIcon.prototype, 'selected', {
+  set: function(value) {
+    if(value === true) {
+      this._disabled = true;
+      this.bg.tint = 0x00FF00;
+      this.image.tint = 0x88FF88;
+      this.image.bg.tint = 0x00FF00;
+      this.image.alpha = 1.0;
+    } else {
+      this._disabled = false;
+      this.bg.tint = 0xFFFFFF;
+      this.image.tint = 0xFFFFFF;
+      this.image.bg.tint = 0xFFFFFF;
+      this.image.alpha = 0.9;
+    }
+    this._selected = value;
+  },
+
+  get: function() {
+    return this._selected;
+  }
+});
+
 Object.defineProperty(ButtonIcon.prototype, 'disabled', {
   set: function(value) {
     if(value === false) {
-      this.image.tint = 0xFFFFFF;
+      this.image.alpha = 0.9;
     } else {
-      this.image.tint = 0xFF0000;
+      this.image.alpha = 0.25;
     }
     this._disabled = value;
   },
