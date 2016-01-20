@@ -13,7 +13,8 @@ function Label(game, string, settings) {
     padding: [6, 12],
     border: [0],
     bg: {},
-    text: {}
+    text: {},
+    align: 'left'
   });
 
   this.setPadding.apply(this, this.settings.padding);
@@ -21,6 +22,7 @@ function Label(game, string, settings) {
 
   this.bg = new BackgroundView(game, this.settings.bg);
   this.textView = new TextView(game, string, this.settings.text);
+  this.align = this.settings.align;
   
   // create label
   this.addView(this.bg);
@@ -35,8 +37,24 @@ Label.prototype.calcPreferredSize = function(target) {
 };
 
 Label.prototype.doLayout = function() {
-  this.textView.position.set(this.left, this.top);
+  var left = this.left;
+  if(this.align === 'right') {
+    left = this.size.width-this.textView.width-this.right;
+  } else if(this.align === 'center') {
+    left = global.Math.floor(this.size.width/2-(this.textView.width/2));
+  }
+  this.textView.position.set(left, this.top);
 };
+
+Object.defineProperty(Label.prototype, 'blendMode', {
+  get: function() {
+    return this.textView.blendMode;
+  },
+
+  set: function(value) {
+    this.textView.blendMode = value;
+  }
+});
 
 Object.defineProperty(Label.prototype, 'tint', {
   get: function() {
