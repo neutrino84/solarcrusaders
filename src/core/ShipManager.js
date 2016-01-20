@@ -124,6 +124,7 @@ ShipManager.prototype.data = function(sock, args, next) {
   for(var u in uuids) {
     ship = this.ships[uuids[u]];
     if(ship) {
+      ship.ignoreEnhancements = true;
       enhancements = Object.keys(ship.enhancements.available);
       ships.push({
         id: ship.id,
@@ -136,13 +137,22 @@ ShipManager.prototype.data = function(sock, args, next) {
         y: ship.y,
         throttle: ship.throttle,
         rotation: ship.rottion,
-        systems: ship.systems,
-        health: ship.health,
-        speed: ship.speed,
+        durability: ship.durability,
+        energy: ship.energy,
         recharge: ship.recharge,
+        health: ship.health,
+        heal: ship.heal,
+        armor: ship.armor,
+        range: ship.range,
+        speed: ship.speed,
+        damage: ship.damage,
+        accuracy: ship.accuracy,
+        evasion: ship.evasion,
+        systems: ship.systems,
         hardpoints: ship.hardpoints,
         enhancements: enhancements
       });
+      ship.ignoreEnhancements = false;
     }
   }
   sock.emit('ship/data', {
@@ -240,24 +250,26 @@ ShipManager.prototype._plot = function(ship, destination, current, previous) {
 ShipManager.prototype._updateShips = function() {
   var ship, delta,
       ships = this.ships,
-      update, updates = [];
+      update, updates = [],
+      stats;
   for(var s in ships) {
     ship = ships[s];
+    stats = ship.config.stats;
     update = { uuid: ship.uuid };
 
     // update health
-    if(ship.health < ship.config.stats.health) {
+    if(ship.health < stats.health) {
       delta = ship.health * ship.heal;
-      ship.health = global.Math.min(ship.config.stats.health, ship.health + delta);
+      ship.health = global.Math.min(stats.health, ship.health + delta);
       update.health = global.Math.round(ship.health);
       update.hdelta = global.Math.round(delta);
     }
 
-    // update reactor
-    if(ship.reactor < ship.config.stats.reactor) {
+    // update energy
+    if(ship.energy < stats.energy) {
       delta = ship.recharge;
-      ship.reactor = global.Math.min(ship.config.stats.reactor, ship.reactor + delta);
-      update.reactor = global.Math.round(ship.reactor);
+      ship.energy = global.Math.min(stats.energy, ship.energy + delta);
+      update.energy = global.Math.round(ship.energy);
       update.rdelta = global.Math.round(delta);
     }
 

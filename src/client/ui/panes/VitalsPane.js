@@ -50,7 +50,7 @@ function VitalsPane(game, string, settings) {
         color: 0x00FF00
       }
     },
-    reactorBar: {
+    energyBar: {
       width: 189,
       height: 4,
       padding: [0],
@@ -77,11 +77,11 @@ function VitalsPane(game, string, settings) {
   this.healthBar = new ProgressBar(game, this.settings.healthBar);
   this.healthBar.setProgressBar(1.0);
   
-  this.reactorBar = new ProgressBar(game, this.settings.reactorBar);
-  this.reactorBar.setProgressBar(1.0);
+  this.energyBar = new ProgressBar(game, this.settings.energyBar);
+  this.energyBar.setProgressBar(1.0);
 
   this.addContent(Layout.NONE, this.healthBar);
-  this.addContent(Layout.NONE, this.reactorBar);
+  this.addContent(Layout.NONE, this.energyBar);
 
   this.addView(this.bg);
   this.addPanel(Layout.CENTER, this.content);
@@ -104,14 +104,12 @@ VitalsPane.prototype._playerSelect = function(data) {
 };
 
 VitalsPane.prototype._update = function(data) {
-  if(data.health) {
-    this.healthBar.setProgressBar(
-      global.Math.min(1.0, data.health / this.data.config.stats.health));
-  }
-  if(data.reactor) {
-    this.reactorBar.setProgressBar(
-      global.Math.min(1.0, data.reactor / this.data.config.stats.reactor));
-  }
+  var math = global.Math,
+      stats = this.data.config.ship.stats,
+      healthBar = this.healthBar,
+      energyBar = this.energyBar;
+  data.health && healthBar.setProgressBar(math.min(1.0, data.health / stats.health));
+  data.energy && energyBar.setProgressBar(math.min(1.0, data.energy / stats.energy));
 };
 
 module.exports = VitalsPane;

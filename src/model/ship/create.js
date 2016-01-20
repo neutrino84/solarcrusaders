@@ -17,7 +17,7 @@ module.exports = function(Ship) {
     // speed: 1.0,       // engine
     // accuracy: 0.5,    // targeting
     // evasion: 0.1,     // pilot
-    // reactor: 100,     // battery
+    // energy: 100,      // battery
     // durability: 1000  // 
   };
 

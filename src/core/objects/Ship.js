@@ -15,6 +15,8 @@ function Ship(manager, ship) {
   this.chasis = ship.chasis;
   this.config = client.ShipConfiguration[ship.chasis];
 
+  this.ignoreEnhancements = false;
+
   this.throttle = global.parseFloat(ship.throttle);
   this.rotation = global.parseFloat(ship.rotation);
   this.position = new engine.Point(global.parseFloat(ship.x), global.parseFloat(ship.y));
@@ -29,7 +31,7 @@ function Ship(manager, ship) {
   this._armor = global.parseFloat(ship.armor);
   this._accuracy = global.parseFloat(ship.accuracy);
   this._evasion = global.parseFloat(ship.evasion);
-  this._reactor = global.parseFloat(ship.reactor);
+  this._energy = global.parseFloat(ship.energy);
   this._recharge = global.parseFloat(ship.recharge);
   this._durability = global.parseFloat(ship.durability);
   this._speed = global.parseFloat(ship.speed);
@@ -41,7 +43,7 @@ function Ship(manager, ship) {
   this.systems = {};
   this.enhancements = {
     active: {
-      reactor: {},
+      energy: {},
       recharge: {},
       heal: {},
       health: {},
@@ -150,7 +152,7 @@ Ship.prototype.activate = function(name) {
       enhancement = available[name],
       stats, active, cooldown, update, cost;
   if(enhancement) {
-    cost = this.reactor + enhancement.cost;
+    cost = this.energy + enhancement.cost;
     if(!enhancement.activated && cost >= 0) {
       if(name === 'booster' && !this.movement.animation.isPlaying) { return false; }
       if(name === 'piercing' && !this.manager.battles[this.uuid]) { return false; }
@@ -164,7 +166,7 @@ Ship.prototype.activate = function(name) {
       }
 
       update = { uuid: this.uuid };
-      update.reactor = this.reactor = global.Math.max(0.0, cost);
+      update.energy = this.energy = global.Math.max(0.0, cost);
 
       switch(name) {
         case 'overload':
@@ -238,13 +240,13 @@ Ship.prototype.destroy = function() {
     this.rooms = this.model = undefined;
 };
 
-Object.defineProperty(Ship.prototype, 'reactor', {
+Object.defineProperty(Ship.prototype, 'energy', {
   get: function() {
-    return this._reactor;
+    return this._energy;
   },
 
   set: function(value) {
-    this._reactor = value;
+    this._energy = value;
   }
 });
 
@@ -270,8 +272,8 @@ Object.defineProperty(Ship.prototype, 'health', {
 
 Object.defineProperty(Ship.prototype, 'recharge', {
   get: function() {
-    var recharge = this.enhancements.active.recharge,
-        total = this._recharge;
+    var total = this._recharge,
+        recharge = this.ignoreEnhancements ? [] : this.enhancements.active.recharge;
     for(var r in recharge) {
       total += recharge[r].stat('recharge', 'value');
     }
@@ -281,8 +283,8 @@ Object.defineProperty(Ship.prototype, 'recharge', {
 
 Object.defineProperty(Ship.prototype, 'heal', {
   get: function() {
-    var heal = this.enhancements.active.heal,
-        total = this._heal;
+    var total = this._heal,
+        heal = this.ignoreEnhancements ? [] : this.enhancements.active.heal;
     for(var h in heal) {
       total += heal[h].stat('heal', 'value');
     }
@@ -292,8 +294,8 @@ Object.defineProperty(Ship.prototype, 'heal', {
 
 Object.defineProperty(Ship.prototype, 'armor', {
   get: function() {
-    var armor = this.enhancements.active.armor,
-        total = this._armor;
+    var total = this._armor,
+        armor = this.ignoreEnhancements ? [] : this.enhancements.active.armor;
     for(var a in armor) {
       total += armor[a].stat('armor', 'value');
     }
@@ -305,7 +307,7 @@ Object.defineProperty(Ship.prototype, 'damage', {
   get: function() {
     var total = 0,
         hardpoints = this.hardpoints,
-        damage = this.enhancements.active.damage;
+        damage = this.ignoreEnhancements ? [] : this.enhancements.active.damage;
     for(var t in hardpoints) {
       total += hardpoints[t].damage;
     }
@@ -325,10 +327,10 @@ Object.defineProperty(Ship.prototype, 'range', {
 Object.defineProperty(Ship.prototype, 'accuracy', {
   get: function() {
     var bonus = 0,
-        accuracy = this.enhancements.active.accuracy,
-        engine = this.systems['targeting'],
-        modifier = engine ? engine.modifier : 1.0,
-        health = engine ? engine.health / engine.stats.health :
+        accuracy = this.ignoreEnhancements ? [] : this.enhancements.active.accuracy,
+        targeting = this.systems['targeting'],
+        modifier = targeting ? targeting.modifier : 1.0,
+        health = targeting ? targeting.health / targeting.stats.health :
           this.health / this.config.stats.health;
     for(var a in accuracy) {
       bonus += accuracy[a].stat('accuracy', 'value');
@@ -340,7 +342,7 @@ Object.defineProperty(Ship.prototype, 'accuracy', {
 Object.defineProperty(Ship.prototype, 'evasion', {
   get: function() {
     var bonus = 0,
-        evasion = this.enhancements.active.evasion,
+        evasion = this.ignoreEnhancements ? [] : this.enhancements.active.evasion,
         pilot = this.systems['pilot'],
         modifier = pilot ? pilot.modifier : 1.0,
         health = pilot ? pilot.health / pilot.stats.health :
@@ -355,7 +357,7 @@ Object.defineProperty(Ship.prototype, 'evasion', {
 Object.defineProperty(Ship.prototype, 'speed', {
   get: function() {
     var bonus = 0,
-        speed = this.enhancements.active.speed,
+        speed = this.ignoreEnhancements ? [] : this.enhancements.active.speed,
         engine = this.systems['engine'],
         modifier = engine ? engine.modifier : 1.0,
         health = engine ? engine.health / engine.stats.health : 1.0;
