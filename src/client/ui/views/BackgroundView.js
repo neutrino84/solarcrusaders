@@ -35,6 +35,13 @@ BackgroundView.prototype.paint = function(top, left, bottom, right) {
 
   this.clear();
 
+  if(settings.highlight) {
+    this.lineStyle(0);
+    this.beginFill(settings.highlight, 1.0);
+    this[drawMethod](offset.x, offset.y, size.width, size.height/2, settings.radius);
+    this.endFill();
+  }
+
   if(settings.borderSize > 0 && settings.borderAlpha > 0) {
     this.lineStyle(settings.borderSize, settings.borderColor, settings.borderAlpha);
   }
@@ -45,13 +52,6 @@ BackgroundView.prototype.paint = function(top, left, bottom, right) {
     this[drawMethod](offset.x, offset.y, size.width, size.height, settings.radius);
   }
   if(settings.fillAlpha > 0) {
-    this.endFill();
-  }
-
-  if(settings.highlight) {
-    this.lineStyle(0);
-    this.beginFill(settings.highlight, 0.75);
-    this[drawMethod](offset.x + 1, offset.y + 1, size.width - 2, size.height / 2 - 2, global.Math.max(0, settings.radius - 2));
     this.endFill();
   }
 };
