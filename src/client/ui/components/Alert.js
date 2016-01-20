@@ -103,7 +103,7 @@ Alert.prototype._alert = function(message, confirmation, title) {
   } else {
     this.button.label.text = confirmation || 'close';
   }
-  this.game.emit('gui/modal', true, this, true);
+  this.game.emit('gui/modal', true, this);
 };
 
 Alert.prototype._close = function() {
