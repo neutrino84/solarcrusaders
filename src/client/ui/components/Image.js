@@ -9,7 +9,7 @@ function Image(game, key, settings) {
   Panel.call(this, game, this);
 
   this.settings = Class.mixin(settings, {
-    padding: [2, 2],
+    padding: [2],
     border: [1],
     bg: {
       fillAlpha: 0.75,
@@ -25,7 +25,6 @@ function Image(game, key, settings) {
   this.image = new ImageView(game, key, this.settings.frame);
 
   if(this.settings.width || this.settings.height) {
-    this.setPreferredSize(this.settings.width, this.settings.height);
     this.image.width = this.settings.width;
     this.image.height = this.settings.height;
   }
