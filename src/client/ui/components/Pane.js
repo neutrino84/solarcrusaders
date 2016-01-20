@@ -5,6 +5,7 @@ var engine = require('engine'),
     StackLayout = require('../layouts/StackLayout'),
     BorderLayout = require('../layouts/BorderLayout'),
     FlowLayout = require('../layouts/FlowLayout'),
+    PercentLayout = require('../layouts/PercentLayout'),
     BackgroundView = require('../views/BackgroundView'),
     Class = engine.Class;
 
@@ -18,7 +19,8 @@ function Pane(game, settings) {
       ax: Layout.LEFT,
       ay: Layout.TOP,
       direction: Layout.VERTICAL,
-      gap: 0
+      gap: 0,
+      stretch: true
     },
     bg: {
       fillAlpha: 1.0,
@@ -36,6 +38,11 @@ function Pane(game, settings) {
       this.layout = new BorderLayout(
         this.settings.layout.ax, this.settings.layout.ay);
       break;
+    case 'percent':
+      this.layout = new PercentLayout(
+        this.settings.layout.direction, this.settings.layout.gap,
+        this.settings.layout.stretch);
+      break;
     default:
       this.layout = new FlowLayout(
         this.settings.layout.ax, this.settings.layout.ay,
@@ -50,6 +57,7 @@ function Pane(game, settings) {
       this.settings.height);
   }
 
+  // bg
   this.bg = new BackgroundView(game, this.settings.bg);
 
   this.setPadding.apply(this, this.settings.padding);
