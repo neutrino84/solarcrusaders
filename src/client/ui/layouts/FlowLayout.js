@@ -85,7 +85,7 @@ FlowLayout.prototype.doLayout = function(target) {
 
   if(lastOne !== null && this.stretchLast === true) {
     if(this.direction == Layout.HORIZONTAL) {
-      lastOne.setSize(target.size.width - lastOne.x - target.right, lastOne.height);
+      lastOne.setSize(target.size.width - lastOne.x - target.right, lastOne.size.height);
     } else {
       lastOne.setSize(lastOne.width, target.size.height - lastOne.y - target.bottom);
     }
