@@ -88,25 +88,25 @@ module.exports = {
     if(place === undefined) { place = 0; }
     if(base === undefined) { base = 10; }
 
-    var p = global.Math.pow(base, -place);
+    var p = global.Math.pow(base, place);
 
-    return global.Math.round(value / p) * p;
+    return global.Math.round(value * p) / p;
   },
 
   floorTo: function(value, place, base) {
     if(place === undefined) { place = 0; }
     if(base === undefined) { base = 10; }
 
-    var p = global.Math.pow(base, -place);
+    var p = global.Math.pow(base, place);
 
-    return global.Math.floor(value / p) * p;
+    return global.Math.floor(value * p) / p;
   },
 
   ceilTo: function(value, place, base) {
     if(place === undefined) { place = 0; }
     if(base === undefined) { base = 10; }
 
-    var p = global.Math.pow(base, -place);
+    var p = global.Math.pow(base, place);
 
     return global.Math.ceil(value * p) / p;
   },
