@@ -3,10 +3,36 @@ var engine = require('engine'),
     Layout = require('../Layout'),
     ContentPane = require('./ContentPane'),
     SystemPane = require('./SystemPane'),
-    Tilemap = require('../components/Tilemap');
+    Tilemap = require('../components/Tilemap'),
+    ButtonIcon = require('../components/ButtonIcon'),
+    Class = engine.Class;
 
 function ShipPane(game, settings) {
-  ContentPane.call(this, game, '', settings);
+  ContentPane.call(this, game, '',
+    Class.mixin(settings, {
+      tab: {
+        padding: [2],
+        icon: {
+          padding: [0],
+          border: [0],
+          frame: 'icon-edit.png',
+          bg: {
+            highlight: false,
+            borderSize: 0.0,
+            fillAlpha: 0.0,
+            radius: 0.0
+          }
+        },
+        bg: {
+          // color: 0x3868b8,
+          fillAlpha: 0.5,
+          // blendMode: engine.BlendMode.ADD,
+          borderSize: 0.0,
+          radius: 0.0
+        }
+      }
+    })
+  );
   
   this.socket = game.net.socket;
   this.shipNetManager = game.shipNetManager;
@@ -27,6 +53,14 @@ function ShipPane(game, settings) {
 
   // 
   this.button.on('inputUp', this._follow, this);
+
+  if(this.isPlayer) {
+    this.editButton = new ButtonIcon(game, 'texture-atlas', this.settings.tab);
+    this.editButton.on('inputUp', this._fitting, this);
+    this.editButton.alert();
+
+    this.addTab(Layout.NONE, this.editButton);
+  }
 
   // subscribe to messages
   this.game.on('ships/selected', this._selected, this);
@@ -84,6 +118,10 @@ ShipPane.prototype._data = function(data) {
 
 ShipPane.prototype._follow = function() {
   this.current.ship && this.game.emit('ship/follow', this.current.ship);
+};
+
+ShipPane.prototype._fitting = function() {
+  this.current.ship && this.game.emit('ship/fitting', this.current.data);
 };
 
 ShipPane.prototype._target = function(data) {

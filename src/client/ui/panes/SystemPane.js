@@ -10,9 +10,9 @@ var xhr = require('xhr'),
 function SystemPane(game, settings) {
   Pane.call(this, game,
     Class.mixin(settings, {
-      padding: [1, 0, 0, 1],
+      padding: [0, 0, 0, 1],
       layout: {
-        gap: 1,
+        gap: 0,
         direction: Layout.HORIZONTAL
       },
       bg: {
@@ -55,22 +55,19 @@ SystemPane.prototype.init = function() {
 
 SystemPane.prototype.create = function(type) {
   return new ButtonIcon(game, 'texture-atlas', {
-    padding: [0],
+    padding: [1, 2, 0, 2],
     bg: {
-      color: 0x666666,
-      fillAlpha: 1.0,
+      fillAlpha: 0.0,
       borderSize: 0.0,
-      radius: 3.0,
-      blendMode: engine.BlendMode.MULTIPLY
+      radius: 0.0
     },
     icon: {
-      padding: [1, 2, 2, 2],
+      padding: [0, 0, 0, 0],
       border: [0],
       frame: 'system-' + type + '.png',
       bg: {
         highlight: false,
         fillAlpha: 0.0,
-        color: 0x3868b8,
         borderSize: 0.0,
         radius: 0.0
       }

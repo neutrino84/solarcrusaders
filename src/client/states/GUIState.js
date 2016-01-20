@@ -14,7 +14,8 @@ var engine = require('engine'),
     BottomPane = require('../ui/panes/BottomPane'),
     VitalsPane = require('../ui/panes/VitalsPane'),
     ShipPane = require('../ui/panes/ShipPane'),
-      
+    FittingPane = require('../ui/panes/FittingPane'),
+
     Alert = require('../ui/components/Alert'),
     AlertMessage = require('../ui/components/AlertMessage'),
     Modal = require('../ui/components/Modal'),
@@ -33,9 +34,6 @@ GUIState.prototype.constructor = engine.State;
 
 GUIState.prototype.init = function() {
   this.auth = this.game.auth;
-
-  // add listeners
-  this.game.on('gui/modal', this.modal, this);
 };
 
 GUIState.prototype.preload = function() {
@@ -90,7 +88,9 @@ GUIState.prototype.create = function() {
   this.leftPane = new LeftPane(game);
   this.rightPane = new RightPane(game);
   this.bottomPane = new BottomPane(game);
+
   this.vitalsPane = new VitalsPane(game);
+  this.fittingPane = new FittingPane(game);
 
   this.shipPanel = new Panel(game, new FlowLayout(Layout.LEFT, Layout.TOP, Layout.VERTICAL, 6));
   this.shipPanel.setPadding(6);
@@ -150,27 +150,25 @@ GUIState.prototype.create = function() {
 };
 
 GUIState.prototype.login = function() {
-  if(this.auth.isUser()) {
+  // if(this.auth.isUser()) {
     this.centerPanel.visible = true;
-    this.centerPanel.invalidate();
     this.bottomPanel.visible = true;
-    this.bottomPanel.invalidate();
     this.topPanel.visible = true;
-    this.topPanel.invalidate();
-  } else {
-    this.bottomPanel.visible = false;
-    this.centerPanel.visible = false;
-    this.registrationForm = new RegistrationForm(game);
-    this.loginForm = new LoginForm(game);
-    this.game.on('gui/loggedin', this._loggedin, this);
-  }
+  // } else {
+  //   this.bottomPanel.visible = false;
+  //   this.centerPanel.visible = false;
+    // this.registrationForm = new RegistrationForm(game);
+    // this.loginForm = new LoginForm(game);
+    // this.game.on('gui/loggedin', this._loggedin, this);
+  // }
   if(this.modalComponent.visible) {
     this.modal(false);
   }
+  this.toggle(true);
 };
 
 GUIState.prototype.refresh = function() {
-  this.toggle(true);
+  this.root.invalidate(true);
 };
 
 GUIState.prototype.toggle = function(force) {
@@ -186,7 +184,7 @@ GUIState.prototype.toggle = function(force) {
 GUIState.prototype.modal = function(show, content, lock, visible) {
   if(typeof show !== 'boolean') { show = true; };
   if(content === undefined) { content = new Panel(game, new StackLayout()); }
-  if(lock === undefined) { lock = false; }
+  if(lock === undefined) { lock = true; }
   if(visible === undefined) { visible = true; }
 
   if(lock && show) {
@@ -203,7 +201,7 @@ GUIState.prototype.modal = function(show, content, lock, visible) {
   this.modalComponent.bg.settings.fillAlpha = visible ? 0.8 : 0.0;
   this.modalComponent.invalidate(true);
 
-  // this.refresh();
+  this.refresh();
 };
 
 GUIState.prototype.resize = function(width, height) {
