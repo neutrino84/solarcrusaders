@@ -124,6 +124,7 @@ function HardpointPane(game, data) {
   });
 
   // enhancement buttons
+  this.data = data;
   this.buttons = [];
 
   // build
@@ -137,6 +138,30 @@ function HardpointPane(game, data) {
 HardpointPane.prototype = Object.create(Pane.prototype);
 HardpointPane.prototype.constructor = HardpointPane;
 
+HardpointPane.prototype.reset = function() {
+  this.costLabel.text = 'cost --';
+  this.activeLabel.text = 'active --';
+  this.cooldownLabel.text = 'cooldown --';
+
+  this._enhancementButtonReset();
+
+  this.stop();
+};
+
+HardpointPane.prototype.start = function() {
+  var buttons = this.buttons
+  for(var i in buttons) {
+    buttons[i].start();
+  }
+};
+
+HardpointPane.prototype.stop = function() {
+  var buttons = this.buttons
+  for(var i in buttons) {
+    buttons[i].stop();
+  }
+};
+
 HardpointPane.prototype.create = function(data) {
   var config = data.config,
       enhancement, enhance,
@@ -145,16 +170,21 @@ HardpointPane.prototype.create = function(data) {
       button;
 
   this.image = new Image(game, data.chasis + '-outline', this.settings.image);
-  this.image.image.alpha = 0.4;
+  this.image.blendMode = engine.BlendMode.ADD;
+  this.image.tint = 0x336699;
 
   this.dpsAreaPane = new Pane(game, this.settings.dpsAreaPane);
   this.hardpointPane = new Pane(game, this.settings.hardpointPane);
   this.enhancementPane = new Pane(game, this.settings.enhancementPane);
   this.enhancementDataPane = this.createEnhancementDataPane();
 
-  this.dpsAreaPane.addPanel(33, this.createDpsPane('12.1', 'critical'));
-  this.dpsAreaPane.addPanel(33, this.createDpsPane(engine.Math.roundTo(data.damage * data.accuracy, 3).toString(), 'average', true));
-  this.dpsAreaPane.addPanel(33, this.createDpsPane(data.damage.toString(), 'max'));
+  this.dpsPaneCritical = this.createDpsPane('12.1', 'critical');
+  this.dpsPaneAverage = this.createDpsPane(engine.Math.roundTo(data.damage * data.accuracy, 3).toString(), 'average', true);
+  this.dpsPaneMax = this.createDpsPane(data.damage.toString(), 'max');
+
+  this.dpsAreaPane.addPanel(33, this.dpsPaneCritical);
+  this.dpsAreaPane.addPanel(33, this.dpsPaneAverage);
+  this.dpsAreaPane.addPanel(33, this.dpsPaneMax);
 
   for(var e=0; e<len; e++) {
     enhance = enhancements[e];
@@ -239,10 +269,30 @@ HardpointPane.prototype.createEnhancementDataPane = function() {
 };
 
 HardpointPane.prototype._enhancementSelect = function(enhancement) {
+  var bonus = 0,
+      data = this.data,
+      dpsPaneCritical = this.dpsPaneCritical.panels[0],
+      dpsPaneAverage = this.dpsPaneAverage.panels[0],
+      dpsPaneMax = this.dpsPaneMax.panels[0];
+
   this.costLabel.text = 'cost ' + enhancement.cost + ' gj';
   this.activeLabel.text = 'active ' + enhancement.active + ' s';
   this.cooldownLabel.text = 'cooldown ' + enhancement.cooldown + ' s';
 
+  if(enhancement.stats.damage) {
+    bonus = enhancement.stats.damage.value;
+    dpsPaneCritical.tint = dpsPaneAverage.tint =
+      dpsPaneMax.tint = 0x00FF00;
+  } else {
+    dpsPaneCritical.tint = dpsPaneAverage.tint =
+      dpsPaneMax.tint = 0xFFFFFF;
+  }
+
+  dpsPaneCritical.text = 12.1 + bonus;
+  dpsPaneAverage.text = engine.Math.roundTo(data.damage * data.accuracy + bonus, 3).toString();
+  dpsPaneMax.text = (data.damage + bonus).toString();
+
+  this.dpsAreaPane.invalidate(true);
   this.enhancementDataPane.invalidate(true);
 };
 

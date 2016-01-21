@@ -59,9 +59,8 @@ FittingPane.prototype = Object.create(ContentPane.prototype);
 FittingPane.prototype.constructor = FittingPane;
 
 FittingPane.prototype.reset = function() {
-  this.hardpointPane && this.removeContent(this.hardpointPane);
-  this.statPane && this.removeContent(this.statPane);
-  this.statPane = this.hardpointPane = undefined;
+  this.hardpointPane && this.hardpointPane.reset();
+  this.statPane && this.statPane.reset();
 };
 
 FittingPane.prototype.open = function(data) {
@@ -70,11 +69,15 @@ FittingPane.prototype.open = function(data) {
   this.bg.inputEnabled = true;
   this.bg.input.priorityID = 2;
 
-  this.hardpointPane = new HardpointPane(game, data);
-  this.statPane = new StatPane(game, data);
+  if(!this.hardpointPane && !this.statPane) {
+    this.hardpointPane = new HardpointPane(game, data);
+    this.statPane = new StatPane(game, data);
 
-  this.addContent(Layout.STRETCH, this.hardpointPane);
-  this.addContent(Layout.STRETCH, this.statPane);
+    this.addContent(Layout.STRETCH, this.hardpointPane);
+    this.addContent(Layout.STRETCH, this.statPane);
+  }
+
+  this.hardpointPane.start();
 
   this.invalidate(true);
 
