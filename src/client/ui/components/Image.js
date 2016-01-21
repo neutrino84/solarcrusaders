@@ -44,6 +44,16 @@ Image.prototype.doLayout = function() {
   this.image.position.set(this.left, this.top);
 };
 
+Object.defineProperty(Image.prototype, 'blendMode', {
+  set: function(value) {
+    this.image.blendMode = value;
+  },
+
+  get: function() {
+    return this.image.blendMode;
+  }
+});
+
 Object.defineProperty(Image.prototype, 'tint', {
   set: function(value) {
     this.image.tint = value;
