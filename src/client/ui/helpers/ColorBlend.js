@@ -1,31 +1,32 @@
 
-var engine = require('engine');
+var engine = require('engine'),
+    EventEmitter = require('eventemitter3');
 
 function ColorBlend(game, target) {
   this.game = game;
   this.target = target;
   this.loop = true;
   this.colorData = [];
+
+  EventEmitter.call(this);
 };
 
 ColorBlend.CACHE = {};
 ColorBlend.FRAMERATE = 30;
 ColorBlend.STEPS = 100;
 
+ColorBlend.prototype = Object.create(EventEmitter.prototype);
 ColorBlend.prototype.constructor = ColorBlend;
 
 ColorBlend.prototype.start = function() {
   this.setTintData();
   this.isRunning = true;
   this.target.update = this.update.bind(this);
+  this.emit('start', this);
 };
 
 ColorBlend.prototype.stop = function() {
-  if(this.loop) {
-    this.target.tint = 0xFFFFFF;
-  } else {
-    this.target.tint = 0x000000;
-  }
+  this.emit('stop', this);
   delete this.target.update;
 };
 
