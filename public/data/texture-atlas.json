@@ -252,9 +252,18 @@
 	"sourceSize": {"w":64,"h":64},
 	"pivot": {"x":0.5,"y":0.5}
 },
+"turret-b.png":
+{
+	"frame": {"x":642,"y":128,"w":64,"h":64},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
+	"sourceSize": {"w":64,"h":64},
+	"pivot": {"x":0.5,"y":0.5}
+},
 "vessel-x01-shields.png":
 {
-	"frame": {"x":642,"y":128,"w":128,"h":128},
+	"frame": {"x":706,"y":128,"w":128,"h":128},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
@@ -263,7 +272,7 @@
 },
 "vessel-x01.png":
 {
-	"frame": {"x":770,"y":128,"w":128,"h":128},
+	"frame": {"x":834,"y":128,"w":128,"h":128},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
@@ -349,6 +358,6 @@
 	"format": "RGBA8888",
 	"size": {"w":1024,"h":1024},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:b8b5078341f20455e4abab71250b8b17:b54edf582e70d63550ce91591fa0c2b7:a973cd4a72d4c90ced76930eac7fdc63$"
+	"smartupdate": "$TexturePacker:SmartUpdate:ec030ad458b138f812966e5938615fcf:7b8a1490409ec8d3da5cf4546eb9dfcf:a973cd4a72d4c90ced76930eac7fdc63$"
 }
 }
