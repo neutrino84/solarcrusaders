@@ -35,6 +35,7 @@ function Ship(manager, ship) {
   this._recharge = global.parseFloat(ship.recharge);
   this._durability = global.parseFloat(ship.durability);
   this._speed = global.parseFloat(ship.speed);
+  this._critical = global.parseFloat(ship.critical);
 
   this.types = ['reactor'];
   this.timers = [];
@@ -51,6 +52,7 @@ function Ship(manager, ship) {
       evasion: {},
       armor: {},
       damage: {},
+      critical: {},
       range: {},
       speed: {}
     },
@@ -313,6 +315,17 @@ Object.defineProperty(Ship.prototype, 'damage', {
     }
     for(var d in damage) {
       total += damage[d].stat('damage', 'value');
+    }
+    return total;
+  }
+});
+
+Object.defineProperty(Ship.prototype, 'critical', {
+  get: function() {
+    var total = this._critical,
+        critical = this.ignoreEnhancements ? [] : this.enhancements.active.critical;
+    for(var a in critical) {
+      total += critical[a].stat('critical', 'value');
     }
     return total;
   }

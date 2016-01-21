@@ -11,7 +11,8 @@
       "evasion": 0.1,
       "energy": 100,
       "recharge": 0.25,
-      "durability": 1000
+      "durability": 1000,
+      "critical": 0.01
     },
     "engine": {
       "exaust": {
@@ -513,7 +514,8 @@
       "evasion": 0.01,
       "energy": 200,
       "recharge": 0.25,
-      "durability": 2000
+      "durability": 2000,
+      "critical": 0.01
     },
     "engine": {
       "exaust": {
@@ -1162,7 +1164,8 @@
       "evasion": 0.25,
       "energy": 100,
       "recharge": 0.75,
-      "durability": 1000
+      "durability": 1000,
+      "critical": 0.01
     },
     "engine": {
       "exaust": {
@@ -1665,7 +1668,8 @@
       "evasion": 0.65,
       "energy": 30,
       "recharge": 0.25,
-      "durability": 500
+      "durability": 500,
+      "critical": 0.01
     },
     "engine": {
       "exaust": {
@@ -1839,7 +1843,8 @@
       "evasion": 0.5,
       "energy": 50,
       "recharge": 0.25,
-      "durability": 500
+      "durability": 500,
+      "critical": 0.01
     },
     "engine": {
       "exaust": {

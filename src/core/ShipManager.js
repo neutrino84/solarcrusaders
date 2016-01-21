@@ -146,6 +146,7 @@ ShipManager.prototype.data = function(sock, args, next) {
         range: ship.range,
         speed: ship.speed,
         damage: ship.damage,
+        critical: ship.critical,
         accuracy: ship.accuracy,
         evasion: ship.evasion,
         systems: ship.systems,
