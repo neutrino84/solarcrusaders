@@ -132,7 +132,7 @@ function HardpointPane(game, data) {
 
   // listen
   this.game.on('gui/fitting/enhancement', this._enhancementSelect, this);
-  this.game.on('gui/fitting/enhancement/reset', this._enhancementButtonReset, this);
+  this.game.on('gui/fitting/enhancement/reset', this.reset, this);
 };
 
 HardpointPane.prototype = Object.create(Pane.prototype);
@@ -144,8 +144,7 @@ HardpointPane.prototype.reset = function() {
   this.cooldownLabel.text = 'cooldown --';
 
   this._enhancementButtonReset();
-
-  this.stop();
+  this._dpsEnhancementSelect();
 };
 
 HardpointPane.prototype.start = function() {
@@ -269,17 +268,23 @@ HardpointPane.prototype.createEnhancementDataPane = function() {
 };
 
 HardpointPane.prototype._enhancementSelect = function(enhancement) {
-  var bonus = 0,
-      data = this.data,
-      dpsPaneCritical = this.dpsPaneCritical.panels[0],
-      dpsPaneAverage = this.dpsPaneAverage.panels[0],
-      dpsPaneMax = this.dpsPaneMax.panels[0];
-
   this.costLabel.text = 'cost ' + enhancement.cost + ' gj';
   this.activeLabel.text = 'active ' + enhancement.active + ' s';
   this.cooldownLabel.text = 'cooldown ' + enhancement.cooldown + ' s';
 
-  if(enhancement.stats.damage) {
+  this._dpsEnhancementSelect(enhancement);
+
+  this.enhancementDataPane.invalidate(true);
+};
+
+HardpointPane.prototype._dpsEnhancementSelect = function(enhancement) {
+  var bonus = 0;
+      data = this.data
+      dpsPaneCritical = this.dpsPaneCritical.panels[0],
+      dpsPaneAverage = this.dpsPaneAverage.panels[0],
+      dpsPaneMax = this.dpsPaneMax.panels[0];
+
+  if(enhancement && enhancement.stats.damage) {
     bonus = enhancement.stats.damage.value;
     dpsPaneCritical.tint = dpsPaneAverage.tint =
       dpsPaneMax.tint = 0x00FF00;
@@ -293,8 +298,7 @@ HardpointPane.prototype._enhancementSelect = function(enhancement) {
   dpsPaneMax.text = (data.damage + bonus).toString();
 
   this.dpsAreaPane.invalidate(true);
-  this.enhancementDataPane.invalidate(true);
-};
+}
 
 HardpointPane.prototype._enhancementButtonReset = function() {
   var bu,
