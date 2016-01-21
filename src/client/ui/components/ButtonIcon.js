@@ -55,6 +55,9 @@ function ButtonIcon(game, key, settings) {
   // color blend
   this.colorBlend = new ColorBlend(game, this.image);
   this.colorBlend.setColor(0x336699, 0x33cc33, 500, engine.Easing.Quadratic.InOut, true);
+  this.colorBlend.on('stop', function() {
+    this.image.tint = 0xFFFFFF;
+  }, this);
 
   // event handling
   this.bg.on('inputOver', this._inputOver, this);
@@ -69,6 +72,15 @@ function ButtonIcon(game, key, settings) {
 
 ButtonIcon.prototype = Object.create(Panel.prototype);
 ButtonIcon.prototype.constructor = ButtonIcon;
+
+ButtonIcon.prototype.start = function() {
+  this.bg.inputEnabled = true;
+  this.bg.input.priorityID = 2;
+};
+
+ButtonIcon.prototype.stop = function() {
+  this.bg.inputEnabled = false;
+};
 
 ButtonIcon.prototype.alert = function() {
   this._alert = true;
