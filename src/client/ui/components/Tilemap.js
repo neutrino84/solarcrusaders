@@ -5,6 +5,7 @@ var engine = require('engine'),
     TilemapView = require('../views/TilemapView'),
     ImageView = require('../views/ImageView'),
     BackgroundView = require('../views/BackgroundView'),
+    ColorBlend = require('../helpers/ColorBlend'),
     Class = engine.Class;//,
 
     // Room = require('../../objects/structure/Room'),
@@ -43,6 +44,12 @@ function Tilemap(game, key, settings) {
   this.bg = new BackgroundView(game, this.settings.bg);
   this.bg.inputEnabled = true;
   this.bg.input.priorityID = 2;
+  
+  // color blend
+  this.colorBlend = new ColorBlend(game);
+  this.colorBlend.setColor(0xFF0000, 0x336699, 2000, engine.Easing.Quadratic.In);
+  this.colorBlend.loop = false;
+
   this.addView(this.bg);
 
   this.load();
@@ -72,6 +79,10 @@ Tilemap.prototype.stop = function() {
   }
 };
 
+Tilemap.prototype.alert = function() {
+  this.colorBlend.start();
+};
+
 Tilemap.prototype.target = function(id, renderable) {
   this.rooms[id].target(renderable);
 };
@@ -90,7 +101,7 @@ Tilemap.prototype.createImages = function() {
 };
 
 Tilemap.prototype.createLayers = function() {
-  var key,
+  var key, outline,
       tilemap = this.tilemap,
       w = tilemap.widthInPixels,
       h = tilemap.heightInPixels,
@@ -107,9 +118,13 @@ Tilemap.prototype.createLayers = function() {
     
     // add outline
     if(this.key && key === 'grid') {
-      this.layers['outline'] = new ImageView(this.game, this.key + '-outline');
-      this.layers['outline'].alpha = 0.25;
-      this.addView(this.layers['outline']);
+      outline = this.layers['outline'] =
+        new ImageView(this.game, this.key + '-outline');
+      outline.blendMode = engine.BlendMode.ADD;
+      outline.tint = 0x336699;
+      outline.alpha = 0.75;
+      this.colorBlend.target = outline;
+      this.addView(outline);
     }
   };
 };
