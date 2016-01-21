@@ -161,7 +161,13 @@ ShipPane.prototype._attack = function(data) {
 
 ShipPane.prototype._updateTarget = function(data, show) {
   var pane = this.panes[data.target];
-      pane && pane.tilemap && pane.tilemap.target(data.id, show);
+  if(pane && pane.tilemap) {
+    pane.tilemap.target(data.id, show);
+    
+    if(pane === this.current && data.type === 'hit') {
+      pane.tilemap.alert();
+    }
+  }
 };
 
 ShipPane.prototype._destroyed = function(ship) {
