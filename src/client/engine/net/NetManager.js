@@ -90,7 +90,7 @@ NetManager.prototype.constructor = NetManager;
 
 Object.defineProperty(NetManager.prototype, 'rtt', {
   get: function() {
-    return this.latency.rtt;
+    return global.Math.min(this.latency.rtt, 250);
   }
 });
 
