@@ -9,7 +9,7 @@ var engine = require('engine'),
     ProgressButtonIcon = require('../components/ProgressButtonIcon'),
     Class = engine.Class;
 
-function BottomPane(game, string, settings) {
+function EnhancementPane(game, string, settings) {
   Panel.call(this, game, new BorderLayout(0, 0));
 
   this.socket = game.net.socket;
@@ -55,7 +55,7 @@ function BottomPane(game, string, settings) {
 
   this.bg = new BackgroundView(game, this.settings.bg);
   this.content = new Pane(game, this.settings.content);
-  this.content.setPreferredSize(191, 46);
+  this.content.setPreferredSize(231, 56);
 
   this.addView(this.bg);
   this.addPanel(Layout.CENTER, this.content);
@@ -65,27 +65,21 @@ function BottomPane(game, string, settings) {
   this.game.on('enhancement/cancelled', this._enhancmentCancelled, this);
 };
 
-BottomPane.prototype = Object.create(Panel.prototype);
-BottomPane.prototype.constructor = BottomPane;
+EnhancementPane.prototype = Object.create(Panel.prototype);
+EnhancementPane.prototype.constructor = EnhancementPane;
 
-BottomPane.prototype.addContent = function(constraint, panel) {
+EnhancementPane.prototype.addContent = function(constraint, panel) {
   this.content.addPanel(constraint, panel);
 };
 
-BottomPane.prototype.create = function(enhancement, key) {
+EnhancementPane.prototype.create = function(enhancement, key) {
   return new ProgressButtonIcon(game,
     'texture-atlas', {
-      padding: [1, 1, 1, 5],
-      bg: {
-        fillAlpha: 1.0,
-        color: 0x3868b8,
-        radius: 0.0
-      },
       icon: {
         padding: [0],
         border: [0],
-        width: 38,
-        height: 38,
+        width: 48,
+        height: 48,
         frame: 'enhancement-' + enhancement + '.png',
         bg: {
           fillAlpha: 0.0,
@@ -100,7 +94,7 @@ BottomPane.prototype.create = function(enhancement, key) {
   );
 };
 
-BottomPane.prototype._select = function(button) {
+EnhancementPane.prototype._select = function(button) {
   var data = this.data;
   button.tint = 0xFF8800;
   this.socket.emit('enhancement/start', {
@@ -109,7 +103,7 @@ BottomPane.prototype._select = function(button) {
   });
 };
 
-BottomPane.prototype._enhancmentStarted = function(data) {
+EnhancementPane.prototype._enhancmentStarted = function(data) {
   if(data.ship !== this.data.uuid) { return; }
 
   var ev, active,
@@ -140,7 +134,7 @@ BottomPane.prototype._enhancmentStarted = function(data) {
   button.invalidate(true);
 };
 
-BottomPane.prototype._enhancmentCancelled = function(data) {
+EnhancementPane.prototype._enhancmentCancelled = function(data) {
   var ev,
       game = this.game,
       button = this.buttons[data.enhancement];
@@ -157,18 +151,18 @@ BottomPane.prototype._enhancmentCancelled = function(data) {
   });
 };
 
-BottomPane.prototype._updateCooldown = function() {
+EnhancementPane.prototype._updateCooldown = function() {
   this.count++;
   this.button.count.text = global.Math.floor((this.total-this.count)/4 + 1);
   this.button.invalidate(true);
 };
 
-BottomPane.prototype._updateActive = function() {
+EnhancementPane.prototype._updateActive = function() {
   this.count--;
   this.button.setProgressBar(this.count/this.total);
 };
 
-BottomPane.prototype._playerSelect = function(data) {
+EnhancementPane.prototype._playerSelect = function(data) {
   var enhancement, button,
       enhancements = data.enhancements;
   if(this.data.uuid) {
@@ -190,4 +184,4 @@ BottomPane.prototype._playerSelect = function(data) {
   }
 };
 
-module.exports = BottomPane;
+module.exports = EnhancementPane;

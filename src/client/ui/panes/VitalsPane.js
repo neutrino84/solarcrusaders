@@ -16,7 +16,7 @@ function VitalsPane(game, string, settings) {
 
   // default styles
   this.settings = Class.mixin(settings, {
-    padding: [1, 4],
+    padding: [0, 4, 1, 4],
     border: [0],
     bg: {
       fillAlpha: 1.0,
@@ -37,7 +37,7 @@ function VitalsPane(game, string, settings) {
       }
     },
     healthBar: {
-      width: 189,
+      width: 229,
       height: 7,
       padding: [0],
       label: {
@@ -56,7 +56,7 @@ function VitalsPane(game, string, settings) {
       }
     },
     energyBar: {
-      width: 189,
+      width: 229,
       height: 7,
       padding: [0],
       label: {
