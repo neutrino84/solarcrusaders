@@ -55,7 +55,7 @@ function EnhancementPane(game, string, settings) {
 
   this.bg = new BackgroundView(game, this.settings.bg);
   this.content = new Pane(game, this.settings.content);
-  this.content.setPreferredSize(239, 58);
+  this.content.setPreferredSize(215, 52);
 
   this.addView(this.bg);
   this.addPanel(Layout.CENTER, this.content);
@@ -78,8 +78,8 @@ EnhancementPane.prototype.create = function(enhancement, key) {
       icon: {
         padding: [0],
         border: [0],
-        width: 48,
-        height: 48,
+        width: 42,
+        height: 42,
         frame: 'enhancement-' + enhancement + '.png',
         bg: {
           fillAlpha: 0.0,

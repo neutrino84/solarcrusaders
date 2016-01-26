@@ -74,7 +74,7 @@ function ProgressButtonIcon(game, key, settings) {
   this.hotkey = new Label(game, this.settings.hotkey.key, this.settings.hotkey);
   
   this.raster = new Panel(game, new RasterLayout());
-  this.raster.setPreferredSize(48, 48);
+  this.raster.setPreferredSize(42, 42);
   this.raster.addPanel(Layout.NONE, this.hotkey);
   this.raster.addPanel(Layout.CENTER, this.count);
 

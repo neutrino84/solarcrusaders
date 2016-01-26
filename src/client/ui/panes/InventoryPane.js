@@ -7,9 +7,9 @@ var engine = require('engine'),
 function InventoryPane(game, settings) {
   ContentPane.call(this, game, 'items',
     Class.mixin(settings, {
-      padding: [1, 0, 1, 4],
+      padding: [1],
       width: 128,
-      height: 78,
+      height: 72,
       button: {
         label: {
           padding: [2]
