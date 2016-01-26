@@ -9,7 +9,7 @@ var engine = require('engine'),
     BackgroundView = require('../views/BackgroundView'),
     Class = engine.Class;
 
-function VitalsPane(game, string, settings) {
+function VitalsPane(game, settings) {
   Panel.call(this, game, new BorderLayout(0, 0));
 
   this.data = {};
