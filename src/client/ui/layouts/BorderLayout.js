@@ -85,7 +85,7 @@ BorderLayout.prototype.doLayout = function(target) {
           break;
         case Layout.LEFT: west = child; break;
         case Layout.RIGHT: east = child; break;
-        default: throw new Error("Invalid constraints: " + ctr);
+        default: throw new Error("Invalid constraints: " + constraint);
       }
     }
   }
