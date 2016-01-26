@@ -10,9 +10,8 @@ var engine = require('engine'),
 
 function Alert(game, settings) {
   Pane.call(this, game, {
-    padding: [4, 4, 8, 4],
+    padding: [1, 1, 6, 1],
     border: [0],
-    layout: { gap: 0 },
     bg: {
       fillAlpha: 1.0,
       color: 0x333333,
@@ -21,7 +20,7 @@ function Alert(game, settings) {
       radius: 4.0
     },
     title: {
-      padding: [4],
+      padding: [6, 10],
       border: [0],
       text: {
         tint: 0xFF3366,
@@ -30,11 +29,12 @@ function Alert(game, settings) {
       bg: {
         color: 0x222222,
         fillAlpha: 1.0,
-        borderSize: 0
+        borderSize: 0.0,
+        radius: 4.0
       }
     },
     message: {
-      padding: [12, 4, 12, 4],
+      padding: [10, 10, 8, 10],
       border: [0],
       text: {
         fontName: 'medium',
@@ -86,8 +86,8 @@ function Alert(game, settings) {
   this.addView(this.bg);
 
   this.addPanel(Layout.STRETCH, this.title);
-  this.addPanel(Layout.USE_PS_SIZE, this.message);
-  this.addPanel(Layout.USE_PS_SIZE, this.button);
+  this.addPanel(Layout.NONE, this.message);
+  this.addPanel(Layout.CENTER, this.button);
 
   this.game.on('gui/alert', this._alert, this);
 };
