@@ -37,7 +37,7 @@ function VitalsPane(game, string, settings) {
       }
     },
     healthBar: {
-      width: 229,
+      width: 237,
       height: 7,
       padding: [0],
       label: {
@@ -56,7 +56,7 @@ function VitalsPane(game, string, settings) {
       }
     },
     energyBar: {
-      width: 229,
+      width: 237,
       height: 7,
       padding: [0],
       label: {

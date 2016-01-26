@@ -29,7 +29,7 @@ function ProgressButtonIcon(game, key, settings) {
 
   ButtonIcon.call(this, game, key,
     Class.mixin(settings, {
-      padding: [1, 1, 1, 5],
+      padding: [2, 2, 2, 6],
       bg: {
         fillAlpha: 1.0,
         color: 0x3868b8,
@@ -110,6 +110,7 @@ Object.defineProperty(ProgressButtonIcon.prototype, 'disabled', {
       this.image.tint = 0xFFFFFF;
     } else {
       this.image.tint = 0xFF0000;
+      this.bg.alpha = 0.75;
     }
     this._disabled = value;
   },
