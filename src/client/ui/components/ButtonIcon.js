@@ -54,7 +54,7 @@ function ButtonIcon(game, key, settings) {
 
   // color blend
   this.colorBlend = new ColorBlend(game, this.image);
-  this.colorBlend.setColor(0x336699, 0x33cc33, 500, engine.Easing.Quadratic.InOut, true);
+  this.colorBlend.setColor(0x336699, 0x33cc33, 250, engine.Easing.Quadratic.InOut, true);
   this.colorBlend.on('stop', function() {
     this.image.tint = 0xFFFFFF;
   }, this);

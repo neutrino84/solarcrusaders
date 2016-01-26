@@ -12,7 +12,7 @@ function ColorBlend(game, target) {
 };
 
 ColorBlend.CACHE = {};
-ColorBlend.FRAMERATE = 30;
+ColorBlend.FRAMERATE = 60;
 ColorBlend.STEPS = 100;
 
 ColorBlend.prototype = Object.create(EventEmitter.prototype);

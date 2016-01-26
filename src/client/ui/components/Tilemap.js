@@ -47,7 +47,7 @@ function Tilemap(game, key, settings) {
   
   // color blend
   this.colorBlend = new ColorBlend(game);
-  this.colorBlend.setColor(0xFF0000, 0x336699, 2000, engine.Easing.Quadratic.In);
+  this.colorBlend.setColor(0xFF0000, 0x336699, 1000, engine.Easing.Quadratic.In);
   this.colorBlend.loop = false;
 
   this.addView(this.bg);

@@ -47,7 +47,7 @@ function Button(game, string, settings) {
 
   // color blend
   this.colorBlend = new ColorBlend(game, this.bg);
-  this.colorBlend.setColor(0xFFFFFF, 0xFFFF00, 500, engine.Easing.Linear.None, true);
+  this.colorBlend.setColor(0xFFFFFF, 0xFFFF00, 250, engine.Easing.Linear.None, true);
   this.colorBlend.on('stop', function() {
     this.bg.tint = 0xFFFFFF;
   }, this);
