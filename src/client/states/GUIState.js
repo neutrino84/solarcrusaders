@@ -12,7 +12,6 @@ var engine = require('engine'),
     LeftPane = require('../ui/panes/LeftPane'),
     RightPane = require('../ui/panes/RightPane'),
     BottomPane = require('../ui/panes/BottomPane'),
-    VitalsPane = require('../ui/panes/VitalsPane'),
     ShipPane = require('../ui/panes/ShipPane'),
     FittingPane = require('../ui/panes/FittingPane'),
 
@@ -83,13 +82,11 @@ GUIState.prototype.create = function() {
 
   this.centerPanel = new Panel(game, new BorderLayout(0, 0));
   this.basePanel = new Panel(game, new BorderLayout(0, 0));
-  this.basePanel.setPadding(6);
+  this.basePanel.setPadding(6, 0, 0, 0);
       
   this.leftPane = new LeftPane(game);
   this.rightPane = new RightPane(game);
-  this.bottomPane = new BottomPane(game);
 
-  this.vitalsPane = new VitalsPane(game);
   this.fittingPane = new FittingPane(game);
 
   this.shipPanel = new Panel(game, new FlowLayout(Layout.LEFT, Layout.TOP, Layout.VERTICAL, 6));
@@ -112,17 +109,15 @@ GUIState.prototype.create = function() {
   this.topPanel.addPanel(Layout.NONE, this.rightPane);
   this.topPanel.visible = false;
 
-  this.bottomPanel = new Panel(game, new FlowLayout(Layout.CENTER, Layout.TOP, Layout.VERTICAL, 3));
-  this.bottomPanel.addPanel(Layout.NONE, this.bottomPane);
-  this.bottomPanel.addPanel(Layout.NONE, this.vitalsPane);
-  this.bottomPanel.visible = false;
+  this.bottomPane = new BottomPane(game);
+  this.bottomPane.visible = false;
 
   this.centerPanel.addPanel(Layout.CENTER, this.shipPanel);
   this.centerPanel.addPanel(Layout.LEFT, this.leftPane);
   this.centerPanel.addPanel(Layout.RIGHT, this.targetPanel);
   
   this.basePanel.addPanel(Layout.TOP, this.topPanel);
-  this.basePanel.addPanel(Layout.BOTTOM, this.bottomPanel);
+  this.basePanel.addPanel(Layout.BOTTOM, this.bottomPane);
 
   this.root = new Panel(game, new StackLayout());
   this.root.setSize(game.width, game.height);
@@ -138,9 +133,6 @@ GUIState.prototype.create = function() {
   // add root to stage
   this.game.stage.addChild(this.root);
 
-  // login
-  this.login();
-
   this.auth.on('user', this.login, this);
   this.auth.on('disconnected', this._disconnected, this);
 
@@ -152,12 +144,12 @@ GUIState.prototype.create = function() {
 GUIState.prototype.login = function() {
   // if(this.auth.isUser()) {
     this.centerPanel.visible = true;
-    this.bottomPanel.visible = true;
     this.topPanel.visible = true;
+    this.bottomPane.visible = true;
   // } else {
   //   this.bottomPanel.visible = false;
   //   this.centerPanel.visible = false;
-    // this.registrationForm = new RegistrationForm(game);
+    this.registrationForm = new RegistrationForm(game);
     // this.loginForm = new LoginForm(game);
     // this.game.on('gui/loggedin', this._loggedin, this);
   // }
