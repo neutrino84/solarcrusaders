@@ -10,7 +10,7 @@ var engine = require('engine'),
     Class = engine.Class;
 
 function ProgressButtonIcon(game, key, settings) {
-  this.decimal = 0.0;
+  this.value = 0.0;
 
   this.progressBg = new BackgroundView(game,
     Class.mixin(settings.progress, {
@@ -29,21 +29,21 @@ function ProgressButtonIcon(game, key, settings) {
 
   ButtonIcon.call(this, game, key,
     Class.mixin(settings, {
-      padding: [0, 0, 0, 3],
+      padding: [1, 1, 1, 5],
       bg: {
-        radius: 4.0,
-        borderSize: 0.0
+        fillAlpha: 1.0,
+        color: 0x3868b8,
+        radius: 0.0
       },
       icon: {
         bg: {
           highlight: false,
-          borderSize: 0.0,
-          radius: 4.0
+          borderSize: 0.0
         }
       },
       hotkey: {
         key: '',
-        padding: [1],
+        padding: [2],
         border: [0],
         text: {
           fontName: 'small'
@@ -74,7 +74,7 @@ function ProgressButtonIcon(game, key, settings) {
   this.hotkey = new Label(game, this.settings.hotkey.key, this.settings.hotkey);
   
   this.raster = new Panel(game, new RasterLayout());
-  this.raster.setPreferredSize(38, 38);
+  this.raster.setPreferredSize(48, 48);
   this.raster.addPanel(Layout.NONE, this.hotkey);
   this.raster.addPanel(Layout.CENTER, this.count);
 
@@ -87,7 +87,7 @@ ProgressButtonIcon.prototype = Object.create(ButtonIcon.prototype);
 ProgressButtonIcon.prototype.constructor = ProgressButtonIcon;
 
 ProgressButtonIcon.prototype.setProgressBar = function(decimal) {
-  this.decimal = global.Math.min(1, decimal);
+  this.value = global.Math.min(1, decimal);
   this.recalc();
   this.progress.paint();
 };
@@ -97,11 +97,11 @@ ProgressButtonIcon.prototype.recalc = function() {
       progressBgSettings = this.progressBg.settings,
       progressSettings = this.progress.settings;
   
-  progressSettings.size = { width: 3, height: size.height * this.decimal };
-  progressSettings.offset = { x: size.width - 3, y: size.height - size.height * this.decimal };
+  progressSettings.size = { width: 3, height: size.height * this.value };
+  progressSettings.offset = { x: size.width - 3, y: size.height - size.height * this.value };
   
-  progressBgSettings.size = { width: 3, height: size.height };
-  progressBgSettings.offset = { x: size.width - 3, y: 0 };
+  progressBgSettings.size = { width: 4, height: size.height };
+  progressBgSettings.offset = { x: size.width - 4, y: 0 };
 };
 
 Object.defineProperty(ProgressButtonIcon.prototype, 'disabled', {
