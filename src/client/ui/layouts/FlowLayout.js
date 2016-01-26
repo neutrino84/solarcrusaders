@@ -17,7 +17,7 @@ FlowLayout.prototype.calcPreferredSize = function(target) {
     child = target.panels[i];
     if(child.visible === true) {
       pref = child.getPreferredSize();
-      if(this.direction == Layout.HORIZONTAL) {
+      if(this.direction === Layout.HORIZONTAL) {
         dim.width += pref.width;
         dim.height = pref.height > dim.height ? pref.height : dim.height;
       } else {
@@ -30,7 +30,7 @@ FlowLayout.prototype.calcPreferredSize = function(target) {
 
   add = this.gap * (cc > 0 ? cc - 1 : 0);
 
-  if(this.direction == Layout.HORIZONTAL) {
+  if(this.direction === Layout.HORIZONTAL) {
     dim.width += add;
   } else {
     dim.height += add;
@@ -39,7 +39,7 @@ FlowLayout.prototype.calcPreferredSize = function(target) {
 };
 
 FlowLayout.prototype.doLayout = function(target) {
-  var a, d, ctr,
+  var a, d, constraint, offset = 0,
       psSize = this.calcPreferredSize(target),
       t = target.top,
       l = target.left,
@@ -55,26 +55,29 @@ FlowLayout.prototype.doLayout = function(target) {
     if(a.visible === true) {
 
         d = a.getPreferredSize();
-        ctr = a.constraint;
+        constraint = a.constraint;
 
-        if(this.direction == Layout.HORIZONTAL) {
-          if(ctr === Layout.STRETCH) {
+        if(this.direction === Layout.HORIZONTAL) {
+          if(constraint === Layout.STRETCH) {
             d.height = target.size.height - t - target.bottom;
+          } else if(constraint === Layout.CENTER) {
+            offset = ~~((psSize.height - d.height) / 2);
+          } else if(constraint === Layout.BOTTOM) {
+            offset = psSize.height - d.height;
           }
-          
-          a.setLocation(px, ~~((psSize.height - d.height) / 2) + py);
+
+          a.setLocation(px, py + offset);
           px += (d.width + this.gap);
         } else {
-          if(ctr === Layout.STRETCH) {
+          if(constraint === Layout.STRETCH) {
             d.width = target.size.width - l - target.right;
-            a.setLocation(l, py);
-          } else {
-            if(ctr === Layout.LEFT) {
-              a.setLocation(l, py);
-            } else {
-              a.setLocation(px + ~~((psSize.width - d.width) / 2), py);
-            }
+          } else if(constraint === Layout.CENTER) {
+            offset = ~~((psSize.width - d.width) / 2);
+          } else if(constraint === Layout.RIGHT) {
+            offset = psSize.width - d.width;
           }
+
+          a.setLocation(px + offset, py);
           py += d.height + this.gap;
         }
 
@@ -84,7 +87,7 @@ FlowLayout.prototype.doLayout = function(target) {
   }
 
   if(lastOne !== null && this.stretchLast === true) {
-    if(this.direction == Layout.HORIZONTAL) {
+    if(this.direction === Layout.HORIZONTAL) {
       lastOne.setSize(target.size.width - lastOne.x - target.right, lastOne.size.height);
     } else {
       lastOne.setSize(lastOne.width, target.size.height - lastOne.y - target.bottom);

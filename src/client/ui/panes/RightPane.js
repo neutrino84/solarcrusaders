@@ -2,7 +2,6 @@
 var engine = require('engine'),
     Layout = require('../Layout'),
     Pane = require('../components/Pane'),
-    BorderPane = require('../components/BorderPane'),
     Label = require('../components/Label'),
     Image = require('../components/Image'),
     Button = require('../components/Button');
@@ -16,7 +15,8 @@ function RightPane(game, settings) {
       ax: Layout.CENTER,
       ay: Layout.TOP,
       direction: Layout.VERTICAL,
-      gap: 0
+      gap: 0,
+      stretch: false
     },
     bg: {
       color: 0x336699,
@@ -27,17 +27,25 @@ function RightPane(game, settings) {
     }
   });
 
-  this.infoBorderPane = new BorderPane(game, {
+  this.infoPane = new Pane(game, {
     padding: [0],
-    gap: [5, 0],
+    layout: {
+      type: 'border',
+      ax: 5,
+      ay: 0
+    },
     bg: {
       fillAlpha: 0.0
     }
   });
 
-  this.infoBorderPane2 = new BorderPane(game, {
+  this.infoPane2 = new Pane(game, {
     padding: [0],
-    gap: [5, 0],
+    layout: {
+      type: 'border',
+      ax: 5,
+      ay: 0
+    },
     bg: {
       fillAlpha: 0.0
     }
@@ -70,7 +78,7 @@ function RightPane(game, settings) {
     })
 
   this.versionText = new Label(game,
-    'solar crusaders v2031', {
+    'solar crusaders v2033', {
       padding: [5],
       text: {
         fontName: 'medium',
@@ -88,18 +96,16 @@ function RightPane(game, settings) {
   this.instructionsButton = new Button(game, 'instructions');
   this.instructionsButton.on('inputUp', this._instructions, this);
 
+  this.infoPane.addPanel(Layout.LEFT, this.registerButton);
+  this.infoPane.addPanel(Layout.RIGHT, this.instructionsButton);
+
+  this.infoPane2.addPanel(Layout.RIGHT, this.fpsText);
+  this.infoPane2.addPanel(Layout.LEFT, this.pingText);
+
   // add layout panels
-  this.addPanel(Layout.CENTER, this.infoBorderPane);
-
-  this.infoBorderPane.addPanel(Layout.LEFT, this.registerButton);
-  this.infoBorderPane.addPanel(Layout.CENTER, this.instructionsButton);
-
+  this.addPanel(Layout.CENTER, this.infoPane);
   this.addPanel(Layout.CENTER, this.versionText);
-
-  this.infoBorderPane2.addPanel(Layout.RIGHT, this.fpsText);
-  this.infoBorderPane2.addPanel(Layout.LEFT, this.pingText);
-
-  this.addPanel(Layout.CENTER, this.infoBorderPane2);
+  this.addPanel(Layout.CENTER, this.infoPane2);
 
   // create timer
   game.clock.events.loop(500, this._updateInfo, this);
