@@ -13,7 +13,7 @@ function HardpointPane(game, data) {
       fillAlpha: 0.0
     },
     image: {
-      padding: [0, 0, 0, 14],
+      padding: [0, 10, 0, 0],
       border: [0],
       bg: {
         fillAlpha: 0.0
@@ -72,8 +72,8 @@ function HardpointPane(game, data) {
     hardpointPane: {
       padding: [0],
       layout: {
-        ax: Layout.CENTER,
-        ay: Layout.CENTER,
+        ax: Layout.LEFT,
+        ay: Layout.TOP,
         direction: Layout.VERTICAL,
         gap: 1
       },
@@ -205,7 +205,7 @@ HardpointPane.prototype.create = function(data) {
     this.enhancementPane.addPanel(Layout.NONE, button);
   }
 
-  this.hardpointPane.addPanel(Layout.NONE, this.image);
+  this.hardpointPane.addPanel(Layout.STRETCH, this.image);
   this.hardpointPane.addPanel(Layout.STRETCH, this.dpsAreaPane);
 
   this.addPanel(Layout.STRETCH, this.hardpointPane);
@@ -223,8 +223,8 @@ HardpointPane.prototype.createDpsPane = function(value, units, large) {
   unitsLabel.tint = 0x4797C7;
   unitsLabel.blendMode = engine.BlendMode.ADD;
 
-  dpsPane.addPanel(Layout.NONE, valueLabel);
-  dpsPane.addPanel(Layout.NONE, unitsLabel);
+  dpsPane.addPanel(Layout.CENTER, valueLabel);
+  dpsPane.addPanel(Layout.CENTER, unitsLabel);
 
   return dpsPane;
 };
