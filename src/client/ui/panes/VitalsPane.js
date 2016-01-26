@@ -28,11 +28,8 @@ function VitalsPane(game, string, settings) {
     content: {
       padding: [1],
       bg: {
-        fillAlpha: 0.8,
-        color: 0x000000,
-        radius: 0.0,
-        borderSize: 0.0,
-        blendMode: engine.BlendMode.MULTIPLY
+        // fillAlpha: 0.8,
+        color: 0x000000
       },
       layout: {
         direction: Layout.VERTICAL,
@@ -41,10 +38,18 @@ function VitalsPane(game, string, settings) {
     },
     healthBar: {
       width: 189,
-      height: 4,
+      height: 7,
       padding: [0],
+      label: {
+        color: 0x336699,
+        padding: [1],
+        text: {
+          fontName: 'small'
+        }
+      },
       bg: {
-        color: 0x000000
+        fillAlpha: 0.25,
+        color: 0x00FF00
       },
       progress: {
         color: 0x00FF00
@@ -52,10 +57,18 @@ function VitalsPane(game, string, settings) {
     },
     energyBar: {
       width: 189,
-      height: 4,
+      height: 7,
       padding: [0],
+      label: {
+        color: 0x336699,
+        padding: [1],
+        text: {
+          fontName: 'small'
+        }
+      },
       bg: {
-        color: 0x000000
+        color: 0xFFAA00,
+        fillAlpha: 0.25
       },
       progress: {
         color: 0xFFAA00
@@ -97,13 +110,17 @@ VitalsPane.prototype.addContent = function(constraint, panel) {
 };
 
 VitalsPane.prototype._playerSelect = function(data) {
+  var stats = data.config.ship.stats;
   if(this.data) {
     this.data = data;
-    this.data.on('data', this._update, this);
+    this.data.on('data', this._updateVitals, this);
+    this.healthBar.setMinMax(0, stats.health);
+    this.energyBar.setMinMax(0, stats.energy);
+    this._updateVitals(data);
   }
 };
 
-VitalsPane.prototype._update = function(data) {
+VitalsPane.prototype._updateVitals = function(data) {
   var math = global.Math,
       stats = this.data.config.ship.stats,
       healthBar = this.healthBar,

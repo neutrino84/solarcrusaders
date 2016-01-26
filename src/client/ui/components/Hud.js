@@ -42,6 +42,7 @@ function Hud(ship, settings) {
     health: {
       width: 80,
       height: 4,
+      label: false,
       bg: {
         fillAlpha: 1.0,
         color: 0x000000,

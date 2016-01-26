@@ -38,7 +38,7 @@ LoadingState.prototype.create = function() {
   this.pendingState = game.state.pendingLength;
 
   // loading bar
-  this.progress = new ProgressBar(game);
+  this.progress = new ProgressBar(game, { label: false });
 
   // logo image
   this.image = new Image(game, 'logo', {

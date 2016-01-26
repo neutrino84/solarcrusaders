@@ -12,6 +12,7 @@ function Label(game, string, settings) {
   this.settings = Class.mixin(settings, {
     padding: [6, 12],
     border: [0],
+    color: 0xFFFFFF,
     bg: {},
     text: {},
     align: 'left'
@@ -20,12 +21,16 @@ function Label(game, string, settings) {
   this.setPadding.apply(this, this.settings.padding);
   this.setBorder.apply(this, this.settings.border);
 
-  this.bg = new BackgroundView(game, this.settings.bg);
-  this.textView = new TextView(game, string, this.settings.text);
   this.align = this.settings.align;
+
+  if(this.settings.bg) {
+    this.bg = new BackgroundView(game, this.settings.bg);
+    this.addView(this.bg);
+  }
   
-  // create label
-  this.addView(this.bg);
+  this.textView = new TextView(game, string, this.settings.text);
+  this.textView.tint = this.settings.color;
+  
   this.addView(this.textView);
 };
 
