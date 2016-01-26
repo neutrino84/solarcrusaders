@@ -7,7 +7,7 @@ var engine = require('engine'),
     BackgroundView = require('../views/BackgroundView'),
     Class = engine.Class;
 
-function AlertMessage(game, settings) {
+function FlashMessage(game, settings) {
   Pane.call(this, game, {
     padding: [2, 0],
     border: [0],
@@ -51,10 +51,10 @@ function AlertMessage(game, settings) {
   this.game.on('gui/message', this._message, this);
 };
 
-AlertMessage.prototype = Object.create(Pane.prototype);
-AlertMessage.prototype.constructor = AlertMessage;
+FlashMessage.prototype = Object.create(Pane.prototype);
+FlashMessage.prototype.constructor = FlashMessage;
 
-AlertMessage.prototype._message = function(message, duration, delay) {
+FlashMessage.prototype._message = function(message, duration, delay) {
   duration = duration || 3500;
   delay = delay || 3000;
 
@@ -70,8 +70,8 @@ AlertMessage.prototype._message = function(message, duration, delay) {
   this.game.emit('gui/modal', true, this, false, false);
 };
 
-AlertMessage.prototype._close = function() {
+FlashMessage.prototype._close = function() {
   this.game.emit('gui/modal', false);
 };
 
-module.exports = AlertMessage;
+module.exports = FlashMessage;

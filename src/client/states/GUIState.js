@@ -16,7 +16,7 @@ var engine = require('engine'),
     FittingPane = require('../ui/panes/FittingPane'),
 
     Alert = require('../ui/components/Alert'),
-    AlertMessage = require('../ui/components/AlertMessage'),
+    FlashMessage = require('../ui/components/FlashMessage'),
     Modal = require('../ui/components/Modal'),
     Selection = require('../ui/components/Selection'),
 
@@ -78,7 +78,7 @@ GUIState.prototype.create = function() {
   this.modalComponent.visible = false;
 
   this.alertComponent = new Alert(game);
-  this.alertMessageComponent = new AlertMessage(game);
+  this.flashMessageComponent = new FlashMessage(game);
 
   this.centerPanel = new Panel(game, new BorderLayout(0, 0));
   this.basePanel = new Panel(game, new BorderLayout(0, 0));
