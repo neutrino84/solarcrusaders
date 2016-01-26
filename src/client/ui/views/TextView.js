@@ -22,8 +22,8 @@ function TextView(game, text, settings) {
     },
     'medium': {
       fontName: 'medium',
-      characterWidth: 7,
       characterWidth: 8,
+      characterHeight: 7,
       xSpacing: 0,
       ySpacing: 0,
       xOffset: 0,
@@ -33,7 +33,7 @@ function TextView(game, text, settings) {
     'small': {
       fontName: 'small',
       characterWidth: 5,
-      characterWidth: 5,
+      characterHeight: 5,
       xSpacing: 0,
       ySpacing: 0,
       xOffset: 0,
