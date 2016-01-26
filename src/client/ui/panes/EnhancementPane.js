@@ -20,7 +20,7 @@ function EnhancementPane(game, string, settings) {
 
   // default styles
   this.settings = Class.mixin(settings, {
-    padding: [1, 4],
+    padding: [1],
     border: [0],
     bg: {
       fillAlpha: 1.0,

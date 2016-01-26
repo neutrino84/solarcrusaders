@@ -16,7 +16,7 @@ function VitalsPane(game, settings) {
 
   // default styles
   this.settings = Class.mixin(settings, {
-    padding: [0, 4, 1, 4],
+    padding: [0, 1, 1, 1],
     border: [0],
     bg: {
       fillAlpha: 1.0,

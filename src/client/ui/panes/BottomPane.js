@@ -4,11 +4,13 @@ var engine = require('engine'),
     Pane = require('../components/Pane'),
     FlowLayout = require('../layouts/FlowLayout'),
     EnhancementPane = require('./EnhancementPane'),
-    VitalsPane = require('./VitalsPane');
+    VitalsPane = require('./VitalsPane'),
+    SubsystemPane = require('./SubsystemPane'),
+    InventoryPane = require('./InventoryPane');
 
 function BottomPane(game) {
   Pane.call(this, game, {
-    padding: [0],
+    padding: [0, 0, 5, 0],
     border: [0],
     layout: {
       ax: Layout.CENTER,
@@ -19,9 +21,8 @@ function BottomPane(game) {
     },
     bg: false,
     pane: {
-      padding: [5],
       bg: false
-    }
+    },
   });
 
   this.leftPane = new Pane(game, this.settings.pane);
@@ -30,11 +31,15 @@ function BottomPane(game) {
 
   this.enhancementPane = new EnhancementPane(game);
   this.vitalsPane = new VitalsPane(game);
+  this.subsystemPane = new SubsystemPane(game);
+  this.inventoryPane = new InventoryPane(game);
 
   this.centerPane.addPanel(Layout.NONE, this.enhancementPane);
   this.centerPane.addPanel(Layout.NONE, this.vitalsPane);
+  this.rightPane.addPanel(Layout.NONE, this.inventoryPane);
+  this.leftPane.addPanel(Layout.NONE, this.subsystemPane);
 
-  this.addPanel(Layout.BOTTOM, this.leftPane);
+  this.addPanel(Layout.TOP, this.leftPane);
   this.addPanel(Layout.BOTTOM, this.centerPane);
   this.addPanel(Layout.BOTTOM, this.rightPane);
 };
