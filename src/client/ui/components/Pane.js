@@ -57,13 +57,14 @@ function Pane(game, settings) {
       this.settings.height);
   }
 
-  // bg
-  this.bg = new BackgroundView(game, this.settings.bg);
-
   this.setPadding.apply(this, this.settings.padding);
   this.setBorder.apply(this, this.settings.border);
 
-  this.addView(this.bg);
+  // bg
+  if(this.settings.bg) {
+    this.bg = new BackgroundView(game, this.settings.bg);
+    this.addView(this.bg);
+  }
 };
 
 Pane.prototype = Object.create(Panel.prototype);
