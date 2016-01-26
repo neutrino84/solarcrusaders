@@ -67,9 +67,9 @@ LoadingState.prototype.create = function() {
   });
 
   this.root.setSize(game.width, game.height);
-  this.root.addPanel(Layout.NONE, this.image);
-  this.root.addPanel(Layout.NONE, this.progress);
-  this.root.addPanel(Layout.NONE, this.statusLabel);
+  this.root.addPanel(Layout.CENTER, this.image);
+  this.root.addPanel(Layout.CENTER, this.progress);
+  this.root.addPanel(Layout.CENTER, this.statusLabel);
 
   // add event listeners
   game.load.on('loadstart', this.loadingStart, this);
