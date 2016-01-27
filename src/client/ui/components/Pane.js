@@ -6,6 +6,7 @@ var engine = require('engine'),
     BorderLayout = require('../layouts/BorderLayout'),
     FlowLayout = require('../layouts/FlowLayout'),
     PercentLayout = require('../layouts/PercentLayout'),
+    ListLayout = require('../layouts/ListLayout'),
     BackgroundView = require('../views/BackgroundView'),
     Class = engine.Class;
 
@@ -20,6 +21,7 @@ function Pane(game, settings) {
       ay: Layout.TOP,
       direction: Layout.VERTICAL,
       gap: 0,
+      columns: 3,
       stretch: true
     },
     bg: {
@@ -36,12 +38,20 @@ function Pane(game, settings) {
       break;
     case 'border':
       this.layout = new BorderLayout(
-        this.settings.layout.ax, this.settings.layout.ay);
+        this.settings.layout.gap[0],
+        this.settings.layout.gap[1]);
       break;
     case 'percent':
       this.layout = new PercentLayout(
-        this.settings.layout.direction, this.settings.layout.gap,
+        this.settings.layout.direction,
+        this.settings.layout.gap,
         this.settings.layout.stretch);
+      break;
+    case 'list':
+      this.layout = new ListLayout(
+        this.settings.layout.columns,
+        this.settings.layout.gap[0],
+        this.settings.layout.gap[1]);
       break;
     default:
       this.layout = new FlowLayout(

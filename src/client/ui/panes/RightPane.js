@@ -31,8 +31,7 @@ function RightPane(game, settings) {
     padding: [0],
     layout: {
       type: 'border',
-      ax: 5,
-      ay: 0
+      gap: [5, 0]
     },
     bg: {
       fillAlpha: 0.0
@@ -43,8 +42,7 @@ function RightPane(game, settings) {
     padding: [0],
     layout: {
       type: 'border',
-      ax: 5,
-      ay: 0
+      gap: [5, 0]
     },
     bg: {
       fillAlpha: 0.0

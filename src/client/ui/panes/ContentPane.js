@@ -26,8 +26,7 @@ function ContentPane(game, string, settings) {
       padding: [1, 1, 0, 1],
       layout: {
         type: 'border',
-        ax: 1,
-        ay: 0
+        gap: [1, 0]
       },
       bg: {
         fillAlpha: 1.0,
