@@ -34,10 +34,10 @@ function BottomPane(game) {
   this.subsystemPane = new SubsystemPane(game);
   this.inventoryPane = new InventoryPane(game);
 
-  this.centerPane.addPanel(Layout.NONE, this.enhancementPane);
-  this.centerPane.addPanel(Layout.NONE, this.vitalsPane);
-  this.rightPane.addPanel(Layout.NONE, this.inventoryPane);
-  this.leftPane.addPanel(Layout.NONE, this.subsystemPane);
+  this.leftPane.addPanel(Layout.NONE, this.enhancementPane);
+  this.leftPane.addPanel(Layout.NONE, this.vitalsPane);
+  this.centerPane.addPanel(Layout.NONE, this.inventoryPane);
+  this.rightPane.addPanel(Layout.NONE, this.subsystemPane);
 
   this.addPanel(Layout.TOP, this.leftPane);
   this.addPanel(Layout.BOTTOM, this.centerPane);
