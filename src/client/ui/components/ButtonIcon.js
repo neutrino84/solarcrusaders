@@ -24,7 +24,8 @@ function ButtonIcon(game, key, settings) {
       color: 0x3868b8,
       borderSize: 0.0,
       blendMode: engine.BlendMode.ADD,
-      radius: 4.0
+      radius: 4.0,
+      disabled: 0x333333
     },
     icon: {
       bg: {
@@ -162,8 +163,10 @@ Object.defineProperty(ButtonIcon.prototype, 'disabled', {
   set: function(value) {
     if(value === false) {
       this.image.alpha = 0.9;
+      this.bg.tint = 0xFFFFFF;
     } else {
       this.image.alpha = 0.25;
+      this.bg.tint = this.settings.bg.disabled;
     }
     this._disabled = value;
   },
