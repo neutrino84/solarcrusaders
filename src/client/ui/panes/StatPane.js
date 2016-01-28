@@ -131,8 +131,8 @@ StatPane.prototype.createSystemTitleRow = function(title) {
       });
 
   pane.layout.stretchLast = true;
-  pane.addPanel(Layout.NONE, icon);
-  pane.addPanel(Layout.NONE, label);
+  pane.addPanel(Layout.CENTER, icon);
+  pane.addPanel(Layout.CENTER, label);
   
   this.addPanel(Layout.STRETCH, pane);
 };
