@@ -6,7 +6,7 @@ var engine = require('engine'),
     Class = engine.Class;
 
 function SubsystemPane(game, settings) {
-  ContentPane.call(this, game, 'sub',
+  ContentPane.call(this, game, 'sys',
     Class.mixin(settings, {
       padding: [1],
       content: {
