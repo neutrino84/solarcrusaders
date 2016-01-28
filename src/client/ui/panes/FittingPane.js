@@ -13,6 +13,9 @@ var xhr = require('xhr'),
 function FittingPane(game, settings) {
   Pane.call(this, game,
     Class.mixin(settings, {
+      bg: {
+        blendMode: engine.BlendMode.ADD
+      },
       layout: {
         direction: Layout.HORIZONTAL
       },
