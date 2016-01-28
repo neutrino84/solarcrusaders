@@ -41,8 +41,6 @@ function Button(game, string, settings) {
   this.label.alpha = 0.9;
 
   this.bg = new BackgroundView(game, this.settings.bg);
-  this.bg.inputEnabled = true;
-  this.bg.input.priorityID = 2;
   this.bg.alpha = 0.75;
 
   // color blend
@@ -58,13 +56,25 @@ function Button(game, string, settings) {
   this.bg.on('inputDown', this._inputDown, this);
   this.bg.on('inputUp', this._inputUp, this);
 
-    // build button
+  // build button
   this.addView(this.bg);
   this.addPanel(Layout.USE_PS_SIZE, this.label);
+
+  // start
+  this.start();
 };
 
 Button.prototype = Object.create(Panel.prototype);
 Button.prototype.constructor = Button;
+
+Button.prototype.start = function() {
+  this.bg.inputEnabled = true;
+  this.bg.input.priorityID = 2;
+};
+
+Button.prototype.stop = function() {
+  this.bg.inputEnabled = false;
+};
 
 Button.prototype.alert = function() {
   this._alert = true;
