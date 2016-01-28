@@ -77,6 +77,8 @@ FittingPane.prototype.open = function(data) {
     this.addContent(Layout.STRETCH, this.statPane);
   }
 
+  this.button.start();
+  this.closeButton.start();
   this.hardpointPane.start();
 
   this.invalidate(true);
@@ -86,6 +88,8 @@ FittingPane.prototype.open = function(data) {
 
 FittingPane.prototype.close = function() {
   this.reset();
+  this.button.stop();
+  this.closeButton.stop();
   this.hardpointPane.stop();
   this.bg.inputEnabled = false;
   this.game.emit('gui/modal', false);
