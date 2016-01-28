@@ -245,6 +245,7 @@ HardpointPane.prototype.createEnhancementButton = function(enhancement) {
         height: 38,
         frame: 'enhancement-' + enhancement + '.png',
         bg: {
+          highlightAlpha: 0.25,
           fillAlpha: 0.0,
           borderSize: 0.0,
           radius: 0.0

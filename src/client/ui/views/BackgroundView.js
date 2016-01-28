@@ -37,7 +37,7 @@ BackgroundView.prototype.paint = function(top, left, bottom, right) {
 
   if(settings.highlight) {
     this.lineStyle(0);
-    this.beginFill(settings.highlight, 1.0);
+    this.beginFill(settings.highlight, settings.highlightAlpha ? settings.highlightAlpha : 1.0);
     this[drawMethod](offset.x, offset.y, size.width, size.height/2, settings.radius);
     this.endFill();
   }
