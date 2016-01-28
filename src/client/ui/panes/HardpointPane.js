@@ -83,7 +83,7 @@ function HardpointPane(game, data) {
       }
     },
     enhancementPane: {
-      padding: [1],
+      padding: [1, 0],
       layout: {
         ax: Layout.LEFT,
         ay: Layout.TOP,
@@ -98,7 +98,7 @@ function HardpointPane(game, data) {
     enhancementDataPane: {
       width: 26,
       height: 26,
-      padding: [0, 1, 1, 1],
+      padding: [0],
       layout: {
         type: 'percent',
         direction: Layout.HORIZONTAL,
