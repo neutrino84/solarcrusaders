@@ -350,7 +350,7 @@ ShipManager.prototype._updateBattles = function() {
         // destroy ship
         if(target.health <= 0) {
           this.remove(target);
-          this.generateRandomShip();
+          this.generateShip(target.chasis);
         } else {
           updates.push(update);
         }
