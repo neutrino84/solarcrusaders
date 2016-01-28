@@ -4,24 +4,40 @@ var xhr = require('xhr'),
     Layout = require('../Layout'),
     ContentPane = require('./ContentPane'),
     HardpointPane = require('./HardpointPane'),
+    CargoPane = require('./CargoPane'),
     StatPane = require('./StatPane'),
     Pane = require('../components/Pane'),
     ButtonIcon = require('../components/ButtonIcon'),
     Class = engine.Class;
 
 function FittingPane(game, settings) {
-  ContentPane.call(this, game, 'ship fittings',
+  Pane.call(this, game,
     Class.mixin(settings, {
-      padding: [1, 4, 1, 4],
-      content: {
-        padding: [1],
-        layout: {
-          ax: Layout.LEFT,
-          ay: Layout.TOP,
-          direction: Layout.HORIZONTAL,
-          gap: 1
+      layout: {
+        direction: Layout.HORIZONTAL
+      },
+      cargoPane: {
+        padding: [1, 4, 1, 0],
+        content: {
+          padding: [2],
+          layout: {
+            gap: 2
+          }
         },
-        bg: {}
+        bg: false
+      },
+      fittingPane: {
+        padding: [1, 4],
+        content: {
+          padding: [1],
+          layout: {
+            ax: Layout.LEFT,
+            ay: Layout.TOP,
+            direction: Layout.HORIZONTAL,
+            gap: 1
+          }
+        },
+        bg: false
       },
       close: {
         padding: [0, 2],
@@ -46,16 +62,22 @@ function FittingPane(game, settings) {
     })
   );
 
+  this.cargoPane = new CargoPane(game, this.settings.cargoPane);
+  this.fittingPane = new ContentPane(game, 'ship fitting', this.settings.fittingPane);
+
   this.closeButton = new ButtonIcon(game, 'texture-atlas', this.settings.close);
   this.closeButton.on('inputUp', this.close, this);
 
-  this.title.addPanel(Layout.RIGHT, this.closeButton);
+  this.fittingPane.title.addPanel(Layout.RIGHT, this.closeButton);
+
+  this.addPanel(Layout.STRETCH, this.cargoPane);
+  this.addPanel(Layout.STRETCH, this.fittingPane);
 
   this.game.on('ship/fitting', this.open, this);
   // this.game.on('gui/player/select', this.open, this);
 };
 
-FittingPane.prototype = Object.create(ContentPane.prototype);
+FittingPane.prototype = Object.create(Pane.prototype);
 FittingPane.prototype.constructor = FittingPane;
 
 FittingPane.prototype.reset = function() {
@@ -73,11 +95,12 @@ FittingPane.prototype.open = function(data) {
     this.hardpointPane = new HardpointPane(game, data);
     this.statPane = new StatPane(game, data);
 
-    this.addContent(Layout.STRETCH, this.hardpointPane);
-    this.addContent(Layout.STRETCH, this.statPane);
+    this.fittingPane.addContent(Layout.STRETCH, this.hardpointPane);
+    this.fittingPane.addContent(Layout.STRETCH, this.statPane);
   }
 
-  this.button.start();
+  this.cargoPane.start();
+  this.fittingPane.button.start();
   this.closeButton.start();
   this.hardpointPane.start();
 
@@ -88,12 +111,14 @@ FittingPane.prototype.open = function(data) {
 
 FittingPane.prototype.close = function() {
   this.reset();
-  this.button.stop();
+
+  this.cargoPane.stop();
+  this.fittingPane.button.stop();
   this.closeButton.stop();
   this.hardpointPane.stop();
   this.bg.inputEnabled = false;
+
   this.game.emit('gui/modal', false);
 };
-
 
 module.exports = FittingPane;
