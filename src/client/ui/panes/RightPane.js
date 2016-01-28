@@ -8,8 +8,6 @@ var engine = require('engine'),
 
 function RightPane(game, settings) {
   Pane.call(this, game, {
-    width: 288,
-    height: 96,
     padding: [0],
     layout: {
       ax: Layout.CENTER,
@@ -76,7 +74,7 @@ function RightPane(game, settings) {
     })
 
   this.versionText = new Label(game,
-    'solar crusaders v2034', {
+    'solar crusaders v2035', {
       padding: [5],
       text: {
         fontName: 'medium',
