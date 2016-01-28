@@ -141,7 +141,7 @@ HardpointPane.prototype.constructor = HardpointPane;
 HardpointPane.prototype.reset = function() {
   this.costLabel.text = 'cost --';
   this.activeLabel.text = 'active --';
-  this.cooldownLabel.text = 'cooldown --';
+  this.cooldownLabel.text = 'cool --';
 
   this._enhancementButtonReset();
   this._dpsEnhancementSelect();
