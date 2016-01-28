@@ -258,7 +258,7 @@ HardpointPane.prototype.createEnhancementDataPane = function() {
   var enhancementDataPane = new Pane(game, this.settings.enhancementDataPane),
       costLabel = this.costLabel = new Label(game, 'cost --', this.settings.enhancementDataPaneLabel),
       activeLabel = this.activeLabel = new Label(game, 'active --', this.settings.enhancementDataPaneLabel)
-      cooldownLabel = this.cooldownLabel = new Label(game, 'cooldown --', this.settings.enhancementDataPaneLabel);
+      cooldownLabel = this.cooldownLabel = new Label(game, 'cool --', this.settings.enhancementDataPaneLabel);
 
   enhancementDataPane.addPanel(33, costLabel);
   enhancementDataPane.addPanel(33, activeLabel);
@@ -269,8 +269,8 @@ HardpointPane.prototype.createEnhancementDataPane = function() {
 
 HardpointPane.prototype._enhancementSelect = function(enhancement) {
   this.costLabel.text = 'cost ' + enhancement.cost + ' gj';
-  this.activeLabel.text = 'active ' + enhancement.active + ' s';
-  this.cooldownLabel.text = 'cooldown ' + enhancement.cooldown + ' s';
+  this.activeLabel.text = 'active ' + enhancement.active + ' sec';
+  this.cooldownLabel.text = 'cool ' + enhancement.cooldown + ' sec';
 
   this._dpsEnhancementSelect(enhancement);
 
