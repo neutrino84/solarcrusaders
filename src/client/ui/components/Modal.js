@@ -13,7 +13,7 @@ function Modal(game, settings) {
     padding: [0],
     border: [0],
     bg: {
-      fillAlpha: 0.8,
+      fillAlpha: 0.75,
       color: 0x000000,
       borderSize: 0.0,
       radius: 0.0
