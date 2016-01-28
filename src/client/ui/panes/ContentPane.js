@@ -91,7 +91,6 @@ function ContentPane(game, string, settings) {
   this.setPadding.apply(this, this.settings.padding);
   this.setBorder.apply(this, this.settings.border);
 
-  this.bg = new BackgroundView(game, this.settings.bg);
   this.title = new Pane(game, this.settings.title);
   this.content = new Pane(game, this.settings.content);
   this.button = new Button(game, string, this.settings.button);
@@ -99,7 +98,10 @@ function ContentPane(game, string, settings) {
   
   this.label = this.button.label;
 
-  this.addView(this.bg);
+  if(this.settings.bg) {
+    this.bg = new BackgroundView(game, this.settings.bg);
+    this.addView(this.bg);
+  }
 
   this.addPanel(Layout.CENTER, this.content);
   this.addPanel(Layout.TOP, this.title);
