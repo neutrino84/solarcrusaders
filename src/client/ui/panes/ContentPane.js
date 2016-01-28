@@ -52,7 +52,7 @@ function ContentPane(game, string, settings) {
         ax: Layout.LEFT,
         ay: Layout.TOP,
         direction: Layout.HORIZONTAL,
-        gap: 0
+        gap: 1
       },
       bg: {
         fillAlpha: 0.0,
