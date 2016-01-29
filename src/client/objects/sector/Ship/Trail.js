@@ -1,48 +1,61 @@
 
 var engine = require('engine');
 
-function Trails(parent) {
+function Trail(parent) {
   this.parent = parent;
   this.game = parent.game;
   this.trajectoryGroup = parent.manager.trajectoryGroup;
 
-  this.numOfPoints = 12;
+  this.numOfPoints = 8;
 };
 
-Trails.prototype.constructor = Trails;
+Trail.prototype.constructor = Trail;
 
-Trails.prototype.create = function() {
+Trail.prototype.create = function() {
   var points = this.points = [],
-      parent = this.parent,
-      config = parent.config.engine.trail,
-      center = game.world.worldTransform.applyInverse(parent.worldTransform.apply(config.position));
+       center, parent = this.parent,
+      config = parent.config.engine.trail;
+  if(config) {
+    center = game.world.worldTransform.applyInverse(parent.worldTransform.apply(config.position));
 
-  for(var i=0; i<this.numOfPoints; i++) {
-    points.push(new engine.Point(center.x, center.y));
+    for(var i=0; i<this.numOfPoints; i++) {
+      points.push(new engine.Point(center.x, center.y));
+    }
+
+    this.trail = new engine.Strip(this.game, 'trails', points);
+    this.trail.scale.set(config.scale.x, config.scale.y);
+    this.trail.blendMode = engine.BlendMode.ADD;
+    this.trail.alpha = 0.75;
+
+    this.trajectoryGroup.add(this.trail);
   }
-
-  this.trail = new engine.Strip(this.game, 'trails', points);
-  this.trail.scale.set(config.scale.x, config.scale.y);
-  this.trail.tint = 0x336699;
-  this.trail.alpha = 1.0;
-  this.trail.blendMode = engine.BlendMode.ADD;
-
-  this.trajectoryGroup.addChild(this.trail);
 };
 
-Trails.prototype.update = function() {
-  var trail = this.trail,
+Trail.prototype.update = function() {
+  var pos, center, trail = this.trail,
       parent = this.parent,
       points = this.points,
       len = this.numOfPoints,
       config = parent.config.engine.trail,
-      worldTransform = this.game.world.worldTransform,
-      center = game.world.worldTransform.applyInverse(parent.worldTransform.apply(config.position));
-  for(var i=0; i<len; i++) {
-    points[i].interpolate(center, (i*2) * 0.0075, points[i]);
+      worldTransform = this.game.world.worldTransform;
+  if(config) {
+    center = worldTransform.applyInverse(parent.worldTransform.apply(config.position))
+    for(var i=0; i<len; i++) {
+      if(i == len-1) {
+        pos = center;
+      } else {
+        pos = points[i+1];
+      }
+      points[i].interpolate(pos, (i*2) * 0.015, points[i]);
+    }
   }
-  points[len-1].set(center.x, center.y);
-  points[len-2].set(center.x, center.y);
 };
 
-module.exports = Trails;
+Trail.prototype.destroy = function() {
+  this.trajectoryGroup.remove(this.trail);
+
+  this.trail = this.points = this.parent =
+    this.game = this.trajectoryGroup = undefined;
+};
+
+module.exports = Trail;
