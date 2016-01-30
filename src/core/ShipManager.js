@@ -348,9 +348,11 @@ ShipManager.prototype._updateBattles = function() {
         });
         
         // destroy ship
-        if(target.health <= 0) {
+        if(target.health <= 0) {          
+          if(target.user === undefined) {
+            this.generateShip(target.chasis);
+          }
           this.remove(target);
-          this.generateShip(target.chasis);
         } else {
           updates.push(update);
         }
