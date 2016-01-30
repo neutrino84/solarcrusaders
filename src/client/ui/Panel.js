@@ -41,13 +41,13 @@ Panel.prototype.removePanel = function(panel) {
   this.panels.splice(this.panels.indexOf(panel), 1);
   this.remove(panel);
   // this.invalidate();
-}
+};
 
 Panel.prototype.addView = function(view) {
   this.views.push(view);
   this.add(view);
   // this.invalidate();
-}
+};
 
 Panel.prototype.invalidate = function(local) {
   this.isValid = false;
@@ -169,7 +169,7 @@ Panel.prototype.setPadding = function(top, left, bottom, right) {
   }
 
   return this;
-}
+};
 
 Panel.prototype.setSize = function(width, height) {
   if(width != this.size.width || height != this.size.height) {
