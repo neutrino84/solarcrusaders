@@ -227,7 +227,7 @@ ShipManager.prototype.generateShip = function(chassis) {
   this.create({
     rotation: global.Math.random() * global.Math.PI,
     chasis: chassis,
-    throttle: 1.0 + (global.Math.random() * 3)
+    throttle: 1.0 + (global.Math.random() * 2.5)
   });
 };
 
