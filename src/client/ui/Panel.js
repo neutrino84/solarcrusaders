@@ -43,6 +43,15 @@ Panel.prototype.removePanel = function(panel) {
   // this.invalidate();
 };
 
+Panel.prototype.removeAll = function() {
+  var panel, panels = this.panels,
+      len = panels.length;
+  for(var i=0; i<len; i++) {
+    panel = panels[i];
+    this.remove(panel, false);
+  }
+};
+
 Panel.prototype.addView = function(view) {
   this.views.push(view);
   this.add(view);
