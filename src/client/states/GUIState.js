@@ -13,7 +13,7 @@ var engine = require('engine'),
     RightPane = require('../ui/panes/RightPane'),
     BottomPane = require('../ui/panes/BottomPane'),
     ShipPane = require('../ui/panes/ShipPane'),
-    FittingPane = require('../ui/panes/FittingPane'),
+    ShipFittingPane = require('../ui/panes/Ship'),
 
     Alert = require('../ui/components/Alert'),
     FlashMessage = require('../ui/components/FlashMessage'),
@@ -87,7 +87,7 @@ GUIState.prototype.create = function() {
   this.leftPane = new LeftPane(game);
   this.rightPane = new RightPane(game);
 
-  this.fittingPane = new FittingPane(game);
+  this.shipFittingPane = new ShipFittingPane(game);
 
   this.shipPanel = new Panel(game, new FlowLayout(Layout.LEFT, Layout.TOP, Layout.VERTICAL, 6));
   this.shipPanel.setPadding(6);

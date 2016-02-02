@@ -1,12 +1,12 @@
 
 var engine = require('engine'),
-    Layout = require('../Layout'),
-    Pane = require('../components/Pane'),
-    Image = require('../components/Image'),
-    Label = require('../components/Label'),
-    ButtonIcon = require('../components/ButtonIcon');
+    Layout = require('../../Layout'),
+    Pane = require('../../components/Pane'),
+    Image = require('../../components/Image'),
+    Label = require('../../components/Label'),
+    ButtonIcon = require('../../components/ButtonIcon');
 
-function HardpointPane(game, data) {
+function HardpointPane(game) {
   Pane.call(this, game, {
     padding: [0],
     bg: {
@@ -123,12 +123,8 @@ function HardpointPane(game, data) {
     }
   });
 
-  // enhancement buttons
-  this.data = data;
+  // buttons
   this.buttons = [];
-
-  // build
-  this.create(data);
 
   // listen
   this.game.on('gui/fitting/enhancement', this._enhancementSelect, this);
@@ -167,6 +163,8 @@ HardpointPane.prototype.create = function(data) {
       enhancements = data.enhancements,
       len = enhancements.length,
       button;
+
+  this.data = data;
 
   this.image = new Image(game, data.chasis + '-outline', this.settings.image);
   this.image.blendMode = engine.BlendMode.ADD;

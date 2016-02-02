@@ -1,12 +1,12 @@
 
 var engine = require('engine'),
-    Layout = require('../Layout'),
-    Pane = require('../components/Pane'),
-    Label = require('../components/Label'),
-    Image = require('../components/Image'),
-    PaneFlash = require('../components/PaneFlash');
+    Layout = require('../../Layout'),
+    Pane = require('../../components/Pane'),
+    Label = require('../../components/Label'),
+    Image = require('../../components/Image'),
+    PaneFlash = require('../../components/PaneFlash');
 
-function StatPane(game, data) {
+function StatPane(game) {
   Pane.call(this, game, {
     padding: [0],
     bg: { fillAlpha: 0.0 },
@@ -59,11 +59,7 @@ function StatPane(game, data) {
     }
   });
 
-  this.data = data;
   this.statPanes = {};
-
-  // build
-  this.create(data);
 
   // listen
   this.game.on('gui/fitting/enhancement', this._enhancementSelect, this);
@@ -100,6 +96,9 @@ StatPane.prototype.create = function(data) {
   var system, systems = data.config.systems,
       stat, stats, units = data.config.units,
       en, output, pane;
+
+
+  this.data = data;
 
   for(var s in systems) {
     system = systems[s];

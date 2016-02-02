@@ -1,15 +1,21 @@
 
 var engine = require('engine'),
-    Layout = require('../Layout'),
-    ContentPane = require('./ContentPane'),
-    ItemPane = require('./ItemPane'),
-    Pane = require('../components/Pane'),
-    Button = require('../components/Button'),
+    Layout = require('../../Layout'),
+    ContentPane = require('../ContentPane'),
+    ItemPane = require('../ItemPane'),
+    Pane = require('../../components/Pane'),
+    Button = require('../../components/Button'),
     Class = engine.Class;
 
 function CargoPane(game, settings) {
   ContentPane.call(this, game, 'cargo hold',
     Class.mixin(settings, {
+      content: {
+        padding: [1]//,
+        // layout: {
+        //   gap: 0
+        // }
+      },
       tab: {
         padding: [0],
         bg: {
@@ -32,8 +38,8 @@ function CargoPane(game, settings) {
         }
       },
       info: {
-        width: 35,
-        height: 35,
+        width: 32,
+        height: 32,
         padding: [0],
         // layout: {
         //   type: 'percent',
@@ -47,44 +53,77 @@ function CargoPane(game, settings) {
         }
       },
       item: {
+        padding: [5],
         layout: {
-          columns: 6
+          gap: [5, 5],
+          columns: 5,
+          rows: 6
+        },
+        cell: {
+          width: 40,
+          height: 40
         }
-      }
+      },
+      bg: false
     })
   );
+  
+  this.pageButtons = [];
+  this.pagePanes = [];
 
-  this.pageButton1 = new Button(game, '1', this.settings.tab);
-  this.pageButton1.disabled = true;
-  this.pageButton1.stop();
-
-  this.pageButton2 = new Button(game, '2', this.settings.tab);
-  this.pageButton2.disabled = true;
-  this.pageButton2.stop();
-
-  this.itemPane = new ItemPane(game, this.settings.item);
   this.infoPane = new Pane(game, this.settings.info);
-
-  this.addTab(Layout.NONE, this.pageButton1);
-  this.addTab(Layout.NONE, this.pageButton2);
-
   this.addContent(Layout.STRETCH, this.infoPane);
-  this.addContent(Layout.NONE, this.itemPane);
+
+  // create
+  this.create();
 };
 
 CargoPane.prototype = Object.create(ContentPane.prototype);
 CargoPane.prototype.constructor = CargoPane;
 
+CargoPane.prototype.reset = function(data) {
+  var slice, page,
+      items = data.items,
+      layout = this.settings.item.layout,
+      columns = layout.columns,
+      rows = layout.rows,
+      size = columns * rows,
+      pages = global.Math.ceil(items.length / size);
+  for(var i=0; i<pages; i++) {
+    slice = items.slice(i, size);
+    page = this.pagePanes[i];
+    page.reset(items);
+  }
+};
+
 CargoPane.prototype.start = function() {
   this.button.start();
-  this.pageButton1.start();
-  this.pageButton2.start();
+  //.. start page buttons
 };
 
 CargoPane.prototype.stop = function() {
   this.button.stop();
-  this.pageButton1.stop();
-  this.pageButton2.stop();
+  //.. stop page buttons
+};
+
+CargoPane.prototype.create = function() {
+  var index = this.pagePanes.length+1;
+      pagePane = new ItemPane(this.game, this.settings.item),
+      pageButton = new Button(this.game, index.toString(), this.settings.tab);
+      pageButton.disabled = true;
+      pageButton.stop();
+
+  //.. add button listener
+
+  this.pageButtons.push(pageButton);
+  this.pagePanes.push(pagePane);
+  this.addContent(Layout.NONE, pagePane);
+  this.addTab(Layout.NONE, pageButton);
+};
+
+CargoPane.prototype.page = function(page) {
+  //.. show page
+  //.. hide page
 };
 
 module.exports = CargoPane;
