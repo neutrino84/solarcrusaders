@@ -35,7 +35,7 @@ EngineCore.prototype.create = function() {
     highlight = new engine.Sprite(parent.game, 'texture-atlas', 'engine-highlight.png');
     highlight.pivot.set(32, 32);
     highlight.position.set(c.position.x, c.position.y);
-    highlight.scale.set(1.25, 1.25);
+    highlight.scale.set(1.0, 1.0);
     highlight.tint = c.tint;
     highlight.blendMode = engine.BlendMode.ADD;
     highlight.alpha = 0;
