@@ -54,15 +54,15 @@ Trail.prototype.update = function() {
       vector;
   if(config) {
     center = worldTransform.applyInverse(parent.worldTransform.apply(config.position, this._tempPoint), this._tempPoint);
-    for(var i=0; i<len; i++) {
+    for(var i=len-1; i>=0; i--) {
       if(i==len-1) {
         points[i].set(center.x, center.y);
-      } else if(i==len-2) {
-        vector = parent.movement.vector.multiply(3.0, 3.0);
-        points[i].set(center.x-vector.x, center.y-vector.y);
+      // } else if(i==len-2) {
+      //   vector = parent.movement.vector.multiply(3.0, 3.0);
+      //   points[i].set(center.x-vector.x, center.y-vector.y);
       } else {
         pos = points[i+1];
-        points[i].interpolate(pos, (i*2) * 0.01, points[i]);
+        points[i].interpolate(center, (i+1) * 0.01, points[i]);
       }
     }
   }
