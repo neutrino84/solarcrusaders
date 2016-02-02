@@ -14,6 +14,7 @@ function ButtonIcon(game, key, settings) {
   this._alert = false;
   this._selected = false;
   this._disabled = false;
+  this._tempPosition = new engine.Point();
 
   // default styles
   this.settings = Class.mixin(settings, {
@@ -49,9 +50,11 @@ function ButtonIcon(game, key, settings) {
   }
 
   this.bg = new BackgroundView(game, this.settings.bg);
-  this.bg.inputEnabled = true;
-  this.bg.input.priorityID = 2;
   this.bg.alpha = 0.75;
+
+  // input handler
+  this.input = new engine.InputHandler(this);
+  this.input.start(2);
 
   // color blend
   this.colorBlend = new ColorBlend(game, this.image);
@@ -61,10 +64,10 @@ function ButtonIcon(game, key, settings) {
   }, this);
 
   // event handling
-  this.bg.on('inputOver', this._inputOver, this);
-  this.bg.on('inputOut', this._inputOut, this);
-  this.bg.on('inputDown', this._inputDown, this);
-  this.bg.on('inputUp', this._inputUp, this);
+  this.on('inputOver', this._inputOver, this);
+  this.on('inputOut', this._inputOut, this);
+  this.on('inputDown', this._inputDown, this);
+  this.on('inputUp', this._inputUp, this);
 
   // build icon
   this.addView(this.bg);
@@ -75,12 +78,11 @@ ButtonIcon.prototype = Object.create(Panel.prototype);
 ButtonIcon.prototype.constructor = ButtonIcon;
 
 ButtonIcon.prototype.start = function() {
-  this.bg.inputEnabled = true;
-  this.bg.input.priorityID = 2;
+  this.input.start(2);
 };
 
 ButtonIcon.prototype.stop = function() {
-  this.bg.inputEnabled = false;
+  this.input.stop();
 };
 
 ButtonIcon.prototype.alert = function() {
@@ -89,17 +91,30 @@ ButtonIcon.prototype.alert = function() {
   this.colorBlend.start();
 };
 
+ButtonIcon.prototype.enableDrag = function() {
+  this.input.enableDrag();
+  this.on('dragStart', this._dragStart, this); 
+};
+
+ButtonIcon.prototype._dragStart = function() {
+  this._tempPosition.copyFrom(this.position);
+  this.once('dragStop', this._dragStop, this);
+};
+
+ButtonIcon.prototype._dragStop = function() {
+  var tween = game.tweens.create(this.position);
+      tween.to({ x: this._tempPosition.x , y: this._tempPosition.y }, 150, engine.Easing.Quadratic.Out);
+      tween.start();
+};
+
 ButtonIcon.prototype._inputUp = function() {
-  if(this.selected) {
-    this.emit('inputUp', this);
-  } else if(!this.disabled) {
+  if(!this.disabled) {
     if(this._alert) {
       this._alert = false;
       this.colorBlend.stop();
     }
     this.bg.tint = 0xffffff;
     this.image.bg.tint = 0xffffff;
-    this.emit('inputUp', this);
   }
 };
 
@@ -108,7 +123,6 @@ ButtonIcon.prototype._inputDown = function() {
 
   this.bg.tint = 0xaaccee;
   this.image.bg.tint = 0xaaccee;
-  this.emit('inputDown', this);
 };
 
 ButtonIcon.prototype._inputOver = function() {
