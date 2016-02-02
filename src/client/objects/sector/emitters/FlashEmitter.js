@@ -5,11 +5,11 @@ function FlashEmitter(game) {
   engine.Emitter.call(this, game, 0, 0);
 
   this.blendMode = engine.BlendMode.ADD;
-  this.setScale(0.0, 1.5, 0.0, 1.5, 250);
+  this.setScale(0.35, 1.0, 0.35, 1.0, 250);
   this.minRotation = 0;
   this.maxRotation = 0;
-  this.setAlpha(1.0, 0.0, 250);
-  this.setTint(0x336699, 0x6699BB, 250);
+  this.setAlpha(1.0, 0.0, 500);
+  this.setTint(0x336699, 0x666666, 500);
   this.makeParticles('texture-atlas', 'explosion-flash.png');
 };
 

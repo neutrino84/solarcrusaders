@@ -41,7 +41,7 @@ Damage.prototype.inflict = function(position) {
 
 Damage.prototype.shockwave = function() {
   this.shockwaveEmitter.at({ center: this.ship.position });
-  this.shockwaveEmitter.explode(10);
+  this.shockwaveEmitter.explode(2);
 };
 
 Damage.prototype.destroyed = function() {
@@ -66,11 +66,11 @@ Damage.prototype.destroyed = function() {
       point = game.world.worldTransform.applyInverse(ship.worldTransform.apply(ship.circle.random()));
       
       this.explosionEmitter.at({ center: point });
-      this.explosionEmitter.explode(1);
+      this.explosionEmitter.explode(2);
       
       this.glowEmitter.color(null);
       this.glowEmitter.at({ center: point });
-      this.glowEmitter.explode(4);
+      this.glowEmitter.explode(1);
     }
   }, this);
 
@@ -79,11 +79,11 @@ Damage.prototype.destroyed = function() {
       point = game.world.worldTransform.applyInverse(ship.worldTransform.apply(ship.circle.random()));
       
       this.explosionEmitter.at({ center: point });
-      this.explosionEmitter.explode(1);
+      this.explosionEmitter.explode(2);
       
       this.glowEmitter.color(null);
       this.glowEmitter.at({ center: point });
-      this.glowEmitter.explode(2);
+      this.glowEmitter.explode(1);
     }
   }, this);
 };

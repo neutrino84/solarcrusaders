@@ -62,14 +62,14 @@ Laser.prototype.fire = function(miss, enhancements, shields) {
     this.glowTween.start();
     this.glowTween.once('complete', function() {
       parent.flashEmitter.at({ center: this._end });
-      parent.flashEmitter.explode(shields ? 10 : 2);
+      parent.flashEmitter.explode(2);
 
       parent.glowEmitter.color(0xFF6666);
       parent.glowEmitter.at({ center: this._end });
-      parent.glowEmitter.explode(10);
+      parent.glowEmitter.explode(1);
 
       parent.explosionEmitter.at({ center: this._end });
-      parent.explosionEmitter.explode(10);
+      parent.explosionEmitter.explode(1);
 
       parent.fxGroup.removeChild(this.glowSprite);
     }, this);
@@ -92,16 +92,16 @@ Laser.prototype.fire = function(miss, enhancements, shields) {
 
   this.endTween.once('complete', function() {
     parent.flashEmitter.at({ center: this._end });
-    parent.flashEmitter.explode(shields ? 10 : 2);
+    parent.flashEmitter.explode(2);
 
     if(!miss) {
       parent.glowEmitter.color(shields ? 0x336699 : 0xFF6666);
       parent.glowEmitter.at({ center: this._end });
-      parent.glowEmitter.explode(shields ? 10 : global.Math.round(3 * global.Math.random()) + 3);
+      parent.glowEmitter.explode(shields ? 2 : 2);
 
       if(!shields) {
         parent.explosionEmitter.at({ center: this._end });
-        parent.explosionEmitter.explode(1);
+        parent.explosionEmitter.explode(3);
 
         if(parent.ship.target) {
           parent.ship.target.damage.inflict(parent.target);

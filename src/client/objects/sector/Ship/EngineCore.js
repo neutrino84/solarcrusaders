@@ -73,7 +73,7 @@ EngineCore.prototype.update = function(multiplier) {
     highlight = highlights[h];
     highlight.alpha = global.Math.min(1.0, clamped);
     
-    if(this.booster) {
+    if(this.booster && global.Math.random() > 0.5) {
       center = game.world.worldTransform.applyInverse(highlight.worldTransform.apply(highlight.pivot));
       parent.manager.flashEmitter.at({ center: center });
       parent.manager.flashEmitter.explode(1);
