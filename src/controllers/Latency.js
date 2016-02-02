@@ -16,14 +16,14 @@ Latency.prototype.init = function(next) {
     });
   });
 
-  this.routes.iorouter.on('pong', this.pong.bind(this));
+  this.routes.iorouter.on('drop', this.pong.bind(this));
 };
 
 Latency.prototype.ping = function() {
   var now = global.Date.now(),
       session = this.handshake.session;
       session.ping = now;
-  this.emit('ping', {
+  this.emit('drip', {
     rtt: session.rtt || 0
   });
 };

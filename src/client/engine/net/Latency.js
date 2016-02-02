@@ -9,7 +9,7 @@ function Latency(game) {
 
   this._history = [];
 
-  this.socket.on('ping', this.ping.bind(this));
+  this.socket.on('drip', this.ping.bind(this));
 };
 
 Latency.HISTORY_SIZE = 10;
@@ -17,7 +17,7 @@ Latency.HISTORY_SIZE = 10;
 Latency.prototype.constructor = Latency;
 
 Latency.prototype.ping = function(data) {
-  this.socket.emit('pong');
+  this.socket.emit('drop');
   this._compute(data);
 };
 
