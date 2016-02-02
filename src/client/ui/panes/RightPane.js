@@ -74,7 +74,7 @@ function RightPane(game, settings) {
     })
 
   this.versionText = new Label(game,
-    'solar crusaders v2035', {
+    'solar crusaders v2037', {
       padding: [5],
       text: {
         fontName: 'medium',
