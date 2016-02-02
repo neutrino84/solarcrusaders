@@ -15,21 +15,21 @@ Trail.prototype.constructor = Trail;
 
 Trail.prototype.create = function() {
   var points = this.points = [],
-      center, parent = this.parent,
+      parent = this.parent,
       config = parent.config.engine.trail;
   if(config) {
-    center = game.world.worldTransform.applyInverse(parent.worldTransform.apply(config.position));
-
     for(var i=0; i<this.numOfPoints; i++) {
-      points.push(new engine.Point(center.x, center.y));
+      points.push(new engine.Point(parent.position.x - i, parent.position.y));
     }
 
     this.trail = new engine.Strip(this.game, 'trails', points);
-    this.trail.scale.set(config.scale.x, config.scale.y);
     this.trail.blendMode = engine.BlendMode.ADD;
     this.trail.alpha = 0.75;
 
-    this.trajectoryGroup.add(this.trail);
+    // wait to add
+    this.game.clock.events.add(1000, function() {
+      this.trajectoryGroup.add(this.trail);
+    }, this)
 
     parent.on('enterBounds', this.enterBounds, this);
     parent.on('exitBounds', this.exitBounds, this);
