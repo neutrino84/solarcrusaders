@@ -11,6 +11,9 @@ var engine = require('engine'),
 function Button(game, string, settings) {
   Panel.call(this, game, new StackLayout());
 
+  this._alert = false;
+  this._disabled = false;
+
   // default styles
   this.settings = Class.mixin(settings, {
     padding: [2],
@@ -83,31 +86,65 @@ Button.prototype.alert = function() {
 };
 
 Button.prototype._inputUp = function() {
+  if(this.disabled) { return; }
   if(this._alert) {
     this._alert = false;
     this.colorBlend.stop();
   }
+
   this.bg.tint = 0xffffff;
   this.label.bg.tint = 0xffffff;
   this.emit('inputUp', this);
 };
 
 Button.prototype._inputDown = function() {
+  if(this.disabled) { return; }
+
   this.bg.tint = 0xaaccee;
   this.label.bg.tint = 0xaaccee;
   this.emit('inputDown', this);
 };
 
 Button.prototype._inputOver = function() {
+  if(this.disabled) { return; }
+
   this.bg.alpha = 1.0;
   this.label.alpha = 1.0;
 };
 
 Button.prototype._inputOut = function() {
+  if(this.disabled) { return; }
   if(!this._alert) {
     this.bg.alpha = 0.75;
   }
   this.label.alpha = 0.9;
 };
+
+Object.defineProperty(Button.prototype, 'tint', {
+  set: function(value) {
+    this.bg.tint = value;
+  },
+
+  get: function() {
+    return this.bg.tint;
+  }
+});
+
+Object.defineProperty(Button.prototype, 'disabled', {
+  set: function(value) {
+    if(value === false) {
+      this.label.alpha = 0.9;
+      this.bg.alpha = 0.9;
+    } else {
+      this.label.alpha = 0.25;
+      this.bg.alpha = 0.5;
+    }
+    this._disabled = value;
+  },
+
+  get: function() {
+    return this._disabled;
+  }
+});
 
 module.exports = Button;
