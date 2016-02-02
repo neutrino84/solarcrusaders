@@ -13,6 +13,7 @@ var Device = require('./system/Device'),
     Keyboard = require('./controls/Keyboard'),
     Mouse = require('./controls/Mouse'),
     Pointer = require('./controls/Pointer'),
+    InputHandler = require('./controls/InputHandler'),
     Class = require('./utils/Class'),
     Point = require('./geometry/Point'),
     Line = require('./geometry/Line'),
@@ -55,6 +56,7 @@ var core = module.exports =
     Keyboard: Keyboard,
     Mouse: Mouse,
     Pointer: Pointer,
+    InputHandler: InputHandler,
 
     // particles
     Emitter: Emitter,
