@@ -145,15 +145,8 @@ AnimationManager.prototype = {
   stop: function(name, resetFrame) {
     if(resetFrame === undefined) { resetFrame = false; }
 
-    if(typeof name === 'string') {
-      if(this._anims[name]) {
-        this.currentAnim = this._anims[name];
-        this.currentAnim.stop(resetFrame);
-      }
-    } else {
-      if(this.currentAnim) {
-        this.currentAnim.stop(resetFrame);
-      }
+    if(this.currentAnim && (typeof name !== 'string' || name === this.currentAnim.name)) {
+      this.currentAnim.stop(resetFrame);
     }
   },
 
