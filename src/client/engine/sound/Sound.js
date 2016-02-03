@@ -127,6 +127,7 @@ Sound.prototype.onEndedHandler = function() {
   }
   
   this.isPlaying = false;
+  this.currentTime = this.durationMS;
   this.stop();
 };
 
