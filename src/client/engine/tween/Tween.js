@@ -136,6 +136,7 @@ Tween.prototype.stop = function(complete) {
 
   if(complete) {
     this.emit('complete', this);
+    this._hasStarted = false;
 
     if(this.chainedTween) {
       this.chainedTween.start();
@@ -344,6 +345,7 @@ Tween.prototype.update = function(time) {
         // No more repeats and no more children, so we're done
         this.isRunning = false;
         this.emit('complete', this);
+        this._hasStarted = false;
 
         if(this.chainedTween) {
           this.chainedTween.start();
