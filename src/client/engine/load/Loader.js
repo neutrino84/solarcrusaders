@@ -644,8 +644,8 @@ Loader.prototype.getAudioURL = function(urls) {
     
     // {uri: .., type: ..} pair
     if(url.uri) {
-      url = url.uri;
       audioType = url.type;
+      url = url.uri;
     } else {
       // Assume direct-data URI can be played if not in a paired form; select immediately
       if(url.indexOf("blob:") === 0 || url.indexOf("data:") === 0) {
@@ -663,7 +663,7 @@ Loader.prototype.getAudioURL = function(urls) {
     }
 
     if(Device.canPlayAudio(audioType)) {
-      return urls[i];
+      return url;
     }
   }
 
