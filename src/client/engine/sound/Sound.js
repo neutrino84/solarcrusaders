@@ -195,12 +195,6 @@ Sound.prototype.play = function(marker, position, volume, loop, forceRestart) {
 
   if(this._sound && this.isPlaying && !this.allowMultiple && (this.override || forceRestart)) {
     if(this.usingWebAudio) {
-      if(this.externalNode) {
-        this._sound.disconnect(this.externalNode);
-      } else {
-        this._sound.disconnect(this.gainNode);
-      }
-
       if(this._sound.stop === undefined) {
         this._sound.noteOff(0);
       } else {
@@ -208,6 +202,11 @@ Sound.prototype.play = function(marker, position, volume, loop, forceRestart) {
           this._sound.stop(0);
         }
         catch (e) {}
+      }
+      if(this.externalNode) {
+        this._sound.disconnect(this.externalNode);
+      } else {
+        this._sound.disconnect(this.gainNode);
       }
     } else if(this.usingAudioTag) {
       this._sound.pause();
@@ -426,18 +425,17 @@ Sound.prototype.resume = function() {
 Sound.prototype.stop = function() {
   if(this.isPlaying && this._sound) {
     if(this.usingWebAudio) {
-      if(this.externalNode) {
-        this._sound.disconnect(this.externalNode);
-      } else {
-        this._sound.disconnect(this.gainNode);
-      }
-
       if(this._sound.stop === undefined) {
         this._sound.noteOff(0);
       } else {
         try {
           this._sound.stop(0);
         } catch (e) {}
+      }
+      if(this.externalNode) {
+        this._sound.disconnect(this.externalNode);
+      } else {
+        this._sound.disconnect(this.gainNode);
       }
     } else if(this.usingAudioTag) {
       this._sound.pause();
