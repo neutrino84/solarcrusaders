@@ -232,6 +232,14 @@ TweenData.prototype = {
     if(this.yoyo) {
       // We're already in reverse mode, which means the yoyo has finished and there's no repeats, so end
       if(this.inReverse && this.repeatCounter === 0) {
+        // restore the properties
+        for(var property in this.vStartCache) {
+          this.vStart[property] = this.vStartCache[property];
+          this.vEnd[property] = this.vEndCache[property];
+        }
+
+        this.inReverse = false;
+
         return TweenData.COMPLETE;
       }
 
