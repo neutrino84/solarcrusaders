@@ -127,6 +127,12 @@ module.exports = {
     return global.Math.atan2(point2.x - point1.x, point2.y - point1.y);
   },
 
+  worldAngleToPointer: function(displayObject, pointer) {
+    var dx = pointer.worldX-displayObject.world.x,
+        dy = pointer.worldY-displayObject.world.y;
+    return Math.atan2(dy, dx);
+  },
+
   reverseAngle: function(angleRad) {
     return this.normalizeAngle(angleRad + global.Math.PI, true);
   },
