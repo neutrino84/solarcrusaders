@@ -37,8 +37,6 @@ function InputHandler(sprite) {
   this.boundsRect = null;
   this.boundsSprite = null;
 
-  this.consumePointerEvent = false;
-
   this.scaleLayer = false;
   
   this.dragFromCenter = false;
@@ -476,9 +474,6 @@ InputHandler.prototype = {
         this.sprite.bringToTop();
       }
     }
-
-    // Consume the event?
-    return this.consumePointerEvent;
   },
 
   _releasedHandler: function(pointer) {
