@@ -130,7 +130,7 @@ module.exports = {
   worldAngleToPointer: function(displayObject, pointer) {
     var dx = pointer.worldX-displayObject.world.x,
         dy = pointer.worldY-displayObject.world.y;
-    return Math.atan2(dy, dx);
+    return global.Math.atan2(dy, dx);
   },
 
   reverseAngle: function(angleRad) {
