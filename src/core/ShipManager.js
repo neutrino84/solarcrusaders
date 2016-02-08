@@ -190,11 +190,8 @@ ShipManager.prototype.update = function() {
 
 ShipManager.prototype.generateRandomShips = function() {
   var iterator = {
-        'vessel-x01': { count: 2 },
-        'vessel-x02': { count: 2 },
-        'vessel-x03': { count: 2 },
-        'vessel-x04': { count: 10 },
-        'vessel-x05': { count: 5 }
+        'vessel-x01': { count: 0 },
+        'vessel-x02': { count: 0 }
       };
   for(var key in iterator) {
     for(var i=0; i<iterator[key].count; i++) {
@@ -204,23 +201,6 @@ ShipManager.prototype.generateRandomShips = function() {
 
   // start ai
   this._updateAI()
-};
-
-ShipManager.prototype.generateRandomShip = function() {
-  var rnd = global.Math.random(),
-      chassis;
-  if(rnd < 0.04 && this.count['vessel-x01'] === 2) {
-    chassis = 'vessel-x01';
-  } else if(rnd < 0.08 && this.count['vessel-x02'] === 0) {
-    chassis = 'vessel-x02';
-  } else if(rnd < 0.12 && this.count['vessel-x03'] === 2) {
-    chassis = 'vessel-x03';
-  } else if(rnd < 0.60) {
-    chassis = 'vessel-x04';
-  } else {
-    chassis = 'vessel-x05';
-  }
-  this.generateShip(chassis);
 };
 
 ShipManager.prototype.generateShip = function(chassis) {
