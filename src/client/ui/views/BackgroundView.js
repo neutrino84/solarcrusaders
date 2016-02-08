@@ -33,7 +33,10 @@ BackgroundView.prototype.paint = function(top, left, bottom, right) {
       settings = this.settings,
       drawMethod = settings.radius > 0 ? 'drawRoundedRect' : 'drawRect';
 
-  this.clear();
+  if(settings.highlight || settings.fillAlpha > 0 ||
+      (settings.borderSize > 0 && settings.borderAlpha > 0)) {
+    this.clear();
+  }
 
   if(settings.highlight) {
     this.lineStyle(0);
