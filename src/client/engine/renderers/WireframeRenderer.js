@@ -152,6 +152,35 @@ WireframeRenderer.prototype.buildRectangle = function(graphicsData, webGLData) {
   indices.push(vertPos, vertPos+1, vertPos+2, vertPos+3);
 };
 
+WireframeRenderer.prototype.buildCircle = function(graphicsData, webGLData) {
+  var circleData = graphicsData.shape,
+      x = circleData.x,
+      y = circleData.y,
+      width = circleData.radius,
+      height = circleData.radius,
+      totalSegs = Math.floor(30 * Math.sqrt(circleData.radius)),
+      seg = (Math.PI * 2) / totalSegs;
+
+  var color = utils.hex2rgb(graphicsData.fillColor),
+      alpha = graphicsData.fillAlpha,
+      r = color[0] * alpha,
+      g = color[1] * alpha,
+      b = color[2] * alpha,
+      verts = webGLData.points,
+      indices = webGLData.indices,
+      vecPos = verts.length/6;
+
+  indices.push(vecPos);
+
+  for(var i = 0; i<totalSegs+1; i++) {
+    verts.push(x,y, r, g, b, alpha);
+    verts.push(x + Math.sin(seg * i) * width, y + Math.cos(seg * i) * height, r, g, b, alpha);
+    indices.push(vecPos++, vecPos++);
+  }
+
+  indices.push(vecPos-1);
+};
+
 pixi.WebGLRenderer.registerPlugin('wireframe', WireframeRenderer);
 
 module.exports = WireframeRenderer;
