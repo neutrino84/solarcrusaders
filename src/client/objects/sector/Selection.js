@@ -79,7 +79,7 @@ Selection.prototype._selected = function(pointer, rectangle) {
   }
 
   if(selected.length > 0) {
-    point = game.world.worldTransform.applyInverse(rectangle);
+    point = game.world.worldTransform.applyInverse(pointer);
     
     for(var i=0; i<selected.length; i++) {
       ship = selected[i];
