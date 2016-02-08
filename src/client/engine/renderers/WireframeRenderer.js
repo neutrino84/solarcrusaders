@@ -58,7 +58,7 @@ WireframeRenderer.prototype.render = function(graphics) {
 
     // set the index buffer!
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, webGLData.indexBuffer);
-    gl.drawElements(gl.LINE_LOOP, webGLData.indices.length, gl.UNSIGNED_SHORT, 0 );
+    gl.drawElements(gl.LINE_LOOP, webGLData.indices.length, gl.UNSIGNED_SHORT, 0);
 
     renderer.drawCount++;
   }
@@ -107,6 +107,8 @@ WireframeRenderer.prototype.updateGraphics = function(graphics) {
 
     if(data.type === pixi.SHAPES.RECT) {
       this.buildRectangle(data, webGLData);
+    } else if(data.type === pixi.SHAPES.CIRC) {
+      this.buildCircle(data, webGLData);
     }
 
     webGL.lastIndex++;
@@ -158,11 +160,11 @@ WireframeRenderer.prototype.buildCircle = function(graphicsData, webGLData) {
       y = circleData.y,
       width = circleData.radius,
       height = circleData.radius,
-      totalSegs = Math.floor(30 * Math.sqrt(circleData.radius)),
+      totalSegs = Math.floor(15 * Math.sqrt(circleData.radius)),
       seg = (Math.PI * 2) / totalSegs;
 
-  var color = utils.hex2rgb(graphicsData.fillColor),
-      alpha = graphicsData.fillAlpha,
+  var color = pixi.utils.hex2rgb(graphicsData.lineColor),
+      alpha = graphicsData.lineAlpha,
       r = color[0] * alpha,
       g = color[1] * alpha,
       b = color[2] * alpha,
@@ -170,15 +172,10 @@ WireframeRenderer.prototype.buildCircle = function(graphicsData, webGLData) {
       indices = webGLData.indices,
       vecPos = verts.length/6;
 
-  indices.push(vecPos);
-
   for(var i = 0; i<totalSegs+1; i++) {
-    verts.push(x,y, r, g, b, alpha);
     verts.push(x + Math.sin(seg * i) * width, y + Math.cos(seg * i) * height, r, g, b, alpha);
-    indices.push(vecPos++, vecPos++);
+    indices.push(vecPos++);
   }
-
-  indices.push(vecPos-1);
 };
 
 pixi.WebGLRenderer.registerPlugin('wireframe', WireframeRenderer);
