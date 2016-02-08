@@ -1,5 +1,6 @@
 
-var engine = require('engine');
+var engine = require('engine'),
+    SelectionIcon = require('./helpers/SelectionIcon');
 
 function Selection(manager) {
   this.manager = manager;
@@ -7,37 +8,47 @@ function Selection(manager) {
   this.socket = this.game.net.socket;
   
   this.pixelPerfectAlpha = 1.0;
+  this.tempPoint = new engine.Point();
   this.shipsGroup = manager.shipManager.shipsGroup;
-  
-  this._tempPoint = new engine.Point();
+
+  // icon
+  this.icon = new SelectionIcon(this.game);
+  this.shipsGroup.add(this.icon);
 
   // subscribe to messages
   this.game.on('gui/selected', this._selected, this);
-  // this.game.input.on('onTap', this._tap, this);
-}
+};
 
 Selection.prototype.constructor = Selection;
 
 Selection.prototype.destroy = function() {
   this.game.removeListener('gui/selected', this._selected);
-  this.game.input.removeListener('onTap', this._tap);
 
   this.manager = this.game =
-    this.socket = this.shipsGroup;
+    this.socket = this.shipsGroup = undefined;
 };
 
-// Selection.prototype._tap = function(pointer, doubleTap) {
-//   var point;
-//   if(doubleTap) {
-//     pointer.button = engine.Mouse.RIGHT_BUTTON;
-//     this._selected(pointer, new engine.Rectangle(pointer.x, pointer.y, 1, 1));
-//   }
-// };
+Selection.prototype._plot = function(ship, destination) {
+  // show icon
+  this.icon.show(destination);
+  
+  // plot server
+  this.socket.emit('ship/plot', {
+    uuid: ship.uuid,
+    destination: destination,
+    current: ship.movement.current,
+    previous: ship.movement.previous,
+    rotation: ship.rotation
+  });
+
+  // plot local
+  ship.movement.plot(destination);
+};
 
 Selection.prototype._selected = function(pointer, rectangle) {
-  var target, highest, movement,
+  var target, highest,
       highestRenderOrderID = global.Number.MAX_VALUE,
-      point, ship,
+      destination, ship,
       select = [],
       player = [],
       targets = [],
@@ -67,7 +78,7 @@ Selection.prototype._selected = function(pointer, rectangle) {
   if(pointer.button === engine.Mouse.LEFT_BUTTON) {
     if(rectangle.volume <= 300) {
       for(var s in select) {
-        if(this._checkPixel(select[s], pointer) &&
+        if(this._checkPixel(select[s].chassis, pointer) &&
             select[s].renderOrderID < highestRenderOrderID) {
           highest = select[s];
           highestRenderOrderID = select[s].renderOrderID;
@@ -79,20 +90,12 @@ Selection.prototype._selected = function(pointer, rectangle) {
   }
 
   if(selected.length > 0) {
-    point = game.world.worldTransform.applyInverse(pointer);
+    destination = this.shipsGroup.worldTransform.applyInverse(pointer);
     
     for(var i=0; i<selected.length; i++) {
       ship = selected[i];
       if(ship.isPlayer && !ship.destroyed) {
-        movement = ship.movement;
-        this.socket.emit('ship/plot', {
-          uuid: ship.uuid,
-          destination: point,
-          current: movement.current,
-          previous: movement.previous,
-          rotation: ship.rotation
-        });
-        movement.plot(point);
+        this._plot(ship, destination);
       }
     }
   }
@@ -103,9 +106,9 @@ Selection.prototype._checkPixel = function(sprite, pointer) {
       input = this.game.input,
       texture = sprite.texture;
   if(texture.baseTexture.source) {
-    input.getLocalPosition(sprite, pointer, this._tempPoint);
-    x = this._tempPoint.x;
-    y = this._tempPoint.y;
+    input.getLocalPosition(sprite, pointer, this.tempPoint);
+    x = this.tempPoint.x;
+    y = this.tempPoint.y;
 
     if(sprite.anchor.x !== 0) {
       x -= -texture.frame.width * sprite.anchor.x;
