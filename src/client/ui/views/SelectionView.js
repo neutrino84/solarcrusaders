@@ -237,7 +237,8 @@ SelectionView.prototype._stopDrag = function(pointer) {
 
   // non-zero bounding box
   if(rect.volume === 0) {
-    rect.resize(1, 1);
+    rect.resize(2, 2);
+    rect.centerOn(pointer.x, pointer.y);
   }
 
   // emit selected bounding rect
