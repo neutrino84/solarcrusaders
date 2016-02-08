@@ -57,7 +57,7 @@ Selection.prototype._selected = function(pointer, rectangle) {
       }
     }
     if(pointer.button === engine.Mouse.RIGHT_BUTTON) {
-      if(child.selected && rectangle.volume <= 300) {
+      if(child.selected) {
         selected.push(child);
       }
     }

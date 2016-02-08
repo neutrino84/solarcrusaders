@@ -1,7 +1,6 @@
 
 var engine = require('engine'),
     Graphics = engine.Graphics,
-    Class = engine.Class,
     View = require('../View');
 
 function SelectionView(game) {
@@ -15,7 +14,6 @@ function SelectionView(game) {
   this.enabled = false;
   this.isDragged = false;
   this.priorityID = 1;
-  this.consumePointerEvent = false;
 
   this.blendMode = engine.BlendMode.ADD;
 
@@ -130,13 +128,13 @@ SelectionView.prototype._pointerOverHandler = function(pointer) {
     data.x = pointer.x;
     data.y = pointer.y;
   }
-}
+};
 
 SelectionView.prototype._pointerOutHandler = function(pointer) {
   var data = this._pointerData[pointer.id];
       data.isOver = false;
       data.isOut = true;
-}
+};
 
 SelectionView.prototype._touchedHandler = function(pointer) {
   var data = this._pointerData[pointer.id];
@@ -146,14 +144,13 @@ SelectionView.prototype._touchedHandler = function(pointer) {
 
     pointer.dirty = true;
 
-    if(this.isDragged === false) {
+    if(this.isDragged === false && pointer.button === engine.Mouse.LEFT_BUTTON) {
       this._startDrag(pointer);
+    } else if(pointer.button === engine.Mouse.RIGHT_BUTTON) {
+      this._selected(pointer);
     }
   }
-
-  // consume the event?
-  return this.consumePointerEvent;
-}
+};
 
 SelectionView.prototype._releasedHandler = function(pointer) {
   var data = this._pointerData[pointer.id];
@@ -168,7 +165,7 @@ SelectionView.prototype._releasedHandler = function(pointer) {
       this._stopDrag(pointer);
     }
   }
-}
+};
 
 SelectionView.prototype._startDrag = function(pointer) {
   var x = pointer.x,
@@ -221,11 +218,9 @@ SelectionView.prototype._drawDrag = function() {
       py = this._dragPoint.y + this._tempVector.y;
 
   this.clear();
-  this.lineStyle(1.0, 0xFFFFFF, 0.75);
-  this.beginFill(0xFFFFFF, 0.25);
+  this.lineStyle(2.0, 0x336699, 0.75);
   this.drawRect(sx, sy, px, py);
-  this.endFill();
-}
+};
 
 SelectionView.prototype._stopDrag = function(pointer) {
   var sx = this._dragStartPoint.x - this._tempVector.x,
@@ -246,10 +241,23 @@ SelectionView.prototype._stopDrag = function(pointer) {
   }
 
   // emit selected bounding rect
-  this.emit('selected', pointer, rect);
+  this._selected(pointer, rect);
 
   // clear rect
   this.clear();
+};
+
+SelectionView.prototype._selected = function(pointer, rect) {
+  this.emit('selected', pointer, rect || new engine.Rectangle(pointer.x-1, pointer.y-1, 2, 2));
+};
+
+SelectionView.prototype._renderWebGL = function(renderer) {
+  if(this.glDirty) {
+    this.dirty = true;
+    this.glDirty = false;
+  }
+  renderer.setObjectRenderer(renderer.plugins.wireframe);
+  renderer.plugins.wireframe.render(this);
 };
 
 module.exports = SelectionView;
