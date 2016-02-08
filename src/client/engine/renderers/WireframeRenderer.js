@@ -160,7 +160,7 @@ WireframeRenderer.prototype.buildCircle = function(graphicsData, webGLData) {
       y = circleData.y,
       width = circleData.radius,
       height = circleData.radius,
-      totalSegs = Math.floor(15 * Math.sqrt(circleData.radius)),
+      totalSegs = Math.floor(5 * Math.sqrt(circleData.radius)),
       seg = (Math.PI * 2) / totalSegs;
 
   var color = pixi.utils.hex2rgb(graphicsData.lineColor),
