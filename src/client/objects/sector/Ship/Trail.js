@@ -8,7 +8,7 @@ function Trail(parent) {
 
   this._tempPoint = new engine.Point();
 
-  this.numOfPoints = 8;
+  this.numOfPoints = 12;
 };
 
 Trail.prototype.constructor = Trail;
@@ -19,17 +19,18 @@ Trail.prototype.create = function() {
       config = parent.config.engine.trail;
   if(config) {
     for(var i=0; i<this.numOfPoints; i++) {
-      points.push(new engine.Point(parent.position.x - i, parent.position.y));
+      points.push(new engine.Point(parent.x + (i * 20), parent.y));
     }
 
     this.trail = new engine.Strip(this.game, 'trails', points);
     this.trail.blendMode = engine.BlendMode.ADD;
-    this.trail.alpha = 0.75;
 
     // wait to add
     this.game.clock.events.add(1000, function() {
+      // TODO: this is faulty
+      // ..
       this.trajectoryGroup.add(this.trail);
-    }, this)
+    }, this);
 
     parent.on('enterBounds', this.enterBounds, this);
     parent.on('exitBounds', this.exitBounds, this);
@@ -57,12 +58,14 @@ Trail.prototype.update = function() {
     for(var i=len-1; i>=0; i--) {
       if(i==len-1) {
         points[i].set(center.x, center.y);
-      // } else if(i==len-2) {
-      //   vector = parent.movement.vector.multiply(3.0, 3.0);
-      //   points[i].set(center.x-vector.x, center.y-vector.y);
+      } else if(i==len-2) {
+        vector = parent.movement.vector;
+        points[i].set(center.x-vector.x * 2.0, center.y-vector.y * 2.0);
       } else {
+        vector = parent.movement.vector;
         pos = points[i+1];
-        points[i].interpolate(center, (i+1) * 0.01, points[i]);
+        pos.subtract(vector.x * 1.0, vector.y * 1.0);
+        points[i].interpolate(pos, 0.15, points[i]);
       }
     }
   }
