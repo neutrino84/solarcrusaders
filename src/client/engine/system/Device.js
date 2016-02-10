@@ -20,6 +20,7 @@ var Device = {
   // audio
   audioData: false,
   webAudio: false,
+  dolby: false,
 
   // browser
   chrome: false,
@@ -29,11 +30,13 @@ var Device = {
   firefox: false,
   firefoxVersion: false,
   safari: false,
+  safariVersion: false,
   mobileSafari: false,
   ie: false,
   ieVersion: false,
   trident: false,
   tridentVersion: false,
+  edge: false,
 
   // headless
   cocoonJS: false,
@@ -181,8 +184,25 @@ var Device = {
           if(audioElement.canPlayType('audio/webm; codecs="vorbis"').replace(/^no$/, '')) {
             device.webm = true;
           }
+
+          if(audioElement.canPlayType('audio/mp4;codecs="ec-3"') !== '') {
+            if(device.edge) {
+              device.dolby = true;
+            } else if(device.safari && device.safariVersion >= 9) {
+              var ua = navigator.userAgent;
+
+              if(/Mac OS X (\d+)_(\d+)/.test(navigator.userAgent)) {
+                var major = parseInt(RegExp.$1, 10);
+                var minor = parseInt(RegExp.$2, 10);
+
+                if((major === 10 && minor >= 11) || major > 10) {
+                  device.dolby = true;
+                }
+              }
+            }
+          }
         }
-      } catch (e) {}
+      } catch(e) {}
     }
 
     function _checkFeatures() {
@@ -289,13 +309,18 @@ var Device = {
       } else if(/MSIE (\d+\.\d+);/.test(ua)) {
         device.ie = true;
         device.ieVersion = parseInt(RegExp.$1, 10);
-      } else if(/Safari/.test(ua) && !device.windowsPhone) {
+      } else if(/Safari\/(\d+)/.test(ua) && !device.windowsPhone) {
         device.safari = true;
+        if(/Version\/(\d+)\./.test(ua)) {
+          device.safariVersion = parseInt(RegExp.$1, 10);
+        }
       } else if(/Trident\/(\d+\.\d+)(.*)rv:(\d+\.\d+)/.test(ua)) {
         device.ie = true;
         device.trident = true;
         device.tridentVersion = parseInt(RegExp.$1, 10);
         device.ieVersion = parseInt(RegExp.$3, 10);
+      } else if (/Edge\/\d+/.test(ua)) {
+        device.edge = true;
       }
         
       if(process !== undefined && require !== undefined) {
@@ -344,6 +369,8 @@ var Device = {
     } else if(type === 'wav' && this.wav) {
       return true;
     } else if(type === 'webm' && this.webm) {
+      return true;
+    } else if(type === 'mp4' && this.dolby) {
       return true;
     }
     return false;
