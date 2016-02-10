@@ -13,6 +13,7 @@ function SelectionView(game) {
 
   this.enabled = false;
   this.isDragged = false;
+  this.objectRenderer = 'wireframe';
   this.priorityID = 1;
 
   this.blendMode = engine.BlendMode.ADD;
@@ -250,15 +251,6 @@ SelectionView.prototype._stopDrag = function(pointer) {
 
 SelectionView.prototype._selected = function(pointer, rect) {
   this.emit('selected', pointer, rect || new engine.Rectangle(pointer.x-1, pointer.y-1, 2, 2));
-};
-
-SelectionView.prototype._renderWebGL = function(renderer) {
-  if(this.glDirty) {
-    this.dirty = true;
-    this.glDirty = false;
-  }
-  renderer.setObjectRenderer(renderer.plugins.wireframe);
-  renderer.plugins.wireframe.render(this);
 };
 
 module.exports = SelectionView;
