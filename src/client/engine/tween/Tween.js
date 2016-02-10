@@ -37,6 +37,10 @@ function Tween(target, game, manager) {
 Tween.prototype = Object.create(EventEmitter.prototype);
 Tween.prototype.constructor = Tween;
 
+Tween.prototype.create = function() {
+  this.timeline.push(new TweenData(this));
+};
+
 Tween.prototype.to = function(properties, duration, ease, autoStart, delay, repeat, yoyo) {
   if(duration === undefined || duration <= 0) { duration = 1000; }
   if(ease === undefined || ease === null) { ease = Easing.Default; }
