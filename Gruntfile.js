@@ -127,7 +127,7 @@ module.exports = function(grunt) {
     'watch': {
       dev: {
         files: ['src/**/*', 'views/**/*', 'public/build/solar.js', 'public/build/engine.js'],
-        tasks: ['concat:dev', 'develop:dev'],
+        tasks: ['develop:dev'],
         options: { nospawn: true }
       }
     },
@@ -188,7 +188,6 @@ module.exports = function(grunt) {
     'browserify:pixi',
     'browserify:engine',
     'browserify:solar',
-    'concat:dev',
     'develop:dev',
     'watch:dev'
   ]);
