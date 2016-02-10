@@ -62,7 +62,12 @@ TweenManager.prototype = {
 
   add: function(tween) {
     tween._manager = this;
-    this._add.push(tween);
+    tween.pendingDelete = false;
+
+    if(this._add.indexOf(tween) === -1 &&
+        this._tweens.indexOf(tween) === -1) {
+      this._add.push(tween);
+    }
   },
 
   create: function(object) {
