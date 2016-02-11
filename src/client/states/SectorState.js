@@ -4,7 +4,7 @@ var engine = require('engine'),
     Snow = require('../fx/Snow'),
     Selection = require('../objects/sector/Selection'),
     ShipManager = require('../objects/sector/ShipManager'),
-    Asteroid = require('../objects/sector/objects/Asteroid');
+    Asteroid = require('../objects/sector/misc/Asteroid');
     
 function SectorState() {}
 
