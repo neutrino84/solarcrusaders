@@ -6,13 +6,12 @@ function ShockwaveEmitter(game) {
 
   this.blendMode = engine.BlendMode.ADD;
 
-  this.setScale(0.5, 2.0, 0.5, 2.0, 6000);
+  this.setScale(0.25, 1.0, 0.25, 1.0, 6000);
   this.minRotation = -15;
   this.maxRotation = 15;
   this.setAlpha(1.0, 0.0, 6000);
   this.makeParticles('texture-atlas', [
-  	'explosion-d.png', 'explosion-d.png',
-  	'explosion-d.png', 'explosion-e.png'
+    'explosion-e.png'
   ]);
 };
 

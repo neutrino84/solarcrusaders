@@ -32,6 +32,7 @@ TargetingComputer.prototype.create = function() {
     hardpoint.flashEmitter = parent.manager.flashEmitter;
     hardpoint.explosionEmitter = parent.manager.explosionEmitter;
     hardpoint.glowEmitter = parent.manager.glowEmitter;
+    hardpoint.fireEmitter = parent.manager.fireEmitter;
     hardpoints.push(hardpoint);
     parent.addChild(hardpoint.sprite);
   }
@@ -77,19 +78,20 @@ TargetingComputer.prototype.update = function() {
 
 TargetingComputer.prototype.destroy = function() {
   var hardpoint;
-
-  this.parent = this.game = this.enhancements =
-    this.config = undefined;
-
+  
   for(var t in this.hardpoints) {
     hardpoint = this.hardpoints[t];
-    hardpoint.fxGroup = hardpoint.flashEmitter =
+    hardpoint.fxGroup =
+      hardpoint.flashEmitter =
       hardpoint.explosionEmitter =
       hardpoint.glowEmitter = undefined;
     hardpoint.destroy();
   }
-
+  
   this.hardpoints = [];
+
+  this.parent = this.game = this.enhancements =
+    this.config = undefined;
 };
 
 module.exports = TargetingComputer;

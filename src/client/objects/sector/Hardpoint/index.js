@@ -8,8 +8,6 @@ function Hardpoint(parent, config) {
   this.game = parent.game;
   this.ship = parent.parent;
   this.config = config;
-
-  this.circle = new engine.Circle();
   this.target = new engine.Point();
   this.position = new engine.Point();
   this.apos = new engine.Point();
@@ -40,17 +38,18 @@ Hardpoint.prototype.create = function(type) {
 Hardpoint.prototype.fire = function(index, miss) {
   var delay = index * 75 + 100,
       action = miss ? this.miss : this.discharge;
-  this.timer = this.game.clock.events.add(delay, action, this);
+  if(!this.timer || (this.timer && this.timer.pendingDelete)) {
+    this.timer = this.game.clock.events.add(delay, action, this);
+  }
 };
 
 Hardpoint.prototype.miss = function() {
   var circle, delay,
       ship = this.ship,
       target = ship.target,
-      enhancements = this.parent.enhancements,
-      overshoot = 50;
+      enhancements = this.parent.enhancements;
   if(target) {
-    circle = this.circle.setTo(target.position.x, target.position.y, target.width / 2);
+    circle = target.circle;
     this.target = circle.circumferencePoint(global.Math.random() * global.Math.PI, false, true, this._tempPoint);
     this.manager.fire(true, enhancements);
   }
@@ -62,8 +61,8 @@ Hardpoint.prototype.discharge = function() {
       target = ship.target,
       enhancements = this.parent.enhancements;
   if(target) {
-    circle = this.circle.setTo(target.position.x, target.position.y, global.Math.sqrt(target.getBounds().perimeter));
-    this.target = circle.random(true);
+    circle = target.hitCircle;
+    this.target = circle.random(false, this.target);
     this.manager.fire(false, enhancements, target.shields);
     if(target.isPlayer && !target.shields) {
       this.game.camera.shake();
@@ -72,13 +71,15 @@ Hardpoint.prototype.discharge = function() {
 };
 
 Hardpoint.prototype.update = function() {
-  var apos, sprite = this.sprite,
+  var apos,
       game = this.game,
+      sprite = this.sprite,
+      ship = this.ship,
       position = this.position,
       manager = this.manager;
-  
-  position.copyFrom(game.world.worldTransform.applyInverse(sprite.worldTransform.apply(sprite.pivot)));
-  sprite.rotation = engine.Point.angle(position, apos = this.absoluteTargetPosition()) - this.ship.rotation;
+
+  position.copyFrom(game.world.worldTransform.applyInverse(ship.worldTransform.apply(sprite.worldTransform.apply(sprite.pivot))));
+  sprite.rotation = engine.Point.angle(position, apos = this.absoluteTargetPosition()) - ship.rotation;
 
   manager.start.copyFrom(position);
   manager.end.copyFrom(apos);
@@ -86,7 +87,7 @@ Hardpoint.prototype.update = function() {
 };
 
 Hardpoint.prototype.absoluteTargetPosition = function() {
-  return engine.Point.add(this.ship.target.position, this.target, this.apos);
+  return this.game.world.worldTransform.applyInverse(this.ship.target.worldTransform.apply(this.target));
 };
 
 Hardpoint.prototype.destroy = function() {
@@ -96,7 +97,7 @@ Hardpoint.prototype.destroy = function() {
   this.manager && this.manager.destroy();
   
   this.parent = this.game = this.ship =
-    this.config = this.circle = this.target =
+    this.config = this.target =
     this.position = this.apos = this.sprite = 
     this.manager = this.timer = this._tempPoint = undefined;
 };
