@@ -1,7 +1,10 @@
 var engine = require('engine'),
-    Background = require('../fx/Background'), // this should draw from objects/sector
-    Planet = require('../fx/Planet'), // this should draw from /objects/sector/planet
-    ShipManager = require('../objects/sector/ShipManager');
+    Background = require('../fx/Background'),
+    Planet = require('../fx/Planet'),
+    Snow = require('../fx/Snow'),
+    Selection = require('../objects/sector/Selection'),
+    ShipManager = require('../objects/sector/ShipManager'),
+    Asteroid = require('../objects/sector/objects/Asteroid');
     
 function SectorState() {}
 
@@ -11,8 +14,6 @@ SectorState.prototype.constructor = engine.State;
 SectorState.prototype.init = function(args) {
   global.state = this;
 
-  this.ships = [];
-  
   this.scrollVelocityX = 0;
   this.scrollVelocityY = 0;
 
@@ -28,28 +29,16 @@ SectorState.prototype.preload = function() {
 
   // load.image('draghe', 'imgs/game/planets/draghe.jpg');
   // load.image('eamon', 'imgs/game/planets/eamon-alpha.jpg');
-  load.image('eamon', 'imgs/game/planets/ichor.jpg');
+  // load.image('arkon', 'imgs/game/planets/arkon.jpg');
+  load.image('talus', 'imgs/game/planets/talus.jpg');
   load.image('clouds', 'imgs/game/planets/clouds.jpg');
 
   load.image('laser-red', 'imgs/game/fx/laser-red.png');
   load.image('laser-blue', 'imgs/game/fx/laser-blue.png');
-  // load.image('engine-glow', 'imgs/game/fx/engine-glow.png');
-  // load.image('engine-smoke', 'imgs/game/fx/engine-smoke.png');
-  // load.image('explosion-a', 'imgs/game/fx/explosion-a.png');
-  // load.image('explosion-b', 'imgs/game/fx/explosion-b.png');
-  // load.image('explosion-c', 'imgs/game/fx/explosion-c.png');
-  // load.image('explosion-d', 'imgs/game/fx/explosion-d.png');
-  // load.image('explosion-flash', 'imgs/game/fx/explosion-flash.png');
-  // load.image('damage-a', 'imgs/game/fx/damage-a.png');
-
-  // load.image('station-mining', 'imgs/game/stations/station-mining.png');
+  // load.image('trails', 'imgs/game/fx/trails.png');
 
   // test load sound
   load.audio('background', 'imgs/game/sounds/mood.mp3');
-
-  // load tilemap
-  // load.image('sector', 'imgs/game/tilesets/sector.png');
-  // load.tilemap('sector', 'data/sector.json');
 };
 
 // loadUpdate = function() {};
@@ -62,37 +51,28 @@ SectorState.prototype.create = function() {
       mouse.capture = true;
       mouse.mouseWheelCallback = function(event) {
         var delta = event.deltaY / sensitivity,
-            scale = engine.Math.clamp(this.world.scale.x - delta, 0.25, 1.2);//,
-            // gridLayer = global.state.gridLayer;
-
+            scale = engine.Math.clamp(this.world.scale.x - delta, 0.4, 1.0);
         if(self.game.paused) { return; }
         if(self.zoom && self.zoom.isRunning) {
           self.zoom.stop();
         }
-
         this.world.scale.set(scale, scale);
-        
-        // show/hide sector grid
-        // if(scale >= 1.0) {
-        //   gridLayer.visible = true;
-        // } else {
-        //   gridLayer.visible = false;
-        // }
       };
 
   // store gui reference
   this.gui = game.state.getBackgroundState('gui');
 
   this.game.world.setBounds(0, 0, 4096, 4096);
-  this.game.world.scale.set(0.6, 0.6);
+  this.game.world.scale.set(0.4, 0.4);
 
   this.game.camera.bounds = null;
   this.game.camera.focusOnXY(2048, 2048);
 
   // create sector
-  // this.createGrid();
-  this.createSector();
   this.createManagers();
+  this.createBackground();
+  this.createSnow();
+  this.createAsteroids();
 
   // AUDIO TEST
   this.sound = this.game.sound.add('background', 0.5, true);
@@ -101,44 +81,61 @@ SectorState.prototype.create = function() {
   });
 
   // start zoom in
-  this.zoom = this.game.tweens.create(this.game.world.scale);
-  this.zoom.to({ x: 0.8, y: 0.8 }, 6000, engine.Easing.Quadratic.InOut, true);
-
-  // gui
-  this.gui.toggle(true);
+  this.game.once('ship/follow', function() {
+    this.zoom = this.game.tweens.create(this.game.world.scale);
+    this.zoom.to({ x: 0.66, y: 0.66 }, 6000, engine.Easing.Quadratic.InOut, true);
+  }, this);
 
   // benchmark
   this.game.clock.benchmark();
+
+  // login
+  this.gui.login();
+
+  // loading message
+  this.game.emit('gui/message', 'loading', 500);
 };
 
-// SectorState.prototype.createGrid = function() {
-//   this.grid = new engine.Tilemap(this.game, 'sector');
-//   this.grid.addTilesetImage('sector');
-//   this.gridLayer = this.grid.createLayer('grid', this.game.width, this.game.height);
-//   // this.gridLayer.visible = false;
-// };
-
-SectorState.prototype.createSector = function() {
+SectorState.prototype.createBackground = function() {
   this.background = new Background(this.game, this.game.width, this.game.height);
+  // this.background.uncache();
   
-  this.planet = new Planet(this.game, 'eamon');
-  this.planet.position.set(0, 0);
-  
+  this.planet = new Planet(this.game, 'talus');
+  this.planet.position.set(2048 / 6, 2048 / 6);
+
   this.game.world.background.add(this.planet);
   this.game.stage.addChildAt(this.background, 0);
 };
 
 SectorState.prototype.createManagers = function() {
+  // this.stationManager = new StationManager(this.game);
+  // this.stationManager.boot();
   this.shipManager = new ShipManager(this.game);
   this.shipManager.hudGroup = this.gui.hud;
+  this.selection = new Selection(this);
+};
+
+SectorState.prototype.createSnow = function() {
+  this.snow = new Snow(this.game, this.game.width, this.game.height);
+  this.game.stage.addChild(this.snow);
+  this.game.stage.swapChildren(this.snow, this.gui.root);
+};
+
+SectorState.prototype.createAsteroids = function() {
+  var asteroid, amount = 100;
+  for(var i=0; i<amount; i++) {
+    asteroid = new Asteroid(this.game);
+    asteroid.position.set(2048 / 4, 2048 / 4);
+
+    this.game.world.foreground.add(asteroid);
+  }
 };
 
 SectorState.prototype.update = function() {
   var game = this.game,
       camera = game.camera,
       keyboard = game.input.keyboard,
-      // fix this :(
-      // timeStep = this.game.clock.elapsedMS / 1000,
+      // timeStep = this.game.clock.elapsed,
       move = 1.04;// * timeStep;
 
   if(this.scrollLock) { return; }
@@ -158,8 +155,7 @@ SectorState.prototype.update = function() {
   }
 
   // apply velocity
-  camera.view.x -= this.scrollVelocityX;
-  camera.view.y -= this.scrollVelocityY;
+  camera.pan(this.scrollVelocityX, this.scrollVelocityY);
   
   // apply friction
   if(this.scrollVelocityX > 0 || this.scrollVelocityX < 0) {
@@ -182,7 +178,7 @@ SectorState.prototype.update = function() {
 
 SectorState.prototype.resize = function(width, height) {
   this.background && this.background.resize(width, height);
-  // this.gridLayer && this.gridLayer.resize(width, height);
+  this.snow && this.snow.resize(width, height);
 };
 
 // paused = function() {};
@@ -192,9 +188,7 @@ SectorState.prototype.resize = function(width, height) {
 // pauseUpdate = function() {};
 
 SectorState.prototype.shutdown = function() {
-  this.stage.removeChild(this.background);
-  this.background && this.background.destroy();
-  // this.gridLayer && this.gridLayer.destroy();
+  this.selection.destroy();
 };
 
 module.exports = SectorState;
