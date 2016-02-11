@@ -74,7 +74,7 @@ function RightPane(game, settings) {
     })
 
   this.versionText = new Label(game,
-    'solar crusaders v2037', {
+    'solar crusaders v__VERSION__', {
       padding: [5],
       text: {
         fontName: 'medium',
@@ -89,11 +89,11 @@ function RightPane(game, settings) {
   this.registerButton = new Button(game, 'beta signup');
   this.registerButton.on('inputUp', this._register, this);
 
-  this.instructionsButton = new Button(game, 'instructions');
-  this.instructionsButton.on('inputUp', this._instructions, this);
+  this.forumsButton = new Button(game, 'forums');
+  this.forumsButton.on('inputUp', this._forums, this);
 
   this.infoPane.addPanel(Layout.LEFT, this.registerButton);
-  this.infoPane.addPanel(Layout.RIGHT, this.instructionsButton);
+  this.infoPane.addPanel(Layout.RIGHT, this.forumsButton);
 
   this.infoPane2.addPanel(Layout.RIGHT, this.fpsText);
   this.infoPane2.addPanel(Layout.LEFT, this.pingText);
@@ -118,8 +118,8 @@ RightPane.prototype._register = function() {
   this.game.emit('gui/registration');
 };
 
-RightPane.prototype._instructions = function() {
-  global.document.location.href = 'http://forums.solarcrusaders.com/topic/47/battle-module-f2p-holiday-special';
+RightPane.prototype._forums = function() {
+  global.document.location.href = 'http://forums.solarcrusaders.com/';
 };
 
 RightPane.prototype._updateInfo = function() {
