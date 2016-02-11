@@ -32,24 +32,24 @@ UserManager.prototype.add = function(user) {
       u = this.users[user.uuid] = Utils.extend({}, user);
       u.ships = [];
 
-  // if(user.uid > 0) {
-  //   this.model.ship.getShipsByUid(user.uid, function(err, ships) {
-  //     if(err) { throw new Error(err); }
-  //     for(var s in ships) {
-  //       ship = ships[s];
-  //       ship.user = user;
-  //       u.ships.push(ship);
-  //       self.game.emit('ship/add', ship);
-  //     }
-  //   });
-  // } else {
-    ship = {};
-    ship.user = user;
-    ship.throttle = 1.0; // global.Math.random() * 3 + 0.8;
-    ship.chasis = 'vessel-x01';
-    u.ships.push(ship);
-    self.game.emit('ship/create', ship);
-  // }
+  if(user.uid > 0) {
+    this.model.ship.getShipsByUid(user.uid, function(err, ships) {
+      if(err) { throw new Error(err); }
+      for(var s in ships) {
+        ship = ships[s];
+        ship.user = user;
+        u.ships.push(ship);
+        self.game.emit('ship/add', ship);
+      }
+    });
+  } else {
+    // ship = {};
+    // ship.user = user;
+    // ship.throttle = 1.0; // global.Math.random() * 3 + 0.8;
+    // ship.chasis = 'vessel-x01';
+    // u.ships.push(ship);
+    // self.game.emit('ship/create', ship);
+  }
 };
 
 UserManager.prototype.remove = function(user) {
