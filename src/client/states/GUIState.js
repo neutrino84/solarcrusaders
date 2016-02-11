@@ -62,9 +62,6 @@ GUIState.prototype.preload = function() {
   // ship outline
   this.game.load.image('vessel-x01-outline', 'imgs/game/ships/vessel-x01-outline.png');
   this.game.load.image('vessel-x02-outline', 'imgs/game/ships/vessel-x02-outline.png');
-  this.game.load.image('vessel-x03-outline', 'imgs/game/ships/vessel-x03-outline.png');
-  this.game.load.image('vessel-x04-outline', 'imgs/game/ships/vessel-x04-outline.png');
-  this.game.load.image('vessel-x05-outline', 'imgs/game/ships/vessel-x05-outline.png');
 };
 
 GUIState.prototype.create = function() {
@@ -107,7 +104,6 @@ GUIState.prototype.create = function() {
 
   this.topPanel = new Panel(game, new FlowLayout(Layout.CENTER, Layout.TOP, Layout.HORIZONTAL, 6));
   this.topPanel.addPanel(Layout.NONE, this.rightPane);
-  this.topPanel.visible = false;
 
   this.bottomPane = new BottomPane(game);
   this.bottomPane.visible = false;
@@ -122,6 +118,8 @@ GUIState.prototype.create = function() {
   this.root = new Panel(game, new StackLayout());
   this.root.setSize(game.width, game.height);
   this.root.visible = false;
+
+  // this.root.invalidate = this.invalidate.bind(this.root);
 
   this.root.addChild(this.hud);
 
@@ -141,18 +139,22 @@ GUIState.prototype.create = function() {
   this.game.on('game/pause', this._pause, this);
 };
 
+// GUIState.prototype.invalidate = function(local) {
+//   console.log('root invalidate');
+//   Panel.prototype.invalidate.call(this, local);
+// };
+
 GUIState.prototype.login = function() {
-  // if(this.auth.isUser()) {
-    this.centerPanel.visible = true;
-    this.topPanel.visible = true;
+  if(this.auth.isUser()) {
     this.bottomPane.visible = true;
-  // } else {
-  //   this.bottomPanel.visible = false;
-  //   this.centerPanel.visible = false;
+    this.centerPanel.visible = true;
+  } else {
+    this.bottomPane.visible = false;
+    this.centerPanel.visible = false;
     this.registrationForm = new RegistrationForm(game);
     // this.loginForm = new LoginForm(game);
     // this.game.on('gui/loggedin', this._loggedin, this);
-  // }
+  }
   if(this.modalComponent.visible) {
     this.modal(false);
   }
