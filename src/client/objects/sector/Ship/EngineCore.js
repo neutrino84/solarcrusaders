@@ -27,9 +27,10 @@ EngineCore.prototype.create = function() {
       glows = this.glows,
       highlights = this.highlights,
       parent = this.parent,
-      config = parent.config.engine.glows;
+      config = parent.config.engine.glows,
+      length = config.length;
   
-  for(var g in config) {
+  for(var g=0; g<length; g++) {
     c = config[g];
 
     highlight = new engine.Sprite(parent.game, 'texture-atlas', 'engine-highlight.png');
@@ -40,7 +41,7 @@ EngineCore.prototype.create = function() {
     highlight.blendMode = engine.BlendMode.ADD;
     highlight.alpha = 0;
 
-    glow = new engine.Sprite(parent.game, 'texture-atlas', c.sprite + '.png');
+    glow = new engine.Sprite(parent.game, 'texture-atlas', 'engine-glow.png');
     glow.pivot.set(128, 64);
     glow.rotation = global.Math.PI + engine.Math.degToRad(c.rotation);
     glow.position.set(c.position.x, c.position.y);
@@ -48,7 +49,7 @@ EngineCore.prototype.create = function() {
     glow.tint = c.tint;
     glow.blendMode = engine.BlendMode.ADD;
 
-    parent.addChild(glow);
+    parent.addChildAt(glow, 0);
     parent.addChild(highlight);
 
     glows.push(glow);
@@ -62,21 +63,25 @@ EngineCore.prototype.update = function(multiplier) {
       highlights = this.highlights,
       game = this.game,
       parent = this.parent,
+      manager = parent.manager,
       config = parent.config.engine.glows,
+      length = config.length,
       flicker = EngineCore.flicker[game.clock.frames % 6],
-      clamped = global.Math.min(multiplier, 1.5);
-  for(var g in glows) {
+      clamped = global.Math.max(global.Math.min(multiplier, 1.5), 0.25);
+  for(var g=0; g<length; g++) {
     scale = config[g].scale;
     glows[g].scale.set(clamped * scale.endX + flicker, clamped * scale.endY + (flicker * 3));
   }
-  for(var h in highlights) {
+  for(var h=0; h<length; h++) {
     highlight = highlights[h];
-    highlight.alpha = global.Math.min(1.0, clamped);
+    highlight.alpha = global.Math.min(1.0, clamped) / (length / 2);
     
-    if(this.booster && global.Math.random() > 0.5) {
-      center = game.world.worldTransform.applyInverse(highlight.worldTransform.apply(highlight.pivot));
-      parent.manager.flashEmitter.at({ center: center });
-      parent.manager.flashEmitter.explode(1);
+    if(this.booster && multiplier > 0) {
+      center = game.world.worldTransform.applyInverse(this.parent.worldTransform.apply(highlight.worldTransform.apply(highlight.pivot)));
+      
+      manager.flashEmitter.color(config[h].tint);
+      manager.flashEmitter.at({ center: center });
+      manager.flashEmitter.explode(1);
     }
   }
 };
@@ -90,8 +95,8 @@ EngineCore.prototype.destroy = function() {
   for(var h in highlights) {
     highlights[h].destroy();
   }
-  this.parent = this.game = this.glows =
-    this.highlights = undefined;
+  this.parent = this.game =
+    this.glows = this.highlights = undefined;
 };
 
 module.exports = EngineCore;
