@@ -1,13 +1,13 @@
 {
   "vessel-x01": {
     "size": 1.0,
-    "oribit": { "radius": 64 },
+    "oribit": { "radius": 128 },
     "stats": {
-      "health": 100,
+      "health": 200,
       "heal": 0.01,
       "armor": 0.0,
       "speed": 3.5,
-      "accuracy": 0.5,
+      "accuracy": 0.36,
       "evasion": 0.1,
       "energy": 100,
       "recharge": 0.25,
@@ -16,29 +16,31 @@
     },
     "engine": {
       "glows": [
-       {
-          "sprite": "engine-glow",
+        {
           "tint": "0x3399FF",
-          "scale": { "startX": 0.10, "endX": 0.20, "startY": 0.2, "endY": 1.2 },
-          "position": { "x": 116, "y": 66 },
+          "scale": { "startX": 0.10, "endX": 0.22, "startY": 0.2, "endY": 0.4 },
+          "position": { "x": 158, "y": 92 },
           "rotation": 0
-        },{
-          "sprite": "engine-glow",
+        }, {
           "tint": "0x3399FF",
-          "scale": { "startX": 0.10, "endX": 0.12, "startY": 0.2, "endY": 0.3 },
-          "position": { "x": 116, "y": 56 },
-          "rotation": 15
-        },{
-          "sprite": "engine-glow",
+          "scale": { "startX": 0.10, "endX": 0.22, "startY": 0.2, "endY": 0.4 },
+          "position": { "x": 158, "y": 164 },
+          "rotation": 0
+        }, {
           "tint": "0x3399FF",
-          "scale": { "startX": 0.10, "endX": 0.12, "startY": 0.2, "endY": 0.3 },
-          "position": { "x": 116, "y": 76 },
-          "rotation": -15
+          "scale": { "startX": 0.10, "endX": 0.22, "startY": 0.2, "endY": 0.4 },
+          "position": { "x": 168, "y": 102 },
+          "rotation": 0
+        }, {
+          "tint": "0x3399FF",
+          "scale": { "startX": 0.10, "endX": 0.22, "startY": 0.2, "endY": 0.4 },
+          "position": { "x": 168, "y": 154 },
+          "rotation": 0
         }
       ],
       "trail": {
         "sprite": "engine-glow",
-        "position": { "x": 102, "y": 64 },
+        "position": { "x": 178, "y": 128 },
         "scale": { "x": 1.0, "y": 1.0 }
       }
     },
@@ -46,46 +48,35 @@
       "hardpoints": [
         {
           "sprite": "turret-a",
-          "pivot": { "x": 32, "y": 32 },
-          "position": { "x": 64, "y": 16 },
-          "scale": { "x": 0.6 , "y": 0.6 },
+          "pivot": { "x": 20, "y": 16 },
+          "position": { "x": 107, "y": 70 },
+          "scale": { "x": 1.0 , "y": 1.0 },
           "type": "laser",
           "laser": {
-            "sprite": "laser-blue"
+            "sprite": "laser-red"
           }
         }, {
           "sprite": "turret-a",
-          "pivot": { "x": 32, "y": 32 },
-          "position": { "x": 64, "y": 115 },
-          "scale": { "x": 0.6 , "y": 0.6 },
+          "pivot": { "x": 20, "y": 16 },
+          "position": { "x": 75, "y": 128 },
+          "scale": { "x": 1.0 , "y": 1.0 },
           "type": "laser",
           "laser": {
-            "sprite": "laser-blue"
+            "sprite": "laser-red"
           }
         }, {
           "sprite": "turret-a",
-          "pivot": { "x": 32, "y": 32 },
-          "position": { "x": 36, "y": 31 },
-          "scale": { "x": 0.6 , "y": 0.6 },
+          "pivot": { "x": 20, "y": 16 },
+          "position": { "x": 107, "y": 187 },
+          "scale": { "x": 1.0 , "y": 1.0 },
           "type": "laser",
           "laser": {
-            "sprite": "laser-blue"
-          }
-        }, {
-          "sprite": "turret-a",
-          "pivot": { "x": 32, "y": 32 },
-          "position": { "x": 36, "y": 100 },
-          "scale": { "x": 0.6 , "y": 0.6 },
-          "type": "laser",
-          "laser": {
-            "sprite": "laser-blue"
+            "sprite": "laser-red"
           }
         }
       ]
     },
-    "shields": {
-      
-    },
+    "shields": false,
     "tilemap": {
         "layers":[{
          "data":[69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69],
@@ -443,7 +434,7 @@
                  "name":"",
                  "properties":
                     {
-                     "system":"shield"
+                     "system":"teleport"
                     },
                  "rotation":0,
                  "type":"",
@@ -493,108 +484,82 @@
   },
   "vessel-x02": {
     "size": 1.0,
-    "oribit": { "radius": 160 },
+    "oribit": { "radius": 128 },
     "stats": {
-      "health": 300,
-      "heal": 0.001,
+      "health": 200,
+      "heal": 0.01,
       "armor": 0.0,
-      "speed": 1.0,
-      "accuracy": 0.8,
-      "evasion": 0.01,
-      "energy": 200,
+      "speed": 3.5,
+      "accuracy": 0.36,
+      "evasion": 0.1,
+      "energy": 100,
       "recharge": 0.25,
-      "durability": 2000,
+      "durability": 1000,
       "critical": 0.01
     },
     "engine": {
       "glows": [
         {
-          "sprite": "engine-glow",
-          "tint": "0xFF0000",
-          "scale": { "startX": 0.1, "endX": 0.16, "startY": 0.35, "endY": 0.8 },
-          "position": { "x": 220, "y": 109 },
-          "rotation": -10
-        }, {
-          "sprite": "engine-glow",
-          "tint": "0xFF0000",
-          "scale": { "startX": 0.1, "endX": 0.16, "startY": 0.35, "endY": 0.8 },
-          "position": { "x": 220, "y": 149 },
-          "rotation": 10
-        },{
-          "sprite": "engine-glow",
-          "tint": "0xFF0000",
-          "scale": { "startX": 0.05, "endX": 0.12, "startY": 0.25, "endY": 0.3 },
-          "position": { "x": 230, "y": 124 },
-          "rotation": -10
-        }, {
-          "sprite": "engine-glow",
-          "tint": "0xFF0000",
-          "scale": { "startX": 0.05, "endX": 0.12, "startY": 0.25, "endY": 0.3 },
-          "position": { "x": 230, "y": 134 },
-          "rotation": 10
-        }, {
-          "sprite": "engine-glow",
-          "tint": "0xFF0000",
-          "scale": { "startX": 0.1, "endX": 0.2, "startY": 0.25, "endY": 0.3 },
-          "position": { "x": 230, "y": 129 },
+          "tint": "0xFF6633",
+          "scale": { "startX": 0.1, "endX": 0.32, "startY": 0.32, "endY": 0.66 },
+          "position": { "x": 166, "y": 128 },
           "rotation": 0
+        }, {
+          "tint": "0xFF6633",
+          "scale": { "startX": 0.1, "endX": 0.22, "startY": 0.32, "endY": 0.66 },
+          "position": { "x": 166, "y": 128 },
+          "rotation": -10
+        }, {
+          "tint": "0xFF6633",
+          "scale": { "startX": 0.1, "endX": 0.22, "startY": 0.32, "endY": 0.66 },
+          "position": { "x": 166, "y": 128 },
+          "rotation": 10
+        }, {
+          "tint": "0xFF6633",
+          "scale": { "startX": 0.1, "endX": 0.32, "startY": 0.32, "endY": 0.88 },
+          "position": { "x": 166, "y": 100 },
+          "rotation": 25
+        }, {
+          "tint": "0xFF6633",
+          "scale": { "startX": 0.1, "endX": 0.32, "startY": 0.32, "endY": 0.88 },
+          "position": { "x": 166, "y": 156 },
+          "rotation": -25
         }
       ]
     },
     "targeting": {
       "hardpoints": [
         {
-          "sprite": "turret-a",
-          "pivot": { "x": 32, "y": 32 },
-          "position": { "x": 64, "y": 104 },
-          "scale": { "x": 0.6 , "y": 0.6 },
-          "type": "laser",
-          "laser": {
-            "sprite": "laser-red"
-          }
-        }, {
-          "sprite": "turret-a",
-          "pivot": { "x": 32, "y": 32 },
-          "position": { "x": 64, "y": 154 },
-          "scale": { "x": 0.6 , "y": 0.6 },
-          "type": "laser",
-          "laser": {
-            "sprite": "laser-red"
-          }
-        },
-        {
-          "sprite": "turret-a",
-          "pivot": { "x": 32, "y": 32 },
-          "position": { "x": 98, "y": 85 },
-          "scale": { "x": 0.6 , "y": 0.6 },
-          "type": "laser",
-          "laser": {
-            "sprite": "laser-red"
-          }
-        }, {
-          "sprite": "turret-a",
-          "pivot": { "x": 32, "y": 32 },
-          "position": { "x": 98, "y": 172 },
-          "scale": { "x": 0.6 , "y": 0.6 },
+          "sprite": "turret-b",
+          "pivot": { "x": 17, "y": 16 },
+          "position": { "x": 164, "y": 92 },
+          "scale": { "x": 1.0 , "y": 1.0 },
           "type": "laser",
           "laser": {
             "sprite": "laser-red"
           }
         }, {
           "sprite": "turret-b",
-          "pivot": { "x": 32, "y": 32 },
-          "position": { "x": 172, "y": 128 },
-          "scale": { "x": 0.6 , "y": 0.6 },
+          "pivot": { "x": 17, "y": 16 },
+          "position": { "x": 101, "y": 128 },
+          "scale": { "x": 1.0 , "y": 1.0 },
           "type": "laser",
           "laser": {
-            "sprite": "laser-blue"
+            "sprite": "laser-red"
+          }
+        }, {
+          "sprite": "turret-b",
+          "pivot": { "x": 17, "y": 16 },
+          "position": { "x": 164, "y": 164 },
+          "scale": { "x": 1.0 , "y": 1.0 },
+          "type": "laser",
+          "laser": {
+            "sprite": "laser-red"
           }
         }
       ]
     },
-    "shields": {
-      
-    },
+    "shields": false,
     "tilemap": {
         "layers": [{
          "data":[69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69],
@@ -1057,7 +1022,7 @@
                  "name":"",
                  "properties":
                     {
-                     "system":"shield"
+
                     },
                  "rotation":0,
                  "type":"",
