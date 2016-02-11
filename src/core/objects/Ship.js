@@ -173,13 +173,13 @@ Ship.prototype.activate = function(name) {
       switch(name) {
         case 'overload':
         case 'booster':
-          this.movement.reset();
-          if(this.movement.animation.isPlaying) {
-            this.movement.update();
-            this.movement.plot();
-          }
-          update.speed = this.speed;
-          update.throttle = this.throttle;
+          // this.movement.reset();
+          // if(this.movement.animation.isPlaying) {
+          //   this.movement.update();
+          //   this.movement.plot();
+          // }
+          // update.speed = this.speed;
+          // update.throttle = this.throttle;
           break;
       }
 
@@ -206,22 +206,22 @@ Ship.prototype.deactivate = function(enhancement) {
   for(var s in stats) {
     delete active[s][enhancement.name];
   }
-  switch(enhancement.name) {
-    case 'overload':
-    case 'booster':
-      this.movement.reset();
-      if(this.movement.animation.isPlaying) {
-        this.movement.update();
-        this.movement.plot();
-      }
-      update = { uuid: this.uuid };
-      update.speed = this.speed;
-      update.throttle = this.throttle;
-      this.sockets.io.sockets.emit('ship/data', {
-        type: 'update', ships: [update]
-      });
-      break;
-  }
+  // switch(enhancement.name) {
+  //   case 'overload':
+  //   case 'booster':
+  //     this.movement.reset();
+  //     if(this.movement.animation.isPlaying) {
+  //       this.movement.update();
+  //       this.movement.plot();
+  //     }
+  //     update = { uuid: this.uuid };
+  //     update.speed = this.speed;
+  //     update.throttle = this.throttle;
+  //     this.sockets.io.sockets.emit('ship/data', {
+  //       type: 'update', ships: [update]
+  //     });
+  //     break;
+  // }
   this.sockets.io.sockets.emit('enhancement/stopped', {
     ship: this.uuid,
     enhancement: enhancement.name
@@ -333,7 +333,7 @@ Object.defineProperty(Ship.prototype, 'critical', {
 
 Object.defineProperty(Ship.prototype, 'range', {
   get: function() {
-    return 384;
+    return 768;
   }
 });
 
@@ -369,15 +369,16 @@ Object.defineProperty(Ship.prototype, 'evasion', {
 
 Object.defineProperty(Ship.prototype, 'speed', {
   get: function() {
-    var bonus = 0,
-        speed = this.ignoreEnhancements ? [] : this.enhancements.active.speed,
-        engine = this.systems['engine'],
-        modifier = engine ? engine.modifier : 1.0,
-        health = engine ? engine.health / engine.stats.health : 1.0;
-    for(var a in speed) {
-      bonus += speed[a].stat('speed', 'value');
-    }
-    return this._speed * modifier * global.Math.max(health, 0.5) + bonus;
+    return this._speed;
+    // var bonus = 0,
+    //     speed = this.ignoreEnhancements ? [] : this.enhancements.active.speed,
+    //     engine = this.systems['engine'],
+    //     modifier = engine ? engine.modifier : 1.0,
+    //     health = engine ? engine.health / engine.stats.health : 1.0;
+    // for(var a in speed) {
+    //   bonus += speed[a].stat('speed', 'value');
+    // }
+    // return this._speed * modifier * global.Math.max(health, 0.5) + bonus;
   }
 });
 
