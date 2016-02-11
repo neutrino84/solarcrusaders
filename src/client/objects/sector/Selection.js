@@ -1,6 +1,6 @@
 
 var engine = require('engine'),
-    SelectionIcon = require('./helpers/SelectionIcon');
+    Indicator = require('./misc/Indicator');
 
 function Selection(manager) {
   this.manager = manager;
@@ -12,8 +12,8 @@ function Selection(manager) {
   this.shipsGroup = manager.shipManager.shipsGroup;
 
   // icon
-  this.icon = new SelectionIcon(this.game);
-  this.shipsGroup.add(this.icon);
+  this.indicator = new Indicator(this.game);
+  this.shipsGroup.add(this.indicator);
 
   // subscribe to messages
   this.game.on('gui/selected', this._selected, this);
@@ -30,7 +30,7 @@ Selection.prototype.destroy = function() {
 
 Selection.prototype._plot = function(ship, destination) {
   // show icon
-  this.icon.show(destination);
+  this.indicator.show(destination);
   
   // plot server
   this.socket.emit('ship/plot', {

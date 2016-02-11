@@ -1,7 +1,7 @@
 
 var engine = require('engine');
 
-function SelectionIcon(game) {
+function Indicator(game) {
   engine.Sprite.call(this, game, 'texture-atlas', 'icon-target.png');
 
   this.tint = 0x336699;
@@ -16,10 +16,10 @@ function SelectionIcon(game) {
   });
 };
 
-SelectionIcon.prototype = Object.create(engine.Sprite.prototype);
-SelectionIcon.prototype.constructor = SelectionIcon;
+Indicator.prototype = Object.create(engine.Sprite.prototype);
+Indicator.prototype.constructor = Indicator;
 
-SelectionIcon.prototype.show = function(destination) {
+Indicator.prototype.show = function(destination) {
   var scale = this.game.world.scale.x;
 
   // show icon
@@ -32,4 +32,4 @@ SelectionIcon.prototype.show = function(destination) {
   this.tween.start();
 };
 
-module.exports = SelectionIcon;
+module.exports = Indicator;
