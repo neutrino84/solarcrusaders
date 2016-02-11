@@ -23,7 +23,7 @@ function ShipManager(game) {
   // activate ai
   this.game.clock.events.loop(1000, this._updateShips, this);
   this.game.clock.events.loop(1000, this._updateBattles, this);
-  this.game.clock.events.loop(10000, this._updateAI, this);
+  this.game.clock.events.loop(3000, this._updateAI, this);
 };
 
 ShipManager.prototype.constructor = ShipManager;
@@ -74,7 +74,7 @@ ShipManager.prototype.create = function(ship, position) {
     case 'random':
       position = ship.user || global.Math.random() > 0.5 ?
         this._generateRandomPositionInView() :
-        this._generateRandomPosition();
+        this._generateRandomPositionInView();
     case Object:
       ship.x = position.x;
       ship.y = position.y;
@@ -190,8 +190,8 @@ ShipManager.prototype.update = function() {
 
 ShipManager.prototype.generateRandomShips = function() {
   var iterator = {
-        'vessel-x01': { count: 0 },
-        'vessel-x02': { count: 0 }
+        'vessel-x01': { count: 1 },
+        'vessel-x02': { count: 1 }
       };
   for(var key in iterator) {
     for(var i=0; i<iterator[key].count; i++) {
@@ -207,7 +207,7 @@ ShipManager.prototype.generateShip = function(chassis) {
   this.create({
     rotation: global.Math.random() * global.Math.PI,
     chasis: chassis,
-    throttle: 1.0 + (global.Math.random() * 2.5)
+    throttle: 1.0 //+ (global.Math.random() * 2.5)
   });
 };
 
@@ -304,18 +304,18 @@ ShipManager.prototype._updateBattles = function() {
             health: system.health
           };
 
-          switch(battle.room) {
-            case 'engine':
-              update.speed = target.speed;
-              update.throttle = target.throttle;
-              // target.throttle = 1.0;
-              target.movement.reset();
-              if(target.movement.animation.isPlaying) {
-                target.movement.update();
-                target.movement.plot();
-              }
-              break;
-          }
+          // switch(battle.room) {
+          //   case 'engine':
+          //     update.speed = target.speed;
+          //     update.throttle = target.throttle;
+          //     // target.throttle = 1.0;
+          //     target.movement.reset();
+          //     if(target.movement.animation.isPlaying) {
+          //       target.movement.update();
+          //       target.movement.plot();
+          //     }
+          //     break;
+          // }
         }
 
         this.sockets.io.sockets.emit('ship/attack', {
@@ -367,28 +367,25 @@ ShipManager.prototype._updateAI = function() {
     ship = ships[s];
     b = this.battles[ship.uuid];
     
-    if(!ship.user && global.Math.random() > 0.5) {
+    if(!ship.user) { // && global.Math.random() > 0.5) {
       destination = global.Math.random() > 0.5 ?
         this._generateRandomPositionInView() :
         this._generateRandomPosition();
       
-      (function(game, manager, ship, destination) {
-        var time = global.Math.floor(global.Math.random() * 10000);
-        game.clock.events.add(time, function() {
-          if(manager.ships[ship.uuid]) {
-            manager._plot(ship, destination);
-          }
-        });
-      })(game, this, ship, destination);
-      
+      // (function(game, manager, ship, destination) {
+      //   var time = global.Math.floor(global.Math.random() * 10000);
+      //   game.clock.events.add(time, function() {
+          // if(manager.ships[ship.uuid]) {
+            this._plot(ship, destination);
+          // }
+      //   });
+      // })(game, this, ship, destination);
+
       random = this._getRandomShip();
-      if(random !== ship && global.Math.random() > 0.5) {
+      if(random !== ship) { // && global.Math.random() > 0.5) {
         switch(ship.chasis) {
           case 'vessel-x01':
           case 'vessel-x02':
-          case 'vessel-x03':
-          // case 'vessel-x04':
-          case 'vessel-x05':
             target = ships[random.uuid];
             if(target) {
               room = global.Math.floor(global.Math.random() * target.rooms.length);
@@ -411,17 +408,16 @@ ShipManager.prototype._updateAI = function() {
             this.sockets.io.sockets.emit('ship/targeted', battle);
             this.battles[target.uuid] = battle;
           }
-
         }
-        if(target.systems['shield'] && health < 0.90) {
-          target.activate('shield');
-        }
+        // if(target.systems['shield'] && health < 0.90) {
+        //   target.activate('shield');
+        // }
         if(target.systems['engine'] && health < 0.5) {
           target.activate('booster');
         }
-        if(target.systems['reactor'] && health < 0.2) {
-          target.activate('overload');
-        }
+        // if(target.systems['reactor'] && health < 0.2) {
+        //   target.activate('overload');
+        // }
       }
     }
   }
@@ -445,6 +441,11 @@ ShipManager.prototype._generateRandomPosition = function() {
   var randX = global.Math.random() * 4096 - 2048,
       randY = global.Math.random() * 4096 - 2048;
   return new engine.Point(2048 + randX, 2048 + randY);
+};
+
+ShipManager.prototype._generateRandomPositionByShip = function(ship) {
+  var circle = new engine.Circle(ship.position.x, ship.position.y, 512);
+  return circle.circumferencePoint(global.Math.random() * global.Math.PI);
 };
 
 module.exports = ShipManager;
