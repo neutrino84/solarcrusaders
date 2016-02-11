@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "solarcrusaders",
-  "version": "0.1.4",
+  "version": "0.1.2",
   "description": "A multiplayer strategy game featuring 4X gameplay, sandbox universe, and simulated virtual economy.",
   "author": "Oliver J Dyla",
   "contributors": [],
@@ -19,6 +19,7 @@
     "bcryptjs": "2.3.0",
     "xregexp": "3.0.x",
     "uuid": "2.0.x",
+    "caminte": "0.2.x",
 
     "morgan": "1.6.x",
     "express": "4.13.x",
@@ -35,9 +36,6 @@
     "socket.io-events": "0.4.x",
     "stripe": "4.3.x",
 
-    "brfs": "1.4.x",
-    "bundle-collapser": "1.2.x",
-
     "earcut": "2.0.x",
     "resource-loader": "1.6.x",
     "object-assign": "4.0.x",
@@ -52,6 +50,10 @@
     "grunt-contrib-concat": "0.5.x",
     "grunt-contrib-watch": "0.6.x",
     "grunt-contrib-uglify": "0.11.x",
-    "grunt-contrib-compress": "0.14.x"
+    "grunt-contrib-compress": "0.14.x",
+    
+    "brfs": "1.4.x",
+    "browserify-versionify": "1.0.x",
+    "bundle-collapser": "1.2.x"
   }
 }
