@@ -10,48 +10,41 @@ function Batch(game, maxSize, properties, batchSize) {
 Batch.prototype = Object.create(pixi.ParticleContainer.prototype);
 Batch.prototype.constructor = Batch;
 
-Batch.prototype.preUpdate = function() {};
-
-Batch.prototype.update = function() {};
-
-Batch.prototype.postUpdate = function() {};
-
-Batch.prototype.getFirstExists = function(exists) {
-  if(typeof exists !== 'boolean') {
-    exists = true;
+Batch.prototype.update = function() {
+  if(this.pendingDestroy) {
+    this.destroy();
+    return false;
   }
-  return this.iterate('exists', exists, Group.RETURN_CHILD);
+
+  if(!this.exists || !this.parent.exists) {
+    this.renderOrderID = -1;
+    return false;
+  }
+
+  var i = this.children.length;
+  while (i--) {
+    this.children[i].update();
+  }
 };
 
-Batch.prototype.iterate = function(key, value, returnType, callback, callbackContext, args) {
-  if(returnType === Group.RETURN_TOTAL && this.children.length === 0) { return 0; }
+Batch.prototype.destroy = function(destroyChildren, soft) {
+  if(this.game === null || this.ignoreDestroy) { return; }
+  if(destroyChildren === undefined) { destroyChildren = true; }
+  if(soft === undefined) { soft = false; }
 
-  var total = 0;
-  for(var i = 0; i < this.children.length; i++) {
-    if(this.children[i][key] === value) {
-      total++;
+  this.removeAll(destroyChildren);
+  this.removeAllListeners();
 
-      if(callback) {
-        if(args) {
-          args[0] = this.children[i];
-          callback.apply(callbackContext, args);
-        } else {
-          callback.call(callbackContext, this.children[i]);
-        }
-      }
+  this.filters = null;
+  this.pendingDestroy = false;
 
-      if(returnType === Group.RETURN_CHILD) {
-        return this.children[i];
-      }
+  if(!soft) {
+    if(this.parent) {
+      this.parent.removeChild(this);
     }
-  }
-
-  if(returnType === Group.RETURN_TOTAL) {
-    return total;
-  }
-
-  // RETURN_CHILD or RETURN_NONE
-  return null;
+    this.game = null;
+    this.exists = false;
+  }  
 };
 
 module.exports = Batch;
