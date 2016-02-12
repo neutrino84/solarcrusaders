@@ -6,7 +6,7 @@ var engine = require('engine'),
     Image = require('../components/Image'),
     Button = require('../components/Button');
 
-function RightPane(game, settings) {
+function HeaderPane(game, settings) {
   Pane.call(this, game, {
     padding: [0],
     layout: {
@@ -107,25 +107,25 @@ function RightPane(game, settings) {
   game.clock.events.loop(500, this._updateInfo, this);
 };
 
-RightPane.prototype = Object.create(Pane.prototype);
-RightPane.prototype.constructor = RightPane;
+HeaderPane.prototype = Object.create(Pane.prototype);
+HeaderPane.prototype.constructor = HeaderPane;
 
-RightPane.prototype.validate = function() {
+HeaderPane.prototype.validate = function() {
   return Pane.prototype.validate.call(this);
 };
 
-RightPane.prototype._register = function() {
+HeaderPane.prototype._register = function() {
   this.game.emit('gui/registration');
 };
 
-RightPane.prototype._forums = function() {
+HeaderPane.prototype._forums = function() {
   global.document.location.href = 'http://forums.solarcrusaders.com/';
 };
 
-RightPane.prototype._updateInfo = function() {
+HeaderPane.prototype._updateInfo = function() {
   this.fpsText.text = this.game.clock.fps + ' fps';
   this.pingText.text = this.game.net.rtt + ' rtt';
   this.invalidate(true);
 };
 
-module.exports = RightPane;
+module.exports = HeaderPane;
