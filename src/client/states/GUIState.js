@@ -10,7 +10,6 @@ var engine = require('engine'),
     
     HeaderPane = require('../ui/panes/HeaderPane'),
     LeftPane = require('../ui/panes/LeftPane'),
-    RightPane = require('../ui/panes/RightPane'),
     BottomPane = require('../ui/panes/BottomPane'),
     ShipPane = require('../ui/panes/ShipPane'),
     ShipFittingPane = require('../ui/panes/Ship'),
@@ -82,7 +81,7 @@ GUIState.prototype.create = function() {
   this.basePanel.setPadding(6, 0, 0, 0);
       
   this.leftPane = new LeftPane(game);
-  this.rightPane = new RightPane(game);
+  this.headerPane = new HeaderPane(game);
 
   this.shipFittingPane = new ShipFittingPane(game);
 
@@ -103,7 +102,7 @@ GUIState.prototype.create = function() {
       }));
 
   this.topPanel = new Panel(game, new FlowLayout(Layout.CENTER, Layout.TOP, Layout.HORIZONTAL, 6));
-  this.topPanel.addPanel(Layout.NONE, this.rightPane);
+  this.topPanel.addPanel(Layout.NONE, this.headerPane);
 
   this.bottomPane = new BottomPane(game);
   this.bottomPane.visible = false;
