@@ -5,8 +5,8 @@ function Asteroid(game) {
   engine.Sprite.call(this, game, 'texture-atlas', 'asteroid-x0' + (global.Math.floor(global.Math.random() * 3) + 1) + '.png');
 
   this.angle = global.Math.random() * 2 * global.Math.PI;
-  this.movspeed = global.Math.random() * 0.0001 - 0.0002;
-  this.rotspeed = global.Math.random() * 0.0025 - 0.005;
+  this.movspeed = (global.Math.random() * 0.001) - 0.0005;
+  this.rotspeed = (global.Math.random() * 0.01) - 0.005;
   this.orbit = this.createOrbit();
   this.tempPoint = new engine.Point();
 
