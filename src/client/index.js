@@ -5,11 +5,13 @@ var pixi = require('pixi'),
     engine = require('engine'),
     LoadingState = require('./states/LoadingState'),
     Auth = require('./net/Auth'),
+    Web = require('./utils/Web'),
     ShipNetManager = require('./net/ShipNetManager'),
+
     startGameEngine = function() {
       var game = new engine.Game({
             parent: 'content',
-            antialias: true,
+            antialias: Web.getQueryParameter('antialias', true),
             width: 1024,
             height: 576
             // forceFXAA: true
