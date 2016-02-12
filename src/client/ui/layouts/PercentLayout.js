@@ -10,7 +10,7 @@ function PercentLayout(dir, gap, stretch) {
 PercentLayout.prototype.calcPreferredSize = function(target) {
   var d, max = 0,
       length = target.panels.length,
-      as = this.gap * (length === 0 ? 0 : length-1);
+      width = this.gap * (length === 0 ? 0 : length-1);
 
   for(var i=0; i<length; i++) {
     d = target.panels[i].getPreferredSize();
@@ -18,15 +18,15 @@ PercentLayout.prototype.calcPreferredSize = function(target) {
       if(d.height > max) {
         max = d.height;
       }
-      as += d.width;
+      width += d.width;
     } else {
       if(d.width > max) {
         max = d.width;
       }
-      as += d.height;
+      width += d.height;
     }
   }
-  return this.direction == Layout.HORIZONTAL ? { width: as, height: max } : { width: max, height: as };
+  return this.direction == Layout.HORIZONTAL ? { width: width, height: max } : { width: max, height: width };
 };
 
 PercentLayout.prototype.doLayout = function(target) {
