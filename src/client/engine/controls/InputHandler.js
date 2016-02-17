@@ -406,8 +406,10 @@ InputHandler.prototype = {
     // Abort. We've been destroyed.
     if(this.sprite === null) { return; }
 
-    var data = this._pointerData[pointer.id];
+    var sendEvent, data = this._pointerData[pointer.id];
     if(data.isOver === false || pointer.dirty) {
+      sendEvent = data.isOver === false;
+
       data.isOver = true;
       data.isOut = false;
       data.timeOver = this.game.clock.time;
@@ -419,7 +421,7 @@ InputHandler.prototype = {
         this._setHandCursor = true;
       }
 
-      if(this.sprite) {
+      if(sendEvent && this.sprite) {
         this.sprite.emit('inputOver', this.sprite, pointer);
       }
     }
