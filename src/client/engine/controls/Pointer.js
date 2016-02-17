@@ -164,7 +164,7 @@ Pointer.prototype = {
 
     // On OS X (and other devices with trackpads) you have to press CTRL + the pad
     // to initiate a right-click event, so we'll check for that here
-    if(event.ctrlKey && this.leftButton.isDown) {
+    if(event.buttons === 1 && event.ctrlKey && this.leftButton.isDown) {
       this.rightButton.start(event);
     }
 
