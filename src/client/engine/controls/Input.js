@@ -75,9 +75,9 @@ Input.prototype.boot = function() {
   
   this.keyboard = new Keyboard(this.game);
   this.keyboard.addCallbacks(this,
-    function(key, event) { this.emit('keydown', key, event); }, 
-    function(key, event) { this.emit('keyup', key, event); },
-    function(key, event) { this.emit('keypress', key, event); }
+    function(event, key) { this.emit('keydown', event, key); }, 
+    function(event, key) { this.emit('keyup', event, key); },
+    function(event, key) { this.emit('keypress', event, key); }
   );
 
   this.scale = new Point(1, 1);

@@ -124,7 +124,13 @@ Keyboard.prototype = {
   },
 
   removeKeyCapture: function(keycode) {
-    delete this._capture[keycode];
+    if(typeof keycode === 'object') {
+      for(var key in keycode) {
+        delete this._capture[keycode[key]];
+      }
+    } else {
+      delete this._capture[keycode];
+    }
   },
 
   clearCaptures: function() {
@@ -160,7 +166,7 @@ Keyboard.prototype = {
     this._k = event.keyCode;
 
     if(this.onDownCallback) {
-      this.onDownCallback.call(this.callbackContext, event);
+      this.onDownCallback.call(this.callbackContext, event, global.String.fromCharCode(event.charCode));
     }
   },
 
@@ -172,7 +178,7 @@ Keyboard.prototype = {
     }
 
     if(this.onPressCallback) {
-      this.onPressCallback.call(this.callbackContext, String.fromCharCode(event.charCode), event);
+      this.onPressCallback.call(this.callbackContext, event, global.String.fromCharCode(event.charCode));
     }
   },
 
@@ -194,7 +200,7 @@ Keyboard.prototype = {
     this._keys[event.keyCode].processKeyUp(event);
 
     if(this.onUpCallback) {
-      this.onUpCallback.call(this.callbackContext, event);
+      this.onUpCallback.call(this.callbackContext, event, global.String.fromCharCode(event.charCode));
     }
   },
 
