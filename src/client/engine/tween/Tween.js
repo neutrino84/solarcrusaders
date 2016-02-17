@@ -308,9 +308,11 @@ Tween.prototype.update = function(time) {
     // In case the update callback modifies this tween
     return this.isRunning;
   } else if(status === TweenData.LOOPED) {
-    
-    this.emit('loop', this);
-    
+    if(this.repeatCounter === -1) {
+      this.emit('loop', this);
+    } else {
+      this.emit('repeat', this);
+    }
     return true;
   } else if(status === TweenData.COMPLETE) {
     var complete = false;
@@ -336,7 +338,7 @@ Tween.prototype.update = function(time) {
       // We've reached the start or end of the child tweens (depending on Tween.reverse), should we repeat it?
       if(this.repeatCounter === -1) {
         this.timeline[this.current].start();
-        this.emit('repeat', this);
+        this.emit('loop', this);
         
         return true;
       } else if(this.repeatCounter > 0) {
