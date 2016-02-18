@@ -296,6 +296,8 @@ var Device = {
 
       if(/Arora/.test(ua)) {
         device.arora = true;
+      } else if (/Edge\/\d+/.test(ua)) {
+        device.edge = true;
       } else if(/Chrome\/(\d+)/.test(ua) && !device.windowsPhone) {
         device.chrome = true;
         device.chromeVersion = parseInt(RegExp.$1, 10);
@@ -319,8 +321,6 @@ var Device = {
         device.trident = true;
         device.tridentVersion = parseInt(RegExp.$1, 10);
         device.ieVersion = parseInt(RegExp.$3, 10);
-      } else if (/Edge\/\d+/.test(ua)) {
-        device.edge = true;
       }
         
       if(process !== undefined && require !== undefined) {
