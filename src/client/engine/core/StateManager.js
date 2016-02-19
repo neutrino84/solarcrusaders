@@ -191,6 +191,9 @@ StateManager.prototype.preUpdate = function() {
   } else if(this._pendingState && this.game.isBooted) {
     var previousStateKey = this._current;
 
+    this._clearWorld = true;
+    this._clearCache = true;
+
     // get rid of old
     // state if we have one
     this.clearCurrentState();
