@@ -6,15 +6,16 @@ var winston = require('winston'),
     LocalStrategy = require('passport-local').Strategy,
     Validator = require('../utils/Validator'),
     Sanitation = require('../utils/Sanitation'),
-    Password = require('../utils/Password');
+    Password = require('../utils/Password'),
+    Generator = require('../utils/Generator');
 
 function Authentication(routes) {
   this.routes = routes;
 
   this.game = app.game;
-  this.user = app.model.user;
-  this.server = global.app.server;
-
+  this.model = app.model;
+  this.server = app.server;
+ 
   this.password = new Password();
   this.passport = new LocalStrategy({ passReqToCallback: true }, this.localLogin.bind(this));
 };
@@ -32,9 +33,9 @@ Authentication.prototype.init = function() {
   // create guest user
   this.routes.express.get('/', function(req, res, next) {
     if(!req.session.user) {
-      var guest = self.user.createDefaultData();
-          guest.uid = 0;
-      req.session.user = guest;
+      var name = Generator.getUsername(),
+          guest = new self.model.User({ name: name, username: name });
+      req.session.user = guest.toStreamObject();
       req.session.save();
     }
     next();
@@ -44,6 +45,7 @@ Authentication.prototype.init = function() {
   this.routes.io.on('connection', function(socket) {
     self.game.emit('auth/login', socket.handshake.session.user);
     socket.on('disconnect', function() {
+      winston.info('[Authentication] Socket ' + socket.handshake.session.socket + ' closed');
       self.game.emit('auth/logout', socket.handshake.session.user);
     });
   });
@@ -85,8 +87,6 @@ Authentication.prototype.register = function(req, res, next) {
 };
 
 Authentication.prototype.login = function(req, res, next) {
-  return next(new Error('[[error:server-locked]]'));
-  
   var self = this;
   passport.authenticate('local', function(err, userData, info) {
     if(err) { return next(err); }
@@ -98,7 +98,7 @@ Authentication.prototype.login = function(req, res, next) {
     self.game.emit('auth/logout', req.session.user);
     self.game.emit('auth/login', userData);
 
-   // store session
+    // store session
     // serve response
     req.session.user = userData;
     req.session.save(function() {
@@ -118,38 +118,30 @@ Authentication.prototype.localLogin = function(req, username, password, next) {
       ip = Sanitation.ip(req.ip);
 
   async.waterfall([
-    function(next) {
-      self.user.logAttempt(ip, next);
-    },
+    // function(next) {
+    //   self.user.logAttempt(ip, next);
+    // },
     function(next) {
       if(username && Validator.isEmailValid(username)) {
-        self.user.getUidByEmail(username, next);
+        self.model.User.findOne({ where: { email: username }}, next);
       } else if(userslug) {
-        self.user.getUidByUserslug(userslug, next);
+        self.model.User.findOne({ where: { userslug: userslug }}, next);
       } else {
         return next(new Error('[[error:invalid-credentials]]'));
       }
     },
-    function(uid, next) {
-      if(!uid) { return next(new Error('[[error:invalid-credentials]]')); }
-      self.user.getAuthCredentials(uid, next);
-    },
-    function(result, next) {
-      if(!result || !result.password) {
+    function(data, next) {
+      if(!data) { return next(new Error('[[error:invalid-credentials]]')); }
+      if(!data.password) {
         return next(new Error('[[error:unknown-error]]'));
       }
-      if(result.banned && parseInt(result.banned, 10) === 1) {
+      if(data.banned) {
         return next(new Error('[[error:user-banned]]'));
       }
-      self.password.compare(password, result.password, function(err, match) {
+      self.password.compare(password, data.password, function(err, match) {
         if(err) { return next(new Error('[[error:unknown-error]]')); }
         if(!match) { return next(new Error('[[error:invalid-credentials]]')); }
-        next(null, result.uid);
-      });
-    },
-    function(uid, next) {
-      self.user.getUserData(uid, function(err, data) {
-        next(null, data, '[[success:authentication-complete]]');
+        next(null, data.toStreamObject(), '[[success:authentication-complete]]');
       });
     }
   ], next);
@@ -158,20 +150,17 @@ Authentication.prototype.localLogin = function(req, username, password, next) {
 Authentication.prototype.logout = function(req, res, next) {
   var uid, self = this,
       session = req.session;
-  if(session.user) {
-    uid = parseInt(session.user.uid, 10);
-    if(uid > 0) {
-      this.server.sessionStore.destroy(req.sessionID, function(err) {
-        if(err) { return next(err); }    
+  if(session.user && session.user.role !== 'guest') {
+    this.server.sessionStore.destroy(req.sessionID, function(err) {
+      if(err) { return next(err); }    
 
-        // notify game
-        self.game.emit('auth/logout', session.user);    
-        
-        // logout
-        req.logout();
-        res.json({ info: 'success' });
-      });
-    }
+      // notify game
+      self.game.emit('auth/logout', session.user);    
+      
+      // logout
+      req.logout();
+      res.json({ info: 'success' });
+    });
   } else {
     return next(new Error('[[error:not-logged-in]]'));
   }

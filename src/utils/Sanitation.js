@@ -39,4 +39,8 @@ Sanitation.slugify = function(str, preserveCase) {
   return str;
 };
 
+Sanitation.email = function(email) {
+  return email.toLowerCase();
+};
+
 module.exports = Sanitation;

@@ -8,8 +8,8 @@ var path = require('path'),
     configFilePath = path.join(__dirname, '/../config.json'),
 
     Database = require('./database'),
-    Configuration = require('./Configuration'),
-    Model = require('./model/Model'),
+    Model = require('./model'),
+    // Configuration = require('./Configuration'),
     Server = require('./Server'),
     Sockets = require('./Sockets'),
     Game = require('./core/Game'),
@@ -18,7 +18,6 @@ var path = require('path'),
 function Application() {
   this.database = null;
   this.configuration = null;
-  this.model = null;
   this.server = null;
   this.sockets = null;
   this.game = null;
@@ -66,17 +65,17 @@ Application.prototype.start = function() {
       winston.info('[Application] Connected database client...');
     },
     function(next) {
-      self.configuration = new Configuration(self);
-      self.configuration.init(next);
-
-      winston.info('[Application] Loaded configuration...');
-    },
-    function(next) {
       self.model = new Model(self);
       self.model.init(next);
 
-      winston.info('[Application] Loaded models...');
+      winston.info('[Application] Models loaded...');
     },
+    // function(next) {
+    //   self.configuration = new Configuration(self);
+    //   self.configuration.init(next);
+
+    //   winston.info('[Application] Loaded configuration...');
+    // },
     function(next) {
       self.server = new Server(self);
       self.server.init(next);

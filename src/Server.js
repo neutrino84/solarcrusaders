@@ -7,6 +7,8 @@ var path = require('path'),
     favicon = require('serve-favicon'),
     bodyParser = require('body-parser'),
     cookieParser = require('cookie-parser'),
+
+    db = require('./database'),
     
     publicDir = path.resolve('public'),
     viewsDir = path.resolve('views');
@@ -14,7 +16,6 @@ var path = require('path'),
 function Server(app) {
   this.app = global.app;
   this.nconf = global.app.nconf;
-  this.database = global.app.database;
 
   this.express = express();
 };
@@ -25,7 +26,7 @@ Server.prototype.init = function(next) {
   var self = this;
 
   this.sessionStore = new connectRedis({
-    client: this.database.client,
+    client: db.client,
     ttl: 60 * 60 * 24 * 14,
     db: parseInt(this.nconf.get('redis:database'), 10)
   });
