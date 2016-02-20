@@ -1,8 +1,8 @@
 {
   "private": true,
   "name": "solarcrusaders",
-  "version": "0.1.3",
-  "description": "A multiplayer strategy game featuring 4X gameplay, sandbox universe, and simulated virtual economy.",
+  "version": "0.2.0",
+  "description": "Solar Crusaders is a multiplayer top-down strategy game featuring a sandbox universe, base building, and exploration.",
   "author": "Oliver J Dyla",
   "contributors": [],
   "dependencies": {
