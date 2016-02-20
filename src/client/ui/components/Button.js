@@ -23,7 +23,8 @@ function Button(game, string, settings) {
       color: 0x3868b8,
       borderSize: 0.0,
       blendMode: engine.BlendMode.ADD,
-      radius: 4.0
+      radius: 4.0,
+      alertColor: 0xFFFF00
     },
     label: {
       bg: {
@@ -48,7 +49,7 @@ function Button(game, string, settings) {
 
   // color blend
   this.colorBlend = new ColorBlend(game, this.bg);
-  this.colorBlend.setColor(0xFFFFFF, 0xFFFF00, 250, engine.Easing.Linear.None, true);
+  this.colorBlend.setColor(0xFFFFFF, this.settings.bg.alertColor, 250, engine.Easing.Linear.None, true);
   this.colorBlend.on('stop', function() {
     this.bg.tint = 0xFFFFFF;
   }, this);
