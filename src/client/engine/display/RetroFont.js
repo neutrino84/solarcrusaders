@@ -54,7 +54,8 @@ RetroFont.ALIGN_LEFT = 'left';
 RetroFont.ALIGN_RIGHT = 'right';
 RetroFont.ALIGN_CENTER = 'center';
 
-RetroFont.TEXT_SET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-.%+/';
+RetroFont.TEXT_SET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-.%+/*';
+RetroFont.TEXT_SET_FULL = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!"#$%&\'()*+.,-/@';
 
 RetroFont.prototype.setFixedWidth = function(width, lineAlignment) {
   if(lineAlignment === undefined) { lineAlignment = 'left'; }
