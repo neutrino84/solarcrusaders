@@ -1,6 +1,7 @@
 
 var engine = require('engine'),
     Layout = require('../Layout'),
+    LoginPane = require('./LoginPane'),
     Pane = require('../components/Pane'),
     Label = require('../components/Label'),
     Image = require('../components/Image'),
@@ -13,7 +14,7 @@ function HeaderPane(game, settings) {
       ax: Layout.CENTER,
       ay: Layout.TOP,
       direction: Layout.VERTICAL,
-      gap: 0,
+      gap: 5,
       stretch: false
     },
     bg: {
@@ -22,33 +23,20 @@ function HeaderPane(game, settings) {
       fillAlpha: 0.0,
       borderSize: 0.0,
       radius: 0
-    }
-  });
-
-  this.infoPane = new Pane(game, {
-    padding: [0],
-    layout: {
-      type: 'border',
-      gap: [5, 0]
     },
-    bg: {
-      fillAlpha: 0.0
-    }
-  });
-
-  this.infoPane2 = new Pane(game, {
-    padding: [0],
-    layout: {
-      type: 'border',
-      gap: [5, 0]
+    pane: {
+      width: 128,
+      height: 7,
+      padding: [0],
+      layout: {
+        type: 'border',
+        gap: [5, 0]
+      },
+      bg: {
+        fillAlpha: 0.0
+      }
     },
-    bg: {
-      fillAlpha: 0.0
-    }
-  });
-
-  this.fpsText = new Label(game,
-    '60 fps', {
+    label: {
       padding: [0],
       text: {
         fontName: 'medium',
@@ -58,48 +46,23 @@ function HeaderPane(game, settings) {
         fillAlpha: 0.0,
         borderAlpha: 0.0
       }
-    });
+    }
+  });
 
-  this.pingText = new Label(game,
-    '0 ping', {
-      padding: [0],
-      text: {
-        fontName: 'medium',
-        tint: 0x66aaff
-      },
-      bg: {
-        fillAlpha: 0.0,
-        borderAlpha: 0.0
-      }
-    })
+  this.loginPane = new LoginPane(game);
+  this.loginPane.start();
 
+  this.infoPane2 = new Pane(game, this.settings.pane);
+  this.fpsText = new Label(game, '60 fps', this.settings.label);
+  this.pingText = new Label(game, '0 ping', this.settings.label);
   this.versionText = new Label(game,
-    'solar crusaders v__VERSION__', {
-      padding: [5],
-      text: {
-        fontName: 'medium',
-        tint: 0x66aaff
-      },
-      bg: {
-        fillAlpha: 0.0,
-        borderAlpha: 0.0
-      }
-    });
-
-  this.registerButton = new Button(game, 'beta signup');
-  this.registerButton.on('inputUp', this._register, this);
-
-  this.forumsButton = new Button(game, 'forums');
-  this.forumsButton.on('inputUp', this._forums, this);
-
-  this.infoPane.addPanel(Layout.LEFT, this.registerButton);
-  this.infoPane.addPanel(Layout.RIGHT, this.forumsButton);
+    'solar crusaders v__VERSION__', this.settings.label);
 
   this.infoPane2.addPanel(Layout.RIGHT, this.fpsText);
   this.infoPane2.addPanel(Layout.LEFT, this.pingText);
 
   // add layout panels
-  this.addPanel(Layout.CENTER, this.infoPane);
+  this.addPanel(Layout.CENTER, this.loginPane);
   this.addPanel(Layout.CENTER, this.versionText);
   this.addPanel(Layout.CENTER, this.infoPane2);
 
@@ -110,22 +73,18 @@ function HeaderPane(game, settings) {
 HeaderPane.prototype = Object.create(Pane.prototype);
 HeaderPane.prototype.constructor = HeaderPane;
 
-HeaderPane.prototype.validate = function() {
-  return Pane.prototype.validate.call(this);
+HeaderPane.prototype.login = function() {
+  this.loginPane.login();
 };
 
-HeaderPane.prototype._register = function() {
-  this.game.emit('gui/registration');
-};
-
-HeaderPane.prototype._forums = function() {
-  global.document.location.href = 'http://forums.solarcrusaders.com/';
+HeaderPane.prototype.logout = function() {
+  this.loginPane.logout();
 };
 
 HeaderPane.prototype._updateInfo = function() {
   this.fpsText.text = this.game.clock.fps + ' fps';
   this.pingText.text = this.game.net.rtt + ' rtt';
-  this.invalidate(true);
+  this.infoPane2.invalidate(true);
 };
 
 module.exports = HeaderPane;

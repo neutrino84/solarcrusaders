@@ -18,6 +18,13 @@ function Label(game, string, settings) {
     align: 'left'
   });
 
+  // set size
+  if(this.settings.width || this.settings.height) {
+    this.setPreferredSize(
+      this.settings.width,
+      this.settings.height);
+  }
+
   this.setPadding.apply(this, this.settings.padding);
   this.setBorder.apply(this, this.settings.border);
 

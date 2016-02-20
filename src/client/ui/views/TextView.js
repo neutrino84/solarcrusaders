@@ -20,6 +20,17 @@ function TextView(game, text, settings) {
       yOffset: 1,
       tint: 0xffffff
     },
+    'full': {
+      chars: engine.RetroFont.TEXT_SET_FULL,
+      fontName: 'full',
+      characterWidth: 6,
+      characterHeight: 8,
+      xSpacing: 0,
+      ySpacing: 0,
+      xOffset: 0,
+      yOffset: 0,
+      tint: 0xffffff
+    },
     'medium': {
       fontName: 'medium',
       characterWidth: 8,
@@ -63,5 +74,11 @@ function TextView(game, text, settings) {
 TextView.prototype = Object.create(engine.Sprite.prototype);
 TextView.prototype.mixinPrototype(View.prototype);
 TextView.prototype.constructor = TextView;
+
+Object.defineProperty(TextView.prototype, 'font', {
+  get: function() {
+    return this.fonts[this.defaultFont];
+  }
+});
 
 module.exports = TextView;

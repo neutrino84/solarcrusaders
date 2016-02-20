@@ -3,6 +3,7 @@ var engine = require('engine'),
     
     Panel = require('../ui/Panel'),
     Layout = require('../ui/Layout'),
+    Focus = require('../ui/Focus'),
 
     BorderLayout = require('../ui/layouts/BorderLayout'),
     FlowLayout = require('../ui/layouts/FlowLayout'),
@@ -38,6 +39,7 @@ GUIState.prototype.preload = function() {
   // load font
   this.game.load.image('vt323', 'imgs/game/fonts/vt323.png');
   this.game.load.image('medium', 'imgs/game/fonts/medium.png');
+  this.game.load.image('full', 'imgs/game/fonts/full.png');
 
   // load tilesets
   this.game.load.image('deck', 'imgs/game/tilesets/deck-mini.png');
@@ -59,14 +61,16 @@ GUIState.prototype.preload = function() {
   this.game.load.spritesheet('door', 'imgs/game/spritesheets/door-mini.png', 16, 16);
 
   // ship outline
-  this.game.load.image('vessel-x01-outline', 'imgs/game/ships/vessel-x01-outline.png');
-  this.game.load.image('vessel-x02-outline', 'imgs/game/ships/vessel-x02-outline.png');
+  this.game.load.image('ubaidian-x01-outline', 'imgs/game/ships/ubaidian/ubaidian-x01-outline.png');
+  this.game.load.image('hederaa-x01-outline', 'imgs/game/ships/hederaa/hederaa-x01-outline.png');
 };
 
 GUIState.prototype.create = function() {
   var game = this.game;
 
+  this.focus = new Focus(game);
   this.selection = new Selection(game);
+  
   this.hud = new engine.Group(game);
   this.hud.visible = false;
 
@@ -145,14 +149,18 @@ GUIState.prototype.create = function() {
 
 GUIState.prototype.login = function() {
   if(this.auth.isUser()) {
+    this.leftPane.visible = true;
     this.bottomPane.visible = true;
     this.centerPanel.visible = true;
+    this.headerPane.login();
+    this.root.invalidate(true);
+    // this.registrationForm && this.registrationForm.destroy();
   } else {
+    this.leftPane.visible = false;
     this.bottomPane.visible = false;
     this.centerPanel.visible = false;
-    this.registrationForm = new RegistrationForm(game);
-    // this.loginForm = new LoginForm(game);
-    // this.game.on('gui/loggedin', this._loggedin, this);
+    this.headerPane.logout()
+    // this.registrationForm = new RegistrationForm(game);
   }
   if(this.modalComponent.visible) {
     this.modal(false);
@@ -207,13 +215,6 @@ GUIState.prototype.resize = function(width, height) {
 
 GUIState.prototype._pause = function() {
   this.game.emit('gui/message', 'paused', 1000, 500);
-};
-
-GUIState.prototype._loggedin = function() {
-  this.registrationForm.destroy();
-  this.loginForm.destroy();
-  this.loginForm = this.registrationForm = undefined;
-  this.game.removeListener('gui/loggedin', this._loggedin);
 };
 
 GUIState.prototype._disconnected = function() {
