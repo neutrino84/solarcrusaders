@@ -1,5 +1,6 @@
 {
-  "vessel-x01": {
+  "ubaidian-x01": {
+    "class": "destroyer",
     "size": 1.0,
     "oribit": { "radius": 128 },
     "stats": {
@@ -7,6 +8,7 @@
       "heal": 0.01,
       "armor": 0.0,
       "speed": 3.5,
+      "range": 512,
       "accuracy": 0.36,
       "evasion": 0.1,
       "energy": 100,
@@ -404,7 +406,7 @@
                  "name":"",
                  "properties":
                     {
-                     "system":"targeting"
+                     "system":"shields"
                     },
                  "rotation":0,
                  "type":"",
@@ -482,7 +484,8 @@
         }]
     }
   },
-  "vessel-x02": {
+  "hederaa-x01": {
+    "class": "destroyer",
     "size": 1.0,
     "oribit": { "radius": 128 },
     "stats": {
@@ -490,6 +493,7 @@
       "heal": 0.01,
       "armor": 0.0,
       "speed": 3.5,
+      "range": 512,
       "accuracy": 0.36,
       "evasion": 0.1,
       "energy": 100,
