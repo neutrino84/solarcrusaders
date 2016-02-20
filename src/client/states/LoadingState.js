@@ -15,7 +15,7 @@ LoadingState.prototype = Object.create(engine.State.prototype);
 LoadingState.prototype.constructor = engine.State;
 
 LoadingState.prototype.preload = function() {
-  this.game.load.image('logo', 'imgs/game/logo.jpg');
+  this.game.load.image('loading', 'imgs/game/loading.gif');
   this.game.load.image('small', 'imgs/game/fonts/small.png');
 };
 
@@ -37,18 +37,19 @@ LoadingState.prototype.create = function() {
   this.currentState = 0;
   this.pendingState = game.state.pendingLength;
 
-  // loading bar
-  this.progress = new ProgressBar(game, { label: false });
+  this.progress = new ProgressBar(game, {
+    width: 162,
+    height: 8,
+    label: false
+  });
 
-  // logo image
-  this.image = new Image(game, 'logo', {
-    padding: [0],
+  this.image = new Image(game, 'loading', {
+    padding: [0, 0, 20, 0],
     border: [0],
     bg: { color: 0x000000 }
   });
 
-  // loading status
-  this.statusLabel = new Label(game, 'loading', {
+  this.status = new Label(game, 'loading', {
     bg: {
       fillAlpha: 0.0,
       borderSize: 0.0
@@ -56,48 +57,47 @@ LoadingState.prototype.create = function() {
     text: { fontName: 'small' }
   });
 
-  // root pane
-  this.root = new Pane(game, {
+  this.container = new Pane(game, {
     layout: {
       ax: Layout.CENTER,
       ay: Layout.CENTER,
       direction: Layout.VERTICAL
     },
+    bg: false
+  });
+
+  this.root = new Pane(game, {
+    layout: {
+      ax: Layout.CENTER,
+      ay: Layout.CENTER
+    },
     bg: { color: 0x000000 }
   });
 
+  this.container.addPanel(Layout.CENTER, this.image);
+  this.container.addPanel(Layout.CENTER, this.progress);
+  this.container.addPanel(Layout.CENTER, this.status);
+
   this.root.setSize(game.width, game.height);
-  this.root.addPanel(Layout.CENTER, this.image);
-  this.root.addPanel(Layout.CENTER, this.progress);
-  this.root.addPanel(Layout.CENTER, this.statusLabel);
+  this.root.addPanel(Layout.CENTER, this.container);
+
+  // force redraw
+  this.root.invalidate(true);
 
   // add event listeners
   game.load.on('loadstart', this.loadingStart, this);
   game.load.on('loadcomplete', this.loadingComplete, this);
   game.load.on('filecomplete', this.loadingProgressBar, this);
-
-  // paint
-  this.root.validate();
-  this.root.repaint();
-  this.root.invalidate = function() {
-    this.isValid = false;
-    this.isLayoutValid = false;
-    this.cachedWidth = -1;
-    
-    this.validate();
-    this.repaint();
-  };
 };
 
 LoadingState.prototype.loadingStart = function() {
-  // update display
-  this.root.alpha = 1.0;
-  this.image.visible = true;
-  this.progress.visible = true;
-  this.statusLabel.visible = true; 
-
   // add gui to stage
   this.game.stage.addChild(this.root);
+
+  // update display
+  this.image.visible = true;
+  this.progress.visible = true;
+  this.status.visible = true; 
 };
 
 LoadingState.prototype.loadingProgressBar = function() {
@@ -106,11 +106,12 @@ LoadingState.prototype.loadingProgressBar = function() {
       file = arguments[1],
       pendingState = this.pendingState;
   this.progress.setProgressBar((loaded/total/pendingState) + (this.currentState/pendingState));
-  this.statusLabel.text = file;
-  this.statusLabel.invalidate();
+  this.status.text = file;
+  this.status.invalidate();
 };
 
 LoadingState.prototype.loadingComplete = function() {
+  // increment state
   this.currentState++;
 
   // move to front
@@ -118,22 +119,26 @@ LoadingState.prototype.loadingComplete = function() {
 
   // remove loading screen
   if(!this.game.state.hasPendingState) {
-    this.tween = this.game.tweens.create(this.root);
-    this.tween.to({ alpha: 0.0 }, 4000);
-    this.tween.delay(500);
-    this.tween.start();
-    this.tween.once('complete', function() {
+    // fade out animation
+    this.tween1 = this.game.tweens.create(this.root);
+    this.tween1.to({ alpha: 0.0 }, 500);
+    this.tween1.delay(500);
+    this.tween1.start();
+    this.tween1.once('complete', function() {
       this.game.stage.removeChild(this.root);
     }, this);
 
-    this.image.visible = false;
-    this.progress.visible = false;
-    this.statusLabel.visible = false;
+    // fade out animation
+    this.tween2 = this.game.tweens.create(this.container);
+    this.tween2.to({ alpha: 0.0 }, 500);
+    this.tween2.start();
+    this.tween1.once('complete', function() {
+      // update display
+      this.image.visible = false;
+      this.progress.visible = false;
+      this.status.visible = false;
+    }, this);
   }
-};
-
-LoadingState.prototype.update = function() {
-  this.image.rotation += 0.01;
 };
 
 LoadingState.prototype.resize = function(width, height) {
