@@ -166,7 +166,7 @@ HardpointPane.prototype.create = function(data) {
 
   this.data = data;
 
-  this.image = new Image(game, data.chasis + '-outline', this.settings.image);
+  this.image = new Image(game, data.chassis + '-outline', this.settings.image);
   this.image.blendMode = engine.BlendMode.ADD;
   this.image.tint = 0x336699;
 

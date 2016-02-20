@@ -35,7 +35,7 @@ function ShipData(game, data) {
     binding: ShipData.STAT_SYSTEM_BINDING,
     sort: ShipData.SYSTEM_SORT_ORDER,
     units: ShipData.STAT_UNITS,
-    ship: game.cache.getJSON('ship-configuration', false)[data.chasis],
+    ship: game.cache.getJSON('ship-configuration', false)[data.chassis],
     enhancement: this.game.cache.getJSON('enhancement-configuration'),
     systems: [
       { name: 'hull', stats: ['durability', 'health', 'heal'], enhancements: [] },
