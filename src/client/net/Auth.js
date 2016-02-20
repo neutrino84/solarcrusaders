@@ -26,11 +26,11 @@ Auth.prototype = Object.create(EventEmitter.prototype);
 Auth.prototype.constructor = Auth;
 
 Auth.prototype.isUser = function() {
-  return this.user.uid ? true : false;
+  return !this.isGuest();
 }
 
 Auth.prototype.isGuest = function() {
-  return this.user.uid === 0 ? true : false;
+  return this.user.role === 'guest' ? true : false;
 }
 
 Auth.prototype._session = function(response) {
