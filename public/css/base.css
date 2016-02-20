@@ -34,7 +34,7 @@ canvas {
 #content {
   height: 100%;
   width: 100%;
-  background: url('../imgs/game/solarcrusaders.jpg') center center no-repeat;
+  background: url('../imgs/game/solarcrusaders.gif') center center no-repeat;
 }
 
 #content.error { background: none; }
