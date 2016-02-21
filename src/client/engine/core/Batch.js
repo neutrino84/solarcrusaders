@@ -1,5 +1,5 @@
 var pixi = require('pixi'),
-	Group = require('./Group');
+    Group = require('./Group');
 
 function Batch(game, maxSize, properties, batchSize) {
   pixi.ParticleContainer.call(this, maxSize, properties, batchSize);
