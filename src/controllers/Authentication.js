@@ -31,7 +31,7 @@ Authentication.prototype.init = function() {
   passport.use(this.passport);
 
   // create guest user
-  this.routes.express.get('/', function(req, res, next) {
+  this.routes.play.get('/', function(req, res, next) {
     if(!req.session.user) {
       var name = Generator.getUsername(),
           guest = new self.model.User({ name: name, username: name });

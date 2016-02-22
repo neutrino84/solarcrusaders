@@ -1,6 +1,8 @@
 var path = require('path'),
     http = require('http'),
+    url = require('url'),
     express = require('express'),
+    subdomain = require('express-subdomain'),
     session = require('express-session'),
     connectRedis = require('connect-redis')(session);
     compression = require('compression'),
@@ -18,12 +20,14 @@ function Server(app) {
   this.nconf = global.app.nconf;
 
   this.express = express();
+  this.play = new express.Router();
 };
 
 Server.prototype.constructor = Server;
 
 Server.prototype.init = function(next) {
-  var self = this;
+  var self = this,
+      href = url.parse(this.nconf.get('url'));
 
   this.sessionStore = new connectRedis({
     client: db.client,
@@ -35,7 +39,13 @@ Server.prototype.init = function(next) {
     name: 'solar.sid',
     store: this.sessionStore,
     secret: app.nconf.get('secret'),
-    cookie: { path: '/', httpOnly: true, secure: false, maxAge: 86400000 },
+    cookie: {
+      path: '/',
+      domain : '.' + href.hostname,
+      httpOnly: true,
+      secure: false,
+      maxAge: 86400000
+    },
     saveUninitialized: true,
     proxy: true,
     resave: false,
@@ -55,6 +65,8 @@ Server.prototype.init = function(next) {
   this.express.use(compression());
   this.express.use(express.static(publicDir));
   this.express.use(this.session);
+
+  this.express.use(subdomain('play', this.play));
 
   next();
 };

@@ -1,22 +1,12 @@
 extends layouts/base
-block header
-  link(rel='stylesheet', href='/css/home.css', type='text/css')
-  script(src='https://use.typekit.net/ffp2bkd.js')
-  script.
-    try{Typekit.load({ async: true });}catch(e){}
 block content
-  #window
-    #introduction.section
-      .logo
-      .bottom
-        .information
-          h1 survive today to fight for tomorrow
-          p pre-orders re-opening soon
-        .button
-          svg(viewBox='0 0 200 200', alt='play now')
-            circle(cx='100', cy='100', r='90', fill='none', stroke-width='5', stroke='#fff')
-            polygon(points='70, 55 70, 145 145, 100', fill='none', stroke-width='5', stroke='#fff')
-  #shell
+  #content
+    .dialog
+      .box
+        h1 watch on youtube
+        a(href='https://www.youtube.com/watch?v=3mURrVKerHg')
+          img(src='/imgs/game/play.png')
+        div(id='dialog')
     if !user
       .modal(id='registration-login')
         .box
@@ -45,3 +35,12 @@ block content
             .splash
             .buttons
               button(type='button', id='registration-cancel') Done
+
+  script(type='text/javascript', src='/build/pixi.js')
+  script(type='text/javascript', src='/build/xhr.js')
+  script(type='text/javascript', src='/build/socket.js')
+  script(type='text/javascript', src='/build/engine.js')
+  script(type='text/javascript', src='/build/solar.js')
+
+  //- script(type='text/javascript', src='/build/app.min.js')
+  

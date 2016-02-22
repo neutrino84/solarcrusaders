@@ -1,0 +1,82 @@
+
+body {
+  background: url('../imgs/game/bg-stars.jpg') #000 center center no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+.wf-loading h1,
+.wf-loading p {
+  display: none;
+}
+
+/*
+ * General Styles
+ */
+#window {
+  width: 100%;
+  height: 100%;
+}
+
+#window .section {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+/*
+ * Homepage Styles
+ */
+#introduction {
+
+}
+
+#introduction .logo {
+  position: absolute;
+  height: 86%;
+  width: 100%;
+  background: url('../imgs/game/bg-planet-ships.png') center center no-repeat;
+  background-size: cover;
+}
+
+#introduction .bottom {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 20%;
+}
+
+#introduction .button {
+  width: 48px;
+  height: 48px;
+  margin: 1.5% auto 1.5% auto;
+  cursor: pointer;
+}
+
+#introduction .information {
+  text-align: center;
+}
+
+#introduction .information h1 {
+  margin: 2px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  font-family: 'proxima-nova', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+#introduction .information p {
+  color: #ff0000;
+  font-size: 14px;
+  font-weight: regular;
+  font-family: 'proxima-nova', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+#introduction .information .button {
+  margin: auto;
+}
