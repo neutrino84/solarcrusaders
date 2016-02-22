@@ -2,11 +2,14 @@
 var engine = require('engine'),
     EventEmitter = require('eventemitter3');
 
-function ColorBlend(game, target) {
+function ColorBlend(game, target, loop, repeat) {
   this.game = game;
   this.target = target;
-  this.loop = true;
+  this.loop = loop !== undefined ? loop : true;
+  this.repeat = repeat || -1;
   this.colorData = [];
+
+  this._repeatCount = 0;
 
   EventEmitter.call(this);
 };
@@ -37,6 +40,9 @@ ColorBlend.prototype.update = function() {
     if(this._t) {
       this.target.tint = this.colorData[this._t].color;
     } else if(this.loop) {
+      this.setTintData();
+    } else if(this._repeatCount < this.repeat) {
+      this._repeatCount++;
       this.setTintData();
     } else {
       this.stop();
