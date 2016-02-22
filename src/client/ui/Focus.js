@@ -27,8 +27,12 @@ Focus.prototype._retain = function(object) {
     }
     
     // blur / focus
-    blurred && blurred.blur && blurred.blur();
+    if(blurred && !blurred._blurWasCalled) {
+      blurred.blur && blurred.blur();
+      blurred._blurWasCalled = true;
+    }
     focussed.focus && focussed.focus();
+    focussed._blurWasCalled = false;
   }
 };
 
@@ -43,8 +47,14 @@ Focus.prototype._release = function(object) {
     objects.splice(index, 1);
 
     // blur / focus
-    blurred.blur && blurred.blur();
-    focussed && focussed.focus && focussed.focus();
+    if(!blurred._blurWasCalled) {
+      blurred.blur && blurred.blur();
+      blurred._blurWasCalled = true;
+    }
+    if(focussed) {
+      focussed.focus && focussed.focus();
+      focussed._blurWasCalled = false;
+    }
   }
 };
     

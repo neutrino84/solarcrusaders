@@ -3,7 +3,6 @@ var xhr = require('xhr'),
     engine = require('engine'),
     Layout = require('../Layout'),
     Pane = require('../components/Pane'),
-    Label = require('../components/Label'),
     Input = require('../components/Input'),
     Button = require('../components/Button');
 
@@ -16,22 +15,6 @@ function LoginPane(game, settings) {
       borderSize: 0.0,
       blendMode: engine.BlendMode.ADD,
       radius: 0.0
-    },
-    user: {
-      padding: [3, 4, 4, 3],
-      width: 384,
-      height: 24,
-      layout: {
-        direction: Layout.HORIZONTAL,
-        gap: 4
-      },
-      bg: {
-        fillAlpha: 0.8,
-        color: 0x000000,
-        radius: 0.0,
-        borderSize: 0.0,
-        blendMode: engine.BlendMode.MULTIPLY
-      }
     },
     content: {
       padding: [3, 4, 4, 3],
@@ -107,39 +90,35 @@ function LoginPane(game, settings) {
     }
   });
 
-  this.user = new Pane(game, this.settings.user);
   this.content = new Pane(game, this.settings.content);
   this.buttons = new Pane(game, this.settings.buttons);
 
   this.usernameInput = new Input(game, 'username');
   this.passwordInput = new Input(game, 'password', { password: true });
+  this.usernameInput.next = this.passwordInput;
+  this.passwordInput.next = this.usernameInput;
+  this.passwordInput.on('inputEnter', this._login, this);
+
   this.loginButton = new Button(game, 'login', this.settings.login);
   this.loginButton.on('inputUp', this._login, this);
 
-  this.logoutButton = new Button(game, 'logout', this.settings.login);
-  this.logoutButton.on('inputUp', this._logout, this);
-
+  this.homeButton = new Button(game, 'home', this.settings.button);
   this.registerButton = new Button(game, 'beta signup', this.settings.button);
-  this.preorderButton = new Button(game, 'pre-order', this.settings.button);
-  this.aboutButton = new Button(game, 'about', this.settings.button);
   this.forumsButton = new Button(game, 'forums', this.settings.button);
 
-  this.forumsButton.on('inputUp', this._forums, this);
+  this.homeButton.on('inputUp', this._home);
+  this.forumsButton.on('inputUp', this._forums);
   this.registerButton.on('inputUp', this._register, this);
   this.registerButton.alert();
-
-  this.user.addPanel(Layout.NONE, this.logoutButton);
 
   this.content.addPanel(Layout.NONE, this.usernameInput);
   this.content.addPanel(Layout.NONE, this.passwordInput);
   this.content.addPanel(Layout.NONE, this.loginButton);
 
-  this.buttons.addPanel(25, this.registerButton);
-  this.buttons.addPanel(25, this.preorderButton);
-  this.buttons.addPanel(25, this.forumsButton);
-  this.buttons.addPanel(25, this.aboutButton);
+  this.buttons.addPanel(33, this.homeButton);
+  this.buttons.addPanel(33, this.registerButton);
+  this.buttons.addPanel(33, this.forumsButton);
 
-  this.addPanel(Layout.STRETCH, this.user);
   this.addPanel(Layout.STRETCH, this.content);
   this.addPanel(Layout.STRETCH, this.buttons);
 };
@@ -158,17 +137,17 @@ LoginPane.prototype.stop = function() {
 };
 
 LoginPane.prototype.login = function() {
-  this.user.visible = true;
   this.content.visible = false;
-  this.registerButton.label.text = 'invite';
   this.invalidate(true);
 };
 
 LoginPane.prototype.logout = function() {
-  this.user.visible = false;
   this.content.visible = true;
-  this.registerButton.label.text = 'beta signup';
   this.invalidate(true)
+};
+
+LoginPane.prototype._home = function() {
+  global.document.location.href = 'http://solarcrusaders.com/';
 };
 
 LoginPane.prototype._register = function() {
@@ -227,26 +206,6 @@ LoginPane.prototype._login = function() {
     // this.formElement.style.display = '';
     self.game.emit('gui/alert', 'you have not entered valid login credentials');
   }
-};
-
-LoginPane.prototype._logout = function() {
-  var self = this,
-      header = {
-        method: 'get',
-        uri: '/logout',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      };
-  xhr(header, function(err, resp, body) {
-    var response = JSON.parse(body),
-        user = response.user,
-        error = err || response.error;
-    if(error) {
-      self.game.emit('gui/alert', 'an unknown error has occurred');
-    }
-    self.game.emit('gui/logout');
-  });
 };
 
 module.exports = LoginPane;

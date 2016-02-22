@@ -27,6 +27,8 @@ function Input(game, string, settings) {
   this._disabled = false;
   this._selected = false;
 
+  this.next = null;
+
   this.cursor = new engine.Graphics(this.game);
   this.cursor.beginFill(0x6699CC, 1.0);
   this.cursor.drawRect(0, 0, 7, this.height);
@@ -36,7 +38,7 @@ function Input(game, string, settings) {
 
   this.addChild(this.cursor);
 
-  this.placeholder = string;
+  this.placeholder = string.toUpperCase();
   this.textView.blendMode = engine.BlendMode.ADD;
   this.textView.texture.autoUpperCase = false;
 
@@ -61,7 +63,7 @@ Input.prototype.stop = function() {
   this.bg.inputEnabled = false;
 
   // ignore focus
-  this.game.removeListener('gui/focus/retain', this.retain);
+  this.game.removeListener('gui/focus/retain', this._retain);
 };
 
 Input.prototype.focus = function() {
@@ -73,6 +75,7 @@ Input.prototype.focus = function() {
 
   // capture keys
   this.game.input.keyboard.addKeyCapture([
+    engine.Keyboard.TAB,
     engine.Keyboard.BACKSPACE,
     engine.Keyboard.DELETE,
     engine.Keyboard.ENTER
@@ -88,6 +91,7 @@ Input.prototype.blur = function() {
 
   // remove capture keys
   this.game.input.keyboard.removeKeyCapture([
+    engine.Keyboard.TAB,
     engine.Keyboard.BACKSPACE,
     engine.Keyboard.DELETE,
     engine.Keyboard.ENTER
@@ -103,10 +107,16 @@ Input.prototype._retain = function(object) {
 Input.prototype._keyDown = function(event) {
   var keyCode = event.keyCode;
   switch(keyCode) {
+    case engine.Keyboard.TAB:
+      this.next && this.game.emit('gui/focus/retain', this.next);
+      break;
+    case engine.Keyboard.ENTER:
+      this.emit('inputEnter', this);
+      this.game.emit('gui/focus/release', this);
+      break;
     case engine.Keyboard.DELETE:
     case engine.Keyboard.BACKSPACE:
       this.value = this._value.slice(0, this._value.length-1);
-      event.preventDefault();
       break;
   }
 };
@@ -125,6 +135,7 @@ Input.prototype._keyPress = function(event, key) {
 };
 
 Input.prototype._inputUp = function() {
+  this.emit('inputUp', this);
   this.game.emit('gui/focus/retain', this);
 };
 
