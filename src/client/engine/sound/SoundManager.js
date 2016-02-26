@@ -285,7 +285,9 @@ SoundManager.prototype = {
 
     // this.onSoundDecode.dispose();
 
-    this.context.close();
+    if(this.context && this.context.close) {
+      this.context.close();
+    }
   }
 };
 
