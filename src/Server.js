@@ -10,13 +10,12 @@ var path = require('path'),
     bodyParser = require('body-parser'),
     cookieParser = require('cookie-parser'),
 
-    db = require('./database'),
-    
     publicDir = path.resolve('public'),
     viewsDir = path.resolve('views');
 
 function Server(app) {
   this.app = global.app;
+  this.database = global.app.database;
   this.nconf = global.app.nconf;
 
   this.express = express();
@@ -30,7 +29,7 @@ Server.prototype.init = function(next) {
       href = url.parse(this.nconf.get('url'));
 
   this.sessionStore = new connectRedis({
-    client: db.client,
+    client: this.database.client,
     ttl: 60 * 60 * 24 * 14,
     db: parseInt(this.nconf.get('redis:database'), 10)
   });
