@@ -63,6 +63,8 @@ Authentication.prototype.init = function() {
 };
 
 Authentication.prototype.register = function(req, res, next) {
+  return next(new Error('[[error:disabled]]'));
+
   var self = this,
       uid, userData = {};
 
@@ -87,6 +89,8 @@ Authentication.prototype.register = function(req, res, next) {
 };
 
 Authentication.prototype.login = function(req, res, next) {
+  return next(new Error('[[error:disabled]]'));
+
   var self = this;
   passport.authenticate('local', function(err, userData, info) {
     if(err) { return next(err); }
