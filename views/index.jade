@@ -1,47 +1,77 @@
 extends layouts/base
 block header
   link(rel='stylesheet', href='/css/home.css', type='text/css')
+  if prodution
+    script(type='text/javascript', src='/build/website.min.js')
+  else
+    script(type='text/javascript', src='/build/website.js')
   script(src='https://use.typekit.net/ffp2bkd.js')
   script.
     try{Typekit.load({ async: true });}catch(e){}
 block content
-  #window
-    #introduction.section
+  #asteroids
+    .topleft
+    .bottomright
+  #window.loading
+    #hme.section
+      .bg
       .logo
       .bottom
-        .information
-          h1 survive today to fight for tomorrow
-          p pre-orders re-opening soon
-        .button
-          svg(viewBox='0 0 200 200', alt='play now')
-            circle(cx='100', cy='100', r='90', fill='none', stroke-width='5', stroke='#fff')
-            polygon(points='70, 55 70, 145 145, 100', fill='none', stroke-width='5', stroke='#fff')
-  #shell
-    if !user
-      .modal(id='registration-login')
-        .box
-          .register(id='registration-start')
-            h1 player registration
-            h2 welcome to the universe
-            p username:
-            .input
-              input(type='text', id='registration-username')
-            p e-mail:
-            .input
-              input(type='text', id='registration-email')
-            p password:
-            .input
-              input(type='password', id='registration-pass1')
-            p re-enter password:
-            .input
-              input(type='password', id='registration-pass2')
-            .error(id='registration-error')
-            .buttons
-              button(type='button', id='registration-submit') Complete Registration
-              button(type='button', id='registration-cancel') Cancel
-          .completed(id='registration-done')
-            h1 registration completed
-            h2 you will recieve further instructions once testing begins!
-            .splash
-            .buttons
-              button(type='button', id='registration-cancel') Done
+        .centering
+          .information
+            h1 survive today to fight for tomorrow
+            p play solar crusaders now!
+          a.button(href='#about')
+            svg(viewBox='0 0 200 200', alt='play now')
+              circle(cx='100', cy='100', r='90', fill='none', stroke-width='8', stroke='#fff')
+              polygon(points='70, 145 145, 100 70, 55', transform='translate(200, 0) rotate(90)' fill='none', stroke-width='8', stroke='#fff')
+    #abt.section
+      .title about
+      .description.centering
+        .column
+          .screenshot
+            .img
+              img(src='/imgs/game/screenshot-a.jpg')
+            .img
+              img(data-src='/imgs/game/screenshot-b.jpg')
+            .img
+              img(data-src='/imgs/game/screenshot-c.jpg')
+            .img
+              img(data-src='/imgs/game/screenshot-d.jpg')
+            //- a.button.centering(href='http://play.' + host)
+              svg(viewBox='0 0 200 200', alt='play now')
+                circle(cx='100', cy='100', r='90', fill='none', stroke-width='8', stroke='#fff')
+                polygon(points='70, 145 145, 100 70, 55', fill='#fff', stroke='none')
+        .column
+          h2 gameplay
+          p Solar Crusaders is a multiplayer top-down strategy space game featuring a sandbox universe, real-time battles, base building, exploration, crafting and more.
+          .nomobile
+            h2 features
+            ul
+              li Pilot customizable ships in a galaxy populated by both players and A.I. controlled units
+              li Guide your ships through the galaxy exploring both curated and procedurally generated star systems, moons, planets, asteroids, and singularities
+              li Colonize locations as you see fit to expand your influence across the stars
+              li Mine ores, refine fuels, trade resources; or simply pirate and plunder what you need
+              li Pull together stronger and braver crew members from five different races to command and pilot your ships
+              //- li Train your crew in fields such as piloting, shields, engineering, weapons, and more
+    #rac.section
+      .title races
+      //- .ubaidian.slide
+      //- .hederaa.slide
+      //- .mechan.slide
+      .ubaidian.right
+      .description.centering
+        p coming soon
+  #logo
+  ul#navigation
+    li.preorder.active(data-menuanchor='home')
+      a(href='#home') home
+    li(data-menuanchor='about')
+      a(href='#about') about
+    li(data-menuanchor='races')
+      a(href='#races') races
+    //- li.preorder(data-menuanchor='preorder')
+    //-   a(href='#preorder') preorder
+    li.mini
+      a(href='http://forums.' + host) forum
+      a(href='http://play.' + host) play demo

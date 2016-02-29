@@ -54,6 +54,18 @@ module.exports = function(grunt) {
           transform: ['brfs', 'browserify-versionify']
         }
       },
+      website: {
+        src: ['src/website/index.js'],
+        dest: 'public/build/website.js',
+        options: {
+          watch: true,
+          alias: {
+            jquery: './src/libs/jquery/dist/jquery',
+            fullpage: './src/libs/fullpage.js/jquery.fullPage',
+            slick: './src/libs/slick-carousel/slick/slick'
+          }
+        }
+      },
       production: {
         src: ['src/client/index.js'],
         dest: 'public/build/app.js',
@@ -117,9 +129,24 @@ module.exports = function(grunt) {
         //   sourceMapName: 'public/build/app.min.map'
         // },
         files: {
+          'public/build/website.min.js': [
+            'public/build/website.js'
+          ],
           'public/build/app.min.js': [
             'public/build/app.js'
           ]
+        }
+      }
+    },
+
+    cssmin: {
+      options: {
+        shorthandCompacting: false,
+        roundingPrecision: -1
+      },
+      target: {
+        files: {
+          'public/css/base.min.css': ['public/css/base.css', 'public/css/home.css']
         }
       }
     },
@@ -176,6 +203,7 @@ module.exports = function(grunt) {
 
   grunt.loadNpmTasks('grunt-develop');
   grunt.loadNpmTasks('grunt-browserify');
+  grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -188,6 +216,7 @@ module.exports = function(grunt) {
     'browserify:pixi',
     'browserify:engine',
     'browserify:solar',
+    'browserify:website',
     'develop:dev',
     'watch:dev'
   ]);
@@ -203,7 +232,9 @@ module.exports = function(grunt) {
   // ]);
 
   grunt.registerTask('build', [
+    'browserify:website',
     'browserify:production',
+    'cssmin',
     'uglify:app',
     'compress:app'
   ]);

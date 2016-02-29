@@ -52,6 +52,7 @@
     "grunt-contrib-watch": "0.6.x",
     "grunt-contrib-uglify": "0.11.x",
     "grunt-contrib-compress": "0.14.x",
+    "grunt-contrib-cssmin": "0.14.x",
     
     "brfs": "1.4.x",
     "browserify-versionify": "1.0.x",

@@ -1,5 +1,6 @@
 
-var Authentication = require('./controllers/Authentication'),
+var url = require('url'),
+    Authentication = require('./controllers/Authentication'),
     Latency = require('./controllers/Latency'),
     Utils = require('./utils');
 
@@ -25,7 +26,8 @@ Routes.prototype.init = function(next) {
   var self = this,
       routeParameters = {
         description: Routes.DESCRIPTION,
-        production: this.app.nconf.get('production')
+        production: this.app.nconf.get('production'),
+        host: url.parse(this.app.nconf.get('url')).host
       };
 
   /*
@@ -37,15 +39,15 @@ Routes.prototype.init = function(next) {
   /*
    * API Calls
    */
-  this.express.post('/login', function(req, res, next) {
+  this.play.post('/login', function(req, res, next) {
     self.authentication.login(req, res, next);
   });
 
-  this.express.post('/register', function(req, res, next) {
+  this.play.post('/register', function(req, res, next) {
     self.authentication.register(req, res, next);
   });
 
-  this.express.get('/logout', function(req, res, next) {
+  this.play.get('/logout', function(req, res, next) {
     self.authentication.logout(req, res, next);
   });
 
@@ -55,7 +57,7 @@ Routes.prototype.init = function(next) {
   this.express.get('/', function(req, res, next) {
     res.render('index',
       Utils.extend({
-        title: 'Solar Crusaders by Puremana Studios'
+        title: 'Solar Crusaders | Puremana Studios'
       }, routeParameters));
   });
 
@@ -69,7 +71,7 @@ Routes.prototype.init = function(next) {
   this.play.get('/', function(req, res, next) {
     res.render('play',
       Utils.extend({
-        title: 'Play Solar Crusaders',
+        title: 'Play | Solar Crusaders',
         user: req.session.user && req.session.user.role !== 'guest' ? true : false
       }, routeParameters));
   });
