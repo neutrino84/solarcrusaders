@@ -15,7 +15,7 @@ LoadingState.prototype = Object.create(engine.State.prototype);
 LoadingState.prototype.constructor = engine.State;
 
 LoadingState.prototype.preload = function() {
-  this.game.load.image('loading', 'imgs/game/loading.gif');
+  this.game.load.image('loading', 'imgs/game/splash.png');
   this.game.load.image('small', 'imgs/game/fonts/small.png');
 };
 
