@@ -1,6 +1,6 @@
 
 var uuid = require('uuid'),
-    engine = require('engine')
+    engine = require('engine'),
     client = require('client'),
     Utils = require('../utils');
 
