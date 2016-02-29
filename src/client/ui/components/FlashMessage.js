@@ -61,6 +61,8 @@ FlashMessage.prototype._message = function(message, duration, delay) {
   this.message.text = message || '';
 
   this.alpha = 1.0;
+
+  this.messageTween && this.messageTween.isRunning && this.messageTween.stop();
   this.messageTween = this.game.tweens.create(this);
   this.messageTween.to({ alpha: 0.0 }, duration, engine.Easing.Quadratic.Out);
   this.messageTween.on('complete', this._close, this);
