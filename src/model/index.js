@@ -24,7 +24,7 @@ Sector.hasMany(Ship, { as: 'ships', foreignKey: 'fk_sector_ship' });
 Sector.hasMany(User, { as: 'users', foreignKey: 'fk_sector_user' });
 
 User.belongsTo(Sector, { as: 'sector', foreignKey: 'fk_sector_user'});
-User.hasMany(Ship, { as: 'ships', foreignKey: 'fk_user_ship' })
+User.hasMany(Ship, { as: 'ships', foreignKey: 'fk_user_ship' });
 
 Ship.hasMany(System, { as: 'systems', foreignKey: 'fk_ship_system' });
 Ship.hasMany(Hardpoint, { as: 'hardpoints', foreignKey: 'fk_ship_hardpoint' });
