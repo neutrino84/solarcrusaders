@@ -20,6 +20,8 @@ function BackgroundView(game, settings) {
 
   this.fillAlpha = this.settings.fillAlpha;
   this.blendMode = this.settings.blendMode;
+
+  this._painted = false;
 };
 
 // multiple inheritence
@@ -33,9 +35,10 @@ BackgroundView.prototype.paint = function(top, left, bottom, right) {
       settings = this.settings,
       drawMethod = settings.radius > 0 ? 'drawRoundedRect' : 'drawRect';
 
-  if(settings.highlight || settings.fillAlpha > 0 ||
+  if(this._painted || settings.highlight || settings.fillAlpha > 0 ||
       (settings.borderSize > 0 && settings.borderAlpha > 0)) {
     this.clear();
+    this._painted = false;
   }
 
   if(settings.highlight) {
@@ -43,6 +46,7 @@ BackgroundView.prototype.paint = function(top, left, bottom, right) {
     this.beginFill(settings.highlight, settings.highlightAlpha ? settings.highlightAlpha : 1.0);
     this[drawMethod](offset.x, offset.y, size.width, size.height/2, settings.radius);
     this.endFill();
+    this._painted = true;
   }
 
   if(settings.borderSize > 0 && settings.borderAlpha > 0) {
@@ -53,6 +57,7 @@ BackgroundView.prototype.paint = function(top, left, bottom, right) {
   }
   if(settings.fillAlpha > 0 || (settings.borderSize > 0 && settings.borderAlpha > 0)) {
     this[drawMethod](offset.x, offset.y, size.width, size.height, settings.radius);
+    this._painted = true;
   }
   if(settings.fillAlpha > 0) {
     this.endFill();
