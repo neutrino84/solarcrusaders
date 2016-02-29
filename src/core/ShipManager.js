@@ -51,6 +51,23 @@ ShipManager.prototype.add = function(ship) {
   }
 };
 
+ShipManager.prototype.create = function(name, chassis, user, position) {
+  var self = this,
+      position = position || this._generateRandomPosition(),
+      shipModel = new this.model.Ship({
+        name: name,
+        chassis: chassis,
+        x: position.x,
+        y: position.y
+      }),
+      ship = new Ship(this, shipModel);
+      ship.user = user;
+      ship.init(function(err) {
+        self.add(ship);
+      });
+  user && user.ships.push(ship);
+};
+
 ShipManager.prototype.remove = function(ship) {
   ship = this.ships[ship.uuid];
   if(ship !== undefined) {
@@ -171,30 +188,15 @@ ShipManager.prototype.update = function() {
 ShipManager.prototype.generateRandomShips = function() {
   var chassis, name,
       iterator = {
-        'ubaidian-x01': { race: 'ubaidian', count: 1 },
-        'hederaa-x01': { race: 'hederaa', count: 1 }
+        'ubaidian-x01': { race: 'ubaidian', count: 0 },
+        'hederaa-x01': { race: 'hederaa', count: 0 }
       };
   for(chassis in iterator) {
     name = Generator.getName(iterator[chassis].race);
     for(var i=0; i<iterator[chassis].count; i++) {
-      this.generateRandomShip(name, chassis);
+      this.create(name, chassis);
     }
   }
-};
-
-ShipManager.prototype.generateRandomShip = function(name, chassis, position) {
-  var self = this,
-      position = position || this._generateRandomPosition(),
-      shipModel = new this.model.Ship({
-        name: name,
-        chassis: chassis,
-        x: position.x,
-        y: position.y
-      }),
-      ship = new Ship(this, shipModel);
-      ship.init(function(err) {
-        self.add(ship);
-      });
 };
 
 ShipManager.prototype._plot = function(ship, destination, current, previous) {
@@ -315,11 +317,11 @@ ShipManager.prototype._updateBattles = function() {
         
         // destroy ship
         if(target.health <= 0) {          
-          if(target.user === undefined) {
-            this.create({
-              chassis: target.chassis
-            });
-          }
+          // if(target.user === undefined) {
+          //   this.create({
+          //     chassis: target.chassis
+          //   });
+          // }
           this.remove(target);
         } else {
           updates.push(update);

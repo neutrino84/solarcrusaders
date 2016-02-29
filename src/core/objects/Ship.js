@@ -13,7 +13,6 @@ function Ship(manager, data) {
   this.data = data;
 
   this.uuid = data.uuid;
-  // this.user = data.user;
   this.chassis = data.chassis;
   this.config = client.ShipConfiguration[data.chassis];
 
@@ -63,6 +62,8 @@ Ship.prototype.init = function(callback) {
         // function(callback) {
         //   self.data.hardpoints(callback);
         // }
+        // // user will already be known
+        // self.data.user.bind(self.data), 
         self.data.systems.bind(self.data),
         self.data.hardpoints.bind(self.data)
       ], function(err, results) {
@@ -71,7 +72,7 @@ Ship.prototype.init = function(callback) {
           self.createSystems();
           self.createHardpoints();
         } else {
-          // load systems
+          // load user, systems and hardpoints
         }
         callback(err);
       });
@@ -95,6 +96,10 @@ Ship.prototype.createRooms = function() {
       }
     }
   }
+};
+
+Ship.prototype.createUser = function() {
+  // stub..
 };
 
 Ship.prototype.createSystems = function(data) {
