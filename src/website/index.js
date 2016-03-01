@@ -11,8 +11,10 @@ jquery(document).ready(function() {
     anchors: ['home', 'about', 'races'],
     onLeave: function(index, nextIndex) {
       if(nextIndex === 1) {
+        jquery('#gradient').css('opacity', '0');
       	jquery('#logo').removeClass('show');
       } else {
+        jquery('#gradient').css('opacity', '1');
       	jquery('#logo').addClass('show');
       }
     }

@@ -73,6 +73,10 @@ body {
   color: #fff;
 }
 
+#navigation li.mini {
+  white-space: nowrap;
+}
+
 #navigation li.mini a {
   padding: 0 0 0 20px;
   color: rgba(255, 255, 255, 0.5);
@@ -130,6 +134,20 @@ body {
   bottom: 0;
   background: -webkit-gradient(linear,left top,left bottom,from(rgba(11,107,211,0)),color-stop(12%,rgba(11,107,211,0)),color-stop(62%,rgba(11,107,211,.5)),color-stop(100%,rgba(11,107,211,0)));
   background: linear-gradient(to bottom,rgba(11,107,211,0) 0,rgba(11,107,211,0) 12%,rgba(11,107,211,.5) 62%,rgba(11,107,211,0) 100%);
+}
+
+#gradient {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  background: -moz-linear-gradient(top, rgba(156, 18, 38, 0.25) 25%, rgba(156, 18, 38, 0) 100%);
+  background: -webkit-linear-gradient(top, rgba(156, 18, 38, 0.25) 25%, rgba(156, 18, 38, 0) 100%);
+  background: linear-gradient(to bottom, rgba(156, 18, 38, 0.25) 25%, rgba(156, 18, 38, 0) 100%);
+  transition: all 2.5s ease-in-out;
+  -webkit-transition: all 2.5s ease-in-out;
 }
 
 #asteroids {
@@ -193,14 +211,12 @@ body {
   opacity: 0;
   background: url('../imgs/game/logo.png') center center no-repeat;
   background-size: auto 54%;
-  /*transform: translate3d(0, -100%, 0);*/
   transition: all 1.5s ease-in-out;
   -webkit-transition: all 1.5s ease-in-out;
 }
 
 #hme.active .logo {
   opacity: 1;
-  /*transform: translate3d(0, 0, 0);*/
 }
 
 #hme .bottom {
@@ -309,13 +325,14 @@ body {
 }
 
 #abt .description .screenshot {
-  /*padding: 3px;*/
-  margin: 18px auto 0 auto;
-  background: rgba(0, 0, 0, 0.25);
+  margin: 15px;
+  padding: 3px;
+  margin: 0 auto 0 auto;
+  background: rgba(0, 0, 0, 0.6);
 }
 
 #abt .description .screenshot .slick-list {
-  border: solid 1px rgba(96, 166, 255, 1.0);
+  /*border: solid 1px rgba(96, 166, 255, 1.0);*/
 }
 
 #abt .description .screenshot .img {
@@ -360,7 +377,11 @@ body {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate3d(-50%, -50%, 0);
+  -webkit-transform: translate3d(-50%, -50%, 0);
+     -moz-transform: translate3d(-50%, -50%, 0);
+      -ms-transform: translate3d(-50%, -50%, 0);
+       -o-transform: translate3d(-50%, -50%, 0);
+          transform: translate3d(-50%, -50%, 0);
 }
 
 .right {
