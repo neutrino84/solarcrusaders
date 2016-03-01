@@ -1,7 +1,7 @@
 extends layouts/base
 block header
   if production
-    link(rel='stylesheet', href='/css/home.min.css', type='text/css')
+    link(rel='stylesheet', href='/build/home.min.css', type='text/css')
     script(type='text/javascript', src='/build/website.min.js')
   else
     link(rel='stylesheet', href='/css/home.css', type='text/css')

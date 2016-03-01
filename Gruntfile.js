@@ -146,8 +146,8 @@ module.exports = function(grunt) {
       },
       target: {
         files: {
-          'public/css/base.min.css': ['public/css/base.css'],
-          'public/css/home.min.css': ['public/css/home.css']
+          'public/build/base.min.css': ['public/css/base.css'],
+          'public/build/home.min.css': ['public/css/home.css']
         }
       }
     },
