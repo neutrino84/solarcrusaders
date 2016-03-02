@@ -24,7 +24,7 @@ block content
             h1 survive today to fight for tomorrow
             p play solar crusaders now!
           a.play(href='http://play.' + host) play now
-          a.button
+          a.button(href='#about')
             svg(viewBox='0 0 200 200', alt='play now')
               circle(cx='100', cy='100', r='90', fill='none', stroke-width='8', stroke='#fff')
               polygon(points='70, 145 145, 100 70, 55', transform='translate(200, 0) rotate(90)', fill='none', stroke-width='8', stroke='#fff')
@@ -32,19 +32,15 @@ block content
       .title about
       .description.centering
         .column
-          .screenshot
-            .img
-              img(src='/imgs/game/screenshot-a.jpg')
-            .img
-              img(data-src='/imgs/game/screenshot-b.jpg')
-            .img
-              img(data-src='/imgs/game/screenshot-c.jpg')
-            .img
-              img(data-src='/imgs/game/screenshot-d.jpg')
-            //- a.button.centering(href='http://play.' + host)
-              svg(viewBox='0 0 200 200', alt='play now')
-                circle(cx='100', cy='100', r='90', fill='none', stroke-width='8', stroke='#fff')
-                polygon(points='70, 145 145, 100 70, 55', fill='#fff', stroke='none')
+          .ships
+            .ship
+              img.centering(src='/imgs/game/ships/ubaidian/ubaidian-x01.png')
+            .ship
+              img.centering(src='/imgs/game/ships/ubaidian/ubaidian-x02.png')
+            .ship
+              img.centering(src='/imgs/game/ships/ubaidian/ubaidian-x03.png')
+            .ship
+              img.centering(src='/imgs/game/ships/ubaidian/ubaidian-x04.png')
         .column
           h2 gameplay
           p Solar Crusaders is a multiplayer top-down strategy space game featuring a sandbox universe, real-time battles, base building, exploration, crafting and more.
@@ -55,14 +51,14 @@ block content
               li Guide your ships through the galaxy exploring both curated and procedurally generated star systems, moons, planets, asteroids, and singularities
               li Colonize locations as you see fit to expand your influence across the stars
               li Mine ores, refine fuels, trade resources; or simply pirate and plunder what you need
-              li Pull together stronger and braver crew members from five different races to command and pilot your ships
-              //- li Train your crew in fields such as piloting, shields, engineering, weapons, and more
+              li Hire stronger and braver crew members from five different races to command and pilot your ships
     #rac.section
       //- .ubaidian.slide
       .title ubaidians
       .ubaidian.right
       .description.centering
         p coming soon
+
   #logo
   ul#navigation
     li.preorder.active(data-menuanchor='home')

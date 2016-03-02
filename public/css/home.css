@@ -182,7 +182,7 @@ body {
   position: absolute;
   right: 4%;
   top: 12%;
-  color: rgba(0, 51, 153, 0.2);
+  color: rgba(0, 51, 153, 0.1);
   font-weight: bold;
   font-family: 'proxima-nova', sans-serif;
   text-transform: uppercase;
@@ -211,12 +211,22 @@ body {
   opacity: 0;
   background: url('../imgs/game/logo.png') center center no-repeat;
   background-size: auto 54%;
-  transition: all 1.5s ease-in-out;
-  -webkit-transition: all 1.5s ease-in-out;
+  transition: all 0.75s ease-in-out;
+  -webkit-transition: all 0.75s ease-in-out;
+  -webkit-transform: translate3d(0, -10%, 0);
+  -moz-transform: translate3d(0, -10%, 0);
+  -ms-transform: translate3d(0, -10%, 0);
+  -o-transform: translate3d(0, -10%, 0);
+  transform: translate3d(0, -10%, 0);
 }
 
 #hme.active .logo {
   opacity: 1;
+  -webkit-transform: translate3d(0, 0, 0);
+  -moz-transform: translate3d(0, 0, 0);
+  -ms-transform: translate3d(0, 0, 0);
+  -o-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
 }
 
 #hme .bottom {
@@ -299,12 +309,12 @@ body {
 #abt .column {
   position: relative;
   float: left;
-  width: 36%;
+  width: 38%;
 }
 
 #abt .column:nth-child(2) {
-  width: 58%;
-  margin-left: 6%;
+  width: 60%;
+  margin-left: 2%;
 }
 
 #abt .description h2 {
@@ -333,37 +343,27 @@ body {
   font-weight: regular;
   font-family: 'proxima-nova', sans-serif;
   letter-spacing: 1px;
-  /*text-shadow: 1px 1px 0 #000;*/
 }
 
-#abt .description .button {
-  position: absolute;
-  display: block;
-  width: 64px;
-  height: 120px;
-}
-
-#abt .description:hover .button {
-}
-
-#abt .description .screenshot {
-  margin: 15px;
-  padding: 3px;
+#abt .description .ships {
   margin: 0 auto 0 auto;
-  background: rgba(0, 0, 0, 0.6);
 }
 
-#abt .description .screenshot .slick-list {
-  /*border: solid 1px rgba(96, 166, 255, 1.0);*/
+#abt .description .ships .ship {
+  position: relative;
+  width: 256px;
+  height: 256px;
+  -webkit-transition: all 0.5s ease-out;
+  transition: all 0.5s ease-out;
+  visibility: hidden;
 }
 
-#abt .description .screenshot .img {
-  /*padding: 3px;*/
+#abt .description .ships .ship.slick-current {
+  z-index: 1;
+  visibility: visible;
 }
 
-#abt .description img {
-  width: 100%;
-}
+#abt .description .ships .ship img {}
 
 /*
  * Races Styles
@@ -371,10 +371,6 @@ body {
 #rac {
   background: url('../imgs/game/bg-slide-ubaidian.png') center center no-repeat;
   background-size: auto 80%;
-}
-
-#rac .description {
-
 }
 
 #rac .description p {
@@ -656,14 +652,27 @@ body {
   color: #fff;
 }
 
-/*
- * Mobile Styles
- */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   #logo {
     display: none;
   }
 
+  #abt .description h2 {
+    margin: 16px 0;
+    font-size: 16px;
+  }
+
+  #abt .description li,
+  #abt .description p {
+    margin: 16px 0;
+    font-size: 13px;
+  }
+}
+
+/*
+ * Mobile Styles
+ */
+@media (max-width: 768px) {
   #hme .play {
     display: none;
   }
@@ -672,8 +681,19 @@ body {
     display: block;
   }
 
+  #abt .description h2 {
+    margin: 14px 0;
+    font-size: 14px;
+  }
+
+
+  #abt .description li,
+  #abt .description p {
+    margin: 14px 0;
+    font-size: 12px;
+  }
+
   .section .column {
-    clear: both;
     float: none !important;
     width: 100% !important;
     margin: 0 !important;
@@ -684,7 +704,7 @@ body {
   }
 }
 
-@media (max-width: 414px) and (orientation: portrait), (max-width: 690px) and (orientation: landscape) {
+@media (max-width: 414px) and (orientation: portrait), (max-width: 736px) and (orientation: landscape) {
   #navigation li.mini {
     display: none;
   }
@@ -694,6 +714,7 @@ body {
   #hme .bottom { height: 32% !important; }
 
   .section .title {
+    width: 80%;
     font-size: 88px !important;
     line-height: 62px !important;
   }
@@ -701,6 +722,10 @@ body {
   .nomobile { display: none; }
 }
 
-@media (max-width: 690px) and (orientation: landscape) {
-  #abt h2, p { display: none; }
+@media (max-width: 736px) and (orientation: landscape) {
+  #abt .ships { display: none; }
+  #abt .column:nth-child(2) h2,
+  #abt .column:nth-child(2) p {
+    font-size: 16px;
+  }
 }

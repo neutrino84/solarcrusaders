@@ -21,13 +21,18 @@ jquery(document).ready(function() {
   });
 
   // slick
-  jquery('#abt .screenshot').slick({
+  jquery('#abt .ships').slick({
     dots: true,
-    speed: 500,
+    speed: 1000,
     autoplay: true,
-    autoplaySpeed: 2000,
+    autoplaySpeed: 1000,
     easing: 'easeInOutCubic',
-   	slide: '.img',
-    arrows: false
+   	slide: '.ship',
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    centerMode: true,
+    arrows: false,
+    infinite: true,
+    fade: true
   });
 });
