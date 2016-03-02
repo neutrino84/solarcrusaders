@@ -17,8 +17,8 @@ function Routes(app) {
 };
 
 Routes.DESCRIPTION =
-  'Solar Crusaders is a multiplayer top-down strategy game featuring ' +
-  'a sandbox universe, base building, and exploration.';
+  'Solar Crusaders is a multiplayer top-down strategy space game featuring a sandbox universe, ' +
+  'real-time battles, base building, exploration, crafting and more.';
 
 Routes.prototype.constructor = Routes;
 
