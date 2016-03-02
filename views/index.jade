@@ -23,10 +23,11 @@ block content
           .information
             h1 survive today to fight for tomorrow
             p play solar crusaders now!
-          a.button(href='#about')
+          a.play(href='http://play.' + host) play now
+          a.button
             svg(viewBox='0 0 200 200', alt='play now')
               circle(cx='100', cy='100', r='90', fill='none', stroke-width='8', stroke='#fff')
-              polygon(points='70, 145 145, 100 70, 55', transform='translate(200, 0) rotate(90)' fill='none', stroke-width='8', stroke='#fff')
+              polygon(points='70, 145 145, 100 70, 55', transform='translate(200, 0) rotate(90)', fill='none', stroke-width='8', stroke='#fff')
     #abt.section
       .title about
       .description.centering
@@ -57,10 +58,8 @@ block content
               li Pull together stronger and braver crew members from five different races to command and pilot your ships
               //- li Train your crew in fields such as piloting, shields, engineering, weapons, and more
     #rac.section
-      .title races
       //- .ubaidian.slide
-      //- .hederaa.slide
-      //- .mechan.slide
+      .title ubaidians
       .ubaidian.right
       .description.centering
         p coming soon
@@ -76,4 +75,4 @@ block content
     //-   a(href='#preorder') preorder
     li.mini
       a(href='http://forums.' + host) forum
-      a(href='http://play.' + host) play demo
+      a(href='http://play.' + host) play now

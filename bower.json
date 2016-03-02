@@ -6,7 +6,7 @@
         "pixi.js": "dev",
         "jquery": "2.2.x",
         "fullpage.js": "2.7.x",
-        "slick-carousel": "1.5.9"
+        "slick-carousel": "1.5.x"
     },
     "devDependencies": {}
 }
