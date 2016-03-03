@@ -44,7 +44,7 @@ WireframeRenderer.prototype.render = function(graphics) {
 
     renderer.shaderManager.setShader(shader);
 
-    gl.lineWidth(graphics.lineWidth);
+    gl.lineWidth(1);
 
     gl.uniformMatrix3fv(shader.uniforms.translationMatrix._location, false, graphics.worldTransform.toArray(true));
     gl.uniformMatrix3fv(shader.uniforms.projectionMatrix._location, false, renderer.currentRenderTarget.projectionMatrix.toArray(true));
