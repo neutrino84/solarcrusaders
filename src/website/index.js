@@ -3,9 +3,6 @@ var jquery = require('jquery'),
     slick = require('slick');
 
 jquery(document).ready(function() {
-  // loaded
-  jquery('#window').removeClass('loading');
-
   // fullpage
   jquery('#window').fullpage({
   	// loopBottom: true,
@@ -38,4 +35,7 @@ jquery(document).ready(function() {
     infinite: true,
     fade: true
   });
+
+  // loaded
+  jquery('#window').removeClass('loading');
 });
