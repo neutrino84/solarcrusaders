@@ -336,11 +336,7 @@ body {
 }
 
 #abt .description ul {
-  margin: 18px 0 18px 20px;
-}
-
-#abt .description li {
-  list-style: circle;
+  margin: 18px 0 18px 30px;
 }
 
 #abt .description li,
@@ -351,6 +347,11 @@ body {
   font-weight: regular;
   font-family: 'proxima-nova', sans-serif;
   letter-spacing: 1px;
+}
+
+#abt .description li {
+  padding: 0 0 0 9px;
+  list-style: circle;
 }
 
 #abt .description .ships {
@@ -367,7 +368,6 @@ body {
 }
 
 #abt .description .ships .ship.slick-current {
-  z-index: 1;
   visibility: visible;
 }
 
@@ -398,7 +398,6 @@ body {
 }
 
 #rac .character {
-  z-index: 1;
   background: center center no-repeat;
   background-size: auto 70%;
 }
