@@ -23,7 +23,7 @@ body {
 }
 
 #logo.show {
-  opacity: 1;
+  opacity: 0.8;
 }
 
 #navigation {
@@ -295,6 +295,14 @@ body {
  * About Styles
  */
 #abt {
+  
+}
+
+#abt .symbol {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0.5;
   background: url('../imgs/game/bg-abt.png') center center no-repeat;
   background-size: auto 80%;
 }
@@ -368,24 +376,69 @@ body {
 /*
  * Races Styles
  */
-#rac {
-  background: url('../imgs/game/bg-slide-ubaidian.png') center center no-repeat;
-  background-size: auto 80%;
+#rac .slide {
+  overflow: hidden;
+}
+
+#rac .symbol {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0.5;
+  background: center center no-repeat;
+  background-size: auto 90%;
+}
+
+#rac .ubaidian .symbol {
+  background-image: url('../imgs/game/bg-slide-ubaidian.png');
+}
+
+#rac .hederaa .symbol {
+  background-image: url('../imgs/game/bg-slide-hederaa.png');
+}
+
+#rac .character {
+  z-index: 1;
+  background: center center no-repeat;
+  background-size: auto 70%;
+}
+
+#rac .ubaidian .character {
+  background-image: url('../imgs/game/bg-slide-ubaidian-char.png');
+}
+
+#rac .hederaa .character {
+  background-image: url('../imgs/game/bg-slide-hederaa-char.png');
+}
+
+#rac .description {
+  width: 50%;
+  left: 40%;
+}
+
+#rac .description h2 {
+  margin: 18px 0;
+  color: rgba(96, 166, 255, 1.0);
+  font-size: 32px;
+  font-weight: bold;
+  font-family: 'proxima-nova', sans-serif;
+  text-align: center;
+  text-transform: uppercase;
+  text-shadow: 0 0 18px #000;
+  letter-spacing: 1px;
 }
 
 #rac .description p {
-  margin: auto 0;
-  color: rgba(96, 166, 255, 1.0);
+  margin: 18px 0;
+  color: #fff;
   font-size: 24px;
-  font-weight: bold;
+  font-weight: regular;
   font-family: 'proxima-nova', sans-serif;
+  font-style: italic;
+  text-align: center;
   text-transform: uppercase;
-  letter-spacing: 2px;
-}
-
-#rac .ubaidian {
-  background: url('../imgs/game/bg-slide-ubaidian-char.png') center center no-repeat;
-  background-size: auto 70%;
+  letter-spacing: 1px;
+  opacity: 0.5;
 }
 
 /*
@@ -425,6 +478,7 @@ body {
 }
 
 .fp-slide {
+  position: relative;
   float: left;
 }
 
@@ -472,16 +526,18 @@ body {
 }
 
 .fp-controlArrow.fp-prev {
+  opacity: 0.5;
   left: 15px;
   width: 0;
   border-width: 38.5px 34px 38.5px 0;
-  border-color: transparent #fff transparent transparent;
+  border-color: transparent #011126 transparent transparent;
 }
 
 .fp-controlArrow.fp-next {
+  opacity: 0.5;
   right: 15px;
   border-width: 38.5px 0 38.5px 34px;
-  border-color: transparent transparent transparent #fff;
+  border-color: transparent transparent transparent #011126;
 }
 
 .slick-slider {
