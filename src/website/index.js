@@ -3,6 +3,9 @@ var jquery = require('jquery'),
     slick = require('slick');
 
 jquery(document).ready(function() {
+  // loaded
+  jquery('#window').removeClass('loading');
+
   // fullpage
   jquery('#window').fullpage({
   	// loopBottom: true,
