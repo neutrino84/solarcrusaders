@@ -1,12 +1,23 @@
 
-var syllables = {
-  ubaidian: ['tu', 'nos', 'vos', 'is', 'ea', 'id', 'suus', 'meus', 'ipse', 'a', 'um', 'pro', 'nam', 'nunc', 'ita', 'ous', 'galle', 'nte'],
-  hederaa: ['ma', 'kima', 'mala', 'ma', 'su', 'lu', 'am', 'ayu', 'minu', 'ghu', 'dru', 'innu', 'sag', 'ga', 'ka']
-};
+var uuid = require('uuid'),
+    syllables = {
+      ubaidian: [
+        'tu', 'nos', 'vos', 'is', 'ea', 'id', 'suus',
+        'meus', 'ipse', 'a', 'um', 'pro', 'nam', 'nunc',
+        'ita', 'ous', 'galle', 'nte'],
+      hederaa: [
+        'ma', 'kima', 'mala', 'ma', 'su', 'lu', 'am',
+        'ayu', 'minu', 'ghu', 'dru', 'innu', 'sag', 'ga', 'ka']
+    };
 
 var Generator = {
   rfloor: function(value) {
     return global.Math.floor(global.Math.random() * value);
+  },
+
+  getGuest: function() {
+    var ids = uuid.v4().split('-');
+    return 'guest (' + ids[0] + ')';
   },
 
   getName: function(race) {
