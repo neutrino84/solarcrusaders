@@ -13,7 +13,7 @@ function Selection(manager) {
 
   // icon
   this.indicator = new Indicator(this.game);
-  this.shipsGroup.add(this.indicator);
+  this.game.world.add(this.indicator);
 
   // subscribe to messages
   this.game.on('gui/selected', this._selected, this);
