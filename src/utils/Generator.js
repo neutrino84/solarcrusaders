@@ -1,9 +1,7 @@
 
 var syllables = {
   ubaidian: ['tu', 'nos', 'vos', 'is', 'ea', 'id', 'suus', 'meus', 'ipse', 'a', 'um', 'pro', 'nam', 'nunc', 'ita', 'ous', 'galle', 'nte'],
-  hederaa: ['ma', 'kima', 'mala', 'ma', 'su', 'lu', 'am', 'ayyu', 'minu', 'ghu', 'dru', 'innu', 'sag', 'ga', 'ka']//,
-  // mechan: [],
-  // seekers: []
+  hederaa: ['ma', 'kima', 'mala', 'ma', 'su', 'lu', 'am', 'ayu', 'minu', 'ghu', 'dru', 'innu', 'sag', 'ga', 'ka']
 };
 
 var Generator = {
@@ -36,6 +34,9 @@ var Generator = {
     var races = Object.keys(syllables),
         race = races[Generator.rfloor(races.length)],
         name = Generator.getName(race);
+    if(name.length > 8) {
+      name = name.slice(0, 8 + Generator.rfloor(global.Math.max(name.length/2 - 8, 0)));
+    }
     return name.replace(/[^a-zA-Z]+/g, '');
   }
 };
