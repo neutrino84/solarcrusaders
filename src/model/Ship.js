@@ -71,6 +71,8 @@ Ship.afterInitialize = function() {
     config = client.ShipConfiguration[this.chassis],
     stats = config.stats;
     
+    if(!this.throttle) { this.throttle = 1.0; }
+    if(!this.race) { this.race = config.race; }
     if(!this.class) { this.class = config.class; }
     if(!this.health) { this.health = stats.health; }
     if(!this.heal) { this.heal = stats.heal; }
