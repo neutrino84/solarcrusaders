@@ -11,8 +11,8 @@ function Hud(ship, settings) {
   Panel.call(this, ship.game, true);
 
   this.settings = Class.mixin(settings, {
-    width: 128,
-    height: 64,
+    width: 256,
+    height: 256,
     padding: [0],
     border: [0],
     layout: {
@@ -23,7 +23,7 @@ function Hud(ship, settings) {
     },
     label: {
       text: {
-        fontName: 'medium'
+        fontName: 'full'
       },
       bg: {
         fillAlpha: 0.0,
@@ -92,11 +92,12 @@ Hud.prototype.create = function() {
 };
 
 Hud.prototype.update = function() {
-  var ship = this.ship,
+  var math = global.Math,
+      ship = this.ship,
       world = this.game.world,
       transform = world.worldTransform.apply(ship.position);
-  this.pivot.set(this.settings.width / 2, -ship.height / 2 * world.scale.x - 12);
-  this.position.set(transform.x, transform.y);
+  this.pivot.set(math.floor(this.settings.width / 2), math.floor(-ship.height / 2 * world.scale.x));
+  this.position.set(math.floor(transform.x), math.floor(transform.y));
 };
 
 Hud.prototype.flash = function(message, color, duration, height, large) {
@@ -105,6 +106,7 @@ Hud.prototype.flash = function(message, color, duration, height, large) {
   if(large === undefined) { large = false; }
 
   var ship = this.ship,
+      world = this.game.world,
       label = new Label(this.game, message, this.settings.message),
       easing = engine.Easing.Quadratic.InOut,
       tweenPosition = this.game.tweens.create(label.position),
@@ -113,7 +115,7 @@ Hud.prototype.flash = function(message, color, duration, height, large) {
   label.tint = color;
   label.alpha = 0.0;
   label.pivot.set(label.width / 2, label.height / 2);
-  label.position.set(this.size.width / 2, -ship.height / 2 - 12);
+  label.position.set(this.size.width / 2, -ship.height / 2 * world.scale.x);
   large && label.scale.set(1.5, 1.5);
 
   this.add(label);
