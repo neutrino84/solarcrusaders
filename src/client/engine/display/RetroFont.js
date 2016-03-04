@@ -12,6 +12,7 @@ function RetroFont(game, key, options) {
   }
   if(options === undefined) { options = {}; }
   if(options.chars === undefined) { options.chars = RetroFont.TEXT_SET; }
+  if(options.autouppercase === undefined) { options.autouppercase = true; }
 
   this.type = Const.RETROFONT;
   this.align = 'left';
@@ -32,8 +33,8 @@ function RetroFont(game, key, options) {
   this.offsetX = options.xOffset || 0;
   this.offsetY = options.yOffset || 0;
 
+  this.autoUpperCase = options.autouppercase;
   this.multiLine = false;
-  this.autoUpperCase = true;
   this.fixedWidth = 0;
 
   this.customSpacingX = 0;

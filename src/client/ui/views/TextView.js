@@ -29,7 +29,8 @@ function TextView(game, text, settings) {
       ySpacing: 0,
       xOffset: 0,
       yOffset: 0,
-      tint: 0xffffff
+      tint: 0xffffff,
+      autouppercase: false
     },
     'medium': {
       fontName: 'medium',
