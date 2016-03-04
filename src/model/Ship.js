@@ -29,7 +29,7 @@ var Ship = schema.define('ship', {
   critical:   { type: schema.Double }
 });
 
-Ship.NAMES = ['ubaidian-x01', 'ubaidian-x02', 'hederaa-x01'];
+Ship.NAMES = ['ubaidian-x01', 'ubaidian-x02', 'ubaidian-x04', 'hederaa-x01'];
 Ship.CLASSES = [
   'frigate',          // 1 light socket
   'transport',        // 1 light socket

@@ -34,7 +34,8 @@ Authentication.prototype.init = function() {
   this.routes.play.get('/', function(req, res, next) {
     if(!req.session.user) {
       var name = Generator.getUsername(),
-          guest = new self.model.User({ name: name, username: name });
+          username = Generator.getGuest(),
+          guest = new self.model.User({ name: name, username: username });
       req.session.user = guest.toStreamObject();
       req.session.save();
     }

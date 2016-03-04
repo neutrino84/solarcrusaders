@@ -2,7 +2,8 @@
 var uuid = require('uuid'),
     engine = require('engine'),
     client = require('client'),
-    Utils = require('../utils');
+    Utils = require('../utils'),
+    Generator = require('../utils/Generator');
 
 function UserManager(game) {
   this.game = game;
@@ -26,11 +27,10 @@ UserManager.prototype.add = function(user) {
   var self = this, ship,
       u = this.users[user.uuid] = Utils.extend({}, user);
       u.ships = [];
-
   if(u.id > 0) {
     // logged in, get ships, or create a new one
   } else {
-    self.game.emit('ship/create', 'abcd', 'ubaidian-x01', u);
+    self.game.emit('ship/create', Generator.getName('ubaidian'), 'ubaidian-x04', u, 1.0);
   }
 };
 

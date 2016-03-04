@@ -22,7 +22,7 @@ function ShipManager(game) {
   // activate ai
   this.game.clock.events.loop(1000, this._updateShips, this);
   this.game.clock.events.loop(1000, this._updateBattles, this);
-  this.game.clock.events.loop(3000, this._updateAI, this);
+  this.game.clock.events.loop(2000, this._updateAI, this);
 };
 
 ShipManager.prototype.constructor = ShipManager;
@@ -51,14 +51,15 @@ ShipManager.prototype.add = function(ship) {
   }
 };
 
-ShipManager.prototype.create = function(name, chassis, user, position) {
+ShipManager.prototype.create = function(name, chassis, user, throttle, position) {
   var self = this,
       position = position || this._generateRandomPosition(),
       shipModel = new this.model.Ship({
         name: name,
         chassis: chassis,
         x: position.x,
-        y: position.y
+        y: position.y,
+        throttle: throttle
       }),
       ship = new Ship(this, shipModel);
       ship.user = user;
@@ -127,7 +128,7 @@ ShipManager.prototype.data = function(sock, args, next) {
         id: ship.id,
         uuid: ship.uuid,
         user: ship.user ? ship.user.uuid : null,
-        username: ship.user ? ship.user.username : null,
+        username: ship.user ? ship.user.username : ship.data.name,
         chassis: ship.chassis,
         sector: ship.sector,
         x: ship.x,
@@ -186,15 +187,18 @@ ShipManager.prototype.update = function() {
 };
 
 ShipManager.prototype.generateRandomShips = function() {
-  var chassis, name,
+  var chassis, name, throttle,
       iterator = {
-        'ubaidian-x01': { race: 'ubaidian', count: 0 },
-        'hederaa-x01': { race: 'hederaa', count: 0 }
+        'ubaidian-x01': { race: 'ubaidian', count: 1 },
+        'ubaidian-x02': { race: 'ubaidian', count: 1 },
+        'ubaidian-x04': { race: 'ubaidian', count: 4 },
+        'hederaa-x01': { race: 'hederaa', count: 1 }
       };
   for(chassis in iterator) {
-    name = Generator.getName(iterator[chassis].race);
     for(var i=0; i<iterator[chassis].count; i++) {
-      this.create(name, chassis);
+      name = Generator.getName(iterator[chassis].race);
+      throttle = global.Math.random() * 2 + 1;
+      this.create(name.toUpperCase(), chassis);
     }
   }
 };
@@ -316,12 +320,11 @@ ShipManager.prototype._updateBattles = function() {
         });
         
         // destroy ship
-        if(target.health <= 0) {          
-          // if(target.user === undefined) {
-          //   this.create({
-          //     chassis: target.chassis
-          //   });
-          // }
+        if(target.health <= 0) {
+          // spawn npc
+          if(!target.user) {
+            this.create(Generator.getName(target.data.race), target.chassis);
+          }
           this.remove(target);
         } else {
           updates.push(update);
@@ -348,8 +351,8 @@ ShipManager.prototype._updateBattles = function() {
 };
 
 ShipManager.prototype._updateAI = function() {
-  var b, battle, random, ship, room, health,
-      destination, origin,
+  var b, battle, random, ship,
+      room, health, origin,
       game = this.game,
       ships = this.ships, target,
       arr = [];
@@ -357,20 +360,13 @@ ShipManager.prototype._updateAI = function() {
     ship = ships[s];
     b = this.battles[ship.uuid];
     
-    if(!ship.user) { // && global.Math.random() > 0.5) {
-      destination = this._generateRandomPosition();
-      
-      // (function(game, manager, ship, destination) {
-      //   var time = global.Math.floor(global.Math.random() * 10000);
-      //   game.clock.events.add(time, function() {
-          // if(manager.ships[ship.uuid]) {
-            this._plot(ship, destination);
-          // }
-      //   });
-      // })(game, this, ship, destination);
+    if(!ship.user && global.Math.random() > 0.82) {
+      // plot ship
+      this._plot(ship, this._generateRandomPosition());
 
+      // 50% attack (new) ship
       random = this._getRandomShip();
-      if(random !== ship) { // && global.Math.random() > 0.5) {
+      if(ship.data.race === 'hederaa' && random !== ship) { //&& global.Math.random() > 0.5) {
         target = ships[random.uuid];
         if(target && ship.damage > 0) {
           room = global.Math.floor(global.Math.random() * target.rooms.length);
@@ -379,10 +375,15 @@ ShipManager.prototype._updateAI = function() {
           this.battles[ship.uuid] = battle;
         }
       }
-    } else if(ship.user && b) {
+    } else if(b) { //if(ship.user && b) {
+      // check if target is AI
+      // and run defence protocols
       target = this.ships[b.target];
       if(target && !target.user) {
         health = target.health / target.config.stats.health;
+        if(!target.movement.animation.isPlaying) {
+          this._plot(ship, this._generateRandomPosition(4096));
+        }
         if(target.systems['targeting']) {
           if(!this.battles[target.uuid] || this.battles[target.uuid].target !== ship.uuid) {
             room = global.Math.floor(global.Math.random() * ship.rooms.length);
@@ -391,15 +392,15 @@ ShipManager.prototype._updateAI = function() {
             this.battles[target.uuid] = battle;
           }
         }
-        // if(target.systems['shield'] && health < 0.90) {
-        //   target.activate('shield');
-        // }
+        if(target.systems['shield'] && health < 0.90) {
+          target.activate('shield');
+        }
         if(target.systems['engine'] && health < 0.5) {
           target.activate('booster');
         }
-        // if(target.systems['reactor'] && health < 0.2) {
-        //   target.activate('overload');
-        // }
+        if(target.systems['reactor'] && health < 0.2) {
+          target.activate('overload');
+        }
       }
     }
   }
@@ -413,11 +414,13 @@ ShipManager.prototype._getRandomShip = function() {
 };
 
 ShipManager.prototype._generateRandomPosition = function(size) {
-  var size = size || (global.Math.random() > 0.5 ? 4096 : 1024),
+  var size = size || (global.Math.random() > 0.5 ? 4096 : 2048),
       halfSize = size/2,
-      randX = global.Math.random() * size - halfSize,
-      randY = global.Math.random() * size - halfSize;
-  return new engine.Point(halfSize + randX, halfSize + randY);
+      center = 2048,
+      start = center - halfSize
+      randX = global.Math.random() * size,
+      randY = global.Math.random() * size;
+  return new engine.Point(start + randX, start + randY);
 };
 
 module.exports = ShipManager;

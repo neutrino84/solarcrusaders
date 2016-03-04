@@ -332,6 +332,33 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":256},
 	"sourceSize": {"w":256,"h":256},
 	"pivot": {"x":0.5,"y":0.5}
+},
+"ubaidian-x02.png":
+{
+	"frame": {"x":344,"y":551,"w":320,"h":320},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":320,"h":320},
+	"sourceSize": {"w":320,"h":320},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"ubaidian-x03.png":
+{
+	"frame": {"x":667,"y":551,"w":128,"h":128},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
+	"sourceSize": {"w":128,"h":128},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"ubaidian-x04.png":
+{
+	"frame": {"x":798,"y":551,"w":128,"h":128},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
+	"sourceSize": {"w":128,"h":128},
+	"pivot": {"x":0.5,"y":0.5}
 }},
 "meta": {
 	"app": "http://www.codeandweb.com/texturepacker",
@@ -340,6 +367,6 @@
 	"format": "RGBA8888",
 	"size": {"w":1024,"h":1024},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:e99bf4938ec3ff26d8f6d795ebb05988:97b1037f5230df5336a10f9719fc264d:a973cd4a72d4c90ced76930eac7fdc63$"
+	"smartupdate": "$TexturePacker:SmartUpdate:837a3e33e4ce8691c8129ff92b13a6b0:b95eb092aad68d25ada08a68f553d499:a973cd4a72d4c90ced76930eac7fdc63$"
 }
 }
