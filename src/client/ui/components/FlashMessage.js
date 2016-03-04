@@ -23,7 +23,8 @@ function FlashMessage(game, settings) {
       border: [0],
       text: {
         fontName: 'medium',
-        characterSpacing: 2
+        characterSpacing: 1,
+        lineSpacing: 4
       },
       bg: {
         color: 0x000000,
