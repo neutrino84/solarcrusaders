@@ -29,7 +29,7 @@ function ProgressButtonIcon(game, key, settings) {
 
   ButtonIcon.call(this, game, key,
     Class.mixin(settings, {
-      padding: [2, 2, 2, 6],
+      padding: [1, 1, 1, 5],
       bg: {
         fillAlpha: 1.0,
         color: 0x3868b8,
