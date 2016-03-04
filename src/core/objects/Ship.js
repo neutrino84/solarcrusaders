@@ -316,7 +316,7 @@ Object.defineProperty(Ship.prototype, 'critical', {
 
 Object.defineProperty(Ship.prototype, 'range', {
   get: function() {
-    return 768;
+    return this.data.range;
   }
 });
 
