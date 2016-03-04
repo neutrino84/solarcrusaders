@@ -55,7 +55,7 @@ function EnhancementPane(game, string, settings) {
 
   this.bg = new BackgroundView(game, this.settings.bg);
   this.content = new Pane(game, this.settings.content);
-  this.content.setPreferredSize(215, 52);
+  this.content.setPreferredSize(207, 50);
 
   this.addView(this.bg);
   this.addPanel(Layout.CENTER, this.content);
