@@ -396,6 +396,10 @@ body {
   background-image: url('../imgs/game/bg-slide-hederaa.png');
 }
 
+#rac .mechan .symbol {
+  background-image: url('../imgs/game/bg-slide-mechan.png');
+}
+
 #rac .character {
   background: center center no-repeat;
   background-size: auto 80%;
@@ -409,6 +413,10 @@ body {
   background-image: url('../imgs/game/bg-slide-hederaa-char.png');
 }
 
+#rac .mechan .character {
+  background-image: url('../imgs/game/bg-slide-mechan-char.png');
+}
+
 #rac .description {
   width: 50%;
   left: 40%;
@@ -416,13 +424,12 @@ body {
 
 #rac .description h2 {
   margin: 18px 0;
-  color: rgba(96, 166, 255, 1.0);
+  color: #fff;
   font-size: 32px;
   font-weight: bold;
   font-family: 'proxima-nova', sans-serif;
   text-align: center;
   text-transform: uppercase;
-  text-shadow: 0 0 18px #000;
   letter-spacing: 1px;
 }
 
@@ -442,7 +449,7 @@ body {
 /*
  * Global Styles
  */
-.centering {
+/*.centering {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -451,7 +458,7 @@ body {
       -ms-transform: translate3d(-50%, -50%, 0);
        -o-transform: translate3d(-50%, -50%, 0);
           transform: translate3d(-50%, -50%, 0);
-}
+}*/
 
 .right {
   position: absolute;
