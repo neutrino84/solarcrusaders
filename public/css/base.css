@@ -6,6 +6,8 @@ html, body {
 }
 
 body {
+  font-size: 62.5%;
+  font-family: Helvetica, Arial, sans-serif;
   background: #000;
 }
 
@@ -44,39 +46,37 @@ canvas {
  */
 .dialog {
   position: absolute;
-  top: 50%;
-  left: 50%;
+  width: 100%;
+  height: 100%;
   display: none;
 }
 
 .dialog .box {
+  width: 60%;
   position: relative;
-  left: -128px;
-  top: -64px;
-  width: 276px;
-  height: 128px;
   text-transform: uppercase;
   background: rgba(255, 255, 255, 0.15);
   border-radius: 6px;
 }
 
 .dialog .box img {
-  position: absolute;
-  right: 15px;
-  top: 15px;
+  display: block;
+  margin: 0 auto;
 }
 
 .dialog .box h1 {
   color: #fff;
-  padding: 30px 15px 15px 15px;
+  padding: 20px;
   font-size: 1.4rem;
   font-weight: bold;
+  text-align: center;
 }
 
 #dialog {
-  padding: 15px 15px 0 15px;
+  padding: 20px;
   color: #aaa;
   font-size: 1.2rem;
+  text-align: center;
 }
 
 /*
@@ -98,12 +98,8 @@ canvas {
 }
 
 .modal .box {
-  position: absolute;
+  position: relative;
   width: 60%;
-  height: 70%;
-  top: 15%;
-  left: 20%;
-  overflow: auto;
   background: rgba(0, 0, 0, 0.75);
 }
 
@@ -145,7 +141,7 @@ canvas {
 
 .modal .box h1 {
   margin: 0 0 5px 0;
-  color: #e4e4e4;
+  color: #fff;
   font-size: 21px;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -153,7 +149,7 @@ canvas {
 
 .modal .box h2 {
   margin: 0 0 5px 0;
-  color: #88bbee;
+  color: #55aaff;
   font-size: 15px;
   font-weight: normal;
   text-transform: uppercase;
@@ -162,7 +158,7 @@ canvas {
 
 .modal .box p {
   margin: 10px 0 5px 0;
-  color: #999;
+  color: #aaa;
   font-size: 14px;
   text-transform: uppercase;
 }
@@ -171,7 +167,7 @@ canvas {
   cursor: pointer;
   margin: 0 10px 0 0;
   padding: 10px;
-  color: #5588bb;
+  color: #55aaff;
   font-size: 14px;
   text-transform: uppercase;
   border: solid 1px rgba(255, 255, 255, 0.1);
@@ -191,6 +187,20 @@ canvas {
 .modal .box .error {
   margin: 10px 0 5px 0;
   color: #f00;
+}
+
+/*
+ * Global Styles
+ */
+.centering {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate3d(-50%, -50%, 0);
+     -moz-transform: translate3d(-50%, -50%, 0);
+      -ms-transform: translate3d(-50%, -50%, 0);
+       -o-transform: translate3d(-50%, -50%, 0);
+          transform: translate3d(-50%, -50%, 0);
 }
 
 /*

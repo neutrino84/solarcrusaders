@@ -2,14 +2,14 @@ extends layouts/base
 block content
   #content
     .dialog
-      .box
+      .box.centering
         h1 watch on youtube
         a(href='https://www.youtube.com/watch?v=3mURrVKerHg')
           img(src='/imgs/game/play.png')
         div(id='dialog')
     if !user
       .modal(id='registration-login')
-        .box
+        .box.centering
           .register(id='registration-start')
             h1 player registration
             h2 welcome to the universe
