@@ -30,42 +30,6 @@ function LoginPane(game, settings) {
         blendMode: engine.BlendMode.MULTIPLY
       }
     },
-    buttons: {
-      padding: [0],
-      layout: {
-        type: 'percent',
-        direction: Layout.HORIZONTAL,
-        gap: 1,
-        stretch: false
-      },
-      bg: {
-        fillAlpha: 0.5,
-        color: 0x000000,
-        radius: 0.0,
-        borderSize: 0.0,
-        blendMode: engine.BlendMode.MULTIPLY
-      }
-    },
-    button: {
-      padding: [0],
-      border: [0],
-      bg: {
-        radius: 0.0,
-        alertColor: 0x000000
-      },
-      label: {
-        padding: [3, 4],
-        bg: {
-          highlight: false,
-          fillAlpha: 0.0,
-          borderSize: 0.0,
-          radius: 0.0
-        },
-        text: {
-          fontName: 'medium'
-        }
-      }
-    },
     login: {
       padding: [1],
       border: [0],
@@ -91,7 +55,6 @@ function LoginPane(game, settings) {
   });
 
   this.content = new Pane(game, this.settings.content);
-  this.buttons = new Pane(game, this.settings.buttons);
 
   this.usernameInput = new Input(game, 'username');
   this.passwordInput = new Input(game, 'password', { password: true });
@@ -102,25 +65,11 @@ function LoginPane(game, settings) {
   this.loginButton = new Button(game, 'login', this.settings.login);
   this.loginButton.on('inputUp', this._login, this);
 
-  this.homeButton = new Button(game, 'home', this.settings.button);
-  this.registerButton = new Button(game, 'beta signup', this.settings.button);
-  this.forumsButton = new Button(game, 'forums', this.settings.button);
-
-  this.homeButton.on('inputUp', this._home);
-  this.forumsButton.on('inputUp', this._forums);
-  this.registerButton.on('inputUp', this._register, this);
-  this.registerButton.alert();
-
   this.content.addPanel(Layout.NONE, this.usernameInput);
   this.content.addPanel(Layout.NONE, this.passwordInput);
   this.content.addPanel(Layout.NONE, this.loginButton);
 
-  this.buttons.addPanel(33, this.homeButton);
-  this.buttons.addPanel(33, this.registerButton);
-  this.buttons.addPanel(33, this.forumsButton);
-
   this.addPanel(Layout.STRETCH, this.content);
-  this.addPanel(Layout.STRETCH, this.buttons);
 };
 
 LoginPane.prototype = Object.create(Pane.prototype);
@@ -146,22 +95,8 @@ LoginPane.prototype.logout = function() {
   this.invalidate(true)
 };
 
-LoginPane.prototype._home = function() {
-  global.document.location.href = 'http://solarcrusaders.com/';
-};
-
-LoginPane.prototype._register = function() {
-  this.game.emit('gui/registration');
-};
-
-LoginPane.prototype._forums = function() {
-  global.document.location.href = 'http://forums.solarcrusaders.com/';
-};
-
 LoginPane.prototype._login = function() {
   var self = this;
-
-  // this.formElement.style.display = 'none';
 
   if(this.usernameInput.value !== '' && this.passwordInput.value !== '') {
     xhr({
@@ -197,13 +132,11 @@ LoginPane.prototype._login = function() {
             self.game.emit('gui/alert', 'an unknown error has occurred\nplease try again later');
             break;
         }
-        // self.formElement.style.display = '';
       } else if(user) {
         self.game.emit('gui/loggedin', user);
       }
     });
   } else {
-    // this.formElement.style.display = '';
     self.game.emit('gui/alert', 'you have not entered valid login credentials');
   }
 };
