@@ -55,6 +55,25 @@ RegistrationForm.prototype._hide = function(evt) {
   this.sectorState.scrollLock = false;
 };
 
+RegistrationForm.prototype._error = function(name, message) {
+  switch(name) {
+    case 'email':
+      this.formEmailElement.parentNode.style.border = 'solid 1px #f00';
+      break;
+    case 'userslug':
+    case 'username':
+      this.formUsernameElement.parentNode.style.border = 'solid 1px #f00';
+      break;
+    case 'password':
+      this.pass1Element.parentNode.style.border = 'solid 1px #f00';
+      this.pass2Element.parentNode.style.border = 'solid 1px #f00';
+      break;
+    default:
+      break;
+  }
+  this.errorElement.innerHTML += '<p>' + name + ': ' + message + '</p>';
+};
+
 RegistrationForm.prototype._submit = function() {
   var self = this;
 
@@ -81,52 +100,17 @@ RegistrationForm.prototype._submit = function() {
         'Content-Type': 'application/json'
       }
     }, function(err, resp, body) {
-      var response = JSON.parse(body);
+      var errors, response = JSON.parse(body);
       if(response.error) {
+        errors = response.data;
+        
         self.startElement.style.display = '';
-        switch(response.error) {
-          case '[[error:invalid-email]]':
-            self.formEmailElement.parentNode.style.border = 'solid 1px #f00';
-            self.errorElement.innerHTML = 'You have entered an invalid e-mail address.';
-            break;
-          case '[[error:invalid-username]]':
-            self.formUsernameElement.parentNode.style.border = 'solid 1px #f00';
-            self.errorElement.innerHTML = 'You have entered an invalid username.';
-            break;
-          case '[[error:username-too-short]]':
-            self.formUsernameElement.parentNode.style.border = 'solid 1px #f00';
-            self.errorElement.innerHTML = 'Your username is too short.';
-            break;
-          case '[[error:username-too-long]]':
-            self.formUsernameElement.parentNode.style.border = 'solid 1px #f00';
-            self.errorElement.innerHTML = 'Your username is too long.';
-            break;
-          case '[[error:invalid-password]]':
-            self.pass1Element.parentNode.style.border = 'solid 1px #f00';
-            self.pass2Element.parentNode.style.border = 'solid 1px #f00';
-            self.errorElement.innerHTML = 'Your password is invalid.';
-            break;
-          case '[[error:password-too-short]]':
-            self.pass1Element.parentNode.style.border = 'solid 1px #f00';
-            self.pass2Element.parentNode.style.border = 'solid 1px #f00';
-            self.errorElement.innerHTML = 'Your password is too short.';
-            break;
-          case '[[error:password-too-long]]':
-            self.pass1Element.parentNode.style.border = 'solid 1px #f00';
-            self.pass2Element.parentNode.style.border = 'solid 1px #f00';
-            self.errorElement.innerHTML = 'Your password is too long.';
-            break;
-          case '[[error:email-exists]]':
-            self.formEmailElement.parentNode.style.border = 'solid 1px #f00';
-            self.errorElement.innerHTML = 'Your email has already been registered.';
-            break;
-          case '[[error:username-exists]]':
-            self.formUsernameElement.parentNode.style.border = 'solid 1px #f00';
-            self.errorElement.innerHTML = 'Your username has been taken.';
-            break;
-          default:
-            self.errorElement.innerHTML = 'An unknown error has occurred.';
-            break;
+        self.errorElement.innerHTML = '';
+        
+        for(var e in errors) {
+          for(var i in errors[e]) {
+            self._error(e, errors[e]);
+          }
         }
       } else {
         self.startElement.style.display = 'none';
