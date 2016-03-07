@@ -76,22 +76,24 @@ LoginPane.prototype = Object.create(Pane.prototype);
 LoginPane.prototype.constructor = LoginPane;
 
 LoginPane.prototype.start = function() {
+  this.loginButton.start();
   this.usernameInput.start();
   this.passwordInput.start();
 };
 
 LoginPane.prototype.stop = function() {
+  this.loginButton.stop();
   this.usernameInput.stop();
   this.passwordInput.stop();
 };
 
 LoginPane.prototype.login = function() {
-  this.content.visible = false;
+  this.visible = false;
   this.invalidate(true);
 };
 
 LoginPane.prototype.logout = function() {
-  this.content.visible = true;
+  this.visible = true;
   this.invalidate(true)
 };
 

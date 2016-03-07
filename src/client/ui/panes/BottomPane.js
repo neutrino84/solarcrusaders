@@ -39,9 +39,9 @@ function BottomPane(game) {
   this.centerPane.addPanel(Layout.NONE, this.inventoryPane);
   this.rightPane.addPanel(Layout.NONE, this.subsystemPane);
 
-  this.addPanel(Layout.TOP, this.leftPane);
-  this.addPanel(Layout.BOTTOM, this.centerPane);
-  this.addPanel(Layout.BOTTOM, this.rightPane);
+  this.addPanel(Layout.NONE, this.leftPane);
+  this.addPanel(Layout.NONE, this.centerPane);
+  this.addPanel(Layout.NONE, this.rightPane);
 };
 
 BottomPane.prototype = Object.create(Pane.prototype);

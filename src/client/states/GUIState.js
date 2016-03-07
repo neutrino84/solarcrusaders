@@ -59,10 +59,6 @@ GUIState.prototype.preload = function() {
   // spritesheet
   this.game.load.spritesheet('crew', 'imgs/game/spritesheets/crew-mini.png', 16, 16);
   this.game.load.spritesheet('door', 'imgs/game/spritesheets/door-mini.png', 16, 16);
-
-  // ship outline
-  this.game.load.image('ubaidian-x01-outline', 'imgs/game/ships/ubaidian/ubaidian-x01-outline.png');
-  this.game.load.image('hederaa-x01-outline', 'imgs/game/ships/hederaa/hederaa-x01-outline.png');
 };
 
 GUIState.prototype.create = function() {
@@ -109,7 +105,6 @@ GUIState.prototype.create = function() {
   this.topPanel.addPanel(Layout.NONE, this.headerPane);
 
   this.bottomPane = new BottomPane(game);
-  this.bottomPane.visible = false;
 
   this.centerPanel.addPanel(Layout.CENTER, this.shipPanel);
   this.centerPanel.addPanel(Layout.LEFT, this.leftPane);
@@ -149,18 +144,18 @@ GUIState.prototype.create = function() {
 
 GUIState.prototype.login = function() {
   if(this.auth.isUser()) {
-    this.leftPane.visible = true;
-    this.bottomPane.visible = true;
-    this.centerPanel.visible = true;
+    this.leftPane.visible = false;
+    // this.bottomPane.visible = true;
+    // this.centerPanel.visible = true;
     this.headerPane.login();
     this.root.invalidate(true);
-    // this.registrationForm && this.registrationForm.destroy();
+    this.registrationForm && (this.registrationForm = this.registrationForm.destroy());
   } else {
     this.leftPane.visible = false;
-    this.bottomPane.visible = false;
-    this.centerPanel.visible = false;
+    // this.bottomPane.visible = false;
+    // this.centerPanel.visible = false;
     this.headerPane.logout()
-    // this.registrationForm = new RegistrationForm(game);
+    this.registrationForm = new RegistrationForm(game);
   }
   if(this.modalComponent.visible) {
     this.modal(false);

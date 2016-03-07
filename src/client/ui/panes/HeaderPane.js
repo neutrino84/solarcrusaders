@@ -2,6 +2,8 @@
 var engine = require('engine'),
     Layout = require('../Layout'),
     LoginPane = require('./LoginPane'),
+    UserPane = require('./UserPane'),
+    MenuPane = require('./MenuPane'),
     Pane = require('../components/Pane'),
     Label = require('../components/Label'),
     Image = require('../components/Image'),
@@ -49,6 +51,9 @@ function HeaderPane(game, settings) {
     }
   });
 
+  this.menuPane = new MenuPane(game);
+  this.userPane = new UserPane(game);
+
   this.loginPane = new LoginPane(game);
   this.loginPane.start();
 
@@ -63,6 +68,8 @@ function HeaderPane(game, settings) {
 
   // add layout panels
   this.addPanel(Layout.CENTER, this.loginPane);
+  this.addPanel(Layout.CENTER, this.userPane);
+  this.addPanel(Layout.STRETCH, this.menuPane);
   this.addPanel(Layout.CENTER, this.versionText);
   this.addPanel(Layout.CENTER, this.infoPane2);
 
@@ -75,10 +82,14 @@ HeaderPane.prototype.constructor = HeaderPane;
 
 HeaderPane.prototype.login = function() {
   this.loginPane.login();
+  this.userPane.login();
+  this.menuPane.login();
 };
 
 HeaderPane.prototype.logout = function() {
   this.loginPane.logout();
+  this.userPane.logout();
+  this.menuPane.logout();
 };
 
 HeaderPane.prototype._updateInfo = function() {

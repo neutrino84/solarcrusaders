@@ -96,11 +96,18 @@ EnhancementPane.prototype.create = function(enhancement, key) {
 
 EnhancementPane.prototype._select = function(button) {
   var data = this.data;
-  button.tint = 0xFF8800;
-  this.socket.emit('enhancement/start', {
-    ship: data.uuid,
-    enhancement: button.id
-  });
+  if(this.game.auth.isGuest()) {
+    this.game.emit('gui/message', 'you must be logged in to use enhancements', 1000, 1000);
+    this._enhancmentCancelled({
+      enhancement: button.id
+    });
+  } else {
+    button.tint = 0xFF8800;
+    this.socket.emit('enhancement/start', {
+      ship: data.uuid,
+      enhancement: button.id
+    });
+  }
 };
 
 EnhancementPane.prototype._enhancmentStarted = function(data) {
