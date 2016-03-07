@@ -46,7 +46,7 @@ var pixi = require('pixi'),
           message = 'you need a compatible browser and graphics card to run this demo.';
         }
       } else {
-        message = 'mobile devices are not supported, but you can still watch!'
+        message = 'mobile devices are not yet supported'
       }
       dialog.innerHTML = message;
     }
