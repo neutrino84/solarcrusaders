@@ -79,7 +79,8 @@ Authentication.prototype.register = function(req, res, next) {
     name: userData.username,
     username: userData.username,
     email: userData.email,
-    password: userData.password
+    password: userData.password,
+    role: 'user'
   });
 
   async.waterfall([
