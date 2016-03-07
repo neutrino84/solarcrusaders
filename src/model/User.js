@@ -47,8 +47,9 @@ function usernameValidator(err) {
 
 User.afterInitialize = function() {
   if(this.isNewRecord()) {
-    if(this.userslug) { this.userslug = Sanitation.slugify(this.username); }
-    if(this.email) { this.email = Sanitation.email(this.email); }
+    this.userslug = Sanitation.slugify(this.username);
+    this.email = Sanitation.email(this.email);
+    this.name = Sanitation.name(this.name);
   }
 };
 

@@ -9,7 +9,7 @@ var winston = require('winston'),
     AbstractClass = caminte.AbstractClass;
 
     // extend caminte
-    Utils.extend(AbstractClass.prototype, Model.prototype);
+    AbstractClass.prototype.toStreamObject = Model.prototype.toStreamObject;
 
 function Database(app) {
   this.app = app;
