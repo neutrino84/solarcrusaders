@@ -113,14 +113,6 @@ canvas {
   display: none;
 }
 
-.modal .box .splash {
-  position: relative;
-  width: 100%;
-  height: 350px;
-  background: url('../imgs/game/splash.png') center center no-repeat;
-  background-size: 100% auto;
-}
-
 .modal .box .input {
   padding: 10px;
   border: solid 1px rgba(255, 255, 255, 0.1);
@@ -187,6 +179,7 @@ canvas {
 .modal .box .error {
   margin: 10px 0 5px 0;
   color: #f00;
+  font-size: 14px;
 }
 
 /*
