@@ -17,7 +17,7 @@ var User = schema.define('user', {
   password:   { type: schema.String },
   reputation: { type: schema.Integer, default: 0 },
   logins:     { type: schema.Integer, default: 0 },
-  banned:     { type: schema.Boolean, default: 0 },
+  banned:     { type: schema.Integer, default: 0 },
   created:    { type: schema.Date, default: Date.now }
 });
 

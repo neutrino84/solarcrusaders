@@ -64,9 +64,7 @@ Authentication.prototype.init = function() {
 };
 
 Authentication.prototype.register = function(req, res, next) {
-  return next(new Error('[[error:disabled]]'));
-
-  var self = this,
+  var self = this, user,
       uid, userData = {};
 
   // copy data
@@ -76,22 +74,42 @@ Authentication.prototype.register = function(req, res, next) {
     }
   }
 
+  // create new user
+  user = new self.model.User({
+    name: userData.username,
+    username: userData.username,
+    email: userData.email,
+    password: userData.password
+  });
+
   async.waterfall([
     function(next) {
-      self.user.create(userData, next);
+      // validate user
+      user.isValid(function(valid) {
+        if(valid) {
+          next(null, user);
+        } else {
+          next({
+            message: '[[error:invalid-user]]',
+            data: user.errors
+          });
+        }
+      });
+    },
+    function(user, next) {
+      // save user
+      user.save(next);
     }
-  ], function(err, userData) {
+  ], function(err, user) {
     if(err) { return next(err); }
     res.json({
       info: null,
-      user: userData
+      user: user.toStreamObject()
     });
   });
 };
 
 Authentication.prototype.login = function(req, res, next) {
-  return next(new Error('[[error:disabled]]'));
-
   var self = this;
   passport.authenticate('local', function(err, userData, info) {
     if(err) { return next(err); }

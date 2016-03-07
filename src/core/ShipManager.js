@@ -187,20 +187,23 @@ ShipManager.prototype.update = function() {
 };
 
 ShipManager.prototype.generateRandomShips = function() {
-  var chassis, name, throttle,
-      iterator = {
+  var iterator = {
         'ubaidian-x01': { race: 'ubaidian', count: 1 },
         'ubaidian-x02': { race: 'ubaidian', count: 1 },
         'ubaidian-x04': { race: 'ubaidian', count: 4 },
         'hederaa-x01': { race: 'hederaa', count: 1 }
       };
-  for(chassis in iterator) {
+  for(var chassis in iterator) {
     for(var i=0; i<iterator[chassis].count; i++) {
-      name = Generator.getName(iterator[chassis].race);
-      throttle = global.Math.random() * 2 + 1;
-      this.create(name.toUpperCase(), chassis);
+      this.generateRandomShip(chassis, iterator[chassis].race);
     }
   }
+};
+
+ShipManager.prototype.generateRandomShip = function(chassis, race) {
+  var name = Generator.getName(race),
+      throttle = global.Math.random() * 1.5 + 0.75;
+      this.create(name.toUpperCase(), chassis, null, throttle);
 };
 
 ShipManager.prototype._plot = function(ship, destination, current, previous) {
@@ -323,7 +326,8 @@ ShipManager.prototype._updateBattles = function() {
         if(target.health <= 0) {
           // spawn npc
           if(!target.user) {
-            this.create(Generator.getName(target.data.race), target.chassis);
+            this.generateRandomShip(
+              target.chassis, target.data.race);
           }
           this.remove(target);
         } else {

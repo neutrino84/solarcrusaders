@@ -27,10 +27,11 @@ UserManager.prototype.add = function(user) {
   var self = this, ship,
       u = this.users[user.uuid] = Utils.extend({}, user);
       u.ships = [];
-  if(u.id > 0) {
+  if(u.role === 'guest') {
     // logged in, get ships, or create a new one
-  } else {
     self.game.emit('ship/create', Generator.getName('ubaidian'), 'ubaidian-x04', u, 1.0);
+  } else {
+    self.game.emit('ship/create', Generator.getName('ubaidian'), 'ubaidian-x01', u, 1.0);
   }
 };
 
