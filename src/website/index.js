@@ -1,6 +1,7 @@
 var jquery = require('jquery'),
     fullPage = require('fullpage'),
-    slick = require('slick');
+    slick = require('slick'),
+    drop = require('drop');
 
 jquery(document).ready(function() {
   // fullpage
@@ -8,7 +9,7 @@ jquery(document).ready(function() {
   	// loopBottom: true,
     animateAnchor: false,
     menu: '#navigation',
-    anchors: ['home', 'about', 'races'],
+    anchors: ['home', 'about', 'races'], //, 'preorder'],
     onLeave: function(index, nextIndex) {
       if(nextIndex === 1) {
         jquery('#gradient').css('opacity', '0');
@@ -34,6 +35,18 @@ jquery(document).ready(function() {
     arrows: false,
     infinite: true,
     fade: true
+  });
+
+  // mobilemenu
+  jquery('#mobilenavigation').removeAttr('style');
+
+  // drop
+  var dropInstance = new drop({
+    target: jquery('#navigation li.menu').get(0),
+    content: jquery('#mobilenavigation').get(0),
+    classes: '',
+    position: 'bottom right',
+    openOn: 'click'
   });
 
   // loaded

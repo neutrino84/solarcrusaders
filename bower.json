@@ -6,7 +6,8 @@
         "pixi.js": "dev",
         "jquery": "2.2.x",
         "fullpage.js": "2.7.x",
-        "slick-carousel": "1.5.x"
+        "slick-carousel": "1.5.x",
+        "tether-drop": "1.4.x"
     },
     "devDependencies": {}
 }

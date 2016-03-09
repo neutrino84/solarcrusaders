@@ -26,6 +26,13 @@ body {
   opacity: 0.8;
 }
 
+#share {
+  position: absolute;
+  left: 32px;
+  top: 21px;
+  width: 50%;
+}
+
 #navigation {
   position: absolute;
   right: 32px;
@@ -109,6 +116,35 @@ body {
   background: linear-gradient(to bottom,rgba(11,107,211,0) 0,rgba(11,107,211,0) 12%,rgba(11,107,211,.5) 62%,rgba(11,107,211,0) 100%);
 }
 
+#navigation li.menu {
+  display: none;
+  width: 32px;
+  height: 32px;
+  margin-top: -8px;
+  background: url(../imgs/game/bg-menu.png) center center no-repeat;
+  background-size: auto 80%;
+}
+
+#mobilenavigation {
+  width: 128px;
+  margin: 16px 0 0 0;
+  padding: 4px;
+}
+
+#mobilenavigation li {
+  text-align: right;
+}
+
+#mobilenavigation li a {
+  display: block;
+  padding: 4px 0;
+  color: rgba(255, 255, 255, 1.0);
+  font-weight: bold;
+  font-family: 'proxima-nova', sans-serif;
+  font-size: 13px;
+  letter-spacing: 2.2px;
+  text-transform: uppercase;
+}
 
 /*#navigation li.preorder a {
   color: #fff;
@@ -447,6 +483,17 @@ body {
 }
 
 /*
+ * Races Styles
+ */
+#prordr {
+
+}
+
+#prordr.section .symbol {
+  background-image: url('../imgs/game/bg-prordr.png');
+}
+
+/*
  * Global Styles
  */
 /*.centering {
@@ -531,18 +578,18 @@ body {
 }
 
 .fp-controlArrow.fp-prev {
-  opacity: 0.5;
+  opacity: 0.8;
   left: 15px;
   width: 0;
-  border-width: 38.5px 34px 38.5px 0;
-  border-color: transparent #011126 transparent transparent;
+  border-width: 24px 20px 24px 0;
+  border-color: transparent #55aaff transparent transparent;
 }
 
 .fp-controlArrow.fp-next {
-  opacity: 0.5;
+  opacity: 0.8;
   right: 15px;
-  border-width: 38.5px 0 38.5px 34px;
-  border-color: transparent transparent transparent #011126;
+  border-width: 24px 0 24px 20px;
+  border-color: transparent transparent transparent #55aaff;
 }
 
 .slick-slider {
@@ -713,10 +760,49 @@ body {
   color: #fff;
 }
 
-@media (max-width: 1024px) {
+.drop-element, .drop-element:after,
+.drop-element:before, .drop-element *,
+.drop-element *:after, .drop-element *:before {
+  box-sizing: border-box;
+}
+
+.drop-element {
+  position: absolute;
+  display: none;
+}
+
+.drop-element.drop-open {
+  display: block;
+}
+
+.drop-element.drop-theme-basic {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.drop-element.drop-theme-basic .drop-content {
+  border-radius: 5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  font-family: inherit;
+  background: #eee;
+  color: #444;
+  padding: 1em;
+  font-size: 1.1em;
+  line-height: 1.5em;
+}
+
+@media (max-width: 1220px) {
   #logo {
     display: none;
   }
+}
+
+@media (max-width: 1024px) {
+  #share {
+    display: none;
+  }
+
+  #hme .bottom { height: 32% !important; }
 
   #abt .description h2 {
     margin: 16px 0;
@@ -727,6 +813,18 @@ body {
   #abt .description p {
     margin: 16px 0;
     font-size: 13px;
+  }
+
+  #at-share-dock {
+    box-shadow: none !important;
+  }
+
+  .atss a .at-icon-wrapper {
+    padding: 0 !important;
+  }
+
+  .section .right {
+    width: 42% !important;
   }
 }
 
@@ -747,7 +845,6 @@ body {
     font-size: 14px;
   }
 
-
   #abt .description li,
   #abt .description p {
     margin: 14px 0;
@@ -759,20 +856,49 @@ body {
     width: 100% !important;
     margin: 0 !important;
   }
+}
+
+@media (max-width: 435px) and (orientation: portrait) {
+  #rac .description {
+    top: 82%;
+  }
+
+  #rac .description h2 {
+    font-size: 22px;
+  }
+
+  #rac .description p {
+    font-size: 14px;
+  }
 
   .section .right {
-    width: 50% !important;
+    width: 60% !important;
   }
 }
 
-@media (max-width: 414px) and (orientation: portrait), (max-width: 736px) and (orientation: landscape) {
+@media (max-width: 435px) and (orientation: portrait), (max-width: 773px) and (orientation: landscape) {
+  #navigation {
+    right: 20px;
+  }
+
+  #navigation li.about,
+  #navigation li.races,
   #navigation li.mini {
     display: none;
   }
 
+  #mobilenavigation,
+  #navigation li.menu {
+    display: block;
+  }
+
   #hme .bg { background-size: auto 78% !important; }
   #hme p { display: none; }
-  #hme .bottom { height: 32% !important; }
+  #hme .bottom { height: 40% !important; }
+
+  #rac .description {
+    left: 50% !important;
+  }
 
   .section .title {
     width: 80%;
@@ -783,10 +909,15 @@ body {
   .nomobile { display: none; }
 }
 
-@media (max-width: 736px) and (orientation: landscape) {
+@media (max-width: 773px) and (orientation: landscape) {
+  #hme .bottom { height: 50% !important; }
+  #hme .button,
   #abt .ships { display: none; }
   #abt .column:nth-child(2) h2,
   #abt .column:nth-child(2) p {
     font-size: 16px;
+  }
+  #rac .description {
+    left: 40% !important;
   }
 }

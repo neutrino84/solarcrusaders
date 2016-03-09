@@ -62,7 +62,9 @@ module.exports = function(grunt) {
           alias: {
             jquery: './src/libs/jquery/dist/jquery',
             fullpage: './src/libs/fullpage.js/jquery.fullPage',
-            slick: './src/libs/slick-carousel/slick/slick'
+            slick: './src/libs/slick-carousel/slick/slick',
+            tether: './src/libs/tether/dist/js/tether',
+            drop: './src/libs/tether-drop/dist/js/drop'
           }
         }
       },
@@ -181,6 +183,11 @@ module.exports = function(grunt) {
         files: [{
           expand: true,
           src: ['public/build/app.min.js'],
+          dest: './',
+          ext: '.min.gz.js'
+        },{
+          expand: true,
+          src: ['public/build/website.min.js'],
           dest: './',
           ext: '.min.gz.js'
         }]
