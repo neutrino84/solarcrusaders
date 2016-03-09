@@ -78,7 +78,7 @@ function UserPane(game, settings) {
   this.logoutButton = new Button(game, 'logout', this.settings.logout);
   this.logoutButton.on('inputUp', this._logout, this);
   
-  this.usernameLabel = new Label(game, 'neutrino84', this.settings.label);
+  this.usernameLabel = new Label(game, 'online', this.settings.label);
   this.usernameLabel.tint = 0x00ff00;
 
   this.creditsImage = new Image(game, 'texture-atlas', Class.mixin({
