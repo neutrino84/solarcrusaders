@@ -3,7 +3,7 @@ function Socket(app) {
   this.app = app;
   this.server = app.server;
 
-  this.io = require('socket.io')(this.server.http);
+  this.io = require('socket.io')(this.server.http, { transports: ['websocket'], allowUpgrades: false });
   this.iosess = require('socket.io-express-session'),
   this.iorouter = require('socket.io-events')();
 };
