@@ -31,7 +31,8 @@ UserManager.prototype.add = function(user) {
       cached = this.users[user.uuid],
       u = Utils.extend({}, user);
   if(cached) {
-    throw Error('[UserManager] user already added');
+    // throw Error('[UserManager] user already added');
+    //.. do nothing for now
   } else {
     u.ships = [];
     this.users[user.uuid] = u;
