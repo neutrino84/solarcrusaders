@@ -53,7 +53,7 @@ Clock.prototype.boot = function() {
 };
 
 Clock.prototype.benchmark = function() {
-  this.events.add(6000, function() {
+  this.events.add(10000, function() {
     this.advancedTiming = false;
     if(this.suggestedFps < 57.5) {
       this.game.emit('fpsProblem');
