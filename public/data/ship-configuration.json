@@ -8,9 +8,9 @@
       "health": 100,
       "heal": 0.01,
       "armor": 0.0,
-      "speed": 5.0,
+      "speed": 6.0,
       "range": 512,
-      "accuracy": 0.36,
+      "accuracy": 0.5,
       "evasion": 0.1,
       "energy": 100,
       "recharge": 0.25,
@@ -518,8 +518,8 @@
     "size": 1.0,
     "oribit": { "radius": 256 },
     "stats": {
-      "health": 500,
-      "heal": 0.01,
+      "health": 300,
+      "heal": 0.001,
       "armor": 0.0,
       "speed": 2.0,
       "range": 1024,
@@ -528,7 +528,7 @@
       "energy": 100,
       "recharge": 0.25,
       "durability": 1000,
-      "critical": 0.01
+      "critical": 0.10
     },
     "engine": {
       "glows": [
@@ -1031,14 +1031,14 @@
     "oribit": { "radius": 128 },
     "stats": {
       "health": 50,
-      "heal": 0.0,
+      "heal": 0.01,
       "armor": 0.0,
       "speed": 7.0,
       "range": 512,
-      "accuracy": 0.9,
+      "accuracy": 0.88,
       "evasion": 0.3,
-      "energy": 100,
-      "recharge": 0.25,
+      "energy": 50,
+      "recharge": 1.0,
       "durability": 1000,
       "critical": 0.01
     },
@@ -1363,9 +1363,9 @@
       "health": 100,
       "heal": 0.01,
       "armor": 0.0,
-      "speed": 5.0,
+      "speed": 6.0,
       "range": 512,
-      "accuracy": 0.36,
+      "accuracy": 0.5,
       "evasion": 0.1,
       "energy": 100,
       "recharge": 0.25,
