@@ -51,7 +51,7 @@ UserManager.prototype.add = function(user) {
   }
 };
 
-UserManager.prototype.remove = function(user, session) {
+UserManager.prototype.remove = function(user) {
   if(user && !this.users[user.uuid]) { return; }
 
   var u = this.users[user.uuid],
@@ -63,8 +63,6 @@ UserManager.prototype.remove = function(user, session) {
 
     this.game.emit('ship/remove', ships[s]);
   }
-
-  session && session.save();
 
   ships = undefined;
 
