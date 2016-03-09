@@ -47,10 +47,6 @@ Auth.prototype._logout = function() {
   global.location.reload();
 };
 
-Auth.prototype._loggedin = function(user) {
-  this.session({ user: user });
-};
-
 Auth.prototype._disconnected = function() {
   this.emit('disconnected');
 };
