@@ -44,12 +44,11 @@ Authentication.prototype.init = function() {
 
   // monitor socket disconnect
   this.routes.io.on('connection', function(socket) {
-    var session = socket.handshake.session;
-    self.game.emit('auth/login', session.user);
+    self.game.emit('auth/login', socket.handshake.session.user);
     socket.on('disconnect', function() {
-      winston.info('[Authentication] Socket ' + session.socket + ' closed');
-      self.game.emit('auth/logout', session.user);
-      session.save();
+      winston.info('[Authentication] Socket ' + socket.handshake.session.socket + ' closed');
+      self.game.emit('auth/logout', socket.handshake.session.user);
+      socket.handshake.session.save();
     });
   });
 
