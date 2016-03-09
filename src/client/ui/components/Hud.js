@@ -22,8 +22,21 @@ function Hud(ship, settings) {
       gap: 0
     },
     label: {
+      padding: [4, 2],
+      border: [0],
       text: {
         fontName: 'full'
+      },
+      bg: {
+        fillAlpha: 0.0,
+        borderSize: 0.0
+      }
+    },
+    stats: {
+      padding: [4, 2],
+      border: [0],
+      text: {
+        fontName: 'small'
       },
       bg: {
         fillAlpha: 0.0,
@@ -76,19 +89,31 @@ Hud.prototype.create = function() {
 
   this.ship.manager.hudGroup.addChild(this);
 
-  if(this.ship.username) {
-    this.label = new Label(game, ship.username, this.settings.label);
-    this.label.tint = ship.isPlayer ? 0x33FF33 : 0x3399FF;
-    this.addPanel(Layout.CENTER, this.label);
-  }
+  this.label = new Label(game, ship.username, this.settings.label);
+  this.label.tint = ship.isPlayer ? 0x33FF33 : 0x3399FF;
 
   this.healthBar = new ProgressBar(this.game, this.settings.health);
   this.healthBar.setProgressBar(ship.details.health / ship.config.stats.health);
   this.healthBar.renderable = false;
+
+  this.stats = new Label(game, '', this.settings.stats);
+
+  this.addPanel(Layout.CENTER, this.label);
   this.addPanel(Layout.CENTER, this.healthBar);
+  this.addPanel(Layout.CENTER, this.stats);
 
   this.validate();
   this.repaint();
+};
+
+Hud.prototype.select = function() {
+  this.healthBar.renderable = true;
+  this.stats.renderable = true;
+};
+
+Hud.prototype.deselect = function() {
+  this.healthBar.renderable = false;
+  this.stats.renderable = false;
 };
 
 Hud.prototype.update = function() {
@@ -98,6 +123,12 @@ Hud.prototype.update = function() {
       transform = world.worldTransform.apply(ship.position);
   this.pivot.set(math.floor(this.settings.width / 2), math.floor(-ship.height / 2 * world.scale.x));
   this.position.set(math.floor(transform.x), math.floor(transform.y));
+};
+
+Hud.prototype.updateStats = function(data) {
+  this.stats.text = data.kills + '/' +
+    data.disables + '/' + data.assists;
+  this.invalidate(true);
 };
 
 Hud.prototype.flash = function(message, color, duration, height, large) {

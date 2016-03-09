@@ -110,6 +110,8 @@ function UserPane(game, settings) {
   this.user.addPanel(Layout.NONE, this.logoutButton);
 
   this.addPanel(Layout.STRETCH, this.user);
+
+  this.game.on('gui/player/select', this._playerSelect, this);
 };
 
 UserPane.prototype = Object.create(Pane.prototype);
@@ -131,6 +133,22 @@ UserPane.prototype.login = function() {
 UserPane.prototype.logout = function() {
   this.visible = false;
   this.invalidate(true)
+};
+
+UserPane.prototype._playerSelect = function(data) {
+  this.data && this.data.removeListener('data', this._updateStats, this);
+  this.data = data;
+  this.data.on('data', this._updateStats, this);
+  
+  this._updateStats(data);
+};
+
+UserPane.prototype._updateStats = function(data) {
+  if(data.kills || data.disables || data.assists) {
+    this.killsLabel.text = this.data.kills + '/' +
+      this.data.disables + '/' + this.data.assists;
+    this.invalidate(true);
+  }
 };
 
 UserPane.prototype._logout = function() {

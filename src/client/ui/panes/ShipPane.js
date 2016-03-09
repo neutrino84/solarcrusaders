@@ -38,6 +38,7 @@ function ShipPane(game, settings) {
   this.shipNetManager = game.shipNetManager;
 
   this.current = null;
+  this.last = null;
   this.isPlayer = settings.player;
 
   this.panes = {};
@@ -54,13 +55,13 @@ function ShipPane(game, settings) {
   // 
   this.button.on('inputUp', this._follow, this);
 
-  if(this.isPlayer) {
-    this.editButton = new ButtonIcon(game, 'texture-atlas', this.settings.tab);
-    this.editButton.on('inputUp', this._fitting, this);
-    this.editButton.alert();
+  // if(this.isPlayer) {
+  //   this.editButton = new ButtonIcon(game, 'texture-atlas', this.settings.tab);
+  //   this.editButton.on('inputUp', this._fitting, this);
+  //   this.editButton.alert();
 
-    this.addTab(Layout.NONE, this.editButton);
-  }
+  //   this.addTab(Layout.NONE, this.editButton);
+  // }
 
   // subscribe to messages
   this.game.on('ships/selected', this._selected, this);
@@ -86,12 +87,15 @@ ShipPane.prototype.set = function(data) {
   this.current.tilemap.on('targeted', this._roomTargeted, this);
   this.current.ship && this._setTargets(this.current.ship.targeted);
 
+  this.last = data;
+
   this.addContent(Layout.NONE, data.tilemap);
   this.title.addPanel(Layout.RIGHT, data.system);
   this.invalidate(true);
 };
 
 ShipPane.prototype.reset = function() {
+  this.last = null;
   this.removeContent(this.current.tilemap);
   this.title.removePanel(this.current.system);
   this.current.tilemap.stop();
@@ -215,10 +219,12 @@ ShipPane.prototype._selected = function(ships) {
       }
       if(!ship.destroyed) {
         if(matches === 0) {
-          this.set(pane);
-
-          if(this.isPlayer) {
-            this.game.emit('gui/player/select', data);
+          // only set new
+          if(this.last !== pane) {
+            this.set(pane);
+            if(this.isPlayer) {
+              this.game.emit('gui/player/select', data);
+            }
           }
         } else {
           //.. send to ship list
@@ -238,8 +244,7 @@ ShipPane.prototype._selected = function(ships) {
 };
 
 ShipPane.prototype._filter = function(ship) {
-  return (this.isPlayer && ship.isPlayer) ||
-    (!this.isPlayer && !ship.isPlayer);
+  return (this.isPlayer && ship.isPlayer) || (!this.isPlayer && !ship.isPlayer);
 };
 
 module.exports = ShipPane;

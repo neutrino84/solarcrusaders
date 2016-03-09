@@ -51,26 +51,29 @@ ShipManager.prototype.add = function(ship) {
   }
 };
 
-ShipManager.prototype.create = function(name, chassis, user, throttle, position) {
+ShipManager.prototype.create = function(name, chassis, data, user, position) {
   var self = this,
       position = position || this._generateRandomPosition(),
-      shipModel = new this.model.Ship({
+      shipModel = new this.model.Ship(Utils.extend({
         name: name,
         chassis: chassis,
         x: position.x,
-        y: position.y,
-        throttle: throttle
-      }),
+        y: position.y
+      }, data)),
       ship = new Ship(this, shipModel);
-      ship.user = user;
-      ship.init(function(err) {
-        self.add(ship);
-      });
-  user && user.ships.push(ship);
+
+  // add user
+  ship.user = user;
+
+  // init ship
+  ship.init(function(err) {
+    self.game.emit('ship/add', ship);
+  });
 };
 
 ShipManager.prototype.remove = function(ship) {
-  ship = this.ships[ship.uuid];
+  var index,
+      ship = this.ships[ship.uuid];
   if(ship !== undefined) {
     delete this.ships[ship.uuid] && ship.destroy();
 
@@ -135,6 +138,9 @@ ShipManager.prototype.data = function(sock, args, next) {
         y: ship.y,
         throttle: ship.throttle,
         rotation: ship.rottion,
+        kills: ship.data.kills,
+        disables: ship.data.disables,
+        assists: ship.data.assists,
         durability: ship.durability,
         energy: ship.energy,
         recharge: ship.recharge,
@@ -190,7 +196,7 @@ ShipManager.prototype.generateRandomShips = function() {
   var iterator = {
         'ubaidian-x01': { race: 'ubaidian', count: 1 },
         'ubaidian-x02': { race: 'ubaidian', count: 1 },
-        'ubaidian-x04': { race: 'ubaidian', count: 4 },
+        'ubaidian-x04': { race: 'ubaidian', count: 6 },
         'hederaa-x01': { race: 'hederaa', count: 1 }
       };
   for(var chassis in iterator) {
@@ -203,7 +209,9 @@ ShipManager.prototype.generateRandomShips = function() {
 ShipManager.prototype.generateRandomShip = function(chassis, race) {
   var name = Generator.getName(race),
       throttle = global.Math.random() * 1.5 + 0.75;
-      this.create(name.toUpperCase(), chassis, null, throttle);
+      this.create(name.toUpperCase(), chassis, {
+        throttle: throttle
+      });
 };
 
 ShipManager.prototype._plot = function(ship, destination, current, previous) {
@@ -326,13 +334,39 @@ ShipManager.prototype._updateBattles = function() {
         if(target.health <= 0) {
           // spawn npc
           if(!target.user) {
-            this.generateRandomShip(
-              target.chassis, target.data.race);
+            this.generateRandomShip(target.chassis, target.data.race);
+            this.game.emit('ship/remove', target);
+          } else {
+            // award disable
+            update.disables = ++target.data.disables;
+
+            // spawn
+            this.create(target.data.name, target.chassis, {
+              kills: target.data.kills,
+              disables: target.data.disables,
+              assists: target.data.assists
+            }, target.user);
+
+            // destroy
+            this.game.emit('ship/remove', target);
           }
-          this.remove(target);
-        } else {
-          updates.push(update);
+
+          // award kill
+          updates.push({
+            uuid: origin.uuid,
+            kills: ++origin.data.kills
+          });
+
+          // award assists
+          for(var bat in battles) {
+            if(battles[bat]) {
+              //..
+            }
+          }
         }
+
+        // push updates
+        updates.push(update);
       } else {
         //.. miss
         this.sockets.io.sockets.emit('ship/attack', {
@@ -368,9 +402,9 @@ ShipManager.prototype._updateAI = function() {
       // plot ship
       this._plot(ship, this._generateRandomPosition());
 
-      // 50% attack (new) ship
+      // hedera attack random target
       random = this._getRandomShip();
-      if(ship.data.race === 'hederaa' && random !== ship) { //&& global.Math.random() > 0.5) {
+      if(ship.data.race === 'hederaa' && random !== ship) {
         target = ships[random.uuid];
         if(target && ship.damage > 0) {
           room = global.Math.floor(global.Math.random() * target.rooms.length);

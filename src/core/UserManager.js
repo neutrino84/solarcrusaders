@@ -15,6 +15,9 @@ function UserManager(game) {
 
   this.game.on('auth/login', this.add, this);
   this.game.on('auth/logout', this.remove, this);
+
+  this.game.on('ship/add', this.addShip, this);
+  this.game.on('ship/remove', this.removeShip, this);
 };
 
 UserManager.prototype.constructor = UserManager;
@@ -25,29 +28,65 @@ UserManager.prototype.init = function() {
 
 UserManager.prototype.add = function(user) {
   var self = this, ship,
-      u = this.users[user.uuid] = Utils.extend({}, user);
-      u.ships = [];
-  if(u.role === 'guest') {
-    // logged in, get ships, or create a new one
-    self.game.emit('ship/create', Generator.getName('ubaidian'), 'ubaidian-x04', u, 1.0);
+      cached = this.users[user.uuid],
+      u = Utils.extend({}, user);
+  if(cached) {
+    throw Error('[UserManager] user already added');
   } else {
-    self.game.emit('ship/create', Generator.getName('ubaidian'), 'ubaidian-x01', u, 1.0);
+    u.ships = [];
+    this.users[user.uuid] = u;
+    if(u.role === 'guest') {
+      self.game.emit('ship/create', Generator.getName('ubaidian'), 'ubaidian-x04', {
+        kills: u.kills || 0,
+        disables: u.disables || 0,
+        assists: u.assists || 0
+      }, u);
+    } else {
+      self.game.emit('ship/create', Generator.getName('ubaidian'), 'ubaidian-x04', {
+        kills: u.kills || 0,
+        disables: u.disables || 0,
+        assists: u.assists || 0
+      }, u);
+    }
   }
 };
 
-UserManager.prototype.remove = function(user) {
+UserManager.prototype.remove = function(user, session) {
   if(user && !this.users[user.uuid]) { return; }
 
   var u = this.users[user.uuid],
       ships = u.ships;
   for(var s in ships) {
+    user.kills = ships[s].data.kills;
+    user.disables = ships[s].data.disables;
+    user.assists = ships[s].data.assists;
+
     this.game.emit('ship/remove', ships[s]);
-    ships[s] = undefined;
   }
+
+  session && session.save();
 
   ships = undefined;
 
   delete this.users[user.uuid];
+};
+
+UserManager.prototype.addShip = function(ship) {
+  if(ship.user) {
+    ship.user.ships.push(ship);
+  }
+};
+
+UserManager.prototype.removeShip = function(ship) {
+  var index, user;
+  if(ship.user) {
+    user = ship.user;
+    index = user.ships.indexOf(ship);
+    
+    if(user.ships[index]) {
+      delete user.ships[index];
+    }
+  }
 };
 
 UserManager.prototype.update = function() {

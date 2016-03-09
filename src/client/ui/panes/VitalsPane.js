@@ -12,8 +12,6 @@ var engine = require('engine'),
 function VitalsPane(game, settings) {
   Panel.call(this, game, new BorderLayout(0, 0));
 
-  this.data = {};
-
   // default styles
   this.settings = Class.mixin(settings, {
     padding: [0, 1, 1, 1],
@@ -111,13 +109,15 @@ VitalsPane.prototype.addContent = function(constraint, panel) {
 
 VitalsPane.prototype._playerSelect = function(data) {
   var stats = data.config.ship.stats;
-  if(this.data) {
-    this.data = data;
-    this.data.on('data', this._updateVitals, this);
-    this.healthBar.setMinMax(0, stats.health);
-    this.energyBar.setMinMax(0, stats.energy);
-    this._updateVitals(data);
-  }
+
+  this.data && this.data.removeListener('data', this._updateVitals, this);
+  this.data = data;
+  this.data.on('data', this._updateVitals, this);
+  
+  this.healthBar.setMinMax(0, stats.health);
+  this.energyBar.setMinMax(0, stats.energy);
+
+  this._updateVitals(data);
 };
 
 VitalsPane.prototype._updateVitals = function(data) {
