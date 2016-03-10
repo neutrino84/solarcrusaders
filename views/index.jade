@@ -35,13 +35,13 @@ block content
         .column
           .ships
             .ship
-              img.centering(src='/imgs/game/ships/ubaidian/ubaidian-x01.png')
+              img.centering(data-src='/imgs/game/ships/ubaidian/ubaidian-x01.png')
             .ship
-              img.centering(src='/imgs/game/ships/ubaidian/ubaidian-x02.png')
+              img.centering(data-src='/imgs/game/ships/ubaidian/ubaidian-x02.png')
             .ship
-              img.centering(src='/imgs/game/ships/ubaidian/ubaidian-x03.png')
+              img.centering(data-src='/imgs/game/ships/ubaidian/ubaidian-x03.png')
             .ship
-              img.centering(src='/imgs/game/ships/ubaidian/ubaidian-x04.png')
+              img.centering(data-src='/imgs/game/ships/ubaidian/ubaidian-x04.png')
         .column
           h2 gameplay
           p Solar Crusaders is a multiplayer top-down strategy space game featuring a sandbox universe, real-time battles, base building, exploration, crafting and more.
@@ -59,7 +59,7 @@ block content
         .title ubaidians
         .character.right
         .description.centering
-          h2 Ubaidian Empire
+          h2 The Ubaidian Empire
           p Ubdaidia Major
       .hederaa.slide
         .symbol
@@ -75,17 +75,85 @@ block content
         .description.centering
           h2 Mechan Alliance
           p Thuul Novus
-    //- #prordr.section
+    #prordr.section
       .symbol
+      .platforms
+        .logos
+      .description.centering
+        .column
+          .content
+            .box
+              h2 Lieutenant
+                small Edition
+              h3 $30.00
+                sup USD
+              ul
+                li
+                  strong beta access
+                li full game
+                li soundtrack
+                li forum badge
+                li credits mention
+                li &nbsp;
+                li &nbsp;
+                li &nbsp;
+                li.button
+                  a.buy(href='https://solarcrusaders.com/') buy now
+        .column
+          .content
+            .box
+              .ribbon
+                span play now
+              h2 Commander
+                small Edition
+              h3 $40.00
+                sup USD
+              ul
+                li
+                  strong alpha access
+                li
+                  strong beta access
+                li
+                  strong full game HD
+                li soundtrack
+                li forum badge
+                li credits mention
+                li &nbsp;
+                li &nbsp;
+                li.button
+                  a.buy(href='https://solarcrusaders.com/') buy now
+        .column
+          .content
+            .box
+              .ribbon
+                span play now
+              h2 Captain
+                small Edition
+              h3 $50.00
+                sup USD
+              ul
+                li
+                  strong alpha access
+                li
+                  strong beta access
+                li
+                  strong full game HD
+                li soundtrack
+                li digital art book
+                li name a planet
+                li forum badge
+                li credits mention
+                li.button
+                  a.buy(href='https://solarcrusaders.com/') buy now
   #logo
   ul#navigation
-    li.home.preorder.active(data-menuanchor='home')
+    li.home.active(data-menuanchor='home')
       a(href='#home') home
     li.about(data-menuanchor='about')
       a(href='#about') about
     li.races(data-menuanchor='races')
       a(href='#races') races
-    //- li.preorder(data-menuanchor='preorder')
+    li.preorder(data-menuanchor='preorder')
       a(href='#preorder') preorder
     li.mini
       a(href='http://forums.' + host) forums
