@@ -63,8 +63,7 @@ module.exports = function(grunt) {
             jquery: './src/libs/jquery/dist/jquery',
             fullpage: './src/libs/fullpage.js/jquery.fullPage',
             slick: './src/libs/slick-carousel/slick/slick',
-            tether: './src/libs/tether/dist/js/tether',
-            drop: './src/libs/tether-drop/dist/js/drop'
+            magnific: './src/libs/magnific-popup/dist/jquery.magnific-popup'
           }
         }
       },

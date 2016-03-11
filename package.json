@@ -35,7 +35,7 @@
     "socket.io": "1.4.x",
     "socket.io-express-session": "0.1.x",
     "socket.io-events": "0.4.x",
-    "stripe": "4.3.x",
+    "stripe": "4.4.x",
 
     "earcut": "2.0.x",
     "resource-loader": "1.6.x",

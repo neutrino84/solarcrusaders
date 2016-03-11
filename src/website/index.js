@@ -1,7 +1,7 @@
 var jquery = require('jquery'),
     fullPage = require('fullpage'),
     slick = require('slick'),
-    drop = require('drop');
+    magnific = require('magnific');
 
 var global = {};
 
@@ -68,16 +68,15 @@ jquery(document).ready(function() {
     mobileFirst: true
   });
 
-  // mobilemenu
-  jquery('#mobilenavigation').removeAttr('style');
-
-  // drop
-  var dropInstance = new drop({
-    target: jquery('#navigation li.menu').get(0),
-    content: jquery('#mobilenavigation').get(0),
-    classes: '',
-    position: 'bottom right',
-    openOn: 'click'
+  // navigation popup
+  jquery('#navigation li.menu').magnificPopup({
+    items: {
+      type: 'inline',
+      src: '#mobilenavigation'
+    }
+  });
+  jquery('#mobilenavigation li a').on('click', function() {
+    jquery.magnificPopup.close();
   });
 
   // loaded

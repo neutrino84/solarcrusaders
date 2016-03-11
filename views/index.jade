@@ -159,13 +159,14 @@ block content
       a(href='http://forums.' + host) forums
       a(href='http://play.' + host) play now
     li.menu
-  ul#mobilenavigation(style='display:none')
-    li.about
-      a(href='#about') about
-    li.races
-      a(href='#races') races
-    li.forums
-      a(href='http://forums.' + host) forums
+  #mobilenavigation.mfp-hide
+    ul.centering
+      li.about
+        a(href='#about') about
+      li.races
+        a(href='#races') races
+      li.forums
+        a(href='http://forums.' + host) forums
   #share
     div.addthis_sharing_toolbox
   script(type='text/javascript', src='//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-56dfd2143450558f')
