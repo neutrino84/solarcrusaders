@@ -86,7 +86,7 @@ Authentication.prototype.register = function(req, res, next) {
 
   async.waterfall([
     function(next) {
-      // validate user
+      user.sanitize();
       user.isValid(function(valid) {
         if(valid) {
           next(null, user);
@@ -99,7 +99,6 @@ Authentication.prototype.register = function(req, res, next) {
       });
     },
     function(user, next) {
-      // save user
       user.save(next);
     }
   ], function(err, user) {

@@ -45,7 +45,7 @@ function usernameValidator(err) {
   if(!Validator.isUsernameValid(this.username)) { err(); }
 };
 
-User.afterInitialize = function() {
+User.prototype.sanitize = function() {
   if(this.isNewRecord()) {
     this.userslug = Sanitation.slugify(this.username);
     this.email = Sanitation.email(this.email);
