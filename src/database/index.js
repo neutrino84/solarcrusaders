@@ -35,16 +35,16 @@ Database.prototype.init = function(next) {
   this.client.auth(password);
   this.client.on('error', this.error);
   this.client.on('end', this.end);
-  this.client.once('ready', function() {
-    winston.info('[Database] Redis client ready...');
-    next();
-  });
 
   // caminte init
   this.schema = Database.schema;
   this.schema.client = this.client;
   this.schema.settings.database = db;
   this.schema.adapter.initialize(this.client);
+  this.schema.on('connected', function() {
+    winston.info('[Database] Redis client ready...');
+    next();
+  });
 };
 
 Database.prototype.close = function() {
