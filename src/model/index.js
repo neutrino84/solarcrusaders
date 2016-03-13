@@ -1,6 +1,7 @@
 
 var Sector = require('./Sector'),
     User = require('./User'),
+    Stripe = require('./Stripe'),
     Ship = require('./Ship'),
     System = require('./System'),
     Hardpoint = require('./Hardpoint');
@@ -9,6 +10,7 @@ function Model(app) {
   this.database = app.database;
 
   this.User = User;
+  this.Stripe = Stripe;
   this.Ship = Ship;
   this.Sector = Sector;
   this.System = System;

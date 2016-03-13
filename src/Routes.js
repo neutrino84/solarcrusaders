@@ -1,6 +1,7 @@
 
 var url = require('url'),
     Authentication = require('./controllers/Authentication'),
+    Stripe = require('./controllers/Stripe'),
     Latency = require('./controllers/Latency'),
     Utils = require('./utils');
 
@@ -13,6 +14,7 @@ function Routes(app) {
   this.game = app.game;
   
   this.authentication = new Authentication(this);
+  this.stripe = new Stripe(this);
   this.latency = new Latency(this);
 };
 
@@ -34,6 +36,7 @@ Routes.prototype.init = function(next) {
    * Initialize controllers
    */
   this.authentication.init();
+  this.stripe.init();
   this.latency.init();
 
   /*
