@@ -43,7 +43,7 @@ UserManager.prototype.add = function(user) {
         assists: u.assists || 0
       }, u);
     } else {
-      self.game.emit('ship/create', Generator.getName('ubaidian'), 'ubaidian-x01', {
+      self.game.emit('ship/create', Generator.getName('ubaidian'), 'ubaidian-x03', {
         kills: u.kills || 0,
         disables: u.disables || 0,
         assists: u.assists || 0

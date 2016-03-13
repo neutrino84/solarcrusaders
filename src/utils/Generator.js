@@ -7,7 +7,10 @@ var uuid = require('uuid'),
         'ita', 'ous', 'galle', 'nte'],
       hederaa: [
         'ma', 'kima', 'mala', 'ma', 'su', 'lu', 'am',
-        'ayu', 'minu', 'ghu', 'dru', 'innu', 'sag', 'ga', 'ka']
+        'ayu', 'minu', 'ghu', 'dru', 'innu', 'sag', 'ga', 'ka'],
+      mechan: [
+        'x', 'z', 'y', 'a', 'b', '18', '27',
+        '34', '46', '55', '64', '73', '82', '91', '00']
     };
 
 var Generator = {
@@ -36,6 +39,11 @@ var Generator = {
         break;
       case 'hederaa':
         parts.splice(1, 0, '\'');
+        break;
+      case 'mechan':
+        if(parts.length >= 3) {
+          parts.splice(2, 0, '-');
+        }
         break;
     }
     return parts.join('');
