@@ -1,7 +1,6 @@
 
 var winston = require('winston'),
     async = require('async'),
-    nconf = require('nconf'),
     passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy,
     Validator = require('../utils/Validator'),
@@ -15,6 +14,8 @@ function Authentication(routes) {
   this.game = app.game;
   this.model = app.model;
   this.server = app.server;
+
+  this.stripe = routes.stripe;
  
   this.password = new Password();
   this.passport = new LocalStrategy({ passReqToCallback: true }, this.localLogin.bind(this));
@@ -117,18 +118,27 @@ Authentication.prototype.login = function(req, res, next) {
     if(!userData) {
       return next(new Error('[[error:no-credentials]]'));
     }
+    self.model.Stripe.findOne({ where: { email: userData.email }}, function(err, stripe) {
+      if(err) { return next(err); }
 
-    // notify game
-    self.game.emit('auth/logout', req.session.user);
-    self.game.emit('auth/login', userData);
+      if(stripe) {
+        userData.edition = stripe.edition;
+      } else {
+        userData.edition = 'recruit';
+      }
 
-    // store session
-    // serve response
-    req.session.user = userData;
-    req.session.save(function() {
-      res.json({
-        info: info,
-        user: userData
+      // notify game
+      self.game.emit('auth/logout', req.session.user);
+      self.game.emit('auth/login', userData);
+
+      // store session
+      // serve response
+      req.session.user = userData;
+      req.session.save(function() {
+        res.json({
+          info: info,
+          user: userData
+        });
       });
     });
   })(req, res, next);

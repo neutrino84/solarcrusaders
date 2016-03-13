@@ -80,10 +80,10 @@ function HeaderPane(game, settings) {
 HeaderPane.prototype = Object.create(Pane.prototype);
 HeaderPane.prototype.constructor = HeaderPane;
 
-HeaderPane.prototype.login = function() {
+HeaderPane.prototype.login = function(user) {
   this.loginPane.login();
-  this.userPane.login();
   this.menuPane.login();
+  this.userPane.login(user);
 };
 
 HeaderPane.prototype.logout = function() {

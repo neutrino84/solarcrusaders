@@ -33,6 +33,20 @@ function UserPane(game, settings) {
         blendMode: engine.BlendMode.MULTIPLY
       }
     },
+    edition: {
+      padding: [5, 5, 4, 5],
+      border: [0],
+      bg: {
+        color: 0x336699,
+        fillAlpha: 1.0,
+        radius: 0.0,
+        borderSize: 0.0,
+        blendMode: engine.BlendMode.ADD,
+      },
+      text: {
+        fontName: 'full'
+      }
+    },
     label: {
       padding: [5, 10, 4, 10],
       bg: {
@@ -78,7 +92,9 @@ function UserPane(game, settings) {
   this.logoutButton = new Button(game, 'logout', this.settings.logout);
   this.logoutButton.on('inputUp', this._logout, this);
   
-  this.usernameLabel = new Label(game, 'online', this.settings.label);
+  this.editionLabel = new Label(game, '', this.settings.edition);
+
+  this.usernameLabel = new Label(game, '', this.settings.label);
   this.usernameLabel.tint = 0x00ff00;
 
   this.creditsImage = new Image(game, 'texture-atlas', Class.mixin({
@@ -100,6 +116,7 @@ function UserPane(game, settings) {
   this.reputationLabel = new Label(game, '0', this.settings.label);
   this.killsLabel = new Label(game, '0/0/0', this.settings.label);
 
+  this.user.addPanel(Layout.NONE, this.editionLabel);
   this.user.addPanel(Layout.NONE, this.usernameLabel);
   this.user.addPanel(Layout.NONE, this.creditsImage);
   this.user.addPanel(Layout.NONE, this.creditsLabel);
@@ -125,8 +142,10 @@ UserPane.prototype.stop = function() {
 
 };
 
-UserPane.prototype.login = function() {
+UserPane.prototype.login = function(user) {
   this.visible = true;
+  this.usernameLabel.text = user.username;
+  this.updateEdition(user);
   this.invalidate(true);
 };
 
@@ -134,6 +153,22 @@ UserPane.prototype.logout = function() {
   this.visible = false;
   this.invalidate(true)
 };
+
+UserPane.prototype.updateEdition = function(data) {
+  var group,
+      edition = data.edition;
+  switch(edition) {
+    case 'captain':
+      group = 'alpha'; break;
+    case 'commander':
+      group = 'alpha'; break;
+    case 'lieutenant':
+      group = 'beta'; break;
+    default:
+      group = edition;
+  }
+  this.editionLabel.text = group.toUpperCase();
+}
 
 UserPane.prototype._playerSelect = function(data) {
   this.data && this.data.removeListener('data', this._updateStats, this);
