@@ -210,7 +210,7 @@ ShipPane.prototype._selected = function(ships) {
           label: ship.name,
           ship: ship,
           data: data,
-          tilemap: new Tilemap(this.game, ship.name, { player: this.isPlayer }),
+          tilemap: new Tilemap(this.game, ship, { player: this.isPlayer }),
           system: new SystemPane(this.game, {
             systems: data.systems
           })

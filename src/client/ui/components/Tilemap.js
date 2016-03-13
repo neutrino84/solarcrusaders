@@ -13,18 +13,19 @@ var engine = require('engine'),
     // Crew = require('../../objects/structure/Crew'),
     // System = require('../../objects/structure/System');
 
-function Tilemap(game, key, settings) {
+function Tilemap(game, ship, settings) {
   Panel.call(this, game, this);
 
   this.layers = {};
   this.rooms = [];
+  this.ship = ship || null;
 
-  if(key) {
-    this.key = key;
-    this.config = game.cache.getJSON('ship-configuration', false)[key];
+  if(ship) {
+    this.config = game.cache.getJSON('ship-configuration', false)[ship.name];
     this.tilemap = new engine.Tilemap(game, 'ship-tilemap', this.config.tilemap);
-    this.pathing = new engine.TilemapPathing(this.tilemap, 'wall', 'wall');
-    this.pathing.updateMap();
+    // disable
+    // this.pathing = new engine.TilemapPathing(this.tilemap, 'wall', 'wall');
+    // this.pathing.updateMap();
   } else {
     this.tilemap = new engine.Tilemap(game, 'ship-tilemap');
   }
@@ -61,7 +62,7 @@ Tilemap.prototype.constructor = Tilemap;
 Tilemap.prototype.load = function() {
   this.createLayers();
   this.createDoors();
-  this.createCrew();
+  // this.createCrew();
   this.createRooms();
 };
 
@@ -101,8 +102,9 @@ Tilemap.prototype.createImages = function() {
 };
 
 Tilemap.prototype.createLayers = function() {
-  var key, outline,
+  var key, outline, mask,
       tilemap = this.tilemap,
+      game = this.game,
       w = tilemap.widthInPixels,
       h = tilemap.heightInPixels,
       layers = tilemap.layers;
@@ -111,19 +113,29 @@ Tilemap.prototype.createLayers = function() {
 
     this.tilemap.addTilesetImage(key);
     
-    this.layers[key] = new TilemapView(this.game, tilemap, l, w, h);
+    this.layers[key] = new TilemapView(game, tilemap, l, w, h);
     this.layers[key].alpha = layers[l].alpha;
     
     this.addView(this.layers[key]);
-    
-    // add outline
-    if(this.key && key === 'grid') {
-      outline = this.layers['outline'] =
-        new ImageView(this.game, this.key + '-outline');
+
+    if(this.ship && key === 'grid') {
+      mask = new BackgroundView(game);
+      mask.renderable = false;
+
+      outline = this.layers['outline'] = new ImageView(game);
+      outline.texture = game.cache.getRenderTexture(this.ship.name + '-outline').texture;
       outline.blendMode = engine.BlendMode.ADD;
       outline.tint = 0x336699;
-      outline.alpha = 0.75;
+      outline.alpha = 1.75;
+      outline.pivot.set(outline.width/2, outline.height/2);
+      outline.position.set(this.tilemap.widthInPixels/2, this.tilemap.heightInPixels/2);
+      outline.scale.set(1.25, 1.25);
+      outline.rotation = global.Math.PI;
+      outline.mask = mask;
+
       this.colorBlend.target = outline;
+
+      this.addView(mask);
       this.addView(outline);
     }
   };
@@ -182,11 +194,11 @@ Tilemap.prototype.calcPreferredSize = function(target) {
 };
 
 Tilemap.prototype.doLayout = function() {
-  var sprite, sprites = this.layers;
-  for(var s in sprites) {
-    sprite = sprites[s];
-    sprite.position.set(this.left, this.top);
-  }
+  // var sprite, sprites = this.layers;
+  // for(var s in sprites) {
+  //   sprite = sprites[s];
+  //   sprite.position.set(this.left, this.top);
+  // }
 };
 
 Tilemap.prototype._selected = function(room) {
