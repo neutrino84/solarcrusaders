@@ -89,16 +89,15 @@ Hud.prototype.create = function() {
 
   this.ship.manager.hudGroup.addChild(this);
 
-  this.label = new Label(game, ship.username, this.settings.label);
-  this.label.tint = ship.isPlayer ? 0x33FF33 : 0x3399FF;
+  this.username = new Label(game, ship.username, this.settings.label);
+  this.username.tint = ship.isPlayer ? 0x33FF33 : 0x3399FF;
 
   this.healthBar = new ProgressBar(this.game, this.settings.health);
   this.healthBar.setProgressBar(ship.details.health / ship.config.stats.health);
-  this.healthBar.renderable = false;
 
   this.stats = new Label(game, '', this.settings.stats);
 
-  this.addPanel(Layout.CENTER, this.label);
+  this.addPanel(Layout.CENTER, this.username);
   this.addPanel(Layout.CENTER, this.healthBar);
   this.addPanel(Layout.CENTER, this.stats);
 
@@ -160,7 +159,7 @@ Hud.prototype.flash = function(message, color, duration, height, large) {
 
 Hud.prototype.destroy = function() {
   this.ship.manager.hudGroup.removeChild(this);
-  this.label = this.game = this.ship =
+  this.username = this.game = this.ship =
     this.layout = this.settings = undefined;
 };
 
