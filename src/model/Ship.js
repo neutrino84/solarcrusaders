@@ -34,10 +34,13 @@ var Ship = schema.define('ship', {
 
 Ship.NAMES = [
   'ubaidian-x01', 'ubaidian-x02', 'ubaidian-x03', 'ubaidian-x04',
-  'hederaa-x01', 'mechan-x01'
+  'hederaa-x01',
+  'mechan-x01', 'mechan-x02', 'mechan-x03',
+  'general-x01', 'general-x02'
 ];
 
 Ship.CLASSES = [
+  'mining',           // 1 light socket
   'frigate',          // 1 light socket
   'transport',        // 1 light socket
   'corvette',         // 1 light socket

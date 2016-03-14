@@ -131,6 +131,7 @@ ShipManager.prototype.data = function(sock, args, next) {
         id: ship.id,
         uuid: ship.uuid,
         user: ship.user ? ship.user.uuid : null,
+        name: ship.data.name,
         username: ship.user ? ship.user.username : ship.data.name,
         chassis: ship.chassis,
         sector: ship.sector,
@@ -199,7 +200,9 @@ ShipManager.prototype.generateRandomShips = function() {
         'ubaidian-x03': { race: 'ubaidian', count: 1 },
         'ubaidian-x04': { race: 'ubaidian', count: 4 },
         'hederaa-x01': { race: 'hederaa', count: 1 },
-        'mechan-x01': { race: 'mechan', count: 2 }
+        'mechan-x01': { race: 'mechan', count: 1 },
+        'general-x01': { race: 'ubaidian', count: 1 },
+        'general-x02': { race: 'ubaidian', count: 1 }
       };
   for(var chassis in iterator) {
     for(var i=0; i<iterator[chassis].count; i++) {
