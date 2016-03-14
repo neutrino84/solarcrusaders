@@ -5,7 +5,7 @@ var engine = require('engine'),
 
 function Input(game, string, settings) {
   Label.call(this, game, string, Class.mixin(settings, {
-    width: 176,
+    width: 144,
     height: 16,
     padding: [5, 3, 3, 3],
     border: [0],
