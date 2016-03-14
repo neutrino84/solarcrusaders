@@ -3,7 +3,7 @@ var engine = require('engine'),
     Laser = require('./Laser'),
     Missile = require('./Missile');
 
-function Hardpoint(parent, config) {
+function Hardpoint(parent, data, config) {
   this.parent = parent;
   this.game = parent.game;
   this.ship = parent.parent;
@@ -14,10 +14,12 @@ function Hardpoint(parent, config) {
 
   this._tempPoint = new engine.Point();
 
-  this.sprite = new engine.Sprite(this.game, 'texture-atlas', config.sprite + '.png');
+  this.cap = new engine.Sprite(this.game, 'texture-atlas', 'turret-cap-' + this.ship.config.race + '.png');
+  this.sprite = new engine.Sprite(this.game, 'texture-atlas', data.name + '.png');
   this.sprite.position.set(config.position.x, config.position.y);
   this.sprite.pivot.set(config.pivot.x, config.pivot.y);
-  this.sprite.scale.set(config.scale.x, config.scale.y);
+  this.ship.addChild(this.sprite);
+  this.sprite.addChild(this.cap);
 
   this.manager = this.create(config.type);
 };

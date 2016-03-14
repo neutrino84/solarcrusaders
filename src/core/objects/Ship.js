@@ -53,29 +53,21 @@ function Ship(manager, data) {
 Ship.prototype.constructor = Ship;
 
 Ship.prototype.init = function(callback) {
-  var self = this;
-      async.series([
-        // check for memory leak
-        // function(callback) {
-        //   self.data.systems(callback);
-        // },
-        // function(callback) {
-        //   self.data.hardpoints(callback);
-        // }
-        // // user will already be known
-        // self.data.user.bind(self.data), 
-        self.data.systems.bind(self.data),
-        self.data.hardpoints.bind(self.data)
-      ], function(err, results) {
-        self.createRooms();
-        if(self.data.isNewRecord()) {
-          self.createSystems();
-          self.createHardpoints();
-        } else {
-          // load user, systems and hardpoints
-        }
-        callback(err);
-      });
+  if(this.data.isNewRecord()) {
+    this.createRooms();
+    this.createSystems();
+    this.createHardpoints();
+    callback();
+  } else {
+    async.series([
+      // // user will already be known
+      // self.data.user.bind(self.data), 
+      this.data.systems.bind(this.data),
+      this.data.hardpoints.bind(this.data)
+    ], function(err, results) {
+      callback(err);
+    });
+  }
 };
 
 Ship.prototype.createRooms = function() {
@@ -98,12 +90,7 @@ Ship.prototype.createRooms = function() {
   }
 };
 
-Ship.prototype.createUser = function() {
-  // stub..
-};
-
-Ship.prototype.createSystems = function(data) {
-  // if not data, create default
+Ship.prototype.createSystems = function() {
   var system, type, enhancement,
       enhancements = this.enhancements,
       systems = this.systems;
@@ -118,13 +105,13 @@ Ship.prototype.createSystems = function(data) {
   }
 };
 
-Ship.prototype.createHardpoints = function(data) {
-  // if not data, create default
+Ship.prototype.createHardpoints = function() {
   var hardpoint,
       hardpoints = this.config.targeting.hardpoints;
-  for(var t in hardpoints) {
+  for(var h in hardpoints) {
     hardpoint = new this.model.Hardpoint({
-      type: hardpoints[t].type
+      type: hardpoints[h].type,
+      index: h
     });
     this.hardpoints.push(hardpoint.toStreamObject());
   }
