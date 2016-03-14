@@ -21,7 +21,6 @@ function Image(game, key, settings) {
   this.setPadding.apply(this, this.settings.padding);
   this.setBorder.apply(this, this.settings.border);
 
-  this.bg = new BackgroundView(game, this.settings.bg);
   this.image = new ImageView(game, key, this.settings.frame);
 
   if(this.settings.width || this.settings.height) {
@@ -29,7 +28,11 @@ function Image(game, key, settings) {
     this.image.height = this.settings.height;
   }
 
-  this.addView(this.bg);
+  if(this.settings.bg) {
+    this.bg = new BackgroundView(game, this.settings.bg);
+    this.addView(this.bg);
+  }
+
   this.addView(this.image);
 };
 
