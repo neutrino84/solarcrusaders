@@ -2,7 +2,7 @@
   "ubaidian-x01": {
     "race": "ubaidian",
     "class": "destroyer",
-    "orbit": {
+    "oribit": {
       "radius": 128
     },
     "stats": {
@@ -1044,7 +1044,7 @@
   "ubaidian-x02": {
     "race": "ubaidian",
     "class": "battlecarrier",
-    "orbit": {
+    "oribit": {
       "radius": 256
     },
     "stats": {
@@ -2162,7 +2162,7 @@
   "ubaidian-x03": {
     "race": "ubaidian",
     "class": "cruiser",
-    "orbit": {
+    "oribit": {
       "radius": 128
     },
     "stats": {
@@ -3114,7 +3114,7 @@
   "ubaidian-x04": {
     "race": "ubaidian",
     "class": "frigate",
-    "orbit": {
+    "oribit": {
       "radius": 128
     },
     "stats": {
@@ -3918,7 +3918,7 @@
   "hederaa-x01": {
     "race": "hederaa",
     "class": "destroyer",
-    "orbit": {
+    "oribit": {
       "radius": 128
     },
     "stats": {
@@ -4996,7 +4996,7 @@
   "mechan-x01": {
     "race": "ubaidian",
     "class": "stealth",
-    "orbit": {
+    "oribit": {
       "radius": 128
     },
     "stats": {
@@ -5899,7 +5899,7 @@
   "general-x01": {
     "race": "ubaidian",
     "class": "mining",
-    "orbit": {
+    "oribit": {
       "radius": 192
     },
     "stats": {
@@ -6232,7 +6232,7 @@
   "general-x02": {
     "race": "ubaidian",
     "class": "transport",
-    "orbit": {
+    "oribit": {
       "radius": 160
     },
     "stats": {
