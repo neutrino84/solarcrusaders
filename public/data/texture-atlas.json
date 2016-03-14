@@ -396,6 +396,24 @@
 	"sourceSize": {"w":32,"h":32},
 	"pivot": {"x":0.5,"y":0.5}
 },
+"turret-cap-hederaa.png":
+{
+	"frame": {"x":811,"y":551,"w":32,"h":32},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+	"sourceSize": {"w":32,"h":32},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"turret-cap-ubaidian.png":
+{
+	"frame": {"x":846,"y":551,"w":32,"h":32},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+	"sourceSize": {"w":32,"h":32},
+	"pivot": {"x":0.5,"y":0.5}
+},
 "ubaidian-x01.png":
 {
 	"frame": {"x":0,"y":682,"w":256,"h":256},
@@ -439,6 +457,6 @@
 	"format": "RGBA8888",
 	"size": {"w":1024,"h":1024},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:6e9ab00ae1408033180c0188a4c4b8dd:01a9f52e1e87277cf8d7aa804a83aec3:a973cd4a72d4c90ced76930eac7fdc63$"
+	"smartupdate": "$TexturePacker:SmartUpdate:1b034b0b275a933c760d98131477396f:ccc43e2d5f5e38b17b74e85c7e504708:a973cd4a72d4c90ced76930eac7fdc63$"
 }
 }
