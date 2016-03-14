@@ -20,8 +20,7 @@ var engine = require('engine'),
     Modal = require('../ui/components/Modal'),
     Selection = require('../ui/components/Selection'),
 
-    RegistrationForm = require('../ui/html/RegistrationForm'),
-    LoginForm = require('../ui/html/LoginForm');
+    RegistrationForm = require('../ui/html/RegistrationForm');
 
 function GUIState() {};
 
@@ -142,18 +141,14 @@ GUIState.prototype.create = function() {
 //   Panel.prototype.invalidate.call(this, local);
 // };
 
-GUIState.prototype.login = function() {
+GUIState.prototype.login = function(user) {
   if(this.auth.isUser()) {
     this.leftPane.visible = false;
-    // this.bottomPane.visible = true;
-    // this.centerPanel.visible = true;
-    this.headerPane.login();
-    this.root.invalidate(true);
+    this.headerPane.login(user);
+    this.headerPane.invalidate(true);
     this.registrationForm && (this.registrationForm = this.registrationForm.destroy());
   } else {
     this.leftPane.visible = false;
-    // this.bottomPane.visible = false;
-    // this.centerPanel.visible = false;
     this.headerPane.logout()
     this.registrationForm = new RegistrationForm(game);
   }
@@ -161,6 +156,7 @@ GUIState.prototype.login = function() {
     this.modal(false);
   }
   this.toggle(true);
+  this.loading();
 };
 
 GUIState.prototype.refresh = function() {
@@ -175,6 +171,10 @@ GUIState.prototype.toggle = function(force) {
   if(this.root.visible) {
     this.root.invalidate();
   }
+};
+
+GUIState.prototype.loading = function() {
+  this.game.emit('gui/message', 'loading', 500);
 };
 
 GUIState.prototype.modal = function(show, content, lock, visible) {
