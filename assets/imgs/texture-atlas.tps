@@ -240,6 +240,8 @@
             <filename>ships/reactor-electricity.png</filename>
             <filename>turrets/turret-a.png</filename>
             <filename>turrets/turret-b.png</filename>
+            <filename>turrets/turret-cap-hederaa.png</filename>
+            <filename>turrets/turret-cap-ubaidian.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
