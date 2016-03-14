@@ -207,7 +207,7 @@ ShipPane.prototype._selected = function(ships) {
         pane = this.panes[ship.uuid];
       } else {
         pane = this.panes[ship.uuid] = {
-          label: ship.name,
+          label: ship.details.name,
           ship: ship,
           data: data,
           tilemap: new Tilemap(this.game, ship, { player: this.isPlayer }),
