@@ -49,7 +49,7 @@ function MenuPane(game, settings) {
   this.homeButton = new Button(game, 'home', this.settings.button);
   this.forumsButton = new Button(game, 'forums', this.settings.button);
   this.inviteButton = new Button(game, 'invite friends', this.settings.button);
-  this.registerButton = new Button(game, 'beta signup',
+  this.registerButton = new Button(game, 'register',
     Class.mixin({
       label: { padding: [8, 16] }
     }, this.settings.button));
