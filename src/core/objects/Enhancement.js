@@ -8,7 +8,7 @@ function Enhancement(parent, enhancement) {
   this.game = parent.game;
   this.activated = false;
 
-  this.config = client.EnhancementConfiguration[enhancement];
+  this.config = client.ItemConfiguration['enhancement'][enhancement];
 
   EventEmitter.call(this);
 };

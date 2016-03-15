@@ -36,7 +36,7 @@ function ShipData(game, data) {
     sort: ShipData.SYSTEM_SORT_ORDER,
     units: ShipData.STAT_UNITS,
     ship: game.cache.getJSON('ship-configuration', false)[data.chassis],
-    enhancement: this.game.cache.getJSON('enhancement-configuration'),
+    enhancement: this.game.cache.getJSON('item-configuration')['enhancement'],
     systems: [
       { name: 'hull', stats: ['durability', 'health', 'heal'], enhancements: [] },
       { name: 'reactor', stats: ['energy', 'recharge'], enhancements: [] },

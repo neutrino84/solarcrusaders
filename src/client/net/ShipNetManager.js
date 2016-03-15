@@ -34,7 +34,7 @@ ShipNetManager.prototype._data = function(data) {
   var ship,
       ships = data.ships;
   if(this.game.cache.checkJSONKey('ship-configuration') &&
-      this.game.cache.checkJSONKey('enhancement-configuration')) {
+      this.game.cache.checkJSONKey('item-configuration')) {
     for(var s in ships) {
       ship = ships[s];
       if(data.type === 'sync' && this.ships[ship.uuid] === undefined) {

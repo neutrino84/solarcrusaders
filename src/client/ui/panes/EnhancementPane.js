@@ -16,7 +16,7 @@ function EnhancementPane(game, string, settings) {
 
   this.data = {};
   this.buttons = {};
-  this.config = this.game.cache.getJSON('enhancement-configuration');
+  this.config = this.game.cache.getJSON('item-configuration')['enhancement'];
 
   // default styles
   this.settings = Class.mixin(settings, {
