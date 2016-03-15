@@ -50,7 +50,7 @@ GUIState.prototype.preload = function() {
 
   // load ship configuration
   this.game.load.json('ship-configuration', 'data/ship-configuration.json');
-  this.game.load.json('enhancement-configuration', 'data/enhancement-configuration.json');
+  this.game.load.json('item-configuration', 'data/item-configuration.json');
 
   // load texture atlas
   this.game.load.atlasJSONHash('texture-atlas', 'imgs/game/texture-atlas.png', 'data/texture-atlas.json');
