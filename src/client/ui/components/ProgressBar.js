@@ -103,7 +103,7 @@ ProgressBar.prototype.setProgressBar = function(value) {
   this.value = value;
   
   if(label && min !== undefined && max !== undefined) {
-    label.text = engine.Math.roundTo(this.max * this.value, 1) + '/' + this.max;
+    label.text = global.Math.round(this.max * this.value) + '/' + this.max;
     label.blendMode = value > 0.5 ? engine.BlendMode.MULTIPLY : engine.BlendMode.ADD;
     label.doLayout();
   }
