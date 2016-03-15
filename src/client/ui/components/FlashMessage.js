@@ -79,7 +79,7 @@ FlashMessage.prototype._message = function(message, duration, delay) {
 // };
 
 FlashMessage.prototype._close = function() {
-  this.game.removeListener('gui/modal', this._cancel, this);
+  // this.game.removeListener('gui/modal', this._cancel, this);
   this.game.emit('gui/modal', false);
 };
 
