@@ -123,7 +123,7 @@ Input.prototype._keyDown = function(event) {
 
 Input.prototype._keyPress = function(event, key) {
   var textView = this.textView,
-      keyCode = event.keyCode;
+      keyCode = event.keyCode ? event.keyCode : event.which;
   switch(keyCode) {
     default:
       if(textView.texture.grabData[keyCode] >= 0 || (
