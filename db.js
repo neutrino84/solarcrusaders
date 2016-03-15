@@ -9,7 +9,8 @@ var path = require('path'),
     debugArgIdx, debugArgs = ['--debug', '--debug-brk'];
 
 // delete all sess in db 1
-// redis-cli -n 1 -h nodebb.dzk5vd.0001.usw2.cache.amazonaws.com KEYS "sess:*" | xargs redis-cli -n 1 -h nodebb.dzk5vd.0001.usw2.cache.amazonaws.com DEL
+// redis-cli -n 2 -h nodebb.dzk5vd.0001.usw2.cache.amazonaws.com KEYS "sess:*" | xargs redis-cli -n 2 -h nodebb.dzk5vd.0001.usw2.cache.amazonaws.com DEL
+// redis-cli -n 1 -h localhost KEYS "sess:*" | xargs redis-cli -n 1 -h localhost DEL
 
 // disable debug
 // server on children
@@ -66,39 +67,39 @@ function startDatabaseConnection() {
   //   }
   // });
 
-  // global.model.User.find({}, function(err, users) {
-  //   for(var u in users) {
-  //     users[u].destroy(function(err) {
-  //       if(!err) {
-  //         console.log('destroyed');
-  //       } else {
-  //         console.log('error');
-  //       }
-  //     });
-  //   }
-  // });
-
-  this.schema.on('connected', function() {
-    stripe.api.customers.list({ limit: 100 }, // max limit 100
-      function(err, customers) {
-        var s,
-            list = customers.data,
-            len = list.length;
-        for(var l=0; l<len; l++) {
-          s = new global.model.Stripe({
-            stripe_id: list[l].id,
-            email: list[l].email,
-            edition: 'captain',
-            name: list[l].metadata.name,
-            default_source: list[l].default_source,
-            currency: list[l].currency,
-            created: new Date(list[l].created * 1000)
-          });
-          s.save();
+  global.model.User.find({}, function(err, users) {
+    for(var u in users) {
+      users[u].destroy(function(err) {
+        if(!err) {
+          console.log('destroyed');
+        } else {
+          console.log('error');
         }
-      }
-    );
+      });
+    }
   });
+
+  // this.schema.on('connected', function() {
+  //   stripe.api.customers.list({ limit: 100 }, // max limit 100
+  //     function(err, customers) {
+  //       var s,
+  //           list = customers.data,
+  //           len = list.length;
+  //       for(var l=0; l<len; l++) {
+  //         s = new global.model.Stripe({
+  //           stripe_id: list[l].id,
+  //           email: list[l].email,
+  //           edition: 'captain',
+  //           name: list[l].metadata.name,
+  //           default_source: list[l].default_source,
+  //           currency: list[l].currency,
+  //           created: new Date(list[l].created * 1000)
+  //         });
+  //         s.save();
+  //       }
+  //     }
+  //   );
+  // });
 };
 
 var userlist = [];
