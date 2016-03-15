@@ -4,7 +4,7 @@ var client = require('client'),
 
 function System(type, subtype) {
   this.type = type;
-  this.subtype = subtype || 'a';
+  this.subtype = subtype || 'alpha';
 
   this.config = client.ItemConfiguration['system'][type][this.subtype];
 };

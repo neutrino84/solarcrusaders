@@ -5,7 +5,7 @@
         "name": "",
         "type": "reactor",
         "mass": 50.0,
-        "modifier": 1.05,
+        "modifier": 1.0,
         "health": 100.0,
         "heal": 1.0,
         "durability": 1000.0,
@@ -18,7 +18,7 @@
         "name": "",
         "type": "pilot",
         "mass": 50.0,
-        "modifier": 1.05,
+        "modifier": 1.0,
         "health": 100.0,
         "heal": 1.0,
         "durability": 1000.0,
@@ -30,7 +30,7 @@
         "name": "",
         "type": "engine",
         "mass": 50.0,
-        "modifier": 1.05,
+        "modifier": 1.0,
         "health": 100.0,
         "heal": 1.0,
         "durability": 1000.0,
@@ -43,7 +43,7 @@
         "name": "",
         "type": "shield",
         "mass": 50.0,
-        "modifier": 1.05,
+        "modifier": 1.0,
         "health": 100.0,
         "heal": 1.0,
         "durability": 1000.0,
@@ -56,12 +56,24 @@
         "name": "",
         "type": "targeting",
         "mass": 50.0,
-        "modifier": 1.05,
+        "modifier": 1.0,
         "health": 100.0,
         "heal": 1.0,
         "durability": 1000.0,
         "failure": 0.05,
         "enhancement": "piercing"
+      }
+    },
+    "teleport": {
+      "alpha": {
+        "name": "",
+        "type": "teleport",
+        "mass": 50.0,
+        "modifier": 1.0,
+        "health": 100.0,
+        "heal": 1.0,
+        "durability": 1000.0,
+        "failure": 0.05
       }
     }
   },
