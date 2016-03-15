@@ -257,36 +257,42 @@ Object.defineProperty(Ship.prototype, 'health', {
   }
 });
 
-Object.defineProperty(Ship.prototype, 'recharge', {
+Object.defineProperty(Ship.prototype, 'heal', {
   get: function() {
-    var total = this.data.recharge,
-        recharge = this.ignoreEnhancements ? [] : this.enhancements.active.recharge;
-    for(var r in recharge) {
-      total += recharge[r].stat('recharge', 'value');
+    var bonus = 0,
+        heal = this.ignoreEnhancements ? [] : this.enhancements.active.heal,
+        repair = this.systems['repair'],
+        modifier = repair ? ((repair.health / repair.stats.health) * (repair.modifier - 0.5)) : 1.0;
+    for(var h in heal) {
+      bonus += heal[h].stat('heal', 'value');
     }
-    return total;
+    return this.data.heal * modifier + bonus;
   }
 });
 
-Object.defineProperty(Ship.prototype, 'heal', {
+Object.defineProperty(Ship.prototype, 'recharge', {
   get: function() {
-    var total = this.data.heal,
-        heal = this.ignoreEnhancements ? [] : this.enhancements.active.heal;
-    for(var h in heal) {
-      total += heal[h].stat('heal', 'value');
+    var bonus = 0,
+        recharge = this.ignoreEnhancements ? [] : this.enhancements.active.recharge,
+        reactor = this.systems['reactor'],
+        modifier = reactor ? ((reactor.health / reactor.stats.health) * (reactor.modifier - 0.5)) : 1.0;
+    for(var r in recharge) {
+      bonus += recharge[r].stat('recharge', 'value');
     }
-    return total;
+    return this.data.recharge * modifier + bonus;
   }
 });
 
 Object.defineProperty(Ship.prototype, 'armor', {
   get: function() {
-    var total = this.data.armor,
-        armor = this.ignoreEnhancements ? [] : this.enhancements.active.armor;
+    var bonus = 0,
+        armor = this.ignoreEnhancements ? [] : this.enhancements.active.armor,
+        shield = this.systems['shield'],
+        modifier = shield ? ((shield.health / shield.stats.health) * (shield.modifier - 0.5)) + 0.5 : 1.0;
     for(var a in armor) {
-      total += armor[a].stat('armor', 'value');
+      bonus += armor[a].stat('armor', 'value');
     }
-    return total;
+    return this.data.armor * modifier + bonus;
   }
 });
 
@@ -318,7 +324,14 @@ Object.defineProperty(Ship.prototype, 'critical', {
 
 Object.defineProperty(Ship.prototype, 'range', {
   get: function() {
-    return this.data.range;
+    var bonus = 0,
+        range = this.ignoreEnhancements ? [] : this.enhancements.active.range,
+        sensor = this.systems['sensor'],
+        modifier = sensor ? ((sensor.health / sensor.stats.health) * (sensor.modifier - 0.5)) + 0.5 : 1.0;
+    for(var r in range) {
+      bonus += range[r].stat('range', 'value');
+    }
+    return this.data.range * modifier + bonus;
   }
 });
 
@@ -327,13 +340,11 @@ Object.defineProperty(Ship.prototype, 'accuracy', {
     var bonus = 0,
         accuracy = this.ignoreEnhancements ? [] : this.enhancements.active.accuracy,
         targeting = this.systems['targeting'],
-        modifier = targeting ? targeting.modifier : 1.0,
-        health = targeting ? targeting.health / targeting.stats.health :
-          this.health / this.config.stats.health;
+        modifier = ((targeting.health / targeting.stats.health) * (targeting.modifier - 0.5)) + 0.5;
     for(var a in accuracy) {
       bonus += accuracy[a].stat('accuracy', 'value');
     }
-    return this.data.accuracy * modifier * global.Math.max(health, 0.5) + bonus;
+    return this.data.accuracy * modifier + bonus;
   }
 });
 
@@ -342,13 +353,11 @@ Object.defineProperty(Ship.prototype, 'evasion', {
     var bonus = 0,
         evasion = this.ignoreEnhancements ? [] : this.enhancements.active.evasion,
         pilot = this.systems['pilot'],
-        modifier = pilot ? pilot.modifier : 1.0,
-        health = pilot ? pilot.health / pilot.stats.health :
-          this.health / this.config.stats.health;
+        modifier = ((pilot.health / pilot.stats.health) * (pilot.modifier - 0.5)) + 0.5;
     for(var e in evasion) {
       bonus += evasion[e].stat('evasion', 'value');
     }
-    return this.data.evasion * modifier * global.Math.max(health, 0.2) + bonus;
+    return this.data.evasion * modifier + bonus;
   }
 });
 
@@ -358,12 +367,11 @@ Object.defineProperty(Ship.prototype, 'speed', {
     // var bonus = 0,
     //     speed = this.ignoreEnhancements ? [] : this.enhancements.active.speed,
     //     engine = this.systems['engine'],
-    //     modifier = engine ? engine.modifier : 1.0,
-    //     health = engine ? engine.health / engine.stats.health : 1.0;
+    //     modifier = ((engine.health / engine.stats.health) * (engine.modifier - 0.5)) + 0.5;
     // for(var a in speed) {
     //   bonus += speed[a].stat('speed', 'value');
     // }
-    // return this.data.speed * modifier * global.Math.max(health, 0.5) + bonus;
+    // return this.data.speed * modifier + bonus;
   }
 });
 

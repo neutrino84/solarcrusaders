@@ -18,7 +18,7 @@ var System = schema.define('system', {
   stats:       { type: schema.JSON }
 });
 
-System.TYPES = ['hull', 'reactor', 'pilot', 'engine', 'shield', 'targeting', 'teleport', 'battery', 'sensor', 'cloak'];
+System.TYPES = ['hull', 'reactor', 'pilot', 'engine', 'shield', 'targeting', 'repair', 'teleport', 'sensor', 'cloak'];
 System.ENHANCEMENTS = ['overload', 'shield', 'piercing', 'booster'];
 
 System.validatesPresenceOf('stats');

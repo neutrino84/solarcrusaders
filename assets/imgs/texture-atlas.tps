@@ -242,6 +242,8 @@
             <filename>turrets/turret-b.png</filename>
             <filename>turrets/turret-cap-hederaa.png</filename>
             <filename>turrets/turret-cap-ubaidian.png</filename>
+            <filename>icons/system-sensor.png</filename>
+            <filename>icons/system-repair.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

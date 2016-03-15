@@ -2,19 +2,19 @@
 var engine = require('engine')
     EventEmitter = require('eventemitter3');
 
-ShipData.SYSTEM_SORT_ORDER = ['hull', 'reactor', 'pilot', 'engine', 'shield', 'targeting', 'battery', 'sensor', 'cloak'];
+ShipData.SYSTEM_SORT_ORDER = ['hull', 'reactor', 'pilot', 'engine', 'shield', 'targeting', 'sensor', 'repair', 'cloak'];
 
 ShipData.STAT_UNITS = {
   'durability': 'hp',
   'health':     'hp',
-  'heal':       '%',
+  'heal':       'hp',
   'capacity':   'm',
   'speed':      'm',
-  'evasion':    '%',
   'energy':     'gj',
   'recharge':   'gj',
   'armor':      'hp',
   'range':      'm',
+  'evasion':    '%',
   'accuracy':   '%',
   'critical':   '%'
 };
@@ -22,13 +22,13 @@ ShipData.STAT_UNITS = {
 ShipData.STAT_SYSTEM_BINDING = {
   'durability': 'hull',
   'capacity':   'hull',
+  'energy':     'hull',
   'health':     'hull',
-  'heal':       'hull',
   'critical':   'hull',
+  'heal':       'repair',
   'speed':      'engine',
   'evasion':    'pilot',
-  'energy':     'reactor',
-  'recharge':   'battery',
+  'recharge':   'reactor',
   'armor':      'shield',
   'range':      'sensor',
   'accuracy':   'targeting'
@@ -46,14 +46,14 @@ function ShipData(game, data) {
     ship: game.cache.getJSON('ship-configuration', false)[data.chassis],
     enhancement: this.game.cache.getJSON('item-configuration')['enhancement'],
     systems: [
-      { name: 'hull', stats: ['durability', 'capacity', 'health', 'heal', 'critical'], enhancements: [] },
-      { name: 'reactor', stats: ['energy'], enhancements: [] },
+      { name: 'hull', stats: ['health', 'energy', 'durability', 'capacity', 'critical'], enhancements: [] },
+      { name: 'reactor', stats: ['recharge'], enhancements: [] },
+      { name: 'repair', stats: ['heal'], enhancements: [] },
       { name: 'pilot', stats: ['evasion'], enhancements: [] },
       { name: 'engine', stats: ['speed'], enhancements: [] },
       { name: 'shield', stats: ['armor'], enhancements: [] },
       { name: 'targeting', stats: ['accuracy'], enhancements: [] },
-      { name: 'battery', stats: ['recharge'] },
-      { name: 'sensor', stats: ['range'] }
+      { name: 'sensor', stats: ['range'], enhancements: [] }
     ]
   };
 
