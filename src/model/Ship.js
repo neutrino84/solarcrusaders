@@ -21,6 +21,7 @@ var Ship = schema.define('ship', {
   rotation:   { type: schema.Double, default: 0.0 },
   health:     { type: schema.Double },
   heal:       { type: schema.Double },
+  capacity:   { type: schema.Double },
   energy:     { type: schema.Double },
   recharge:   { type: schema.Double },
   armor:      { type: schema.Double },
@@ -64,6 +65,7 @@ Ship.validatesNumericalityOf('throttle');
 Ship.validatesNumericalityOf('rotation');
 Ship.validatesNumericalityOf('health');
 Ship.validatesNumericalityOf('heal');
+Ship.validatesNumericalityOf('capacity');
 Ship.validatesNumericalityOf('energy');
 Ship.validatesNumericalityOf('recharge');
 Ship.validatesNumericalityOf('armor');
@@ -74,8 +76,8 @@ Ship.validatesNumericalityOf('speed');
 Ship.validatesNumericalityOf('critical');
 
 Ship.afterInitialize = function() {
-  // load default values
-  // from ship configuration
+  //.. TODO:
+  //.. THIS NEEDS TO BE REMOVED
   var config, stats;
   if(this.chassis && this.isNewRecord()) {
     config = client.ShipConfiguration[this.chassis],
@@ -86,6 +88,7 @@ Ship.afterInitialize = function() {
     if(!this.class) { this.class = config.class; }
     if(!this.health) { this.health = stats.health; }
     if(!this.heal) { this.heal = stats.heal; }
+    if(!this.capacity) { this.capacity = stats.capacity; }
     if(!this.energy) { this.energy = stats.energy; }
     if(!this.recharge) { this.recharge = stats.recharge; }
     if(!this.armor) { this.armor = stats.armor; }

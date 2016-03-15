@@ -2,6 +2,7 @@
 var async = require('async'),
     engine = require('engine'),
     client = require('client'),
+    System = require('./System'),
     Enhancement = require('./Enhancement'),
     Utils = require('../../utils');
 
@@ -90,21 +91,25 @@ Ship.prototype.createRooms = function() {
   }
 };
 
+/*
+ * System Factory
+ */
 Ship.prototype.createSystems = function() {
   var system, type, enhancement,
-      enhancements = this.enhancements,
       systems = this.systems;
   for(var type in systems) {
-    system = new this.model.System({ name: type, type: type });
+    system = new this.model.System(new System(type).toObject());
     enhancement = system.enhancement;
     if(enhancement) {
-      enhancements.available[enhancement] =
-        new Enhancement(this, enhancement);
+      this.enhancements.available[enhancement] = new Enhancement(this, enhancement);
     }
     systems[type] = system.toStreamObject();
   }
 };
 
+/*
+ * Hardpoint Factory
+ */
 Ship.prototype.createHardpoints = function() {
   var hardpoint,
       hardpoints = this.config.targeting.hardpoints;
@@ -211,6 +216,16 @@ Ship.prototype.destroy = function() {
     this.enhancements = this.hardpoints = this.timers =
     this.rooms = this.data = undefined;
 };
+
+Object.defineProperty(Ship.prototype, 'capacity', {
+  get: function() {
+    return this.data.capacity;
+  },
+
+  set: function(value) {
+    this.data.capacity = value;
+  }
+});
 
 Object.defineProperty(Ship.prototype, 'energy', {
   get: function() {

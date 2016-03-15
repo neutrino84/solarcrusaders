@@ -119,7 +119,7 @@ ShipManager.prototype.plot = function(sock, args, next) {
 };
 
 ShipManager.prototype.data = function(sock, args, next) {
-  var self = this, ship, enhancements,
+  var self = this, ship, enhancements, systems,
       uuids = args[1].uuids,
       ships = [];
   for(var u in uuids) {
@@ -143,6 +143,7 @@ ShipManager.prototype.data = function(sock, args, next) {
         disables: ship.data.disables,
         assists: ship.data.assists,
         durability: ship.durability,
+        capacity: ship.capacity,
         energy: ship.energy,
         recharge: ship.recharge,
         health: ship.health,
@@ -154,8 +155,8 @@ ShipManager.prototype.data = function(sock, args, next) {
         critical: ship.critical,
         accuracy: ship.accuracy,
         evasion: ship.evasion,
-        systems: ship.systems,
         hardpoints: ship.hardpoints,
+        systems: ship.systems,
         enhancements: enhancements
       });
       ship.ignoreEnhancements = false;

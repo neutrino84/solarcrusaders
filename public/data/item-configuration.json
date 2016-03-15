@@ -1,4 +1,73 @@
 {
+  "system": {
+    "reactor": {
+      "alpha": {
+        "name": "",
+        "type": "reactor",
+        "mass": 50.0,
+        "modifier": 1.05,
+        "health": 100.0,
+        "heal": 1.0,
+        "durability": 1000.0,
+        "failure": 0.05,
+        "enhancement": "overload"
+      }
+    },
+    "pilot": {
+      "alpha": {
+        "name": "",
+        "type": "pilot",
+        "mass": 50.0,
+        "modifier": 1.05,
+        "health": 100.0,
+        "heal": 1.0,
+        "durability": 1000.0,
+        "failure": 0.05
+      }
+    },
+    "engine": {
+      "alpha": {
+        "name": "",
+        "type": "engine",
+        "mass": 50.0,
+        "modifier": 1.05,
+        "health": 100.0,
+        "heal": 1.0,
+        "durability": 1000.0,
+        "failure": 0.05,
+        "enhancement": "booster"
+      }
+    },
+    "shield": {
+      "alpha": {
+        "name": "",
+        "type": "shield",
+        "mass": 50.0,
+        "modifier": 1.05,
+        "health": 100.0,
+        "heal": 1.0,
+        "durability": 1000.0,
+        "failure": 0.05,
+        "enhancement": "shield"
+      }
+    },
+    "targeting": {
+      "alpha": {
+        "name": "",
+        "type": "targeting",
+        "mass": 50.0,
+        "modifier": 1.05,
+        "health": 100.0,
+        "heal": 1.0,
+        "durability": 1000.0,
+        "failure": 0.05,
+        "enhancement": "piercing"
+      }
+    }
+  },
+  "hardpoint": {
+
+  },
   "enhancement": {
     "overload": {
       "cost": -30,

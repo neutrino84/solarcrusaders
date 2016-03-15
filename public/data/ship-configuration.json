@@ -6,6 +6,7 @@
       "radius": 128
     },
     "stats": {
+      "capacity": 1000,
       "health": 100,
       "heal": 0.01,
       "armor": 0,
@@ -1048,6 +1049,7 @@
       "radius": 256
     },
     "stats": {
+      "capacity": 3000,
       "health": 300,
       "heal": 0.001,
       "armor": 0,
@@ -1058,7 +1060,7 @@
       "energy": 100,
       "recharge": 0.25,
       "durability": 1000,
-      "critical": 0.1
+      "critical": 0.01
     },
     "engine": {
       "glows": [
@@ -2166,6 +2168,7 @@
       "radius": 128
     },
     "stats": {
+      "capacity": 800,
       "health": 80,
       "heal": 0.01,
       "armor": 0,
@@ -3118,6 +3121,7 @@
       "radius": 128
     },
     "stats": {
+      "capacity": 500,
       "health": 50,
       "heal": 0.01,
       "armor": 0,
@@ -3922,6 +3926,7 @@
       "radius": 128
     },
     "stats": {
+      "capacity": 1000,
       "health": 100,
       "heal": 0.01,
       "armor": 0,
@@ -5000,6 +5005,7 @@
       "radius": 128
     },
     "stats": {
+      "capacity": 300,
       "health": 30,
       "heal": 0,
       "armor": 0,
@@ -5903,6 +5909,7 @@
       "radius": 192
     },
     "stats": {
+      "capacity": 1000,
       "health": 100,
       "heal": 0.01,
       "armor": 0,
@@ -6236,6 +6243,7 @@
       "radius": 160
     },
     "stats": {
+      "capacity": 800,
       "health": 80,
       "heal": 0.01,
       "armor": 0,
