@@ -97,7 +97,6 @@ StatPane.prototype.create = function(data) {
       stat, stats, units = data.config.units,
       en, output, pane;
 
-
   this.data = data;
 
   for(var s in systems) {
