@@ -32,12 +32,12 @@ Modal.prototype = Object.create(Panel.prototype);
 Modal.prototype.constructor = Modal;
 
 Modal.prototype.empty = function() {
-  if(this.panels.length > 0) {
-    for(var p in this.panels) {
-      //.. TODO: FIX THIS
-      // if(this.panels[p].destroy) {
-      //   this.panels[p].destroy();
-      // }
+  var panels = this.panels,
+      panel;
+  if(panels.length > 0) {
+    for(var p in panels) {
+      panel = panels[p];
+      panel.cancel && panel.cancel();
       this.removePanel(this.panels[p]);
     }
   }
