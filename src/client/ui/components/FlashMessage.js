@@ -71,15 +71,13 @@ FlashMessage.prototype._message = function(message, duration, delay) {
   this.messageTween.start();
 
   this.game.emit('gui/modal', true, this, false, false);
-  // this.game.once('gui/modal', this._cancel, this);
 };
 
-// FlashMessage.prototype._cancel = function() {
-//   this.messageTween.stop();
-// };
+FlashMessage.prototype.cancel = function() {
+  this.messageTween.stop();
+};
 
 FlashMessage.prototype._close = function() {
-  // this.game.removeListener('gui/modal', this._cancel, this);
   this.game.emit('gui/modal', false);
 };
 
