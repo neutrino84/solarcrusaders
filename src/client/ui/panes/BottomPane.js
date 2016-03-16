@@ -5,7 +5,6 @@ var engine = require('engine'),
     FlowLayout = require('../layouts/FlowLayout'),
     EnhancementPane = require('./EnhancementPane'),
     VitalsPane = require('./VitalsPane'),
-    SubsystemPane = require('./SubsystemPane'),
     InventoryPane = require('./InventoryPane');
 
 function BottomPane(game) {
@@ -31,13 +30,11 @@ function BottomPane(game) {
 
   this.enhancementPane = new EnhancementPane(game);
   this.vitalsPane = new VitalsPane(game);
-  this.subsystemPane = new SubsystemPane(game);
   this.inventoryPane = new InventoryPane(game);
 
   this.leftPane.addPanel(Layout.NONE, this.enhancementPane);
   this.leftPane.addPanel(Layout.NONE, this.vitalsPane);
   this.centerPane.addPanel(Layout.NONE, this.inventoryPane);
-  this.rightPane.addPanel(Layout.NONE, this.subsystemPane);
 
   this.addPanel(Layout.NONE, this.leftPane);
   this.addPanel(Layout.NONE, this.centerPane);

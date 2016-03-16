@@ -24,7 +24,7 @@ function StatPane(game) {
       } 
     },
     row: {
-      padding: [6, 23, 6, 5],
+      padding: [6, 24, 6, 5],
       bg: {
         fillAlpha: 0.04,
         color: 0x3868b8
@@ -118,7 +118,7 @@ StatPane.prototype.createSystemTitleRow = function(title) {
   var pane = new Pane(this.game, this.settings.title),
       label = new Label(this.game, title, this.settings.key),
       icon = new Image(this.game, 'texture-atlas', {
-        padding: [0],
+        padding: [0, 0, 0, 1],
         border: [0],
         width: 12,
         height: 12,

@@ -47,7 +47,7 @@ function Ship(game, settings) {
   );
 
   this.closeButton = new ButtonIcon(game, 'texture-atlas', this.settings.close);
-  this.closeButton.on('inputUp', this.close, this);
+  this.closeButton.on('inputUp', this._close, this);
 
   this.cargoPane = new CargoPane(game, this.settings.cargoPane);
   this.fittingPane = new FittingPane(game, this.settings.fittingPane);
@@ -58,47 +58,47 @@ function Ship(game, settings) {
 
   this.swap(this.cargoPane, this.fittingPane);
 
-  this.game.on('ship/fitting', this.open, this);
-  // this.game.on('gui/player/select', this.open, this);
+  this.game.on('ship/fitting', this._open, this);
+  this.game.on('gui/player/select', this._playerSelect, this);
 };
 
 Ship.prototype = Object.create(Pane.prototype);
 Ship.prototype.constructor = Ship;
 
-Ship.prototype.open = function(data) {
-  if(this.data === undefined) {
+Ship.prototype._playerSelect = function(data) {
+  if(!this.data) {
     this.data = data;
-
-    //.. TEST
-    // this.cargoPane.reset({
-    //   items: [
-    //     { uuid: '1', sprite: 'item-turret-flak.png', count: 1 },
-    //     { uuid: '2', sprite: 'item-turret-laser.png', count: 1 },
-    //     { uuid: '3', sprite: 'item-turret-pulse.png', count: 1 }
-    //   ]
-    // });
-    //.. TEST
-
     this.fittingPane.create(data);
 
-    this.bg.inputEnabled = true;
-    this.bg.input.priorityID = 2;
+    //..
+    //.. TEMP
+    // this._open();
   }
+};
 
-  this.fittingPane.reset(data);
+Ship.prototype._open = function() {
+  if(this.data === undefined) { return; }
+  
+  //.. TEST
+  // this.cargoPane.reset({
+  //   items: [
+  //     { uuid: '1', sprite: 'item-turret-flak.png', count: 1 },
+  //     { uuid: '2', sprite: 'item-turret-laser.png', count: 1 },
+  //     { uuid: '3', sprite: 'item-turret-pulse.png', count: 1 }
+  //   ]
+  // });
+  //.. TEST
+
+  this.fittingPane.reset(this.data);
 
   this.closeButton.start();
   this.cargoPane.start();
   this.fittingPane.start();
 
-  this.invalidate(true);
-
   this.game.emit('gui/modal', true, this);
 };
 
-Ship.prototype.close = function() {
-  this.bg.inputEnabled = false;
-
+Ship.prototype._close = function() {
   this.closeButton.stop();
   this.cargoPane.stop();
   this.fittingPane.stop();
