@@ -405,11 +405,11 @@ body {
   letter-spacing: 1px;
 }
 
-#abt .description ul {
+#abt .description ul.features {
   margin: 18px 0 18px 30px;
 }
 
-#abt .description li,
+#abt .description ul.features li,
 #abt .description p {
   margin: 18px 0;
   color: #fff;
@@ -419,7 +419,7 @@ body {
   letter-spacing: 1px;
 }
 
-#abt .description li {
+#abt .description ul.features li {
   padding: 0 0 0 9px;
   list-style: circle;
 }
@@ -950,7 +950,7 @@ body {
   display: block;
   width: 100%;
   padding: 0;
-  margin: 0 !important;
+  margin: 8px 0 !important;
   list-style: none;
   text-align: center;
 }
@@ -960,7 +960,7 @@ body {
   display: inline-block;
   width: 20px;
   height: 20px;
-  margin: 0 5px;
+  margin: 0;
   padding: 0;
   cursor: pointer;
 }
@@ -1028,7 +1028,7 @@ body {
     font-size: 16px;
   }
 
-  #abt .description li,
+  #abt .description ul.features li,
   #abt .description p {
     margin: 16px 0;
     font-size: 13px;
@@ -1064,7 +1064,7 @@ body {
     font-size: 14px;
   }
 
-  #abt .description li,
+  #abt .description ul.features li,
   #abt .description p {
     margin: 14px 0;
     font-size: 12px;
