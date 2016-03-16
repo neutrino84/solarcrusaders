@@ -360,7 +360,7 @@
 	"sourceSize": {"w":12,"h":12},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"system-sensor.png":
+"system-scanner.png":
 {
 	"frame": {"x":711,"y":551,"w":12,"h":12},
 	"rotated": false,
@@ -475,6 +475,6 @@
 	"format": "RGBA8888",
 	"size": {"w":1024,"h":1024},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:6039acdaf34cfd5534877fc3c8b91d1d:5b655cabe8da9fc419d11a3273e3b9c3:a973cd4a72d4c90ced76930eac7fdc63$"
+	"smartupdate": "$TexturePacker:SmartUpdate:4d59117fc12549af24f69edfe0a212cc:9aa063fe239a0d8bfeeece6c11195256:a973cd4a72d4c90ced76930eac7fdc63$"
 }
 }
