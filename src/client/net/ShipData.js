@@ -2,7 +2,7 @@
 var engine = require('engine')
     EventEmitter = require('eventemitter3');
 
-ShipData.SYSTEM_SORT_ORDER = ['hull', 'reactor', 'pilot', 'engine', 'shield', 'targeting', 'sensor', 'repair', 'cloak'];
+ShipData.SYSTEM_SORT_ORDER = ['hull', 'reactor', 'pilot', 'engine', 'shield', 'targeting', 'scanner', 'repair', 'cloak'];
 
 ShipData.STAT_UNITS = {
   'durability': 'hp',
@@ -30,7 +30,7 @@ ShipData.STAT_SYSTEM_BINDING = {
   'evasion':    'pilot',
   'recharge':   'reactor',
   'armor':      'shield',
-  'range':      'sensor',
+  'range':      'scanner',
   'accuracy':   'targeting'
 };
 
@@ -53,7 +53,7 @@ function ShipData(game, data) {
       { name: 'engine', stats: ['speed'], enhancements: [] },
       { name: 'shield', stats: ['armor'], enhancements: [] },
       { name: 'targeting', stats: ['accuracy'], enhancements: [] },
-      { name: 'sensor', stats: ['range'], enhancements: [] }
+      { name: 'scanner', stats: ['range'], enhancements: [] }
     ]
   };
 
