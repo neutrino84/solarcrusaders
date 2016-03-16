@@ -78,7 +78,35 @@
     }
   },
   "hardpoint": {
-
+    "mining": {},
+    "laser": {
+      "alpha": {
+        "name": "Type 1 Laser",
+        "type": "laser",
+        "subtype": "alpha",
+        "sprite": "turret-a",
+        "damage": 2.0,
+        "durability": 1000.0,
+        "enhancement": null,
+        "dispersion": {}
+      }
+    },
+    "rocket": {
+      "alpha": {
+        "name": "Type 1 Launcher",
+        "type": "rocket",
+        "subtype": "alpha",
+        "sprite": "turret-b",
+        "damage": 2.0,
+        "durability": 1000.0,
+        "enhancement": null,
+        "dispersion": {}
+      }
+    },
+    "bomb": {},
+    "ion": {},
+    "plasma": {},
+    "flak": {}
   },
   "enhancement": {
     "overload": {

@@ -3,6 +3,7 @@ var async = require('async'),
     engine = require('engine'),
     client = require('client'),
     System = require('./System'),
+    Hardpoint = require('./Hardpoint'),
     Enhancement = require('./Enhancement'),
     Utils = require('../../utils');
 
@@ -113,11 +114,8 @@ Ship.prototype.createSystems = function() {
 Ship.prototype.createHardpoints = function() {
   var hardpoint,
       hardpoints = this.config.targeting.hardpoints;
-  for(var h in hardpoints) {
-    hardpoint = new this.model.Hardpoint({
-      type: hardpoints[h].type,
-      index: h
-    });
+  for(var slot in hardpoints) {
+    hardpoint = new this.model.Hardpoint(new Hardpoint(slot, 'laser').toObject());
     this.hardpoints.push(hardpoint.toStreamObject());
   }
 };
@@ -326,8 +324,8 @@ Object.defineProperty(Ship.prototype, 'range', {
   get: function() {
     var bonus = 0,
         range = this.ignoreEnhancements ? [] : this.enhancements.active.range,
-        sensor = this.systems['sensor'],
-        modifier = sensor ? ((sensor.health / sensor.stats.health) * (sensor.modifier - 0.5)) + 0.5 : 1.0;
+        scanner = this.systems['scanner'],
+        modifier = scanner ? ((scanner.health / scanner.stats.health) * (scanner.modifier - 0.5)) + 0.5 : 1.0;
     for(var r in range) {
       bonus += range[r].stat('range', 'value');
     }
