@@ -39,6 +39,10 @@ ListLayout.prototype.calcPreferredSize = function(target) {
     }
   }
 
+  if(dim.width < mx) {
+    dim.width = mx;
+  }
+
   dim.height += my - gy;
 
   return dim;
