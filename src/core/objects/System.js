@@ -14,7 +14,8 @@ System.prototype.constructor = System;
 System.prototype.toObject = function() {
   var system = Utils.extend({}, this.config);
       system.stats = {
-        health: this.config.health
+        health: this.config.health,
+        durability: this.config.durability
       };
   return system;
 };
