@@ -26,8 +26,7 @@ function MenuPane(game, settings) {
         radius: 0.0,
         fillAlpha: 1.0,
         color: 0x3868b8,
-        blendMode: engine.BlendMode.ADD,
-        alertColor: 0x000000
+        blendMode: engine.BlendMode.ADD
       },
       label: {
         padding: [5, 14],
@@ -59,7 +58,6 @@ function MenuPane(game, settings) {
   this.inviteButton.on('inputUp', this._invite);
   this.forumsButton.on('inputUp', this._forums);
   this.registerButton.on('inputUp', this._register, this);
-  this.registerButton.alert();
 
   this.addPanel(Layout.CENTER, this.homeButton);
   this.addPanel(Layout.CENTER, this.registerButton);
