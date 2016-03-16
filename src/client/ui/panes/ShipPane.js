@@ -55,14 +55,6 @@ function ShipPane(game, settings) {
   // 
   this.button.on('inputUp', this._follow, this);
 
-  // if(this.isPlayer) {
-  //   this.editButton = new ButtonIcon(game, 'texture-atlas', this.settings.tab);
-  //   this.editButton.on('inputUp', this._fitting, this);
-  //   this.editButton.alert();
-
-  //   this.addTab(Layout.NONE, this.editButton);
-  // }
-
   // subscribe to messages
   this.game.on('ships/selected', this._selected, this);
   this.game.on('ship/target', this._target, this);
@@ -122,10 +114,6 @@ ShipPane.prototype._data = function(data) {
 
 ShipPane.prototype._follow = function() {
   this.current.ship && this.game.emit('ship/follow', this.current.ship);
-};
-
-ShipPane.prototype._fitting = function() {
-  this.current.ship && this.game.emit('ship/fitting', this.current.data);
 };
 
 ShipPane.prototype._target = function(data) {
