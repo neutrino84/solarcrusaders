@@ -62,7 +62,7 @@ function Button(game, string, settings) {
 
   // build button
   this.addView(this.bg);
-  this.addPanel(Layout.USE_PS_SIZE, this.label);
+  this.addPanel(Layout.STRETCH, this.label);
 
   // start
   this.start();
