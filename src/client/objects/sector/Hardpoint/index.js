@@ -15,7 +15,7 @@ function Hardpoint(parent, data, config) {
   this._tempPoint = new engine.Point();
 
   this.cap = new engine.Sprite(this.game, 'texture-atlas', 'turret-cap-' + this.ship.config.race + '.png');
-  this.sprite = new engine.Sprite(this.game, 'texture-atlas', data.name + '.png');
+  this.sprite = new engine.Sprite(this.game, 'texture-atlas', data.sprite + '.png');
   this.sprite.position.set(config.position.x, config.position.y);
   this.sprite.pivot.set(config.pivot.x, config.pivot.y);
   this.ship.addChild(this.sprite);
