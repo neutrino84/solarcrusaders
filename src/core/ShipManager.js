@@ -249,18 +249,18 @@ ShipManager.prototype._updateShips = function() {
 
     // update health
     if(ship.health < stats.health) {
-      delta = ship.health * ship.heal;
+      delta = ship.heal;
       ship.health = global.Math.min(stats.health, ship.health + delta);
-      update.health = global.Math.round(ship.health);
-      update.hdelta = global.Math.round(delta);
+      update.health = engine.Math.roundTo(ship.health, 1);
+      update.hdelta = engine.Math.roundTo(delta, 1);
     }
 
     // update energy
     if(ship.energy < stats.energy) {
       delta = ship.recharge;
       ship.energy = global.Math.min(stats.energy, ship.energy + delta);
-      update.energy = global.Math.round(ship.energy);
-      update.rdelta = global.Math.round(delta);
+      update.energy = engine.Math.roundTo(ship.energy, 1);
+      update.rdelta = engine.Math.roundTo(delta, 1);
     }
 
     if(delta !== undefined) {
