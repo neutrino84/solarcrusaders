@@ -244,6 +244,8 @@
             <filename>turrets/turret-cap-ubaidian.png</filename>
             <filename>icons/system-repair.png</filename>
             <filename>icons/system-scanner.png</filename>
+            <filename>icons/item-laser-a.png</filename>
+            <filename>icons/item-rocket-a.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

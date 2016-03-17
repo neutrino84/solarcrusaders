@@ -68,6 +68,7 @@ Ship.prototype.constructor = Ship;
 Ship.prototype._playerSelect = function(data) {
   if(!this.data) {
     this.data = data;
+    this.cargoPane.create(data);
     this.fittingPane.create(data);
 
     //..
@@ -78,14 +79,6 @@ Ship.prototype._playerSelect = function(data) {
 
 Ship.prototype._open = function() {
   if(this.data === undefined) { return; }
-  
-  // this.cargoPane.reset({
-  //   items: [
-  //     { uuid: '1', sprite: 'item-turret-flak.png', count: 1 },
-  //     { uuid: '2', sprite: 'item-turret-laser.png', count: 1 },
-  //     { uuid: '3', sprite: 'item-turret-pulse.png', count: 1 }
-  //   ]
-  // });
 
   this.fittingPane.reset(this.data);
 

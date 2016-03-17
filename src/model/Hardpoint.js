@@ -8,6 +8,7 @@ var Hardpoint = schema.define('hardpoint', {
   name:        { type: schema.String },
   type:        { type: schema.String, default: 'laser' },
   sprite:      { type: schema.String, default: 'turret-a' },
+  cargo:       { type: schema.String, default: 'item-laser-a' },
   enhancement: { type: schema.String },
   created:     { type: schema.Date, default: Date.now },
   slot:        { type: schema.Integer },

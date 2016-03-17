@@ -119,7 +119,8 @@ ShipManager.prototype.plot = function(sock, args, next) {
 };
 
 ShipManager.prototype.data = function(sock, args, next) {
-  var self = this, ship, enhancements, systems,
+  var self = this, ship, enhancements, systems, cargo, uuid,
+      user = sock.sock.handshake.session.user,
       uuids = args[1].uuids,
       ships = [];
   for(var u in uuids) {
@@ -127,10 +128,12 @@ ShipManager.prototype.data = function(sock, args, next) {
     if(ship) {
       ship.ignoreEnhancements = true;
       enhancements = Object.keys(ship.enhancements.available);
+      uuid = ship.user ? ship.user.uuid : null;
+      cargo = uuid === user.uuid ? ship.cargo : {};
       ships.push({
         id: ship.id,
         uuid: ship.uuid,
-        user: ship.user ? ship.user.uuid : null,
+        user: uuid,
         name: ship.data.name,
         username: ship.user ? ship.user.username : ship.data.name,
         chassis: ship.chassis,
@@ -157,7 +160,8 @@ ShipManager.prototype.data = function(sock, args, next) {
         evasion: ship.evasion,
         hardpoints: ship.hardpoints,
         systems: ship.systems,
-        enhancements: enhancements
+        enhancements: enhancements,
+        cargo: cargo
       });
       ship.ignoreEnhancements = false;
     }

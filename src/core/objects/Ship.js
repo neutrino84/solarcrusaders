@@ -27,6 +27,7 @@ function Ship(manager, data) {
 
   this.timers = [];
   this.rooms = [];
+  this.cargo = {};
   this.hardpoints = {};
   this.systems = {
     'reactor': null
@@ -117,6 +118,11 @@ Ship.prototype.createHardpoints = function() {
   for(var slot in hardpoints) {
     hardpoint = new this.model.Hardpoint(new Hardpoint(slot, 'laser').toObject());
     this.hardpoints[slot] = hardpoint.toStreamObject();
+    this.cargo[hardpoint.uuid] = {
+      uuid: hardpoint.uuid,
+      sprite: hardpoint.cargo,
+      enabled: true
+    };
   }
 };
 

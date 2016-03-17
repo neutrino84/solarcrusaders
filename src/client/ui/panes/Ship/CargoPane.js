@@ -56,8 +56,8 @@ function CargoPane(game, settings) {
         padding: [5],
         layout: {
           gap: [5, 5],
-          columns: 5,
-          rows: 6
+          columns: 6,
+          rows: 7
         },
         cell: {
           width: 40,
@@ -68,62 +68,48 @@ function CargoPane(game, settings) {
     })
   );
   
-  this.pageButtons = [];
   this.pagePanes = [];
 
   this.infoPane = new Pane(game, this.settings.info);
   this.addContent(Layout.STRETCH, this.infoPane);
 
-  // create
-  this.create();
+  this.content.bg.inputEnabled = true;
+  this.content.bg.input.priorityID = 4;
+  this.content.bg.input.stop();
+  // this.content.bg.input.enableDrop();
+  this.content.bg.on('inputDropped', this._itemDropped, this);
 };
 
 CargoPane.prototype = Object.create(ContentPane.prototype);
 CargoPane.prototype.constructor = CargoPane;
 
-CargoPane.prototype.reset = function(data) {
-  var slice, page,
-      items = data.items,
-      layout = this.settings.item.layout,
-      columns = layout.columns,
-      rows = layout.rows,
-      size = columns * rows,
-      pages = global.Math.ceil(items.length / size);
-  for(var i=0; i<pages; i++) {
-    slice = items.slice(i, size);
-    page = this.pagePanes[i];
-    page.reset(items);
-  }
+CargoPane.prototype.reset = function(cargo) {
+  var page = this.pagePanes[0];
+      page.reset(cargo);
 };
 
 CargoPane.prototype.start = function() {
   this.button.start();
-  //.. start page buttons
+  this.content.bg.input.start();
 };
 
 CargoPane.prototype.stop = function() {
   this.button.stop();
-  //.. stop page buttons
+  this.content.bg.input.stop();
 };
 
-CargoPane.prototype.create = function() {
+CargoPane.prototype.create = function(data) {
   var index = this.pagePanes.length+1;
-      pagePane = new ItemPane(this.game, this.settings.item),
-      pageButton = new Button(this.game, index.toString(), this.settings.tab);
-      pageButton.disabled = true;
-      pageButton.stop();
+      pagePane = new ItemPane(this.game, this.settings.item);
 
-  //.. add button listener
-
-  this.pageButtons.push(pageButton);
   this.pagePanes.push(pagePane);
+  this.reset(data.cargo);
+
   this.addContent(Layout.NONE, pagePane);
-  this.addTab(Layout.NONE, pageButton);
 };
 
-CargoPane.prototype.page = function(page) {
-  //.. show page
-  //.. hide page
+CargoPane.prototype._itemDropped = function(item) {
+  //..
 };
 
 module.exports = CargoPane;

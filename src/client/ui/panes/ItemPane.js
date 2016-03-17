@@ -39,15 +39,13 @@ ItemPane.prototype = Object.create(Pane.prototype);
 ItemPane.prototype.constructor = ItemPane;
 
 ItemPane.prototype.reset = function(items) {
-  var data, item, cell,
-      len = items.length,
+  var data, item, cell, index = 0,
       cells = this.panels;
-  for(var i=0; i<len; i++) {
+  for(var i in items) {
     data = items[i];
-    cell = cells[i];
+    cell = cells[index++];
 
     item = this.getItem(data);
-    item.enableDrag();
 
     cell.removeAll();
     cell.addPanel(Layout.NONE, item);
@@ -85,7 +83,7 @@ ItemPane.prototype.createItem = function(item) {
       icon: {
         padding: [3],
         border: [0],
-        frame: item.sprite,
+        frame: item.sprite + '.png',
         bg: {
           highlight: false,
           color: 0x000000,
