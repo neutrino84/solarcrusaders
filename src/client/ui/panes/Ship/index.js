@@ -18,10 +18,10 @@ function Ship(game, settings) {
         direction: Layout.HORIZONTAL
       },
       cargoPane: {
-        padding: [1, 4, 1, 0]
+        padding: [1, 1, 1, 0]
       },
       fittingPane: {
-        padding: [1, 4]
+        padding: [1]
       },
       close: {
         padding: [0, 2],
@@ -79,7 +79,6 @@ Ship.prototype._playerSelect = function(data) {
 Ship.prototype._open = function() {
   if(this.data === undefined) { return; }
   
-  //.. TEST
   // this.cargoPane.reset({
   //   items: [
   //     { uuid: '1', sprite: 'item-turret-flak.png', count: 1 },
@@ -87,7 +86,6 @@ Ship.prototype._open = function() {
   //     { uuid: '3', sprite: 'item-turret-pulse.png', count: 1 }
   //   ]
   // });
-  //.. TEST
 
   this.fittingPane.reset(this.data);
 

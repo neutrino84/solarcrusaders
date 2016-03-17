@@ -142,6 +142,7 @@ HardpointPane.prototype.start = function() {
   for(var i in buttons) {
     buttons[i].start();
   }
+  this.shipPane.start();
 };
 
 HardpointPane.prototype.stop = function() {
@@ -149,6 +150,7 @@ HardpointPane.prototype.stop = function() {
   for(var i in buttons) {
     buttons[i].stop();
   }
+  this.shipPane.stop();
 };
 
 HardpointPane.prototype.create = function(data) {

@@ -10,24 +10,126 @@ function ShipPane(game, data) {
   Panel.call(this, game, this);
 
   this.data = data;
-  this.hardpoints = [];
+  this.hardpoints = {};
+  this.drag = null;
 
-  this.setPreferredSize(256, 192);
+  this.setPreferredSize(256, 228);
 
-  this.image = new engine.Sprite(game, game.cache.getRenderTexture(data.chassis + '-outline').texture);
-  this.image.blendMode = engine.BlendMode.ADD;
-  this.image.tint = 0x336699;
-  this.image.rotation = global.Math.PI;
-  this.image.pivot.set(this.image.width/2, this.image.height/2);
-  this.image.position.set(128, 192/2);
-  this.image.scale.set(1.25, 1.25);
-
-  this.addChild(this.image);
+  this.create(data);
 };
 
 ShipPane.prototype = Object.create(Panel.prototype);
 ShipPane.prototype.constructor = ShipPane;
 
+ShipPane.prototype.create = function(data) {
+  var game = this.game,
+      hardpoint;
+
+  // set data
+  this.data = data;
+
+  // get configuration
+  this.config = game.cache.getJSON('ship-configuration', false)[data.chassis]['targeting']['hardpoints'];
+
+  // create ship
+  this.chassis = new engine.Sprite(game, 'texture-atlas', data.chassis + '.png');
+  this.chassis.rotation = global.Math.PI;
+  this.chassis.pivot.set(this.chassis.width/2, this.chassis.height/2);
+  this.chassis.position.set(128, 114);
+
+  // create outline
+  this.outline = new engine.Sprite(game, game.cache.getRenderTexture(data.chassis + '-outline').texture);
+  this.outline.blendMode = engine.BlendMode.ADD;
+  this.outline.tint = 0x5588bb;
+
+  // add to display
+  this.addChild(this.chassis);
+  this.chassis.addChild(this.outline);
+
+  // create hardpoint slots
+  for(var h in this.config) {
+    hardpoint = this._createHardpoint(data.hardpoints[h], this.config[h]);
+    hardpoint.id = h;
+    this.hardpoints[h] = hardpoint;
+    this.chassis.addChild(hardpoint);
+  }
+};
+
 ShipPane.prototype.doLayout = function() {};
+
+ShipPane.prototype.start = function() {
+  var hardpoint,
+      hardpoints = this.hardpoints;
+  for(var h in hardpoints) {
+    hardpoint = hardpoints[h];
+    hardpoint.input.start();
+  }
+  this.tween && this.tween.stop();
+  this.tween = this.game.tweens.create(this.outline);
+  this.tween.to({ alpha: 0.25 }, 2000, engine.Easing.Quadratic.InOut, true, 0, -1, true);
+};
+
+ShipPane.prototype.stop = function() {
+  var hardpoint,
+      hardpoints = this.hardpoints;
+  for(var h in hardpoints) {
+    hardpoint = hardpoints[h];
+    hardpoint.input.stop();
+  }
+  this.tween.stop();
+  this.outline.alpha = 1.0;
+};
+
+ShipPane.prototype._createHardpoint = function(data, config) {
+  var hardpoint;
+  if(data != undefined) {
+    hardpoint = new engine.Sprite(game, 'texture-atlas', data.sprite + '.png');
+    hardpoint.position.set(config.position.x, config.position.y);
+    hardpoint.pivot.set(config.pivot.x, config.pivot.y);
+    hardpoint.inputEnabled = true;
+    hardpoint.input.priorityID = 2;
+    hardpoint.on('inputDown', this._hardpointInputDown, this);
+    hardpoint.on('inputUp', this._hardpointInputUp, this);
+  }
+  return hardpoint;
+};
+
+ShipPane.prototype._hardpointInputDown = function(sprite, pointer) {
+  var game = this.game,
+      hardpoints = this.data.hardpoints,
+      data = hardpoints[sprite.id],
+      position = sprite.worldTransform.apply(sprite.pivot),
+      highlight;
+  if(data != undefined) {
+    sprite.alpha = 0.25;
+
+    highlight = new engine.Sprite(game, sprite.texture);
+    highlight.tint = 0x5599FF;
+    highlight.blendMode = engine.BlendMode.ADD;
+
+    this.drag = new engine.Sprite(game, sprite.texture);
+    this.drag.pivot.set(sprite.pivot.x, sprite.pivot.y);
+    this.drag.position.set(position.x, position.y);
+    this.drag.inputEnabled = true;
+    this.drag.input.priorityID = 3;
+    this.drag.rotation = global.Math.PI;
+    this.drag.input.enableDrag();
+    this.drag.input.startDrag(pointer);
+    this.drag.addChild(highlight);
+
+    game.gui.root.addChild(this.drag);
+  }
+};
+
+ShipPane.prototype._hardpointInputUp = function(sprite, pointer) {
+  var game = this.game,
+      tween = game.tweens.create(this.drag.position),
+      dragStartPoint = this.drag.input.dragStartPoint;
+  tween.to({ x: dragStartPoint.x, y: dragStartPoint.y }, 150, engine.Easing.Quadratic.Out, true);
+  tween.on('complete', function() {
+    sprite.alpha = 1.0;
+    this.drag.destroy();
+  }, this);
+};
 
 module.exports = ShipPane;
