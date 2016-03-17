@@ -48,7 +48,7 @@ function Tilemap(game, ship, settings) {
   
   // color blend
   this.colorBlend = new ColorBlend(game);
-  this.colorBlend.setColor(0xFF0000, 0x336699, 1000, engine.Easing.Quadratic.In);
+  this.colorBlend.setColor(0xFF0000, 0x5588bb, 1000, engine.Easing.Quadratic.In);
   this.colorBlend.loop = false;
 
   this.addView(this.bg);
@@ -125,7 +125,7 @@ Tilemap.prototype.createLayers = function() {
       outline = this.layers['outline'] = new ImageView(game);
       outline.texture = game.cache.getRenderTexture(this.ship.name + '-outline').texture;
       outline.blendMode = engine.BlendMode.ADD;
-      outline.tint = 0x336699;
+      outline.tint = 0x5588bb;
       outline.alpha = 1.75;
       outline.pivot.set(outline.width/2, outline.height/2);
       outline.position.set(this.tilemap.widthInPixels/2, this.tilemap.heightInPixels/2);
