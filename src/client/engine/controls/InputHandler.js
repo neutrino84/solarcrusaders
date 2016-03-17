@@ -477,7 +477,6 @@ InputHandler.prototype = {
       }
     }
   },
-
   _releasedHandler: function(pointer) {
     // Abort. We've been destroyed.
     if(this.sprite === null) { return; }
@@ -517,6 +516,17 @@ InputHandler.prototype = {
       if(this.draggable && this.isDragged && this._draggedPointerID === pointer.id) {
         this.stopDrag(pointer);
       }
+    }
+  },
+
+  _dropHandler: function(pointer) {
+    // Abort. Not a droppable.
+    if(!this.drop) { return; }
+
+    var data = this._pointerData[pointer.id];
+    if(pointer.isUp && this.checkPointerOver(pointer)) {
+      pointer.targetObject.sprite.caught = true;
+      this.sprite.emit('inputDropped', pointer.targetObject.sprite, pointer);
     }
   },
 
@@ -596,6 +606,14 @@ InputHandler.prototype = {
       return this.game.clock.time - this._pointerData[pointer].timeDown;
     }
     return -1;
+  },
+
+  enableDrop: function(accepts) {
+    this.drop = true;
+  },
+
+  disableDrop: function() {
+    this.drop = false;
   },
 
   enableDrag: function(lockCenter, bringToTop, pixelPerfect, alphaThreshold, boundsRect, boundsSprite) {

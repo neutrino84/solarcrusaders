@@ -485,6 +485,7 @@ Pointer.prototype = {
       input.currentPointers--;
     }
 
+    input.interactiveItems.callAll('_dropHandler', this);
     input.interactiveItems.callAll('_releasedHandler', this);
 
     if(this._clickTrampolines) {
