@@ -18,9 +18,8 @@ function PaneFlash(game, settings) {
   this.flashBg = new BackgroundView(game, this.settings.flashBg);
   this.flashBg.tint = 0x000000;
 
-  this.colorBlend = new ColorBlend(game, this.flashBg);
-  this.colorBlend.setColor(0x000000, 0x00AA00, 250, engine.Easing.Quadratic.InOut, true);
-  this.colorBlend.loop = false;
+  this.colorBlend = new ColorBlend(game, this.flashBg, false);
+  this.colorBlend.setColor(0x000000, 0x222222, 125, engine.Easing.Default, true);
   this.colorBlend.on('stop', function() {
     this.flashBg.tint = 0x000000;
   }, this);
