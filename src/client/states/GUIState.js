@@ -31,6 +31,7 @@ GUIState.prototype = Object.create(engine.State.prototype);
 GUIState.prototype.constructor = engine.State;
 
 GUIState.prototype.init = function() {
+  this.game.gui = this;
   this.auth = this.game.auth;
 };
 
