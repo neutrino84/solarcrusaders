@@ -6,16 +6,14 @@ var engine = require('engine'),
     Label = require('../../components/Label'),
     ButtonIcon = require('../../components/ButtonIcon');
 
-function ShipPane(game, data) {
+function ShipPane(game) {
   Panel.call(this, game, this);
 
-  this.data = data;
-  this.hardpoints = {};
+  this.data = null;
   this.drag = null;
+  this.hardpoints = {};
 
   this.setPreferredSize(256, 228);
-
-  this.create(data);
 };
 
 ShipPane.prototype = Object.create(Panel.prototype);
@@ -48,7 +46,7 @@ ShipPane.prototype.create = function(data) {
 
   // create hardpoint slots
   for(var h in this.config) {
-    hardpoint = this._createHardpoint(data.hardpoints[h], this.config[h]);
+    hardpoint = this._hardpoint(data.hardpoints[h], this.config[h]);
     hardpoint.id = h;
     this.hardpoints[h] = hardpoint;
     this.chassis.addChild(hardpoint);
@@ -80,24 +78,28 @@ ShipPane.prototype.stop = function() {
   this.outline.alpha = 1.0;
 };
 
-ShipPane.prototype._createHardpoint = function(data, config) {
+ShipPane.prototype._hardpoint = function(data, config) {
   var hardpoint;
   if(data != undefined) {
     hardpoint = new engine.Sprite(game, 'texture-atlas', data.sprite + '.png');
     hardpoint.position.set(config.position.x, config.position.y);
     hardpoint.pivot.set(config.pivot.x, config.pivot.y);
+    
     hardpoint.inputEnabled = true;
     hardpoint.input.priorityID = 2;
+    hardpoint.input.stop();
+
     hardpoint.on('inputDown', this._hardpointInputDown, this);
     hardpoint.on('inputUp', this._hardpointInputUp, this);
+    hardpoint.on('inputOver', this._hardpointInputOver, this);
   }
   return hardpoint;
 };
 
 ShipPane.prototype._hardpointInputDown = function(sprite, pointer) {
   var game = this.game,
-      hardpoints = this.data.hardpoints,
-      data = hardpoints[sprite.id],
+      // hardpoints = this.data.hardpoints,
+      // data = hardpoints[sprite.id],
       position = sprite.worldTransform.apply(sprite.pivot),
       highlight;
   if(data != undefined) {
@@ -108,6 +110,7 @@ ShipPane.prototype._hardpointInputDown = function(sprite, pointer) {
     highlight.blendMode = engine.BlendMode.ADD;
 
     this.drag = new engine.Sprite(game, sprite.texture);
+    this.drag.id = sprite.id;
     this.drag.pivot.set(sprite.pivot.x, sprite.pivot.y);
     this.drag.position.set(position.x, position.y);
     this.drag.inputEnabled = true;
@@ -125,11 +128,25 @@ ShipPane.prototype._hardpointInputUp = function(sprite, pointer) {
   var game = this.game,
       tween = game.tweens.create(this.drag.position),
       dragStartPoint = this.drag.input.dragStartPoint;
-  tween.to({ x: dragStartPoint.x, y: dragStartPoint.y }, 150, engine.Easing.Quadratic.Out, true);
-  tween.on('complete', function() {
-    sprite.alpha = 1.0;
+  
+  // stop drag
+  this.drag.input.stopDrag(pointer);
+  
+  if(this.drag.caught) {
+    sprite.destroy();
     this.drag.destroy();
-  }, this);
+    delete this.hardpoints[sprite.id];
+  } else {
+    tween.to({ x: dragStartPoint.x, y: dragStartPoint.y }, 150, engine.Easing.Quadratic.Out, true);
+    tween.on('complete', function() {
+      sprite.alpha = 1.0;
+      this.drag.destroy();
+    }, this);
+  }
+};
+
+ShipPane.prototype._hardpointInputOver = function(sprite, pointer) {
+  
 };
 
 module.exports = ShipPane;

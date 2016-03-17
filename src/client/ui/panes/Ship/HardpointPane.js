@@ -163,7 +163,8 @@ HardpointPane.prototype.create = function(data) {
 
   this.data = data;
 
-  this.shipPane = new ShipPane(game, data);
+  this.shipPane = new ShipPane(game);
+  this.shipPane.create(data);
 
   this.dpsAreaPane = new Pane(game, this.settings.dpsAreaPane);
   this.hardpointPane = new Pane(game, this.settings.hardpointPane);
