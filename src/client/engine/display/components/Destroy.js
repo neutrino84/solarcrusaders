@@ -64,7 +64,6 @@ Destroy.prototype = {
     //   this._glyphs = [];
     // }
 
-    this.alive = false;
     this.exists = false;
     this.visible = false;
     this.game = null;

@@ -175,12 +175,10 @@ Emitter.prototype.makeParticles = function(keys, frames, quantity, collide, coll
 
 Emitter.prototype.kill = function() {
   this.on = false;
-  this.alive = false;
   this.exists = false;
 };
 
 Emitter.prototype.revive = function() {
-  this.alive = true;
   this.exists = true;
 };
 
