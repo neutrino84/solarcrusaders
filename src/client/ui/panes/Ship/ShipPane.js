@@ -84,7 +84,7 @@ ShipPane.prototype._hardpoint = function(data, config) {
     hardpoint = new engine.Sprite(game, 'texture-atlas', data.sprite + '.png');
     hardpoint.position.set(config.position.x, config.position.y);
     hardpoint.pivot.set(config.pivot.x, config.pivot.y);
-    
+
     hardpoint.inputEnabled = true;
     hardpoint.input.priorityID = 2;
     hardpoint.input.stop();
@@ -92,6 +92,7 @@ ShipPane.prototype._hardpoint = function(data, config) {
     hardpoint.on('inputDown', this._hardpointInputDown, this);
     hardpoint.on('inputUp', this._hardpointInputUp, this);
     hardpoint.on('inputOver', this._hardpointInputOver, this);
+    hardpoint.on('inputOut', this._hardpointInputOut, this);
   }
   return hardpoint;
 };
@@ -146,7 +147,18 @@ ShipPane.prototype._hardpointInputUp = function(sprite, pointer) {
 };
 
 ShipPane.prototype._hardpointInputOver = function(sprite, pointer) {
-  
+  var highlight = new engine.Sprite(game, sprite.texture);
+      highlight.tint = 0x5599FF;
+      highlight.blendMode = engine.BlendMode.ADD;
+
+  sprite.addChild(highlight);
+};
+
+ShipPane.prototype._hardpointInputOut = function(sprite, pointer) {
+  this.timeout && clearTimeout(this.timeout);
+  this.timeout = setTimeout(function() {
+    sprite.removeChildren();
+  }, 20);
 };
 
 module.exports = ShipPane;
