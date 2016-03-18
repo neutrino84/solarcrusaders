@@ -29,7 +29,7 @@ function MenuPane(game, settings) {
         blendMode: engine.BlendMode.ADD
       },
       label: {
-        padding: [5, 14],
+        padding: [5, 24],
         bg: {
           highlight: false,
           fillAlpha: 0.8,
