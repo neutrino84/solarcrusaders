@@ -3130,7 +3130,7 @@
       "accuracy": 0.88,
       "evasion": 0.3,
       "energy": 50,
-      "recharge": 1,
+      "recharge": 3,
       "durability": 1000,
       "critical": 0.01
     },
