@@ -37,8 +37,8 @@ function startDatabaseConnection() {
   this.schema.adapter.initialize(client);
 
   global.model = new Model({});
-  global.stripe = new Stripe();
-  global.stripe.init();
+  // global.stripe = new Stripe();
+  // global.stripe.init();
 
   // this.schema.on('connected', function() {
   //   var done = function(err) { console.log('err', err); },
@@ -67,16 +67,30 @@ function startDatabaseConnection() {
   //   }
   // });
 
-  global.model.User.find({}, function(err, users) {
-    for(var u in users) {
-      users[u].destroy(function(err) {
-        if(!err) {
-          console.log('destroyed');
-        } else {
-          console.log('error');
-        }
-      });
-    }
+  this.schema.on('connected', function() {
+    global.model.User.all(function(err, users) {
+      var user, output = [];
+
+      for(var u in users) {
+        user = users[u];
+        output.push({
+          name: user.name,
+          email: user.email,
+          username: user.username,
+          password: user.password,
+          created: user.created.toString()
+        })
+        console.log(users[u].created.getTime());
+      //   users[u].destroy(function(err) {
+      //     if(!err) {
+      //       console.log('destroyed');
+      //     } else {
+      //       console.log('error');
+      //     }
+      //   });
+      }
+      console.log(output);
+    });
   });
 
   // this.schema.on('connected', function() {
