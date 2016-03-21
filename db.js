@@ -70,7 +70,6 @@ function startDatabaseConnection() {
   this.schema.on('connected', function() {
     global.model.User.all(function(err, users) {
       var user, output = [];
-
       for(var u in users) {
         user = users[u];
         output.push({
@@ -78,16 +77,9 @@ function startDatabaseConnection() {
           email: user.email,
           username: user.username,
           password: user.password,
-          created: user.created.toString()
-        })
-        console.log(users[u].created.getTime());
-      //   users[u].destroy(function(err) {
-      //     if(!err) {
-      //       console.log('destroyed');
-      //     } else {
-      //       console.log('error');
-      //     }
-      //   });
+          created: user.created.toString(),
+          role: 'user'
+        });
       }
       console.log(output);
     });
