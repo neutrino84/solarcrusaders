@@ -40,32 +40,45 @@ function startDatabaseConnection() {
   // global.stripe = new Stripe();
   // global.stripe.init();
 
-  // this.schema.on('connected', function() {
-  //   var done = function(err) { console.log('err', err); },
-  //       create = function(user) {
-  //         var user = new global.model.User({
-  //           name: user.username,
-  //           username: user.username,
-  //           email: user.email,
-  //           password: user.password,
-  //           created: new Date(user.created),
-  //           role: user.role
-  //         });
-  //         user.sanitize();
-  //         return user;
-  //       },
-  //       worker = function(user, callback) {
-  //         console.log('queue', user.username);
-  //         user.save(callback);
-  //       },
-  //       q = async.queue(worker, 1);
-  //   for(var u in userlist) {
-  //     q.push(create(userlist[u]), done);
-  //   }
-  //   q.drain = function() {
-  //     console.log('work complete');
-  //   }
-  // });
+  this.schema.on('connected', function() {
+    var done = function(err) { console.log('err', err); },
+        create = function(user) {
+          var user = new global.model.User({
+            name: user.username,
+            username: user.username,
+            email: user.email,
+            password: user.password,
+            created: new Date(user.created),
+            role: user.role
+          });
+          user.sanitize();
+          return user;
+        },
+        worker = function(user, callback) {
+          console.log('queue', user.username);
+          user.save(callback);
+        },
+        q = async.queue(worker, 1);
+    for(var u in userlist) {
+      q.push(create(userlist[u]), done);
+    }
+    q.drain = function() {
+      console.log('work complete');
+    }
+    for(var s in stripelist) {
+      var stripe = stripelist[s];
+      var model = new global.model.Stripe({
+          name: stripe.name,
+          email: stripe.email,
+          stripe_id: stripe.stripe_id,
+          default_source: stripe.default_source,
+          created: new Date(stripe.created),
+          currency: stripe.currency,
+          edition: stripe.edition
+      });
+      model.save();
+    }
+  });
 
   // this.schema.on('connected', function() {
   //   global.model.User.all(function(err, users) {
@@ -85,24 +98,24 @@ function startDatabaseConnection() {
   //   });
   // });
 
-  this.schema.on('connected', function() {
-    global.model.Stripe.all(function(err, stripes) {
-      var stripe, output = [];
-      for(var s in stripes) {
-        stripe = stripes[u];
-        output.push({
-          name: stripe.name,
-          email: stripe.email,
-          stripe_id: stripe.stripe_id,
-          default_source: stripe.default_source,
-          created: stripe.created.toString(),
-          currency: stripe.currency,
-          edition: stripe.edition
-        });
-      }
-      console.log(output);
-    });
-  });
+  // this.schema.on('connected', function() {
+  //   global.model.Stripe.all(function(err, stripes) {
+  //     var stripe, output = [];
+  //     for(var s in stripes) {
+  //       stripe = stripes[s];
+  //       output.push({
+  //         name: stripe.name,
+  //         email: stripe.email,
+  //         stripe_id: stripe.stripe_id,
+  //         default_source: stripe.default_source,
+  //         created: stripe.created.toString(),
+  //         currency: stripe.currency,
+  //         edition: stripe.edition
+  //       });
+  //     }
+  //     console.log(output);
+  //   });
+  // });
 
   // this.schema.on('connected', function() {
   //   stripe.api.customers.list({ limit: 100 }, // max limit 100
@@ -128,6 +141,7 @@ function startDatabaseConnection() {
 };
 
 var userlist = [];
+var stripelist = [];
 
 // init db
 startDatabaseConnection();
