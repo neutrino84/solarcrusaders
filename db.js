@@ -48,7 +48,7 @@ function startDatabaseConnection() {
   //           username: user.username,
   //           email: user.email,
   //           password: user.password,
-  //           created: user.created,
+  //           created: new Date(user.created),
   //           role: user.role
   //         });
   //         user.sanitize();
@@ -67,18 +67,37 @@ function startDatabaseConnection() {
   //   }
   // });
 
+  // this.schema.on('connected', function() {
+  //   global.model.User.all(function(err, users) {
+  //     var user, output = [];
+  //     for(var u in users) {
+  //       user = users[u];
+  //       output.push({
+  //         name: user.name,
+  //         email: user.email,
+  //         username: user.username,
+  //         password: user.password,
+  //         created: user.created.toString(),
+  //         role: 'user'
+  //       });
+  //     }
+  //     console.log(output);
+  //   });
+  // });
+
   this.schema.on('connected', function() {
-    global.model.User.all(function(err, users) {
-      var user, output = [];
-      for(var u in users) {
-        user = users[u];
+    global.model.Stripe.all(function(err, stripes) {
+      var stripe, output = [];
+      for(var s in stripes) {
+        stripe = stripes[u];
         output.push({
-          name: user.name,
-          email: user.email,
-          username: user.username,
-          password: user.password,
-          created: user.created.toString(),
-          role: 'user'
+          name: stripe.name,
+          email: stripe.email,
+          stripe_id: stripe.stripe_id,
+          default_source: stripe.default_source,
+          created: stripe.created.toString(),
+          currency: stripe.currency,
+          edition: stripe.edition
         });
       }
       console.log(output);
