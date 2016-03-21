@@ -16,6 +16,12 @@ function Authentication(routes) {
   this.server = app.server;
 
   this.stripe = routes.stripe;
+
+  // queue must be used to
+  // prevent duplication
+  this.queue = async.queue(function(model, callback) {
+    model.save(callback);
+  }, 1);
  
   this.password = new Password();
   this.passport = new LocalStrategy({ passReqToCallback: true }, this.localLogin.bind(this));
@@ -77,7 +83,7 @@ Authentication.prototype.register = function(req, res, next) {
   }
 
   // create new user
-  user = new self.model.User({
+  user = new this.model.User({
     name: userData.username,
     username: userData.username,
     email: userData.email,
@@ -100,7 +106,7 @@ Authentication.prototype.register = function(req, res, next) {
       });
     },
     function(user, next) {
-      user.save(next);
+      self.queue.push(user, next);
     }
   ], function(err, user) {
     if(err) { return next(err); }
