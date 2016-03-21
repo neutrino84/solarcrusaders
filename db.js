@@ -76,7 +76,7 @@ function startDatabaseConnection() {
           currency: stripe.currency,
           edition: stripe.edition
       });
-      model.save();
+      model.save({ validate: false });
     }
   });
 
