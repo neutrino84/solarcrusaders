@@ -32,9 +32,9 @@ Database.prototype.init = function(next) {
 
   // redis init
   this.client = client;
-  this.client.auth(password);
   this.client.on('error', this.error);
   this.client.on('end', this.end);
+  password && this.client.auth(password);
 
   // caminte init
   this.schema = Database.schema;
