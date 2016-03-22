@@ -1,5 +1,5 @@
 
-var XRegExp = require('xregexp').XRegExp;
+var XRegExp = require('xregexp');
 
 var Sanitation = {
   invalidUnicodeChars: XRegExp('[^\\p{L}\\s\\d\\-_]', 'g'),
