@@ -1,5 +1,5 @@
 var engine = require('engine'),
-    Background = require('../fx/Background'),
+    Space = require('../fx/Space'),
     Planet = require('../fx/Planet'),
     Snow = require('../fx/Snow'),
     Selection = require('../objects/sector/Selection'),
@@ -17,8 +17,8 @@ SectorState.prototype.init = function(args) {
   this.scrollVelocityX = 0;
   this.scrollVelocityY = 0;
 
-  this.scrollLock = false;
-  // this.game.stage.disableVisibilityChange = true;
+  this.scrollLock = true;
+  this.game.stage.disableVisibilityChange = true;
 };
 
 SectorState.prototype.preload = function() {
@@ -26,6 +26,7 @@ SectorState.prototype.preload = function() {
 
   // load background
   load.image('space', 'imgs/game/space/sector-a.jpg');
+  load.image('nebula', 'imgs/game/space/nebula-a.jpg');
 
   // load.image('draghe', 'imgs/game/planets/draghe.jpg');
   // load.image('eamon', 'imgs/game/planets/eamon-alpha.jpg');
@@ -51,7 +52,7 @@ SectorState.prototype.create = function() {
       mouse.capture = true;
       mouse.mouseWheelCallback = function(event) {
         var delta = event.deltaY / sensitivity,
-            scale = engine.Math.clamp(this.world.scale.x - delta, 0.4, 1.0);
+            scale = engine.Math.clamp(this.world.scale.x - delta, 0.25, 1.0);
         if(self.game.paused) { return; }
         if(self.zoom && self.zoom.isRunning) {
           self.zoom.stop();
@@ -59,18 +60,15 @@ SectorState.prototype.create = function() {
         this.world.scale.set(scale, scale);
       };
 
-  // store gui reference
-  this.gui = game.state.getBackgroundState('gui');
-
   this.game.world.setBounds(0, 0, 4096, 4096);
-  this.game.world.scale.set(0.4, 0.4);
+  this.game.world.scale.set(0.34, 0.34);
 
   this.game.camera.bounds = null;
   this.game.camera.focusOnXY(2048, 2048);
 
   // create sector
   this.createManagers();
-  this.createBackground();
+  this.createSpace();
   this.createSnow();
   this.createAsteroids();
 
@@ -86,39 +84,43 @@ SectorState.prototype.create = function() {
     this.zoom.to({ x: 0.66, y: 0.66 }, 6000, engine.Easing.Quadratic.InOut, true);
   }, this);
 
+  // login
+  if(game.net.connected) {
+    this.game.gui.login(game.auth.user);
+  }
+
   // benchmark
   this.game.clock.benchmark();
 
-  // login
-  this.gui.login();
+  // notify
+  this.game.emit('gui/focus/retain', this);
 
-  // loading message
-  this.game.emit('gui/message', 'loading', 500);
+  // subscribe
+  this.game.on('gui/selected', function() {
+    this.game.emit('gui/focus/retain', this);
+  }, this);
 };
 
-SectorState.prototype.createBackground = function() {
-  this.background = new Background(this.game, this.game.width, this.game.height);
-  // this.background.uncache();
+SectorState.prototype.createSpace = function() {
+  this.space = new Space(this.game, this.game.width, this.game.height);
   
   this.planet = new Planet(this.game, 'talus');
   this.planet.position.set(2048 / 6, 2048 / 6);
 
   this.game.world.background.add(this.planet);
-  this.game.stage.addChildAt(this.background, 0);
+  this.game.stage.addChildAt(this.space, 0);
 };
 
 SectorState.prototype.createManagers = function() {
-  // this.stationManager = new StationManager(this.game);
-  // this.stationManager.boot();
   this.shipManager = new ShipManager(this.game);
-  this.shipManager.hudGroup = this.gui.hud;
+  this.shipManager.hudGroup = this.game.gui.hud;
   this.selection = new Selection(this);
 };
 
 SectorState.prototype.createSnow = function() {
   this.snow = new Snow(this.game, this.game.width, this.game.height);
   this.game.stage.addChild(this.snow);
-  this.game.stage.swapChildren(this.snow, this.gui.root);
+  this.game.stage.swapChildren(this.snow, this.game.gui.root);
 };
 
 SectorState.prototype.createAsteroids = function() {
@@ -131,12 +133,22 @@ SectorState.prototype.createAsteroids = function() {
   }
 };
 
+SectorState.prototype.focus = function() {
+  this.scrollLock = false;
+  this.shipManager.focus();
+}
+
+SectorState.prototype.blur = function() {
+  this.scrollLock = true;
+  this.shipManager.blur();
+};
+
 SectorState.prototype.update = function() {
   var game = this.game,
       camera = game.camera,
       keyboard = game.input.keyboard,
-      // timeStep = this.game.clock.elapsed,
-      move = 1.04;// * timeStep;
+      timeStep = game.clock.elapsedMS / 10,
+      move = 1.12 * timeStep;
 
   if(this.scrollLock) { return; }
 
@@ -177,7 +189,7 @@ SectorState.prototype.update = function() {
 // render = function() {};
 
 SectorState.prototype.resize = function(width, height) {
-  this.background && this.background.resize(width, height);
+  this.space && this.space.resize(width, height);
   this.snow && this.snow.resize(width, height);
 };
 
