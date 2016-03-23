@@ -47,7 +47,7 @@ function StatPane(game) {
       }
     },
     value: {
-      padding: [0, 50, 0, 0],
+      padding: [0, 66, 0, 0],
       text: {
         fontName: 'medium'
       },
@@ -95,6 +95,7 @@ StatPane.prototype.reset = function() {
 StatPane.prototype.create = function(data) {
   var system, systems = data.config.systems,
       stat, stats, units = data.config.units,
+      enabled = data.systems,
       en, output, pane;
 
   this.data = data;
@@ -102,14 +103,22 @@ StatPane.prototype.create = function(data) {
   for(var s in systems) {
     system = systems[s];
     stats = system.stats;
-    this.createSystemTitleRow(system.name);
+    
+    if(system.name === 'hull' || enabled[system.name] != undefined) {
+      this.createSystemTitleRow(system.name);
+    }
     for(var s in stats) {
       stat = stats[s];
       output = this._calculateStatValue(data[stat], units[stat], 0);
       pane = this.createKeyValueRow(stat, output + ' ' + units[stat]);
       
       this.statPanes[stat] = pane;
-      this.addPanel(Layout.STRETCH, pane);
+
+      if(system.name !== 'hull' && enabled[system.name] == undefined) {
+        this.addPanelAt(Layout.STRETCH, pane, 5);
+      } else {
+        this.addPanel(Layout.STRETCH, pane);
+      }
     }
   }
 };
