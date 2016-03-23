@@ -47,17 +47,18 @@ Panel.prototype.addPanelAt = function(constraint, panel, index) {
   this.addAt(panel, index);
 };
 
-Panel.prototype.removePanel = function(panel) {
+Panel.prototype.removePanel = function(panel, destroy) {
   this.panels.splice(this.panels.indexOf(panel), 1);
-  this.remove(panel);
+  this.remove(panel, destroy || false);
 };
 
 Panel.prototype.removeAll = function() {
-  var panel, panels = this.panels,
+  var panel,
+      panels = this.panels.slice(0),
       len = panels.length;
   for(var i=0; i<len; i++) {
     panel = panels[i];
-    this.remove(panel, false);
+    this.removePanel(panel);
   }
 };
 

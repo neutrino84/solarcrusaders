@@ -125,4 +125,8 @@ ContentPane.prototype.removeContent = function(panel) {
   this.content.removePanel(panel);
 };
 
+ContentPane.prototype.removeAllContent = function() {
+  this.content.removeAll();
+};
+
 module.exports = ContentPane;
