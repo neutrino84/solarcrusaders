@@ -53,11 +53,12 @@ ShipManager.prototype.add = function(ship) {
 
 ShipManager.prototype.create = function(data, user, position) {
   var self = this, ship,
-      position = position || this._generateRandomPosition();
-  ship = new Ship(this, Utils.extend({
-    x: position.x,
-    y: position.y
-  }, data));
+      position = position || this._generateRandomPosition(),
+      data = Utils.extend({ x:
+        position.x,
+        y: position.y
+      }, data);
+  ship = new Ship(this, data);
   ship.user = user;
   ship.init(function(err) {
     self.game.emit('ship/add', ship);
