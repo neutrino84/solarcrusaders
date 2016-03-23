@@ -8,6 +8,7 @@ var System = schema.define('system', {
   name:        { type: schema.String },
   type:        { type: schema.String },
   enhancement: { type: schema.String },
+  cargo:       { type: schema.String },
   created:     { type: schema.Date, default: Date.now },
   modifier:    { type: schema.Double, default: 1.0 },
   health:      { type: schema.Double, default: 100.0 },
@@ -21,7 +22,9 @@ var System = schema.define('system', {
 System.TYPES = ['hull', 'reactor', 'pilot', 'engine', 'shield', 'targeting', 'repair', 'teleport', 'scanner', 'cloak'];
 System.ENHANCEMENTS = ['overload', 'shield', 'piercing', 'booster'];
 
+System.validatesPresenceOf('name');
 System.validatesPresenceOf('stats');
+System.validatesPresenceOf('cargo');
 
 System.validatesInclusionOf('type', { in: System.TYPES });
 System.validatesInclusionOf('enhancement', { in: System.ENHANCEMENTS, allowNull: true });

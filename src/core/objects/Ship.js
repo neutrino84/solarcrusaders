@@ -100,7 +100,8 @@ Ship.prototype.createRooms = function() {
  */
 Ship.prototype.createSystems = function() {
   var system, type, enhancement,
-      systems = this.systems;
+      systems = this.systems,
+      cargo = this.cargo;
   for(var type in systems) {
     system = new this.model.System(new System(type).toObject());
     enhancement = system.enhancement;
@@ -108,6 +109,11 @@ Ship.prototype.createSystems = function() {
       this.enhancements.available[enhancement] = new Enhancement(this, enhancement);
     }
     systems[type] = system.toStreamObject();
+    cargo[system.uuid] = {
+      uuid: system.uuid,
+      sprite: system.cargo,
+      enabled: true
+    };
   }
 };
 

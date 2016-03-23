@@ -4,6 +4,7 @@
       "alpha": {
         "name": "",
         "type": "reactor",
+        "cargo": "item-system-reactor",
         "mass": 50.0,
         "modifier": 1.0,
         "health": 100.0,
@@ -17,6 +18,7 @@
       "alpha": {
         "name": "",
         "type": "pilot",
+        "cargo": "item-system-pilot",
         "mass": 50.0,
         "modifier": 1.0,
         "health": 100.0,
@@ -29,6 +31,7 @@
       "alpha": {
         "name": "",
         "type": "engine",
+        "cargo": "item-system-engine",
         "mass": 50.0,
         "modifier": 1.0,
         "health": 100.0,
@@ -42,6 +45,7 @@
       "alpha": {
         "name": "",
         "type": "shield",
+        "cargo": "item-system-shield",
         "mass": 50.0,
         "modifier": 1.0,
         "health": 100.0,
@@ -55,6 +59,7 @@
       "alpha": {
         "name": "",
         "type": "targeting",
+        "cargo": "item-system-targeting",
         "mass": 50.0,
         "modifier": 1.0,
         "health": 100.0,
@@ -68,6 +73,7 @@
       "alpha": {
         "name": "",
         "type": "teleport",
+        "cargo": "item-system-teleport",
         "mass": 50.0,
         "modifier": 1.0,
         "health": 100.0,

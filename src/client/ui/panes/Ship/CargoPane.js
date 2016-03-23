@@ -53,11 +53,11 @@ function CargoPane(game, settings) {
         }
       },
       item: {
-        padding: [5],
+        padding: [1],
         layout: {
-          gap: [5, 5],
+          gap: [1, 1],
           columns: 6,
-          rows: 7
+          rows: 8
         },
         cell: {
           width: 40,
@@ -70,8 +70,8 @@ function CargoPane(game, settings) {
   
   this.pagePanes = [];
 
-  this.infoPane = new Pane(game, this.settings.info);
-  this.addContent(Layout.STRETCH, this.infoPane);
+  // this.infoPane = new Pane(game, this.settings.info);
+  // this.addContent(Layout.STRETCH, this.infoPane);
 
   this.content.bg.inputEnabled = true;
   this.content.bg.input.priorityID = 4;

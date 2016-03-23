@@ -75,22 +75,18 @@ ItemPane.prototype.getItem = function(item) {
 ItemPane.prototype.createItem = function(item) {
   return new ButtonIcon(this.game,
     this.settings.data.atlas, {
-      padding: [1],
+      padding: [0],
       border: [0],
       bg: {
-        radius: 0.0
+        color: 0x000000,
+        fillAlpha: 0.5,
+        blendMode: engine.BlendMode.NORMAL
       },
       icon: {
-        padding: [3],
+        padding: [4],
         border: [0],
         frame: item.sprite + '.png',
-        bg: {
-          highlight: false,
-          color: 0x000000,
-          fillAlpha: 0.5,
-          radius: 0.0,
-          borderSize: 0.0
-        }
+        bg: false
       }
     });
 };

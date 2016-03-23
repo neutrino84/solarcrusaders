@@ -34,13 +34,22 @@ Panel.prototype.addPanel = function(constraint, panel) {
 
   this.panels.push(panel);
   this.add(panel);
-  // this.invalidate();
+};
+
+Panel.prototype.addPanelAt = function(constraint, panel, index) {
+  if(panel.constraint != null) {
+    constr = panel.constraint;
+  } else {
+    panel.constraint = constraint;
+  }
+
+  this.panels.splice(index, 0, panel);
+  this.addAt(panel, index);
 };
 
 Panel.prototype.removePanel = function(panel) {
   this.panels.splice(this.panels.indexOf(panel), 1);
   this.remove(panel);
-  // this.invalidate();
 };
 
 Panel.prototype.removeAll = function() {
@@ -55,7 +64,6 @@ Panel.prototype.removeAll = function() {
 Panel.prototype.addView = function(view) {
   this.views.push(view);
   this.add(view);
-  // this.invalidate();
 };
 
 Panel.prototype.invalidate = function(local) {
@@ -147,8 +155,6 @@ Panel.prototype.setBorder = function(top, left, bottom, right) {
     this.border.left = left;
     this.border.bottom = bottom;
     this.border.right = right;
-
-    // this.invalidate();
   }
 
   return this;
@@ -173,8 +179,6 @@ Panel.prototype.setPadding = function(top, left, bottom, right) {
     this.padding.left = left;
     this.padding.bottom = bottom;
     this.padding.right = right;
-
-    // this.invalidate();
   }
 
   return this;
@@ -207,7 +211,6 @@ Panel.prototype.setPreferredSize = function(width, height) {
   if(width != this.psWidth || height != this.psHeight) {
     this.psWidth = width;
     this.psHeight = height;
-    // this.invalidate();
   }
 };
 
