@@ -44,7 +44,7 @@ UserManager.prototype.add = function(user) {
     } else {
       self.game.emit('ship/create', {
         name: Generator.getName('ubaidian'),
-        chassis: 'ubaidian-x03'
+        chassis: 'ubaidian-x04'
       }, u);
     }
   }
