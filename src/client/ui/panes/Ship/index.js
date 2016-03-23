@@ -68,7 +68,6 @@ Ship.prototype.constructor = Ship;
 Ship.prototype._playerSelect = function(data) {
   if(!this.data) {
     this.data = data;
-    this.cargoPane.create(data);
     this.fittingPane.create(data);
 
     //..
@@ -81,8 +80,9 @@ Ship.prototype._open = function() {
   if(this.data === undefined) { return; }
 
   this.fittingPane.reset(this.data);
+  this.cargoPane.create(this.data);
 
-  this.closeButton.start();
+  this.closeButton.start(4);
   this.cargoPane.start();
   this.fittingPane.start();
 

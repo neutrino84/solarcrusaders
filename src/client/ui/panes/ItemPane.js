@@ -12,10 +12,9 @@ function ItemPane(game, settings) {
       layout: {
         type: 'list',
         gap: [2, 2],
-        columns: 3,
-        rows: 2
+        columns: 3
       },
-      cell: {
+      cel: {
         bg: {
           fillAlpha: 0.2,
           color: 0x000000
@@ -28,37 +27,34 @@ function ItemPane(game, settings) {
     })
   );
 
+  // cels
+  this.cels = [];
+
   // cache
   this.cache = {};
-
-  // create
-  this.create();
 };
 
 ItemPane.prototype = Object.create(Pane.prototype);
 ItemPane.prototype.constructor = ItemPane;
 
 ItemPane.prototype.reset = function(items) {
-  var data, item, cell, index = 0,
-      cells = this.panels;
-  for(var i in items) {
-    data = items[i];
-    cell = cells[index++];
+  var item,
+      columns = this.settings.layout.columns,
+      len = items.length,
+      remaining = columns - items.length;
+  
+  // clear
+  this.removeAll();
 
-    item = this.getItem(data);
-
-    cell.removeAll();
-    cell.addPanel(Layout.NONE, item);
-  }
-};
-
-ItemPane.prototype.create = function() {
-  var layout = this.settings.layout,
-      columns = layout.columns,
-      rows = layout.rows,
-      len = columns * rows;
+  // add items
   for(var i=0; i<len; i++) {
-    this.addPanel(Layout.NONE, this.createCell());
+    item = this.getItem(items[i]);
+    this.addPanel(Layout.NONE, item);
+  }
+
+  // add empty
+  for(var i=0; i<remaining; i++) {
+    this.addPanel(Layout.NONE, this.createCel());
   }
 };
 
@@ -80,7 +76,8 @@ ItemPane.prototype.createItem = function(item) {
       bg: {
         color: 0x000000,
         fillAlpha: 0.5,
-        blendMode: engine.BlendMode.NORMAL
+        blendMode: engine.BlendMode.NORMAL,
+        radius: 0.0
       },
       icon: {
         padding: [4],
@@ -91,8 +88,19 @@ ItemPane.prototype.createItem = function(item) {
     });
 };
 
-ItemPane.prototype.createCell = function() {
-  return new Pane(this.game, this.settings.cell);
+ItemPane.prototype.createCel = function() {
+  var cels = this.cels,
+      len = cels.length,
+      cel;
+  for(var i=0; i<len; i++) {
+    if(!cels[i].parent) {
+      cel = cels[i];
+    }
+  }
+  if(!cel) {
+    cels.push(cel = new Pane(this.game, this.settings.cel));
+  }
+  return cel;
 };
 
 module.exports = ItemPane;

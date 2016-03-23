@@ -112,7 +112,8 @@ Ship.prototype.createSystems = function() {
     cargo[system.uuid] = {
       uuid: system.uuid,
       sprite: system.cargo,
-      enabled: true
+      enabled: true,
+      type: 'system'
     };
   }
 };
@@ -129,7 +130,8 @@ Ship.prototype.createHardpoints = function() {
     this.cargo[hardpoint.uuid] = {
       uuid: hardpoint.uuid,
       sprite: hardpoint.cargo,
-      enabled: true
+      enabled: true,
+      type: 'hardpoint'
     };
   }
 };
