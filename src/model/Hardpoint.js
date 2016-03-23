@@ -19,6 +19,11 @@ var Hardpoint = schema.define('hardpoint', {
 Hardpoint.ENHANCEMENTS = [];
 Hardpoint.TYPES = ['mining', 'laser', 'rocket', 'bomb', 'ion', 'plasma', 'flak'];
 
+Hardpoint.validatesPresenceOf('name');
+Hardpoint.validatesPresenceOf('type');
+Hardpoint.validatesPresenceOf('sprite');
+Hardpoint.validatesPresenceOf('cargo');
+
 Hardpoint.validatesInclusionOf('type', { in: Hardpoint.TYPES });
 Hardpoint.validatesInclusionOf('enhancement', { in: Hardpoint.ENHANCEMENTS, allowNull: true });
 
