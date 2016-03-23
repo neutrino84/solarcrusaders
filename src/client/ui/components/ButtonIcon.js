@@ -81,8 +81,8 @@ function ButtonIcon(game, key, settings) {
 ButtonIcon.prototype = Object.create(Panel.prototype);
 ButtonIcon.prototype.constructor = ButtonIcon;
 
-ButtonIcon.prototype.start = function() {
-  this.input.start(2);
+ButtonIcon.prototype.start = function(priority) {
+  this.input.start(priority || 2);
 };
 
 ButtonIcon.prototype.stop = function() {
