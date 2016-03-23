@@ -49,9 +49,6 @@ function ButtonIcon(game, key, settings) {
     this.disabled = true;
   }
 
-  this.bg = new BackgroundView(game, this.settings.bg);
-  this.bg.alpha = 0.75;
-
   // input handler
   this.input = new engine.InputHandler(this);
   this.input.start(2);
@@ -70,7 +67,14 @@ function ButtonIcon(game, key, settings) {
   this.on('inputUp', this._inputUp, this);
 
   // build icon
-  this.addView(this.bg);
+  if(this.settings.bg) {
+    this.bg = new BackgroundView(game, this.settings.bg);
+    this.bg.alpha = 0.75;
+    this.addView(this.bg);
+  } else {
+    this.bg = {};
+  }
+
   this.addPanel(Layout.USE_PS_SIZE, this.image);
 };
 

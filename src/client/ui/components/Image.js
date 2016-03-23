@@ -31,6 +31,8 @@ function Image(game, key, settings) {
   if(this.settings.bg) {
     this.bg = new BackgroundView(game, this.settings.bg);
     this.addView(this.bg);
+  } else {
+    this.bg = {};
   }
 
   this.addView(this.image);
