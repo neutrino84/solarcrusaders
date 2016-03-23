@@ -44,9 +44,12 @@ Authentication.prototype.init = function() {
           username = Generator.getGuest(),
           guest = new self.model.User({ name: name, username: username });
       req.session.user = guest.toStreamObject();
-      req.session.save();
+      req.session.save(function() {
+        next();
+      });
+    } else {
+      next();
     }
-    next();
   });
 
   // monitor socket disconnect
@@ -55,7 +58,6 @@ Authentication.prototype.init = function() {
     socket.on('disconnect', function() {
       winston.info('[Authentication] Socket ' + socket.handshake.session.socket + ' closed');
       self.game.emit('auth/logout', socket.handshake.session.user);
-      socket.handshake.session.save();
     });
   });
 
