@@ -75,9 +75,7 @@ Ship.validatesNumericalityOf('durability');
 Ship.validatesNumericalityOf('speed');
 Ship.validatesNumericalityOf('critical');
 
-Ship.afterInitialize = function() {
-  //.. TODO:
-  //.. THIS NEEDS TO BE REMOVED
+Ship.prototype.init = function() {
   var config, stats;
   if(this.chassis && this.isNewRecord()) {
     config = client.ShipConfiguration[this.chassis],

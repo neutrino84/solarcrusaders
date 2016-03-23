@@ -37,16 +37,14 @@ UserManager.prototype.add = function(user) {
     u.ships = [];
     this.users[user.uuid] = u;
     if(u.role === 'guest') {
-      self.game.emit('ship/create', Generator.getName('ubaidian'), 'ubaidian-x04', {
-        kills: u.kills || 0,
-        disables: u.disables || 0,
-        assists: u.assists || 0
+      self.game.emit('ship/create', {
+        name: Generator.getName('ubaidian'),
+        chassis: 'ubaidian-x04'
       }, u);
     } else {
-      self.game.emit('ship/create', Generator.getName('ubaidian'), 'ubaidian-x03', {
-        kills: u.kills || 0,
-        disables: u.disables || 0,
-        assists: u.assists || 0
+      self.game.emit('ship/create', {
+        name: Generator.getName('ubaidian'),
+        chassis: 'ubaidian-x03'
       }, u);
     }
   }
@@ -58,10 +56,6 @@ UserManager.prototype.remove = function(user) {
   var u = this.users[user.uuid],
       ships = u.ships;
   for(var s in ships) {
-    user.kills = ships[s].data.kills;
-    user.disables = ships[s].data.disables;
-    user.assists = ships[s].data.assists;
-
     this.game.emit('ship/remove', ships[s]);
   }
 

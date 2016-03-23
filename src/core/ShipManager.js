@@ -51,21 +51,14 @@ ShipManager.prototype.add = function(ship) {
   }
 };
 
-ShipManager.prototype.create = function(name, chassis, data, user, position) {
-  var self = this,
-      position = position || this._generateRandomPosition(),
-      shipModel = new this.model.Ship(Utils.extend({
-        name: name,
-        chassis: chassis,
-        x: position.x,
-        y: position.y
-      }, data)),
-      ship = new Ship(this, shipModel);
-
-  // add user
+ShipManager.prototype.create = function(data, user, position) {
+  var self = this, ship,
+      position = position || this._generateRandomPosition();
+  ship = new Ship(this, Utils.extend({
+    x: position.x,
+    y: position.y
+  }, data));
   ship.user = user;
-
-  // init ship
   ship.init(function(err) {
     self.game.emit('ship/add', ship);
   });
@@ -217,9 +210,11 @@ ShipManager.prototype.generateRandomShips = function() {
 };
 
 ShipManager.prototype.generateRandomShip = function(chassis, race) {
-  var name = Generator.getName(race),
+  var name = Generator.getName(race).toUpperCase(),
       throttle = global.Math.random() * 1.5 + 0.75;
-      this.create(name.toUpperCase(), chassis, {
+      this.create({
+        name: name,
+        chassis: chassis,
         throttle: throttle
       });
 };
@@ -351,7 +346,9 @@ ShipManager.prototype._updateBattles = function() {
             update.disables = ++target.data.disables;
 
             // spawn
-            this.create(target.data.name, target.chassis, {
+            this.create({
+              name: target.data.name,
+              chassis: target.chassis,
               kills: target.data.kills,
               disables: target.data.disables,
               assists: target.data.assists

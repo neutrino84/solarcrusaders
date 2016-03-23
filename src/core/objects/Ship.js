@@ -12,17 +12,19 @@ function Ship(manager, data) {
   this.game = manager.game;
   this.sockets = manager.sockets;
   this.model = manager.model;
-  this.data = data;
+  
+  this.data = new this.model.Ship(data);
+  this.data.init();
 
-  this.uuid = data.uuid;
-  this.chassis = data.chassis;
-  this.config = client.ShipConfiguration[data.chassis];
+  this.uuid = this.data.uuid;
+  this.chassis = this.data.chassis;
+  this.config = client.ShipConfiguration[this.data.chassis];
 
   this.ignoreEnhancements = false;
 
-  this.throttle = global.parseFloat(data.throttle);
-  this.rotation = global.parseFloat(data.rotation);
-  this.position = new engine.Point(global.parseFloat(data.x), global.parseFloat(data.y));
+  this.throttle = global.parseFloat(this.data.throttle);
+  this.rotation = global.parseFloat(this.data.rotation);
+  this.position = new engine.Point(global.parseFloat(this.data.x), global.parseFloat(this.data.y));
   this.interpolate = this.position.copyFrom.bind(this.position);
 
   this.timers = [];
