@@ -37,10 +37,10 @@ Damage.prototype.inflict = function(position) {
   damageTween.to({ alpha: 0 }, 4000, engine.Easing.Quadratic.InOut, true, 1000);
   damageTween.once('complete', function() {
     damage.destroy();
+    spot.destroy();
   }, this);
 
   timer = game.clock.events.repeat(50, 40, function() { spot.alpha = global.Math.random(); });
-  timer.on('complete', function() { spot.destroy(); });
 
   ship.addChild(damage);
   ship.addChild(spot);
