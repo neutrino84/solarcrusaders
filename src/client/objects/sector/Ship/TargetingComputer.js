@@ -22,12 +22,12 @@ TargetingComputer.prototype.enremove = function(enhancement) {
 };
 
 TargetingComputer.prototype.create = function() {
-  var hardpoint, config, data, index,
+  var hardpoint, config, data, slot,
       parent = this.parent,
       hardpoints = parent.details.hardpoints;
   for(var h in hardpoints) {
-    index = hardpoints[h].index;
-    hardpoint = new Hardpoint(this, hardpoints[h], this.config.hardpoints[index]);
+    slot = hardpoints[h].slot;
+    hardpoint = new Hardpoint(this, hardpoints[h], this.config.hardpoints[slot]);
     hardpoint.fxGroup = parent.manager.fxGroup;
     hardpoint.flashEmitter = parent.manager.flashEmitter;
     hardpoint.explosionEmitter = parent.manager.explosionEmitter;
