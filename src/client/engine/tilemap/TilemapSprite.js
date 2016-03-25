@@ -56,8 +56,8 @@ function TilemapSprite(game, tilemap, index, width, height) {
 TilemapSprite.prototype = Object.create(Sprite.prototype);
 TilemapSprite.prototype.constructor = TilemapSprite;
 
-TilemapSprite.prototype.postUpdate = function() {
-  Sprite.prototype.postUpdate.call(this);
+TilemapSprite.prototype.update = function() {
+  Sprite.prototype.update.call(this);
 
   this.render();
 };
