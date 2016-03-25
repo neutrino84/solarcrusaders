@@ -115,16 +115,20 @@ EnhancementPane.prototype._enhancmentStarted = function(data) {
         button: button
       };
 
-  ev = game.clock.events.repeat(250, cooldown.total, this._updateCooldown, cooldown);
-  ev.on('complete', function(cooldown) {
+  ev = game.clock.create();
+  ev.repeat(250, cooldown.total, this._updateCooldown, cooldown);
+  ev.on('complete', function() {
     cooldown.button.disabled = false;
     cooldown.button.count.visible = false;
     cooldown.button.setProgressBar(1.0);
   });
+  ev.start();
 
   if(config.active) {
     active = { count: config.active * 10, total: config.active * 10, button: button };
-    ev = game.clock.events.repeat(100, active.total, this._updateActive, active);
+    ev = game.clock.create();
+    ev.repeat(100, active.total, this._updateActive, active);
+    ev.start();
   }
 
   button.disabled = true;
