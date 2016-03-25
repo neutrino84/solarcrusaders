@@ -45,11 +45,11 @@ Server.prototype.init = function(next) {
       secure: false,
       maxAge: 86400000
     },
-    saveUninitialized: true,
+    saveUninitialized: false,
     proxy: true,
     resave: false,
-    unset: 'destroy'
-    // rolling: true
+    unset: 'destroy',
+    rolling: false
   });
 
   this.http = http.createServer(this.express);
