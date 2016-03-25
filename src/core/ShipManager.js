@@ -54,9 +54,9 @@ ShipManager.prototype.add = function(ship) {
 ShipManager.prototype.create = function(data, user, position) {
   var self = this, ship,
       position = position || this._generateRandomPosition(),
-      data = Utils.extend({ x:
-        position.x,
-        y: position.y
+      data = Utils.extend({
+        x: data.x || position.x,
+        y: data.y || position.y
       }, data);
   ship = new Ship(this, data);
   ship.user = user;
@@ -113,7 +113,8 @@ ShipManager.prototype.plot = function(sock, args, next) {
 };
 
 ShipManager.prototype.data = function(sock, args, next) {
-  var self = this, ship, enhancements, systems, cargo, uuid,
+  var self = this, ship, enhancements, systems,
+      cargo, uuid, username,
       user = sock.sock.handshake.session.user,
       uuids = args[1].uuids,
       ships = [];
@@ -121,6 +122,7 @@ ShipManager.prototype.data = function(sock, args, next) {
     ship = this.ships[uuids[u]];
     if(ship) {
       ship.ignoreEnhancements = true;
+      username = ship.user ? ship.user.data.username : ship.data.name;
       enhancements = Object.keys(ship.enhancements.available);
       uuid = ship.user ? ship.user.uuid : null;
       cargo = uuid === user.uuid ? ship.cargo : {};
@@ -129,7 +131,7 @@ ShipManager.prototype.data = function(sock, args, next) {
         uuid: ship.uuid,
         user: uuid,
         name: ship.data.name,
-        username: ship.user ? ship.user.username : ship.data.name,
+        username: username,
         chassis: ship.chassis,
         sector: ship.sector,
         x: ship.x,
@@ -227,7 +229,7 @@ ShipManager.prototype._plot = function(ship, destination, current, previous) {
   current = current || movement.current;
   previous = previous || movement.previous;
   movement.plot(destination, current, previous);
-  this.sockets.io.sockets.emit('ship/plotted', {
+  movement.valid && this.sockets.io.sockets.emit('ship/plotted', {
     uuid: ship.uuid,
     destination: destination,
     throttle: ship.throttle,
@@ -406,7 +408,7 @@ ShipManager.prototype._updateAI = function() {
     ship = ships[s];
     b = this.battles[ship.uuid];
     
-    if(!ship.user && global.Math.random() > 0.82) {
+    if(!ship.user && global.Math.random() > 0.88) {
       // plot ship
       this._plot(ship, this._generateRandomPosition());
 

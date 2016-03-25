@@ -12,7 +12,7 @@ Model.prototype.toStreamObject = function() {
     if(self[attr] instanceof List) {
       data[attr] = self[attr].toObject();
     } else if(self.__data.hasOwnProperty(attr)) {
-      if(attr !== 'id' && attr !== 'password' && attr.indexOf('fk_') !== 0) {
+      if(attr !== 'password' && attr.indexOf('fk_') !== 0) {
         data[attr] = self[attr];
       }
     } else {

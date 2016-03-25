@@ -14,8 +14,8 @@ function Authentication(routes) {
   this.game = app.game;
   this.model = app.model;
   this.server = app.server;
-
-  this.stripe = routes.stripe;
+  this.sockets = app.sockets;
+  this.io = app.sockets.io;
 
   // queue must be used to
   // prevent duplication
@@ -53,22 +53,13 @@ Authentication.prototype.init = function() {
   });
 
   // monitor socket disconnect
-  this.routes.io.on('connection', function(socket) {
-    self.game.emit('auth/login', socket.handshake.session.user);
+  this.io.on('connection', function(socket) {
+    self.game.emit('auth/connection', socket);
     socket.on('disconnect', function() {
-      winston.info('[Authentication] Socket ' + socket.handshake.session.socket + ' closed');
-      self.game.emit('auth/logout', socket.handshake.session.user);
-    });
-  });
-
-  // send socket the session user
-  this.routes.iorouter.on('user', function(sockets, args, next) {
-    var sock = sockets.sock,
-        session = sock.handshake.session;
-    sock.handshake.session.reload(function() {
-      sockets.emit('user', {
-        user: sockets.sock.handshake.session.user
-      });
+      var session = this.handshake.session,
+          socket = session.socket;
+      winston.info('[Authentication] Socket ' + socket + ' closed');
+      self.game.emit('auth/disconnect', this);
     });
   });
 };
@@ -120,36 +111,35 @@ Authentication.prototype.register = function(req, res, next) {
 };
 
 Authentication.prototype.login = function(req, res, next) {
-  var self = this;
-  passport.authenticate('local', function(err, userData, info) {
-    if(err) { return next(err); }
-    if(!userData) {
-      return next(new Error('[[error:no-credentials]]'));
-    }
-    self.model.Stripe.findOne({ where: { email: userData.email }}, function(err, stripe) {
+  var self = this,
+      session = req.session,
+      socket = this.sockets.getSocketById(session.socket),
+      handshake;
+  if(socket) {
+    passport.authenticate('local', function(err, userData, info) {
       if(err) { return next(err); }
-
-      if(stripe) {
-        userData.edition = stripe.edition;
-      } else {
-        userData.edition = 'recruit';
-      }
+      if(!userData) { return next(new Error('[[error:no-credentials]]')); }
 
       // notify game
-      self.game.emit('auth/logout', req.session.user);
-      self.game.emit('auth/login', userData);
+      self.game.emit('auth/logout', session);
 
-      // store session
-      // serve response
-      req.session.user = userData;
-      req.session.save(function() {
+      // store new session
+      session.user = userData;
+      handshake = socket.handshake.session;
+      async.series([
+        session.save.bind(session),
+        handshake.reload.bind(handshake)
+      ], function(err, results) {
+        self.game.emit('auth/login', session);
         res.json({
           info: info,
           user: userData
         });
       });
-    });
-  })(req, res, next);
+    })(req, res, next);
+  } else {
+    return next(new Error('[[error:no-socket]]'));
+  }
 };
 
 Authentication.prototype.localLogin = function(req, username, password, next) {
@@ -197,7 +187,7 @@ Authentication.prototype.logout = function(req, res, next) {
       if(err) { return next(err); }    
 
       // notify game
-      self.game.emit('auth/logout', session.user);    
+      self.game.emit('auth/logout', session);    
       
       // logout
       req.logout();

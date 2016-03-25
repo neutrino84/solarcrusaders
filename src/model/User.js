@@ -10,12 +10,14 @@ var User = schema.define('user', {
   uuid:       { type: schema.UUID, default: uuid.v4 },
   status:     { type: schema.String, default: 'offline' },
   role:       { type: schema.String, default: 'guest' },
+  edition:    { type: schema.String, default: 'none' },
   name:       { type: schema.String },
   username:   { type: schema.String },
   userslug:   { type: schema.String, index: true, unique: true },
   email:      { type: schema.String, index: true, unique: true },
   password:   { type: schema.String },
-  reputation: { type: schema.Integer, default: 0 },
+  credits:    { type: schema.Number, default: 0.0 },
+  reputation: { type: schema.Number, default: 0.0 },
   logins:     { type: schema.Integer, default: 0 },
   banned:     { type: schema.Integer, default: 0 },
   created:    { type: schema.Date, default: Date.now }
@@ -34,23 +36,28 @@ User.validatesUniquenessOf('email', { message: 'email already registered' });
 
 User.validatesInclusionOf('role', { in: ['guest', 'user', 'moderator', 'admin'] });
 User.validatesInclusionOf('status', { in: ['online', 'offline'] });
-User.validatesNumericalityOf('reputation', { int: true });
+User.validatesInclusionOf('edition', { in: ['none', 'lieutenant', 'commander', 'captain'] });
+
+User.validatesNumericalityOf('credits');
+User.validatesNumericalityOf('reputation');
 User.validatesNumericalityOf('logins', { int: true });
 
 function emailValidator(err) {
-  if(!Validator.isEmailValid(this.email)) { err(); }
+  if(this.isNewRecord()) {
+    if(!Validator.isEmailValid(this.email)) { err(); }
+  }
 };
 
 function usernameValidator(err) {
-  if(!Validator.isUsernameValid(this.username)) { err(); }
+  if(this.isNewRecord()) {
+    if(!Validator.isUsernameValid(this.username)) { err(); }
+  }
 };
 
 User.prototype.sanitize = function() {
-  if(this.isNewRecord()) {
-    this.userslug = Sanitation.slugify(this.username);
-    this.email = Sanitation.email(this.email);
-    this.name = Sanitation.name(this.name);
-  }
+  this.userslug = Sanitation.slugify(this.username);
+  this.email = Sanitation.email(this.email);
+  this.name = Sanitation.name(this.name);
 };
 
 User.beforeCreate = function(next) {

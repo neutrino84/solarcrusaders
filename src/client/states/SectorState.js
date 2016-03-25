@@ -85,7 +85,7 @@ SectorState.prototype.create = function() {
   }, this);
 
   // login
-  if(game.net.connected) {
+  if(game.auth.ready) {
     this.game.gui.login(game.auth.user);
   }
 

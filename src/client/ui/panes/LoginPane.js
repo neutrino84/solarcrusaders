@@ -135,7 +135,7 @@ LoginPane.prototype._login = function() {
             break;
         }
       } else if(user) {
-        self.game.emit('gui/loggedin', user);
+        self.game.emit('gui/login', user);
       }
     });
   } else {

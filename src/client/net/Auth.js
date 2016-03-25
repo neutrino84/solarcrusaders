@@ -5,19 +5,15 @@ var engine = require('engine'),
 function Auth(game) {
   this.game = game;
   this.user = {};
+  this.ready = false;
   this.socket = game.net.socket;
 
-  this.socket.on('user', this._session.bind(this));
-  this.socket.on('connect', this._login.bind(this));
+  this.socket.on('user', this._user.bind(this));
+  this.socket.on('connect', this._connect.bind(this));
   this.socket.on('disconnect', this._disconnected.bind(this));
 
-  this.game.on('gui/loggedin', this._login, this);
+  this.game.on('gui/login', this._login, this);
   this.game.on('gui/logout', this._logout, this);
-
-  // if we connect really fast
-  if(game.net.connected) {
-    this._login();
-  }
 
   EventEmitter.call(this);
 };
@@ -33,18 +29,22 @@ Auth.prototype.isGuest = function() {
   return this.user.role === 'guest' ? true : false;
 }
 
-Auth.prototype._session = function(response) {
-  if(response === undefined) { throw new Error('[Auth] An empty user object was detected'); }
-  this.user = response.user;
+Auth.prototype._user = function(user) {
+  this.ready = true;
+  this.user = user;
   this.emit('user', this.user);
 };
 
-Auth.prototype._login = function() {
-  this.socket.emit('user');
+Auth.prototype._login = function(user) {
+  //..
 };
 
 Auth.prototype._logout = function() {
-  global.location.reload();
+  //..
+};
+
+Auth.prototype._connect = function() {
+  this.emit('connected');
 };
 
 Auth.prototype._disconnected = function() {

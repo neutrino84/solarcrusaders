@@ -58,6 +58,7 @@ function Ship(manager, data) {
 Ship.prototype.constructor = Ship;
 
 Ship.prototype.init = function(callback) {
+  var self = this;
   if(this.data.isNewRecord()) {
     this.createRooms();
     this.createSystems();
@@ -65,13 +66,44 @@ Ship.prototype.init = function(callback) {
     callback();
   } else {
     async.series([
-      // // user will already be known
-      // self.data.user.bind(self.data), 
+      // this.data.reload.bind(this.data),
       this.data.systems.bind(this.data),
       this.data.hardpoints.bind(this.data)
     ], function(err, results) {
+      self.createRooms();
+      self.createSystems();
+      self.createHardpoints();
       callback(err);
     });
+  }
+};
+
+Ship.prototype.save = function(callback) {
+  var self = this,
+      user = this.user;
+  if(user && !user.data.isNewRecord()) {
+    async.series([
+      function(next) {
+        self.data.fk_sector_ship = 1;
+        self.data.fk_user_ship = user.data.id;
+        self.data.x = self.position.x;
+        self.data.y = self.position.y;
+        self.data.rotation = self.rotation;
+        self.data.save(next);
+      }//,
+      // function(next) {
+      //   var system, type,
+      //       systems = self.systems;
+      //   for(var type in systems) {
+      //     system = new self.model.System(systems[type]);
+      //     system.fk_system_ship = self.data.id;
+      //     system.save();
+      //   }
+      //   next();
+      // }
+    ], callback);
+  } else {
+    callback();
   }
 };
 

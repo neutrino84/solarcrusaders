@@ -1,20 +1,20 @@
 
-var uuid = require('uuid'),
-    engine = require('engine'),
-    client = require('client'),
-    Utils = require('../utils'),
-    Generator = require('../utils/Generator');
+var winston = require('winston'),
+    User = require('./objects/User');
 
 function UserManager(game) {
   this.game = game;
   this.model = game.model;
-  this.winston = game.winston;
-  this.sockets = game.sockets;
-
+  
+  this.sockets = {};
+  this.sessions = {};
   this.users = {};
 
-  this.game.on('auth/login', this.add, this);
-  this.game.on('auth/logout', this.remove, this);
+  this.game.on('auth/connection', this.connection, this);
+  this.game.on('auth/disconnect', this.disconnect, this);
+
+  this.game.on('auth/login', this.login, this);
+  this.game.on('auth/logout', this.logout, this);
 
   this.game.on('ship/add', this.addShip, this);
   this.game.on('ship/remove', this.removeShip, this);
@@ -22,46 +22,79 @@ function UserManager(game) {
 
 UserManager.prototype.constructor = UserManager;
 
-UserManager.prototype.init = function() {
-  var self = this;
+UserManager.prototype.init = function() {};
+
+UserManager.prototype.connection = function(socket) {
+  var session = socket.handshake.session,
+      user = session.user;
+  if(user) {
+    this.sockets[socket.id] = socket;
+    this.game.emit('auth/login', session);
+  } else {
+    socket.disconnect();
+  }
 };
 
-UserManager.prototype.add = function(user) {
-  var self = this, ship,
-      cached = this.users[user.uuid],
-      u = Utils.extend({}, user);
-  if(cached) {
-    // throw Error('[UserManager] user already added');
-    //.. do nothing for now
+UserManager.prototype.disconnect = function(socket) {
+  var game = this.game,
+      session = socket.handshake.session;
+  game.emit('auth/logout', session);
+  delete this.sockets[socket.id];
+};
+
+UserManager.prototype.exists = function(u) {
+  var socket,
+      session = this.sessions[u.uuid];
+  if(session) {
+    winston.info('[UserManager] User session exists');
+    socket = this.sockets[session.socket];
+    socket && socket.disconnect();
+  }
+  return session ? true : false;
+};
+
+UserManager.prototype.login = function(session) {
+  var self = this,
+      u = session.user,
+      socket = this.sockets[session.socket],
+      user = this.users[u.uuid];
+  if(this.exists(u)) {
+    socket && socket.disconnect();
+  } else if(socket) {
+    this.sessions[u.uuid] = session;
+    user = this.users[u.uuid] = new User(this, u);
+    user.init(function(err) {
+      socket.emit('user', user.data.toStreamObject());
+    });
   } else {
-    u.ships = [];
-    this.users[user.uuid] = u;
-    if(u.role === 'guest') {
-      self.game.emit('ship/create', {
-        name: Generator.getName('ubaidian'),
-        chassis: 'ubaidian-x04'
-      }, u);
+    winston.info('[UserManager] Could not not find socket');
+  }
+};
+
+UserManager.prototype.logout = function(session) {
+  var self = this,
+      u = session.user || {},
+      user = this.users[u.uuid],
+      session = this.sessions[u.uuid],
+      ships, len;
+  if(user && session) {
+    if(!user.data.isNewRecord()) {
+      // don't release until
+      // user is saved
+      user.save(destroy);
     } else {
-      self.game.emit('ship/create', {
-        name: Generator.getName('ubaidian'),
-        chassis: 'ubaidian-x04'
-      }, u);
+      destroy();
+    }
+
+    function destroy() {
+      ships = user.ships;
+      for(var s=0; s<ships.length; s++) {
+        self.game.emit('ship/remove', ships[s]);
+      }
+      delete self.sessions[u.uuid];
+      delete self.users[u.uuid];
     }
   }
-};
-
-UserManager.prototype.remove = function(user) {
-  if(user && !this.users[user.uuid]) { return; }
-
-  var u = this.users[user.uuid],
-      ships = u.ships;
-  for(var s in ships) {
-    this.game.emit('ship/remove', ships[s]);
-  }
-
-  ships = undefined;
-
-  delete this.users[user.uuid];
 };
 
 UserManager.prototype.addShip = function(ship) {
@@ -75,7 +108,6 @@ UserManager.prototype.removeShip = function(ship) {
   if(ship.user) {
     user = ship.user;
     index = user.ships.indexOf(ship);
-    
     if(user.ships[index]) {
       delete user.ships[index];
     }
