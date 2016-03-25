@@ -16,8 +16,7 @@ function BackgroundFilter(game, width, height) {
     scale: { type: 'f', value: 1 }
   };
 
-  pixi.AbstractFilter.call(this,
-    fs.readFileSync(__dirname + '/BackgroundFilter.vert', 'utf8'),
+  pixi.AbstractFilter.call(this, null,
     fs.readFileSync(__dirname + '/BackgroundFilter.frag', 'utf8'),
       this.uniforms
   );
