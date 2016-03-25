@@ -21,27 +21,21 @@ var commands = Object.keys(redis.Multi.prototype).filter(function(n) {
 
 commands.forEach(function(cmd) {
   Client.prototype[cmd] = function(args, callback) {
-    var c = this._client, log;
-    if(typeof args === 'string') {
-      args = [args];
-    }
-    if(!args) {
-      args = [];
-    }
+    var c = this._client, log, cargs;
+    if(typeof args === 'string') { args = [args]; }
+    if(!args) { args = []; }
+    
     var lstr = cmd.toUpperCase() + ' ' + args.map(function(a) {
-      if(typeof a === 'object') {
-          return JSON.stringify(a);
-      }
+      if(typeof a === 'object') { return JSON.stringify(a); }
       return a;
     }).join(' ');
 
-    args.push(function(err, replies) {
-      if(err) {
-          console.log(err);
-      }
+    cargs = args.slice(0);
+    cargs.push(function(err, replies) {
+      if(err) { console.log(err); }
       callback && callback(err, replies);
     });
-    c[cmd].apply(c, args);
+    c[cmd].apply(c, cargs);
   };
 });
 
@@ -62,6 +56,24 @@ Client.prototype.multi = function(commands, callback) {
   }).join('\n  ') + '\nEXEC';
 
   this._client.multi(commands).exec(function(err, replies) {
+    if(err) { console.log(err); }
+    callback && callback(err, replies);
+  });
+};
+
+Client.prototype.batch = function(commands, callback) {
+  if(commands.length === 0) {
+    return callback && callback();
+  }
+
+  if(commands.length === 1) {
+    return this[commands[0].shift().toLowerCase()].call(
+      this, commands[0], callback && function(e, r) {
+        callback(e, [r]);
+      });
+  }
+
+  this._client.batch(commands).exec(function(err, replies) {
     if(err) { console.log(err); }
     callback && callback(err, replies);
   });
@@ -122,7 +134,7 @@ function BridgeToRedis(schema, callback) {
   this.indexes = {};
   this.schema = schema;
   this.callback = callback;
-  this._models = {};
+  this.models = {};
 };
 
 BridgeToRedis.prototype.initialize = function(client) {
@@ -146,7 +158,7 @@ BridgeToRedis.prototype.initialize = function(client) {
 BridgeToRedis.prototype.define = function(descr) {
   var m = descr.model.modelName,
       self = this;
-      self._models[m] = descr;
+      self.models[m] = descr;
       self.indexes[m] = {
         id: Number
       };
@@ -165,8 +177,8 @@ BridgeToRedis.prototype.defineForeignKey = function(model, key, cb) {
 };
 
 BridgeToRedis.prototype.forDatabase = function(model, data) {
-  var p = this._models[model].properties;
-  for (var i in data) {
+  var p = this.models[model].properties;
+  for(var i in data) {
     if(!p[i]) { continue; }
     if(typeof data[i] === 'undefined' || data[i] === null) {
       if(p[i].default || p[i].default === 0) {
@@ -180,7 +192,7 @@ BridgeToRedis.prototype.forDatabase = function(model, data) {
         continue;
       }
     }
-    switch ((p[i].type.name || '').toString().toLowerCase()) {
+    switch((p[i].type.name || '').toString().toLowerCase()) {
       case 'date':
         if(data[i].getTime) {
           data[i] = data[i].getTime().toString();
@@ -210,10 +222,9 @@ BridgeToRedis.prototype.forDatabase = function(model, data) {
 };
 
 BridgeToRedis.prototype.fromDatabase = function(model, data) {
-  var p = this._models[model].properties, d;
-  for (var i in data) {
+  var p = this.models[model].properties, d;
+  for(var i in data) {
     if(!p[i]) { continue; }
-    var type = (p[i].type.name || '').toString().toLowerCase();
     if(typeof data[i] === 'undefined' || data[i] === null) {
       if(p[i].default || p[i].default === 0) {
         if(typeof p[i].default === 'function') {
@@ -226,7 +237,7 @@ BridgeToRedis.prototype.fromDatabase = function(model, data) {
         continue;
       }
     }
-    switch (type) {
+    switch((p[i].type.name || '').toString().toLowerCase()) {
       case 'json':
         try {
           if(typeof data[i] === 'string') {
@@ -252,48 +263,56 @@ BridgeToRedis.prototype.fromDatabase = function(model, data) {
 };
 
 BridgeToRedis.prototype.save = function(model, data, callback) {
-  var self = this;
-  data = self.forDatabase(model, data);
+  var self = this,
+      schedule = [],
+      copy = {},
+      data = self.forDatabase(model, data);
   deleteNulls(data);
   self.client.hgetall(model + ':' + data.id, function(err, prevData) {
     if(err) { return callback(err); }
-    self.client.hmset([model + ':' + data.id, self.forDatabase(model, data)], function(err) {
-      if(err) { return callback(err); }
-      if(prevData) {
-        Object.keys(prevData).forEach(function(k) {
-          if(data.hasOwnProperty(k)) { return; }
-          data[k] = prevData[k];
-        });
-      }
-      self.updateIndexes(model, data.id, data, callback, self.forDatabase(model, prevData));
-    }.bind(this));
+    schedule.push(['HMSET', model + ':' + data.id, data]);
+    prevData && Object.keys(prevData)
+      .forEach(function(k) {
+        if(data.hasOwnProperty(k)) {
+          copy[k] = data[k];
+        } else {
+          copy[k] = prevData[k];
+        }
+      });
+    self.updateIndexes(model, data.id, prevData ? copy : data, callback, prevData, schedule);
   }.bind(this));
 };
 
-BridgeToRedis.prototype.updateIndexes = function(model, id, data, callback, prevData) {
-  var p = this._models[model].properties,
-      i = this.indexes[model],
-      schedule = [];
+BridgeToRedis.prototype.uniqueIndexes = function(model, id, data) {
+  var uniques = [],
+      props = this.models[model].properties;
+  for(var key in props) {
+    if(props[key].unique) {
+      uniques.push('indexes:' + model + ':' + key + ':' + data[key]);
+    }
+  }
+  return uniques;
+};
+
+BridgeToRedis.prototype.updateIndexes = function(model, id, data, callback, prevData, schedule) {
+  var indexes = this.indexes[model],
+      schedule = schedule || [];
+  
   if(!callback.removed) {
     schedule.push(['SADD', 'set:' + model, id]);
   }
-  
-  Object.keys(i).forEach(function(key) {
+
+  Object.keys(indexes).forEach(function(key) {
     if(data.hasOwnProperty(key)) {
-      var val = data[key];
-      schedule.push([
-        'SADD', 'indexes:' + model + ':' + key + ':' + val, id
-      ]);
+      schedule.push(['SADD', 'indexes:' + model + ':' + key + ':' + data[key], id]);
     }
     if(prevData && prevData[key] !== data[key]) {
-      schedule.push([
-        'SREM', 'indexes:' + model + ':' + key + ':' + prevData[key], id
-      ]);
+      schedule.push(['SREM', 'indexes:' + model + ':' + key + ':' + prevData[key], id]);
     }
   });
 
   if(schedule.length) {
-    this.client.multi(schedule, function(err) {
+    this.client.multi(schedule, function(err, reply) {
       callback(err, data);
     });
   } else {
@@ -303,22 +322,41 @@ BridgeToRedis.prototype.updateIndexes = function(model, id, data, callback, prev
 
 BridgeToRedis.prototype.create = function(model, data, callback) {
   if(data.id) { return create.call(this, data.id, true); }
-
+  
   this.client.incr('id:' + model, function(err, id) {
-    create.call(this, id);
+    if(err) { return callback(err); }
+    var schedule = [],
+        uniques = this.uniqueIndexes(model, id, data);
+    if(uniques.length) {
+      schedule.push(['WATCH'].concat(uniques));
+      for(var u in uniques) {
+        schedule.push(['SCARD', uniques[u]]);
+      }
+      this.client.batch(schedule, function(err, reply) {
+        if(err) { return callback(err); }
+        for(var r in reply) {
+          if(reply[r] === 'OK') { continue; }
+          if(reply[r] > 0) {
+            return this.client.unwatch([], function() {
+              callback('[Redis] unique property already set in database');
+            });
+          }
+        }
+        create.call(this, id);
+      }.bind(this));
+    } else {
+      create.call(this, id);
+    }
   }.bind(this));
-
-  function create(id, upsert) {
+  
+  function create(id) {
     data.id = id.toString();
     this.save(model, data, function(err) {
       if(callback) {
         callback(err, parseInt(id, 10));
       }
     });
-
-    // push the id to the list of user ids for sorting
-    this.client.sadd(['set:' + model, data.id]);
-  }
+  };
 };
 
 BridgeToRedis.prototype.update = function(model, filter, data, callback) {
@@ -381,369 +419,325 @@ BridgeToRedis.prototype.destroy = function destroy(model, id, callback) {
 };
 
 BridgeToRedis.prototype.possibleIndexes = function(model, filter, callback) {
+  if(!filter || Object.keys(filter.where || {}).length === 0) {
+    return callback([], [], true);
+  }
 
-    if(!filter || Object.keys(filter.where || {}).length === 0) {
-        // no index needed
-        callback([[], [], [], true]);
-        return false;
-        /*
-         filter.where = {
-         id: {
-         gt: 0
-         }
-         };
-         */
-    }
+  var self = this,
+      dest = 'where:' + (Date.now() * Math.random()),
+      props = self.models[model].properties,
+      compIndex = {},
+      foundIndex = [],
+      noIndex = [];
 
-    var self = this;
-    var dest = 'where:' + (Date.now() * Math.random());
-    var props = self._models[model].properties;
-    var compIndex = {};
-    var foundIndex = [];
-    var noIndex = [];
-
-    Object.keys(filter.where).forEach(function(key) {
-        var i = self.indexes[model][key];
-
-        if(i && typeof i !== 'undefined') {
-            var val = filter.where[key];
-            if(val && typeof val === 'object' && !val.getTime) {
-                var cin = 'indexes:' + model + ':' + key + ':';
-                if(!compIndex[key]) {
-                    compIndex[key] = {
-                        conds: []
-                    };
-                }
-                if(i.name === 'Date') {
-                    Object.keys(val).forEach(function(cndkey) {
-                        val[cndkey] = val[cndkey] && val[cndkey].getTime ? val[cndkey].getTime() : 0;
-                    });
-                }
-                compIndex[key].rkey = cin + '*';
-                compIndex[key].fkey = cin;
-                compIndex[key].type = props[key].type.name;
-                compIndex[key].conds.push(val);
-            } else {
-                if(i.name === 'Date') {
-                    val = val && val.getTime ? val.getTime() : 0;
-                }
-                foundIndex.push('indexes:' + model + ':' + key + ':' + val);
-            }
-        } else {
-            noIndex.push(key);
+  Object.keys(filter.where).forEach(function(key) {
+    var val, cin,
+        index = self.indexes[model][key];
+    if(index && typeof index !== 'undefined') {
+      // index value
+      val = filter.where[key];
+      
+      if(val && typeof val === 'object' && !val.getTime) {
+        // compound index
+        cin = 'indexes:' + model + ':' + key + ':';
+        if(!compIndex[key]) {
+          compIndex[key] = { conds: [] };
         }
-    }.bind(this));
-
-    if(Object.keys(compIndex || {}).length > 0) {
-        var multi = self.client._client.multi();
-        for (var ik in compIndex) {
-            multi.keys(compIndex[ik].rkey);
+        if(index.name === 'Date') {
+          Object.keys(val).forEach(function(cndkey) {
+            val[cndkey] = val[cndkey] && val[cndkey].getTime ? val[cndkey].getTime() : 0;
+          });
         }
-        multi.exec(function(err, mkeys) {
-            if(err) {
-                console.log(err);
-            }
-            var condIndex = [];
-            for (var ic in compIndex) {
-                var kregex = new RegExp('^' + compIndex[ic].fkey + '(.*)');
-                if(mkeys) {
-                    for (var i in mkeys) {
-                        var keys = mkeys[i];
-                        if(keys.length) {
-                            keys.forEach(function(key) {
-                                if(kregex.test(key)) {
-                                    var fkval = RegExp.$1;
-                                    // if(compIndex[ic].type === 'Number' || compIndex[ic].type === 'Date') {
-                                    //     fkval = parseInt(fkval);
-                                    // }
-                                    if(helpers.parseCond(fkval, compIndex[ic].conds[0])) {
-                                        condIndex.push(key);
-                                    }
-                                }
-                            }.bind(this));
-                        }
-                    }
-                }
-            }
-            condIndex.unshift(dest);
-            self.client._client.sunionstore(condIndex, function(err, replies) {
-                if(replies > 0) {
-                    foundIndex.push(dest);
-                }
-                callback([foundIndex, noIndex, [dest]]);
-            });
-        }.bind(this));
+        compIndex[key].rkey = cin + '*';
+        compIndex[key].fkey = cin;
+        compIndex[key].type = props[key].type.name;
+        compIndex[key].conds.push(val);
+      } else {
+        // regular index
+        if(index.name === 'Date') {
+          val = val && val.getTime ? val.getTime() : 0;
+        }
+        foundIndex.push('indexes:' + model + ':' + key + ':' + val);
+      }
     } else {
-        callback([foundIndex, noIndex, [dest]]);
+      noIndex.push(key);
     }
+  }.bind(this));
+
+  if(Object.keys(compIndex || {}).length > 0) {
+    var multi = self.client._client.multi();
+    for (var ik in compIndex) {
+      multi.keys(compIndex[ik].rkey);
+    }
+    multi.exec(function(err, mkeys) {
+      if(err) { console.log(err); }
+      var condIndex = [];
+      for (var ic in compIndex) {
+        var kregex = new RegExp('^' + compIndex[ic].fkey + '(.*)');
+        if(mkeys) {
+          for (var i in mkeys) {
+            var keys = mkeys[i];
+            if(keys.length) {
+              keys.forEach(function(key) {
+                if(kregex.test(key)) {
+                  var fkval = RegExp.$1;
+                  // if(compIndex[ic].type === 'Number' || compIndex[ic].type === 'Date') {
+                  //     fkval = parseInt(fkval);
+                  // }
+                  if(helpers.parseCond(fkval, compIndex[ic].conds[0])) {
+                    condIndex.push(key);
+                  }
+                }
+              }.bind(this));
+            }
+          }
+        }
+      }
+      condIndex.unshift(dest);
+      self.client._client.sunionstore(condIndex, function(err, replies) {
+        if(replies > 0) {
+          foundIndex.push(dest);
+        }
+        callback([foundIndex, noIndex, [dest]]);
+      });
+    }.bind(this));
+  } else {
+    callback(foundIndex, noIndex);
+  }
 };
 
-BridgeToRedis.prototype.all = BridgeToRedis.prototype.find = function all(model, filter, callback) {
-    if('function' === typeof filter) {
-        callback = filter;
-        filter = {};
+BridgeToRedis.prototype.all =
+BridgeToRedis.prototype.find = function all(model, filter, callback) {
+  if('function' === typeof filter) { callback = filter; filter = {}; }
+  if(!filter) { filter = {}; }
+
+  var self = this;
+  var dest = 'temp:' + (Date.now() * Math.random());
+
+  if(!filter) { filter = {}; }
+  if(!filter.order) { filter.order = 'id'; }
+  if(!filter.where) {
+    dest = 'set:' + model;
+    filter.where = {};
+  }
+
+  self.possibleIndexes(model, filter, function(indexes, noIndexes, bypass) {
+    var client = self.client,
+        sortCmd = [],
+        allNumeric = true,
+        reverse = false,
+        props = self.models[model].properties,
+        trans = self.client.transaction(),
+        cmd, orders, offset, limit;
+
+    // no index error
+    if(noIndexes.length) {
+      throw new Error(model + ': no indexes found for ' + noIndexes.join(', ') +
+        ' impossible to sort and filter using redis adapter');
     }
-    if(!filter) {
-        filter = {};
+
+    // temp
+    if(!bypass) {
+      if(indexes && indexes.length > 0) {
+        indexes.unshift(dest);
+        trans.sinterstore(indexes);
+      } else {
+        return callback(null, null);
+      }
     }
 
-    var self = this;
-    var dest = 'temp:' + (Date.now() * Math.random());
-
-    if(!filter) {
-        filter = {order: 'id'};
+    // only count
+    if(filter.getCount) {
+      trans.scard(dest, callback);
+      return trans.run();
     }
 
-    // WHERE
-    if(!filter.where) {
-        dest = 'set:' + model;
-        // no filtering, just sort/limit (if any)
-        // but we need where to be an object for possibleIndexes
-        filter.where = {};
+    // order
+    if(typeof filter.order === 'string') {
+      orders = [filter.order];
+    } else {
+      orders = filter.order;
     }
-
-    self.possibleIndexes(model, filter, function(pi) {
-        var client = self.client;
-        var cmd;
-        var sortCmd = [];
-        var props = self._models[model].properties;
-        var allNumeric = true;
-        var trans = self.client.transaction();
-        var indexes = pi[0];
-        var noIndexes = pi[1];
-
-        if(noIndexes.length) {
-            throw new Error(model + ': no indexes found for ' +
-                noIndexes.join(', ') +
-                ' impossible to sort and filter using redis adapter');
+    orders.forEach(function(key) {
+      var match = key.match(/\s+(A|DE)SC$/i);
+      if(match) {
+        key = key.replace(/\s+(A|DE)SC/i, '');
+        if(match[1] === 'DE') {
+          reverse = true;
         }
-
-        // indexes needed
-        if(pi.length < 4) {
-            if(indexes && indexes.length > 0) {
-                indexes.unshift(dest);
-                trans.sinterstore(indexes);
-            } else {
-                callback(null, null);
-                return;
-            }
+      }
+      if(key !== 'id') {
+        if(props[key].type.name !== 'Number' && props[key].type.name !== 'Date') {
+          allNumeric = false;
         }
-        // only counting?
-        if(filter.getCount) {
-            trans.scard(dest, callback);
-            return trans.run();
-        }
-
-        // ORDER
-        var reverse = false;
-        if(!filter.order) {
-            filter.order = 'id';
-        }
-        var orders = filter.order;
-        if(typeof filter.order === "string") {
-            orders = [filter.order];
-        }
-
-        orders.forEach(function(key) {
-            var m = key.match(/\s+(A|DE)SC$/i);
-            if(m) {
-                key = key.replace(/\s+(A|DE)SC/i, '');
-                if(m[1] === 'DE')
-                    reverse = true;
-            }
-            if(key !== 'id') {
-                if(props[key].type.name !== 'Number' && props[key].type.name !== 'Date') {
-                    allNumeric = false;
-                }
-            }
-            sortCmd.push("BY", model + ":*->" + key);
-        });
-
-        // LIMIT
-        if(filter.limit) {
-            var offset = (filter.offset || filter.skip || 0), limit = filter.limit;
-            sortCmd.push("LIMIT", offset, limit);
-        }
-
-        // we need ALPHA modifier when sorting string values
-        // the only case it's not required - we sort numbers
-        if(!allNumeric) {
-            sortCmd.push('ALPHA');
-        }
-
-        if(reverse) {
-            sortCmd.push('DESC');
-        }
-
-        sortCmd.unshift(dest);
-        sortCmd.push("GET", "#");
-        cmd = "SORT " + sortCmd.join(" ");
-
-        trans.sort(sortCmd, function(err, ids) {
-            if(err) {
-                return callback(err, []);
-            }
-            var sortedKeys = ids.map(function(i) {
-                return model + ":" + i;
-            });
-            handleKeys(err, sortedKeys);
-        }.bind(this));
-
-        if(dest.match(/^temp/)) {
-            trans.del(dest);
-        }
-
-        if(indexes && indexes.length > 0) {
-            indexes.forEach(function(idx) {
-                if(idx.match(/^where/)) {
-                    trans.del(idx);
-                }
-            }.bind(this));
-        }
-        trans.run(callback);
-
-        function handleKeys(err, keys) {
-            if(err) {
-                console.log(err);
-            }
-            var query = keys.map(function(key) {
-                return ['hgetall', key];
-            });
-            client.multi(query, function(err, replies) {
-                callback(err, (replies || []).map(function(r) {
-                    return self.fromDatabase(model, r);
-                }));
-            }.bind(this));
-        }
-
-        function numerically(a, b) {
-            return a[this[0]] - b[this[0]];
-        }
-
-        function literally(a, b) {
-            return a[this[0]] > b[this[0]];
-        }
-
-        return;
+      }
+      sortCmd.push('BY', model + ':*->' + key);
     });
+
+    // limit
+    if(filter.limit) {
+      offset = (filter.offset || filter.skip || 0);
+      limit = filter.limit;
+      sortCmd.push('LIMIT', offset, limit);
+    }
+
+    // alpha modifier
+    if(!allNumeric) {
+      sortCmd.push('ALPHA');
+    }
+
+    if(reverse) {
+      sortCmd.push('DESC');
+    }
+
+    sortCmd.unshift(dest);
+    sortCmd.push('GET', '#');
+    cmd = 'SORT ' + sortCmd.join(' ');
+
+    trans.sort(sortCmd, function(err, ids) {
+      if(err) { return callback(err, []); }
+      var sortedKeys = ids.map(function(i) {
+        return model + ':' + i;
+      });
+      handleKeys(err, sortedKeys);
+    }.bind(this));
+
+    if(dest.match(/^temp/)) {
+      trans.del(dest);
+    }
+
+    // if(indexes && indexes.length > 0) {
+    //   indexes.forEach(function(idx) {
+    //     if(idx.match(/^where/)) {
+    //       trans.del(idx);
+    //     }
+    //   }.bind(this));
+    // }
+
+    // run
+    trans.run(callback);
+        
+    function handleKeys(err, keys) {
+      if(err) { console.log(err); }
+      var query = keys.map(function(key) {
+        return ['hgetall', key];
+      });
+      client.multi(query, function(err, replies) {
+        callback(err, (replies || []).map(function(r) {
+          return self.fromDatabase(model, r);
+        }));
+      }.bind(this));
+    };
+
+    // function numerically(a, b) {
+    //   return a[this[0]] - b[this[0]];
+    // };
+
+    // function literally(a, b) {
+    //   return a[this[0]] > b[this[0]];
+    // };
+  });
 };
 
 BridgeToRedis.prototype.remove = function remove(model, filter, callback) {
-    var self = this;
-    var dest = 'temp:' + (Date.now() * Math.random());
-    self.possibleIndexes(model, filter, function(pi) {
-        var indexes = pi[0];
-        var noIndexes = pi[1];
-        var trans = self.client._client.multi();
+  var self = this;
+  var dest = 'temp:' + (Date.now() * Math.random());
+  self.possibleIndexes(model, filter, function(indexes, noIndexes) {
+    var trans = self.client._client.multi();
 
-        if(noIndexes.length) {
-            throw new Error(model + ': no indexes found for ' +
-                noIndexes.join(', ') +
-                ' impossible to sort and filter using redis adapter');
+    if(noIndexes.length) {
+      throw new Error(model + ': no indexes found for ' + noIndexes.join(', ') +
+        ' impossible to sort and filter using redis adapter');
+    }
+
+    if(indexes && indexes.length > 0) {
+      if(indexes.length === 1) {
+        indexes.unshift(dest);
+        trans.sunionstore(indexes);
+        trans.smembers(dest);
+      } else {
+        indexes.unshift(dest);
+        trans.sinterstore(indexes);
+      }
+    } else {
+      callback(null, null);
+    }
+
+    if(dest.match(/^temp/)) {
+      trans.del(dest);
+    }
+
+    if(indexes && indexes.length > 0) {
+      indexes.forEach(function(idx) {
+        if(idx.match(/^where/)) {
+          trans.del(idx);
         }
+      }.bind(this));
+    }
 
-        if(indexes && indexes.length > 0) {
-            if(indexes.length === 1) {
-                indexes.unshift(dest);
-                trans.sunionstore(indexes);
-                trans.smembers(dest);
-            } else {
-                indexes.unshift(dest);
-                trans.sinterstore(indexes);
-            }
-        } else {
-            callback(null, null);
-        }
+    trans.exec(function(err, result) {
+      if(err) { console.log(err); }
 
-        if(dest.match(/^temp/)) {
-            trans.del(dest);
-        }
-        if(indexes && indexes.length > 0) {
-            indexes.forEach(function(idx) {
-                if(idx.match(/^where/)) {
-                    trans.del(idx);
-                }
-            }.bind(this));
-        }
-
-        trans.exec(function(err, result) {
-            if(err) {
-                console.log(err);
-            }
-            var found = result[1] || [];
-            var query = found.map(function(key) {
-                return ['hgetall', (model + ':' + key)];
-            });
-
-            if(found && found.length > 0) {
-                self.client.multi(query, function(err, replies) {
-                    var schedule = [];
-                    if(replies && replies.length > 0) {
-                        replies.forEach(function(reply) {
-                            if(reply) {
-                                schedule.push([
-                                    'DEL',
-                                    model + ':' + reply.id
-                                ]);
-                                schedule.push([
-                                    'SREM',
-                                    'set:' + model,
-                                    reply.id
-                                ]);
-                                Object.keys(reply).forEach(function(replyKey) {
-                                    schedule.push([
-                                        'SREM',
-                                        'indexes:' + model + ':' + replyKey + ':' + reply[replyKey],
-                                        reply.id
-                                    ]);
-                                }.bind(this));
-                            }
-                        }.bind(this));
-                        self.client.multi(schedule, callback);
-                    } else {
-                        callback(null);
-                    }
+      var found = result[1] || [],
+          query = found.map(function(key) {
+            return ['hgetall', (model + ':' + key)];
+          });
+      if(found && found.length > 0) {
+        self.client.multi(query, function(err, replies) {
+          var schedule = [];
+          if(replies && replies.length > 0) {
+            replies.forEach(function(reply) {
+              if(reply) {
+                schedule.push(['DEL', model + ':' + reply.id]);
+                schedule.push(['SREM', 'set:' + model, reply.id]);
+                Object.keys(reply).forEach(function(replyKey) {
+                  schedule.push(['SREM', 'indexes:' + model + ':' + replyKey + ':' + reply[replyKey], reply.id]);
                 }.bind(this));
-            } else {
-                callback(null);
-            }
-        });
+              }
+            }.bind(this));
+            self.client.multi(schedule, callback);
+          } else {
+            callback(null);
+          }
+        }.bind(this));
+      } else {
+        callback(null);
+      }
     });
+  });
 };
 
 BridgeToRedis.prototype.destroyAll = function destroyAll(model, callback) {
-    var br = this;
-    br.client.multi([
-        ['KEYS', model + ':*'],
-        ['KEYS', '*:' + model + ':*']
-    ], function(err, k) {
-        br.client.del(k[0].concat(k[1]).concat('set:' + model), callback);
-    });
+  var br = this;
+  br.client.multi([
+    ['KEYS', model + ':*'],
+    ['KEYS', '*:' + model + ':*']
+  ], function(err, k) {
+    br.client.del(k[0].concat(k[1]).concat('set:' + model), callback);
+  });
 };
 
 BridgeToRedis.prototype.count = function count(model, callback, where) {
-    if(where && Object.keys(where).length) {
-        this.all(model, {where: where, getCount: true}, callback);
-    } else {
-        this.client.scard('set:' + model, callback);
-    }
+  if(where && Object.keys(where).length) {
+    this.all(model, {where: where, getCount: true}, callback);
+  } else {
+    this.client.scard('set:' + model, callback);
+  }
 };
 
 BridgeToRedis.prototype.updateAttributes = function updateAttrs(model, id, data, callback) {
-    var self = this;
-    data.id = id;
-    self.findById(model, id, function(err, prevData) {
-        self.save(model, data, callback, prevData);
-    });
+  data.id = id;
+  this.save(model, data, callback);
 };
 
 function deleteNulls(data) {
-    Object.keys(data).forEach(function(key) {
-        if(data[key] === null)
-            delete data[key];
-    });
+  Object.keys(data).forEach(function(key) {
+    if(data[key] === null) {
+      delete data[key];
+    }
+  });
 }
 
 BridgeToRedis.prototype.disconnect = function disconnect() {
-    this.client.quit();
+  this.client.quit();
 };
