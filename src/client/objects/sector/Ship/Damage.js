@@ -57,8 +57,6 @@ Damage.prototype.destroyed = function() {
       ship = this.ship;
 
   ship.destroyed = true;
-  ship.engineCore.destroy();
-
   ship.movement.animation.stop();
   // this.shockwave();
 
@@ -93,11 +91,22 @@ Damage.prototype.destroyed = function() {
       this.glowEmitter.explode(1);
     }
   }, this);
+
+  this.timer3 = game.clock.events.add(10000, function() {
+    ship.destroyed = false;
+
+    // unburned
+    ship.tint = 0xFFFFFF;
+    for(var i in ship.children) {
+      ship.children[i].tint = 0xFFFFFF;
+    }
+  }, this);
 };
 
 Damage.prototype.destroy = function() {
   this.timer1 && this.game.clock.events.remove(this.timer1);
-  this.timer2 &&this.game.clock.events.remove(this.timer2);
+  this.timer2 && this.game.clock.events.remove(this.timer2);
+  this.timer3 && this.game.clock.events.remove(this.timer3);
 
   this.ship = this.game =
     this.explosionEmitter = this.flashEmitter =
