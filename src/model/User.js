@@ -16,8 +16,8 @@ var User = schema.define('user', {
   userslug:   { type: schema.String, index: true, unique: true },
   email:      { type: schema.String, index: true, unique: true },
   password:   { type: schema.String },
-  credits:    { type: schema.Number, default: 0.0 },
-  reputation: { type: schema.Number, default: 0.0 },
+  credits:    { type: schema.Integer, default: 0 },
+  reputation: { type: schema.Integer, default: 0 },
   logins:     { type: schema.Integer, default: 0 },
   banned:     { type: schema.Integer, default: 0 },
   created:    { type: schema.Date, default: Date.now }
@@ -38,8 +38,8 @@ User.validatesInclusionOf('role', { in: ['guest', 'user', 'moderator', 'admin'] 
 User.validatesInclusionOf('status', { in: ['online', 'offline'] });
 User.validatesInclusionOf('edition', { in: ['none', 'lieutenant', 'commander', 'captain'] });
 
-User.validatesNumericalityOf('credits');
-User.validatesNumericalityOf('reputation');
+User.validatesNumericalityOf('credits', { int: true });
+User.validatesNumericalityOf('reputation', { int: true });
 User.validatesNumericalityOf('logins', { int: true });
 
 function emailValidator(err) {
