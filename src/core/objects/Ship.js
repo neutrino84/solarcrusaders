@@ -191,19 +191,6 @@ Ship.prototype.activate = function(name) {
       update = { uuid: this.uuid };
       update.energy = this.energy = global.Math.max(0.0, cost);
 
-      switch(name) {
-        case 'overload':
-        case 'booster':
-          // this.movement.reset();
-          // if(this.movement.animation.isPlaying) {
-          //   this.movement.update();
-          //   this.movement.plot();
-          // }
-          // update.speed = this.speed;
-          // update.throttle = this.throttle;
-          break;
-      }
-
       this.sockets.io.sockets.emit('ship/data', {
         type: 'update', ships: [update]
       });
@@ -227,22 +214,6 @@ Ship.prototype.deactivate = function(enhancement) {
   for(var s in stats) {
     delete active[s][enhancement.name];
   }
-  // switch(enhancement.name) {
-  //   case 'overload':
-  //   case 'booster':
-  //     this.movement.reset();
-  //     if(this.movement.animation.isPlaying) {
-  //       this.movement.update();
-  //       this.movement.plot();
-  //     }
-  //     update = { uuid: this.uuid };
-  //     update.speed = this.speed;
-  //     update.throttle = this.throttle;
-  //     this.sockets.io.sockets.emit('ship/data', {
-  //       type: 'update', ships: [update]
-  //     });
-  //     break;
-  // }
   this.sockets.io.sockets.emit('enhancement/stopped', {
     ship: this.uuid,
     enhancement: enhancement.name
