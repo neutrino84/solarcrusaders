@@ -8,9 +8,11 @@ function Auth(game) {
   this.ready = false;
   this.socket = game.net.socket;
 
-  this.socket.on('user', this._user.bind(this));
   this.socket.on('connect', this._connect.bind(this));
   this.socket.on('disconnect', this._disconnected.bind(this));
+
+  this.socket.on('user/sync', this._sync.bind(this));
+  this.socket.on('user/data', this._data.bind(this));
 
   this.game.on('gui/login', this._login, this);
   this.game.on('gui/logout', this._logout, this);
@@ -29,10 +31,17 @@ Auth.prototype.isGuest = function() {
   return this.user.role === 'guest' ? true : false;
 }
 
-Auth.prototype._user = function(user) {
+Auth.prototype._sync = function(user) {
   this.ready = true;
   this.user = user;
-  this.emit('user', this.user);
+  this.emit('sync', this.user);
+};
+
+Auth.prototype._data = function(user) {
+  for(var key in user) {
+    this.user[key] = user[key];
+  }
+  this.emit('data', this.user);
 };
 
 Auth.prototype._login = function(user) {

@@ -145,6 +145,8 @@ UserPane.prototype.stop = function() {
 UserPane.prototype.login = function(user) {
   this.visible = true;
   this.usernameLabel.text = user.username;
+  this.creditsLabel.text = engine.Math.formatMoney(user.credits);
+  this.reputationLabel.text = user.reputation;
   this.updateEdition(user);
   this.invalidate(true);
 };
@@ -164,6 +166,8 @@ UserPane.prototype.updateEdition = function(data) {
       group = 'alpha'; break;
     case 'lieutenant':
       group = 'beta'; break;
+    case 'none':
+      group = 'updating'; break;
     default:
       group = edition;
   }

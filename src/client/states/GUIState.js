@@ -129,7 +129,8 @@ GUIState.prototype.create = function() {
   // add root to stage
   this.game.stage.addChild(this.root);
 
-  this.auth.on('user', this.login, this);
+  this.auth.on('sync', this.login, this);
+  this.auth.on('data', this.data, this);
   this.auth.on('disconnected', this._disconnected, this);
 
   this.game.on('gui/modal', this.modal, this);
@@ -158,6 +159,11 @@ GUIState.prototype.login = function(user) {
   }
   this.toggle(true);
   this.loading();
+};
+
+GUIState.prototype.data = function(user) {
+  this.headerPane.login(user);
+  this.headerPane.invalidate(true);
 };
 
 GUIState.prototype.refresh = function() {

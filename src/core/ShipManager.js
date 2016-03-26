@@ -278,7 +278,7 @@ ShipManager.prototype._updateShips = function() {
 
 ShipManager.prototype._updateBattles = function() {
   var battle, origin, target, distance, delta,
-      accuracy, evasion, system,
+      accuracy, evasion, system, credits,
       battles = this.battles,
       update, updates = [];
   for(var b in battles) {
@@ -335,6 +335,15 @@ ShipManager.prototype._updateBattles = function() {
             origin: origin.uuid,
             target: target.uuid
           });
+
+          // award credits
+          if(origin.user) {
+            credits = target.config.stats.health * 100;
+            origin.user.data.credits += global.Math.round(global.Math.random() * credits + credits);
+            this.game.emit('user/data', origin.user, {
+              credits: origin.user.data.credits
+            });
+          }
 
           // spawn npc
           if(!target.user) {

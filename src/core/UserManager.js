@@ -16,6 +16,8 @@ function UserManager(game) {
   this.game.on('auth/login', this.login, this);
   this.game.on('auth/logout', this.logout, this);
 
+  this.game.on('user/data', this.data, this);
+
   this.game.on('ship/add', this.addShip, this);
   this.game.on('ship/remove', this.removeShip, this);
 };
@@ -53,6 +55,15 @@ UserManager.prototype.exists = function(u) {
   return session ? true : false;
 };
 
+UserManager.prototype.data = function(user, update) {
+  var socket,
+      session = this.sessions[user.uuid];
+  if(session && update) {
+    socket = this.sockets[session.socket];
+    socket.emit('user/data', update);
+  }
+};
+
 UserManager.prototype.login = function(session) {
   var self = this,
       u = session.user,
@@ -64,7 +75,7 @@ UserManager.prototype.login = function(session) {
     this.sessions[u.uuid] = session;
     user = this.users[u.uuid] = new User(this, u);
     user.init(function(err) {
-      socket.emit('user', user.data.toStreamObject());
+      socket.emit('user/sync', user.data.toStreamObject());
     });
   } else {
     winston.info('[UserManager] Could not not find socket');
