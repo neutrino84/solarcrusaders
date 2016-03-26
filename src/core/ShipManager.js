@@ -72,7 +72,7 @@ ShipManager.prototype.remove = function(ship) {
     delete this.ships[ship.uuid] && ship.destroy();
 
     this.count[ship.chassis] && this.count[ship.chassis]--;
-    this.sockets.io.sockets.emit('ship/destroyed', {
+    this.sockets.io.sockets.emit('ship/removed', {
       uuid: ship.uuid
     });
   }
@@ -314,19 +314,6 @@ ShipManager.prototype._updateBattles = function() {
           update.systems[battle.room] = {
             health: system.health
           };
-
-          // switch(battle.room) {
-          //   case 'engine':
-          //     update.speed = target.speed;
-          //     update.throttle = target.throttle;
-          //     // target.throttle = 1.0;
-          //     target.movement.reset();
-          //     if(target.movement.animation.isPlaying) {
-          //       target.movement.update();
-          //       target.movement.plot();
-          //     }
-          //     break;
-          // }
         }
 
         this.sockets.io.sockets.emit('ship/attack', {
@@ -340,25 +327,22 @@ ShipManager.prototype._updateBattles = function() {
         
         // destroy ship
         if(target.health <= 0) {
+          // stop movement
+          target.movement.animation.stop();
+
+          // disable
+          this.sockets.io.sockets.emit('ship/disabled', {
+            origin: origin.uuid,
+            target: target.uuid
+          });
+
           // spawn npc
           if(!target.user) {
             this.generateRandomShip(target.chassis, target.data.race);
-            this.game.emit('ship/remove', target);
+            // this.game.emit('ship/remove', target);
           } else {
             // award disable
             update.disables = ++target.data.disables;
-
-            // spawn
-            this.create({
-              name: target.data.name,
-              chassis: target.chassis,
-              kills: target.data.kills,
-              disables: target.data.disables,
-              assists: target.data.assists
-            }, target.user);
-
-            // destroy
-            this.game.emit('ship/remove', target);
           }
 
           // award kill
@@ -368,11 +352,15 @@ ShipManager.prototype._updateBattles = function() {
           });
 
           // award assists
-          for(var bat in battles) {
-            if(battles[bat]) {
-              //..
-            }
-          }
+          // for(var bat in battles) {
+          //   if(battles[bat]) {
+          //     //..
+          //   }
+          // }
+
+          // end battle
+          delete this.battles[origin.uuid];
+          delete this.battles[target.uuid];
         }
 
         // push updates

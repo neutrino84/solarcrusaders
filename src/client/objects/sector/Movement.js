@@ -16,9 +16,9 @@ function Movement(parent) {
   this.anticlockwise = false;
 
   this.destination = new engine.Point();
-  
-  // animation
-  this.animation = new Animation(parent.game, parent.position, []);
+  this.animation = new Animation(parent.game, parent);
+
+  this._tempPoint = new engine.Point();
 
   EventEmitter.call(this);
 }
@@ -35,194 +35,121 @@ Movement.prototype.reset = function() {
 };
 
 Movement.prototype.update = function() {
-  this.animation.update();
-
   var parent = this.parent,
       animation = this.animation,
-      lastFrame = animation.lastFrame,
+      lastFrame = this.lastFrame = parent.position.clone(this._tempPoint),
       a1, a2;
+
+  this.animation.update();
+
   if(animation.isPlaying && lastFrame) {
     a1 = lastFrame.y - parent.position.y;
     a2 = lastFrame.x - parent.position.x;
-
     if(a1 !== 0 && a2 !== 0) {
       parent.rotation = global.Math.atan2(a1, a2);
+    } else {
+      parent.rotation = 0;
     }
   }
 };
 
-Movement.prototype.plot = function(point, current, previous, delay) {
-  this.delay = delay | 0;
+Movement.prototype.plot = function(destination, current, previous, delay) {
+  var start = current ? current : this.current,
+      end = previous ? previous : this.previous,
+      destination = destination || this.destination,
+      oribital = this._findTangentCircle(start, end, destination);
 
-  this.startPosition = current ? current : this.parent.position;
-  this.lastPosition = previous ? previous : this.previous;
-
-  point && this.destination.copyFrom(point);
-
-  this.oribital = this._findTangentCircle();
-
-  if(!this.oribital.contains(this.destination.x, this.destination.y)) {
+  if(oribital) {
     this.valid = true;
+
+    this.oribital = oribital;
+
+    this.currentPosition = start;
+    this.previousPosition = end;
+    this.destination.copyFrom(destination);
+
     this.tangentPoint = this._findTangentPoint(this.destination, this.oribital);
-
-    this.startAngle = this.oribital.circumferenceAngle(this.startPosition);
+    this.startAngle = this.oribital.circumferenceAngle(this.currentPosition);
     this.endAngle = this.oribital.circumferenceAngle(this.tangentPoint);
-    
-    this.arcLength = this._findArcLength(this.startPosition, this.tangentPoint, this.oribital);
-    this.linearLength = this.tangentPoint.distance(this.destination);
-    this.totalLength = this.arcLength + this.linearLength;
 
-    this.animation.stop();
-    this.animation.play(this.generateData(), this.duration);
+    this.arcLength = this._findArcLength(this.currentPosition, this.tangentPoint, this.oribital);
+    this.linearLength = this.tangentPoint.distance(this.destination);
+
+    this.animation.stop(true);
+    this.animation.play(delay || 0, [
+      new ArcPath(this, 0.0, 1.0),
+      new LinearPath(this, 0.0, 0.5),
+      new LinearPath(this, 0.5, 1.0, engine.Easing.Quadratic.Out)
+    ]);
   } else {
     this.valid = false;
   }
 };
 
-Movement.prototype.generateData = function(paths) {
-  var self = this,
-      completeDuration = 0,
-      delay = 0,
-      dt, duration, path, complete,
-      percent, value,
-      point, data = [],
-      fps = (1 / Movement.FRAMERATE) * 1000,
-      isPlaying = this.animation.isPlaying,
-      paths = paths || [
-        new ArcPath(this, 0.0, 1.0, engine.Easing.Default),
-        // new ArcPath(this, 0.1, 1.0),
-        new LinearPath(this, 0.0, 0.75),
-        new LinearPath(this, 0.75, 1.0, engine.Easing.Quadratic.Out)
-      ],
-      length = paths.length;
-
-  for(var p=0; p<length; p++) {
-    dt = 0;
-    path = paths[p];
-    duration = path.duration;
-    completeDuration += duration;
-    complete = false;
-
-    do {
-      dt += fps;
-      delay += fps;
-      percent = global.Math.min(dt / duration, 1);
-
-      value = path.easing(percent);
-      interpolated = path.start + ((path.end - path.start) * value);
-      point = path.interpolate(this, interpolated);
-
-      // 
-      if(delay > this.delay) {
-        data.push({ x: point.x, y: point.y });
-      }
-
-      if(percent === 1) {
-        complete = true;
-      }
-    } while(!complete);
-  }
-
-  this.duration = completeDuration;
-
-  return data;
-};
-
-Movement.prototype.getForwardFrameByFrames = function(frames) {
-  var parent = this.parent,
-      animation = this.animation,
-      frameIndex = animation.frameIndex,
-      frameTotal = animation.frameTotal,
-      index = global.Math.min(frameTotal-1, frameIndex + frames);
-  if(animation.isPlaying && animation.frameData[index] !== undefined) {
-    return animation.frameData[index];
-  } else {
-    return null;
-  }
-};
-
 Movement.prototype.destroy = function() {
-  this.animation.stop();
+  // this.animation.stop();
   this.animation.destroy();
-
   this.removeAllListeners();
-
   this.parent = this.game =
     this.config = this.destination =
-    this.animation = this.startPosition =
-    this.lastPosition = this.oribital =
+    this.animation = this.currentPosition =
+    this.previousPosition = this.oribital =
     this.tangentPoint = undefined;
 };
 
-Movement.prototype.drawData = function(color) {
-  if(!this.trajectoryGraphics) { return; }
-  
-  var frameData = this.animation.frameData,
-      color = color || 0x3366FF;
-  for(var f in frameData) {
-    if(global.parseInt(f, 10) % 20 !== 0) { continue; }
-    this.trajectoryGraphics.lineStyle(0);
-    this.trajectoryGraphics.beginFill(color, 0.5);
-    this.trajectoryGraphics.drawCircle(frameData[f].x, frameData[f].y, 2);
-    this.trajectoryGraphics.endFill();
-  }
-}
-
 Movement.prototype.drawDebug = function() {
-  if(!this.parent.isPlayer || !this.trajectoryGraphics) { return; }
+  if(!this.parent.isPlayer || !this.parent.manager.trajectoryGraphics) { return; }
 
   // draw line from start to destination
-  // this.trajectoryGraphics.lineStyle(1.0, 0x6699FF, 1.0);
-  // this.trajectoryGraphics.moveTo(this.startPosition.x, this.startPosition.y);
-  // this.trajectoryGraphics.lineTo(this.lastPosition.x, this.lastPosition.y);
+  // this.parent.manager.trajectoryGraphics.lineStyle(1.0, 0x6699FF, 1.0);
+  // this.parent.manager.trajectoryGraphics.moveTo(this.currentPosition.x, this.currentPosition.y);
+  // this.parent.manager.trajectoryGraphics.lineTo(this.previousPosition.x, this.previousPosition.y);
 
   // draw start circle
-  // this.trajectoryGraphics.lineStyle(1.0, 0xFFFFFF, 0.25);
-  // this.trajectoryGraphics.beginFill(0x000000, 1.0)
-  // this.trajectoryGraphics.drawCircle(this.startPosition.x, this.startPosition.y, 5);
-  // this.trajectoryGraphics.endFill();
+  // this.parent.manager.trajectoryGraphics.lineStyle(1.0, 0xFFFFFF, 0.25);
+  // this.parent.manager.trajectoryGraphics.beginFill(0x000000, 1.0)
+  // this.parent.manager.trajectoryGraphics.drawCircle(this.currentPosition.x, this.currentPosition.y, 5);
+  // this.parent.manager.trajectoryGraphics.endFill();
 
   // draw destination circle
-  this.trajectoryGraphics.lineStyle(0);
-  this.trajectoryGraphics.beginFill(0x00FFFF, 0.5);
-  this.trajectoryGraphics.drawCircle(this.destination.x, this.destination.y, 10);
-  this.trajectoryGraphics.endFill();
+  this.parent.manager.trajectoryGraphics.lineStyle(0);
+  this.parent.manager.trajectoryGraphics.beginFill(0x00FFFF, 0.5);
+  this.parent.manager.trajectoryGraphics.drawCircle(this.destination.x, this.destination.y, 10);
+  this.parent.manager.trajectoryGraphics.endFill();
 
   // draw turning oribit
-  // this.trajectoryGraphics.lineStyle(1.0, 0xFFFFFF, 0.1);
-  // this.trajectoryGraphics.drawCircle(this.oribital.x, this.oribital.y, this.oribital.radius);
-  this.trajectoryGraphics.lineStyle(5.0, 0x00FFFF, 0.5);
-  this.trajectoryGraphics.arc(this.oribital.x, this.oribital.y, this.oribital.radius, this.startAngle, this.endAngle, this.anticlockwise);
-  this.trajectoryGraphics.moveTo(this.tangentPoint.x, this.tangentPoint.y);
-  this.trajectoryGraphics.lineTo(this.destination.x, this.destination.y);
+  // this.parent.manager.trajectoryGraphics.lineStyle(1.0, 0xFFFFFF, 0.1);
+  // this.parent.manager.trajectoryGraphics.drawCircle(this.oribital.x, this.oribital.y, this.oribital.radius);
+  this.parent.manager.trajectoryGraphics.lineStyle(5.0, 0x00FFFF, 0.5);
+  this.parent.manager.trajectoryGraphics.arc(this.oribital.x, this.oribital.y, this.oribital.radius, this.startAngle, this.endAngle, this.anticlockwise);
+  this.parent.manager.trajectoryGraphics.moveTo(this.tangentPoint.x, this.tangentPoint.y);
+  this.parent.manager.trajectoryGraphics.lineTo(this.destination.x, this.destination.y);
 
   // draw tangent lines to destination
-  // this.trajectoryGraphics.lineStyle(1.0, 0xFFFFFF, 0.5);
-  // this.trajectoryGraphics.moveTo(this.destination.x, this.destination.y);
-  // this.trajectoryGraphics.lineTo(this.tangentPoint.x, this.tangentPoint.y);
+  // this.parent.manager.trajectoryGraphics.lineStyle(1.0, 0xFFFFFF, 0.5);
+  // this.parent.manager.trajectoryGraphics.moveTo(this.destination.x, this.destination.y);
+  // this.parent.manager.trajectoryGraphics.lineTo(this.tangentPoint.x, this.tangentPoint.y);
 };
 
-Movement.prototype._findTangentCircle = function() {
-  var perp = new engine.Point().copyFrom(this.lastPosition).rotate(this.startPosition.x, this.startPosition.y, -global.Math.PI / 2),
-      point1 = engine.Line.pointAtDistance(this.startPosition, perp, this.config.oribit.radius),
-      point2 = engine.Line.pointAtDistance(this.startPosition, perp, -this.config.oribit.radius),
-      len1 = point1.distance(this.destination),
-      len2 = point2.distance(this.destination),
-      point = len1 > len2 ? point2 : point1;
-
-  if(len1 > len2) {
-    point = point2;
+Movement.prototype._findTangentCircle = function(start, end, destination) {
+  var radius = this.config.oribit.radius,
+      p = new engine.Point(),
+      perp = p.copyFrom(end).rotate(start.x, start.y, -global.Math.PI / 2),
+      point1 = engine.Line.pointAtDistance(start, perp, radius),
+      point2 = engine.Line.pointAtDistance(start, perp, -radius),
+      len1 = point1.distance(destination),
+      len2 = point2.distance(destination),
+      circle1 = new engine.Circle(point1.x, point1.y, radius)
+      circle2 = new engine.Circle(point2.x, point2.y, radius);
+  if(len1 > len2 && !circle2.contains(destination.x, destination.y)) {
     this.anticlockwise = true;
-  } else {
-    point = point1;
-    this.anticlockwise = false;
+    return circle2;
   }
-
-  // this.trajectoryGraphics.lineStyle(1.0, 0x3366FF, 0.25);
-  // this.trajectoryGraphics.drawCircle(point1.x, point1.y, this.config.oribit.radius);
-  // this.trajectoryGraphics.drawCircle(point2.x, point2.y, this.config.oribit.radius);
-
-  return new engine.Circle(point.x, point.y, this.config.oribit.radius);
+  if(len1 < len2 && !circle1.contains(destination.x, destination.y)) {
+    this.anticlockwise = false;
+    return circle1;
+  }
+  return false;
 };
 
 Movement.prototype._findTangentPoint = function(point, circle) {
@@ -264,32 +191,35 @@ Movement.prototype._findArcLength = function(a, b, circle) { // function(a1, a2,
   return angle * circle.radius;
 };
 
-Movement.prototype._generateLastPosition = function() {
+Movement.prototype._generatePreviousPosition = function() {
   var rotation = this.parent.rotation,
-      start = this.start;
+      start = this.current;
   return new engine.Point(
-    start.x + (100 * global.Math.cos(rotation)),
-    start.y + (100 * global.Math.sin(rotation)));
+    start.x + (1 * global.Math.cos(rotation)),
+    start.y + (1 * global.Math.sin(rotation)));
 };
-
-Object.defineProperty(Movement.prototype, 'start', {
-  get: function() {
-    return this.startPosition ?
-      this.startPosition : this.parent.position.clone();
-  }
-});
 
 Object.defineProperty(Movement.prototype, 'current', {
   get: function() {
-    return this.animation.frame ?
-      this.animation.frame : this.parent.position.clone();
+    var current,
+        currentFrame = this.animation.currentFrame;
+    if(!currentFrame) {
+      current = this.parent.position.clone();
+      currentFrame = { x: current.x, y: current.y };
+    }
+    return currentFrame;
   }
 });
 
 Object.defineProperty(Movement.prototype, 'previous', {
   get: function() {
-    return this.animation.lastFrame ?
-      this.animation.lastFrame : this._generateLastPosition();
+    var previous,
+        previousFrame = this.animation.lastFrame;
+    if(!previousFrame) {
+      previous = this._generatePreviousPosition();
+      previousFrame = { x: previous.x, y: previous.y };
+    }
+    return previousFrame;
   }
 });
 
@@ -332,10 +262,11 @@ Object.defineProperty(Movement.prototype, 'speed', {
   get: function() {
     var frame, x1, x2, y1, y2,
         speed = 0,
+        parent = this.parent,
         animation = this.animation,
-        lastFrame = animation.lastFrame;
-    if(lastFrame) {
-      frame = animation.frame;
+        lastFrame = this.lastFrame;
+    if(lastFrame && this.animation.isPlaying) {
+      frame = parent.position;
       x1 = lastFrame.x;
       y1 = lastFrame.y;
       x2 = frame.x;
@@ -349,17 +280,18 @@ Object.defineProperty(Movement.prototype, 'speed', {
 
 Object.defineProperty(Movement.prototype, 'vector', {
   get: function() {
-    var animation = this.animation,
-        lastFrame = animation.lastFrame,
+    var parent = this.parent,
+        animation = this.animation,
+        lastFrame = this.lastFrame,
         x1 = y1 = x2 = y2 = 0;
     if(lastFrame) {
-      frame = animation.frame;
+      frame = parent.position;
       x1 = lastFrame.x;
       y1 = lastFrame.y;
       x2 = frame.x;
       y2 = frame.y;
     }
-    return new engine.Point(x2 - x1, y2 - y1);
+    return { x: x2 - x1, y: y2 - y1 };
   }
 });
 

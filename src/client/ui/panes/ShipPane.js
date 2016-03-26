@@ -60,7 +60,8 @@ function ShipPane(game, settings) {
   this.game.on('ship/target', this._target, this);
   this.game.on('ship/targeted', this._targeted, this);
   this.game.on('ship/attack', this._attack, this);
-  this.game.on('ship/destroyed', this._destroyed, this);
+  this.game.on('ship/removed', this._removed, this);
+  this.game.on('ship/disabled', this._disabled, this);
   
   // set default
   this.set(this.blank);
@@ -133,19 +134,19 @@ ShipPane.prototype._setTargets = function(targeted) {
   var target, battle;
   for(var t in targeted) {
     target = targeted[t];
-    battle = this.shipNetManager.getBattleByOriginUuid(target.uuid);
+    battle = this.shipNetManager.getBattleData(target.uuid);
     battle && this._updateTarget(battle, true);
   }
 };
 
 ShipPane.prototype._targeted = function(data) {
-  var battle = this.shipNetManager.getBattleByOriginUuid(data.origin);
+  var battle = this.shipNetManager.getBattleData(data.origin);
       battle && this._updateTarget(battle, false);
   this._updateTarget(data, true);
 };
 
 ShipPane.prototype._attack = function(data) {
-  var battle = this.shipNetManager.getBattleByOriginUuid(data.origin);
+  var battle = this.shipNetManager.getBattleData(data.origin);
   if(battle !== undefined) {
     this._updateTarget(data, true);
   }
@@ -162,12 +163,19 @@ ShipPane.prototype._updateTarget = function(data, show) {
   }
 };
 
-ShipPane.prototype._destroyed = function(ship) {
-  var battle = this.shipNetManager.getBattleByOriginUuid(ship.uuid);
+ShipPane.prototype._removed = function(ship) {
+  var battle = this.shipNetManager.getBattleData(ship.uuid);
       battle && this._updateTarget(battle, false);
   if(this.current && ship.uuid === this.current.data.uuid) {
     this.set(this.blank);
   }
+};
+
+ShipPane.prototype._disabled = function(data) {
+  var battle = this.shipNetManager.getBattleData(data.origin);
+      battle && this._updateTarget(battle, false);
+      battle = this.shipNetManager.getBattleData(data.target);
+      battle && this._updateTarget(battle, false);
 };
 
 ShipPane.prototype._roomTargeted = function(room) {
@@ -189,7 +197,7 @@ ShipPane.prototype._selected = function(ships) {
       data, matches = 0;
   for(var s in ships) {
     ship = ships[s];
-    data = this.shipNetManager.getShipDataByUuid(ship.uuid);
+    data = this.shipNetManager.getShipData(ship.uuid);
     if(this._filter(ship)) {
       if(this.panes[ship.uuid]) {
         pane = this.panes[ship.uuid];

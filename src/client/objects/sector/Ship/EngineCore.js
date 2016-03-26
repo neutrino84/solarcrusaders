@@ -4,10 +4,11 @@ var engine = require('engine');
 function EngineCore(parent) {
   this.parent = parent;
   this.game = parent.game;
-  this.booster = false;
 
   this.glows = [];
   this.highlights = [];
+
+  this._booster = false;
 };
 
 // random flicker
@@ -55,7 +56,15 @@ EngineCore.prototype.create = function() {
     glows.push(glow);
     highlights.push(highlight);
   }
-}
+};
+
+EngineCore.prototype.start = function() {
+  this._booster = true;
+};
+
+EngineCore.prototype.stop = function() {
+  this._booster = false;
+};
 
 EngineCore.prototype.update = function(multiplier) {
   var scale, center, highlight,
@@ -76,7 +85,7 @@ EngineCore.prototype.update = function(multiplier) {
     highlight = highlights[h];
     highlight.alpha = global.Math.min(1.0, clamped) / (length / 2);
     
-    if(this.booster && multiplier > 0) {
+    if(this._booster && multiplier > 0) {
       center = game.world.worldTransform.applyInverse(this.parent.worldTransform.apply(highlight.worldTransform.apply(highlight.pivot)));
       
       manager.flashEmitter.color(config[h].tint);
@@ -95,8 +104,8 @@ EngineCore.prototype.destroy = function() {
   for(var h in highlights) {
     highlights[h].destroy();
   }
-  this.parent = this.game =
-    this.glows = this.highlights = undefined;
+  this.parent = this.game = this.glows = 
+    this.highlights = undefined;
 };
 
 module.exports = EngineCore;
