@@ -108,8 +108,8 @@ UserManager.prototype.removeShip = function(ship) {
   if(ship.user) {
     user = ship.user;
     index = user.ships.indexOf(ship);
-    if(user.ships[index]) {
-      delete user.ships[index];
+    if(index > -1) {
+      user.ships.splice(index, 1);
     }
   }
 };
