@@ -128,7 +128,8 @@ function ScaleManager(game, width, height) {
   this._updateThrottleReset = 100;
 
   this._resolutionLow = 1024;
-  this._resolutionMedium = 1366;
+  this._resolutionMedium = 1280;
+  this._resolutionMaximum = 1920;
   this._resolutionMode = 'auto';
 
   this._parentBounds = new Rectangle();
@@ -310,9 +311,9 @@ ScaleManager.prototype = {
 
   setGameSize: function(width, height, silent) {
     this._gameSize.setTo(0, 0, width, height);
-    if(this.currentScaleMode !== ScaleManager.RESIZE) {
+    // if(this.currentScaleMode !== ScaleManager.RESIZE) {
       this.updateDimensions(width, height, true);
-    }
+    // }
     if(!silent) {
       this.queueUpdate(true);
     }
@@ -656,11 +657,18 @@ ScaleManager.prototype = {
   },
 
   reflowGame: function() {
-    this.resetCanvas('', '');
-
-    var bounds = this.getParentBounds(this._tempBounds);
-    this.updateDimensions(bounds.width, bounds.height, true);
-
+    var bounds = this.getParentBounds(this._tempBounds),
+        width = bounds.width,
+        height = bounds.height,
+        w, h,
+        resolutionMaximum = this._resolutionMaximum;
+    if(width < resolutionMaximum) {
+      this.resetCanvas('', '');
+      this.updateDimensions(width, height, true);
+    } else {
+      this.setExactFit();
+      this.reflowCanvas();
+    }
   },
 
   reflowCanvas: function() {
@@ -1017,12 +1025,14 @@ Object.defineProperty(ScaleManager.prototype, 'resolutionMode', {
 Object.defineProperty(ScaleManager.prototype, 'resolution', {
   get: function() {
     switch(this._resolutionMode) {
+      case 'max':
+        return this._resolutionMaximum;
       case 'medium':
         return this._resolutionMedium;
       case 'low':
         return this._resolutionLow;
       default:
-        return this.bounds.width;
+        return this._resolutionMaximum;
     }
   },
 });

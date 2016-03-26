@@ -19,22 +19,16 @@ Stage.prototype.boot = function() {
   this.checkVisibility();
 };
 
-Stage.prototype.preUpdate = function() {
-  this.currentRenderOrderID = 0;
-
-  for(var i = 0; i < this.children.length; i++) {
-    this.children[i].preUpdate();
-  }
-};
-
 Stage.prototype.update = function() {
+  this.currentRenderOrderID = 0;
   var i = this.children.length;
   while(i--) {
     this.children[i].update();
   }
+  this.game.world.camera.update();
 };
 
-Stage.prototype.postUpdate = function() {
+// Stage.prototype.postUpdate = function() {
   // if(this.game.world.camera.target) {
   //   this.game.world.camera.target.postUpdate();
   //   this.game.world.camera.update();
@@ -46,14 +40,12 @@ Stage.prototype.postUpdate = function() {
   //     }
   //   }
   // } else {
-    this.game.world.camera.update();
-
-    var i = this.children.length;
-    while(i--) {
-      this.children[i].postUpdate();
-    }
+    // var i = this.children.length;
+    // while(i--) {
+    //   this.children[i].postUpdate();
+    // }
   // }
-};
+// };
 
 Stage.prototype.checkVisibility = function() {
   if(global.document.webkitHidden !== undefined) {

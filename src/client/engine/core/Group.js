@@ -11,7 +11,6 @@ function Group(game, parent) {
   
   this.z = 0;
   this.type = CONST.GROUP;
-  this.cursor = null;
   this.pendingDestroy = false;
   this.exists = true;
 
@@ -36,14 +35,16 @@ Group.prototype.add = function(child, silent) {
   if(child.parent !== this) {
     this.addChild(child);
     child.z = this.children.length;
+  }
 
-    if(!silent && child.onAddedToGroup) {
-      child.onAddedToGroup(this);
-    }
+  return child;
+};
 
-    if(this.cursor === null) {
-      this.cursor = child;
-    }
+Group.prototype.addAt = function(child, index, silent) {
+  if(silent === undefined) { silent = false; }
+
+  if(child.parent !== this) {
+    this.addChildAt(child, index);
   }
 
   return child;
@@ -127,25 +128,16 @@ Group.prototype.forEach = function(callback, callbackContext, checkExists) {
   }
 };
 
+Group.prototype.swap = function(child1, child2) {
+  this.swapChildren(child1, child2);
+};
+
 Group.prototype.remove = function(child, destroy, silent) {
+  if(this.children.length === 0 || this.children.indexOf(child) === -1) { return false; }
   if(destroy === undefined) { destroy = false; }
   if(silent === undefined) { silent = false; }
 
-  if(this.children.length === 0 || this.children.indexOf(child) === -1) { return false; }
-
-  // if(!silent && child.events && !child.destroyPhase) {
-  //   child.events.onRemovedFromGroup$dispatch(child, this);
-  // }
-
   var removed = this.removeChild(child);
-  // this.removeFromHash(child);
-
-  // this.updateZ();
-
-  // if(this.cursor === child) {
-  //   this.next();
-  // }
-
   if(destroy && removed) {
     removed.destroy(true);
   }
@@ -156,27 +148,18 @@ Group.prototype.remove = function(child, destroy, silent) {
 Group.prototype.removeAll = function(destroy, silent) {
   if(destroy === undefined) { destroy = false; }
   if(silent === undefined) { silent = false; }
-
   if(this.children.length === 0) { return; }
 
   var removed;
   do {
-    if(!silent && this.children[0] && this.children[0].onRemovedFromGroup) {
-      this.children[0].onRemovedFromGroup(this);
-    }
-
     removed = this.removeChild(this.children[0]);
-    // this.removeFromHash(removed);
-
     if(destroy && removed) {
       removed.destroy(true);
     }
   } while(this.children.length > 0);
-
-  this.cursor = null;
 };
 
-Group.prototype.preUpdate = function() {
+Group.prototype.update = function() {
   if(this.pendingDestroy) {
     this.destroy();
     return false;
@@ -189,23 +172,7 @@ Group.prototype.preUpdate = function() {
 
   var i = this.children.length;
   while (i--) {
-    this.children[i].preUpdate();
-  }
-
-  return true;
-};
-
-Group.prototype.update = function() {
-  var i = this.children.length;
-  while (i--) {
     this.children[i].update();
-  }
-};
-
-Group.prototype.postUpdate = function() {
-  var i = this.children.length;
-  while (i--) {
-    this.children[i].postUpdate();
   }
 };
 
@@ -214,12 +181,9 @@ Group.prototype.destroy = function(destroyChildren, soft) {
   if(destroyChildren === undefined) { destroyChildren = true; }
   if(soft === undefined) { soft = false; }
 
-  this.onDestroy && this.onDestroy(destroyChildren, soft);
-  
   this.removeAll(destroyChildren);
   this.removeAllListeners();
 
-  this.cursor = null;
   this.filters = null;
   this.pendingDestroy = false;
 
@@ -229,7 +193,6 @@ Group.prototype.destroy = function(destroyChildren, soft) {
     }
     this.game = null;
     this.exists = false;
-    pixi.Container.prototype.destroy(this);
   }  
 };
 

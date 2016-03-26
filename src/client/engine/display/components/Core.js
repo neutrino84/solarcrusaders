@@ -47,20 +47,12 @@ Core.install = function(components) {
 Core.init = function(game, key, frame) {
   this.game = game;
   this.key = key;
-
-  // this.world = new Point(x, y);
-  // this.previousPosition = new Point(x, y);
-  
-  // this.events = new Events(this);
-
   if(this.components.Animation) {
     this.animations = new AnimationManager(this);
   }
-
   if(this.components.LoadTexture && key !== null) {
     this.loadTexture(key, frame);
   }
-
   if(this.components.FixedToCamera) {
     this.cameraOffset = new Point(this.x, this.y);
   }
@@ -71,30 +63,16 @@ Core.preUpdate = function() {
     this.destroy();
     return;
   }
-
-  // this.previousPosition.set(this.world.x, this.world.y);
-  // this.previousRotation = this.rotation;
-
   if(!this.exists || !this.parent.exists) {
     this.renderOrderID = -1;
     return false;
   }
-
-  // this.world.setTo(this.game.camera.x + this.worldTransform.tx, this.game.camera.y + this.worldTransform.ty);
-
   if(this.visible) {
     this.renderOrderID = this.game.stage.currentRenderOrderID++;
   }
-
   if(this.animations) {
     this.animations.update();
   }
-
-  // Sprite children ought to be raw pixi.Sprite
-  // for(var i = 0; i < this.children.length; i++) {
-  //   this.children[i].preUpdate();
-  // }
-
   return true;
 };
 
@@ -106,18 +84,12 @@ Core.prototype = {
 
   z: 0,
 
-  events: undefined,
   animations: undefined,
 
   key: '',
-  world: null,
   debug: false,
   renderOrderID: 0,
-  fresh: true,
   pendingDestroy: false,
-
-  previousPosition: null,
-  previousRotation: 0,
 
   _exists: true,
 
@@ -138,17 +110,6 @@ Core.prototype = {
   },
 
   update: function() {},
-
-  postUpdate: function() {
-    if(this.components.FixedToCamera) {
-      FixedToCamera.postUpdate.call(this);
-    }
-
-    // Sprite children ought to be raw pixi.Sprite
-    // for(var i=0; i<this.children.length; i++) {
-    //   this.children[i].postUpdate();
-    // }
-  }
 };
 
 module.exports = Core;

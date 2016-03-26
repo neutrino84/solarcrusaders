@@ -129,9 +129,6 @@ Game.prototype.update = function(time) {
 
   if(this._kickstart) {
     this.updateLogic(this.clock.desiredFpsMult);
-    
-    // this.stage.updateTransform();
-    
     this.updateRender(this.clock.slowMotion * this.clock.desiredFps);
     this._kickstart = false;
     return;
@@ -141,7 +138,7 @@ Game.prototype.update = function(time) {
     if(this.clock.time > this._nextFpsNotification) {
       // only permit one fps notification per 10 seconds
       this._nextFpsNotification = this.clock.time + 10000;
-      this.emit('fpsProblem');
+      this.emit('spiraling');
     }
 
     this._deltaTime = 0;
@@ -164,8 +161,6 @@ Game.prototype.update = function(time) {
       this._deltaTime -= slowStep;
       this.currentUpdateID = count;
       this.updateLogic(this.clock.desiredFpsMult);
-
-      // this.stage.updateTransform();
 
       count++;
 
@@ -192,9 +187,7 @@ Game.prototype.updateLogic = function(timeStep) {
   if(!this._paused) {
     // preUpdate
     this.scale.preUpdate();
-    this.world.camera.preUpdate();
     this.state.preUpdate();
-    this.stage.preUpdate();
 
     // update
     this.state.update();
@@ -203,9 +196,6 @@ Game.prototype.updateLogic = function(timeStep) {
     this.input.update();
     this.sound.update();
     this.particles.update();
-
-    // postUpdate
-    this.stage.postUpdate();
   } else {
     // pauseUpdate
     this.scale.pauseUpdate();
@@ -215,7 +205,7 @@ Game.prototype.updateLogic = function(timeStep) {
 
 Game.prototype.updateRender = function(elapsedTime) {
   // render scene and state
-  // this.state.preRender(elapsedTime);
+  this.state.preRender(elapsedTime);
   this.renderer.render(this.stage);
 };
 
@@ -246,7 +236,7 @@ Game.prototype.gamePaused = function(event) {
     this._paused = true;
     this.clock.gamePaused();
     this.sound.setMute();
-    this.emit('pause', event);
+    this.emit('game/pause', event);
   }
 };
 
@@ -256,19 +246,19 @@ Game.prototype.gameResumed = function(event) {
     this.clock.gameResumed();
     this.input.reset();
     this.sound.unsetMute();
-    this.emit('resume', event);
+    this.emit('game/resume', event);
   }
 };
 
 Game.prototype.focusLoss = function(event) {
-  this.emit('blur', event);
+  this.emit('game/blur', event);
   if(!this.stage.disableVisibilityChange) {
     this.gamePaused(event);
   }
 };
 
 Game.prototype.focusGain = function(event) {
-  this.emit('focus', event);
+  this.emit('game/focus', event);
   if(!this.stage.disableVisibilityChange) {
     this.gameResumed(event);
   }

@@ -3,47 +3,44 @@ var Rectangle = require('../../geometry/Rectangle');
 function InWorld() {};
 
 InWorld.preUpdate = function() {
-  var spriteInView;
-
-  // Cache the bounds if we need it
+  var spriteInView,
+      game = this.game;
   if(this.autoCull || this.checkWorldBounds) {
     this.autoCullBounds.copyFrom(this.getBounds());
-
-    this.autoCullBounds.x += this.game.camera.view.x;
-    this.autoCullBounds.y += this.game.camera.view.y;
+    this.autoCullBounds.x += game.camera.view.x;
+    this.autoCullBounds.y += game.camera.view.y;
 
     if(this.autoCull) {
-      // Won't get rendered but will still get its transform updated
-      if(spriteInView = this.game.world.camera.view.intersects(this.autoCullBounds)) {
+      spriteInView = game.world.camera.view.intersects(this.autoCullBounds)
+
+      if(this.autoCullFired && spriteInView) {
+        this.autoCullFired = false;
         this.renderable = true;
-        this.game.world.camera.totalInView++;
-      } else {
+        game.world.camera.totalInView++;
+      } else if(!this.autoCullFired && !spriteInView) {
+        this.autoCullFired = true;
         this.renderable = false;
+        game.world.camera.totalInView--;
       }
     }
 
     if(this.checkWorldBounds) {
-      // The Sprite is already out of the world bounds, so let's check to see if it has come back again
-      if(this._outOfBoundsFired && spriteInView) {
-        this._outOfBoundsFired = false;
-        this.onEnterBounds && this.onEnterBounds();
-      } else if(!this._outOfBoundsFired && !spriteInView) {
-        // The Sprite WAS in the screen, but has now left.
-        this._outOfBoundsFired = true;
-        this.onOutOfBounds && this.onOutOfBounds();
+      if(this.outOfBoundsFired && spriteInView) {
+        this.outOfBoundsFired = false;
+        this.emit('enterBounds', this);
+      } else if(!this.outOfBoundsFired && !spriteInView) {
+        this.outOfBoundsFired = true;
+        this.emit('exitBounds', this);
       }
     }
   }
-
-  return true;
 };
 
 InWorld.prototype = {
   autoCullBounds: new Rectangle(),
+  autoCullFired: true,
   checkWorldBounds: false,
-  outOfBoundsKill: false,
-
-  _outOfBoundsFired: false,
+  outOfBoundsFired: false,
 
   inWorld: {
     get: function() {

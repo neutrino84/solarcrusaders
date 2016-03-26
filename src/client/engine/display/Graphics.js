@@ -3,10 +3,12 @@ var pixi = require('pixi'),
     Core = require('./components/Core'),
     Destroy = require('./components/Destroy'),
     InWorld = require('./components/InWorld'),
-    Point = require('../geometry/Point');
+    Point = require('../geometry/Point'),
+    FixedToCamera = require('./components/FixedToCamera');
 
 function Graphics(game) {
   this.type = Const.GRAPHICS;
+  this.objectRenderer = 'graphics';
 
   pixi.Graphics.call(this);
 
@@ -31,10 +33,12 @@ Core.install.call(Graphics.prototype, [
 
 Graphics.prototype.preUpdateInWorld = InWorld.preUpdate;
 Graphics.prototype.preUpdateCore = Core.preUpdate;
+Graphics.prototype.preUpdateFixedToCamera = FixedToCamera.preUpdate;
 
-Graphics.prototype.preUpdate = function() {
+Graphics.prototype.update = function() {
   this.preUpdateInWorld()
   this.preUpdateCore();
+  this.preUpdateFixedToCamera();
 };
 
 Graphics.prototype.destroy = function(destroyChildren) {
@@ -110,6 +114,15 @@ Graphics.prototype.drawTriangles = function(vertices, indices, cull) {
       }
     }
   }
+};
+
+Graphics.prototype._renderWebGL = function(renderer) {
+  if(this.glDirty) {
+    this.dirty = true;
+    this.glDirty = false;
+  }
+  renderer.setObjectRenderer(renderer.plugins[this.objectRenderer]);
+  renderer.plugins[this.objectRenderer].render(this);
 };
 
 module.exports = Graphics;

@@ -3,7 +3,7 @@ var Point = require('../../geometry/Point');
 
 function FixedToCamera() {};
 
-FixedToCamera.postUpdate = function () {
+FixedToCamera.preUpdate = function () {
   var game = this.game;
   if(this.fixedToCamera) {
     this.position.x = game.camera.x;

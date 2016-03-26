@@ -3,7 +3,8 @@ var pixi = require('pixi'),
     Point = require('../geometry/Point'),
     Rectangle = require('../geometry/Rectangle'),
     Core = require('./components/Core'),
-    InWorld = require('./components/InWorld');
+    InWorld = require('./components/InWorld'),
+    FixedToCamera = require('./components/FixedToCamera');
 
 function Sprite(game, key, frame) {
   key = key || null;
@@ -38,10 +39,12 @@ Core.install.call(
 
 Sprite.prototype.preUpdateCore = Core.preUpdate;
 Sprite.prototype.preUpdateInWorld = InWorld.preUpdate;
+Sprite.prototype.preUpdateFixedToCamera = FixedToCamera.preUpdate;
 
-Sprite.prototype.preUpdate = function() {
+Sprite.prototype.update = function() {
   this.preUpdateInWorld()
   this.preUpdateCore();
+  this.preUpdateFixedToCamera();
 };
 
 Sprite.prototype.getBounds = function(matrix) {

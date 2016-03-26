@@ -1,10 +1,7 @@
 var pixi = require('pixi'),
     Const = require('../const'),
     Cache = require('../load/Cache'),
-    // Point = require('../geometry/Point'),
-    // Rectangle = require('../geometry/Rectangle'),
-    Core = require('./components/Core'),
-    InWorld = require('./components/InWorld');
+    Core = require('./components/Core');
 
 function Strip(game, key, points) {
   key = key || null;
@@ -17,8 +14,7 @@ function Strip(game, key, points) {
 
   this.type = Const.STRIP;
 
-  pixi.mesh.Rope.call(this,
-    game.cache.getItem('__default', Cache.TEXTURE).texture, points);
+  pixi.mesh.Rope.call(this, game.cache.getItem('__default', Cache.TEXTURE).texture, points);
 
   Core.init.call(this, game, key); // frame not supported
 };
@@ -28,29 +24,18 @@ Strip.prototype.constructor = Strip;
 
 Core.install.call(
   Strip.prototype, [
-    // 'Angle',
     'Mixin',
-    // 'Animation',
-    // 'AutoCull',
     'Bounds',
     'Destroy',
-    // 'FixedToCamera',
-    'LoadTexture',
-    // 'InWorld',
-    // 'InputEnabled'
-    // 'Reset'
+    'LoadTexture'
   ]
 );
 
 Strip.prototype.preUpdateCore = Core.preUpdate;
-Strip.prototype.preUpdateInWorld = InWorld.preUpdate;
-
-Strip.prototype.preUpdate = function() {
-  this.preUpdateInWorld()
-  this.preUpdateCore();
-};
 
 Strip.prototype.update = function() {
+  this.preUpdateCore();
+
   if(this._hasUpdateAnimation) {
     this.updateAnimation.call(this);
   }
