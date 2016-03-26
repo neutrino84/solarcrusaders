@@ -84,6 +84,13 @@ module.exports = {
     return start + input;
   },
 
+  formatMoney: function(value, places, marker) {
+    var value = value / 100,
+        places = places || 2,
+        marker = marker || ',';
+    return value.toFixed(places).replace(/(\d)(?=(\d{3})+\.)/g, '$1' + marker);
+  },
+
   roundTo: function(value, place, base) {
     if(place === undefined) { place = 0; }
     if(base === undefined) { base = 10; }
