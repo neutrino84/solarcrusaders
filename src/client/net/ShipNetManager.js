@@ -73,13 +73,13 @@ ShipNetManager.prototype._plotted = function(data) {
 };
 
 ShipNetManager.prototype._attack = function(data) {
-  this.battles[data.origin] = data;
   this.game.emit('ship/attack', data);
+  this.battles[data.origin] = data;
 };
 
 ShipNetManager.prototype._targeted = function(data) {
-  this.battles[data.origin] = data;
   this.game.emit('ship/targeted', data);
+  this.battles[data.origin] = data;
 };
 
 ShipNetManager.prototype._untargeted = function(data) {
