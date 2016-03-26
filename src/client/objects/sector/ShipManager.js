@@ -235,9 +235,9 @@ ShipManager.prototype._plotted = function(data) {
   }
 };
 
-ShipManager.prototype._targeted = function(targeted) {
-  var origin = this.ships[targeted.origin],
-      target = this.ships[targeted.target];
+ShipManager.prototype._targeted = function(data) {
+  var origin = this.ships[data.origin],
+      target = this.ships[data.target];
   if(origin && target) {
     origin.target = target;
     origin.targetingComputer.cancel();
@@ -331,17 +331,16 @@ ShipManager.prototype._removed = function(ship) {
       game = this.game,
       s = this.ships[ship.uuid];
   if(s !== undefined) {
-    s.target = null;
-    s.damage.destroyed();
     s.disabled();
 
     tween = game.tweens.create(s);
-    tween.to({ alpha: 0 }, 2500, engine.Easing.Default, true);
+    tween.to({ alpha: 0 }, 2500, engine.Easing.Default, true, 5000);
+    tween.once('start', function() {
+      this._untargeted(ship);
+    }, this);
     tween.once('complete', function() {
       this.remove(ship);
     }, this);
-
-    this._untargeted(ship);
   }
 };
 

@@ -22,7 +22,7 @@ function ShipManager(game) {
   // activate ai
   this.game.clock.events.loop(1000, this._updateShips, this);
   this.game.clock.events.loop(1000, this._updateBattles, this);
-  this.game.clock.events.loop(2000, this._updateAI, this);
+  this.game.clock.events.loop(2500, this._updateAI, this);
 };
 
 ShipManager.prototype.constructor = ShipManager;
@@ -339,7 +339,7 @@ ShipManager.prototype._updateBattles = function() {
           // spawn npc
           if(!target.user) {
             this.generateRandomShip(target.chassis, target.data.race);
-            // this.game.emit('ship/remove', target);
+            this.game.emit('ship/remove', target);
           } else {
             // award disable
             update.disables = ++target.data.disables;
@@ -411,7 +411,8 @@ ShipManager.prototype._updateAI = function() {
           this.battles[ship.uuid] = battle;
         }
       }
-    } else if(b) { //if(ship.user && b) {
+    }
+    if(b && global.Math.random() > 0.5) {
       // check if target is AI
       // and run defence protocols
       target = this.ships[b.target];
@@ -428,14 +429,8 @@ ShipManager.prototype._updateAI = function() {
             this.battles[target.uuid] = battle;
           }
         }
-        if(target.systems['shield'] && health < 0.90) {
+        if(target.systems['shield'] && health < 0.50) {
           target.activate('shield');
-        }
-        if(target.systems['engine'] && health < 0.5) {
-          target.activate('booster');
-        }
-        if(target.systems['reactor'] && health < 0.2) {
-          target.activate('overload');
         }
       }
     }
