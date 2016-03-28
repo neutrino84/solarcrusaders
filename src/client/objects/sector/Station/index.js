@@ -1,54 +1,47 @@
 
 var engine = require('engine');
 
-function Station(manager, key) {
-  engine.Sprite.call(this, manager.game, key);
+function Station(manager, data) {
+  engine.Sprite.call(this, manager.game, data.chassis);
 
-  this.name = key;
-  this.target = null;
-  this.targeted = [];
-
+  this.name = data.chassis;
   this.manager = manager;
   this.game = manager.game;
 
-  this.rotation = 0.0;
-  this.position = new engine.Point(0, 0);
+  this.data = data;
+
+  this.period = 0;
+  this.orbit = new engine.Circle(2048/4, 2048/4, data.orbit);
+  this.pivot.set(this.width/2, this.width/2);
 
   // activate culling
   this.autoCull = true;
   this.checkWorldBounds = true;
-
-  this._selected = false;
 };
 
 Station.prototype = Object.create(engine.Sprite.prototype);
 Station.prototype.constructor = Station;
 
 Station.prototype.boot = function() {
-
-};
-
-Station.prototype.data = function() {
-  
+  this.cap = new engine.Sprite(this.game, this.data.chassis + '-cap');
+  this.cap.pivot.set(this.cap.width/2, this.cap.height/2);
+  this.cap.position.set(this.width/2, this.width/2);
+  this.addChild(this.cap);
 };
 
 Station.prototype.update = function() {
   engine.Sprite.prototype.update.call(this);
 
-  this.rotation += 0.00002 * this.game.clock.elapsed;
+  this.orbit.circumferencePoint(this.period, false, false, this.position);
+  this.period += 0.00002 * this.game.clock.elapsed;
+  this.rotation -= 0.00001 * this.game.clock.elapsed;
+  this.cap.rotation += 0.00008 * this.game.clock.elapsed;
 };
 
 Station.prototype.destroy = function() {
   this.manager = this.game = this.target =
-  this.targeted = undefined;
-
+    this.targeted = undefined;
   engine.Sprite.prototype.destroy.call(this);
 };
-
-Object.defineProperty(Station.prototype, 'selected', {
-  get: function() {
-    return this._selected;
-  }
-});
 
 module.exports = Station;

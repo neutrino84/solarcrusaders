@@ -4,6 +4,7 @@ var engine = require('engine'),
     Snow = require('../fx/Snow'),
     Selection = require('../objects/sector/Selection'),
     ShipManager = require('../objects/sector/ShipManager'),
+    StationManager = require('../objects/sector/StationManager'),
     Asteroid = require('../objects/sector/misc/Asteroid');
     
 function SectorState() {}
@@ -31,8 +32,12 @@ SectorState.prototype.preload = function() {
   // load.image('draghe', 'imgs/game/planets/draghe.jpg');
   // load.image('eamon', 'imgs/game/planets/eamon-alpha.jpg');
   // load.image('arkon', 'imgs/game/planets/arkon.jpg');
-  load.image('talus', 'imgs/game/planets/talus.jpg');
+  load.image('talus', 'imgs/game/planets/arkon.jpg');
   load.image('clouds', 'imgs/game/planets/clouds.jpg');
+
+  // load stations
+  load.image('station', 'imgs/game/stations/ubaidian-x01.png');
+  load.image('station-cap', 'imgs/game/stations/ubaidian-cap-x01.png');
 
   load.image('laser-red', 'imgs/game/fx/laser-red.png');
   load.image('laser-blue', 'imgs/game/fx/laser-blue.png');
@@ -112,8 +117,12 @@ SectorState.prototype.createSpace = function() {
 };
 
 SectorState.prototype.createManagers = function() {
+  this.stationManager = new StationManager(this.game);
+  this.stationManager.boot();
+  
   this.shipManager = new ShipManager(this.game);
   this.shipManager.hudGroup = this.game.gui.hud;
+
   this.selection = new Selection(this);
 };
 
@@ -124,7 +133,7 @@ SectorState.prototype.createSnow = function() {
 };
 
 SectorState.prototype.createAsteroids = function() {
-  var asteroid, amount = 100;
+  var asteroid, amount = 50;
   for(var i=0; i<amount; i++) {
     asteroid = new Asteroid(this.game);
     asteroid.position.set(2048 / 4, 2048 / 4);

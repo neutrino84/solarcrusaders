@@ -1,7 +1,8 @@
 
 var engine = require('engine'),
     EventEmitter = require('eventemitter3'),
-    Station = require('./Station');
+    Station = require('./Station'),
+    FogFilter = require('../../fx/filters/FogFilter');
 
 function StationManager(game) {
   EventEmitter.call(this);
@@ -10,9 +11,10 @@ function StationManager(game) {
   this.game = game;
   this.net = game.net;
   this.socket = game.net.socket;
-  this.shipNetManager = game.shipNetManager;
 
-  this.stationGroup = new engine.Group(game);
+  this.stationsGroup = new engine.Group(game);
+
+  this.game.world.foreground.add(this.stationsGroup);
 
   // stations
   this.stations = {};
@@ -24,43 +26,33 @@ function StationManager(game) {
 StationManager.prototype = Object.create(EventEmitter.prototype);
 StationManager.prototype.constructor = StationManager;
 
-StationManager.prototype.create = function(data, details) {
+StationManager.prototype.boot = function() {
+  // this.fogFilter = new FogFilter(this.game);
+  // this.stationsGroup.filters = [this.fogFilter];
+
+  for(var i=0; i<1; i++) {
+    this.create({
+      uuid: i.toString(),
+      center: { x: 2048, y: 2048 },
+      index: i,
+      orbit: 768,
+      chassis: 'station'
+    });
+  }
+};
+
+StationManager.prototype.create = function(data) {
   var game = this.game,
-      station = new Station(this, details.chasis);
+      station = new Station(this, data);
+      station.boot();
 
-  station.uuid = data.uuid;
-  station.user = details.user;
-  
-  station.details = details;
-  station.position.set(data.current.x, data.current.y);
-  station.rotation = data.rotation;
-  station.movement.throttle = data.throttle;
-  station.movement.trajectoryGraphics = this.trajectoryGraphics;
-
-  station.boot();
-
-  this.stationGroup.add(station);
+  this.stationsGroup.add(station);
 
   return station;
 };
 
 StationManager.prototype.remove = function(ship) {
-  var game = this.game,
-      camera = game.camera,
-      s = this.stations[station.uuid];
-  if(s !== undefined) {
-    if(camera.target === s) {
-      camera.unfollow();
-    }
-    delete this.stations[ship.uuid] && s.destroy();
-  }
-};
-
-StationManager.prototype.removeAll = function() {
-  var stations = this.stations;
-  for(var s in stations) {
-    this.remove(stations[s]);
-  }
+  //..
 };
 
 StationManager.prototype.destroy = function() {
@@ -70,9 +62,7 @@ StationManager.prototype.destroy = function() {
   game.removeListener('game/pause', this._reset);
   game.removeListener('game/resume', this._resume);
 
-  this.game = this.socket = undefined;
-
-  this.removeAll();
+  this.game = this.net = this.socket = undefined;
 };
 
 StationManager.prototype._resume = function() {};
