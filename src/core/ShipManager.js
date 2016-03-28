@@ -201,7 +201,7 @@ ShipManager.prototype.generateRandomShips = function() {
         'ubaidian-x03': { race: 'ubaidian', count: 1 },
         'ubaidian-x04': { race: 'ubaidian', count: 4 },
         'hederaa-x01': { race: 'hederaa', count: 1 },
-        'mechan-x01': { race: 'mechan', count: 1 },
+        'mechan-x01': { race: 'mechan', count: 3 },
         'general-x01': { race: 'ubaidian', count: 1 },
         'general-x02': { race: 'ubaidian', count: 1 }
       };
@@ -411,13 +411,16 @@ ShipManager.prototype._updateAI = function() {
 
       // hedera attack random target
       random = this._getRandomShip();
-      if(ship.data.race === 'hederaa' && random !== ship) {
-        target = ships[random.uuid];
-        if(target && ship.damage > 0) {
-          room = global.Math.floor(global.Math.random() * target.rooms.length);
-          battle = { origin: ship.uuid, target: target.uuid, id: room, room: target.rooms[room].system };
-          this.sockets.io.sockets.emit('ship/targeted', battle);
-          this.battles[ship.uuid] = battle;
+
+      if(ship.data.race === 'hederaa' || ship.data.race === 'mechan') {
+        if(random !== ship) {
+          target = ships[random.uuid];
+          if(target && ship.damage > 0) {
+            room = global.Math.floor(global.Math.random() * target.rooms.length);
+            battle = { origin: ship.uuid, target: target.uuid, id: room, room: target.rooms[room].system };
+            this.sockets.io.sockets.emit('ship/targeted', battle);
+            this.battles[ship.uuid] = battle;
+          }
         }
       }
     }
