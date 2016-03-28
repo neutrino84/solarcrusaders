@@ -72,7 +72,7 @@
             </struct>
         </struct>
         <key>shapePadding</key>
-        <uint>3</uint>
+        <uint>2</uint>
         <key>jpgQuality</key>
         <uint>80</uint>
         <key>pngOptimizationLevel</key>
@@ -253,6 +253,7 @@
             <key type="filename">turrets/turret-a.png</key>
             <key type="filename">turrets/turret-b.png</key>
             <key type="filename">turrets/turret-cap-hederaa.png</key>
+            <key type="filename">turrets/turret-cap-mechan.png</key>
             <key type="filename">turrets/turret-cap-ubaidian.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -321,6 +322,7 @@
             <filename>icons/item-system-scanner.png</filename>
             <filename>icons/item-system-shield.png</filename>
             <filename>icons/item-system-targeting.png</filename>
+            <filename>turrets/turret-cap-mechan.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
