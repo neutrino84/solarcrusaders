@@ -162,8 +162,10 @@ GUIState.prototype.login = function(user) {
 };
 
 GUIState.prototype.data = function(user) {
-  this.headerPane.login(user);
-  this.headerPane.invalidate(true);
+  if(this.auth.isUser()) {
+    this.headerPane.login(user);
+    this.headerPane.invalidate(true);
+  }
 };
 
 GUIState.prototype.refresh = function() {
