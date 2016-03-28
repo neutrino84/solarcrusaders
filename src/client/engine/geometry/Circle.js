@@ -94,8 +94,8 @@ Circle.prototype = {
     return Circle.contains(this, x, y);
   },
 
-  circumferencePoint: function(angle, asDegrees, out) {
-    return Circle.circumferencePoint(this, angle, asDegrees, out);
+  circumferencePoint: function(angle, asDegrees, relative, out) {
+    return Circle.circumferencePoint(this, angle, asDegrees, relative, out);
   },
 
   circumferenceAngle: function(point) {
