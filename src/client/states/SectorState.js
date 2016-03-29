@@ -78,9 +78,10 @@ SectorState.prototype.create = function() {
   this.createAsteroids();
 
   // AUDIO TEST
-  this.sound = this.game.sound.add('background', 0.5, true);
+  this.sound = this.game.sound.add('background', 0.001, true);
   this.sound.on('decoded', function() {
-    this.fadeIn(12000, true);
+    this.play('', 0, 0, true);
+    this.fadeTo(12000, 0.12);
   });
 
   // start zoom in
