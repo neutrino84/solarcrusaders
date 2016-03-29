@@ -10,9 +10,10 @@ function Station(manager, data) {
 
   this.data = data;
 
-  this.period = 0;
+  this.period = data.index * global.Math.PI;
   this.orbit = new engine.Circle(2048/4, 2048/4, data.orbit);
   this.pivot.set(this.width/2, this.width/2);
+  this.rotation = global.Math.random() * global.Math.PI;
 
   // activate culling
   this.autoCull = true;
@@ -26,6 +27,7 @@ Station.prototype.boot = function() {
   this.cap = new engine.Sprite(this.game, this.data.chassis + '-cap');
   this.cap.pivot.set(this.cap.width/2, this.cap.height/2);
   this.cap.position.set(this.width/2, this.width/2);
+  this.cap.rotation = global.Math.random() * global.Math.PI;
   this.addChild(this.cap);
 };
 

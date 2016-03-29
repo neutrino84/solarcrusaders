@@ -30,7 +30,7 @@ StationManager.prototype.boot = function() {
   // this.fogFilter = new FogFilter(this.game);
   // this.stationsGroup.filters = [this.fogFilter];
 
-  for(var i=0; i<1; i++) {
+  for(var i=0; i<2; i++) {
     this.create({
       uuid: i.toString(),
       center: { x: 2048, y: 2048 },
