@@ -37,7 +37,6 @@ GUIState.prototype.init = function() {
 
 GUIState.prototype.preload = function() {
   // load font
-  this.game.load.image('vt323', 'imgs/game/fonts/vt323.png');
   this.game.load.image('medium', 'imgs/game/fonts/medium.png');
   this.game.load.image('full', 'imgs/game/fonts/full.png');
 
