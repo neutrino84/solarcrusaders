@@ -6,49 +6,47 @@ var pixi = require('pixi'),
     FrameData = require('../animation/FrameData');
 
 function RetroFont(game, key, options) {
-  if(!game.cache.checkImageKey(key)) {
-    console.warn("RetroFont - Can't find font:" + key);
-    return false;
-  }
   if(options === undefined) { options = {}; }
   if(options.chars === undefined) { options.chars = RetroFont.TEXT_SET; }
   if(options.autouppercase === undefined) { options.autouppercase = true; }
 
-  this.type = Const.RETROFONT;
+  this.frameKeyMap = [];
+
+  this.game = game;
   this.align = 'left';
   this.currentText = '';
+  this.type = Const.RETROFONT;
 
-  this.grabData = [];
+  this.multiLine = false;
+  this.fixedWidth = 0;
+  this.autoUpperCase = options.autouppercase;
+
+  this.customSpacingX = 0;
+  this.customSpacingY = 0;
+
+  this.characterSpacingX = options.xSpacing || 0;
+  this.characterSpacingY = options.ySpacing || 0;
 
   this.image = game.cache.getImage(key, true);
 
   this.characterWidth = options.characterWidth || this.image.data.width / options.chars.length;
   this.characterHeight = options.characterHeight || this.image.data.height;
 
-  this.characterSpacingX = options.xSpacing || 0;
-  this.characterSpacingY = options.ySpacing || 0;
-
   this.characterPerRow = options.charsPerRow || this.image.data.width / this.characterWidth;
 
   this.offsetX = options.xOffset || 0;
   this.offsetY = options.yOffset || 0;
 
-  this.autoUpperCase = options.autouppercase;
-  this.multiLine = false;
-  this.fixedWidth = 0;
-
-  this.customSpacingX = 0;
-  this.customSpacingY = 0;
-
   this.frameData = new FrameData();
   this.stamp = new Sprite(game, key);
+  this.texture = new pixi.RenderTexture(new pixi.BaseRenderTexture(32, 32, pixi.SCALE_MODES.NEAREST));
+
+  this.container = new pixi.Container();
+  this.container.addChild(this.stamp);
 
   this.generateFrameData(options.chars);
-
-  pixi.RenderTexture.call(this, game.renderer, 100, 100, pixi.SCALE_MODES.NEAREST);
 };
 
-RetroFont.prototype = Object.create(pixi.RenderTexture.prototype);
 RetroFont.prototype.constructor = RetroFont;
 
 RetroFont.ALIGN_LEFT = 'left';
@@ -86,20 +84,17 @@ RetroFont.prototype.buildRetroFontText = function() {
   var cx = 0;
   var cy = 0;
 
-  // Clears the textureBuffer
-  this.clear();
-
   if(this.multiLine) {
     var lines = this.currentText.split("\n");
 
     if(this.fixedWidth > 0) {
-      this.resize(this.fixedWidth, (lines.length * (this.characterHeight + this.customSpacingY)) - this.customSpacingY, true);
+      this.texture.resize(this.fixedWidth, (lines.length * (this.characterHeight + this.customSpacingY)) - this.customSpacingY, false);
     } else {
-      this.resize(this.getLongestLine() * (this.characterWidth + this.customSpacingX), (lines.length * (this.characterHeight + this.customSpacingY)) - this.customSpacingY, true);
+      this.texture.resize(this.getLongestLine() * (this.characterWidth + this.customSpacingX), (lines.length * (this.characterHeight + this.customSpacingY)) - this.customSpacingY, false);
     }
 
     // Loop through each line of text
-    for(var i = 0; i < lines.length; i++) {
+    for(var i=0; i<lines.length; i++) {
       // RetroFont.ALIGN_LEFT
       cx = 0;
 
@@ -122,9 +117,9 @@ RetroFont.prototype.buildRetroFontText = function() {
     }
   } else {
       if(this.fixedWidth > 0) {
-        this.resize(this.fixedWidth, this.characterHeight, true);
+        this.texture.resize(this.fixedWidth, this.characterHeight, false);
       } else {
-        this.resize(this.currentText.length * (this.characterWidth + this.customSpacingX), this.characterHeight, true);
+        this.texture.resize(this.currentText.length * (this.characterWidth + this.customSpacingX), this.characterHeight, false);
       }
 
       // RetroFont.ALIGN_LEFT
@@ -148,20 +143,18 @@ RetroFont.prototype.buildRetroFontText = function() {
 };
 
 RetroFont.prototype.pasteLine = function(line, x, y, customSpacingX) {
-  var matrix = new pixi.Matrix();
-  for(var c = 0; c < line.length; c++) {
+  for(var c=0; c<line.length; c++) {
     // If it's a space then there is no point copying, so leave a blank space
     if(line.charAt(c) === ' ') {
       x += this.characterWidth + customSpacingX;
     } else {
       // If the character doesn't exist in the font then we don't want a blank space, we just want to skip it
-      if(this.grabData[line.charCodeAt(c)] >= 0) {
-        matrix.tx = x;
-        matrix.ty = y;
+      if(this.frameKeyMap[line.charCodeAt(c)] >= 0) {
+        this.stamp.x = x;
+        this.stamp.y = y;
 
-        this.stamp.setFrame(this.frameData.getFrame(this.grabData[line.charCodeAt(c)]));
-
-        this.render(this.stamp, matrix, false, false);
+        this.stamp.setFrame(this.frameData.getFrame(this.frameKeyMap[line.charCodeAt(c)]));
+        this.game.renderer.render(this.container, this.texture, x == 0 && y == 0 ? true : false);
 
         x += this.characterWidth + customSpacingX;
 
@@ -191,7 +184,7 @@ RetroFont.prototype.removeUnsupportedCharacters = function(stripCR) {
   for(var c = 0; c < this.currentText.length; c++) {
     var aChar = this.currentText[c];
     var code = aChar.charCodeAt(0);
-    if(this.grabData[code] >= 0 || (!stripCR && aChar === "\n")) {
+    if(this.frameKeyMap[code] >= 0 || (!stripCR && aChar === "\n")) {
       newString = newString.concat(aChar);
     }
   }
@@ -204,7 +197,7 @@ RetroFont.prototype.generateFrameData = function(chars) {
       currentY = this.offsetY;
   for(var c=0; c<chars.length; c++) {
     frame = this.frameData.addFrame(new Frame(c, currentX, currentY, this.characterWidth, this.characterHeight));
-    this.grabData[chars.charCodeAt(c)] = frame.index;
+    this.frameKeyMap[chars.charCodeAt(c)] = frame.index;
     row++;
     if(row === this.characterPerRow) {
       row = 0;
@@ -234,17 +227,6 @@ Object.defineProperty(RetroFont.prototype, 'text', {
       this.removeUnsupportedCharacters(this.multiLine);
       this.buildRetroFontText();
     }
-  }
-});
-
-Object.defineProperty(RetroFont.prototype, 'smoothed', {
-  get: function() {
-    return this.stamp.smoothed;
-  },
-
-  set: function(value) {
-    this.stamp.smoothed = value;
-    this.buildRetroFontText();
   }
 });
 
