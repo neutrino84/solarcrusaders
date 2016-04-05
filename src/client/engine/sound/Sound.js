@@ -376,7 +376,7 @@ Sound.prototype.pause = function() {
 Sound.prototype.resume = function() {
   if(this.paused && this._sound) {
     if(this.usingWebAudio) {
-      var p = this.position + (this.pausedPosition / 1000);
+      var p = Math.max(0, this.position + (this.pausedPosition / 1000));
 
       this._sound = this.context.createBufferSource();
       this._sound.buffer = this._buffer;
