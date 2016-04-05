@@ -370,12 +370,8 @@ Tween.prototype.update = function(time) {
 
 Tween.prototype.generateData = function(frameRate, data) {
   if(this.game === null || this.target === null) { return null; }
-  if(frameRate === undefined) {
-    frameRate = 60;
-  }
-  if(data === undefined) {
-    data = [];
-  }
+  if(frameRate === undefined) { frameRate = 60; }
+  if(data === undefined) { data = []; }
 
   // Populate the tween data
   for(var i = 0; i < this.timeline.length; i++) {
