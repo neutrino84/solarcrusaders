@@ -13,10 +13,6 @@ Destroy.prototype = {
 
     this.destroyPhase = true;
 
-    // if(this.events) {
-    //   this.events.onDestroy$dispatch(this);
-    // }
-
     if(this.parent) {
       if(this.parent instanceof Group) {
         this.parent.remove(this);
@@ -33,9 +29,7 @@ Destroy.prototype = {
       this.animations.destroy();
     }
 
-    // if(this.events) {
-    //   this.events.destroy();
-    // }
+    this.game.tweens.removeFrom(this);
 
     var i = this.children.length;
     if(destroyChildren) {
@@ -48,31 +42,16 @@ Destroy.prototype = {
       }
     }
 
-    // if(this._crop) {
-    //   this._crop = null;
-    // }
-
     if(this._frame) {
       this._frame = null;
     }
-
-    // if(Phaser.Video && this.key instanceof Phaser.Video) {
-    //   this.key.onChangeSource.remove(this.resizeFrame, this);
-    // }
-
-    // if(Phaser.BitmapText && this._glyphs) {
-    //   this._glyphs = [];
-    // }
 
     this.exists = false;
     this.visible = false;
     this.game = null;
 
-    // in-case pixi is still going to try and
-    // render it even though destroyed
     this.renderable = false;
 
-    // pixi level destroy
     pixi.Sprite.prototype.destroy.call(this);
 
     this.destroyPhase = false;
