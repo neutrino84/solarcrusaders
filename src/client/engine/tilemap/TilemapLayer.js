@@ -121,8 +121,8 @@ TilemapLayer.prototype.resize = function(width, height) {
   this.texture.width = width;
   this.texture.height = height;
 
-  this.texture.crop.width = width;
-  this.texture.crop.height = height;
+  this.texture.orig.width = width;
+  this.texture.orig.height = height;
 
   this.texture.baseTexture.width = width;
   this.texture.baseTexture.height = height;

@@ -3,6 +3,7 @@ require('./polyfill');
 
 var core = module.exports = require('../libs/pixi.js/src/core');
     core.mesh = require('../libs/pixi.js/src/mesh');
+    core.particles = require('../libs/pixi.js/src/particles');
     core.filters = {
       BlurFilter: require('../libs/pixi.js/src/filters/blur/BlurFilter')
     };

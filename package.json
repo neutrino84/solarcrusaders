@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "solarcrusaders",
-  "version": "0.2.3-alpha.8",
+  "version": "0.3.0-alpha.1",
   "description": "Solar Crusaders is a multiplayer top-down strategy game featuring a sandbox universe, base building, and exploration.",
   "author": "Oliver J Dyla",
   "contributors": [],
@@ -36,11 +36,14 @@
     "socket.io-events": "0.4.x",
     "stripe": "4.5.x",
 
+    "xhr": "2.2.x",
     "earcut": "2.1.x",
-    "resource-loader": "1.6.x",
-    "object-assign": "4.0.x",
     "eventemitter3": "1.2.x",
-    "xhr": "2.2.x"
+    "bit-twiddle": "1.0.x",
+    "object-assign": "4.0.x",
+    "resource-loader": "1.6.x",
+    "ismobilejs": "git+https://github.com/kaimallea/isMobile.git",
+    "pixi-gl-core": "git+https://github.com/pixijs/pixi-gl-core"
   },
   "devDependencies": {
     "grunt": "0.4.x",
@@ -53,7 +56,7 @@
     "grunt-contrib-compress": "1.1.x",
     "grunt-contrib-cssmin": "1.0.x",
     
-    "brfs": "1.4.x",
+    "glslify": "5.0.x",
     "browserify-versionify": "1.0.x",
     "bundle-collapser": "1.2.x"
   }

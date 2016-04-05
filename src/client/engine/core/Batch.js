@@ -2,12 +2,12 @@ var pixi = require('pixi'),
     Group = require('./Group');
 
 function Batch(game, maxSize, properties, batchSize) {
-  pixi.ParticleContainer.call(this, maxSize, properties, batchSize);
+  pixi.particles.ParticleContainer.call(this, maxSize, properties, batchSize);
 
   this.game = game;
 };
 
-Batch.prototype = Object.create(pixi.ParticleContainer.prototype);
+Batch.prototype = Object.create(pixi.particles.ParticleContainer.prototype);
 Batch.prototype.constructor = Batch;
 
 Batch.prototype.update = function() {

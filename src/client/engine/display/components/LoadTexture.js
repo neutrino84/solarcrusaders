@@ -52,10 +52,10 @@ LoadTexture.prototype = {
     this.texture.frame.width = frame.width;
     this.texture.frame.height = frame.height;
 
-    this.texture.crop.x = frame.x;
-    this.texture.crop.y = frame.y;
-    this.texture.crop.width = frame.width;
-    this.texture.crop.height = frame.height;
+    this.texture.orig.x = frame.x;
+    this.texture.orig.y = frame.y;
+    this.texture.orig.width = frame.width;
+    this.texture.orig.height = frame.height;
 
     if(frame.trimmed) {
       if(this.texture.trim) {

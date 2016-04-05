@@ -39,8 +39,8 @@ function Input(game, string, settings) {
   this.addChild(this.cursor);
 
   this.placeholder = string.toUpperCase();
+  
   this.textView.blendMode = engine.BlendMode.ADD;
-  this.textView.texture.autoUpperCase = false;
 
   // even handling
   this.bg.on('inputUp', this._inputUp, this);
@@ -126,7 +126,7 @@ Input.prototype._keyPress = function(event, key) {
       keyCode = event.keyCode ? event.keyCode : event.which;
   switch(keyCode) {
     default:
-      if(textView.texture.grabData[keyCode] >= 0 || (
+      if(textView.font.frameKeys[keyCode] >= 0 || (
           this._value !== '' && keyCode === engine.Keyboard.SPACEBAR)) {
         this.value += key;
       }
@@ -182,10 +182,10 @@ Input.prototype._encrypt = function() {
 Input.prototype._parsed = function() {
   var value = this.settings.password ? this._encrypt() : this._value,
       length = value.length,
-      font = this.textView.font,
+      character = this.textView.settings.character,
       width = this.size.width - this.left - this.right - 5,
-      characterWidth = font.characterWidth + font.xSpacing + font.xOffset,
-      maxChars = global.Math.floor(width / characterWidth);
+      maxCharWidth = character.width + character.spacing.x + character.offset.x,
+      maxChars = global.Math.floor(width / maxCharWidth);
   if(length < maxChars) {
     return value;
   } else {

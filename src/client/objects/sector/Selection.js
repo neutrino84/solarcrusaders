@@ -127,8 +127,8 @@ Selection.prototype._checkPixel = function(sprite, pointer) {
 
       // if the coordinates are outside the trim area we return
       // false immediately, to save doing a draw call
-      if(x < texture.crop.x || x > texture.crop.right ||
-          y < texture.crop.y || y > texture.crop.bottom) {
+      if(x < texture.orig.x || x > texture.orig.right ||
+          y < texture.orig.y || y > texture.orig.bottom) {
         this._dx = x;
         this._dy = y;
         return false;

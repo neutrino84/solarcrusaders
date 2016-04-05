@@ -35,7 +35,7 @@ function Game(config) {
   this.forceFXAA = config['forceFXAA'] || false;
   this.resolution = config['resolution'] || 1;
 
-  this.clearBeforeRender = config['clearBeforeRender'] || true;
+  this.clearBeforeRender = config['clearBeforeRender'] || false;
   this.preserveDrawingBuffer = config['preserveDrawingBuffer'] || false;
 
   this.isBooted = false;

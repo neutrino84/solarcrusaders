@@ -30,7 +30,7 @@ module.exports = function(grunt) {
           alias: {
             pixi: './src/client/pixi.js'
           },
-          transform: ['brfs', 'browserify-versionify']
+          transform: ['glslify', 'browserify-versionify']
         }
       },
       engine: {
@@ -42,7 +42,7 @@ module.exports = function(grunt) {
           alias: {
             engine: './src/client/engine/index.js'
           },
-          transform: ['brfs']
+          transform: ['glslify']
         }
       },
       solar: {
@@ -51,7 +51,7 @@ module.exports = function(grunt) {
         options: {
           external: ['pixi', 'engine', 'xhr'],
           watch: true,
-          transform: ['brfs', 'browserify-versionify']
+          transform: ['glslify', 'browserify-versionify']
         }
       },
       website: {
@@ -79,7 +79,7 @@ module.exports = function(grunt) {
             ['./src/client/engine/index.js', { expose: 'engine', plugin: [require('bundle-collapser/plugin')] }],
             ['./src/client/pixi.js', { expose: 'pixi', plugin: [require('bundle-collapser/plugin')] }]
           ],
-          transform: ['brfs', 'browserify-versionify'],
+          transform: ['glslify', 'browserify-versionify'],
           plugin: [require('bundle-collapser/plugin')]
         }
       }

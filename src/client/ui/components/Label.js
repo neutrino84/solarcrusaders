@@ -80,11 +80,11 @@ Object.defineProperty(Label.prototype, 'tint', {
 
 Object.defineProperty(Label.prototype, 'text', {
   get: function() {
-    return this.textView.fontTexture.text;
+    return this.textView.font.text;
   },
 
   set: function(value) {
-    this.textView.fontTexture.text = value.toString();
+    this.textView.font.text = value.toString();
   }
 });
 

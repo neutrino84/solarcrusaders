@@ -358,7 +358,7 @@ InputHandler.prototype = {
         y -= this.sprite.texture.trim.y;
 
         // If the coordinates are outside the trim area we return false immediately, to save doing a draw call
-        if(x < this.sprite.texture.crop.x || x > this.sprite.texture.crop.right || y < this.sprite.texture.crop.y || y > this.sprite.texture.crop.bottom) {
+        if(x < this.sprite.texture.orig.x || x > this.sprite.texture.orig.right || y < this.sprite.texture.orig.y || y > this.sprite.texture.orig.bottom) {
           this._dx = x;
           this._dy = y;
           return false;

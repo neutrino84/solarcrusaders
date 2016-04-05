@@ -6,7 +6,7 @@ var Device = require('./system/Device'),
     Sprite = require('./display/Sprite'),
     Particle = require('./display/Particle'),
     Graphics = require('./display/Graphics'),
-    RetroFont = require('./display/RetroFont'),
+    Font = require('./display/Font'),
     Strip = require('./display/Strip'),
     Math = require('./utils/Math'),
     Color = require('./utils/Color'),
@@ -27,10 +27,10 @@ var Device = require('./system/Device'),
     TilemapSprite = require('./tilemap/TilemapSprite'),
     TilemapPathing = require('./tilemap/TilemapPathing'),
     Tileset = require('./tilemap/Tileset'),
-    Tile = require('./tilemap/Tile'),
+    Tile = require('./tilemap/Tile');//,
 
     // plugins
-    WireframeRenderer = require('./renderers/WireframeRenderer');
+    // WireframeRenderer = require('./renderers/WireframeRenderer');
 
 var core = module.exports =
   Object.assign(require('./const'), {
@@ -45,7 +45,7 @@ var core = module.exports =
     Sprite: Sprite,
     Particle: Particle,
     Graphics: Graphics,
-    RetroFont: RetroFont,
+    Font: Font,
     Strip: Strip,
 
     // geometry

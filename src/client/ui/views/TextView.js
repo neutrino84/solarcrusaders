@@ -8,78 +8,57 @@ function TextView(game, text, settings) {
   Sprite.call(this, game);
   View.call(this);
 
-  this.defaultFont = settings && settings.fontName ? settings.fontName : 'vt323';
+  this.defaultFont = settings && settings.fontName ? settings.fontName : 'medium';
   this.fonts = {
-    'vt323': {
-      fontName: 'vt323',
-      characterWidth: 8,
-      characterHeight: 10,
-      xSpacing: 2,
-      ySpacing: 0,
-      xOffset: 1,
-      yOffset: 1,
-      tint: 0xffffff
-    },
     'full': {
-      chars: engine.RetroFont.TEXT_SET_FULL,
       fontName: 'full',
-      characterWidth: 6,
-      characterHeight: 8,
-      xSpacing: 0,
-      ySpacing: 0,
-      xOffset: 0,
-      yOffset: 0,
-      tint: 0xffffff,
-      autouppercase: false
+      multiline: true,
+      charset: engine.Font.CHAR_SET_FULL,
+      character: {
+        width: 6,
+        height: 8,
+        size: 0,
+        spacing: { x: 0, y: 0 },
+        offset: { x: 0, y: 0 }
+      }
     },
     'medium': {
       fontName: 'medium',
-      characterWidth: 8,
-      characterHeight: 7,
-      xSpacing: 0,
-      ySpacing: 0,
-      xOffset: 0,
-      yOffset: 0,
-      tint: 0xffffff
+      multiline: true,
+      autouppercase: true,
+      character: {
+        width: 8,
+        height: 7,
+        size: 0,
+        spacing: { x: 0, y: 0 },
+        offset: { x: 0, y: 0 }
+      }
     },
     'small': {
       fontName: 'small',
-      characterWidth: 5,
-      characterHeight: 5,
-      xSpacing: 0,
-      ySpacing: 0,
-      xOffset: 0,
-      yOffset: 0,
-      tint: 0xffffff
+      multiline: true,
+      autouppercase: true,
+      character: {
+        width: 5,
+        height: 5,
+        size: 0,
+        spacing: { x: 0, y: 0 },
+        offset: { x: 0, y: 0 }
+      }
     }
   }
 
-  // init settings
   this.settings = Class.mixin(settings, this.fonts[this.defaultFont]);
 
-  // create font texture
-  this.fontTexture = new engine.RetroFont(game, this.settings.fontName, this.settings);
-  this.fontTexture.multiLine = true;
-  this.fontTexture.text = text;
-  this.fontTexture.customSpacingX = this.settings.characterSpacing || 0;
-  this.fontTexture.customSpacingY = this.settings.lineSpacing || 0;
-  
-  // set tint
-  this.tint = this.settings.tint;
+  this.font = new engine.Font(game, this.settings.fontName, this.settings);
+  this.font.text = text;
 
-  // set font texture
-  this.texture = this.fontTexture;
+  this.texture = this.font.texture;
 };
 
 // multiple inheritence
 TextView.prototype = Object.create(engine.Sprite.prototype);
 TextView.prototype.mixinPrototype(View.prototype);
 TextView.prototype.constructor = TextView;
-
-Object.defineProperty(TextView.prototype, 'font', {
-  get: function() {
-    return this.fonts[this.defaultFont];
-  }
-});
 
 module.exports = TextView;
