@@ -14,7 +14,6 @@ var pixi = require('pixi'),
             antialias: Web.getQueryParameter('antialias', false),
             width: 1024,
             height: 576
-            // forceFXAA: true
           }),
           loadingState = new LoadingState();
 
@@ -28,27 +27,25 @@ var pixi = require('pixi'),
       global.game = game;
     };
 
-// setTimeout(function() {
-  engine.Device.whenReady(function() {
-    var el = global.document.getElementById('content'),
-        dialog = global.document.getElementById('dialog'),
-        message, device = engine.Device;
-    if(device.desktop && device.webGL && (
-        device.firefox || device.chrome || device.safari)) {
-      el.className = 'running';
-      startGameEngine();
-    } else {
-      el.className = 'error';
-      if(device.desktop) {
-        if(device.webGL) {
-          message = 'your browser is not yet supported';
-        } else {
-          message = 'you need a compatible browser and graphics card to run this demo.';
-        }
+engine.Device.whenReady(function() {
+  var el = global.document.getElementById('content'),
+      dialog = global.document.getElementById('dialog'),
+      message, device = engine.Device;
+  if(device.desktop && device.webGL && (
+      device.firefox || device.chrome || device.safari)) {
+    el.className = 'running';
+    startGameEngine();
+  } else {
+    el.className = 'error';
+    if(device.desktop) {
+      if(device.webGL) {
+        message = 'your browser is not yet supported';
       } else {
-        message = 'mobile devices are not yet supported'
+        message = 'you need a compatible browser and graphics card to run this demo.';
       }
-      dialog.innerHTML = message;
+    } else {
+      message = 'mobile devices are not yet supported'
     }
-  });
-// }, 50);
+    dialog.innerHTML = message;
+  }
+});
