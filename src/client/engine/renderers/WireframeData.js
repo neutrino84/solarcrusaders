@@ -1,5 +1,6 @@
+var glCore = require('pixi-gl-core');
 
-function WireframeData(gl) {
+function WireframeData(gl, shader, attribsState) {
   this.gl = gl;
 
   this.color = [0,0,0]; // color split!
@@ -7,15 +8,20 @@ function WireframeData(gl) {
   this.points = [];
   this.indices = [];
 
-  this.buffer = gl.createBuffer();
-  this.indexBuffer = gl.createBuffer();
+  this.buffer = glCore.GLBuffer.createVertexBuffer(gl);
+  this.indexBuffer = glCore.GLBuffer.createIndexBuffer(gl);
 
-  this.mode = 1;
-  this.alpha = 1;
   this.dirty = true;
 
   this.glPoints = null;
   this.glIndices = null;
+
+  this.shader = shader;
+
+  this.vao = new glCore.VertexArrayObject(gl, attribsState)
+    .addIndex(this.indexBuffer)
+    .addAttribute(this.buffer, shader.attributes.aVertexPosition, gl.FLOAT, false, 4 * 6, 0)
+    .addAttribute(this.buffer, shader.attributes.aColor, gl.FLOAT, false, 4 * 6, 2 * 4);
 }
 
 WireframeData.prototype.constructor = WireframeData;
@@ -26,17 +32,11 @@ WireframeData.prototype.reset = function () {
 };
 
 WireframeData.prototype.upload = function () {
-  var gl = this.gl;
-
   this.glPoints = new Float32Array(this.points);
-
-  gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
-  gl.bufferData(gl.ARRAY_BUFFER, this.glPoints, gl.STATIC_DRAW);
+  this.buffer.upload( this.glPoints );
 
   this.glIndices = new Uint16Array(this.indices);
-
-  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
-  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.glIndices, gl.STATIC_DRAW);
+  this.indexBuffer.upload( this.glIndices );
 
   this.dirty = false;
 };
@@ -46,9 +46,10 @@ WireframeData.prototype.destroy = function () {
   this.points = null;
   this.indices = null;
 
-  this.gl.deleteBuffer(this.buffer);
-  this.gl.deleteBuffer(this.indexBuffer);
-  
+  this.vao.destroy();
+  this.buffer.destroy();
+  this.indexBuffer.destroy();
+
   this.gl = null;
 
   this.buffer = null;
