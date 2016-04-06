@@ -13,7 +13,6 @@ function SoundManager(game) {
 
   this.context = null;
   this.usingWebAudio = false;
-  this.usingAudioTag = false;
   this.noAudio = false;
 
   this.connectToMaster = true;
@@ -59,13 +58,7 @@ SoundManager.prototype = {
     }
 
     if(this.context === null) {
-      //  No Web Audio support - how about legacy Audio?
-      if(window['Audio'] === undefined) {
-        this.noAudio = true;
-        return;
-      } else {
-        this.usingAudioTag = true;
-      }
+      this.noAudio = true;
     } else {
       this.usingWebAudio = true;
 
@@ -108,14 +101,13 @@ SoundManager.prototype = {
   },
 
   decode: function(key, sound) {
-    sound = sound || null;
-
-    var soundData = this.game.cache.getSoundData(key);
+    var self = this,
+        game = this.game,
+        sound = sound = sound || null,
+        soundData = this.game.cache.getSoundData(key);
     if(soundData) {
       if(this.game.cache.isSoundDecoded(key) === false) {
         this.game.cache.updateSound(key, 'isDecoding', true);
-
-        var self = this;
         try {
           this.context.decodeAudioData(soundData, function(buffer) {
             if(buffer) {
@@ -133,7 +125,7 @@ SoundManager.prototype = {
 
     this._watchList.reset();
 
-    for(var i = 0; i < files.length; i++) {
+    for(var i=0; i<files.length; i++) {
       if(files[i] instanceof Sound) {
         if(!this.game.cache.isSoundDecoded(files[i].key)) {
           this._watchList.add(files[i].key);
@@ -143,7 +135,6 @@ SoundManager.prototype = {
       }
     }
 
-    //  All decoded already?
     if(this._watchList.total === 0) {
       this._watching = false;
       callback.call(callbackContext);
@@ -173,7 +164,6 @@ SoundManager.prototype = {
         if(this.game.cache.isSoundDecoded(key)) {
           this._watchList.remove(key);
         }
-
         key = this._watchList.next;
       }
 
@@ -194,11 +184,6 @@ SoundManager.prototype = {
     this._sounds.push(sound);
 
     return sound;
-  },
-
-  addSprite: function(key) {
-    var audioSprite = new AudioSprite(this.game, key);
-    return audioSprite;
   },
 
   remove: function(sound) {
@@ -243,13 +228,6 @@ SoundManager.prototype = {
       this.masterGain.gain.value = 0;
     }
 
-    // Loop through sounds
-    for(var i = 0; i < this._sounds.length; i++) {
-      if(this._sounds[i].usingAudioTag) {
-        this._sounds[i].mute = true;
-      }
-    }
-
     // this.onMute.dispatch();
   },
 
@@ -260,13 +238,6 @@ SoundManager.prototype = {
 
     if(this.usingWebAudio) {
       this.masterGain.gain.value = this._muteVolume;
-    }
-
-    //  Loop through sounds
-    for(var i = 0; i < this._sounds.length; i++) {
-      if(this._sounds[i].usingAudioTag) {
-        this._sounds[i].mute = false;
-      }
     }
 
     // this.onUnMute.dispatch();
@@ -336,13 +307,6 @@ Object.defineProperty(SoundManager.prototype, 'volume', {
 
       if(this.usingWebAudio) {
         this.masterGain.gain.value = value;
-      } else {
-        //  Loop through the sound cache and change the volume of all html audio tags
-        for(var i = 0; i < this._sounds.length; i++) {
-          if(this._sounds[i].usingAudioTag) {
-            this._sounds[i].volume = this._sounds[i].volume * value;
-          }
-        }
       }
 
       // this.onVolumeChange.dispatch(value);
