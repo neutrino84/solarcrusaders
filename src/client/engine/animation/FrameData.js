@@ -112,6 +112,11 @@ FrameData.prototype = {
     }
 
     return output;
+  },
+
+  destroy: function() {
+    this._frames = null;
+    this._frameNames = null;
   }
 
 };
