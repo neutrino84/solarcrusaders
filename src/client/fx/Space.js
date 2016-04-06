@@ -4,13 +4,8 @@ var pixi = require('pixi'),
     Shader = require('pixi-gl-core').GLShader;
 
 function Space(game, width, height) {
-  var base1 = game.cache.getImage('space', true).base;
-      base1.wrapMode = pixi.WRAP_MODES.REPEAT;
-  var base2 = game.cache.getImage('nebula', true).base;
-      base2.wrapMode = pixi.WRAP_MODES.REPEAT;
-
-  this.spaceTexture = new pixi.Texture(base1);
-  this.nebulaTexture = new pixi.Texture(base2);
+  this.spaceTexture = new pixi.Texture(this.getRepeatTexture('space'));
+  this.nebulaTexture = new pixi.Texture(this.getRepeatTexture('nebula'));
 
   pixi.Sprite.call(this, this.spaceTexture);
 
@@ -19,9 +14,10 @@ function Space(game, width, height) {
   this.tileScale = new pixi.Point(1, 1);
   this.tilePosition = new pixi.Point(0, 0);
 
+  this.transform.updated = false;
+
   this._width = width || 128;
   this._height = height || 128;
-  this._uvs = new pixi.TextureUvs();
   this._glDatas = [];
 };
 
@@ -66,12 +62,18 @@ Space.prototype.resize = function(width, height) {
   this.height = height;
 };
 
+Space.prototype.getRepeatTexture = function(key) {
+  var base = game.cache.getImage(key, true).base;
+      base.wrapMode = pixi.WRAP_MODES.REPEAT;
+  return base;
+};
+
 Space.prototype._onTextureUpdate = function() {
   return;
 };
 
 Space.prototype._renderWebGL = function(renderer) {
-  var gl, glData, vertices, btex,
+  var gl, glData, vertices,
       textureUvs, textureWidth, textureHeight,
       textureBaseWidth, textureBaseHeight,
       uPixelSize, uFrame, uTransform,
@@ -87,8 +89,8 @@ Space.prototype._renderWebGL = function(renderer) {
   if(!glData) {
     glData = {
       shader: new Shader(gl,
-        glslify(__dirname + '/shaders/SpaceShader.vert', 'utf8'),
-        glslify(__dirname + '/shaders/SpaceShader.frag', 'utf8')
+        glslify(__dirname + '/shaders/space.vert', 'utf8'),
+        glslify(__dirname + '/shaders/space.frag', 'utf8')
       ),
       quad: new pixi.Quad(gl)
     };
@@ -205,7 +207,6 @@ Space.prototype.destroy = function() {
   this.tileScale = null;
   this.tilePosition = null;
   this._tileScaleOffset = null;
-  this._uvs = null;
 };
 
 module.exports = Space;
