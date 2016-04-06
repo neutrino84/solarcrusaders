@@ -1,36 +1,28 @@
 
 var pixi = require('pixi'),
-    fs = require('fs');
+    glslify = require('glslify'),
+    Shader = require('pixi-gl-core').GLShader;
 
 function Space(game, width, height) {
   var base1 = game.cache.getImage('space', true).base;
-      base1.mipmap = true;
+      base1.wrapMode = pixi.WRAP_MODES.REPEAT;
   var base2 = game.cache.getImage('nebula', true).base;
-      base2.mipmap = true;
-  var space = this.tex = new pixi.Texture(base1),
-      nebula = this.neb = new pixi.Texture(base2);
-  
-  pixi.Sprite.call(this, space);
+      base2.wrapMode = pixi.WRAP_MODES.REPEAT;
+
+  this.spaceTexture = new pixi.Texture(base1);
+  this.nebulaTexture = new pixi.Texture(base2);
+
+  pixi.Sprite.call(this, this.spaceTexture);
 
   this.game = game;
+
   this.tileScale = new pixi.Point(1, 1);
   this.tilePosition = new pixi.Point(0, 0);
 
   this._width = width || 128;
   this._height = height || 128;
   this._uvs = new pixi.TextureUvs();
-  this._canvasPattern = null;
-
-  this.shader = new pixi.AbstractFilter(
-    fs.readFileSync(__dirname + '/filters/Space.vert', 'utf8'),
-    fs.readFileSync(__dirname + '/filters/Space.frag', 'utf8'), {
-      channel0: { type: 'sampler2D', value: nebula },
-      time: { type: 'f', value: 0 },
-      uFrame: { type: '4fv', value: [0,0,1,1] },
-      uTransform: { type: '4fv', value: [0,0,1,1] }//,
-      // uPixelSize : { type : '2fv', value: [1, 1]}
-    }
-  );
+  this._glDatas = [];
 };
 
 Space.prototype = Object.create(pixi.Sprite.prototype);
@@ -61,14 +53,12 @@ Object.defineProperties(Space.prototype, {
 Space.prototype.update = function() {
   var game = this.game,
       view = game.camera.view,
-      scale = (game.world.scale.x/10) + (9/10);
+      scale = game.world.scale.x/10 + 9/10;
 
   this.tilePosition.x = -view.x/20;
   this.tilePosition.y = -view.y/20;
 
   this.tileScale.set(scale, scale);
-
-  this.shader.uniforms.time.value = game.clock.totalElapsedSeconds();
 };
 
 Space.prototype.resize = function(width, height) {
@@ -81,44 +71,62 @@ Space.prototype._onTextureUpdate = function() {
 };
 
 Space.prototype._renderWebGL = function(renderer) {
-  // tweak our texture temporarily..
-  var texture = this._texture;
+  var gl, glData, vertices, btex,
+      textureUvs, textureWidth, textureHeight,
+      textureBaseWidth, textureBaseHeight,
+      uPixelSize, uFrame, uTransform,
+      texture = this._texture;
 
-  if(!texture || !texture._uvs) {
-    return;
+  if(!texture || !texture._uvs) { return; }
+
+  renderer.flush();
+
+  gl = renderer.gl;
+  glData = this._glDatas[renderer.CONTEXT_UID];
+
+  if(!glData) {
+    glData = {
+      shader: new Shader(gl,
+        glslify(__dirname + '/shaders/SpaceShader.vert', 'utf8'),
+        glslify(__dirname + '/shaders/SpaceShader.frag', 'utf8')
+      ),
+      quad: new pixi.Quad(gl)
+    };
+
+    this._glDatas[renderer.CONTEXT_UID] = glData;
+    glData.quad.initVao(glData.shader);
   }
 
-  var tempUvs = texture._uvs,
-      tempWidth = texture._frame.width,
-      tempHeight = texture._frame.height,
-      tw = texture.baseTexture.width,
-      th = texture.baseTexture.height;
+  vertices = glData.quad.vertices;
+  vertices[0] = vertices[6] = (this._width) * -this.anchor.x;
+  vertices[1] = vertices[3] = this._height * -this.anchor.y;
+  vertices[2] = vertices[4] = (this._width) * (1-this.anchor.x);
+  vertices[5] = vertices[7] = this._height * (1-this.anchor.y);
 
-  texture._uvs = this._uvs;
-  texture._frame.width = this.width;
-  texture._frame.height = this.height;
+  glData.quad.upload();
 
-  // this.shader.uniforms.uPixelSize.value[0] = 1.0/tw;
-  // this.shader.uniforms.uPixelSize.value[1] = 1.0/th;
+  renderer.bindShader(glData.shader);
 
-  this.shader.uniforms.uFrame.value[0] = tempUvs.x0;
-  this.shader.uniforms.uFrame.value[1] = tempUvs.y0;
-  this.shader.uniforms.uFrame.value[2] = tempUvs.x1 - tempUvs.x0;
-  this.shader.uniforms.uFrame.value[3] = tempUvs.y2 - tempUvs.y0;
+  textureUvs = texture._uvs,
+  textureWidth = texture._frame.width,
+  textureHeight = texture._frame.height,
+  textureBaseWidth = texture.baseTexture.width,
+  textureBaseHeight = texture.baseTexture.height;
 
-  // this.shader.uniforms.uTransform.value[0] = (this.tilePosition.x % (tempWidth * this.tileScale.x)) / this._width;
-  // this.shader.uniforms.uTransform.value[1] = (this.tilePosition.y % (tempHeight * this.tileScale.y)) / this._height;
-  this.shader.uniforms.uTransform.value[0] = (this.tilePosition.x / this._width) + 0.5 - ((1-this.tileScale.x) * (this.tilePosition.x / this._width));
-  this.shader.uniforms.uTransform.value[1] = (this.tilePosition.y / this._height) + 0.5 - ((1-this.tileScale.y) * (this.tilePosition.y / this._height));
-  this.shader.uniforms.uTransform.value[2] = (tw / this._width) * this.tileScale.x;
-  this.shader.uniforms.uTransform.value[3] = (th / this._height) * this.tileScale.y;
+  uTransform = glData.shader.uniforms.uTransform;
+  uTransform[0] = (this.tilePosition.x / this._width) + 0.5 - ((1-this.tileScale.x) * (this.tilePosition.x / this._width));
+  uTransform[1] = (this.tilePosition.y / this._height) + 0.5 - ((1-this.tileScale.y) * (this.tilePosition.y / this._height));
+  uTransform[2] = (textureBaseWidth / this._width) * this.tileScale.x;
+  uTransform[3] = (textureBaseHeight / this._height) * this.tileScale.y;
+  
+  glData.shader.uniforms.uTransform = uTransform;
+  glData.shader.uniforms.alpha = this.worldAlpha;
+  glData.shader.uniforms.uMapSampler = 1;
 
-  renderer.setObjectRenderer(renderer.plugins.sprite);
-  renderer.plugins.sprite.render(this);
+  renderer.bindTexture(this.nebulaTexture, 1);
+  renderer.bindTexture(this._texture, 0);
 
-  texture._uvs = tempUvs;
-  texture._frame.width = tempWidth;
-  texture._frame.height = tempHeight;
+  glData.quad.draw();
 };
 
 Space.prototype.getBounds = function() {
