@@ -1,10 +1,11 @@
 
 precision lowp float;
 
-varying vec2 vTextureCoord;
-
 uniform sampler2D uSampler;
 uniform float time;
+
+varying vec2 vTextureCoord;
+varying vec2 vFilterCoord;
 
 vec3 mod289(vec3 x) {
   return x - floor(x * (1.0 / 289.0)) * 289.0;
@@ -85,8 +86,7 @@ float snoise(vec3 v) {
 
 void main(void) {
   vec4 tex = texture2D(uSampler, vTextureCoord);
-  vec2 p = vTextureCoord;
-       p *= 4.0;
+  vec2 p = vFilterCoord * 40.0;
 
   float n = 0.0;
   n += 1.0 * abs(snoise(vec3(p, time * 0.5)));

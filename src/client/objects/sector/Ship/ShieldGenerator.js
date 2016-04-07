@@ -1,78 +1,32 @@
 
 var pixi = require('pixi'),
     engine = require('engine'),
-    ShieldShader = require('../../../fx/shaders/ShieldShader'),
+    ShieldFilter = require('../../../fx/filters/ShieldFilter'),
     OutlineFilter = require('../../../fx/filters/OutlineFilter');
 
 function ShieldGenerator(parent) {
   this.parent = parent;
   this.game = parent.game;
+  this.renderer = this.game.renderer;
 
-  this.outlineSprite = new engine.Sprite(this.game, 'texture-atlas', this.parent.name + '.png');
   this.shieldSprite = new engine.Sprite(this.game, 'texture-atlas', this.parent.name + '.png');
+  this.outlineSprite = new engine.Sprite(this.game, 'texture-atlas', this.parent.name + '.png');
+
   this.width = this.shieldSprite.width
   this.height = this.shieldSprite.height;
-  
-  this.shieldShader = new ShieldShader();
-
-  this._running = false;
 };
 
 ShieldGenerator.prototype.constructor = ShieldGenerator;
 
 ShieldGenerator.prototype.create = function() {
-  var game = this.game,
-      cache = game.cache,
-      parent = this.parent,
-      width = this.width,
-      height = this.height,
-      outlineSprite = this.outlineSprite,
-      outlineRenderTexture, outlineFilter,
-      shieldSprite = this.shieldSprite,
-      shieldRenderTexture, blurFilter;
-
-  // render ship outline
-  if(!cache.checkRenderTextureKey(parent.name + '-outline')) {
-    outlineFilter = new OutlineFilter(width, height);
-    // blurFilter = new pixi.filters.BlurFilter();
-    // blurFilter.blur = 2;
-    // blurFilter.passes = 2;
-    outlineRenderTexture = new pixi.RenderTexture(game.renderer, width, height);
-    outlineRenderTexture.render(outlineSprite);
-    outlineSprite.filters = [/*blurFilter, */outlineFilter];
-    outlineRenderTexture.render(outlineSprite);
-    outlineSprite.filters = undefined;
-    cache.addRenderTexture(parent.name + '-outline', outlineRenderTexture);
-  } else {
-    outlineRenderTexture = cache.getRenderTexture(parent.name + '-outline').texture;
-  }
+  this.shieldSprite.blendMode = engine.BlendMode.ADD;
+  this.shieldSprite.filters = [new ShieldFilter(this.game, this.shieldSprite)];
   
-  outlineSprite.texture = outlineRenderTexture;
-  outlineSprite.blendMode = engine.BlendMode.ADD;
-  outlineSprite.tint = 0x55aaff;
-
-  // render shield effect
-  if(!cache.checkRenderTextureKey(parent.name + '-blur')) {
-    blurFilter = new pixi.filters.BlurFilter();
-    blurFilter.blur = 100;
-    blurFilter.passes = 4;
-    shieldRenderTexture = new pixi.RenderTexture(game.renderer, width, height);
-    shieldRenderTexture.render(shieldSprite);
-    shieldSprite.filters = [blurFilter];
-    shieldRenderTexture.render(shieldSprite);
-    shieldSprite.filters = undefined;
-    cache.addRenderTexture(parent.name + '-blur', shieldRenderTexture);
-  } else {
-    shieldRenderTexture = cache.getRenderTexture(parent.name + '-blur').texture;
-  }
-  
-  shieldSprite.texture = shieldRenderTexture;
-  shieldSprite.blendMode = engine.BlendMode.ADD;
-  shieldSprite.shader = this.shieldShader;
+  this.shieldSprite.tint = 0xFF0000;
+  this.outlineSprite.filters = [new OutlineFilter(this.width, this.height)];
 };
 
 ShieldGenerator.prototype.start = function() {
-  this._running = true;
   this.parent.addChild(this.shieldSprite);
   this.parent.addChild(this.outlineSprite);
 
@@ -85,16 +39,13 @@ ShieldGenerator.prototype.start = function() {
 };
 
 ShieldGenerator.prototype.stop = function() {
-  this._running = false;
   this.fadeTween && this.fadeTween.stop();
   this.parent.removeChild(this.shieldSprite);
   this.parent.removeChild(this.outlineSprite);
 };
 
 ShieldGenerator.prototype.update = function() {
-  if(this._running) {
-    this.shieldShader.time += 0.01;
-  }
+  //..
 };
 
 ShieldGenerator.prototype.destroy = function() {

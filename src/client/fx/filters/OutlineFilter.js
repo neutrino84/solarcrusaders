@@ -1,48 +1,50 @@
 
 var pixi = require('pixi'),
-    fs = require('fs');
+    glslify = require('glslify');
 
 function OutlineFilter(width, height) {
-  var matrix = [-1, -1, -1, -1, 8, -1, -1, -1, -1];
-  pixi.AbstractFilter.call(this, null,
-    fs.readFileSync(__dirname + '/OutlineFilter.frag', 'utf8'), {
-      matrix: { type: '1fv', value: new Float32Array(matrix) },
-      texelSize: { type: 'v2', value: { x: 1 / width, y: 1 / height } }
-    }
+  pixi.Filter.call(this,
+    glslify('./outline.vert', 'utf8'),
+    glslify('./outline.frag', 'utf8')
   );
-}
 
-OutlineFilter.prototype = Object.create(pixi.AbstractFilter.prototype);
+  this.matrix = [-1, -1, -1, -1, 8,-1, -1, -1, -1];
+  this.width = width * 2;
+  this.height = height * 2;
+  this.padding = 0;
+};
+
+OutlineFilter.prototype = Object.create(pixi.Filter.prototype);
 OutlineFilter.prototype.constructor = OutlineFilter;
 
 Object.defineProperties(OutlineFilter.prototype, {
   matrix: {
     get: function() {
-      return this.uniforms.matrix.value;
+      return this.uniforms.matrix;
     },
 
     set: function(value) {
-      this.uniforms.matrix.value = new Float32Array(value);
+      this.uniforms.matrix = new Float32Array(value);
     }
   },
 
   width: {
     get: function() {
-      return 1/this.uniforms.texelSize.value.x;
+      return 1/this.uniforms.texelSize.x;
     },
 
     set: function(value) {
-      this.uniforms.texelSize.value.x = 1/value;
+      this.uniforms.texelSize.x = 1/value;
     }
   },
 
   height: {
     get: function() {
-      return 1/this.uniforms.texelSize.value.y;
+      return 1/this.uniforms.texelSize.y;
     },
 
     set: function(value) {
-      this.uniforms.texelSize.value.y = 1/value;
+      this.uniforms.texelSize.y = 1/value;
     }
   }
 });
