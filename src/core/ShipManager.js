@@ -38,6 +38,7 @@ ShipManager.prototype.init = function() {
 
   // generate npcs
   this.generateRandomShips();
+  this.generatePirateShips();
 };
 
 ShipManager.prototype.add = function(ship) {
@@ -53,7 +54,7 @@ ShipManager.prototype.add = function(ship) {
 
 ShipManager.prototype.create = function(data, user, position) {
   var self = this, ship,
-      position = position || this._generateRandomPosition(),
+      position = position || this.generateRandomPosition(user ? 1024 : 4096),
       data = Utils.extend({
         x: data.x || position.x,
         y: data.y || position.y
@@ -202,8 +203,8 @@ ShipManager.prototype.generateRandomShips = function() {
         'ubaidian-x04': { race: 'ubaidian', count: 4 },
         'hederaa-x01': { race: 'hederaa', count: 1 },
         'mechan-x01': { race: 'mechan', count: 3 },
-        'general-x01': { race: 'ubaidian', count: 1 },
-        'general-x02': { race: 'ubaidian', count: 1 }
+        'general-x01': { race: 'ubaidian', count: 0 },
+        'general-x02': { race: 'ubaidian', count: 0 }
       };
   for(var chassis in iterator) {
     for(var i=0; i<iterator[chassis].count; i++) {
@@ -212,13 +213,38 @@ ShipManager.prototype.generateRandomShips = function() {
   }
 };
 
-ShipManager.prototype.generateRandomShip = function(chassis, race) {
+ShipManager.prototype.generatePirateShips = function() {
+  var iterator = [
+        { name: 'roofus', chassis: 'general-x01' },
+        { name: 'bobby', chassis: 'general-x01' },
+        { name: 'crayford', chassis: 'general-x02' },
+        { name: 'cage', chassis: 'general-x02' },
+        { name: 'thak', chassis: 'general-x03' },
+        { name: 'baylor', chassis: 'general-x03' }
+      ],
+      len = iterator.length;
+
+  // create pirate
+  for(var i=0; i<len; i++) {
+    this.create({
+      name: iterator[i].name,
+      chassis: iterator[i].chassis,
+      throttle: 1.0,
+      ai: 'pirate',
+      x: -2048, y: 2048
+    });
+  }
+};
+
+ShipManager.prototype.generateRandomShip = function(chassis, race, ai) {
   var name = Generator.getName(race).toUpperCase(),
-      throttle = global.Math.random() * 1.5 + 0.75;
+      throttle = global.Math.random() * 1.5 + 0.75,
+      ai = ai || 'basic';
       this.create({
         name: name,
         chassis: chassis,
-        throttle: throttle
+        throttle: throttle,
+        ai: ai
       });
 };
 
@@ -288,6 +314,10 @@ ShipManager.prototype._updateBattles = function() {
 
     // check exist
     if(origin && target) {
+      // activate defence
+      target.ai && target.ai.defence(battle);
+
+      // calculate distance
       distance = origin.position.distance(target.position);
 
       if(distance > origin.range) { continue; } // weapons out of range
@@ -346,11 +376,13 @@ ShipManager.prototype._updateBattles = function() {
           }
 
           // spawn npc
-          if(!target.user) {
-            this.generateRandomShip(target.chassis, target.data.race);
+          if(target.ai) {
+            if(target.ai.type === 'basic') {
+              this.generateRandomShip(target.chassis, target.data.race);
+            }
             this.game.emit('ship/remove', target);
           } else {
-            // award disable
+            // penalize
             update.disables = ++target.data.disables;
           }
 
@@ -402,61 +434,20 @@ ShipManager.prototype._updateAI = function() {
       ships = this.ships, target,
       arr = [];
   for(var s in ships) {
+    // ship ai
     ship = ships[s];
-    b = this.battles[ship.uuid];
-    
-    if(!ship.user && global.Math.random() > 0.88) {
-      // plot ship
-      this._plot(ship, this._generateRandomPosition());
-
-      // hedera attack random target
-      random = this._getRandomShip();
-
-      if(ship.data.race === 'hederaa' || ship.data.race === 'mechan') {
-        if(random !== ship) {
-          target = ships[random.uuid];
-          if(target && ship.damage > 0) {
-            room = global.Math.floor(global.Math.random() * target.rooms.length);
-            battle = { origin: ship.uuid, target: target.uuid, id: room, room: target.rooms[room].system };
-            this.sockets.io.sockets.emit('ship/targeted', battle);
-            this.battles[ship.uuid] = battle;
-          }
-        }
-      }
-    }
-    if(b && global.Math.random() > 0.5) {
-      // check if target is AI
-      // and run defence protocols
-      target = this.ships[b.target];
-      if(target && !target.user) {
-        health = target.health / target.config.stats.health;
-        if(!target.movement.animation.isPlaying) {
-          this._plot(ship, this._generateRandomPosition(4096));
-        }
-        if(target.systems['targeting']) {
-          if(!this.battles[target.uuid] || this.battles[target.uuid].target !== ship.uuid) {
-            room = global.Math.floor(global.Math.random() * ship.rooms.length);
-            battle = { origin: target.uuid, target: ship.uuid, id: room, room: ship.rooms[room].system };
-            this.sockets.io.sockets.emit('ship/targeted', battle);
-            this.battles[target.uuid] = battle;
-          }
-        }
-        if(target.systems['shield'] && health < 0.50) {
-          target.activate('shield');
-        }
-      }
-    }
+    ship.ai && ship.ai.update();
   }
 };
 
-ShipManager.prototype._getRandomShip = function() {
+ShipManager.prototype.getRandomShip = function() {
   var ships = this.ships,
       keys = Object.keys(ships),
       random = keys[Math.floor(keys.length * Math.random())];
   return ships[random];
 };
 
-ShipManager.prototype._generateRandomPosition = function(size) {
+ShipManager.prototype.generateRandomPosition = function(size) {
   var size = size || (global.Math.random() > 0.5 ? 4096 : 2048),
       halfSize = size/2,
       center = 2048,

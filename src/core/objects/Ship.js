@@ -5,6 +5,7 @@ var async = require('async'),
     System = require('./System'),
     Hardpoint = require('./Hardpoint'),
     Enhancement = require('./Enhancement'),
+    AI = require('../AI'),
     Utils = require('../../utils');
 
 function Ship(manager, data) {
@@ -26,6 +27,8 @@ function Ship(manager, data) {
   this.rotation = global.parseFloat(this.data.rotation);
   this.position = new engine.Point(global.parseFloat(this.data.x), global.parseFloat(this.data.y));
   this.interpolate = this.position.copyFrom.bind(this.position);
+
+  this.ai = data.ai ? AI.create(data.ai, this) : null;
 
   this.timers = [];
   this.rooms = [];
