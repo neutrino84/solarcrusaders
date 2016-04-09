@@ -27,10 +27,10 @@ var Device = require('./system/Device'),
     TilemapSprite = require('./tilemap/TilemapSprite'),
     TilemapPathing = require('./tilemap/TilemapPathing'),
     Tileset = require('./tilemap/Tileset'),
-    Tile = require('./tilemap/Tile');//,
+    Tile = require('./tilemap/Tile'),
 
     // plugins
-    // WireframeRenderer = require('./renderers/WireframeRenderer');
+    WireframeRenderer = require('./renderers/WireframeRenderer');
 
 var core = module.exports =
   Object.assign(require('./const'), {
