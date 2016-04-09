@@ -1,25 +1,21 @@
 
-var pixi = require('pixi');
-var fs = require('fs');
+var pixi = require('pixi'),
+    engine = require('engine'),
+    glslify = require('glslify'),
+    Shader = require('pixi-gl-core').GLShader;
 
-function PlanetGlowShader(game) {
-  this.game = game;
+function Atmosphere(game) {
+  engine.Shader.call(this, game, new pixi.Texture(this.getRepeatTexture('planet')));
+};
 
-  var uniforms = {
-    projectionMatrix: { type: 'mat3', value: new Float32Array([1, 0, 0, 0, 1, 0, 0, 0, 1]) }
-  }
+Atmosphere.prototype = Object.create(engine.Shader.prototype);
+Atmosphere.prototype.constructor = Atmosphere;
 
-  var vertex = fs.readFileSync(__dirname + '/PlanetShader.vert', 'utf8');
-  var fragment = fs.readFileSync(__dirname + '/PlanetGlowShader.frag', 'utf8');
+Atmosphere.prototype.getShader = function(gl) {
+  return new Shader(gl,
+    glslify(__dirname + '/shaders/planet.vert', 'utf8'),
+    glslify(__dirname + '/shaders/atmosphere.frag', 'utf8')
+  );
+};
 
-  pixi.Shader.call(this, game.renderer.shaderManager, vertex, fragment, uniforms, {
-    aVertexPosition: 0,
-    aTextureCoord: 0,
-    aColor: 0
-  });
-}
-
-PlanetGlowShader.prototype = Object.create(pixi.Shader.prototype);
-PlanetGlowShader.prototype.constructor = PlanetGlowShader;
-
-module.exports = PlanetGlowShader;
+module.exports = Atmosphere;

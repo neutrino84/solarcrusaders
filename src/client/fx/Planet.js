@@ -1,64 +1,42 @@
 
 var pixi = require('pixi'),
-    PlanetShader = require('./shaders/PlanetShader'),
-    PlanetGlowShader = require('./shaders/PlanetGlowShader');
+    engine = require('engine'),
+    glslify = require('glslify'),
+    Shader = require('pixi-gl-core').GLShader,
+    Atmosphere = require('./Atmosphere');
 
-function Planet(game, key) {
-  var texture = new pixi.Texture(this.getMipmapTexture(key)),
-      clouds = new pixi.Texture(this.getMipmapTexture('clouds'));
+function Planet(game) {
+  this.planetTexture = new pixi.Texture(this.getRepeatTexture('planet')),
+  this.cloudsTexture = new pixi.Texture(this.getRepeatTexture('clouds'));
 
-  pixi.Sprite.call(this, texture);
+  engine.Shader.call(this, game, this.planetTexture);
 
-  this.game = game;
+  this.atmosphere = new Atmosphere(game);
+  this.atmosphere.cache();
+  this.addChild(this.atmosphere);
 
-  this.pivot.set(512, 512);
+  this.pivot.set(this._width/2, this._height/2);
+  this.position.set(2048/6, 2048/6);
+};
 
-  this.planetShader = new PlanetShader(game);
-  this.planetShader.setTexture(texture, clouds);
-
-  this.glowSprite = new pixi.Sprite(texture);
-  this.glowSprite.shader = new PlanetGlowShader(game);
-  this.glowTexture = new pixi.RenderTexture(game.renderer, texture.width, texture.height);
-  this.glowTexture.render(this.glowSprite);
-
-  this.glowSprite.texture = this.glowTexture;
-  this.glowSprite.shader = undefined;
-
-  this.addChild(this.glowSprite);
-
-  this.shader = this.planetShader;
-
-  this.game.on('fpsProblem', this.cache, this);
-}
-
-Planet.prototype = Object.create(pixi.Sprite.prototype);
+Planet.prototype = Object.create(engine.Shader.prototype);
 Planet.prototype.constructor = Planet;
 
-Planet.prototype.update = function() {
-  this.shader && this.shader.update();
+  
+Planet.prototype.apply = function(renderer, shader) {
+  shader.uniforms.time = this.game.clock.totalElapsedSeconds();
+  shader.uniforms.translationMatrix = this.worldTransform.toArray(true);
+  shader.uniforms.uClouds = 1;
+
+  renderer.bindTexture(this._texture, 0);
+  renderer.bindTexture(this.cloudsTexture, 1);
 };
 
-Planet.prototype.getMipmapTexture = function(key) {
-  var base = game.cache.getImage(key, true).base;
-      base.mipmap = true;
-  return base;
-};
-
-Planet.prototype.cache = function() {
-  this.planetTexture && this.planetTexture.destroy();
-  this.planetTexture = new pixi.RenderTexture(this.game.renderer, this.width, this.height);
-  this.planetTexture.render(this);
-  this.texture = this.planetTexture;
-  this.shader = undefined;
-  this.removeChild(this.glowSprite);
-};
-
-Planet.prototype.uncache = function() {
-
-};
-
-Planet.prototype.destroy = function() {
-
+Planet.prototype.getShader = function(gl) {
+  return new Shader(gl,
+    glslify(__dirname + '/shaders/planet.vert', 'utf8'),
+    glslify(__dirname + '/shaders/planet.frag', 'utf8')
+  );
 };
 
 module.exports = Planet;
