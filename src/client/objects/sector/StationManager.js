@@ -1,8 +1,7 @@
 
 var engine = require('engine'),
     EventEmitter = require('eventemitter3'),
-    Station = require('./Station'),
-    FogFilter = require('../../fx/filters/FogFilter');
+    Station = require('./Station');
 
 function StationManager(game) {
   EventEmitter.call(this);
@@ -27,15 +26,12 @@ StationManager.prototype = Object.create(EventEmitter.prototype);
 StationManager.prototype.constructor = StationManager;
 
 StationManager.prototype.boot = function() {
-  // this.fogFilter = new FogFilter(this.game);
-  // this.stationsGroup.filters = [this.fogFilter];
-
-  for(var i=0; i<2; i++) {
+  for(var i=0; i<1; i++) {
     this.create({
       uuid: i.toString(),
       center: { x: 2048, y: 2048 },
       index: i,
-      orbit: 768,
+      orbit: 512,
       chassis: 'station'
     });
   }
