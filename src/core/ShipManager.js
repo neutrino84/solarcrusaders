@@ -428,11 +428,8 @@ ShipManager.prototype._updateBattles = function() {
 };
 
 ShipManager.prototype._updateAI = function() {
-  var b, battle, random, ship,
-      room, health, origin,
-      game = this.game,
-      ships = this.ships, target,
-      arr = [];
+  var ship,
+      ships = this.ships;
   for(var s in ships) {
     // ship ai
     ship = ships[s];
