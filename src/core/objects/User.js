@@ -45,7 +45,7 @@ User.prototype.create = function(ships) {
     // create default ship
     this.game.emit('ship/create', {
       name: Generator.getName('ubaidian'),
-      chassis: 'ubaidian-x04'
+      chassis: this.data.role === 'user' ? 'ubaidian-x03' : 'ubaidian-x04'
     }, this);
   }
 };
