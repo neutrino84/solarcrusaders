@@ -149,18 +149,6 @@ Emitter.prototype.makeParticles = function(keys, frames, quantity, collide, coll
 
     particle = new this.particleClass(this.game, rndKey, rndFrame);
 
-    // this.game.physics.arcade.enable(particle, false);
-
-    // if(collide) {
-    //   particle.body.checkCollision.any = true;
-    //   particle.body.checkCollision.none = false;
-    // } else {
-    //   particle.body.checkCollision.none = true;
-    // }
-
-    // particle.body.collideWorldBounds = collideWorldBounds;
-    // particle.body.skipQuadTree = true;
-
     particle.exists = false;
     particle.visible = false;
     particle.anchor.copy(this.particleAnchor);
@@ -285,9 +273,6 @@ Emitter.prototype.emitParticle = function() {
 
   particle.vector = this.vector;
   particle.blendMode = this.blendMode;
-
-  // particle.body.updateBounds();
-  // particle.body.bounce.setTo(this.bounce.x, this.bounce.y);
 
   particle.velocity.x = this.game.rnd.between(this.minParticleSpeed.x, this.maxParticleSpeed.x);
   particle.velocity.y = this.game.rnd.between(this.minParticleSpeed.y, this.maxParticleSpeed.y);
