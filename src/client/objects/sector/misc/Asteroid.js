@@ -13,16 +13,24 @@ function Asteroid(game) {
   this.scale.copy(this.createScale());
   this.pivot.set(this.texture.frame.width/2, this.texture.frame.height/2);
   this.rotation = this.angle;
+
+  // activate culling
+  this.autoCull = true;
+  this.checkWorldBounds = true;
 };
 
 Asteroid.prototype = Object.create(engine.Sprite.prototype);
 Asteroid.prototype.constructor = Asteroid;
 
 Asteroid.prototype.update = function() {
-  var position = this.orbit.circumferencePoint(this.angle, false, this.tempPoint);
-  this.position.copy(position);
-  this.rotation += this.rotspeed;
-  this.angle += this.movspeed;
+  engine.Sprite.prototype.update.call(this);
+
+  if(this.renderable) {
+    var position = this.orbit.circumferencePoint(this.angle, false, this.tempPoint);
+    this.position.copy(position);
+    this.rotation += this.rotspeed;
+    this.angle += this.movspeed;
+  }
 };
 
 Asteroid.prototype.createOrbit = function() {
@@ -33,7 +41,7 @@ Asteroid.prototype.createOrbit = function() {
 };
 
 Asteroid.prototype.createScale = function() {
-  var scale = global.Math.random() * 0.4 + 0.6,
+  var scale = global.Math.random() * 0.6 + 0.4,
       point = { x: scale, y: scale };
   return point;
 };
