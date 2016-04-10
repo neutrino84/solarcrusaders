@@ -40,47 +40,51 @@ function startDatabaseConnection() {
   // global.stripe = new Stripe();
   // global.stripe.init();
 
-  this.schema.on('connected', function() {
-    var done = function(err) { console.log('err', err); },
-        create = function(user) {
-          var user = new global.model.User({
-            name: user.username,
-            username: user.username,
-            email: user.email,
-            password: user.password,
-            created: new Date(user.created),
-            role: user.role
-          });
-          user.sanitize();
-          return user;
-        },
-        worker = function(user, callback) {
-          console.log('queue', user.username);
-          user.save(callback);
-        },
-        q = async.queue(worker, 1);
-    for(var u in userlist) {
-      q.push(create(userlist[u]), done);
-    }
-    q.drain = function() {
-      console.log('work complete');
-    }
-    for(var s in stripelist) {
-      var stripe = stripelist[s];
-      var model = new global.model.Stripe({
-          name: stripe.name,
-          email: stripe.email,
-          stripe_id: stripe.stripe_id,
-          default_source: stripe.default_source,
-          created: new Date(stripe.created),
-          currency: stripe.currency,
-          edition: stripe.edition
-      });
-      model.save({ validate: false });
-    }
-  });
-
   // this.schema.on('connected', function() {
+  //   var done = function(err) { console.log('err', err); },
+  //       create = function(user) {
+  //         var user = new global.model.User({
+  //           name: user.username,
+  //           username: user.username,
+  //           email: user.email,
+  //           password: user.password,
+  //           created: new Date(user.created),
+  //           role: user.role
+  //         });
+  //         user.sanitize();
+  //         return user;
+  //       },
+  //       worker = function(user, callback) {
+  //         console.log('queue', user.username);
+  //         user.save(callback);
+  //       },
+  //       q = async.queue(worker, 1);
+  //   for(var u in userlist) {
+  //     q.push(create(userlist[u]), done);
+  //   }
+  //   q.drain = function() {
+  //     console.log('work complete');
+  //   }
+  //   for(var s in stripelist) {
+  //     var stripe = stripelist[s];
+  //     var model = new global.model.Stripe({
+  //         name: stripe.name,
+  //         email: stripe.email,
+  //         stripe_id: stripe.stripe_id,
+  //         default_source: stripe.default_source,
+  //         created: new Date(stripe.created),
+  //         currency: stripe.currency,
+  //         edition: stripe.edition
+  //     });
+  //     model.save({ validate: false });
+  //   }
+  // });
+
+  this.schema.on('connected', function() {
+    global.model.Ship.destroyAll(function(err) {
+      console.log('destroyed');
+    });
+
   //   global.model.User.all(function(err, users) {
   //     var user, output = [];
   //     for(var u in users) {
@@ -96,7 +100,7 @@ function startDatabaseConnection() {
   //     }
   //     console.log(output);
   //   });
-  // });
+  });
 
   // this.schema.on('connected', function() {
   //   global.model.Stripe.all(function(err, stripes) {
