@@ -72,7 +72,7 @@
             </struct>
         </struct>
         <key>shapePadding</key>
-        <uint>2</uint>
+        <uint>0</uint>
         <key>jpgQuality</key>
         <uint>80</uint>
         <key>pngOptimizationLevel</key>
@@ -104,19 +104,19 @@
         <key>algorithmSettings</key>
         <struct type="AlgorithmSettings">
             <key>algorithm</key>
-            <enum type="AlgorithmSettings::AlgorithmId">Basic</enum>
+            <enum type="AlgorithmSettings::AlgorithmId">MaxRects</enum>
             <key>freeSizeMode</key>
             <enum type="AlgorithmSettings::AlgorithmFreeSizeMode">Best</enum>
             <key>sizeConstraints</key>
             <enum type="AlgorithmSettings::SizeConstraints">AnySize</enum>
             <key>forceSquared</key>
-            <false/>
+            <true/>
             <key>forceWordAligned</key>
             <false/>
             <key>maxRects</key>
             <struct type="AlgorithmMaxRectsSettings">
                 <key>heuristic</key>
-                <enum type="AlgorithmMaxRectsSettings::Heuristic">BottomLeft</enum>
+                <enum type="AlgorithmMaxRectsSettings::Heuristic">Best</enum>
             </struct>
             <key>basic</key>
             <struct type="AlgorithmBasicSettings">
@@ -176,7 +176,7 @@
             <key>scaleMode</key>
             <enum type="ScaleMode">Smooth</enum>
             <key>extrude</key>
-            <uint>0</uint>
+            <uint>2</uint>
             <key>trimThreshold</key>
             <uint>1</uint>
             <key>trimMargin</key>
@@ -240,6 +240,7 @@
             <key type="filename">ships/engine-highlight.png</key>
             <key type="filename">ships/general/general-x01.png</key>
             <key type="filename">ships/general/general-x02.png</key>
+            <key type="filename">ships/general/general-x03.png</key>
             <key type="filename">ships/hederaa/hederaa-x01-lights.png</key>
             <key type="filename">ships/hederaa/hederaa-x01.png</key>
             <key type="filename">ships/mechan/mechan-x01.png</key>
@@ -252,6 +253,7 @@
             <key type="filename">ships/ubaidian/ubaidian-x04.png</key>
             <key type="filename">turrets/turret-a.png</key>
             <key type="filename">turrets/turret-b.png</key>
+            <key type="filename">turrets/turret-cap-general.png</key>
             <key type="filename">turrets/turret-cap-hederaa.png</key>
             <key type="filename">turrets/turret-cap-mechan.png</key>
             <key type="filename">turrets/turret-cap-ubaidian.png</key>
@@ -323,6 +325,8 @@
             <filename>icons/item-system-shield.png</filename>
             <filename>icons/item-system-targeting.png</filename>
             <filename>turrets/turret-cap-mechan.png</filename>
+            <filename>ships/general/general-x03.png</filename>
+            <filename>turrets/turret-cap-general.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

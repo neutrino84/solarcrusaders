@@ -3,7 +3,7 @@
     "race": "ubaidian",
     "class": "destroyer",
     "oribit": {
-      "radius": 128
+      "radius": 224
     },
     "stats": {
       "capacity": 1000,
@@ -1051,7 +1051,7 @@
     "stats": {
       "capacity": 3000,
       "health": 300,
-      "heal": 0.75,
+      "heal": 0.25,
       "armor": 0.0,
       "speed": 2.0,
       "range": 1024,
@@ -3923,7 +3923,7 @@
     "race": "hederaa",
     "class": "destroyer",
     "oribit": {
-      "radius": 128
+      "radius": 224
     },
     "stats": {
       "capacity": 1000,
@@ -5903,7 +5903,7 @@
     }
   },
   "general-x01": {
-    "race": "ubaidian",
+    "race": "general",
     "class": "mining",
     "oribit": {
       "radius": 192
@@ -6237,7 +6237,7 @@
     }
   },
   "general-x02": {
-    "race": "ubaidian",
+    "race": "general",
     "class": "transport",
     "oribit": {
       "radius": 160
@@ -6248,7 +6248,7 @@
       "heal": 0.2,
       "armor": 0.0,
       "speed": 5.0,
-      "range": 512,
+      "range": 1024,
       "accuracy": 0.6,
       "evasion": 0.3,
       "energy": 80,
@@ -6336,6 +6336,398 @@
           "position": {
             "x": 45,
             "y": 87
+          }
+        }
+      ]
+    },
+    "shields": false,
+    "tilemap": {
+      "layers": [
+        {
+         "data":[69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69, 69],
+         "height":12,
+         "name":"grid",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":16,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 57, 57, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 58, 61, 57, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 59, 62, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 59, 65, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 58, 66, 57, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 57, 57, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":12,
+         "name":"deck",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":16,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 13, 13, 23, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 20, 5, 6, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 9, 0, 3, 19, 23, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 16, 18, 1, 6, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 13, 20, 29, 8, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 9, 0, 3, 17, 21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 18, 8, 7, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 16, 16, 21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":12,
+         "name":"wall",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":16,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "height":12,
+         "name":"doors",
+         "objects":[
+                {
+                 "height":16,
+                 "id":97,
+                 "name":"",
+                 "properties":
+                    {
+                     "frame":"1"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":144,
+                 "y":72
+                }, 
+                {
+                 "height":16,
+                 "id":98,
+                 "name":"",
+                 "properties":
+                    {
+                     "frame":"0"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":152,
+                 "y":80
+                }, 
+                {
+                 "height":16,
+                 "id":99,
+                 "name":"",
+                 "properties":
+                    {
+                     "frame":"1"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":144,
+                 "y":104
+                }, 
+                {
+                 "height":16,
+                 "id":109,
+                 "name":"",
+                 "properties":
+                    {
+                     "frame":"0"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":120,
+                 "y":64
+                }, 
+                {
+                 "height":16,
+                 "id":110,
+                 "name":"",
+                 "properties":
+                    {
+                     "frame":"0"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":120,
+                 "y":112
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "width":16,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "height":12,
+         "name":"rooms",
+         "objects":[
+                {
+                 "height":32,
+                 "id":102,
+                 "name":"",
+                 "properties":
+                    {
+                     "system":"pilot"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":160,
+                 "y":80
+                }, 
+                {
+                 "height":32,
+                 "id":103,
+                 "name":"",
+                 "properties":
+                    {
+                     "system":"targeting"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":128,
+                 "y":48
+                }, 
+                {
+                 "height":32,
+                 "id":104,
+                 "name":"",
+                 "properties":
+                    {
+                     "system":"engine"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":128,
+                 "y":112
+                }, 
+                {
+                 "height":32,
+                 "id":105,
+                 "name":"",
+                 "properties":
+                    {
+                     "system":"pilot"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":144,
+                 "y":80
+                }, 
+                {
+                 "height":16,
+                 "id":106,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":112,
+                 "y":112
+                }, 
+                {
+                 "height":16,
+                 "id":107,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":112,
+                 "y":64
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "width":16,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "height":12,
+         "name":"crew",
+         "objects":[],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":false,
+         "width":16,
+         "x":0,
+         "y":0
+        }
+      ]
+    }
+  },
+  "general-x03": {
+    "race": "general",
+    "class": "battleship",
+    "oribit": {
+      "radius": 192
+    },
+    "stats": {
+      "capacity": 3000,
+      "health": 300,
+      "heal": 0.25,
+      "armor": 0.0,
+      "speed": 1.5,
+      "range": 1024,
+      "accuracy": 0.92,
+      "evasion": 0,
+      "energy": 100,
+      "recharge": 0.25,
+      "durability": 1000,
+      "critical": 0.01
+    },
+    "engine": {
+      "glows": [
+        {
+          "tint": "0xFFFFFF",
+          "scale": {
+            "startX": 0.02,
+            "endX": 0.05,
+            "startY": 0.08,
+            "endY": 0.12
+          },
+          "position": {
+            "x": 143,
+            "y": 63
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "0xFFFFFF",
+          "scale": {
+            "startX": 0.02,
+            "endX": 0.05,
+            "startY": 0.08,
+            "endY": 0.12
+          },
+          "position": {
+            "x": 143,
+            "y": 145
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "0xFFFFFF",
+          "scale": {
+            "startX": 0.06,
+            "endX": 0.12,
+            "startY": 0.24,
+            "endY": 0.34
+          },
+          "position": {
+            "x": 152,
+            "y": 81
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "0xFFFFFF",
+          "scale": {
+            "startX": 0.06,
+            "endX": 0.12,
+            "startY": 0.24,
+            "endY": 0.34
+          },
+          "position": {
+            "x": 152,
+            "y": 124
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "0xFFFFFF",
+          "scale": {
+            "startX": 0.02,
+            "endX": 0.06,
+            "startY": 0.04,
+            "endY": 0.12
+          },
+          "position": {
+            "x": 63,
+            "y": 71
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "0xFFFFFF",
+          "scale": {
+            "startX": 0.02,
+            "endX": 0.06,
+            "startY": 0.04,
+            "endY": 0.12
+          },
+          "position": {
+            "x": 63,
+            "y": 135
+          },
+          "rotation": 0
+        }
+      ]
+    },
+    "targeting": {
+      "hardpoints": [
+        {
+          "pivot": {
+            "x": 17,
+            "y": 16
+          },
+          "position": {
+            "x": 15,
+            "y": 103
+          }
+        },
+        {
+          "pivot": {
+            "x": 17,
+            "y": 16
+          },
+          "position": {
+            "x": 50,
+            "y": 103
+          }
+        },
+        {
+          "pivot": {
+            "x": 17,
+            "y": 16
+          },
+          "position": {
+            "x": 116,
+            "y": 80
+          }
+        },
+        {
+          "pivot": {
+            "x": 17,
+            "y": 16
+          },
+          "position": {
+            "x": 116,
+            "y": 127
           }
         }
       ]
