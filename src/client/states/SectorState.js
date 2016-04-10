@@ -1,7 +1,8 @@
 var engine = require('engine'),
     Space = require('../fx/Space'),
     Planet = require('../fx/Planet'),
-    Snow = require('../fx/Snow'),
+    NebulaCluster = require('../fx/NebulaCluster'),
+    // Snow = require('../fx/Snow'),
     Selection = require('../objects/sector/Selection'),
     ShipManager = require('../objects/sector/ShipManager'),
     StationManager = require('../objects/sector/StationManager'),
@@ -32,7 +33,7 @@ SectorState.prototype.preload = function() {
   // load.image('draghe', 'imgs/game/planets/draghe.jpg');
   // load.image('eamon', 'imgs/game/planets/eamon-alpha.jpg');
   // load.image('arkon', 'imgs/game/planets/arkon.jpg');
-  load.image('talus', 'imgs/game/planets/arkon.jpg');
+  load.image('planet', 'imgs/game/planets/arkon.jpg');
   load.image('clouds', 'imgs/game/planets/clouds.jpg');
 
   // load stations
@@ -69,16 +70,16 @@ SectorState.prototype.create = function() {
   this.game.world.scale.set(0.34, 0.34);
 
   this.game.camera.bounds = null;
-  this.game.camera.focusOnXY(2048, 2048);
+  // this.game.camera.focusOnXY(-2048, 2048);
 
   // create sector
   this.createManagers();
-  this.createSpace();
-  this.createSnow();
   this.createAsteroids();
+  this.createSpace();
+  // this.createSnow();
 
   // AUDIO TEST
-  this.sound = this.game.sound.add('background', 0.001, true);
+  this.sound = this.game.sound.add('background', 0, true);
   this.sound.on('decoded', function() {
     this.play('', 0, 0, true);
     this.fadeTo(12000, 0.12);
@@ -109,10 +110,14 @@ SectorState.prototype.create = function() {
 
 SectorState.prototype.createSpace = function() {
   this.space = new Space(this.game, this.game.width, this.game.height);
-  
-  this.planet = new Planet(this.game, 'talus');
-  this.planet.position.set(2048 / 6, 2048 / 6);
+  this.planet = new Planet(this.game);
+  // this.planet.cache();
 
+  this.nebula = new NebulaCluster(this.game);
+  this.nebula.position.set(-512, 1024);
+  this.nebula.create(3);
+
+  this.game.world.foreground.add(this.nebula);
   this.game.world.background.add(this.planet);
   this.game.stage.addChildAt(this.space, 0);
 };
@@ -134,7 +139,7 @@ SectorState.prototype.createSnow = function() {
 };
 
 SectorState.prototype.createAsteroids = function() {
-  var asteroid, amount = 50;
+  var asteroid, amount = 80;
   for(var i=0; i<amount; i++) {
     asteroid = new Asteroid(this.game);
     asteroid.position.set(2048 / 4, 2048 / 4);
