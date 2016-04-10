@@ -217,10 +217,9 @@ ShipManager.prototype.generatePirateShips = function() {
   var iterator = [
         { name: 'roofus', chassis: 'general-x01' },
         { name: 'bobby', chassis: 'general-x01' },
-        { name: 'crayford', chassis: 'general-x02' },
+        { name: 'crayford', chassis: 'general-x01' },
         { name: 'cage', chassis: 'general-x02' },
-        { name: 'thak', chassis: 'general-x03' },
-        { name: 'baylor', chassis: 'general-x03' }
+        { name: 'thak', chassis: 'general-x03' }
       ],
       len = iterator.length;
 
