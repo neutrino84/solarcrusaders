@@ -23,9 +23,14 @@ function Laser(parent, config) {
   this.glowSprite.blendMode = engine.BlendMode.ADD;
 
   this.redTexture = new pixi.Texture(this.game.cache.getImage('laser-red', true).base);
-  this.blueTexture = new pixi.Texture(this.game.cache.getImage('laser-red', true).base);
+  this.redPiercingTexture = new pixi.Texture(this.game.cache.getImage('laser-red-piercing', true).base);
+  this.blueTexture = new pixi.Texture(this.game.cache.getImage('laser-blue', true).base);
+  
   this.strip = new engine.Strip(this.game, this.blueTexture, [this._start, this._end]);
   this.strip.blendMode = engine.BlendMode.ADD;
+
+  this.stripPiercing = new engine.Strip(this.game, this.redPiercingTexture, [this._start, this._end]);
+  this.stripPiercing.blendMode = engine.BlendMode.ADD;
 
   this.startTween = this.game.tweens.create(this._start);
   this.endTween = this.game.tweens.create(this._end);
@@ -52,13 +57,14 @@ Laser.prototype.fire = function(miss, enhancements, shields) {
       end = this.end,
       start = engine.Line.pointAtDistance(this.start, this.end, 8),
       distance = this.start.distance(this.end) / 5.0,
-      parent = this.parent;
+      parent = this.parent,
+      piercing = enhancements.piercing;
 
   this._start.copyFrom(start);
   this._end.copyFrom(end);
 
   this.strip.alpha = 1.0;
-  this.strip.texture = this.blueTexture;
+  this.strip.texture = piercing ? this.redTexture : this.blueTexture;
 
   this.glowSprite.alpha = 1.0;
 
@@ -88,15 +94,20 @@ Laser.prototype.fire = function(miss, enhancements, shields) {
 
   this.endTween.once('start', function() {
     parent.fxGroup.addChild(this.strip);
+    piercing && parent.fxGroup.addChild(this.stripPiercing);
+
     parent.sprite.addChild(this.glowSprite);
   }, this);
 
   this.fadeTween.once('complete', function() {
     parent.fxGroup.removeChild(this.strip);
+
     parent.sprite.removeChild(this.glowSprite);
   }, this);
 
   this.endTween.once('complete', function() {
+    parent.fxGroup.removeChild(this.stripPiercing);
+    
     if(!miss) {
       parent.glowEmitter.color(shields ? 0x336699 : 0xFF6666);
       parent.glowEmitter.at({ center: end });
