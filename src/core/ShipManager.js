@@ -282,6 +282,11 @@ ShipManager.prototype._updateShips = function() {
       update.hdelta = engine.Math.roundTo(delta, 1);
     }
 
+    // re-enable ship
+    if(ship.disabled && ship.health >= 3) {
+      ship.disabled = false;
+    }
+
     // update energy
     if(ship.energy < stats.energy) {
       delta = ship.recharge;
@@ -312,7 +317,7 @@ ShipManager.prototype._updateBattles = function() {
     target = this.ships[battle.target];
 
     // check exist
-    if(origin && target) {
+    if(origin && target && !target.disabled) {
       // activate defence
       target.ai && target.ai.defence(battle);
 
@@ -383,6 +388,7 @@ ShipManager.prototype._updateBattles = function() {
           } else {
             // penalize
             update.disables = ++target.data.disables;
+            target.disabled = true;
           }
 
           // award kill
