@@ -16,35 +16,13 @@ function Space(game, width, height) {
 
   this.transform.updated = false;
 
-  this._width = width || 128;
-  this._height = height || 128;
+  this._width = width;
+  this._height = height;
   this._glDatas = [];
 };
 
 Space.prototype = Object.create(pixi.Sprite.prototype);
 Space.prototype.constructor = Space;
-
-Object.defineProperties(Space.prototype, {
-  width: {
-    get: function() {
-      return this._width;
-    },
-    
-    set: function(value) {
-      this._width = value;
-    }
-  },
-
-  height: {
-    get: function() {
-      return this._height;
-    },
-
-    set: function(value) {
-      this._height = value;
-    }
-  }
-});
 
 Space.prototype.update = function() {
   var game = this.game,
@@ -208,5 +186,27 @@ Space.prototype.destroy = function() {
   this.tilePosition = null;
   this._tileScaleOffset = null;
 };
+
+Object.defineProperties(Space.prototype, {
+  width: {
+    get: function() {
+      return this._width;
+    },
+    
+    set: function(value) {
+      this._width = value;
+    }
+  },
+
+  height: {
+    get: function() {
+      return this._height;
+    },
+
+    set: function(value) {
+      this._height = value;
+    }
+  }
+});
 
 module.exports = Space;
