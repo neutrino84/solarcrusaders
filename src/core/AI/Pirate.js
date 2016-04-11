@@ -18,22 +18,27 @@ Pirate.prototype.update = function() {
       ships = manager.ships,
       ship = this.ship,
       battles = manager.battles,
+      battle = battles[ship.uuid],
       target;
 
   // plot ship
-  if(battles[ship.uuid]) {
+  if(battle) {
     manager._plot(ship, this.patrol.random());
   } else if(global.Math.random() > 0.96) {
     manager._plot(ship, this.patrol.random());
   }
 
   // search and destroy
-  for(var s in ships) {
-    target = ships[s];
-    
-    if(this.sight.contains(target.position.x, target.position.y)) {
-      if(target !== ship && target.user) {
-        this.battle(ship, target);
+  if(!battle || global.Math.random() > 0.75) {
+    for(var s in ships) {
+      target = ships[s];
+      
+      if(target.user && this.sight.contains(target.position.x, target.position.y)) {
+        if(!battle || battle.target !== target.uuid) {
+          this.battle(ship, target);
+        } else {
+          continue;
+        }
       }
     }
   }
