@@ -99,7 +99,7 @@ SectorState.prototype.create = function() {
   }
 
   // benchmark
-  this.game.clock.benchmark();
+  // this.game.clock.benchmark();
 
   // notify
   this.game.emit('gui/focus/retain', this);
