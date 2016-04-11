@@ -22,7 +22,6 @@ function Planet(game) {
 Planet.prototype = Object.create(engine.Shader.prototype);
 Planet.prototype.constructor = Planet;
 
-  
 Planet.prototype.apply = function(renderer, shader) {
   shader.uniforms.time = this.game.clock.totalElapsedSeconds();
   shader.uniforms.translationMatrix = this.worldTransform.toArray(true);
