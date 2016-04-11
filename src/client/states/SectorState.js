@@ -2,7 +2,8 @@ var engine = require('engine'),
     Space = require('../fx/Space'),
     Planet = require('../fx/Planet'),
     NebulaCluster = require('../fx/NebulaCluster'),
-    // Snow = require('../fx/Snow'),
+    // Shockwave = require('../fx/Shockwave'),
+    Snow = require('../fx/Snow'),
     Selection = require('../objects/sector/Selection'),
     ShipManager = require('../objects/sector/ShipManager'),
     StationManager = require('../objects/sector/StationManager'),
@@ -70,13 +71,13 @@ SectorState.prototype.create = function() {
   this.game.world.scale.set(0.34, 0.34);
 
   this.game.camera.bounds = null;
-  // this.game.camera.focusOnXY(-2048, 2048);
+  this.game.camera.focusOnXY(2048, 2048);
 
   // create sector
   this.createManagers();
   this.createAsteroids();
   this.createSpace();
-  // this.createSnow();
+  this.createSnow();
 
   // AUDIO TEST
   this.sound = this.game.sound.add('background', 0, true);
@@ -116,6 +117,11 @@ SectorState.prototype.createSpace = function() {
   this.nebula = new NebulaCluster(this.game);
   this.nebula.position.set(-512, 1024);
   this.nebula.create(3);
+
+  // this.shockwave = new Shockwave(game, this.space, this.planet);
+  // this.shockwave.position.set(2048, 2048);
+  // this.shockwave.create();
+  // this.game.world.addAt(this.shockwave, 0);
 
   this.game.world.foreground.add(this.nebula);
   this.game.world.background.add(this.planet);
