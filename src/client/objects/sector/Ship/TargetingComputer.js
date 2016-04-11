@@ -37,18 +37,18 @@ TargetingComputer.prototype.create = function() {
   }
 };
 
-TargetingComputer.prototype.fire = function(miss) {
+TargetingComputer.prototype.fire = function() {
   var parent = this.parent,
       target = parent.target,
       hardpoints = this.hardpoints;
   if(target && hardpoints.length > 0) {
     for(var t in hardpoints) {
-      hardpoints[t].fire(t, miss);
+      hardpoints[t].fire(t, target);
     }
   }
 };
 
-TargetingComputer.prototype.cancel = function(miss) {
+TargetingComputer.prototype.cancel = function() {
   var game = this.game,
       parent = this.parent,
       target = parent.target,
@@ -57,18 +57,16 @@ TargetingComputer.prototype.cancel = function(miss) {
   if(target && hardpoints.length > 0) {
     for(var t in hardpoints) {
       hardpoint = hardpoints[t];
-      hardpoint.timer && game.clock.events.remove(
-        hardpoint.timer
-      );
+      hardpoint.timer && game.clock.events.remove(hardpoint.timer);
+      hardpoint.target = null;
     }
   }
 };
 
 TargetingComputer.prototype.update = function() {
   var parent = this.parent,
-      target = parent.target,
       hardpoints = this.hardpoints;
-  if(target && hardpoints.length > 0) {
+  if(hardpoints.length > 0) {
     for(var t in hardpoints) {
       hardpoints[t].update();
     }

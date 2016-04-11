@@ -122,8 +122,9 @@ Laser.prototype.fire = function(miss, enhancements, shields) {
           parent.fireEmitter.explode(1);
         });
 
-        if(parent.ship.target && parent.ship.target.damage) {
-          parent.ship.target.damage.inflict(parent.target);
+        if(parent.ship.target && parent.ship.target.damage
+            && parent.ship.target === parent.target) {
+          parent.ship.target.damage.inflict(parent.aim);
         }
       }
     }
