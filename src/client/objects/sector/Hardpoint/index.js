@@ -66,8 +66,8 @@ Hardpoint.prototype.update = function() {
       position = this.position,
       manager = this.manager;
   if(this.target) {
-    trans = ship.worldTransform.apply(sprite.worldTransform.apply(sprite.pivot));
-    position.copyFrom(this.game.world.worldTransform.applyInverse(trans));
+    ship.updateTransform();
+    position.copyFrom(this.game.world.worldTransform.applyInverse(ship.worldTransform.apply(this.sprite)));
     sprite.rotation = engine.Point.angle(position, apos = this.absoluteTargetPosition()) - ship.rotation;
 
     manager.start.copyFrom(position);
