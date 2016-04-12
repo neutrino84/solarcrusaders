@@ -269,6 +269,7 @@ ShipManager.prototype._attack = function(data) {
     if(!origin.target) { this._targeted(data); }
     if(data.type !== 'miss') {
       target.renderable && target.hud.flash(data.damage.toString(), 0xFF0000, 300, 30, true);
+
       if(origin.renderable || target.renderable) {
         origin.targetingComputer.fire();
       }

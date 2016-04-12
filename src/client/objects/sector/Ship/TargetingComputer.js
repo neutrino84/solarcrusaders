@@ -27,12 +27,14 @@ TargetingComputer.prototype.create = function() {
       hardpoints = parent.details.hardpoints;
   for(var h in hardpoints) {
     slot = hardpoints[h].slot;
+
     hardpoint = new Hardpoint(this, hardpoints[h], this.config.hardpoints[slot]);
     hardpoint.fxGroup = parent.manager.fxGroup;
     hardpoint.flashEmitter = parent.manager.flashEmitter;
     hardpoint.explosionEmitter = parent.manager.explosionEmitter;
     hardpoint.glowEmitter = parent.manager.glowEmitter;
     hardpoint.fireEmitter = parent.manager.fireEmitter;
+
     this.hardpoints.push(hardpoint);
   }
 };
