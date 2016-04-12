@@ -13,6 +13,8 @@ function Snow(game, width, height) {
   this._width = width;
   this._height = height;
 
+  this.transform.updated = false;
+
   // optimize
   // this.game.on('fpsProblem', this.destroy, this);
 }
