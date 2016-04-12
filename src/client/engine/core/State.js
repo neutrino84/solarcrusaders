@@ -19,8 +19,6 @@ State.prototype = {
 
   preRender: function() {},
 
-  render: function() {},
-
   resize: function() {},
 
   paused: function() {},

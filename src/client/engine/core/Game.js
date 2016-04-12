@@ -39,14 +39,7 @@ function Game(config) {
   this.preserveDrawingBuffer = config['preserveDrawingBuffer'] || false;
 
   this.isBooted = false;
-  this.forceSingleUpdate = false;
   this.currentUpdateID = 0;
-
-  this._deltaTime = 0;
-  this._lastCount = 0;
-  this._spiraling = 0;
-  this._kickstart = true;
-  this._nextFpsNotification = 0;
 
   this._paused = false;
   this._codePaused = false;
@@ -127,63 +120,11 @@ Game.prototype.setupRenderer = function() {
 Game.prototype.update = function(time) {
   this.clock.update(time);
 
-  if(this._kickstart) {
-    this.updateLogic(this.clock.desiredFpsMult);
-    this.updateRender(this.clock.slowMotion * this.clock.desiredFps);
-    this._kickstart = false;
-    return;
-  }
-
-  if(this._spiraling > 1 && !this.forceSingleUpdate) {
-    if(this.clock.time > this._nextFpsNotification) {
-      // only permit one fps notification per 10 seconds
-      this._nextFpsNotification = this.clock.time + 10000;
-      this.emit('spiraling');
-    }
-
-    this._deltaTime = 0;
-    this._spiraling = 0;
-
-    this.updateRender(this.clock.slowMotion * this.clock.desiredFps);
-  } else {
-    var count = 0,
-        slowStep = this.clock.slowMotion * 1000.0 / this.clock.desiredFps;
-
-    this._deltaTime += global.Math.max(global.Math.min(slowStep * 3, this.clock.elapsed), 0);
-
-    this.updatesThisFrame = global.Math.floor(this._deltaTime / slowStep);
-    
-    if(this.forceSingleUpdate) {
-      this.updatesThisFrame = global.Math.min(1, this.updatesThisFrame);
-    }
-
-    while(this._deltaTime >= slowStep) {
-      this._deltaTime -= slowStep;
-      this.currentUpdateID = count;
-      this.updateLogic(this.clock.desiredFpsMult);
-
-      count++;
-
-      if(this.forceSingleUpdate && count === 1) {
-        break;
-      } else {
-        this.clock.refresh();
-      }
-    }
-
-    if(count > this._lastCount) {
-      this._spiraling++;
-    } else if(count < this._lastCount) {
-      this._spiraling = 0;
-    }
-
-    this._lastCount = count;
-
-    this.updateRender(this._deltaTime / slowStep);
-  }
+  this.updateLogic();
+  this.updateRender();
 };
 
-Game.prototype.updateLogic = function(timeStep) {
+Game.prototype.updateLogic = function() {
   if(!this._paused) {
     // preUpdate
     this.scale.preUpdate();
@@ -203,10 +144,15 @@ Game.prototype.updateLogic = function(timeStep) {
   }
 };
 
-Game.prototype.updateRender = function(elapsedTime) {
-  // render scene and state
-  this.state.preRender(elapsedTime);
-  this.renderer.render(this.stage);
+Game.prototype.updateRender = function() {
+  // update transform
+  this.stage.updateTransform();
+
+  // pre-render
+  this.state.preRender();
+
+  // render scene graph
+  this.renderer.render(this.stage, null, false, null, true);
 };
 
 Game.prototype.destroy = function() {

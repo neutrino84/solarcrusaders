@@ -285,9 +285,9 @@ StateManager.prototype.pauseUpdate = function() {
   }
 };
 
-StateManager.prototype.preRender = function(elapsedTime) {
+StateManager.prototype.preRender = function() {
   if(this._created && this.callbackContext.preRender) {
-    this.callbackContext.preRender(elapsedTime);
+    this.callbackContext.preRender();
   }
 };
 
@@ -300,18 +300,6 @@ StateManager.prototype.resize = function(width, height) {
   // resize background states
   for(var b in this.backgroundStates) {
     this.backgroundStates[b].resize(width, height);
-  }
-};
-
-StateManager.prototype.render = function() {
-  if(this._created) {
-    if(this.callbackContext.render) {
-      this.callbackContext.render();
-    }
-  } else {
-    if(this.callbackContext.loadRender) {
-      this.callbackContext.loadRender();
-    }
   }
 };
 

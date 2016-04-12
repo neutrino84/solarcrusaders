@@ -2,7 +2,7 @@ var engine = require('engine'),
     Space = require('../fx/Space'),
     Planet = require('../fx/Planet'),
     NebulaCluster = require('../fx/NebulaCluster'),
-    // Shockwave = require('../fx/Shockwave'),
+    Shockwave = require('../fx/Shockwave'),
     Snow = require('../fx/Snow'),
     Selection = require('../objects/sector/Selection'),
     ShipManager = require('../objects/sector/ShipManager'),
@@ -188,9 +188,6 @@ SectorState.prototype.update = function() {
     this.scrollVelocityY -= move;
   }
 
-  // apply velocity
-  camera.pan(this.scrollVelocityX, this.scrollVelocityY);
-  
   // apply friction
   if(this.scrollVelocityX > 0 || this.scrollVelocityX < 0) {
     this.scrollVelocityX /= 1.1;
@@ -204,11 +201,14 @@ SectorState.prototype.update = function() {
   if(this.scrollVelocityY > -0.05 && this.scrollVelocityY < 0.05) {
     this.scrollVelocityY = 0;
   }
+
+  // apply velocity
+  camera.pan(this.scrollVelocityX, this.scrollVelocityY);
 };
 
-// preRender = function() {};
-
-// render = function() {};
+SectorState.prototype.preRender = function() {
+  // this.shockwave.preRender();
+};
 
 SectorState.prototype.resize = function(width, height) {
   this.space && this.space.resize(width, height);

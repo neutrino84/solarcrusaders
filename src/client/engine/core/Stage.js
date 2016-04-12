@@ -8,6 +8,8 @@ function Stage(game) {
   this.disableVisibilityChange = false;
   this.currentRenderOrderID = 0;
 
+  this.parent = new pixi.Container();
+
   this._onChange = null;
   this._hiddenVar = null;
 };
@@ -27,25 +29,6 @@ Stage.prototype.update = function() {
   }
   this.game.world.camera.update();
 };
-
-// Stage.prototype.postUpdate = function() {
-  // if(this.game.world.camera.target) {
-  //   this.game.world.camera.target.postUpdate();
-  //   this.game.world.camera.update();
-
-  //   var i = this.children.length;
-  //   while(i--) {
-  //     if(this.children[i] !== this.game.world.camera.target) {
-  //       this.children[i].postUpdate();
-  //     }
-  //   }
-  // } else {
-    // var i = this.children.length;
-    // while(i--) {
-    //   this.children[i].postUpdate();
-    // }
-  // }
-// };
 
 Stage.prototype.checkVisibility = function() {
   if(global.document.webkitHidden !== undefined) {
