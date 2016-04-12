@@ -84,7 +84,7 @@ SectorState.prototype.create = function() {
   this.sound = this.game.sound.add('background', 0, true);
   this.sound.on('decoded', function() {
     this.play('', 0, 0, true);
-    this.fadeTo(12000, 0.12);
+    this.fadeTo(12000, 0.25);
   });
 
   // start zoom in
