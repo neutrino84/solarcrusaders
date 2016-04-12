@@ -101,7 +101,7 @@ vec4 map(vec3 p, float rcenter, float radius) {
 
   den = clamp(den * f, 0.0, 1.0);
   
-  vec3 col = mix(vec3(0.9, 0.6, 0.9), vec3(0.0, 0.0, 0.0), den) + 0.05 * sin(p);
+  vec3 col = mix(vec3(0.8, 0.6, 0.3), vec3(1.4, 3.8, 0.1), den) + 0.05 * sin(p);
   
   return vec4(col, den);
 }
@@ -119,7 +119,7 @@ vec3 raymarch(vec3 ro, vec3 rd, float sphere, float radius, vec3 center) {
     if(rcenter > radius) continue;
 
     vec4 col = map(pos, rcenter, radius);
-         col.xyz *= mix(1.6 * vec3(0.5, 0.1, 0.5), vec3(0.0, 0.0, -1.0), clamp((pos.y - 0.2) / 2.0, 0.0, 1.0));
+         col.xyz *= mix(1.6 * vec3(0.6, 0.2, 0.0), vec3(-2.0, -4.0, -4.0), clamp((pos.y - 0.2) / 2.0, 0.0, 1.0));
          col.a *= 0.6;
          col.rgb *= col.a;
 
