@@ -19,7 +19,6 @@ function Laser(parent, config) {
   this.glowSprite.scale.set(1.0, 1.0);
   this.glowSprite.pivot.set(32, 32);
   this.glowSprite.position.set(0, 16);
-  this.glowSprite.tint = 0xFFAAAA;
   this.glowSprite.blendMode = engine.BlendMode.ADD;
 
   this.redTexture = new pixi.Texture(this.game.cache.getImage('laser-red', true).base);
@@ -67,6 +66,7 @@ Laser.prototype.fire = function(miss, enhancements, shields) {
   this.strip.texture = piercing ? this.redTexture : this.blueTexture;
 
   this.glowSprite.alpha = 1.0;
+  this.glowSprite.tint = piercing ? 0xFFAAAA : 0xCCCCFF;
 
   this.glowTween.updateTweenData('vStart', { alpha: 1.0 }, 0);
   this.glowTween.updateTweenData('vEnd', { alpha: 0.0 }, 0);
