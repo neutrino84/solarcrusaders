@@ -7,8 +7,8 @@ function Shader(game, texture) {
   this.game = game;
 
   this._cached = false;
-  this._width = texture.width;
-  this._height = texture.height;
+  this._width = texture ? texture.width : 0;
+  this._height = texture ? texture.height : 0;
   this._glDatas = [];
 };
 

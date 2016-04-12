@@ -2,7 +2,7 @@ var engine = require('engine'),
     Space = require('../fx/Space'),
     Planet = require('../fx/Planet'),
     NebulaCluster = require('../fx/NebulaCluster'),
-    Shockwave = require('../fx/Shockwave'),
+    ShockwaveManager = require('../fx/ShockwaveManager'),
     Snow = require('../fx/Snow'),
     Selection = require('../objects/sector/Selection'),
     ShipManager = require('../objects/sector/ShipManager'),
@@ -119,17 +119,14 @@ SectorState.prototype.createSpace = function() {
   this.nebula.position.set(-512, 1024);
   this.nebula.create(3);
 
-  // this.shockwave = new Shockwave(game, this.space, this.planet);
-  // this.shockwave.position.set(2048, 2048);
-  // this.shockwave.create();
-  // this.game.world.addAt(this.shockwave, 0);
-
   this.game.world.foreground.add(this.nebula);
   this.game.world.background.add(this.planet);
   this.game.stage.addChildAt(this.space, 0);
 };
 
 SectorState.prototype.createManagers = function() {
+  this.shockwaveManager = new ShockwaveManager(this.game, this);
+
   this.stationManager = new StationManager(this.game);
   this.stationManager.boot();
   
@@ -207,7 +204,7 @@ SectorState.prototype.update = function() {
 };
 
 SectorState.prototype.preRender = function() {
-  // this.shockwave.preRender();
+  this.shockwaveManager.preRender();
 };
 
 SectorState.prototype.resize = function(width, height) {
