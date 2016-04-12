@@ -318,9 +318,6 @@ ShipManager.prototype._updateBattles = function() {
 
     // check exist
     if(origin && target && !target.disabled) {
-      // activate defence
-      target.ai && target.ai.defence(battle);
-
       // calculate distance
       distance = origin.position.distance(target.position);
 
@@ -433,12 +430,19 @@ ShipManager.prototype._updateBattles = function() {
 };
 
 ShipManager.prototype._updateAI = function() {
-  var ship,
-      ships = this.ships;
+  var ship, battle, target,
+      ships = this.ships,
+      battles = this.battles;
   for(var s in ships) {
-    // ship ai
     ship = ships[s];
     ship.ai && ship.ai.update();
+
+    battle = battles[ship.uuid];
+
+    if(battle && battle.target) {
+      target = ships[battle.target];
+      target && target.ai && target.ai.defence(battle);
+    }
   }
 };
 

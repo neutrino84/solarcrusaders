@@ -11,6 +11,7 @@ Basic.prototype.constructor = Basic;
 Basic.prototype.update = function() {
   var manager = this.manager,
       ships = manager.ships,
+      battles = manager.battles,
       ship = this.ship;
   
   if(global.Math.random() > 0.88) {
@@ -21,38 +22,45 @@ Basic.prototype.update = function() {
     random = manager.getRandomShip();
   
     if(ship.data.race === 'hederaa' || ship.data.race === 'mechan') {
-      if(random !== ship) {
+      if(!battles[ship.uuid] && random !== ship) {
         target = ships[random.uuid];
-        if(target && ship.damage > 0) {
-          this.battle(ship, target);
-        }
+        target && this.battle(ship, target);
       }
     }
   }
 };
 
-Basic.prototype.defence = function(battle) {
+Basic.prototype.defence = function(incoming) {
   var manager = this.manager,
+      ship = this.ship,
       ships = manager.ships,
-      origin = ships[battle.origin],
-      target = ships[battle.target],
-      health = target.health / target.config.stats.health;
+      battles = manager.battles,
+      battle = battles[ship.uuid],
+      origin = ships[incoming.origin],
+      health = ship.health / ship.config.stats.health;
   
   // start moving around
-  if(!target.movement.animation.isPlaying) {
-    manager._plot(target, manager.generateRandomPosition(4096));
+  if(!ship.movement.animation.isPlaying) {
+    manager._plot(ship, manager.generateRandomPosition(4096));
   }
 
-  // fire back
-  if(target.systems['targeting']) {
-    if(!manager.battles[target.uuid] || manager.battles[target.uuid].target !== origin.uuid) {
-      this.battle(target, origin);
+  // fire back at closest
+  if(ship.systems['targeting']) {
+    if(!battle) {
+      this.battle(ship, origin);
+    } else if(battle.target !== incoming.origin) {
+      other = ships[battle.target]; // other and origin
+
+      if(other.position.distance(ship.position) >
+          origin.position.distance(ship.position)) {
+        this.battle(ship, origin);
+      }
     }
   }
 
   // activate shielding
-  if(target.systems['shield'] && health < 0.80) {
-    target.activate('shield');
+  if(ship.systems['shield'] && health < 0.80) {
+    ship.activate('shield');
   }
 };
 

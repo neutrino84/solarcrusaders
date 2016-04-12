@@ -52,7 +52,7 @@ Pirate.prototype.defence = function(battle) {
       health = target.health / target.config.stats.health;
   
   // activate piercing
-  if(target.systems['targeting']) {
+  if(target.systems['targeting'] && health < 0.5) {
     target.activate('piercing');
   }
 };
