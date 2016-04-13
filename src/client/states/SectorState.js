@@ -30,6 +30,7 @@ SectorState.prototype.preload = function() {
   // load background
   load.image('space', 'imgs/game/space/sector-a.jpg');
   load.image('nebula', 'imgs/game/space/nebula-a.jpg');
+  load.image('snow', 'imgs/game/space/snow.jpg');
 
   // load.image('draghe', 'imgs/game/planets/draghe.jpg');
   // load.image('eamon', 'imgs/game/planets/eamon-alpha.jpg');
@@ -84,7 +85,7 @@ SectorState.prototype.create = function() {
   this.sound = this.game.sound.add('background', 0, true);
   this.sound.on('decoded', function() {
     this.play('', 0, 0, true);
-    this.fadeTo(12000, 0.25);
+    this.fadeTo(12000, 0.01);
   });
 
   // start zoom in
