@@ -1,34 +1,34 @@
-
 precision lowp float;
 
 varying vec2 vTextureCoord;
 
 uniform sampler2D uSampler;
 
-uniform vec2 center;
-uniform vec3 params;
 uniform float time;
+uniform float strength;
+
+float disc(vec2 uv) {
+  float radius = time;
+  float border = 0.2;// * time + 0.1;
+  float d = length(uv) * 2.0;
+  float start = smoothstep(radius, radius+border, d);
+  float end = smoothstep(radius-border, radius, d);
+  float multiplier = (d - 1.0) * (d - 1.0);
+  return (1.0-(1.0+start-end)) * multiplier;
+}
 
 void main(void) {
-  float waveStrength = params.x;
-  float frequency = params.y;
-  float waveSpeed = params.z; 
+  vec2 coord = vTextureCoord;
+  vec2 center = vTextureCoord - vec2(0.5, 0.5);
 
-  float modifiedTime = time * waveSpeed;
-
-  vec2 tapPoint = vec2(center.x, center.y);
-  vec2 uv = vTextureCoord;
+  float d = disc(center) * strength;
   
-  vec2 distVec = uv - tapPoint;
-  
-  float d = length(distVec)*2.0;
-  vec2 newTexCoord = uv;
+  coord += d;
 
-  float multiplier = (d < 1.0) ? ((d-1.0)*(d-1.0)) : 0.0;
+  float light = d+d;
+  vec3 color = texture2D(uSampler, coord).rgb;
+       color.b += light;
+       color.g += light/2.;
 
-  float addend = (sin(frequency*d-modifiedTime)+1.0) * waveStrength * multiplier;
-
-  newTexCoord += addend;
-
-  gl_FragColor = texture2D(uSampler, newTexCoord);
+  gl_FragColor = vec4(color, 1.0);
 }
