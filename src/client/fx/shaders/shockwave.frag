@@ -9,7 +9,7 @@ uniform float strength;
 
 float disc(vec2 uv) {
   float radius = time;
-  float border = 0.2;// * time + 0.1;
+  float border = 0.1;// * time + 0.1;
   float d = length(uv) * 2.0;
   float start = smoothstep(radius, radius+border, d);
   float end = smoothstep(radius-border, radius, d);

@@ -7,8 +7,6 @@ var pixi = require('pixi'),
 function Shockwave(game, width, height) {
   engine.Shader.call(this, game);
 
-  this.strength = 0.0;
-
   this.tween = game.tweens.create(this);
   this.texture = pixi.RenderTexture.create(width, height, pixi.SCALE_MODES.LINEAR);
 
@@ -16,7 +14,7 @@ function Shockwave(game, width, height) {
 
   this._width = width;
   this._height = height;
-  this._strength = 0.3;
+  this._strength = 0.05;
 };
 
 Shockwave.prototype = Object.create(engine.Shader.prototype);
@@ -34,9 +32,8 @@ Shockwave.prototype.preRender = function(space) {
 
 Shockwave.prototype.start = function(properties) {
   var easing = properties.easing || engine.Easing.Quadratic.InOut,
-      animation = {
-        _strength: properties.strength || this.strength,
-      };
+      animation = { _strength: 0.0 };
+  this._strength = properties.strength || this._strength;
   this.tween.to(animation, properties.duration || 4000, easing, true, 0, 0, false);
   this.tween.once('complete', function() {
     this.parent.remove(this);
