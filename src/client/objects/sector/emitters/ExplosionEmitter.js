@@ -12,9 +12,8 @@ function ExplosionEmitter(game) {
   this.setTint(0xFF8888, 0x181818, 500);
 
   this.makeParticles('texture-atlas', [
-    'engine-smoke.png', 'explosion-c.png',
-    'explosion-a.png', 'explosion-a.png',
-    'explosion-b.png', 'explosion-b.png'
+    'explosion-a.png', 'explosion-b.png',
+    'explosion-a.png', 'explosion-b.png'
   ]);
 };
 

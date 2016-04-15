@@ -4,6 +4,19 @@ var engine = require('engine');
 function Damage(ship) {
   this.ship = ship;
   this.game = ship.game;
+
+  this.glow = new engine.Sprite(this.game, 'texture-atlas', 'explosion-d.png');
+  this.glow.pivot.set(64, 64);
+  this.glow.scale.set(24.0, 24.0);
+  this.glow.blendMode = engine.BlendMode.ADD;
+  this.glow.tint  = 0xffffff;
+  this.glow.alpha = 0.0;
+
+  this.glowTween = this.game.tweens.create(this.glow);
+  this.glowTween.to({ alpha: 0.8 }, 250, engine.Easing.Quadratic.InOut);
+  this.glowTween.to({ alpha: 0.6 }, 2000, engine.Easing.Quadratic.InOut);
+  this.glowTween.to({ alpha: 0.0 }, 3000, engine.Easing.Quadratic.InOut);
+  
   this.explosionEmitter = ship.manager.explosionEmitter;
   this.flashEmitter = ship.manager.flashEmitter;
   this.glowEmitter = ship.manager.glowEmitter;
@@ -49,6 +62,14 @@ Damage.prototype.inflict = function(position) {
 Damage.prototype.shockwave = function() {
   this.shockwaveEmitter.at({ center: this.ship.position });
   this.shockwaveEmitter.explode(2);
+
+  this.game.emit('fx/shockwave', {
+    width: 1024,
+    height: 1024,
+    duration: 4000,
+    x: this.ship.x - (512),
+    y: this.ship.y - (512)
+  });
 };
 
 Damage.prototype.destroyed = function() {
@@ -58,7 +79,16 @@ Damage.prototype.destroyed = function() {
 
   ship.destroyed = true;
   ship.movement.animation.stop();
-  // this.shockwave();
+  
+  this.shockwave();
+
+  this.glow.position.set(ship.x, ship.y);
+  this.game.world.add(this.glow);
+
+  this.glowTween.start();
+  this.glowTween.once('complete', function() {
+    this.game.world.remove(this.glow);
+  }, this);
 
   // burned
   ship.tint = 0x444444;
@@ -66,7 +96,7 @@ Damage.prototype.destroyed = function() {
     ship.children[i].tint = 0x444444;
   }
 
-  this.timer1 = game.clock.events.repeat(100, 20, function() {
+  this.timer1 = game.clock.events.repeat(200, 20, function() {
     if(ship.worldTransform) {
       point = game.world.worldTransform.applyInverse(ship.worldTransform.apply(ship.circle.random()));
       
@@ -79,7 +109,7 @@ Damage.prototype.destroyed = function() {
     }
   }, this);
 
-  this.timer2 = game.clock.events.repeat(200, 25, function() {
+  this.timer2 = game.clock.events.repeat(150, 20, function() {
     if(global.Math.random() > 0.5 && ship.worldTransform) {
       point = game.world.worldTransform.applyInverse(ship.worldTransform.apply(ship.circle.random()));
       

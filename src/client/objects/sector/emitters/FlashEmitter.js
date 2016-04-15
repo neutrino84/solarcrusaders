@@ -8,9 +8,11 @@ function FlashEmitter(game) {
   this.maxRotation = 45;
 
   this.blendMode = engine.BlendMode.ADD;
+
   this.setScale(0.1, 1.0, 0.1, 1.0, 250);
   this.setAlpha(1.0, 0.0, 250);
   this.setTint(0x336699, 0x666666, 250);
+  
   this.makeParticles('texture-atlas', 'explosion-flash.png');
 };
 

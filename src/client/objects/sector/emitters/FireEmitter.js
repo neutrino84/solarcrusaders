@@ -8,12 +8,13 @@ function FireEmitter(game) {
   this.maxRotation = 10;
 
   this.blendMode = engine.BlendMode.ADD;
+  
   this.setScale(0.1, 0.6, 0.1, 0.6, 500);
   this.setAlpha(1.0, 0.0, 1000);
   this.setTint(0xFF6666, 0x333333, 500);
 
   this.makeParticles('texture-atlas', [
-    'explosion-d.png', 'engine-smoke.png'
+    'explosion-d.png'
   ]);
 };
 
