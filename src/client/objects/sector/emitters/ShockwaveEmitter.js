@@ -6,7 +6,7 @@ function ShockwaveEmitter(game) {
 
   this.blendMode = engine.BlendMode.ADD;
 
-  this.setScale(0.5, -4.0, 0.5, 4.0, 4000);
+  this.setScale(0.0, 2.0, 0.0, 2.0, 4000);
   this.minRotation = -45;
   this.maxRotation = 45;
   this.setAlpha(1.0, 0.0, 4000);
