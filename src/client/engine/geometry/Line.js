@@ -3,7 +3,8 @@ var Const = require('../const'),
     Math = require('../utils/Math');
   
 function Line(x1, y1, x2, y2) {
-  if(arguments.length === 4) {
+  if(arguments.length === 4 ||
+      arguments.length === 0) {
     x1 = x1 || 0;
     y1 = y1 || 0;
     x2 = x2 || 0;
@@ -15,7 +16,6 @@ function Line(x1, y1, x2, y2) {
     this.start = new Point().copyFrom(x1);
     this.end = new Point().copyFrom(y1);
   }
-
   this.type = Const.LINE;
 };
 
@@ -27,11 +27,7 @@ Line.prototype = {
     return this;
   },
 
-  fromSprite: function(startSprite, endSprite, useCenter) {
-    if(useCenter === undefined) { useCenter = false; }
-    if(useCenter) {
-      return this.setTo(startSprite.center.x, startSprite.center.y, endSprite.center.x, endSprite.center.y);
-    }
+  fromSprite: function(startSprite, endSprite) {
     return this.setTo(startSprite.x, startSprite.y, endSprite.x, endSprite.y);
   },
 
