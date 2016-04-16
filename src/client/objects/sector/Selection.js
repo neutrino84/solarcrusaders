@@ -47,7 +47,7 @@ Selection.prototype._plot = function(ship, destination) {
 
 Selection.prototype._selected = function(pointer, rectangle) {
   var target, highest,
-      highestRenderOrderID = global.Number.MAX_VALUE,
+      highestRenderOrderID = 0,
       destination, ship,
       select = [],
       player = [],
@@ -79,12 +79,12 @@ Selection.prototype._selected = function(pointer, rectangle) {
     if(rectangle.volume <= 300) {
       for(var s in select) {
         if(this._checkPixel(select[s].chassis, pointer) &&
-            select[s].renderOrderID < highestRenderOrderID) {
+            select[s].z > highestRenderOrderID) {
           highest = select[s];
-          highestRenderOrderID = select[s].renderOrderID;
+          highestRenderOrderID = select[s].z;
         }
       }
-      select = highest ? [highest].concat(targets) : select;
+      select = highest ? [highest].concat(targets) : select.concat(targets);
     }
     this.game.emit('ships/selected', select.concat(player));
   }
