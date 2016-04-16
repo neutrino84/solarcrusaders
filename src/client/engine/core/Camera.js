@@ -13,19 +13,20 @@ function Camera(game, x, y, width, height) {
   this.bounds = new Rectangle(x, y, width, height);
 
   this.smooth = false;
-  this.smoothSpeed = 0.1;
+  this.smoothStep = 0.1;
   this.smoothThreshhold = 64;
 
   this.roundPx = false;
   this.atLimit = { x: false, y: false };
   this.totalInView = 0;
 
-  this._smooth = false;
   this._shaking = 0.0;
-  this._smoothSpeed = null;
+  this._smooth = false;
+  this._smoothStep = null;
   this._position = new Point();
-  this._smoothPosition = new Point();
   this._targetPosition = new Point();
+  this._smoothPosition = new Point();
+  this._smoothTween = this.game.tweens.create(this);
 };
 
 Camera.FOLLOW_LOCKON = 0;
@@ -63,7 +64,8 @@ Camera.prototype.follow = function(target, style) {
       this.deadzone = new Rectangle((this.width - helper) / 2, (this.height - helper) / 2, helper, helper);
       break;
     case Camera.FOLLOW_SMOOTH:
-      this.smooth = true;
+      this._smooth = false;
+      this.smooth = true; 
       this.deadzone = null;
       break;
     case Camera.FOLLOW_LOCKON:
@@ -83,8 +85,8 @@ Camera.prototype.update = function() {
   this.roundPx && view.floor();
 
   if(this._shaking) {
-    view.x += (math.random() * 10 - 5) * this._shaking;
-    view.y += (math.random() * 10 - 5) * this._shaking;
+    view.x += (math.random() * 20 - 10) * this._shaking;
+    view.y += (math.random() * 20 - 10) * this._shaking;
   }
 
   display.pivot.x = view.x + view.halfWidth;
@@ -92,7 +94,7 @@ Camera.prototype.update = function() {
 };
 
 Camera.prototype.updateTarget = function() {
-  var x, y,
+  var x, y, distance,
       smoothPosition = this._smoothPosition,
       targetPosition = this._targetPosition;
       targetPosition.copyFrom(this.target);
@@ -119,18 +121,20 @@ Camera.prototype.updateTarget = function() {
   }
 
   if(this.smooth) {
-    if(!this._smooth && targetPosition.distance(this.position) > this.smoothThreshhold) {
-      this._smooth = true;
-      this._smoothSpeed = 0;
-      this._smoothTween && this._smoothTween.stop();
-      this._smoothTween = this.game.tweens.create(this);
-      this._smoothTween.to({ _smoothSpeed: 1.0 }, 1000, Easing.Default, true);
-      this._smoothTween.once('complete', function() {
-        this._smooth = false;
-      }, this);
+    if(!this._smooth) {
+      distance = targetPosition.distance(this.position);
+      if(distance > this.smoothThreshhold) {
+        this._smooth = true;
+        this._smoothStep = 0;
+        this._smoothTween && this._smoothTween.isRunning && this._smoothTween.stop();
+        this._smoothTween.to({ _smoothStep: 1.0 }, distance * 24.0, Easing.Default, true);
+        this._smoothTween.once('complete', function() {
+          this._smooth = false;
+        }, this);
+      }
     }
     if(this._smooth) {
-      smoothPosition = Point.interpolate(this.position, { x: x, y: y }, this._smoothSpeed, smoothPosition);
+      smoothPosition = Point.interpolate(this.position, { x: x, y: y }, this._smoothStep, smoothPosition);
       x = smoothPosition.x;
       y = smoothPosition.y;
     }
