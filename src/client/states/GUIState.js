@@ -10,10 +10,9 @@ var engine = require('engine'),
     StackLayout = require('../ui/layouts/StackLayout'),
     
     HeaderPane = require('../ui/panes/HeaderPane'),
-    LeftPane = require('../ui/panes/LeftPane'),
     BottomPane = require('../ui/panes/BottomPane'),
     ShipPane = require('../ui/panes/ShipPane'),
-    ShipFittingPane = require('../ui/panes/Ship'),
+    // ShipFittingPane = require('../ui/panes/Ship'),
 
     Alert = require('../ui/components/Alert'),
     FlashMessage = require('../ui/components/FlashMessage'),
@@ -65,9 +64,6 @@ GUIState.prototype.create = function() {
 
   this.focus = new Focus(game);
   this.selection = new Selection(game);
-  
-  this.hud = new engine.Group(game);
-  this.hud.visible = false;
 
   this.modalComponent = new Modal(game);
   this.modalComponent.visible = false;
@@ -78,11 +74,10 @@ GUIState.prototype.create = function() {
   this.centerPanel = new Panel(game, new BorderLayout(0, 0));
   this.basePanel = new Panel(game, new BorderLayout(0, 0));
   this.basePanel.setPadding(6, 0, 0, 0);
-      
-  this.leftPane = new LeftPane(game);
+
   this.headerPane = new HeaderPane(game);
 
-  this.shipFittingPane = new ShipFittingPane(game);
+  // this.shipFittingPane = new ShipFittingPane(game);
 
   this.shipPanel = new Panel(game, new FlowLayout(Layout.LEFT, Layout.TOP, Layout.VERTICAL, 6));
   this.shipPanel.setPadding(6);
@@ -106,7 +101,6 @@ GUIState.prototype.create = function() {
   this.bottomPane = new BottomPane(game);
 
   this.centerPanel.addPanel(Layout.CENTER, this.shipPanel);
-  this.centerPanel.addPanel(Layout.LEFT, this.leftPane);
   this.centerPanel.addPanel(Layout.RIGHT, this.targetPanel);
   
   this.basePanel.addPanel(Layout.TOP, this.topPanel);
@@ -117,8 +111,6 @@ GUIState.prototype.create = function() {
   this.root.visible = false;
 
   // this.root.invalidate = this.invalidate.bind(this.root);
-
-  this.root.addChild(this.hud);
 
   this.root.addPanel(Layout.STRETCH, this.selection);
   this.root.addPanel(Layout.STRETCH, this.basePanel);
@@ -144,12 +136,10 @@ GUIState.prototype.create = function() {
 
 GUIState.prototype.login = function(user) {
   if(this.auth.isUser()) {
-    this.leftPane.visible = false;
     this.headerPane.login(user);
     this.headerPane.invalidate(true);
     this.registrationForm && (this.registrationForm = this.registrationForm.destroy());
   } else {
-    this.leftPane.visible = false;
     this.headerPane.logout()
     this.registrationForm = new RegistrationForm(game);
   }
@@ -172,7 +162,7 @@ GUIState.prototype.refresh = function() {
 };
 
 GUIState.prototype.toggle = function(force) {
-  this.hud.visible = this.root.visible =
+  this.root.visible =
     force !== undefined ? force : !this.root.visible;
   
   // repaint gui

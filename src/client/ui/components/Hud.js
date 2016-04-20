@@ -12,7 +12,7 @@ function Hud(ship, settings) {
 
   this.settings = Class.mixin(settings, {
     width: 256,
-    height: 256,
+    height: 32,
     padding: [0],
     border: [0],
     layout: {
@@ -75,7 +75,7 @@ function Hud(ship, settings) {
     this.settings.layout.ax, this.settings.layout.ay,
     this.settings.layout.direction, this.settings.layout.gap);
 
-  this.setSize(this.settings.width,this.settings.height);
+  this.setSize(this.settings.width, this.settings.height);
   this.setPadding.apply(this, this.settings.padding);
   this.setBorder.apply(this, this.settings.border);
 };
@@ -87,7 +87,14 @@ Hud.prototype.create = function() {
   var game = this.game,
       ship = this.ship;
 
-  this.ship.manager.hudGroup.addChild(this);
+  this.pinned = new engine.Group(this.game);
+  this.pinned.transform = new engine.Pinned();
+  this.pinned.position.set(this.ship.pivot.x, this.ship.pivot.y);
+  this.pinned.add(this);
+
+  this.pivot.set(128, -32);
+
+  this.ship.add(this.pinned);
 
   this.username = new Label(game, ship.username, this.settings.label);
   this.username.tint = ship.isPlayer ? 0x33FF33 : 0x3399FF;
@@ -116,12 +123,10 @@ Hud.prototype.deselect = function() {
 };
 
 Hud.prototype.update = function() {
-  var math = global.Math,
-      ship = this.ship,
-      world = this.game.world,
-      transform = world.worldTransform.apply(ship.position);
-  this.pivot.set(math.floor(this.settings.width / 2), math.floor(-ship.height / 2 * world.scale.x));
-  this.position.set(math.floor(transform.x), math.floor(transform.y));
+  var scale = this.game.world.scale.x,
+      x = this.settings.width/2,
+      y = -scale * (this.ship.chassis.texture.width/2);
+  this.pivot.set(x, y);
 };
 
 Hud.prototype.updateStats = function(data) {
@@ -158,7 +163,7 @@ Hud.prototype.flash = function(message, color, duration, height, large) {
 };
 
 Hud.prototype.destroy = function() {
-  this.ship.manager.hudGroup.removeChild(this);
+  Panel.prototype.destroy.call(this);
   this.username = this.game = this.ship =
     this.layout = this.settings = undefined;
 };
