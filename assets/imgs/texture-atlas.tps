@@ -2,9 +2,9 @@
 <data version="1.0">
     <struct type="Settings">
         <key>fileFormatVersion</key>
-        <int>3</int>
+        <int>4</int>
         <key>texturePackerVersion</key>
-        <string>4.1.0</string>
+        <string>4.2.2</string>
         <key>fileName</key>
         <string>/Users/oliver/projects/solarcrusaders/assets/imgs/texture-atlas.tps</string>
         <key>autoSDSettings</key>
@@ -28,8 +28,6 @@
             </struct>
         </array>
         <key>allowRotation</key>
-        <false/>
-        <key>premultiplyAlpha</key>
         <false/>
         <key>shapeDebug</key>
         <false/>
@@ -99,8 +97,6 @@
             <key>height</key>
             <int>1024</int>
         </QSize>
-        <key>reduceBorderArtifacts</key>
-        <false/>
         <key>algorithmSettings</key>
         <struct type="AlgorithmSettings">
             <key>algorithm</key>
@@ -111,8 +107,6 @@
             <enum type="AlgorithmSettings::SizeConstraints">AnySize</enum>
             <key>forceSquared</key>
             <true/>
-            <key>forceWordAligned</key>
-            <false/>
             <key>maxRects</key>
             <struct type="AlgorithmMaxRectsSettings">
                 <key>heuristic</key>
@@ -156,6 +150,8 @@
         <false/>
         <key>outputFormat</key>
         <enum type="SettingsBase::OutputFormat">RGBA8888</enum>
+        <key>alphaHandling</key>
+        <enum type="SettingsBase::AlphaHandling">ClearTransparentPixels</enum>
         <key>contentProtection</key>
         <struct type="ContentProtection">
             <key>key</key>
@@ -167,8 +163,6 @@
         <false/>
         <key>prependSmartFolderName</key>
         <false/>
-        <key>cleanTransparentPixels</key>
-        <true/>
         <key>globalSpriteSettings</key>
         <struct type="SpriteSettings">
             <key>scale</key>
@@ -197,12 +191,10 @@
             <key type="filename">fx/damage-a.png</key>
             <key type="filename">fx/damage-b.png</key>
             <key type="filename">fx/engine-glow.png</key>
-            <key type="filename">fx/engine-smoke.png</key>
             <key type="filename">fx/explosion-a.png</key>
             <key type="filename">fx/explosion-b.png</key>
             <key type="filename">fx/explosion-c.png</key>
             <key type="filename">fx/explosion-d.png</key>
-            <key type="filename">fx/explosion-e.png</key>
             <key type="filename">fx/explosion-flash.png</key>
             <key type="filename">fx/laser-piercing.png</key>
             <key type="filename">icons/enhancement-booster.png</key>
@@ -237,6 +229,9 @@
             <key type="filename">objects/asteroid-x02.png</key>
             <key type="filename">objects/asteroid-x03.png</key>
             <key type="filename">objects/asteroid-x04.png</key>
+            <key type="filename">objects/asteroid-x05.png</key>
+            <key type="filename">objects/asteroid-x06.png</key>
+            <key type="filename">objects/canister.png</key>
             <key type="filename">ships/engine-highlight.png</key>
             <key type="filename">ships/general/general-x01.png</key>
             <key type="filename">ships/general/general-x02.png</key>
@@ -267,12 +262,9 @@
             <filename>fx/damage-a.png</filename>
             <filename>fx/damage-b.png</filename>
             <filename>fx/engine-glow.png</filename>
-            <filename>fx/engine-smoke.png</filename>
             <filename>fx/explosion-a.png</filename>
             <filename>fx/explosion-b.png</filename>
-            <filename>fx/explosion-c.png</filename>
             <filename>fx/explosion-d.png</filename>
-            <filename>fx/explosion-e.png</filename>
             <filename>fx/explosion-flash.png</filename>
             <filename>fx/laser-piercing.png</filename>
             <filename>icons/enhancement-booster.png</filename>
@@ -327,6 +319,10 @@
             <filename>turrets/turret-cap-mechan.png</filename>
             <filename>ships/general/general-x03.png</filename>
             <filename>turrets/turret-cap-general.png</filename>
+            <filename>fx/explosion-c.png</filename>
+            <filename>objects/canister.png</filename>
+            <filename>objects/asteroid-x05.png</filename>
+            <filename>objects/asteroid-x06.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

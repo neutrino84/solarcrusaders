@@ -36,9 +36,36 @@
 	"sourceSize": {"w":141,"h":156},
 	"pivot": {"x":0.5,"y":0.5}
 },
+"asteroid-x05.png":
+{
+	"frame": {"x":398,"y":586,"w":117,"h":125},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":117,"h":125},
+	"sourceSize": {"w":117,"h":125},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"asteroid-x06.png":
+{
+	"frame": {"x":326,"y":262,"w":57,"h":59},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":57,"h":59},
+	"sourceSize": {"w":57,"h":59},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"canister.png":
+{
+	"frame": {"x":398,"y":715,"w":64,"h":64},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
+	"sourceSize": {"w":64,"h":64},
+	"pivot": {"x":0.5,"y":0.5}
+},
 "damage-a.png":
 {
-	"frame": {"x":398,"y":586,"w":64,"h":64},
+	"frame": {"x":802,"y":134,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -47,7 +74,7 @@
 },
 "damage-b.png":
 {
-	"frame": {"x":802,"y":134,"w":64,"h":64},
+	"frame": {"x":870,"y":134,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -65,25 +92,16 @@
 },
 "engine-highlight.png":
 {
-	"frame": {"x":870,"y":134,"w":64,"h":64},
+	"frame": {"x":934,"y":2,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
 	"sourceSize": {"w":64,"h":64},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"engine-smoke.png":
-{
-	"frame": {"x":134,"y":586,"w":128,"h":128},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
-	"sourceSize": {"w":128,"h":128},
-	"pivot": {"x":0.5,"y":0.5}
-},
 "enhancement-booster.png":
 {
-	"frame": {"x":326,"y":262,"w":48,"h":48},
+	"frame": {"x":387,"y":262,"w":48,"h":48},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
@@ -92,7 +110,7 @@
 },
 "enhancement-overload.png":
 {
-	"frame": {"x":378,"y":262,"w":48,"h":48},
+	"frame": {"x":439,"y":262,"w":48,"h":48},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
@@ -101,7 +119,7 @@
 },
 "enhancement-piercing.png":
 {
-	"frame": {"x":430,"y":262,"w":48,"h":48},
+	"frame": {"x":466,"y":715,"w":48,"h":48},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
@@ -110,7 +128,7 @@
 },
 "enhancement-shield.png":
 {
-	"frame": {"x":466,"y":586,"w":48,"h":48},
+	"frame": {"x":934,"y":70,"w":48,"h":48},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
@@ -119,7 +137,7 @@
 },
 "enhancement-slot.png":
 {
-	"frame": {"x":938,"y":133,"w":38,"h":38},
+	"frame": {"x":874,"y":238,"w":38,"h":38},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":38,"h":38},
@@ -128,7 +146,7 @@
 },
 "explosion-a.png":
 {
-	"frame": {"x":266,"y":586,"w":128,"h":128},
+	"frame": {"x":134,"y":586,"w":128,"h":128},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
@@ -137,7 +155,7 @@
 },
 "explosion-b.png":
 {
-	"frame": {"x":518,"y":634,"w":128,"h":128},
+	"frame": {"x":266,"y":586,"w":128,"h":128},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
@@ -146,7 +164,7 @@
 },
 "explosion-c.png":
 {
-	"frame": {"x":650,"y":634,"w":128,"h":128},
+	"frame": {"x":519,"y":634,"w":128,"h":128},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
@@ -155,16 +173,7 @@
 },
 "explosion-d.png":
 {
-	"frame": {"x":667,"y":474,"w":128,"h":128},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
-	"sourceSize": {"w":128,"h":128},
-	"pivot": {"x":0.5,"y":0.5}
-},
-"explosion-e.png":
-{
-	"frame": {"x":735,"y":242,"w":128,"h":128},
+	"frame": {"x":651,"y":634,"w":128,"h":128},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
@@ -173,7 +182,7 @@
 },
 "explosion-flash.png":
 {
-	"frame": {"x":934,"y":2,"w":64,"h":64},
+	"frame": {"x":734,"y":374,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -182,7 +191,7 @@
 },
 "general-x01.png":
 {
-	"frame": {"x":802,"y":2,"w":128,"h":128},
+	"frame": {"x":667,"y":474,"w":128,"h":128},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
@@ -191,7 +200,7 @@
 },
 "general-x02.png":
 {
-	"frame": {"x":867,"y":238,"w":128,"h":128},
+	"frame": {"x":742,"y":242,"w":128,"h":128},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
@@ -227,7 +236,7 @@
 },
 "icon-close.png":
 {
-	"frame": {"x":734,"y":442,"w":12,"h":12},
+	"frame": {"x":710,"y":242,"w":12,"h":12},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":12,"h":12},
@@ -236,7 +245,7 @@
 },
 "icon-credits.png":
 {
-	"frame": {"x":934,"y":114,"w":20,"h":15},
+	"frame": {"x":491,"y":300,"w":20,"h":15},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":20,"h":15},
@@ -245,7 +254,7 @@
 },
 "icon-edit.png":
 {
-	"frame": {"x":750,"y":442,"w":12,"h":12},
+	"frame": {"x":726,"y":242,"w":12,"h":12},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":12,"h":12},
@@ -254,7 +263,7 @@
 },
 "icon-kills.png":
 {
-	"frame": {"x":482,"y":298,"w":24,"h":15},
+	"frame": {"x":491,"y":262,"w":24,"h":15},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":24,"h":15},
@@ -263,7 +272,7 @@
 },
 "icon-reputation.png":
 {
-	"frame": {"x":710,"y":242,"w":21,"h":15},
+	"frame": {"x":491,"y":281,"w":21,"h":15},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":21,"h":15},
@@ -272,7 +281,7 @@
 },
 "icon-target.png":
 {
-	"frame": {"x":934,"y":70,"w":40,"h":40},
+	"frame": {"x":870,"y":374,"w":40,"h":40},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":40},
@@ -281,7 +290,7 @@
 },
 "item-laser-a.png":
 {
-	"frame": {"x":482,"y":262,"w":32,"h":32},
+	"frame": {"x":799,"y":202,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -290,7 +299,7 @@
 },
 "item-rocket-a.png":
 {
-	"frame": {"x":799,"y":202,"w":32,"h":32},
+	"frame": {"x":835,"y":202,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -299,7 +308,7 @@
 },
 "item-system-engine.png":
 {
-	"frame": {"x":835,"y":202,"w":32,"h":32},
+	"frame": {"x":871,"y":202,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -308,7 +317,7 @@
 },
 "item-system-pilot.png":
 {
-	"frame": {"x":978,"y":70,"w":32,"h":32},
+	"frame": {"x":907,"y":202,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -317,7 +326,7 @@
 },
 "item-system-reactor.png":
 {
-	"frame": {"x":938,"y":175,"w":32,"h":32},
+	"frame": {"x":938,"y":122,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -326,7 +335,7 @@
 },
 "item-system-scanner.png":
 {
-	"frame": {"x":974,"y":175,"w":32,"h":32},
+	"frame": {"x":938,"y":158,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -335,7 +344,7 @@
 },
 "item-system-shield.png":
 {
-	"frame": {"x":980,"y":122,"w":32,"h":32},
+	"frame": {"x":874,"y":280,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -344,7 +353,7 @@
 },
 "item-system-targeting.png":
 {
-	"frame": {"x":871,"y":202,"w":32,"h":32},
+	"frame": {"x":910,"y":280,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -353,7 +362,7 @@
 },
 "laser-piercing.png":
 {
-	"frame": {"x":734,"y":374,"w":64,"h":64},
+	"frame": {"x":802,"y":374,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -362,7 +371,7 @@
 },
 "mechan-x01.png":
 {
-	"frame": {"x":782,"y":606,"w":128,"h":128},
+	"frame": {"x":802,"y":2,"w":128,"h":128},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
@@ -371,7 +380,7 @@
 },
 "mechan-x02.png":
 {
-	"frame": {"x":814,"y":442,"w":128,"h":128},
+	"frame": {"x":2,"y":718,"w":128,"h":128},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
@@ -380,7 +389,7 @@
 },
 "mechan-x03.png":
 {
-	"frame": {"x":782,"y":738,"w":128,"h":128},
+	"frame": {"x":134,"y":718,"w":128,"h":128},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
@@ -389,7 +398,7 @@
 },
 "reactor-electricity.png":
 {
-	"frame": {"x":802,"y":374,"w":64,"h":64},
+	"frame": {"x":814,"y":442,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -398,7 +407,7 @@
 },
 "system-engine.png":
 {
-	"frame": {"x":766,"y":442,"w":12,"h":12},
+	"frame": {"x":734,"y":442,"w":12,"h":12},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":12,"h":12},
@@ -407,7 +416,7 @@
 },
 "system-hull.png":
 {
-	"frame": {"x":782,"y":442,"w":12,"h":12},
+	"frame": {"x":750,"y":442,"w":12,"h":12},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":12,"h":12},
@@ -416,7 +425,7 @@
 },
 "system-pilot.png":
 {
-	"frame": {"x":798,"y":442,"w":12,"h":12},
+	"frame": {"x":766,"y":442,"w":12,"h":12},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":12,"h":12},
@@ -425,7 +434,7 @@
 },
 "system-reactor.png":
 {
-	"frame": {"x":978,"y":106,"w":12,"h":12},
+	"frame": {"x":782,"y":442,"w":12,"h":12},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":12,"h":12},
@@ -434,7 +443,7 @@
 },
 "system-repair.png":
 {
-	"frame": {"x":958,"y":114,"w":12,"h":12},
+	"frame": {"x":798,"y":442,"w":12,"h":12},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":12,"h":12},
@@ -443,7 +452,7 @@
 },
 "system-scanner.png":
 {
-	"frame": {"x":1002,"y":2,"w":12,"h":12},
+	"frame": {"x":734,"y":458,"w":12,"h":12},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":12,"h":12},
@@ -452,7 +461,7 @@
 },
 "system-shield.png":
 {
-	"frame": {"x":1002,"y":18,"w":12,"h":12},
+	"frame": {"x":750,"y":458,"w":12,"h":12},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":12,"h":12},
@@ -461,7 +470,7 @@
 },
 "system-targeting.png":
 {
-	"frame": {"x":1002,"y":34,"w":12,"h":12},
+	"frame": {"x":766,"y":458,"w":12,"h":12},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":12,"h":12},
@@ -470,7 +479,7 @@
 },
 "system-teleport.png":
 {
-	"frame": {"x":1002,"y":50,"w":12,"h":12},
+	"frame": {"x":782,"y":458,"w":12,"h":12},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":12,"h":12},
@@ -479,7 +488,7 @@
 },
 "turret-a.png":
 {
-	"frame": {"x":870,"y":370,"w":32,"h":32},
+	"frame": {"x":943,"y":194,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -488,7 +497,7 @@
 },
 "turret-b.png":
 {
-	"frame": {"x":906,"y":370,"w":32,"h":32},
+	"frame": {"x":974,"y":122,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -497,7 +506,7 @@
 },
 "turret-cap-general.png":
 {
-	"frame": {"x":942,"y":370,"w":32,"h":32},
+	"frame": {"x":974,"y":158,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -506,7 +515,7 @@
 },
 "turret-cap-hederaa.png":
 {
-	"frame": {"x":870,"y":406,"w":32,"h":32},
+	"frame": {"x":986,"y":70,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -515,7 +524,7 @@
 },
 "turret-cap-mechan.png":
 {
-	"frame": {"x":906,"y":406,"w":32,"h":32},
+	"frame": {"x":943,"y":230,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -524,7 +533,7 @@
 },
 "turret-cap-ubaidian.png":
 {
-	"frame": {"x":942,"y":406,"w":32,"h":32},
+	"frame": {"x":874,"y":316,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -551,7 +560,7 @@
 },
 "ubaidian-x03.png":
 {
-	"frame": {"x":2,"y":718,"w":128,"h":128},
+	"frame": {"x":266,"y":718,"w":128,"h":128},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
@@ -560,7 +569,7 @@
 },
 "ubaidian-x04.png":
 {
-	"frame": {"x":134,"y":718,"w":128,"h":128},
+	"frame": {"x":783,"y":606,"w":128,"h":128},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
@@ -574,6 +583,6 @@
 	"format": "RGBA8888",
 	"size": {"w":1024,"h":1024},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:105563d645f1db42c8ea7cace3cef78c:f7b58dc2a5e0d954ce357ccac85a65b3:a973cd4a72d4c90ced76930eac7fdc63$"
+	"smartupdate": "$TexturePacker:SmartUpdate:1da9f27f6cfdda7061506e833b06a05c:d5e85f76bbbfb96cc9bd50b92c085582:a973cd4a72d4c90ced76930eac7fdc63$"
 }
 }
