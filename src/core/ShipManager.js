@@ -35,6 +35,7 @@ ShipManager.prototype.init = function() {
   this.sockets.iorouter.on('ship/plot', this.plot.bind(this));
   this.sockets.iorouter.on('ship/target', this.target.bind(this));
   this.sockets.iorouter.on('enhancement/start', this.enhancement.bind(this));
+  this.sockets.iorouter.on('ship/canister', this.canister.bind(this));
 
   // generate npcs
   this.generateRandomShips();
@@ -101,6 +102,18 @@ ShipManager.prototype.enhancement = function(sock, args, next) {
         enhancement: data.enhancement
       });
     }
+  }
+};
+
+ShipManager.prototype.canister = function(sock, args, next) {
+  var user = sock.sock.handshake.session.user,
+      data = args[1],
+      ship = this.ships[data.uuid];
+  if(ship && ship.user && ship.user.ship === user.ship) {
+    ship.user.data.credits += 10000;
+    this.game.emit('user/data', ship.user, {
+      credits: ship.user.data.credits
+    });
   }
 };
 
