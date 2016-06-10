@@ -1054,7 +1054,7 @@
       "heal": 0.25,
       "armor": 0.0,
       "speed": 2.0,
-      "range": 1024,
+      "range": 768,
       "accuracy": 0.88,
       "evasion": 0,
       "energy": 100,
