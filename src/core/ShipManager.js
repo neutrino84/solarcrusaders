@@ -110,7 +110,7 @@ ShipManager.prototype.canister = function(sock, args, next) {
       data = args[1],
       ship = this.ships[data.uuid];
   if(ship && ship.user && ship.user.ship === user.ship) {
-    ship.user.data.credits += 10000;
+    ship.user.data.credits += 1000;
     this.game.emit('user/data', ship.user, {
       credits: ship.user.data.credits
     });
