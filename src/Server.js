@@ -66,6 +66,7 @@ Server.prototype.init = function(next) {
   this.express.use(this.session);
 
   this.express.use(subdomain('play', this.play));
+  this.express.use(subdomain('dev', this.play));
 
   next();
 };
