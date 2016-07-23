@@ -4,28 +4,19 @@ function Clock(game) {
   this.game = game;
   
   this.time = 0;
-  this.prevTime = 0;
-
-  this.now = 0;
   this.previousDateNow = 0;
-
-  this.elapsed = 0;
   this.elapsedMS = 0;
 
-  this.slowMotion = 1.0;
   this.desiredFpsMult = 1.0 / Clock.DESIRED_FPS;
-
-  this.timeToCall = 0;
-  this.timeExpected = 0;
 
   this.events = new Timer(this.game, false);
 
-  this._desiredFps = Clock.DESIRED_FPS;
   this._started = 0;
   this._timers = [];
+  this._desiredFps = Clock.DESIRED_FPS;
 };
 
-Clock.DESIRED_FPS = 5;
+Clock.DESIRED_FPS = 10;
 
 Clock.prototype.constructor = Clock;
 
@@ -33,6 +24,39 @@ Clock.prototype.init = function() {
   this._started = global.Date.now();
   this.time = global.Date.now();
   this.events.start();
+};
+
+Clock.prototype.update = function() {
+  this.previousDateNow = this.time;
+  this.time = global.Date.now();
+  this.elapsedMS = this.time - this.previousDateNow;
+
+  this.events.update(this.time);
+
+  if(this._timers.length) {
+    this.updateTimers();
+  }
+};
+
+Clock.prototype.throttle = function(fn, threshhold, context) {
+  var last,
+      deferTimer,
+      threshhold = threshhold || 250,
+      clock = this;
+  return function() {
+    var context = context || this,
+        now = clock.time;
+    if(last && now < last + threshhold) {
+      clearTimeout(deferTimer);
+      deferTimer = setTimeout(function () {
+        last = now;
+        fn.apply(context);
+      }, threshhold);
+    } else {
+      last = now;
+      fn.apply(context);
+    }
+  };
 };
 
 Clock.prototype.add = function(timer) {
@@ -55,26 +79,9 @@ Clock.prototype.removeAll = function() {
   this.events.removeAll();
 };
 
-Clock.prototype.update = function(time) {
-  this.previousDateNow = this.time;
-  this.time = global.Date.now();
-  this.elapsedMS = this.time - this.previousDateNow;
-  this.prevTime = this.now;
-  this.now = time;
-  this.elapsed = this.now - this.prevTime;
-
-  // time to call this function again in ms in case we're using timers 
-  // instead of RequestAnimationFrame to update the game
-  // this.timeToCall = global.Math.floor(global.Math.max(0, (1000.0 / this._desiredFps) - (this.timeExpected - time)));
-
-  // time when the next call is expected if using timers
-  // this.timeExpected = time + this.timeToCall;
-
-  this.events.update(this.time);
-
-  if(this._timers.length) {
-    this.updateTimers();
-  }
+Clock.prototype.reset = function() {
+  this._started = this.time;
+  this.removeAll();
 };
 
 Clock.prototype.refresh = function() {
@@ -109,11 +116,6 @@ Clock.prototype.elapsedSince = function(since) {
 
 Clock.prototype.elapsedSecondsSince = function(since) {
   return (this.time - since) * 0.001;
-};
-
-Clock.prototype.reset = function() {
-  this._started = this.time;
-  this.removeAll();
 };
 
 Object.defineProperty(Clock.prototype, 'desiredFps', {

@@ -1,10 +1,10 @@
 
 var async = require('async'),
-    engine = require('engine'),
     client = require('client'),
     System = require('./System'),
     Hardpoint = require('./Hardpoint'),
     Enhancement = require('./Enhancement'),
+    Movement = require('./Movement'),
     AI = require('../AI'),
     Utils = require('../../utils');
 
@@ -23,12 +23,8 @@ function Ship(manager, data) {
 
   this.ignoreEnhancements = false;
 
-  this.throttle = global.parseFloat(this.data.throttle);
-  this.rotation = global.parseFloat(this.data.rotation);
-  this.position = new engine.Point(global.parseFloat(this.data.x), global.parseFloat(this.data.y));
-  this.interpolate = this.position.copyFrom.bind(this.position);
-
-  this.ai = data.ai ? AI.create(data.ai, this) : null;
+  this.movement = new Movement(this);
+  this.ai = data.ai ? AI.create(data.ai, this) : null; // reformat this
 
   this.timers = [];
   this.rooms = [];
@@ -54,8 +50,6 @@ function Ship(manager, data) {
     },
     available: {}
   };
-
-  this.movement = new client.Movement(this);
 };
 
 Ship.prototype.constructor = Ship;
@@ -89,9 +83,8 @@ Ship.prototype.save = function(callback) {
       function(next) {
         self.data.fk_sector_ship = 1;
         self.data.fk_user_ship = user.data.id;
-        self.data.x = self.position.x;
-        self.data.y = self.position.y;
-        self.data.rotation = self.rotation;
+        self.data.x = self.movement.position.x;
+        self.data.y = self.movement.position.y;
         self.data.save(next);
       }//,
       // function(next) {
@@ -171,57 +164,96 @@ Ship.prototype.createHardpoints = function() {
   }
 };
 
-Ship.prototype.activate = function(name) {
-  var enhancements = this.enhancements,
-      active = enhancements.active,
-      available = enhancements.available,
-      enhancement = available[name],
-      stats, active, cooldown, update, cost;
-  if(enhancement) {
-    cost = this.energy + enhancement.cost;
-    if(!enhancement.activated && cost >= 0) {
-      if(name === 'booster' && !this.movement.animation.isPlaying) { return false; }
-      if(name === 'piercing' && !this.manager.battles[this.uuid]) { return false; }
-      
-      enhancement.start();
-      enhancement.once('deactivated', this.deactivate, this);
+Ship.prototype.attack = function(ship, point) {
+  var sockets = this.sockets,
+      movement = this.movement,
+      position = movement.position,
+      distance = position.distance(point) / 128.0, // add delay compensation
+      damage, update;
+  if(distance < 1.0) {
+    damage = ship.damage * (1-distance);
 
-      stats = enhancement.stats;
-      for(var s in stats) {
-        active[s][name] = enhancement;
-      }
+    // update damage
+    if(ship.health-damage > 0) {
+      ship.health -= damage;
+      update = {
+        uuid: this.uuid,
+        health: ship.health
+      };
 
-      update = { uuid: this.uuid };
-      update.energy = this.energy = global.Math.max(0.0, cost);
-
-      this.sockets.io.sockets.emit('ship/data', {
+      // broadcast
+      sockets.io.sockets.emit('ship/data', {
         type: 'update', ships: [update]
       });
+    } else {
+      position.set(2048, 2048);
 
-      this.sockets.io.sockets.emit('enhancement/started', {
-        ship: this.uuid,
-        enhancement: name
+      ship.health = this.config.stats.health;
+
+      update = {
+        uuid: this.uuid,
+        health: ship.health
+      };
+
+      // broadcast
+      sockets.io.sockets.emit('ship/data', {
+        type: 'update', ships: [update]
       });
-
-      return true;
     }
   }
-  
-  return false;
 };
 
-Ship.prototype.deactivate = function(enhancement) {
-  var enhancements = this.enhancements,
-      active = enhancements.active,
-      stats = enhancement.stats;
-  for(var s in stats) {
-    delete active[s][enhancement.name];
-  }
-  this.sockets.io.sockets.emit('enhancement/stopped', {
-    ship: this.uuid,
-    enhancement: enhancement.name
-  });
-};
+// Ship.prototype.activate = function(name) {
+//   var enhancements = this.enhancements,
+//       active = enhancements.active,
+//       available = enhancements.available,
+//       enhancement = available[name],
+//       stats, active, cooldown, update, cost;
+//   if(enhancement) {
+//     cost = this.energy + enhancement.cost;
+//     if(!enhancement.activated && cost >= 0) {
+//       // if(name === 'booster' && !this.movement.animation.isPlaying) { return false; }
+//       if(name === 'piercing' && !this.manager.battles[this.uuid]) { return false; }
+      
+//       enhancement.start();
+//       enhancement.once('deactivated', this.deactivate, this);
+
+//       stats = enhancement.stats;
+//       for(var s in stats) {
+//         active[s][name] = enhancement;
+//       }
+
+//       update = { uuid: this.uuid };
+//       update.energy = this.energy = global.Math.max(0.0, cost);
+
+//       this.sockets.io.sockets.emit('ship/data', {
+//         type: 'update', ships: [update]
+//       });
+
+//       this.sockets.io.sockets.emit('enhancement/started', {
+//         ship: this.uuid,
+//         enhancement: name
+//       });
+
+//       return true;
+//     }
+//   }
+  
+//   return false;
+// };
+
+// Ship.prototype.deactivate = function(enhancement) {
+//   var enhancements = this.enhancements,
+//       active = enhancements.active,
+//       stats = enhancement.stats;
+//   for(var s in stats) {
+//     delete active[s][enhancement.name];
+//   }
+//   this.sockets.io.sockets.emit('enhancement/stopped', {
+//     ship: this.uuid,
+//     enhancement: enhancement.name
+//   });
+// };
 
 Ship.prototype.destroy = function() {
   var enhancements = this.enhancements,
@@ -229,11 +261,10 @@ Ship.prototype.destroy = function() {
   for(var e in available) {
     available[e].destroy();
   }
-  this.movement.destroy();
-  this.manager = this.game = this.sockets =
-    this.data = this.movement = this.user =
-    this.position = this.config = this.systems =
-    this.enhancements = this.hardpoints = this.timers =
+  this.manager = this.game =
+    this.data = this.user = this.sockets =
+    this.config = this.systems = this.timers =
+    this.enhancements = this.hardpoints =
     this.rooms = this.data = undefined;
 };
 

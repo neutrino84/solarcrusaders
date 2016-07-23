@@ -1,7 +1,11 @@
 
+var engine = require('engine');
+
 function Basic(ship) {
   this.ship = ship;
   this.manager = ship.manager;
+
+  this.vector = new engine.Point();
   
   this.type = 'basic';
 };
@@ -10,23 +14,17 @@ Basic.prototype.constructor = Basic;
 
 Basic.prototype.update = function() {
   var manager = this.manager,
-      ships = manager.ships,
-      battles = manager.battles,
-      ship = this.ship;
+      ship = this.ship,
+      movement = ship.movement,
+      destination;
   
-  if(global.Math.random() > 0.88) {
+  if(global.Math.random() > 0.5) {
+    // create vector
+    destination = manager.generateRandomPosition();
+    destination.subtract(movement.position.x, movement.position.y);
+
     // plot ship
-    manager._plot(ship, manager.generateRandomPosition(4096));
-  
-    // hedera attack random target
-    random = manager.getRandomShip();
-  
-    if(ship.data.race === 'hederaa' || ship.data.race === 'mechan') {
-      if(!battles[ship.uuid] && random !== ship) {
-        target = ships[random.uuid];
-        target && this.battle(ship, target);
-      }
-    }
+    ship.movement.plot({ x: destination.x, y: destination.y });
   }
 };
 
