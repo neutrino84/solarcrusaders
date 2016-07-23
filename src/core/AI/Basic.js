@@ -20,7 +20,7 @@ Basic.prototype.update = function() {
   
   if(global.Math.random() > 0.5) {
     // create vector
-    destination = manager.generateRandomPosition();
+    destination = manager.generateRandomPosition(512);
     destination.subtract(movement.position.x, movement.position.y);
 
     // plot ship
