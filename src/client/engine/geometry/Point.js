@@ -127,6 +127,14 @@ Point.prototype = {
     }
   },
 
+    //   public static double GetAngle(Vector2 A, Vector2 B)
+    // {
+    //     // |A·B| = |A| |B| COS(θ)
+    //     // |A×B| = |A| |B| SIN(θ)
+
+    //     return Math.Atan2(Cross(A,B), Dot(A,B));
+    // }
+
   rotate: function(x, y, angle, asDegrees, distance) {
     return Point.rotate(this, x, y, angle, asDegrees, distance);
   },
@@ -260,6 +268,12 @@ Point.multiplyAdd = function(a, b, s, out) {
 Point.interpolate = function(a, b, f, out) {
   if(out === undefined) { out = new Point(); }
   return out.setTo(a.x + (b.x - a.x) * f, a.y + (b.y - a.y) * f);
+};
+
+Point.cosineInterpolate = function(a, b, f, out) {
+  if(out === undefined) { out = new Point(); }
+  f = (1 - global.Math.cos(f * global.Math.PI)) / 2;
+  return out.setTo((a.x * (1 - f)) + (b.x * f), (a.y * (1 - f)) + (b.y * f));
 };
 
 Point.perp = function(a, out) {
