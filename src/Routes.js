@@ -101,6 +101,8 @@ Routes.prototype.init = function(next) {
   });
 
   this.iorouter.on(function(err, sock, args, next) {
+    self.app.winston.info('[Server] Uncaught socket message: ' + err);
+    
     sock.emit(args[0], {
       error: error.message
     });
