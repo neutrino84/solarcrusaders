@@ -127,14 +127,6 @@ Point.prototype = {
     }
   },
 
-    //   public static double GetAngle(Vector2 A, Vector2 B)
-    // {
-    //     // |A·B| = |A| |B| COS(θ)
-    //     // |A×B| = |A| |B| SIN(θ)
-
-    //     return Math.Atan2(Cross(A,B), Dot(A,B));
-    // }
-
   rotate: function(x, y, angle, asDegrees, distance) {
     return Point.rotate(this, x, y, angle, asDegrees, distance);
   },
