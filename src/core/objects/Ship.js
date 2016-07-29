@@ -164,22 +164,53 @@ Ship.prototype.createHardpoints = function() {
   }
 };
 
-Ship.prototype.attack = function(ship, point) {
+Ship.prototype.attack = function(data) {
+  var sockets = this.sockets,
+      ships = this.manager.ships;
+
+  // validate distance
+  if(this.movement.position.distance(data.targ) <= this.range + this.speed) { // add delay compensation
+    
+    // emit to all ships
+    sockets.io.sockets.emit('ship/attack', data);
+
+    // check collisions
+    for(var s in ships) {
+      if(ships[s] !== this) {
+        (function(s, ship, data) {
+          setTimeout(function() {
+            s.hit(ship, data.targ);
+          }, 250); // add delay compensation
+        })(ships[s], this, data);
+      }
+    }
+  }
+};
+
+Ship.prototype.hit = function(ship, point) {
   var sockets = this.sockets,
       movement = this.movement,
+      data = this.data,
+      ai = this.ai,
       position = movement.position,
       distance = position.distance(point) / 128.0, // add delay compensation
-      damage, update;
+      damage, health, update;
   if(distance < 1.0) {
     damage = ship.damage * (1-distance);
+    health = data.health-damage;
 
     // update damage
-    if(ship.health-damage > 0) {
-      ship.health -= damage;
+    if(health > 0) {
+      data.health = health;
+      
+      // notify
       update = {
         uuid: this.uuid,
-        health: ship.health
+        health: data.health
       };
+
+      // defend
+      ai && ai.defend(ship);
 
       // broadcast
       sockets.io.sockets.emit('ship/data', {
@@ -188,11 +219,11 @@ Ship.prototype.attack = function(ship, point) {
     } else {
       position.set(2048, 2048);
 
-      ship.health = this.config.stats.health;
+      data.health = this.config.stats.health;
 
       update = {
         uuid: this.uuid,
-        health: ship.health
+        health: data.health
       };
 
       // broadcast

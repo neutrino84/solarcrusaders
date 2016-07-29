@@ -19,7 +19,7 @@ function ShipManager(game) {
   this.game.on('ship/create', this.create, this);
 
   // activate ai
-  // this.game.clock.events.loop(1000, this._updateShips, this);
+  this.game.clock.events.loop(1000, this._updateShips, this);
   this.game.clock.events.loop(2000, this._updateAI, this);
 };
 
@@ -52,7 +52,7 @@ ShipManager.prototype.add = function(ship) {
 
 ShipManager.prototype.create = function(data, user, position) {
   var self = this, ship,
-      position = position || this.generateRandomPosition(user ? 1024 : 4096),
+      position = position || this.generateRandomPosition(256), //(user ? 1024 : 4096),
       data = Utils.extend({
         x: data.x || position.x,
         y: data.y || position.y
@@ -106,22 +106,7 @@ ShipManager.prototype.attack = function(sock, args, next) {
       data = args[1],
       ship = ships[data.uuid];
   if(ship && ship.user && ship.user.uuid === user.uuid) {
-    if(ship.movement.position.distance(data.targ) <= ship.range + ship.speed) { // add delay compensation
-      
-      // emit to all ships
-      sockets.io.sockets.emit('ship/attack', data);
-
-      // check collisions
-      for(var s in ships) {
-        if(ships[s] !== ship) {
-          (function(s, ship, data) {
-            setTimeout(function() {
-              s.attack(ship, data.targ);
-            }, 250); // add delay compensation
-          })(ships[s], ship, data);
-        }
-      }
-    }
+    ship.attack(data);
   }
 }
 
@@ -203,8 +188,8 @@ ShipManager.prototype.update = function() {
 
 ShipManager.prototype.generateRandomShips = function() {
   var iterator = {
-        'ubaidian-x01': { race: 'ubaidian', count: 1 },
-        'ubaidian-x02': { race: 'ubaidian', count: 1 },
+        'ubaidian-x01': { race: 'ubaidian', count: 0 },
+        'ubaidian-x02': { race: 'ubaidian', count: 0 },
         'ubaidian-x03': { race: 'ubaidian', count: 1 },
         'ubaidian-x04': { race: 'ubaidian', count: 4 },
         'hederaa-x01': { race: 'hederaa', count: 0 },
@@ -268,12 +253,6 @@ ShipManager.prototype._updateShips = function() {
       delta = ship.heal;
       ship.health = global.Math.min(stats.health, ship.health + delta);
       update.health = engine.Math.roundTo(ship.health, 1);
-      update.hdelta = engine.Math.roundTo(delta, 1);
-    }
-
-    // re-enable ship
-    if(ship.disabled && ship.health >= 3) {
-      ship.disabled = false;
     }
 
     // update energy
@@ -281,7 +260,6 @@ ShipManager.prototype._updateShips = function() {
       delta = ship.recharge;
       ship.energy = global.Math.min(stats.energy, ship.energy + delta);
       update.energy = engine.Math.roundTo(ship.energy, 1);
-      update.rdelta = engine.Math.roundTo(delta, 1);
     }
 
     if(delta !== undefined) {
