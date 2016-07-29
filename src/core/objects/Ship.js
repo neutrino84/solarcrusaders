@@ -178,9 +178,11 @@ Ship.prototype.attack = function(data) {
     for(var s in ships) {
       if(ships[s] !== this) {
         (function(s, ship, data) {
-          setTimeout(function() {
-            s.hit(ship, data.targ);
-          }, 250); // add delay compensation
+          ship.game.clock.events.add(250, function() { // add delay compensation
+            if(ship.game && s.game) {
+              s.hit(ship, data.targ);
+            }
+          }, this);
         })(ships[s], this, data);
       }
     }
@@ -210,14 +212,14 @@ Ship.prototype.hit = function(ship, point) {
       };
 
       // defend
-      ai && ai.defend(ship);
+      ai && ai.engage(ship);
 
       // broadcast
       sockets.io.sockets.emit('ship/data', {
         type: 'update', ships: [update]
       });
     } else {
-      position.set(2048, 2048);
+      position.copyFrom(this.manager.generateRandomPosition(1024));
 
       data.health = this.config.stats.health;
 
@@ -292,6 +294,7 @@ Ship.prototype.destroy = function() {
   for(var e in available) {
     available[e].destroy();
   }
+  this.ai && this.ai.destroy();
   this.manager = this.game =
     this.data = this.user = this.sockets =
     this.config = this.systems = this.timers =
