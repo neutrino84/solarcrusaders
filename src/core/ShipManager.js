@@ -108,7 +108,7 @@ ShipManager.prototype.attack = function(sock, args, next) {
   if(ship && ship.user && ship.user.uuid === user.uuid) {
     ship.attack(data);
   }
-}
+};
 
 ShipManager.prototype.data = function(sock, args, next) {
   var self = this, ship, enhancements, systems,
@@ -188,8 +188,8 @@ ShipManager.prototype.update = function() {
 
 ShipManager.prototype.generateRandomShips = function() {
   var iterator = {
-        'ubaidian-x01': { race: 'ubaidian', count: 0 },
-        'ubaidian-x02': { race: 'ubaidian', count: 0 },
+        'ubaidian-x01': { race: 'ubaidian', count: 1 },
+        'ubaidian-x02': { race: 'ubaidian', count: 1 },
         'ubaidian-x03': { race: 'ubaidian', count: 1 },
         'ubaidian-x04': { race: 'ubaidian', count: 4 },
         'hederaa-x01': { race: 'hederaa', count: 0 },
