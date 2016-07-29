@@ -20,7 +20,7 @@ function Movement(parent) {
   this.direction = new engine.Point();
 
   // this.test = this.game.clock.throttle(function() {
-  //   console.log(this.cross);
+  //   console.log(this.vector.cross(this.direction), this.vector.dot(this.direction));
   // }, 500, this);
 };
 
@@ -32,7 +32,7 @@ Movement.prototype.update = function() {
       position = this.position,
       vector = this.vector,
       direction = this.direction,
-      speed, cross;
+      speed, cross, dot;
 
   if(this.magnitude > 64.0) {
     this.throttle = global.Math.min(this.magnitude / 256.0, 1.0);
@@ -47,8 +47,9 @@ Movement.prototype.update = function() {
       global.Math.sin(this.rotation));
 
     // linear rotate
+    dot = vector.dot(this.direction);
     cross = vector.cross(this.direction);
-    if(cross > 0.1) {
+    if(cross > 0.1 || dot < 0.0) {
       this.rotation -= 0.1;
     } else if(cross < -0.1) {
       this.rotation += 0.1;
