@@ -2,18 +2,15 @@
   "ubaidian-x01": {
     "race": "ubaidian",
     "class": "destroyer",
-    "oribit": {
-      "radius": 224
-    },
     "stats": {
       "capacity": 1000,
       "health": 100,
       "heal": 0.5,
       "armor": 0.0,
       "speed": 18.0,
-      "range": 1024,
+      "range": 1280,
       "accuracy": 0.5,
-      "evasion": 0.1,
+      "evasion": 0.04,
       "energy": 100,
       "recharge": 0.25,
       "durability": 1000,
@@ -1045,9 +1042,6 @@
   "ubaidian-x02": {
     "race": "ubaidian",
     "class": "battlecarrier",
-    "oribit": {
-      "radius": 256
-    },
     "stats": {
       "capacity": 3000,
       "health": 300,
@@ -1056,7 +1050,7 @@
       "speed": 8.0,
       "range": 2048,
       "accuracy": 0.88,
-      "evasion": 0,
+      "evasion": 0.02,
       "energy": 100,
       "recharge": 0.25,
       "durability": 1000,
@@ -2164,18 +2158,15 @@
   "ubaidian-x03": {
     "race": "ubaidian",
     "class": "cruiser",
-    "oribit": {
-      "radius": 128
-    },
     "stats": {
       "capacity": 800,
       "health": 80,
       "heal": 0.2,
       "armor": 0.0,
-      "speed": 42.0,
-      "range": 1024,
+      "speed": 64.0,
+      "range": 1280,
       "accuracy": 0.88,
-      "evasion": 0.3,
+      "evasion": 0.1,
       "energy": 100,
       "recharge": 1,
       "durability": 1000,
@@ -3117,18 +3108,15 @@
   "ubaidian-x04": {
     "race": "ubaidian",
     "class": "frigate",
-    "oribit": {
-      "radius": 128
-    },
     "stats": {
       "capacity": 500,
       "health": 50,
       "heal": 0.2,
       "armor": 0.0,
-      "speed": 34.0,
-      "range": 1024,
+      "speed": 48.0,
+      "range": 1344,
       "accuracy": 0.88,
-      "evasion": 0.3,
+      "evasion": 0.1,
       "energy": 50,
       "recharge": 3,
       "durability": 1000,
@@ -3922,18 +3910,15 @@
   "hederaa-x01": {
     "race": "hederaa",
     "class": "destroyer",
-    "oribit": {
-      "radius": 224
-    },
     "stats": {
       "capacity": 1000,
       "health": 100,
       "heal": 0.5,
       "armor": 0.0,
       "speed": 16.0,
-      "range": 1024,
+      "range": 1280,
       "accuracy": 0.5,
-      "evasion": 0.1,
+      "evasion": 0.04,
       "energy": 100,
       "recharge": 0.25,
       "durability": 1000,
@@ -5001,18 +4986,15 @@
   "mechan-x01": {
     "race": "mechan",
     "class": "stealth",
-    "oribit": {
-      "radius": 128
-    },
     "stats": {
       "capacity": 300,
       "health": 30,
       "heal": 0.2,
       "armor": 0.0,
       "speed": 52.0,
-      "range": 512,
+      "range": 1024,
       "accuracy": 0.98,
-      "evasion": 0.5,
+      "evasion": 0.2,
       "energy": 30,
       "recharge": 1,
       "durability": 500,
@@ -5905,18 +5887,15 @@
   "general-x01": {
     "race": "general",
     "class": "mining",
-    "oribit": {
-      "radius": 192
-    },
     "stats": {
       "capacity": 1000,
       "health": 100,
       "heal": 0.2,
       "armor": 0.0,
-      "speed": 4.0,
-      "range": 512,
+      "speed": 18.0,
+      "range": 1280,
       "accuracy": 0.5,
-      "evasion": 0.25,
+      "evasion": 0.1,
       "energy": 100,
       "recharge": 1,
       "durability": 500,
@@ -6239,18 +6218,15 @@
   "general-x02": {
     "race": "general",
     "class": "transport",
-    "oribit": {
-      "radius": 160
-    },
     "stats": {
       "capacity": 800,
       "health": 80,
       "heal": 0.2,
       "armor": 0.0,
-      "speed": 5.0,
-      "range": 1024,
+      "speed": 4.0,
+      "range": 1280,
       "accuracy": 0.6,
-      "evasion": 0.3,
+      "evasion": 0.1,
       "energy": 80,
       "recharge": 1,
       "durability": 1000,
@@ -6583,18 +6559,15 @@
   "general-x03": {
     "race": "general",
     "class": "battleship",
-    "oribit": {
-      "radius": 192
-    },
     "stats": {
       "capacity": 3000,
       "health": 300,
       "heal": 0.25,
       "armor": 0.0,
-      "speed": 1.5,
-      "range": 1024,
+      "speed": 8.0,
+      "range": 2048,
       "accuracy": 0.92,
-      "evasion": 0,
+      "evasion": 0.05,
       "energy": 100,
       "recharge": 0.25,
       "durability": 1000,
