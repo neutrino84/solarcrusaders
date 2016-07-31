@@ -6,7 +6,7 @@ function Movement(parent) {
   this.game = parent.game;
 
   this.throttle = 0.0;
-  this.rotation = -global.Math.PI/2;
+  this.rotation = global.Math.PI;
   this.magnitude = 0.0;
   
   this.start = {
@@ -19,8 +19,8 @@ function Movement(parent) {
   this.vector = new engine.Point();
   this.direction = new engine.Point();
 
-  // this.test = this.game.clock.throttle(function() {
-  //   console.log(this.vector.cross(this.direction), this.vector.dot(this.direction));
+  // this.test = this.game.clock.throttle(function(cross) {
+  //   console.log(cross);
   // }, 500, this);
 };
 
@@ -33,6 +33,10 @@ Movement.prototype.update = function() {
       vector = this.vector,
       direction = this.direction,
       speed, cross, dot;
+
+  if(parent.disabled) {
+    this.magnitude /= 1.04;
+  }
 
   if(this.magnitude > 64.0) {
     this.throttle = global.Math.min(this.magnitude / 256.0, 1.0);
@@ -47,12 +51,14 @@ Movement.prototype.update = function() {
       global.Math.sin(this.rotation));
 
     // linear rotate
-    dot = vector.dot(this.direction);
-    cross = vector.cross(this.direction);
-    if(cross > 0.1 || dot < 0.0) {
-      this.rotation -= 0.1;
-    } else if(cross < -0.1) {
-      this.rotation += 0.1;
+    dot = vector.dot(direction);
+    cross = vector.cross(direction);
+    if(cross > parent.evasion) {
+      this.rotation -= parent.evasion;
+    } else if(cross < -parent.evasion) {
+      this.rotation += parent.evasion;
+    } else if(dot < 0) {
+      this.rotation -= parent.evasion
     }
 
     // linear speed
@@ -60,13 +66,16 @@ Movement.prototype.update = function() {
       speed * direction.x,
       speed * direction.y);
   } else {
+    this.magnitude = 0.0;
     this.throttle = 0.0;
   }
 };
 
-Movement.prototype.plot = function(destination) {
-  this.destination.copyFrom(destination);
-  this.magnitude = this.destination.getMagnitude();
+Movement.prototype.plot = function(destination, magnitude) {
+  if(!this.parent.disabled) {
+    this.destination.copyFrom(destination);
+    this.magnitude = magnitude ? magnitude : this.destination.getMagnitude();
+  }
 };
 
 Movement.prototype.destroy = function() {

@@ -21,6 +21,7 @@ function Ship(manager, data) {
   this.chassis = this.data.chassis;
   this.config = client.ShipConfiguration[this.data.chassis];
 
+  this.disabled = false;
   this.ignoreEnhancements = false;
 
   this.movement = new Movement(this);
@@ -168,7 +169,8 @@ Ship.prototype.attack = function(data) {
   var sockets = this.sockets,
       ships = this.manager.ships;
 
-  // validate distance
+  // validate attack
+  if(this.disabled) { return; }
   if(this.movement.position.distance(data.targ) <= this.range + this.speed) { // add delay compensation
     
     // emit to all ships
@@ -202,10 +204,9 @@ Ship.prototype.hit = function(ship, point) {
     health = data.health-damage;
 
     // update damage
-    if(health > 0) {
+    if(!this.disabled && health > 0) {
+      // update health
       data.health = health;
-      
-      // notify
       update = {
         uuid: this.uuid,
         health: data.health
@@ -219,21 +220,41 @@ Ship.prototype.hit = function(ship, point) {
         type: 'update', ships: [update]
       });
     } else {
-      position.copyFrom(this.manager.generateRandomPosition(1024));
+      // disengage attacker
+      ship.ai && ship.ai.disengage();
 
-      data.health = this.config.stats.health;
-
-      update = {
-        uuid: this.uuid,
-        health: data.health
-      };
-
-      // broadcast
-      sockets.io.sockets.emit('ship/data', {
-        type: 'update', ships: [update]
-      });
+      // disable ship
+      if(!this.disabled) {
+        this.disable();
+      }
     }
   }
+};
+
+Ship.prototype.disable = function() {
+  this.disabled = true;
+  this.ai && this.ai.disengage();
+  this.game.clock.events.add(this.ai ? this.ai.respawnTime : 10000, this.enable, this);
+  this.sockets.io.sockets.emit('ship/disabled', {
+    uuid: this.uuid
+  });
+};
+
+Ship.prototype.enable = function() {
+  // re-enable
+  this.disabled = false;
+
+  // respawn
+  this.movement.magnitude = 0;
+  this.movement.position.copyFrom(this.ai ? this.ai.getHomePosition() : this.manager.generateRandomPosition(1024));
+
+  // update health
+  this.data.health = this.config.stats.health;
+
+  // broadcast
+  this.sockets.io.sockets.emit('ship/enabled', {
+    uuid: this.uuid
+  });
 };
 
 // Ship.prototype.activate = function(name) {
@@ -409,14 +430,15 @@ Object.defineProperty(Ship.prototype, 'critical', {
 
 Object.defineProperty(Ship.prototype, 'range', {
   get: function() {
-    var bonus = 0,
-        range = this.ignoreEnhancements ? [] : this.enhancements.active.range,
-        scanner = this.systems['scanner'],
-        modifier = scanner ? ((scanner.health / scanner.stats.health) * (scanner.modifier - 0.5)) + 0.5 : 1.0;
-    for(var r in range) {
-      bonus += range[r].stat('range', 'value');
-    }
-    return this.data.range * modifier + bonus;
+    return this.data.range;
+    // var bonus = 0,
+    //     range = this.ignoreEnhancements ? [] : this.enhancements.active.range,
+    //     scanner = this.systems['scanner'],
+    //     modifier = scanner ? ((scanner.health / scanner.stats.health) * (scanner.modifier - 0.5)) + 0.5 : 1.0;
+    // for(var r in range) {
+    //   bonus += range[r].stat('range', 'value');
+    // }
+    // return this.data.range * modifier + bonus;
   }
 });
 
@@ -435,14 +457,15 @@ Object.defineProperty(Ship.prototype, 'accuracy', {
 
 Object.defineProperty(Ship.prototype, 'evasion', {
   get: function() {
-    var bonus = 0,
-        evasion = this.ignoreEnhancements ? [] : this.enhancements.active.evasion,
-        pilot = this.systems['pilot'],
-        modifier = ((pilot.health / pilot.stats.health) * (pilot.modifier - 0.5)) + 0.5;
-    for(var e in evasion) {
-      bonus += evasion[e].stat('evasion', 'value');
-    }
-    return this.data.evasion * modifier + bonus;
+    return this.data.evasion;
+    // var bonus = 0,
+    //     evasion = this.ignoreEnhancements ? [] : this.enhancements.active.evasion,
+    //     pilot = this.systems['pilot'],
+    //     modifier = ((pilot.health / pilot.stats.health) * (pilot.modifier - 0.5)) + 0.5;
+    // for(var e in evasion) {
+    //   bonus += evasion[e].stat('evasion', 'value');
+    // }
+    // return this.data.evasion * modifier + bonus;
   }
 });
 

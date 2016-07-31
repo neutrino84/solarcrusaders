@@ -36,7 +36,7 @@ ShipManager.prototype.init = function() {
 
   // generate npcs
   this.generateRandomShips();
-  // this.generatePirateShips();
+  this.generatePirateShips();
 };
 
 ShipManager.prototype.add = function(ship) {
@@ -52,7 +52,7 @@ ShipManager.prototype.add = function(ship) {
 
 ShipManager.prototype.create = function(data, user, position) {
   var self = this, ship,
-      position = position || this.generateRandomPosition(256), //(user ? 1024 : 4096),
+      position = position || this.generateRandomPosition(user ? 512 : 2048),
       data = Utils.extend({
         x: data.x || position.x,
         y: data.y || position.y
@@ -190,7 +190,7 @@ ShipManager.prototype.generateRandomShips = function() {
   var iterator = {
         'ubaidian-x01': { race: 'ubaidian', count: 1 },
         'ubaidian-x02': { race: 'ubaidian', count: 1 },
-        'ubaidian-x03': { race: 'ubaidian', count: 1 },
+        'ubaidian-x03': { race: 'ubaidian', count: 2 },
         'ubaidian-x04': { race: 'ubaidian', count: 4 },
         'hederaa-x01': { race: 'hederaa', count: 0 },
         'mechan-x01': { race: 'mechan', count: 4 },
@@ -206,11 +206,10 @@ ShipManager.prototype.generateRandomShips = function() {
 
 ShipManager.prototype.generatePirateShips = function() {
   var iterator = [
-        { name: 'roofus', chassis: 'general-x01' },
-        { name: 'bobby', chassis: 'general-x01' },
-        { name: 'crayford', chassis: 'general-x01' },
-        { name: 'cage', chassis: 'general-x02' },
-        { name: 'thak', chassis: 'general-x03' }
+        { name: 'xinli', chassis: 'general-x01' },
+        { name: 'mavero', chassis: 'general-x01' },
+        { name: 'vega', chassis: 'general-x02' },
+        { name: 'thak', chassis: 'general-x02' }
       ],
       len = iterator.length;
 
@@ -244,6 +243,8 @@ ShipManager.prototype._updateShips = function() {
       update, updates = [],
       stats;
   for(var s in ships) {
+    if(ships[s].disabled) { continue; }
+
     ship = ships[s];
     stats = ship.config.stats;
     update = { uuid: ship.uuid };
