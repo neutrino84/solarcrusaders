@@ -43,18 +43,18 @@ Clock.prototype.throttle = function(fn, threshhold, context) {
       deferTimer,
       threshhold = threshhold || 250,
       clock = this;
-  return function() {
+  return function(arg) {
     var context = context || this,
         now = clock.time;
     if(last && now < last + threshhold) {
       clearTimeout(deferTimer);
       deferTimer = setTimeout(function () {
         last = now;
-        fn.apply(context);
+        fn.call(context, arg);
       }, threshhold);
     } else {
       last = now;
-      fn.apply(context);
+      fn.call(context, arg);
     }
   };
 };
