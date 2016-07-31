@@ -1,60 +1,53 @@
 var engine = require('engine'),
-	  Basic = require('./Basic');
+    Basic = require('./Basic');
 
 function Pirate(ship) {
   Basic.call(this, ship);
 
   this.type = 'pirate';
 
-  this.patrol = new engine.Circle(this.ship.position.x, this.ship.position.y, 512);
-  this.sight = new engine.Circle(this.ship.position.x, this.ship.position.y, 2048);
+  this.aimRadius = 64;
+  this.attackRate = 280;
+  this.respawnTime = 3600000;
+  this.disengageTime = 16000;
+  this.defaultSpeedMagnitude = 192;
+  this.sightRange = 2048;
+
+  this.sight = new engine.Circle();
+  this.patrol = new engine.Circle(ship.movement.position.x, ship.movement.position.y, 128);
+
+  this.game.clock.events.loop(500, this.scan, this);
 };
 
 Pirate.prototype = Object.create(Basic.prototype);
 Pirate.prototype.constructor = Pirate;
 
-Pirate.prototype.update = function() {
-  var manager = this.manager,
-      ships = manager.ships,
+Pirate.prototype.scan = function() {
+  var ships = this.manager.ships,
       ship = this.ship,
-      battles = manager.battles,
-      battle = battles[ship.uuid],
-      target;
+      sight = this.sight,
+      p1, p2;
+  if(ship.disabled) { return; }
+  if(global.Math.random() > 0.5) {
+    p1 = ship.movement.position;
+    sight.setTo(p1.x, p1.y, this.sightRange);
 
-  // plot ship
-  if(battle) {
-    manager._plot(ship, this.patrol.random());
-  } else if(global.Math.random() > 0.96) {
-    manager._plot(ship, this.patrol.random());
-  }
-
-  // search and destroy
-  if(!battle || global.Math.random() > 0.75) {
     for(var s in ships) {
-      target = ships[s];
-      
-      if(target.user && this.sight.contains(target.position.x, target.position.y)) {
-        if(!battle || battle.target !== target.uuid) {
-          this.battle(ship, target);
-        } else {
-          continue;
+      p2 = ships[s].movement.position;
+
+      if(ships[s].disabled || ships[s].ai) { continue; }
+      if(sight.contains(p2.x, p2.y)) {
+        if(global.Math.random() > 0.5) {
+          this.engage(ships[s]);
+          break;
         }
       }
     }
   }
 };
 
-Pirate.prototype.defence = function(battle) {
-  var manager = this.manager,
-      ships = manager.ships,
-      origin = ships[battle.origin],
-      target = ships[battle.target],
-      health = target.health / target.config.stats.health;
-  
-  // activate piercing
-  if(target.systems['targeting'] && health < 0.5) {
-    target.activate('piercing');
-  }
+Pirate.prototype.getHomePosition = function() {
+  return this.patrol.random();
 };
 
 module.exports = Pirate;

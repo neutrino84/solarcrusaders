@@ -10,39 +10,43 @@ function Basic(ship) {
   this.countdown = null;
   this.target = null;
   this.aim = new engine.Circle();
-  
+
+  this.aimRadius = 192;
+  this.attackRate = 500;
+  this.respawnTime = 10000;
+  this.disengageTime = 8000;
+  this.defaultSpeedMagnitude = 128;
+
   this.type = 'basic';
 };
 
 Basic.prototype.constructor = Basic;
 
 Basic.prototype.update = function() {
-  var manager = this.manager,
-      ship = this.ship,
+  var ship = this.ship,
       target = this.target,
       movement = ship.movement,
       position = movement.position,
       destination;
-  
-  if(target && global.Math.random() > 0.5) {
+  if(target && global.Math.random() > 0.25) {
     destination = target.movement.position;
     ship.movement.plot({ x: destination.x-position.x, y: destination.y-position.y });
-  } else if(global.Math.random() > 0.5) {
-    destination = manager.generateRandomPosition(1024);
-    ship.movement.plot({ x: destination.x-position.x, y: destination.y-position.y });
+  } else if(global.Math.random() > 0.75) {
+    destination = this.getHomePosition();
+    ship.movement.plot({ x: destination.x-position.x, y: destination.y-position.y }, this.defaultSpeedMagnitude);
   }
 };
 
 Basic.prototype.engage = function(target) {
-  if(target.ai) return;
+  if(target.ai) { return };
   if(this.target != target) {
     this.target = target;
 
     this.timer && this.game.clock.events.remove(this.timer);
-    this.timer = this.game.clock.events.loop(500, this.attack, this);
+    this.timer = this.game.clock.events.loop(this.attackRate, this.attack, this);
 
     this.countdown && this.game.clock.events.remove(this.countdown);
-    this.countdown = this.game.clock.events.loop(5000, this.disengage, this);
+    this.countdown = this.game.clock.events.loop(this.disengageTime, this.disengage, this);
   }
 };
 
@@ -52,13 +56,13 @@ Basic.prototype.disengage = function() {
 };
 
 Basic.prototype.attack = function() {
-  var ship = this.ship,
-      target = this.target.movement,
-      aim = this.aim,
+  var aim = this.aim,
+      ship = this.ship,
+      position = this.target.movement.position,
       point = {};
   
   // aim
-  aim.setTo(target.position.x, target.position.y, 128);
+  aim.setTo(position.x, position.y, this.aimRadius);
   aim.random(false, point);
 
   // attack
@@ -66,6 +70,10 @@ Basic.prototype.attack = function() {
     uuid: ship.uuid,
     targ: point
   });
+};
+
+Basic.prototype.getHomePosition = function() {
+  return this.manager.generateRandomPosition(1024);
 };
 
 Basic.prototype.destroy = function() {
