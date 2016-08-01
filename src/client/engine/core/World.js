@@ -20,13 +20,15 @@ World.prototype = Object.create(Group.prototype);
 World.prototype.constructor = World;
 
 World.prototype.boot = function() {
+  this.static = new Group(this.game, this.game.stage);
   this.background = new Group(this.game, this.game.stage);
   this.foreground = new Group(this.game, this.game.stage);
   
+  // create camera
   this.camera = new Camera(this.game, 0, 0, this.game.width, this.game.height);
-  this.camera.displayObject = this;
-
   this.game.camera = this.camera;
+
+  // add world to stage
   this.game.stage.addChild(this);
 };
 
