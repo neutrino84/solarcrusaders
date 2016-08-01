@@ -14,7 +14,7 @@ function Camera(game, x, y, width, height) {
 
   this.smooth = false;
   this.smoothStep = 0.1;
-  this.smoothThreshhold = 64;
+  this.smoothThreshhold = 128;
 
   this.roundPx = false;
   this.atLimit = { x: false, y: false };
@@ -77,7 +77,7 @@ Camera.prototype.follow = function(target, style) {
 
 Camera.prototype.update = function() {
   var view = this.view,
-      display = this.displayObject,
+      display = this.world,
       math = global.Math;
 
   this.target && this.updateTarget();
@@ -127,7 +127,7 @@ Camera.prototype.updateTarget = function() {
         this._smooth = true;
         this._smoothStep = 0;
         this._smoothTween && this._smoothTween.isRunning && this._smoothTween.stop();
-        this._smoothTween.to({ _smoothStep: 1.0 }, distance * 24.0, Easing.Default, true);
+        this._smoothTween.to({ _smoothStep: 1.0 }, distance * 48.0, Easing.Default, true);
         this._smoothTween.once('complete', function() {
           this._smooth = false;
         }, this);
@@ -203,7 +203,7 @@ Camera.prototype.pan = function(x, y) {
 
 Camera.prototype.setSize = function(width, height) {
   var view = this.view,
-      display = this.displayObject;
+      display = this.world;
   view.width = width;
   view.height = height;
   display.x = view.halfWidth;
