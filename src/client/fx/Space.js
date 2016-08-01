@@ -3,7 +3,7 @@ var pixi = require('pixi'),
     glslify = require('glslify'),
     Shader = require('pixi-gl-core').GLShader;
 
-function Space(game, width, height) {
+function Space(game) {
   this.spaceTexture = new pixi.Texture(this.getRepeatTexture('space'));
   this.nebulaTexture = new pixi.Texture(this.getRepeatTexture('nebula'));
 
@@ -14,10 +14,8 @@ function Space(game, width, height) {
   this.tileScale = new pixi.Point(1, 1);
   this.tilePosition = new pixi.Point(0, 0);
 
-  this.transform.updated = false;
-
-  this._width = width;
-  this._height = height;
+  this._width = game.width;
+  this._height = game.height;
   this._glDatas = [];
 };
 
@@ -105,6 +103,8 @@ Space.prototype._renderWebGL = function(renderer) {
 
   renderer.bindTexture(this.nebulaTexture, 1);
   renderer.bindTexture(this._texture, 0);
+
+  renderer.state.setBlendMode(this.blendMode);
 
   glData.quad.draw();
 };
