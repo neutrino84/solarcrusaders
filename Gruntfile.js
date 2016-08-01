@@ -1,6 +1,6 @@
+var bundleCollapser = require('bundle-collapser/plugin');
 
 module.exports = function(grunt) {
-
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
 
@@ -76,11 +76,11 @@ module.exports = function(grunt) {
             socket: './node_modules/socket.io/node_modules/socket.io-client'
           },
           require: [
-            ['./src/client/engine/index.js', { expose: 'engine', plugin: [require('bundle-collapser/plugin')] }],
-            ['./src/client/pixi.js', { expose: 'pixi', plugin: [require('bundle-collapser/plugin')] }]
+            ['./src/client/engine/index.js', { expose: 'engine', plugin: [bundleCollapser] }],
+            ['./src/client/pixi.js', { expose: 'pixi', plugin: [bundleCollapser] }]
           ],
           transform: ['glslify', 'browserify-versionify'],
-          plugin: [require('bundle-collapser/plugin')]
+          plugin: [bundleCollapser]
         }
       }
     },
@@ -100,14 +100,13 @@ module.exports = function(grunt) {
 
     'uglify': {
       options: {
-        mangle: {
-          screw_ie8: true
-        },
+        mangle: {},
         compress: {
           sequences: true,
           properties: true,
           dead_code: true,
           drop_debugger: true,
+          drop_console: true,
           unsafe: true,
           conditionals : true,
           comparisons: true,
