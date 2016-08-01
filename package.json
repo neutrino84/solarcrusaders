@@ -45,7 +45,7 @@
     "bit-twiddle": "1.0.x",
     "object-assign": "4.0.x",
     "resource-loader": "1.6.x",
-    "ismobilejs": "git+https://github.com/kaimallea/isMobile.git",
+    "ismobilejs": "0.4.x",
     "pixi-gl-core": "git+https://github.com/pixijs/pixi-gl-core.git"
   },
   "devDependencies": {
