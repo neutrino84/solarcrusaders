@@ -1,9 +1,8 @@
 
 var engine = require('engine');
 
-function Selection(manager) {
-  this.manager = manager;
-  this.game = manager.game;
+function Selection(game) {
+  this.game = game;
   this.input = game.input,
 
   this.input.on('onDown', this._onInput, this);
@@ -30,7 +29,8 @@ Selection.prototype._onInput = function(pointer) {
 Selection.prototype.destroy = function() {
   this.input.removeListener('onDown', this._onInput);
   this.input.removeListener('onUp', this._onInput);
-  this.manager = this.game =
+  
+  this.game =
     this.input = undefined;
 };
 
