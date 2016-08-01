@@ -1,8 +1,8 @@
 
 var engine = require('engine');
 
-function Indicator(game, parent) {
-  engine.Group.call(this, game, parent);
+function Indicator(game) {
+  engine.Group.call(this, game);
 
   this.renderable = false;
 
