@@ -3,14 +3,14 @@ var pixi = require('pixi'),
     Point = require('../geometry/Point'),
     Rectangle = require('../geometry/Rectangle'),
     Core = require('./components/Core'),
-    InWorld = require('./components/InWorld'),
-    FixedToCamera = require('./components/FixedToCamera');
+    InWorld = require('./components/InWorld');
 
 function Sprite(game, key, frame) {
   key = key || null;
   frame = frame || null;
 
   this.type = Const.SPRITE;
+  this.bounds = new Rectangle();
 
   pixi.Sprite.call(this);
 
@@ -28,7 +28,6 @@ Core.install.call(
     'AutoCull',
     'Bounds',
     'Destroy',
-    'FixedToCamera',
     'LoadTexture',
     'InWorld',
     'InputEnabled',
@@ -39,21 +38,14 @@ Core.install.call(
 
 Sprite.prototype.preUpdateCore = Core.preUpdate;
 Sprite.prototype.preUpdateInWorld = InWorld.preUpdate;
-Sprite.prototype.preUpdateFixedToCamera = FixedToCamera.preUpdate;
 
 Sprite.prototype.update = function() {
   this.preUpdateInWorld()
   this.preUpdateCore();
-  this.preUpdateFixedToCamera();
 };
 
-Sprite.prototype.getBounds = function(matrix) {
-  if(!this._currentBounds) {
-    this._currentBounds = new Rectangle().copyFrom(
-      pixi.Sprite.prototype.getBounds.call(this, matrix)
-    );
-  }
-  return this._currentBounds;
+Sprite.prototype.getBounds = function() {
+  return this.bounds.copyFrom(pixi.Sprite.prototype.getBounds.call(this));
 };
 
 module.exports = Sprite;
