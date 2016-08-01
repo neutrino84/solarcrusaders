@@ -70,11 +70,12 @@ Shader.prototype._renderShaderWebGL = function(renderer) {
   vertices[5] = vertices[7] = this._height * (1-this.anchor.y);
 
   glData.quad.upload();
-
   renderer.bindShader(glData.shader);
   
+  // apply uniforms
   this.apply(renderer, glData.shader);
 
+  renderer.state.setBlendMode(this.blendMode);
   glData.quad.draw();
 };
 
