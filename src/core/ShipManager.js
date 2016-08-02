@@ -102,7 +102,8 @@ ShipManager.prototype.attack = function(sock, args, next) {
   var ships = this.ships,
       sockets = this.sockets,
       clock = this.game.clock,
-      user = sock.sock.handshake.session.user,
+      session = sock.sock.handshake.session,
+      user = session.user,
       data = args[1],
       ship = ships[data.uuid];
   if(ship && ship.user && ship.user.uuid === user.uuid) {
@@ -209,7 +210,8 @@ ShipManager.prototype.generatePirateShips = function() {
         { name: 'xinli', chassis: 'general-x01' },
         { name: 'mavero', chassis: 'general-x01' },
         { name: 'vega', chassis: 'general-x02' },
-        { name: 'thak', chassis: 'general-x02' }
+        { name: 'thak', chassis: 'general-x02' },
+        { name: 'bongo', chassis: 'general-x03'}
       ],
       len = iterator.length;
 
