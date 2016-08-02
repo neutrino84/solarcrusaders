@@ -155,7 +155,7 @@ Ship.prototype.createHardpoints = function() {
       hardpoints = this.config.targeting.hardpoints;
 
   // hardpoint type
-  this.hardpoint = global.Math.random() > 0.5 ? 'laser' : 'rocket';
+  this.hardpoint = global.Math.random() > 0.75 ? 'laser' : 'rocket';
 
   // create turrets
   for(var slot in hardpoints) {
