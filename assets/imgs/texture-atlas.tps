@@ -208,14 +208,6 @@
             <key type="filename">icons/icon-kills.png</key>
             <key type="filename">icons/icon-reputation.png</key>
             <key type="filename">icons/icon-target.png</key>
-            <key type="filename">icons/item-laser-a.png</key>
-            <key type="filename">icons/item-rocket-a.png</key>
-            <key type="filename">icons/item-system-engine.png</key>
-            <key type="filename">icons/item-system-pilot.png</key>
-            <key type="filename">icons/item-system-reactor.png</key>
-            <key type="filename">icons/item-system-scanner.png</key>
-            <key type="filename">icons/item-system-shield.png</key>
-            <key type="filename">icons/item-system-targeting.png</key>
             <key type="filename">icons/system-engine.png</key>
             <key type="filename">icons/system-hull.png</key>
             <key type="filename">icons/system-pilot.png</key>
@@ -236,8 +228,6 @@
             <key type="filename">ships/general/general-x01.png</key>
             <key type="filename">ships/general/general-x02.png</key>
             <key type="filename">ships/general/general-x03.png</key>
-            <key type="filename">ships/hederaa/hederaa-x01-lights.png</key>
-            <key type="filename">ships/hederaa/hederaa-x01.png</key>
             <key type="filename">ships/mechan/mechan-x01.png</key>
             <key type="filename">ships/mechan/mechan-x02.png</key>
             <key type="filename">ships/mechan/mechan-x03.png</key>
@@ -252,6 +242,7 @@
             <key type="filename">turrets/turret-cap-hederaa.png</key>
             <key type="filename">turrets/turret-cap-mechan.png</key>
             <key type="filename">turrets/turret-cap-ubaidian.png</key>
+            <key type="filename">turrets/turret-rocket-a.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -291,8 +282,6 @@
             <filename>objects/asteroid-x04.png</filename>
             <filename>ships/general/general-x01.png</filename>
             <filename>ships/general/general-x02.png</filename>
-            <filename>ships/hederaa/hederaa-x01-lights.png</filename>
-            <filename>ships/hederaa/hederaa-x01.png</filename>
             <filename>ships/mechan/mechan-x01.png</filename>
             <filename>ships/mechan/mechan-x02.png</filename>
             <filename>ships/mechan/mechan-x03.png</filename>
@@ -308,14 +297,6 @@
             <filename>turrets/turret-cap-ubaidian.png</filename>
             <filename>icons/system-repair.png</filename>
             <filename>icons/system-scanner.png</filename>
-            <filename>icons/item-laser-a.png</filename>
-            <filename>icons/item-rocket-a.png</filename>
-            <filename>icons/item-system-engine.png</filename>
-            <filename>icons/item-system-pilot.png</filename>
-            <filename>icons/item-system-reactor.png</filename>
-            <filename>icons/item-system-scanner.png</filename>
-            <filename>icons/item-system-shield.png</filename>
-            <filename>icons/item-system-targeting.png</filename>
             <filename>turrets/turret-cap-mechan.png</filename>
             <filename>ships/general/general-x03.png</filename>
             <filename>turrets/turret-cap-general.png</filename>
@@ -323,6 +304,7 @@
             <filename>objects/canister.png</filename>
             <filename>objects/asteroid-x05.png</filename>
             <filename>objects/asteroid-x06.png</filename>
+            <filename>turrets/turret-rocket-a.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
