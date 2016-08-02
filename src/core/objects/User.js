@@ -15,6 +15,9 @@ function User(manager, data) {
   this.uuid = this.data.uuid;
 };
 
+// temp remove this
+User.count = 0;
+
 User.prototype.constructor = User;
 
 User.prototype.init = function(callback) {
@@ -43,9 +46,10 @@ User.prototype.create = function(ships) {
     }
   } else {
     // create default ship
+    User.count++
     this.game.emit('ship/create', {
       name: Generator.getName('ubaidian'),
-      chassis: this.data.role === 'user' ? 'ubaidian-x03' : 'ubaidian-x04'
+      chassis: this.data.role === 'user' ? 'ubaidian-x03' : 'ubaidian-x0' + (User.count % 4 + 1)
     }, this);
   }
 };
