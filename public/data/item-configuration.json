@@ -105,7 +105,7 @@
         "subtype": "alpha",
         "sprite": "turret-b",
         "cargo": "item-rocket-a",
-        "damage": 2.0,
+        "damage": 4.0,
         "durability": 1000.0,
         "enhancement": null,
         "dispersion": {}
