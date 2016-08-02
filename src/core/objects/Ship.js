@@ -153,8 +153,13 @@ Ship.prototype.createSystems = function() {
 Ship.prototype.createHardpoints = function() {
   var hardpoint,
       hardpoints = this.config.targeting.hardpoints;
+
+  // hardpoint type
+  this.hardpoint = 'laser';// global.Math.random() > 0.5 ? 'laser' : 'rocket';
+
+  // create turrets
   for(var slot in hardpoints) {
-    hardpoint = new this.model.Hardpoint(new Hardpoint(slot, 'laser').toObject());
+    hardpoint = new this.model.Hardpoint(new Hardpoint(slot, this.hardpoint).toObject());
     this.hardpoints[slot] = hardpoint.toStreamObject();
     this.cargo[hardpoint.uuid] = {
       uuid: hardpoint.uuid,
@@ -166,28 +171,34 @@ Ship.prototype.createHardpoints = function() {
 };
 
 Ship.prototype.attack = function(data) {
-  var sockets = this.sockets,
-      ships = this.manager.ships;
+  if(this.disabled) { return; }
+
+  var game = this.game,
+      sockets = this.sockets,
+      ships = this.manager.ships,
+      distance = this.movement.compensated().distance(data.targ),
+      time;
 
   // validate attack
-  if(this.disabled) { return; }
-  if(this.movement.position.distance(data.targ) <= this.range + this.speed) { // add delay compensation
-    
+  if(distance <= this.range + this.speed) { // add delay compensation
+
     // emit to all ships
     sockets.io.sockets.emit('ship/attack', data);
 
-    // check collisions
-    for(var s in ships) {
-      if(ships[s] !== this) {
-        (function(s, ship, data) {
-          ship.game.clock.events.add(250, function() { // add delay compensation
-            if(ship.game && s.game) {
-              s.hit(ship, data.targ);
-            }
-          }, this);
-        })(ships[s], this, data);
+    // compute travel time
+    time = this.hardpoint === 'laser' ? distance/4 : distance;
+
+    // time collisions
+    game.clock.events.add(time, function() {
+      if(this.game == undefined) { return; }
+      for(var s in ships) {
+        ship = ships[s];
+
+        if(ship.game && ship != this) {
+          ship.hit(this, data.targ);
+        }
       }
-    }
+    }, this);
   }
 };
 
@@ -196,11 +207,14 @@ Ship.prototype.hit = function(ship, point) {
       movement = this.movement,
       data = this.data,
       ai = this.ai,
-      position = movement.position,
-      distance = position.distance(point) / 128.0, // add delay compensation
+      compensated = movement.compensated(),
+      distance = compensated.distance(point),
+      ratio =  distance / 128.0,
       damage, health, update;
-  if(distance < 1.0) {
-    damage = ship.damage * (1-distance);
+  if(ratio < 1.0) {
+
+    // calc damage
+    damage = ship.damage * (1-ratio);
     health = data.health-damage;
 
     // update damage
@@ -234,7 +248,7 @@ Ship.prototype.hit = function(ship, point) {
 Ship.prototype.disable = function() {
   this.disabled = true;
   this.ai && this.ai.disengage();
-  this.game.clock.events.add(this.ai ? this.ai.respawnTime : 10000, this.enable, this);
+  this.timer = this.game.clock.events.add(this.ai ? this.ai.respawnTime : 10000, this.enable, this);
   this.sockets.io.sockets.emit('ship/disabled', {
     uuid: this.uuid
   });
@@ -316,6 +330,7 @@ Ship.prototype.destroy = function() {
     available[e].destroy();
   }
   this.ai && this.ai.destroy();
+  this.timer && this.game.clock.events.remove(this.timer);
   this.manager = this.game =
     this.data = this.user = this.sockets =
     this.config = this.systems = this.timers =

@@ -18,6 +18,7 @@ function Movement(parent) {
   this.destination = new engine.Point();
   this.vector = new engine.Point();
   this.direction = new engine.Point();
+  this.relative = new engine.Point();
 
   // this.test = this.game.clock.throttle(function(cross) {
   //   console.log(cross);
@@ -39,7 +40,7 @@ Movement.prototype.update = function() {
   }
 
   if(this.magnitude > 64.0) {
-    this.throttle = global.Math.min(this.magnitude / 256.0, 1.0);
+    this.throttle = global.Math.min(this.magnitude / 320.0, 1.0);
 
     speed = parent.speed * this.throttle;
 
@@ -69,6 +70,17 @@ Movement.prototype.update = function() {
     this.magnitude = 0.0;
     this.throttle = 0.0;
   }
+};
+
+Movement.prototype.compensated = function(rtt) {
+  var rtt = rtt || 0,
+      position = this.position,
+      direction = this.direction,
+      compensated = -this.parent.speed * this.throttle,
+      relative = this.relative;
+  return this.relative.setTo(
+    position.x + direction.x * compensated,
+    position.y + direction.y * compensated);
 };
 
 Movement.prototype.plot = function(destination, magnitude) {
