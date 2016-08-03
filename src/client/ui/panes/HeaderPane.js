@@ -57,21 +57,21 @@ function HeaderPane(game, settings) {
   this.loginPane = new LoginPane(game);
   this.loginPane.start();
 
-  this.infoPane2 = new Pane(game, this.settings.pane);
+  this.infoPane = new Pane(game, this.settings.pane);
   this.fpsText = new Label(game, '60 fps', this.settings.label);
   this.pingText = new Label(game, '0 ping', this.settings.label);
   this.versionText = new Label(game,
     'solar crusaders v__VERSION__', this.settings.label);
 
-  this.infoPane2.addPanel(Layout.RIGHT, this.fpsText);
-  this.infoPane2.addPanel(Layout.LEFT, this.pingText);
+  this.infoPane.addPanel(Layout.RIGHT, this.fpsText);
+  this.infoPane.addPanel(Layout.LEFT, this.pingText);
 
   // add layout panels
-  this.addPanel(Layout.CENTER, this.loginPane);
   this.addPanel(Layout.CENTER, this.userPane);
+  this.addPanel(Layout.CENTER, this.loginPane);
   this.addPanel(Layout.STRETCH, this.menuPane);
   this.addPanel(Layout.CENTER, this.versionText);
-  this.addPanel(Layout.CENTER, this.infoPane2);
+  this.addPanel(Layout.CENTER, this.infoPane);
 
   // create timer
   game.clock.events.loop(500, this._updateInfo, this);
@@ -95,7 +95,7 @@ HeaderPane.prototype.logout = function() {
 HeaderPane.prototype._updateInfo = function() {
   this.fpsText.text = this.game.clock.fps + ' fps';
   this.pingText.text = this.game.net.rtt + ' rtt';
-  this.infoPane2.invalidate(true);
+  this.infoPane.invalidate(true);
 };
 
 module.exports = HeaderPane;
