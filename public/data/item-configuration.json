@@ -128,8 +128,8 @@
       }
     },
     "booster": {
-      "cost": -10,
-      "cooldown": 30,
+      "cost": -30,
+      "cooldown": 10,
       "active": 3,
       "stats": {
         "speed": {
@@ -138,9 +138,9 @@
       }
     },
     "shield": {
-      "cost": -10,
-      "cooldown": 30,
-      "active": 15,
+      "cost": -30,
+      "cooldown": 10,
+      "active": 5,
       "stats": {
         "armor": {
           "value": 4
