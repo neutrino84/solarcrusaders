@@ -113,8 +113,6 @@ VitalsPane.prototype._player = function(ship) {
   var stats,
       game = this.game;
 
-  this.ship = ship;
-
   this.data && this.data.removeListener('data', this._update, this);
   this.data = ship.details;
   this.data.on('data', this._update, this);
@@ -134,14 +132,14 @@ VitalsPane.prototype._update = function(data) {
 };
 
 VitalsPane.prototype._enabled = function(data) {
-  if(this.ship && data.uuid === this.ship.uuid) {
+  if(this.data && data.uuid === this.data.uuid) {
     this.healthBar.setProgressBar(1);
     this.energyBar.setProgressBar(1);
   }
 };
 
 VitalsPane.prototype._disabled = function(data) {
-  if(this.ship && data.uuid === this.ship.uuid) {
+  if(this.data && data.uuid === this.data.uuid) {
     this.healthBar.setProgressBar(0);
     this.energyBar.setProgressBar(0);
   }
