@@ -14,7 +14,7 @@ function VitalsPane(game, settings) {
 
   // default styles
   this.settings = Class.mixin(settings, {
-    padding: [0, 1, 1, 1],
+    padding: [0, 2, 2, 2],
     border: [0],
     bg: {
       fillAlpha: 1.0,
@@ -24,23 +24,23 @@ function VitalsPane(game, settings) {
       radius: 0.0
     },
     content: {
-      padding: [1],
+      padding: [2],
       bg: {
         // fillAlpha: 0.8,
         color: 0x000000
       },
       layout: {
         direction: Layout.VERTICAL,
-        gap: 1
+        gap: 2
       }
     },
     healthBar: {
       width: 205,
-      height: 7,
+      height: 9,
       padding: [0],
       label: {
         color: 0x336699,
-        padding: [1],
+        padding: [2],
         text: {
           fontName: 'small'
         }
@@ -55,11 +55,11 @@ function VitalsPane(game, settings) {
     },
     energyBar: {
       width: 205,
-      height: 7,
+      height: 9,
       padding: [0],
       label: {
         color: 0x336699,
-        padding: [1],
+        padding: [2],
         text: {
           fontName: 'small'
         }
@@ -97,7 +97,7 @@ function VitalsPane(game, settings) {
   this.addView(this.bg);
   this.addPanel(Layout.CENTER, this.content);
 
-  this.game.on('gui/player/select', this._playerSelect, this);
+  this.game.on('ship/player', this._player, this);
 };
 
 VitalsPane.prototype = Object.create(Panel.prototype);
@@ -107,26 +107,26 @@ VitalsPane.prototype.addContent = function(constraint, panel) {
   this.content.addPanel(constraint, panel);
 };
 
-VitalsPane.prototype._playerSelect = function(data) {
-  var stats = data.config.ship.stats;
+VitalsPane.prototype._player = function(ship) {
+  var stats,
+      game = this.game;
 
-  this.data && this.data.removeListener('data', this._updateVitals, this);
-  this.data = data;
-  this.data.on('data', this._updateVitals, this);
-  
-  this.healthBar.setMinMax(0, stats.health);
-  this.energyBar.setMinMax(0, stats.energy);
+  this.data && this.data.removeListener('data', this._update, this);
+  this.data = ship.details;
+  this.data.on('data', this._update, this);
 
-  this._updateVitals(data);
+  this.healthBar.setMinMax(0, this.data.config.ship.stats.health);
+  this.energyBar.setMinMax(0, this.data.config.ship.stats.energy);
+
+  this._update(this.data);
 };
 
-VitalsPane.prototype._updateVitals = function(data) {
-  var math = global.Math,
-      stats = this.data.config.ship.stats,
+VitalsPane.prototype._update = function(data) {
+  var stats = this.data.config.ship.stats,
       healthBar = this.healthBar,
       energyBar = this.energyBar;
-  data.health && healthBar.setProgressBar(math.min(1.0, data.health / stats.health));
-  data.energy && energyBar.setProgressBar(math.min(1.0, data.energy / stats.energy));
+  data.health && healthBar.setProgressBar(global.Math.min(1.0, data.health / stats.health));
+  data.energy && energyBar.setProgressBar(global.Math.min(1.0, data.energy / stats.energy));
 };
 
 module.exports = VitalsPane;
