@@ -7,28 +7,20 @@ function ShipNetManager(game) {
   this.socket = game.net.socket;
 
   this.ships = {};
-  this.battles = {};
 
   this.socket.on('ship/sync', this._sync.bind(this));
   this.socket.on('ship/data', this._data.bind(this));
-  this.socket.on('ship/targeted', this._targeted.bind(this));
-  this.socket.on('ship/attack', this._attack.bind(this));
   this.socket.on('ship/removed', this._removed.bind(this));
   this.socket.on('ship/disabled', this._disabled.bind(this));
-  this.socket.on('ship/plotted', this._plotted.bind(this));
-  this.socket.on('enhancement/started', this._enstarted.bind(this));
-  this.socket.on('enhancement/stopped', this._enstopped.bind(this));
-  this.socket.on('enhancement/cancelled', this._encancelled.bind(this));
+  this.socket.on('ship/enabled', this._enabled.bind(this));
+  this.socket.on('ship/enhancement/started',this._started.bind(this));
+  this.socket.on('ship/enhancement/stopped', this._stopped.bind(this));
 };
 
 ShipNetManager.prototype.constructor = ShipNetManager;
 
 ShipNetManager.prototype.getShipData = function(uuid) {
   return this.ships[uuid];
-};
-
-ShipNetManager.prototype.getBattleData = function(uuid) {
-  return this.battles[uuid];
 };
 
 ShipNetManager.prototype._data = function(data) {
@@ -68,45 +60,24 @@ ShipNetManager.prototype._sync = function(data) {
   }
 };
 
-ShipNetManager.prototype._plotted = function(data) {
-
-};
-
-ShipNetManager.prototype._attack = function(data) {
-  this.game.emit('ship/attack', data);
-  this.battles[data.origin] = data;
-};
-
-ShipNetManager.prototype._targeted = function(data) {
-  this.game.emit('ship/targeted', data);
-  this.battles[data.origin] = data;
-};
-
-ShipNetManager.prototype._untargeted = function(data) {
-  this.game.emit('ship/untargeted', data);
-  delete this.battles[ship.origin];
-};
-
-ShipNetManager.prototype._enstarted = function(data) {
-  this.game.emit('enhancement/started', data);
-};
-
-ShipNetManager.prototype._enstopped = function(data) {
-  this.game.emit('enhancement/stopped', data);
-};
-
-ShipNetManager.prototype._encancelled = function(data) {
-  this.game.emit('enhancement/cancelled', data);
-};
-
 ShipNetManager.prototype._removed = function(data) {
   this.game.emit('ship/removed', data);
 };
 
 ShipNetManager.prototype._disabled = function(data) {
   this.game.emit('ship/disabled', data);
-  delete this.battles[data.origin];
-  delete this.battles[data.target];
+};
+
+ShipNetManager.prototype._enabled = function(data) {
+  this.game.emit('ship/enabled', data);
+};
+
+ShipNetManager.prototype._started = function(data) {
+  this.game.emit('ship/enhancement/started', data);
+};
+
+ShipNetManager.prototype._stopped = function(data) {
+  this.game.emit('ship/enhancement/stopped', data);
 };
 
 module.exports = ShipNetManager;
