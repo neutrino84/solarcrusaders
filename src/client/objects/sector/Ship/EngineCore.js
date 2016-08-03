@@ -1,53 +1,56 @@
 
 var engine = require('engine');
 
-function EngineCore(parent) {
+function EngineCore(parent, config) {
   this.parent = parent;
   this.game = parent.game;
+  this.config = config;
 
   this.glows = [];
   this.highlights = [];
 
-  this._booster = false;
+  this.brightness = 0.0;
+  this.isBoosting = false;
+
+  this.position = new engine.Point();
 };
 
 // random flicker
 EngineCore.flicker = [
-  global.Math.random() * 0.045,
-  global.Math.random() * 0.025,
-  global.Math.random() * 0.015,
-  global.Math.random() * 0.025,
-  global.Math.random() * 0.035,
-  global.Math.random() * 0.025
+  0.01, 0.02,
+  0.07, 0.03,
+  0.012, 0.06
 ];
 
 EngineCore.prototype.constructor = EngineCore;
 
 EngineCore.prototype.create = function() {
-  var glow, highlight, c,
+  var glow, highlight, conf,
       glows = this.glows,
       highlights = this.highlights,
       parent = this.parent,
-      config = parent.config.engine.glows,
+      config = this.config.glows,
       length = config.length;
   
   for(var g=0; g<length; g++) {
-    c = config[g];
+    conf = config[g];
 
+    // create highlight
     highlight = new engine.Sprite(parent.game, 'texture-atlas', 'engine-highlight.png');
     highlight.pivot.set(32, 32);
-    highlight.position.set(c.position.x, c.position.y);
+    highlight.position.set(conf.position.x, conf.position.y);
     highlight.scale.set(1.0, 1.0);
-    highlight.tint = c.tint;
+    highlight.tint = conf.tint;
     highlight.blendMode = engine.BlendMode.ADD;
     highlight.alpha = 0;
 
+    // create glow
     glow = new engine.Sprite(parent.game, 'texture-atlas', 'engine-glow.png');
     glow.pivot.set(128, 64);
-    glow.rotation = global.Math.PI + engine.Math.degToRad(c.rotation);
-    glow.position.set(c.position.x, c.position.y);
-    glow.scale.set(c.scale.startX * 0.1, c.scale.startY * 0.1);
-    glow.tint = c.tint;
+    glow.rotation = global.Math.PI + engine.Math.degToRad(conf.rotation);
+    glow.position.set(conf.position.x, conf.position.y);
+    glow.scale.set(conf.scale.startX * 0.1, conf.scale.startY * 0.1);
+    glow.tint = conf.tint;
     glow.blendMode = engine.BlendMode.ADD;
 
     parent.addChildAt(glow, 0);
@@ -59,52 +62,63 @@ EngineCore.prototype.create = function() {
 };
 
 EngineCore.prototype.start = function() {
-  this._booster = true;
+  this.isBoosting = true;
 };
 
 EngineCore.prototype.stop = function() {
-  this._booster = false;
+  this.isBoosting = false;
+};
+
+EngineCore.prototype.show = function(show) {
+  var glows = this.glows,
+      highlights = this.highlights,
+      config = this.config.glows,
+      length = config.length;
+  for(var i=0; i<length; i++) {
+    glows[i].renderable = show;
+    highlights[i].renderable = show;
+  }
 };
 
 EngineCore.prototype.update = function(multiplier) {
-  var scale, center, highlight,
+  var game = this.game,
       glows = this.glows,
-      highlights = this.highlights,
-      game = this.game,
       parent = this.parent,
-      manager = parent.manager,
-      config = parent.config.engine.glows,
+      highlights = this.highlights,
+      config = this.config.glows,
+      position = this.position,
       length = config.length,
       flicker = EngineCore.flicker[game.clock.frames % 6],
-      clamped = global.Math.max(global.Math.min(multiplier, 1.5), 0.25);
+      scale, center, highlight, relative;
+
+  // set brightness
+  this.brightness += (multiplier - this.brightness) * 0.1;
+  
   for(var g=0; g<length; g++) {
     scale = config[g].scale;
-    glows[g].scale.set(clamped * scale.endX + flicker, clamped * scale.endY + (flicker * 3));
-  }
-  for(var h=0; h<length; h++) {
-    highlight = highlights[h];
-    highlight.alpha = global.Math.min(1.0, clamped) / (length / 2);
     
-    if(this._booster && multiplier > 0) {
-      center = game.world.worldTransform.applyInverse(this.parent.worldTransform.apply(highlight.worldTransform.apply(highlight.pivot)));
+    // update glow
+    glows[g].scale.set(
+      this.brightness * scale.endX + flicker,
+      this.brightness * scale.endY + flicker);
+
+    // update highlight
+    highlight = highlights[g];
+    highlight.alpha = this.brightness;
+    
+    if(this.isBoosting && game.clock.frames % 2 === 0) {
+      highlight.worldTransform.apply(highlight.pivot, position);
+      game.world.worldTransform.applyInverse(position, position);
       
-      manager.flashEmitter.color(config[h].tint);
-      manager.flashEmitter.at({ center: center });
-      manager.flashEmitter.explode(1);
+      parent.manager.flashEmitter.at({ center: position });
+      parent.manager.flashEmitter.explode(1);
     }
   }
 };
 
 EngineCore.prototype.destroy = function() {
-  var glows = this.glows,
-      highlights = this.highlights;
-  for(var g in glows) {
-    glows[g].destroy();
-  }
-  for(var h in highlights) {
-    highlights[h].destroy();
-  }
-  this.parent = this.game = this.glows = 
+  this.parent = this.game = this.config =
+    this.position = this.glows = 
     this.highlights = undefined;
 };
 
