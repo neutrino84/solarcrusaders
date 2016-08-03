@@ -6,8 +6,8 @@ function GlowEmitter(game) {
 
   this.blendMode = engine.BlendMode.ADD;
   
-  this.setScale(0.25, 2.2, 0.25, 2.2, 250);
-  this.setAlpha(1.0, 0.0, 2000);
+  this.setScale(0.1, 3.0, 0.1, 3.0, 250);
+  this.setAlpha(1.0, 0.0, 300);
   this.setTint(0xFFFFFF, 0xFF6666, 250);
 
   this.makeParticles('texture-atlas', 'explosion-d.png');
