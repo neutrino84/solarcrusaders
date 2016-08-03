@@ -33,6 +33,7 @@ ShipManager.prototype.init = function() {
   this.sockets.iorouter.on('ship/plot', this.plot.bind(this));
   this.sockets.iorouter.on('ship/canister', this.canister.bind(this));
   this.sockets.iorouter.on('ship/attack', this.attack.bind(this));
+  this.sockets.iorouter.on('ship/enhancement/*', this.enhancement.bind(this));
 
   // generate npcs
   this.generateRandomShips();
@@ -101,13 +102,36 @@ ShipManager.prototype.plot = function(sock, args, next) {
 ShipManager.prototype.attack = function(sock, args, next) {
   var ships = this.ships,
       sockets = this.sockets,
-      clock = this.game.clock,
       session = sock.sock.handshake.session,
       user = session.user,
       data = args[1],
       ship = ships[data.uuid];
   if(ship && ship.user && ship.user.uuid === user.uuid) {
     ship.attack(data);
+  }
+};
+
+ShipManager.prototype.enhancement = function(sock, args, next) {
+  var ships = this.ships,
+      sockets = this.sockets,
+      session = sock.sock.handshake.session,
+      user = session.user,
+      path = args[0],
+      data = args[1],
+      ship = ships[data.uuid];
+  switch(path) {
+    case 'ship/enhancement/start':
+      if(ship && ship.user && ship.user.uuid === user.uuid) {
+        if(!ship.activate(data.enhancement)) {
+          this.sockets.io.sockets.emit('ship/enhancement/cancelled', {
+            uuid: ship.uuid,
+            enhancement: data.enhancement
+          });
+        }
+      }
+      break;
+    default:
+      break;
   }
 };
 

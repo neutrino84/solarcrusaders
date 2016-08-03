@@ -262,8 +262,9 @@ Ship.prototype.enable = function() {
   this.movement.magnitude = 0;
   this.movement.position.copyFrom(this.ai ? this.ai.getHomePosition() : this.manager.generateRandomPosition(1024));
 
-  // update health
+  // update health / energy
   this.data.health = this.config.stats.health;
+  this.data.energy = this.config.stats.energy;
 
   // broadcast
   this.sockets.io.sockets.emit('ship/enabled', {
@@ -271,57 +272,66 @@ Ship.prototype.enable = function() {
   });
 };
 
-// Ship.prototype.activate = function(name) {
-//   var enhancements = this.enhancements,
-//       active = enhancements.active,
-//       available = enhancements.available,
-//       enhancement = available[name],
-//       stats, active, cooldown, update, cost;
-//   if(enhancement) {
-//     cost = this.energy + enhancement.cost;
-//     if(!enhancement.activated && cost >= 0) {
-//       // if(name === 'booster' && !this.movement.animation.isPlaying) { return false; }
-//       if(name === 'piercing' && !this.manager.battles[this.uuid]) { return false; }
-      
-//       enhancement.start();
-//       enhancement.once('deactivated', this.deactivate, this);
-
-//       stats = enhancement.stats;
-//       for(var s in stats) {
-//         active[s][name] = enhancement;
-//       }
-
-//       update = { uuid: this.uuid };
-//       update.energy = this.energy = global.Math.max(0.0, cost);
-
-//       this.sockets.io.sockets.emit('ship/data', {
-//         type: 'update', ships: [update]
-//       });
-
-//       this.sockets.io.sockets.emit('enhancement/started', {
-//         ship: this.uuid,
-//         enhancement: name
-//       });
-
-//       return true;
-//     }
-//   }
+Ship.prototype.activate = function(name) {
+  var enhancements = this.enhancements,
+      active = enhancements.active,
+      available = enhancements.available,
+      enhancement = available[name],
+      stats, active, cooldown, update, cost;
   
-//   return false;
-// };
+  if(enhancement) {
+    cost = this.energy + enhancement.cost;
 
-// Ship.prototype.deactivate = function(enhancement) {
-//   var enhancements = this.enhancements,
-//       active = enhancements.active,
-//       stats = enhancement.stats;
-//   for(var s in stats) {
-//     delete active[s][enhancement.name];
-//   }
-//   this.sockets.io.sockets.emit('enhancement/stopped', {
-//     ship: this.uuid,
-//     enhancement: enhancement.name
-//   });
-// };
+    if(!enhancement.activated && cost >= 0) {      
+      enhancement.start();
+      enhancement.once('deactivated', this.deactivate, this);
+      enhancement.once('cooled', this.cooled, this);
+
+      stats = enhancement.stats;
+      for(var s in stats) {
+        active[s][name] = enhancement;
+      }
+
+      update = { uuid: this.uuid };
+      update.energy = this.energy = global.Math.max(0.0, cost);
+
+      this.sockets.io.sockets.emit('ship/data', {
+        type: 'update', ships: [update]
+      });
+
+      this.sockets.io.sockets.emit('ship/enhancement/started', {
+        uuid: this.uuid,
+        enhancement: name
+      });
+
+      return true;
+    }
+  }
+  
+  return false;
+};
+
+Ship.prototype.deactivate = function(enhancement) {
+  var enhancements = this.enhancements,
+      active = enhancements.active,
+      stats = enhancement.stats;
+  
+  for(var s in stats) {
+    delete active[s][enhancement.name];
+  }
+
+  this.sockets.io.sockets.emit('ship/enhancement/stopped', {
+    uuid: this.uuid,
+    enhancement: enhancement.name
+  });
+};
+
+Ship.prototype.cooled = function(enhancement) {
+  this.sockets.io.sockets.emit('ship/enhancement/cancelled', {
+    uuid: this.uuid,
+    enhancement: enhancement.name
+  });
+};
 
 Ship.prototype.destroy = function() {
   var enhancements = this.enhancements,
@@ -486,15 +496,14 @@ Object.defineProperty(Ship.prototype, 'evasion', {
 
 Object.defineProperty(Ship.prototype, 'speed', {
   get: function() {
-    return this.data.speed;
-    // var bonus = 0,
-    //     speed = this.ignoreEnhancements ? [] : this.enhancements.active.speed,
-    //     engine = this.systems['engine'],
-    //     modifier = ((engine.health / engine.stats.health) * (engine.modifier - 0.5)) + 0.5;
-    // for(var a in speed) {
-    //   bonus += speed[a].stat('speed', 'value');
-    // }
-    // return this.data.speed * modifier + bonus;
+    var bonus = 0,
+        speed = this.ignoreEnhancements ? [] : this.enhancements.active.speed,
+        engine = this.systems['engine'],
+        modifier = ((engine.health / engine.stats.health) * (engine.modifier - 0.5)) + 0.5;
+    for(var a in speed) {
+      bonus += speed[a].stat('speed', 'value');
+    }
+    return this.data.speed + bonus; // this.data.speed * modifier + bonus;
   }
 });
 

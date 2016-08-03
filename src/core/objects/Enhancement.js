@@ -6,8 +6,8 @@ function Enhancement(parent, enhancement) {
   this.parent = parent;
   this.name = enhancement;
   this.game = parent.game;
-  this.activated = false;
 
+  this.activated = false;
   this.config = client.ItemConfiguration['enhancement'][enhancement];
 
   EventEmitter.call(this);
@@ -24,9 +24,13 @@ Enhancement.prototype.start = function() {
   var clock = this.game.clock,
       active = this.active * 1000,
       cooldown = this.cooldown * 1000;
+  
+  // activate
   this.activated = true;
-  active && (this.activeTimer = clock.events.add(active, this._deactivated, this));
-  cooldown && (this.cooldownTimer = clock.events.add(cooldown, this._cooled, this));
+  
+  // set timers
+  this.activeTimer = clock.events.add(active, this._deactivated, this);
+  this.cooldownTimer = clock.events.add(cooldown, this._cooled, this);
 };
 
 Enhancement.prototype.stop = function() {
