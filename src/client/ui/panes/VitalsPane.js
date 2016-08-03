@@ -35,7 +35,7 @@ function VitalsPane(game, settings) {
       }
     },
     healthBar: {
-      width: 205,
+      width: 238,
       height: 9,
       padding: [0],
       label: {
@@ -54,7 +54,7 @@ function VitalsPane(game, settings) {
       }
     },
     energyBar: {
-      width: 205,
+      width: 238,
       height: 9,
       padding: [0],
       label: {
@@ -98,6 +98,8 @@ function VitalsPane(game, settings) {
   this.addPanel(Layout.CENTER, this.content);
 
   this.game.on('ship/player', this._player, this);
+  this.game.on('ship/enabled', this._enabled, this);
+  this.game.on('ship/disabled', this._disabled, this);
 };
 
 VitalsPane.prototype = Object.create(Panel.prototype);
@@ -110,6 +112,8 @@ VitalsPane.prototype.addContent = function(constraint, panel) {
 VitalsPane.prototype._player = function(ship) {
   var stats,
       game = this.game;
+
+  this.ship = ship;
 
   this.data && this.data.removeListener('data', this._update, this);
   this.data = ship.details;
@@ -127,6 +131,20 @@ VitalsPane.prototype._update = function(data) {
       energyBar = this.energyBar;
   data.health && healthBar.setProgressBar(global.Math.min(1.0, data.health / stats.health));
   data.energy && energyBar.setProgressBar(global.Math.min(1.0, data.energy / stats.energy));
+};
+
+VitalsPane.prototype._enabled = function(data) {
+  if(this.ship && data.uuid === this.ship.uuid) {
+    this.healthBar.setProgressBar(1);
+    this.energyBar.setProgressBar(1);
+  }
+};
+
+VitalsPane.prototype._disabled = function(data) {
+  if(this.ship && data.uuid === this.ship.uuid) {
+    this.healthBar.setProgressBar(0);
+    this.energyBar.setProgressBar(0);
+  }
 };
 
 module.exports = VitalsPane;
