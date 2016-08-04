@@ -11,8 +11,8 @@
       "range": 1280,
       "accuracy": 0.5,
       "evasion": 0.04,
-      "energy": 100,
-      "recharge": 0.25,
+      "energy": 200,
+      "recharge": 1,
       "durability": 1000,
       "critical": 0.01
     },
@@ -1051,8 +1051,8 @@
       "range": 2048,
       "accuracy": 0.88,
       "evasion": 0.02,
-      "energy": 100,
-      "recharge": 0.25,
+      "energy": 200,
+      "recharge": 1,
       "durability": 1000,
       "critical": 0.01
     },
