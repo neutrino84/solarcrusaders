@@ -6,6 +6,7 @@ function Movement(parent) {
 
   this.game = parent.game;
   this.config = parent.config;
+
   this.velocity = 0;
   
   this._last = 0;
@@ -57,20 +58,15 @@ Movement.prototype.update = function() {
       ship = this.parent,
       distance, speed, multiplier;
 
-  // move ship
-  // if(ship.isPlayer) {
-  //   this._move();
-  // }
-
   // ship position to point
   position.set(ship.position.x, ship.position.y);
 
   // calculate distance
-  distance = this.velocity = position.distance(destination);
+  distance = position.distance(destination);
 
   // calculate speed
   speed = (spd / (1/10)) * (1/60);
-  multiplier = speed / distance < 1.0 ? speed * 1.001 : speed * 0.999;
+  multiplier = speed; //speed / distance < 1.0 ? speed * 1.01 : speed * 0.99;
   
   // calculate vector
   vector.set(destination.x - position.x, destination.y - position.y);
@@ -95,9 +91,8 @@ Movement.prototype.update = function() {
     }
   }
 
-  // if(destination.x !== position.x) {
-  //   this._test();
-  // }
+  // set velocity
+  this.velocity = speed * 6;
 };
 
 Movement.prototype.plot = function(data) {
