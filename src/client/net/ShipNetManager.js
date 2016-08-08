@@ -15,6 +15,7 @@ function ShipNetManager(game) {
   this.socket.on('ship/enabled', this._enabled.bind(this));
   this.socket.on('ship/enhancement/started',this._started.bind(this));
   this.socket.on('ship/enhancement/stopped', this._stopped.bind(this));
+  this.socket.on('ship/enhancement/cancelled', this._cancelled.bind(this));
 };
 
 ShipNetManager.prototype.constructor = ShipNetManager;
@@ -78,6 +79,10 @@ ShipNetManager.prototype._started = function(data) {
 
 ShipNetManager.prototype._stopped = function(data) {
   this.game.emit('ship/enhancement/stopped', data);
+};
+
+ShipNetManager.prototype._cancelled = function(data) {
+  this.game.emit('ship/enhancement/cancelled', data);
 };
 
 module.exports = ShipNetManager;
