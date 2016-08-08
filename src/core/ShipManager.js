@@ -107,7 +107,7 @@ ShipManager.prototype.attack = function(sock, args, next) {
       data = args[1],
       ship = ships[data.uuid];
   if(ship && ship.user && ship.user.uuid === user.uuid) {
-    ship.attack(data);
+    ship.attack(data, session.rtt);
   }
 };
 
@@ -213,8 +213,8 @@ ShipManager.prototype.update = function() {
 
 ShipManager.prototype.generateRandomShips = function() {
   var iterator = {
-        'ubaidian-x01': { race: 'ubaidian', count: 1 },
-        'ubaidian-x02': { race: 'ubaidian', count: 1 },
+        'ubaidian-x01': { race: 'ubaidian', count: 0 },
+        'ubaidian-x02': { race: 'ubaidian', count: 0 },
         'ubaidian-x03': { race: 'ubaidian', count: 2 },
         'ubaidian-x04': { race: 'ubaidian', count: 4 },
         'hederaa-x01': { race: 'hederaa', count: 0 },
@@ -246,7 +246,7 @@ ShipManager.prototype.generatePirateShips = function() {
       chassis: iterator[i].chassis,
       throttle: 1.0,
       ai: 'pirate',
-      x: -2048, y: 2048
+      x: -2560, y: 2048
     });
   }
 };
