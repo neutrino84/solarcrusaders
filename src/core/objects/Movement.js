@@ -6,14 +6,15 @@ function Movement(parent) {
   this.game = parent.game;
 
   this.throttle = 0.0;
-  this.rotation = global.Math.PI;
   this.magnitude = 0.0;
+  this.rotation = global.Math.PI;
+  this.time = this.game.clock.time;
   
   this.start = {
     x: global.parseFloat(parent.data.x),
     y: global.parseFloat(parent.data.y)
   }
-  
+
   this.position = new engine.Point(this.start.x, this.start.y);
   this.destination = new engine.Point();
   this.vector = new engine.Point();
@@ -25,6 +26,11 @@ function Movement(parent) {
   // }, 500, this);
 };
 
+Movement.CLOCK_RATE = 100;
+Movement.FRICTION = 1.04;
+Movement.STOP_THRESHOLD = 64.0;
+Movement.THROTTLE_THRESHOLD = 320.0;
+
 Movement.prototype.constructor = Movement;
 
 Movement.prototype.update = function() {
@@ -35,12 +41,16 @@ Movement.prototype.update = function() {
       direction = this.direction,
       speed, cross, dot;
 
+  // time compensation
+  this.time = this.game.clock.time;
+
+  // magnitude friction
   if(parent.disabled) {
-    this.magnitude /= 1.04;
+    this.magnitude /= Movement.FRICTION;
   }
 
-  if(this.magnitude > 64.0) {
-    this.throttle = global.Math.min(this.magnitude / 320.0, 1.0);
+  if(this.magnitude > Movement.STOP_THRESHOLD) {
+    this.throttle = global.Math.min(this.magnitude / Movement.THROTTLE_THRESHOLD, 1.0);
 
     speed = parent.speed * this.throttle;
 
@@ -76,8 +86,11 @@ Movement.prototype.compensated = function(rtt) {
   var rtt = rtt || 0,
       position = this.position,
       direction = this.direction,
-      compensated = -this.parent.speed * this.throttle,
-      relative = this.relative;
+      relative = this.relative,
+      modifier = (this.game.clock.time - this.time) / Movement.CLOCK_RATE,
+      velocity = -this.parent.speed * this.throttle,
+      offset = rtt * (velocity / Movement.CLOCK_RATE),
+      compensated = (velocity + (velocity * modifier)) + offset;
   return this.relative.setTo(
     position.x + direction.x * compensated,
     position.y + direction.y * compensated);
