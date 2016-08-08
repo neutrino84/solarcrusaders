@@ -215,10 +215,10 @@ ShipManager.prototype.generateRandomShips = function() {
   var iterator = {
         'ubaidian-x01': { race: 'ubaidian', count: 0 },
         'ubaidian-x02': { race: 'ubaidian', count: 0 },
-        'ubaidian-x03': { race: 'ubaidian', count: 0 },
-        'ubaidian-x04': { race: 'ubaidian', count: 0 },
+        'ubaidian-x03': { race: 'ubaidian', count: 2 },
+        'ubaidian-x04': { race: 'ubaidian', count: 4 },
         'hederaa-x01': { race: 'hederaa', count: 0 },
-        'mechan-x01': { race: 'mechan', count: 0 },
+        'mechan-x01': { race: 'mechan', count: 4 },
         'general-x01': { race: 'ubaidian', count: 0 },
         'general-x02': { race: 'ubaidian', count: 0 }
       };
@@ -235,13 +235,7 @@ ShipManager.prototype.generatePirateShips = function() {
         { name: 'mavero', chassis: 'general-x01' },
         { name: 'vega', chassis: 'general-x02' },
         { name: 'thak', chassis: 'general-x02' },
-        { name: 'pizza', chassis: 'general-x01' },
-        { name: 'cheeseman', chassis: 'general-x01' },
-        { name: 'pickle', chassis: 'general-x02' },
-        { name: 'judo', chassis: 'general-x01' },
-        { name: 'gibblie', chassis: 'general-x02' },
-        { name: 'orange', chassis: 'general-x02' },
-        { name: 'zeus', chassis: 'ubaidian-x02'}
+        { name: 'zeus', chassis: 'general-x03'}
       ],
       len = iterator.length;
 
