@@ -240,7 +240,12 @@ ShipManager.prototype.generatePirateShips = function() {
         { name: 'cheeseman', chassis: 'general-x01' },
         { name: 'pickle', chassis: 'general-x02' },
         { name: 'orange', chassis: 'general-x02' },
-        { name: 'muffin', chassis: 'general-x03'}
+        { name: 'muffin', chassis: 'general-x03'},
+        { name: 'judo', chassis: 'general-x01' },
+        { name: 'gibblie', chassis: 'general-x02' },
+        { name: 'orange', chassis: 'general-x02' },
+        { name: 'honeybadger', chassis: 'general-x03'},
+        { name: 'zeus', chassis: 'ubaidian-x02'}
       ],
       len = iterator.length;
 
