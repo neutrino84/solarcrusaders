@@ -170,13 +170,14 @@ Ship.prototype.createHardpoints = function() {
   }
 };
 
-Ship.prototype.attack = function(data) {
+Ship.prototype.attack = function(data, rtt) {
   if(this.disabled) { return; }
 
   var game = this.game,
       sockets = this.sockets,
       ships = this.manager.ships,
-      distance = this.movement.compensated().distance(data.targ),
+      compensated = this.movement.compensated(rtt),
+      distance = compensated.distance(data.targ),
       time;
 
   // validate attack
@@ -214,7 +215,7 @@ Ship.prototype.hit = function(ship, point) {
   if(ratio < 1.0) {
 
     // calc damage
-    damage = ship.damage * (1-ratio);
+    damage = global.Math.max(0, ship.damage * (1-ratio) - this.armor);
     health = data.health-damage;
 
     // update damage
