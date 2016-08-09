@@ -89,6 +89,9 @@ Projectile.prototype.update = function(origin, destination) {
 };
 
 Projectile.prototype.destroy = function() {
+  this.stop();
+  this.projectile.destroy();
+
   this.parent = this.game = this.data = this.clock
     this.easing = this.origin = this.destination =
     this.position = this.projectile = undefined;
