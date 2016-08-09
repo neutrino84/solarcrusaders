@@ -7,19 +7,16 @@ function TargetingComputer(parent, config) {
   this.game = parent.game;
   this.config = config;
 
-  this.enhancements = {}
   this.hardpoints = [];
+
+  this.target = new engine.Point();
+
+  // attack rate locked at
+  // 500ms but will be dynamic
+  this.fire = this.game.clock.throttle(this.fired, 500, this, true);
 };
 
 TargetingComputer.prototype.constructor = TargetingComputer;
-
-TargetingComputer.prototype.enadd = function(enhancement) {
-  this.enhancements[enhancement] = true;
-};
-
-TargetingComputer.prototype.enremove = function(enhancement) {
-  delete this.enhancements[enhancement];
-};
 
 TargetingComputer.prototype.create = function() {
   var hardpoint, config, data, slot,
@@ -39,58 +36,83 @@ TargetingComputer.prototype.create = function() {
   }
 };
 
-TargetingComputer.prototype.fire = function() {
-  var parent = this.parent,
-      target = parent.target,
-      hardpoints = this.hardpoints;
-  if(target && hardpoints.length > 0) {
-    for(var t in hardpoints) {
-      hardpoints[t].fire(t, target);
+TargetingComputer.prototype.attack = function(target) {
+  var hardpoints = this.hardpoints,
+      parent = this.parent,
+      length = hardpoints.length,
+      distance;
+  if(length > 0) {
+    // update target
+    this.target.set(target.x, target.y);
+
+    // distance
+    distance = engine.Point.distance(parent.position, this.target);
+
+    // display
+    for(var i=0; i<length; i++) {
+      hardpoints[i].fire(distance);
     }
   }
 };
 
-TargetingComputer.prototype.cancel = function() {
+TargetingComputer.prototype.fired = function(target) {
   var game = this.game,
       parent = this.parent,
-      target = parent.target,
       hardpoints = this.hardpoints,
-      hardpoint;
-  if(target && hardpoints.length > 0) {
-    for(var t in hardpoints) {
-      hardpoint = hardpoints[t];
-      hardpoint.timer && game.clock.events.remove(hardpoint.timer);
-      hardpoint.target = null;
+      socket = parent.manager.socket,
+      details = parent.details,
+      distance;
+  if(hardpoints.length > 0) {
+    game.world.worldTransform.applyInverse(target, this.target);
+    distance = engine.Point.distance(parent.position, this.target);
+    
+    // check range
+    if(distance > details.range) {
+      engine.Line.pointAtDistance(parent.position, this.target, details.range, this.target);
+      distance = details.range;
+    }
+    
+    // server
+    socket.emit('ship/attack', {
+      uuid: parent.uuid,
+      targ: {
+        x: this.target.x,
+        y: this.target.y
+      }
+    });
+
+    // display
+    for(var i=0; i<hardpoints.length; i++) {
+      hardpoints[i].fire(distance);
     }
   }
 };
 
 TargetingComputer.prototype.update = function() {
-  var parent = this.parent,
-      hardpoints = this.hardpoints;
-  if(hardpoints.length > 0) {
-    for(var t in hardpoints) {
-      hardpoints[t].update();
+  var hardpoints = this.hardpoints,
+      length = hardpoints.length;
+  if(length > 0) {
+    for(var h in hardpoints) {
+      hardpoints[h].update();
     }
   }
 };
 
 TargetingComputer.prototype.destroy = function() {
-  var hardpoint;
+  var hardpoint,
+      hardpoints = this.hardpoints;
   
-  for(var t in this.hardpoints) {
-    hardpoint = this.hardpoints[t];
+  for(var h in hardpoints) {
+    hardpoint = hardpoints[h];
+    hardpoint.destroy();
     hardpoint.fxGroup =
       hardpoint.flashEmitter =
       hardpoint.explosionEmitter =
       hardpoint.glowEmitter = undefined;
-    hardpoint.destroy();
   }
   
-  this.hardpoints = [];
-
-  this.parent = this.game = this.enhancements =
-    this.config = undefined;
+  this.parent = this.game =
+    this.config = this.hardpoints = undefined;
 };
 
 module.exports = TargetingComputer;
