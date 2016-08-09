@@ -21,8 +21,6 @@ ShieldGenerator.prototype.constructor = ShieldGenerator;
 ShieldGenerator.prototype.create = function() {
   this.shieldSprite.blendMode = engine.BlendMode.ADD;
   this.shieldSprite.filters = [new ShieldFilter(this.game, this.shieldSprite)];
-  
-  this.shieldSprite.tint = 0xFF0000;
   this.outlineSprite.filters = [new OutlineFilter(this.width, this.height)];
 };
 
@@ -30,9 +28,9 @@ ShieldGenerator.prototype.start = function() {
   this.parent.addChild(this.shieldSprite);
   this.parent.addChild(this.outlineSprite);
 
-  this.outlineSprite.alpha = 1.0;
+  this.outlineSprite.alpha = 0.5;
   this.fadeTween = this.game.tweens.create(this.outlineSprite);
-  this.fadeTween.to({ alpha: 0.50 }, 100, engine.Easing.Quadratic.InOut);
+  this.fadeTween.to({ alpha: 0.25 }, 100, engine.Easing.Quadratic.InOut);
   this.fadeTween.repeat();
   this.fadeTween.yoyo(true, 0);
   this.fadeTween.start();
@@ -40,6 +38,7 @@ ShieldGenerator.prototype.start = function() {
 
 ShieldGenerator.prototype.stop = function() {
   this.fadeTween && this.fadeTween.stop();
+  
   this.parent.removeChild(this.shieldSprite);
   this.parent.removeChild(this.outlineSprite);
 };
