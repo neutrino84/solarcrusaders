@@ -2,180 +2,119 @@
 var pixi = require('pixi'),
     engine = require('engine');
 
-function Laser(parent, config) {
+function Laser(parent) {
   this.parent = parent;
   this.game = parent.game;
-  this.config = config;
+  this.data = parent.data;
+  this.clock  = parent.game.clock;
 
-  this.easing = engine.Easing.Default;
+  this.started = 0;
+  this.elapsed = 0;
 
-  this.start = new engine.Point();
-  this.end = new engine.Point();
+  this.delay = 50;
+  this.duration = 400;
+  this.isRunning = false;
+  this.hasExploded = false;
 
   this._start = new engine.Point();
   this._end = new engine.Point();
-  
-  this.glowSprite = new engine.Sprite(this.game, 'texture-atlas', 'laser-piercing.png');
-  this.glowSprite.scale.set(1.0, 1.0);
-  this.glowSprite.pivot.set(32, 32);
-  this.glowSprite.position.set(0, 16);
-  this.glowSprite.blendMode = engine.BlendMode.ADD;
 
-  this.redTexture = new pixi.Texture(this.game.cache.getImage('laser-red', true).base);
-  this.redPiercingTexture = new pixi.Texture(this.game.cache.getImage('laser-red-piercing', true).base);
-  this.blueTexture = new pixi.Texture(this.game.cache.getImage('laser-blue', true).base);
+  this.destination = new engine.Point();
+  this.origin = new engine.Point();
+
+  this.texture = new pixi.Texture(this.game.cache.getImage('laser-red', true).base);
   
-  this.strip = new engine.Strip(this.game, this.blueTexture, [this._start, this._end]);
+  this.strip = new engine.Strip(this.game, this.texture, [this._start, this._end]);
   this.strip.blendMode = engine.BlendMode.ADD;
 
-  this.stripPiercing = new engine.Strip(this.game, this.redPiercingTexture, [this._start, this._end]);
-  this.stripPiercing.blendMode = engine.BlendMode.ADD;
-
-  this.startTween = this.game.tweens.create(this._start);
-  this.endTween = this.game.tweens.create(this._end);
-  this.fadeTween = this.game.tweens.create(this.strip);
-  this.glowTween = this.game.tweens.create(this.glowSprite);
-
-  this.startTween.create();
-  this.endTween.create();
-  this.fadeTween.create();
-  this.glowTween.create();
+  this.glow = new engine.Sprite(this.game, 'texture-atlas', 'laser-piercing.png');
+  this.glow.scale.set(1.0, 1.0);
+  this.glow.pivot.set(32, 32);
+  this.glow.position.set(0, 16);
+  this.glow.blendMode = engine.BlendMode.ADD;
 };
 
-Laser.prototype.constructor = Laser;
+Laser.prototype.start = function(origin, destination, distance) {
+  if(this.isRunning) { return; }
+  
+  this.started = this.clock.time;
+  this.elapsed = 0;
 
-Laser.prototype.isRunning = function() {
-  return this.endTween.isRunning || this.startTween.isRunning || this.fadeTween.isRunning;
+  this.duration = distance/4;
+  this.isRunning = true;
+  this.hasExploded = false;
+
+  this.origin.copyFrom(origin);
+  this.destination.copyFrom(destination);
+
+  this._start.copyFrom(this.origin);
+  this._end.copyFrom(this.origin);
+
+  this.glow.alpha = 1.0;
+
+  this.parent.fxGroup.addChild(this.strip);
+  this.parent.sprite.addChild(this.glow);
 };
 
-Laser.prototype.fire = function(miss, enhancements, shields) {
-  if(this.isRunning()) { return; }
+Laser.prototype.stop = function() {
+  this.isRunning = false;
+  this.parent.fxGroup.removeChild(this.strip);
+  this.parent.sprite.removeChild(this.glow);
+};
 
-  var game = this.game,
-      duration = 750,
-      end = this.end,
-      start = engine.Line.pointAtDistance(this.start, this.end, 8),
-      distance = this.start.distance(this.end) / 5.0,
-      parent = this.parent,
-      piercing = enhancements.piercing;
+Laser.prototype.explode = function() {
+  this.hasExploded = true;
 
-  this._start.copyFrom(start);
-  this._end.copyFrom(end);
+  this.parent.fireEmitter.at({ center: this.destination });
+  this.parent.fireEmitter.explode(2);
 
-  this.strip.alpha = 1.0;
-  this.strip.texture = piercing ? this.redTexture : this.blueTexture;
+  this.parent.explode(this.destination);
+};
 
-  this.glowSprite.alpha = 1.0;
-  this.glowSprite.tint = piercing ? 0xFFAAAA : 0xCCCCFF;
+Laser.prototype.update = function(origin, destination) {
+  var f1, f2, f3;
+  if(this.isRunning === true) {
+    this.elapsed = this.clock.time - this.started;
 
-  this.glowTween.updateTweenData('vStart', { alpha: 1.0 }, 0);
-  this.glowTween.updateTweenData('vEnd', { alpha: 0.0 }, 0);
-  this.glowTween.updateTweenData('duration', distance, 0);
-  this.glowTween.updateTweenData('delay', duration, 0);
+    if(this.elapsed >= this.duration + this.delay) {
+      this.stop();
+    }
 
-  this.fadeTween.updateTweenData('vStart', { alpha: 1.0 }, 0);
-  this.fadeTween.updateTweenData('vEnd', { alpha: 0.0 }, 0);
-  this.fadeTween.updateTweenData('duration', distance+100, 0);
-  this.fadeTween.updateTweenData('delay', duration-100, 0);
+    // update orig / dest
+    this.origin.copyFrom(origin);
 
-  this.startTween.updateTweenData('vStart', { x: start.x, y: start.y }, 0);
-  this.startTween.updateTweenData('vEnd', { x: end.x, y: end.y }, 0);
-  this.startTween.updateTweenData('duration', distance, 0);
-  this.startTween.updateTweenData('delay', duration, 0);
-
-  this.endTween.updateTweenData('vStart', { x: start.x, y: start.y }, 0);
-  this.endTween.updateTweenData('vEnd', { x: end.x, y: end.y }, 0);
-  this.endTween.updateTweenData('duration', distance, 0);
-
-  this.startTween.start();
-  this.endTween.start();
-  this.fadeTween.start();
-  this.glowTween.start();
-
-  this.endTween.once('start', function() {
-    parent.fxGroup.addChild(this.strip);
-    piercing && parent.fxGroup.addChild(this.stripPiercing);
-
-    parent.sprite.addChild(this.glowSprite);
-  }, this);
-
-  this.fadeTween.once('complete', function() {
-    parent.fxGroup.removeChild(this.strip);
-
-    parent.sprite.removeChild(this.glowSprite);
-  }, this);
-
-  this.endTween.once('complete', function() {
-    parent.fxGroup.removeChild(this.stripPiercing);
-    
-    if(!miss) {
-      parent.glowEmitter.color(shields ? 0x336699 : 0xFF6666);
-      parent.glowEmitter.at({ center: end });
-      parent.glowEmitter.explode(shields ? 3 : 2);
-
-      parent.explosionEmitter.at({ center: end });
-      parent.explosionEmitter.explode(2);
-
-      if(!shields) {
-        this.timer2 = game.clock.events.repeat((distance + duration)/30, 30, function() {
-          parent.fireEmitter.at({ center: end });
-          parent.fireEmitter.explode(1);
-        });
-
-        if(parent.ship.target && parent.ship.target.damage
-            && parent.ship.target === parent.target) {
-          parent.ship.target.damage.inflict(parent.aim);
-        }
+    if(this.elapsed <= this.duration) {
+      f1 = this.elapsed/this.duration;
+      this.origin.interpolate(this.destination, f1, this._start);
+    } else {
+      this._start.copyFrom(this.destination);
+      
+      if(this.hasExploded == false) {
+        this.explode();
       }
     }
-  }, this);
-};
 
-Laser.prototype.update = function() {
-  var start, end = this.end;
-  if(this.isRunning()) {
-    start = engine.Line.pointAtDistance(this.start, end, 17);
-
-    this._start.copyFrom(start);
-    this.startTween.updateTweenData('vStart', { x: start.x, y: start.y }, 0);
-    this.startTween.updateTweenData('vEnd', { x: end.x, y: end.y }, 0);
-
-    this._end.copyFrom(end);
-    this.endTween.updateTweenData('vStart', { x: start.x, y: start.y }, 0);
-    this.endTween.updateTweenData('vEnd', { x: end.x, y: end.y }, 0);
-
-    if(this.glowSprite.parent) {
-      this.glowSprite.rotation += 0.05;
+    if(this.elapsed >= this.delay) {
+      f2 = (this.elapsed-this.delay)/this.duration;
+      this.origin.interpolate(this.destination, f2, this._end);
+      this.glow.alpha = 1.0-f2;
+    } else {
+      this._end.copyFrom(this.origin);
     }
+
+    this.glow.rotation += 0.1;
   }
 };
 
 Laser.prototype.destroy = function() {
-  this.timer1 && this.game.clock.events.remove(this.timer1);
-  this.timer2 && this.game.clock.events.remove(this.timer2);
+  this.stop();
 
-  this.startTween.stop();
-  this.endTween.stop();
-  this.fadeTween.stop();
-  this.glowTween.stop();
+  this.texture.destroy();
+  this.strip.destroy();
+  this.glow.destroy();
 
-  this.startTween.removeAllListeners();
-  this.endTween.removeAllListeners();
-  this.fadeTween.removeAllListeners();
-  this.glowTween.removeAllListeners();
-
-  this.strip && this.strip.destroy();
-  this.glowSprite && this.glowSprite.destroy();
-
-  this.redTexture.destroy();
-  this.blueTexture.destroy();
-
-  this.parent = this.game = this.config =
-    this.easing = this.start = this.end =
-    this._start = this._end = this.strip =
-    this.redTexture = this.blueTexture =
-    this.glowSprite = this.glowTween =
-    this.startTween = this.endTween = undefined;
+  this.parent = this.game = 
+    this.data = this.clock = undefined;
 };
 
 module.exports = Laser;
