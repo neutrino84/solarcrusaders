@@ -195,28 +195,17 @@
             <key type="filename">fx/explosion-b.png</key>
             <key type="filename">fx/explosion-c.png</key>
             <key type="filename">fx/explosion-d.png</key>
-            <key type="filename">fx/explosion-flash.png</key>
             <key type="filename">fx/laser-piercing.png</key>
             <key type="filename">icons/enhancement-booster.png</key>
-            <key type="filename">icons/enhancement-overload.png</key>
+            <key type="filename">icons/enhancement-heal.png</key>
             <key type="filename">icons/enhancement-piercing.png</key>
             <key type="filename">icons/enhancement-shield.png</key>
-            <key type="filename">icons/enhancement-slot.png</key>
             <key type="filename">icons/icon-close.png</key>
             <key type="filename">icons/icon-credits.png</key>
             <key type="filename">icons/icon-edit.png</key>
             <key type="filename">icons/icon-kills.png</key>
             <key type="filename">icons/icon-reputation.png</key>
             <key type="filename">icons/icon-target.png</key>
-            <key type="filename">icons/system-engine.png</key>
-            <key type="filename">icons/system-hull.png</key>
-            <key type="filename">icons/system-pilot.png</key>
-            <key type="filename">icons/system-reactor.png</key>
-            <key type="filename">icons/system-repair.png</key>
-            <key type="filename">icons/system-scanner.png</key>
-            <key type="filename">icons/system-shield.png</key>
-            <key type="filename">icons/system-targeting.png</key>
-            <key type="filename">icons/system-teleport.png</key>
             <key type="filename">objects/asteroid-x01.png</key>
             <key type="filename">objects/asteroid-x02.png</key>
             <key type="filename">objects/asteroid-x03.png</key>
@@ -256,26 +245,16 @@
             <filename>fx/explosion-a.png</filename>
             <filename>fx/explosion-b.png</filename>
             <filename>fx/explosion-d.png</filename>
-            <filename>fx/explosion-flash.png</filename>
             <filename>fx/laser-piercing.png</filename>
             <filename>icons/enhancement-booster.png</filename>
-            <filename>icons/enhancement-overload.png</filename>
             <filename>icons/enhancement-piercing.png</filename>
             <filename>icons/enhancement-shield.png</filename>
-            <filename>icons/enhancement-slot.png</filename>
             <filename>icons/icon-close.png</filename>
             <filename>icons/icon-credits.png</filename>
             <filename>icons/icon-edit.png</filename>
             <filename>icons/icon-kills.png</filename>
             <filename>icons/icon-reputation.png</filename>
             <filename>icons/icon-target.png</filename>
-            <filename>icons/system-engine.png</filename>
-            <filename>icons/system-hull.png</filename>
-            <filename>icons/system-pilot.png</filename>
-            <filename>icons/system-reactor.png</filename>
-            <filename>icons/system-shield.png</filename>
-            <filename>icons/system-targeting.png</filename>
-            <filename>icons/system-teleport.png</filename>
             <filename>objects/asteroid-x01.png</filename>
             <filename>objects/asteroid-x02.png</filename>
             <filename>objects/asteroid-x03.png</filename>
@@ -295,8 +274,6 @@
             <filename>turrets/turret-b.png</filename>
             <filename>turrets/turret-cap-hederaa.png</filename>
             <filename>turrets/turret-cap-ubaidian.png</filename>
-            <filename>icons/system-repair.png</filename>
-            <filename>icons/system-scanner.png</filename>
             <filename>turrets/turret-cap-mechan.png</filename>
             <filename>ships/general/general-x03.png</filename>
             <filename>turrets/turret-cap-general.png</filename>
@@ -305,6 +282,7 @@
             <filename>objects/asteroid-x05.png</filename>
             <filename>objects/asteroid-x06.png</filename>
             <filename>turrets/turret-rocket-a.png</filename>
+            <filename>icons/enhancement-heal.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

@@ -1,6 +1,7 @@
 
 var engine = require('engine'),
     Movement = require('../Movement'),
+    Repair = require('./Repair'),
     EngineCore = require('./EngineCore'),
     TargetingComputer = require('./TargetingComputer'),
     ShieldGenerator = require('./ShieldGenerator'),
@@ -35,6 +36,7 @@ function Ship(manager, key) {
   this.engineCore = new EngineCore(this, this.config.engine);
   this.targetingComputer = new TargetingComputer(this, this.config.targeting);
   this.shieldGenerator = new ShieldGenerator(this, this.config.shields);
+  this.repair = new Repair(this, {});
   
   // selection
   this.selected = false;
@@ -53,6 +55,7 @@ Ship.prototype.boot = function() {
   this.engineCore.create();
   this.targetingComputer.create();
   this.shieldGenerator.create();
+  this.repair.create();
   this.hud.create();
 
   this.details.on('data', this.data, this);
@@ -153,6 +156,7 @@ Ship.prototype.disable = function() {
   this.damage.destroyed();
   this.engineCore.show(false);
   this.shieldGenerator.stop();
+  this.repair.stop();
   this.hud.healthBar.setProgressBar(0.0);
 
   if(!this.isPlayer) {
@@ -173,6 +177,7 @@ Ship.prototype.destroy = function() {
   this.movement.destroy();
   this.engineCore.destroy();
   this.targetingComputer.destroy();
+  this.repair.destroy();
 
   this.details.removeListener('data', this.data);
 
@@ -187,12 +192,6 @@ Ship.prototype.destroy = function() {
 Object.defineProperty(Ship.prototype, 'isPlayer', {
   get: function() {
     return this.user && this.game.auth.user.uuid === this.user;
-  }
-});
-
-Object.defineProperty(Ship.prototype, 'speed', {
-  get: function() {
-    return this.details.speed;
   }
 });
 

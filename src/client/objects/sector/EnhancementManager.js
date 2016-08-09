@@ -18,7 +18,8 @@ EnhancementManager.prototype._started = function(data) {
   var ship = this.manager.ships[data.uuid];
   if(ship !== undefined) {
     switch(data.enhancement) {
-      case 'overload':
+      case 'heal':
+        ship.repair.start();
         break;
       case 'booster':
         ship.engineCore.start();
@@ -34,7 +35,8 @@ EnhancementManager.prototype._stopped = function(data) {
   var ship = this.manager.ships[data.uuid];
   if(ship !== undefined) {
     switch(data.enhancement) {
-      case 'overload':
+      case 'heal':
+        ship.repair.stop();
         break;
       case 'booster':
         ship.engineCore.stop();

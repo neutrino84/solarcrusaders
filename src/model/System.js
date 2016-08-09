@@ -20,7 +20,7 @@ var System = schema.define('system', {
 });
 
 System.TYPES = ['hull', 'reactor', 'pilot', 'engine', 'shield', 'targeting', 'repair', 'teleport', 'scanner', 'cloak'];
-System.ENHANCEMENTS = ['overload', 'shield', 'piercing', 'booster'];
+System.ENHANCEMENTS = ['heal', 'shield', 'piercing', 'booster'];
 
 System.validatesPresenceOf('name');
 System.validatesPresenceOf('stats');

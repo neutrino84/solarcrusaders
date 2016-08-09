@@ -11,7 +11,7 @@
         "heal": 1.0,
         "durability": 1000.0,
         "failure": 0.05,
-        "enhancement": "overload"
+        "enhancement": "heal"
       }
     },
     "pilot": {
@@ -117,13 +117,13 @@
     "flak": {}
   },
   "enhancement": {
-    "overload": {
+    "heal": {
       "cost": -30,
-      "cooldown": 180,
-      "active": 10,
+      "cooldown": 60,
+      "active": 5,
       "stats": {
         "heal": {
-          "value": 0.2
+          "value": 2.0
         }
       }
     },
