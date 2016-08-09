@@ -4,23 +4,21 @@ var engine = require('engine'),
     Layout = require('../Layout'),
     Pane = require('../components/Pane'),
     Label = require('../components/Label'),
+    FlowLayout = require('../layouts/FlowLayout'),
     BorderLayout = require('../layouts/BorderLayout'),
     BackgroundView = require('../views/BackgroundView'),
-    ProgressButtonIcon = require('../components/ProgressButtonIcon'),
+    ButtonIcon = require('../components/ButtonIcon'),
     Class = engine.Class;
 
 function EnhancementPane(game, string, settings) {
   Panel.call(this, game, new BorderLayout(0, 0));
 
-  this.socket = game.net.socket;
-
-  this.data = {};
   this.buttons = {};
   this.config = this.game.cache.getJSON('item-configuration')['enhancement'];
 
   // default styles
   this.settings = Class.mixin(settings, {
-    padding: [1],
+    padding: [2],
     border: [0],
     bg: {
       fillAlpha: 1.0,
@@ -30,7 +28,7 @@ function EnhancementPane(game, string, settings) {
       radius: 0.0
     },
     content: {
-      padding: [3],
+      padding: [2],
       bg: {
         fillAlpha: 0.8,
         color: 0x000000,
@@ -40,7 +38,7 @@ function EnhancementPane(game, string, settings) {
       },
       layout: {
         direction: Layout.HORIZONTAL,
-        gap: 3
+        gap: 2
       }
     }
   });
@@ -55,136 +53,162 @@ function EnhancementPane(game, string, settings) {
 
   this.bg = new BackgroundView(game, this.settings.bg);
   this.content = new Pane(game, this.settings.content);
-  this.content.setPreferredSize(207, 50);
 
   this.addView(this.bg);
   this.addPanel(Layout.CENTER, this.content);
 
-  this.game.on('gui/player/select', this._playerSelect, this);
-  this.game.on('enhancement/started', this._enhancmentStarted, this);
-  this.game.on('enhancement/cancelled', this._enhancmentCancelled, this);
+  this.game.on('ship/player', this._player, this);
+  this.game.on('ship/enhancement/started', this._started, this);
+  this.game.on('ship/enhancement/stopped', this._stopped, this);
+  this.game.on('ship/enhancement/cancelled', this._cancelled, this);
 };
 
 EnhancementPane.prototype = Object.create(Panel.prototype);
 EnhancementPane.prototype.constructor = EnhancementPane;
 
-EnhancementPane.prototype.addContent = function(constraint, panel) {
-  this.content.addPanel(constraint, panel);
+EnhancementPane.prototype.reset = function() {
+  var button,
+      buttons = this.buttons,
+      content = this.content;
+  for(var b in buttons) {
+    buttons[b].stop();
+    content.removePanel(buttons[b]);
+  }
 };
 
 EnhancementPane.prototype.create = function(enhancement, key) {
-  return new ProgressButtonIcon(game,
-    'texture-atlas', {
-      icon: {
-        padding: [0],
-        border: [0],
-        width: 42,
-        height: 42,
-        frame: 'enhancement-' + enhancement + '.png',
+  var game = this.game,
+      countdown = new Panel(game, new FlowLayout(Layout.CENTER, Layout.CENTER)),
+      label = new Label(game, '3', {
         bg: {
           fillAlpha: 0.0,
           borderSize: 0.0,
           radius: 0.0
         }
-      },
-      hotkey: {
-        key: key.toString()
-      }
-    }
-  );
+      }),
+      button = new ButtonIcon(game,
+        'texture-atlas', {
+          padding: [0],
+          border: [0],
+          bg: {
+            fillAlpha: 1.0,
+            color: 0x3868b8,
+            borderSize: 0.0,
+            blendMode: engine.BlendMode.ADD,
+            radius: 0.0,
+            disabled: 0x333333
+          },
+          icon: {
+            padding: [1],
+            border: [0],
+            width: 42,
+            height: 42,
+            frame: 'enhancement-' + enhancement + '.png',
+            bg: {
+              fillAlpha: 0.0,
+              borderSize: 0.0,
+              radius: 0.0
+            }
+          },
+          hotkey: {
+            key: key.toString()
+          }
+        }
+      );
+
+  countdown.addPanel(Layout.NONE, label);
+  countdown.visible = false;
+
+  button.countdown = countdown;
+  button.label = label;
+  button.addPanel(Layout.STRETCH, countdown);
+
+  return button;
 };
 
 EnhancementPane.prototype._select = function(button) {
-  button.tint = 0xFF8800;
-  this.socket.emit('enhancement/start', {
-    ship: this.data.uuid,
+  var game = this.game,
+      data = this.data;
+  
+  // disable
+  button.disabled = true;
+  
+  // send event
+  game.emit('ship/enhancement/start', {
+    uuid: data.uuid,
     enhancement: button.id
   });
 };
 
-EnhancementPane.prototype._enhancmentStarted = function(data) {
-  if(data.ship !== this.data.uuid) { return; }
+EnhancementPane.prototype._started = function(data) {
+  if(data.uuid !== this.data.uuid) { return; }
 
-  var ev, active,
-      game = this.game,
-      button = this.buttons[data.enhancement],
-      config = this.config[data.enhancement],
-      cooldown = {
-        count: 0,
-        total: config.cooldown * 4,
-        button: button
-      };
-
-  ev = game.clock.create();
-  ev.repeat(250, cooldown.total, this._updateCooldown, cooldown);
-  ev.on('complete', function() {
-    cooldown.button.disabled = false;
-    cooldown.button.count.visible = false;
-    cooldown.button.setProgressBar(1.0);
-  });
-  ev.start();
-
-  if(config.active) {
-    active = { count: config.active * 10, total: config.active * 10, button: button };
-    ev = game.clock.create();
-    ev.repeat(100, active.total, this._updateActive, active);
-    ev.start();
-  }
-
-  button.disabled = true;
-  button.count.text = config.cooldown;
-  button.count.visible = true;
-  button.invalidate(true);
-};
-
-EnhancementPane.prototype._enhancmentCancelled = function(data) {
-  var ev,
-      game = this.game,
+  var config = this.config[data.enhancement],
       button = this.buttons[data.enhancement];
+  
+  // disable
+  button.disabled = true;
+  button.label.text = config.cooldown;
+  button.count = config.cooldown;
+  button.countdown.visible = true;
+  button.invalidate(true);
+
+  // timer
+  this.timer && this.game.clock.events.remove(this.timer);
+  this.timer = this.game.clock.events.repeat(1000, config.cooldown,
+    function() {
+      button.label.text = --button.count;
+      button.invalidate(true);
+    });
+};
+
+EnhancementPane.prototype._stopped = function(data) {
+  if(data.uuid !== this.data.uuid) { return; }
+};
+
+EnhancementPane.prototype._cancelled = function(data) {
+  if(data.uuid !== this.data.uuid) { return; }
+
+  var button = this.buttons[data.enhancement];
       button.disabled = false;
-      button.count.visible = false;
-  button.tint = 0xFF8800;
-  ev = game.clock.events.repeat(200, 5, function() {
-    switch(button.tint) {
-      case 0xFFFFFF:
-        return button.tint = 0xFF8800;
-      default:
-        return button.tint = 0xFFFFFF;
-    }
-  });
+      button.countdown.visible = false;
+
+  // cancel timer
+  this.timer && this.game.clock.events.remove(this.timer);
 };
 
-EnhancementPane.prototype._updateCooldown = function() {
-  this.count++;
-  this.button.count.text = global.Math.floor((this.total-this.count)/4 + 1);
-  this.button.invalidate(true);
-};
-
-EnhancementPane.prototype._updateActive = function() {
-  this.count--;
-  this.button.setProgressBar(this.count/this.total);
-};
-
-EnhancementPane.prototype._playerSelect = function(data) {
+EnhancementPane.prototype._player = function(ship) {
   var enhancement, button,
-      enhancements = data.enhancements;
-  if(this.data.uuid) {
-    this.data = data;
-  } else {
-    this.data = data;
-    for(var e in enhancements) {
-      enhancement = enhancements[e];
-      
-      button = this.create(enhancement, global.parseInt(e) + 1);
-      button.id = enhancement;
-      button.on('inputUp', this._select, this);
-      button.setProgressBar(1.0);
-      
-      this.buttons[enhancement] = button;
-      this.addContent(Layout.NONE, button);
-    }
-    this.invalidate(true);
+      enhancements = ship.details.enhancements;
+
+  // set data object
+  this.data = ship.details;
+
+  // reset buttons
+  if(this.children.length) {
+    this.reset();
   }
+  
+  // create buttons
+  for(var e in enhancements) {
+    enhancement = enhancements[e];
+    
+    button = this.buttons[enhancement] || this.create(enhancement, global.parseInt(e) + 1);
+    button.id = enhancement;
+    button.on('inputUp', this._select, this);
+
+    if(enhancement === 'piercing') {
+      button.disabled = true;
+    } else {
+      button.start();
+    }
+    
+    this.buttons[enhancement] = button;
+    this.content.addPanel(Layout.NONE, button);
+  }
+
+  this.invalidate(true);
 };
+
 
 module.exports = EnhancementPane;
