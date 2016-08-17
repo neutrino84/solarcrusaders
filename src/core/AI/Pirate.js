@@ -6,12 +6,12 @@ function Pirate(ship) {
 
   this.type = 'pirate';
 
-  this.aimRadius = 64;
+  this.aimRadius = 128;
   this.attackRate = 500;
   this.respawnTime = 3600000;
   this.disengageTime = 16000;
   this.defaultSpeedMagnitude = 192;
-  this.sightRange = 2048;
+  this.sightRange = 1024;
 
   this.sight = new engine.Circle();
   this.patrol = new engine.Circle(ship.movement.position.x, ship.movement.position.y, 128);

@@ -215,10 +215,10 @@ ShipManager.prototype.generateRandomShips = function() {
   var iterator = {
         'ubaidian-x01': { race: 'ubaidian', count: 0 },
         'ubaidian-x02': { race: 'ubaidian', count: 0 },
-        'ubaidian-x03': { race: 'ubaidian', count: 2 },
-        'ubaidian-x04': { race: 'ubaidian', count: 4 },
+        'ubaidian-x03': { race: 'ubaidian', count: 1 },
+        'ubaidian-x04': { race: 'ubaidian', count: 2 },
         'hederaa-x01': { race: 'hederaa', count: 0 },
-        'mechan-x01': { race: 'mechan', count: 4 },
+        'mechan-x01': { race: 'mechan', count: 2 },
         'general-x01': { race: 'ubaidian', count: 0 },
         'general-x02': { race: 'ubaidian', count: 0 }
       };
@@ -230,25 +230,43 @@ ShipManager.prototype.generateRandomShips = function() {
 };
 
 ShipManager.prototype.generatePirateShips = function() {
-  var iterator = [
+  var r1, r2,
+      iterator = [
         { name: 'xinli', chassis: 'general-x01' },
         { name: 'mavero', chassis: 'general-x01' },
         { name: 'vega', chassis: 'general-x02' },
-        { name: 'thak', chassis: 'general-x02' },
-        { name: 'zeus', chassis: 'general-x03'}
+        { name: 'thak', chassis: 'general-x02' }
       ],
       len = iterator.length;
 
-  // create pirate
-  for(var i=0; i<len; i++) {
-    this.create({
-      name: iterator[i].name,
-      chassis: iterator[i].chassis,
-      throttle: 1.0,
-      ai: 'pirate',
-      x: -2560, y: 2048
-    });
+  // create pirates
+  for(var j=0; j<3; j++) {
+    r1 = (global.Math.random() * 2 - 1) * 4096;
+    r2 = (global.Math.random() * 2 - 1) * 4096;
+    for(var i=0; i<len; i++) {
+      this.create({
+        name: iterator[i].name,
+        chassis: iterator[i].chassis,
+        throttle: 1.0,
+        ai: 'pirate',
+        x: 2048 + r1,
+        y: 2048 + r2
+      });
+    }
   }
+
+
+  // zeus
+  this.create({
+    name: 'zeus',
+    chassis: 'general-x03',
+    throttle: 1.0,
+    ai: 'pirate',
+    x: -2048,
+    y: 2048
+  });
+
+
 };
 
 ShipManager.prototype.generateRandomShip = function(chassis, race, ai) {
