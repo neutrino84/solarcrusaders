@@ -46,7 +46,7 @@
     "object-assign": "4.0.x",
     "resource-loader": "1.6.x",
     "ismobilejs": "0.4.x",
-    "pixi-gl-core": "git+https://github.com/pixijs/pixi-gl-core.git"
+    "pixi-gl-core": "git://github.com/pixijs/pixi-gl-core.git#b10e3a91727fd8aaa39691c2f292f09a96eddc12"
   },
   "devDependencies": {
     "grunt": "0.4.x",
