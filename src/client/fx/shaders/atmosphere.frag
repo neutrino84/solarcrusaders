@@ -4,8 +4,8 @@ varying vec2 vTextureCoord;
 
 // rendering params
 const float sphsize = 0.8; // planet size
-const float dist = 0.08; // distance for glow and distortion
-const float glow = 3.2; // glow amount, mainly on hit side
+const float dist = 0.12; // distance for glow and distortion
+const float glow = 2.2; // glow amount, mainly on hit side
 
 const float start = 120.0;
 const float steps = 292.0; // number of steps for the volumetric rendering
@@ -40,7 +40,7 @@ void main() {
 
   // green - vec3(v/4.2, v/1.8, v/3.2);
   // red - vec3(v/1.2, v/3.6, v/3.6);
-  // blue - vec3(v/4., v/3., v/0.8);
+  // blue - vec3(v/3.0, v/1.8, v/1.0);
   col += vec3(v/3.0, v/1.8, v/1.0);
 
   gl_FragColor = vec4(col, 0.); 

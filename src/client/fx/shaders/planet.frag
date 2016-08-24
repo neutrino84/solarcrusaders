@@ -34,13 +34,14 @@ void main(void) {
     uv.y -= 0.024 * time;
 
     clouds = texture2D(uClouds, uv).rgb;
-    clouds.r /= 2.5;
-    clouds.g /= 1.5;
+    clouds.b /= 2.6;
+    clouds.g /= 2.6;
+    // clouds.b /= 0.0;
     
     // textures
-    color = mix(planet * planet, planet, 0.44);
-    color *= 1.26 * pow(max(0.44, dot(pos, normalize(vec3(2.6, 0.0, 4.)))), 7.6);
-    color += clouds * 0.14;
+    color = mix(planet * planet, planet, 0.5);
+    color *= 1.86 * pow(max(0.44, dot(pos, normalize(vec3(2.6, 0.0, 6.0)))), 7.6);
+    color += clouds * (clouds / 2.0) * 0.5;
 
     alpha += 1.0;
   }
