@@ -2,7 +2,7 @@
 var engine = require('engine');
 
 function Asteroid(game) {
-  engine.Sprite.call(this, game, 'texture-atlas', 'asteroid-x0' + (global.Math.floor(global.Math.random() * 3) + 1) + '.png');
+  engine.Sprite.call(this, game, 'texture-atlas', 'asteroid-x0' + (global.Math.floor(global.Math.random() * 5) + 1) + '.png');
 
   this.angle = global.Math.random() * 2 * global.Math.PI;
   this.movspeed = (global.Math.random() * 0.001) - 0.0005;
