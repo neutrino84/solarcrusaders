@@ -2,9 +2,9 @@ var engine = require('engine'),
     Space = require('../fx/Space'),
     Planet = require('../fx/Planet'),
     NebulaCluster = require('../fx/NebulaCluster'),
-    ShockwaveManager = require('../fx/ShockwaveManager'),
+    // ShockwaveManager = require('../fx/ShockwaveManager'),
     Snow = require('../fx/Snow'),
-    Selection = require('../objects/sector/Selection'),
+    InputManager = require('../objects/sector/InputManager'),
     ShipManager = require('../objects/sector/ShipManager'),
     StationManager = require('../objects/sector/StationManager'),
     Asteroid = require('../objects/sector/misc/Asteroid');
@@ -16,9 +16,6 @@ SectorState.prototype.constructor = engine.State;
 
 SectorState.prototype.init = function(args) {
   global.state = this;
-
-  this.scrollVelocityX = 0;
-  this.scrollVelocityY = 0;
 
   this.scrollLock = true;
   this.game.stage.disableVisibilityChange = true;
@@ -35,20 +32,20 @@ SectorState.prototype.preload = function() {
   // load.image('draghe', 'imgs/game/planets/draghe.jpg');
   // load.image('eamon', 'imgs/game/planets/eamon-alpha.jpg');
   // load.image('arkon', 'imgs/game/planets/arkon.jpg');
-  load.image('planet', 'imgs/game/planets/arkon.jpg');
+  load.image('planet', 'imgs/game/planets/eamon-alpha.jpg');
   load.image('clouds', 'imgs/game/planets/clouds.jpg');
 
   // load stations
   load.image('station', 'imgs/game/stations/ubaidian-x01.png');
   load.image('station-cap', 'imgs/game/stations/ubaidian-cap-x01.png');
 
-  load.image('laser-blue', 'imgs/game/fx/laser-blue.png');
+  // load.image('laser-blue', 'imgs/game/fx/laser-blue.png');
   load.image('laser-red', 'imgs/game/fx/laser-red.png');
-  load.image('laser-red-piercing', 'imgs/game/fx/laser-red-piercing.png');
+  // load.image('laser-red-piercing', 'imgs/game/fx/laser-red-piercing.png');
   // load.image('trails', 'imgs/game/fx/trails.png');
 
   // test load sound
-  load.audio('background', 'imgs/game/sounds/mood.mp3');
+  // load.audio('background', 'imgs/game/sounds/mood.mp3');
 };
 
 // loadUpdate = function() {};
@@ -82,17 +79,17 @@ SectorState.prototype.create = function() {
   this.createSnow();
 
   // AUDIO TEST
-  this.sound = this.game.sound.add('background', 0, true);
-  this.sound.on('decoded', function() {
-    this.play('', 0, 0, true);
-    this.fadeTo(12000, 0.01);
-  });
+  // this.sound = this.game.sound.add('background', 0, true);
+  // this.sound.on('decoded', function() {
+  //   this.play('', 0, 0, true);
+  //   this.fadeTo(12000, 0.01);
+  // });
 
   // start zoom in
-  this.game.once('ship/follow', function() {
-    this.zoom = this.game.tweens.create(this.game.world.scale);
-    this.zoom.to({ x: 0.66, y: 0.66 }, 6000, engine.Easing.Quadratic.InOut, true);
-  }, this);
+  // this.game.once('ship/follow', function() {
+  //   this.zoom = this.game.tweens.create(this.game.world.scale);
+  //   this.zoom.to({ x: 0.54, y: 0.54 }, 6000, engine.Easing.Quadratic.InOut, true);
+  // }, this);
 
   // login
   if(game.auth.ready) {
@@ -112,29 +109,26 @@ SectorState.prototype.create = function() {
 };
 
 SectorState.prototype.createSpace = function() {
-  this.space = new Space(this.game, this.game.width, this.game.height);
+  this.space = new Space(this.game);
   this.planet = new Planet(this.game);
-  // this.planet.cache();
 
   this.nebula = new NebulaCluster(this.game);
   this.nebula.position.set(-512, 1024);
   this.nebula.create(3);
 
+  this.game.world.static.add(this.space);
   this.game.world.foreground.add(this.nebula);
   this.game.world.background.add(this.planet);
-  this.game.stage.addChildAt(this.space, 0);
 };
 
 SectorState.prototype.createManagers = function() {
-  this.shockwaveManager = new ShockwaveManager(this.game, this);
+  // this.shockwaveManager = new ShockwaveManager(this.game, this);
 
   this.stationManager = new StationManager(this.game);
   this.stationManager.boot();
   
   this.shipManager = new ShipManager(this.game);
-  this.shipManager.hudGroup = this.game.gui.hud;
-
-  this.selection = new Selection(this);
+  this.inputManager = new InputManager(this.game);
 };
 
 SectorState.prototype.createSnow = function() {
@@ -155,57 +149,44 @@ SectorState.prototype.createAsteroids = function() {
 
 SectorState.prototype.focus = function() {
   this.scrollLock = false;
-  this.shipManager.focus();
+  // this.shipManager.focus();
 }
 
 SectorState.prototype.blur = function() {
   this.scrollLock = true;
-  this.shipManager.blur();
+  // this.shipManager.blur();
 };
 
 SectorState.prototype.update = function() {
   var game = this.game,
       camera = game.camera,
       keyboard = game.input.keyboard,
-      timeStep = game.clock.elapsedMS / 10,
-      move = 1.12 * timeStep;
+      x = 0, y = 0,
+      amount = 512;
 
-  if(this.scrollLock) { return; }
-
-  // add velocity on keypress
-  if(keyboard.isDown(engine.Keyboard.A) || keyboard.isDown(engine.Keyboard.LEFT)) {
-    this.scrollVelocityX += move;
-  }
-  if(keyboard.isDown(engine.Keyboard.D) || keyboard.isDown(engine.Keyboard.RIGHT)) {
-    this.scrollVelocityX -= move;
-  }
-  if(keyboard.isDown(engine.Keyboard.W) || keyboard.isDown(engine.Keyboard.UP)) {
-    this.scrollVelocityY += move;
-  }
-  if(keyboard.isDown(engine.Keyboard.S) || keyboard.isDown(engine.Keyboard.DOWN)) {
-    this.scrollVelocityY -= move;
-  }
-
-  // apply friction
-  if(this.scrollVelocityX > 0 || this.scrollVelocityX < 0) {
-    this.scrollVelocityX /= 1.1;
-  }
-  if(this.scrollVelocityX > -0.05 && this.scrollVelocityX < 0.05) {
-    this.scrollVelocityX = 0;
-  }
-  if(this.scrollVelocityY > 0 || this.scrollVelocityY < 0) {
-    this.scrollVelocityY /= 1.1;
-  }
-  if(this.scrollVelocityY > -0.05 && this.scrollVelocityY < 0.05) {
-    this.scrollVelocityY = 0;
+  if(!this.scrollLock) {
+    if(keyboard.isDown(engine.Keyboard.A) || keyboard.isDown(engine.Keyboard.LEFT)) {
+      x = -amount;
+    }
+    if(keyboard.isDown(engine.Keyboard.D) || keyboard.isDown(engine.Keyboard.RIGHT)) {
+      x = amount;
+    }
+    if(keyboard.isDown(engine.Keyboard.W) || keyboard.isDown(engine.Keyboard.UP)) {
+      y = -amount;
+    }
+    if(keyboard.isDown(engine.Keyboard.S) || keyboard.isDown(engine.Keyboard.DOWN)) {
+      y = amount;
+    }
+  } else {
+    x = y = 0;
   }
 
   // apply velocity
-  camera.pan(this.scrollVelocityX, this.scrollVelocityY);
+  camera.offset.setTo(x, y);
 };
 
 SectorState.prototype.preRender = function() {
-  this.shockwaveManager.preRender();
+  // this.shockwaveManager.preRender();
 };
 
 SectorState.prototype.resize = function(width, height) {
@@ -220,7 +201,7 @@ SectorState.prototype.resize = function(width, height) {
 // pauseUpdate = function() {};
 
 SectorState.prototype.shutdown = function() {
-  this.selection.destroy();
+  this.inputManager.destroy();
 };
 
 module.exports = SectorState;
