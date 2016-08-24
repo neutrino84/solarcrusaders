@@ -97,7 +97,9 @@ Hud.prototype.create = function() {
   this.ship.add(this.pinned);
 
   this.username = new Label(game, ship.username, this.settings.label);
-  this.username.tint = ship.isPlayer ? 0x33FF33 : 0x3399FF;
+  this.username.tint = ship.isPlayer ? 0x33FF33 : (
+    ship.details.ai === 'pirate' ? 0xFF0000 : 0x3399FF
+  );
 
   this.healthBar = new ProgressBar(this.game, this.settings.health);
   this.healthBar.setProgressBar(ship.details.health / ship.config.stats.health);

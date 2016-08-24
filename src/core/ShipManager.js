@@ -136,7 +136,7 @@ ShipManager.prototype.enhancement = function(sock, args, next) {
 };
 
 ShipManager.prototype.data = function(sock, args, next) {
-  var self = this, ship, enhancements, systems,
+  var self = this, ship, enhancements, systems, ai,
       cargo, uuid, username,
       user = sock.sock.handshake.session.user,
       uuids = args[1].uuids,
@@ -148,11 +148,13 @@ ShipManager.prototype.data = function(sock, args, next) {
       username = ship.user ? ship.user.data.username : ship.data.name;
       enhancements = Object.keys(ship.enhancements.available);
       uuid = ship.user ? ship.user.uuid : null;
+      ai = ship.ai ? ship.ai.type : null;
       cargo = uuid === user.uuid ? ship.cargo : {};
       ships.push({
         id: ship.id,
         uuid: ship.uuid,
         user: uuid,
+        ai: ai,
         name: ship.data.name,
         username: username,
         chassis: ship.chassis,
