@@ -17,6 +17,12 @@ Missile.prototype.constructor = Missile;
 Missile.prototype.start = function(origin, destination, distance) {
   var missile = new Projectile(this);
       missile.start(origin, destination, distance);
+
+  // peircing
+  if(this.parent.parent.enhanced('piercing')) {
+    missile.projectile.tint = 0xFF9999;
+  }
+
   this.projectiles.push(missile);
   this.isRunning = true;
 };

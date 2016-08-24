@@ -8,6 +8,7 @@ function TargetingComputer(parent, config) {
   this.config = config;
 
   this.hardpoints = [];
+  this.enhancements = {};
 
   this.target = new engine.Point();
 
@@ -86,6 +87,14 @@ TargetingComputer.prototype.fired = function(target) {
       hardpoints[i].fire(distance);
     }
   }
+};
+
+TargetingComputer.prototype.enhance = function(name, state) {
+  this.enhancements[name] = state;
+};
+
+TargetingComputer.prototype.enhanced = function(name) {
+  return this.enhancements[name];
 };
 
 TargetingComputer.prototype.update = function() {

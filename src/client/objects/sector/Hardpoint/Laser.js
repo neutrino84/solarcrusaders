@@ -11,8 +11,9 @@ function Laser(parent) {
   this.started = 0;
   this.elapsed = 0;
 
-  this.delay = 50;
-  this.duration = 400;
+  this.delay = Laser.DEFAULT_DELAY;
+  this.duration = Laser.DEFAULT_DURATION;
+
   this.isRunning = false;
   this.hasExploded = false;
 
@@ -22,9 +23,10 @@ function Laser(parent) {
   this.destination = new engine.Point();
   this.origin = new engine.Point();
 
-  this.texture = new pixi.Texture(this.game.cache.getImage('laser-red', true).base);
+  this.textureRed = new pixi.Texture(this.game.cache.getImage('laser-red', true).base);
+  this.textureBlue = new pixi.Texture(this.game.cache.getImage('laser-blue', true).base);
   
-  this.strip = new engine.Strip(this.game, this.texture, [this._start, this._end]);
+  this.strip = new engine.Strip(this.game, this.textureRed, [this._start, this._end]);
   this.strip.blendMode = engine.BlendMode.ADD;
 
   this.glow = new engine.Sprite(this.game, 'texture-atlas', 'laser-piercing.png');
@@ -33,6 +35,9 @@ function Laser(parent) {
   this.glow.position.set(0, 16);
   this.glow.blendMode = engine.BlendMode.ADD;
 };
+
+Laser.DEFAULT_DELAY = 50;
+Laser.DEFAULT_DURATION = 400;
 
 Laser.prototype.start = function(origin, destination, distance) {
   if(this.isRunning) { return; }
@@ -43,6 +48,15 @@ Laser.prototype.start = function(origin, destination, distance) {
   this.duration = distance/4;
   this.isRunning = true;
   this.hasExploded = false;
+
+  // check piercing
+  if(this.parent.parent.enhanced('piercing')) {
+    this.delay = Laser.DEFAULT_DELAY/2;
+    this.strip.texture = this.textureBlue;
+  } else {
+    this.delay = Laser.DEFAULT_DELAY;
+    this.strip.texture = this.textureRed;
+  }
 
   this.origin.copyFrom(origin);
   this.destination.copyFrom(destination);
@@ -109,7 +123,9 @@ Laser.prototype.update = function(origin, destination) {
 Laser.prototype.destroy = function() {
   this.stop();
 
-  this.texture.destroy();
+  this.textureRed.destroy();
+  this.textureBlue.destroy();
+
   this.strip.destroy();
   this.glow.destroy();
 

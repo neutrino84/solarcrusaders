@@ -39,9 +39,8 @@ SectorState.prototype.preload = function() {
   load.image('station', 'imgs/game/stations/ubaidian-x01.png');
   load.image('station-cap', 'imgs/game/stations/ubaidian-cap-x01.png');
 
-  // load.image('laser-blue', 'imgs/game/fx/laser-blue.png');
+  load.image('laser-blue', 'imgs/game/fx/laser-blue.png');
   load.image('laser-red', 'imgs/game/fx/laser-red.png');
-  // load.image('laser-red-piercing', 'imgs/game/fx/laser-red-piercing.png');
   // load.image('trails', 'imgs/game/fx/trails.png');
 
   // test load sound

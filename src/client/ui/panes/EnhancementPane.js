@@ -196,12 +196,7 @@ EnhancementPane.prototype._player = function(ship) {
     button = this.buttons[enhancement] || this.create(enhancement, global.parseInt(e) + 1);
     button.id = enhancement;
     button.on('inputUp', this._select, this);
-
-    if(enhancement === 'piercing') {
-      button.disabled = true;
-    } else {
-      button.start();
-    }
+    button.start();
     
     this.buttons[enhancement] = button;
     this.content.addPanel(Layout.NONE, button);
