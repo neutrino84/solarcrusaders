@@ -3,15 +3,22 @@ var engine = require('engine');
 
 function Selection(game) {
   this.game = game;
-  this.input = game.input,
+  this.world = game.world;
 
-  this.input.on('onDown', this._onInput, this);
-  this.input.on('onUp', this._onInput, this);
+  this.input = new engine.InputHandler(this.world);
+  this.input.start(1);
+  this.input.checkPointerOver =
+    this.input.checkPointerDown = function(pointer, fastTest) {
+      return true;
+    };
+
+  this.world.on('inputUp', this._onInput, this);
+  this.world.on('inputDown', this._onInput, this);
 };
 
 Selection.prototype.constructor = Selection;
 
-Selection.prototype._onInput = function(pointer) {
+Selection.prototype._onInput = function(world, pointer) {
   var data = {
         type: pointer.isDown ? 'start' : 'stop',
         target: {
@@ -27,9 +34,11 @@ Selection.prototype._onInput = function(pointer) {
 };
 
 Selection.prototype.destroy = function() {
-  this.input.removeListener('onDown', this._onInput);
-  this.input.removeListener('onUp', this._onInput);
-  
+  this.input.destroy();
+
+  this.world.removeListener('onDown', this._onInput);
+  this.world.removeListener('onUp', this._onInput);
+
   this.game =
     this.input = undefined;
 };
