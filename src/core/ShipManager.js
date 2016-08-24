@@ -255,7 +255,6 @@ ShipManager.prototype.generatePirateShips = function() {
     }
   }
 
-
   // zeus
   this.create({
     name: 'zeus',
@@ -265,8 +264,6 @@ ShipManager.prototype.generatePirateShips = function() {
     x: -2048,
     y: 2048
   });
-
-
 };
 
 ShipManager.prototype.generateRandomShip = function(chassis, race, ai) {
