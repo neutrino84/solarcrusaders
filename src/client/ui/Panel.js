@@ -71,6 +71,7 @@ Panel.prototype.invalidate = function(local) {
   this.isValid = false;
   this.isLayoutValid = false;
   this.cachedWidth = -1;
+  // this.transform.updated = true;
   
   if(local) {
     for(var i=0; i<this.panels.length; i++) {
@@ -84,6 +85,8 @@ Panel.prototype.invalidate = function(local) {
     this.validate();
     this.repaint();
   }
+
+  // this.transform.updated = false;
 };
 
 Panel.prototype.validate = function() {
