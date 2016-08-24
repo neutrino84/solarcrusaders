@@ -97,5 +97,5 @@ void main(void) {
   rn *= tex.a;
   rn += (0.1 * sin(time * 5.0) + 0.2) * tex.a;
 
-  gl_FragColor = vec4(rn*rn*rn, rn*rn, rn, tex.a);
+  gl_FragColor = vec4(rn, rn, rn, rn*rn*rn*rn);
 }
