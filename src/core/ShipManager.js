@@ -232,40 +232,59 @@ ShipManager.prototype.generateRandomShips = function() {
 };
 
 ShipManager.prototype.generatePirateShips = function() {
-  var r1, r2,
-      iterator = [
-        { name: 'xinli', chassis: 'general-x01' },
-        { name: 'mavero', chassis: 'general-x01' },
-        { name: 'vega', chassis: 'general-x02' },
-        { name: 'thak', chassis: 'general-x02' }
-      ],
+  var base, ship,
+      iterator = [{
+        location: { x: -2048, y: 2048 },
+        ships: [
+          { name: 'xinli', chassis: 'general-x01' },
+          { name: 'mavero', chassis: 'general-x01' },
+          { name: 'ardelle', chassis: 'general-x01' },
+          { name: 'vega', chassis: 'general-x02' },
+          { name: 'thak', chassis: 'general-x02' },
+          { name: 'zeus', chassis: 'general-x03' }
+        ]
+      }, {
+        location: { x: 6144, y: 2048 },
+        ships: [
+          { name: 'satel', chassis: 'general-x01' },
+          { name: 'thath', chassis: 'general-x01' },
+          { name: 'sai', chassis: 'general-x02' },
+          { name: 'ramir', chassis: 'general-x02' }
+        ]
+      }, {
+        location: { x: 2048, y: -2048 },
+        ships: [
+          { name: 'manduk', chassis: 'general-x01' },
+          { name: 'talai', chassis: 'general-x01' },
+          { name: 'prelloc', chassis: 'general-x01' },
+          { name: 'kresthaa', chassis: 'general-x01' }
+        ]
+      }, {
+        location: { x: 2048, y: 6144 },
+        ships: [
+          { name: 'theni', chassis: 'general-x02' },
+          { name: 'saroc', chassis: 'general-x02' },
+          { name: 'gahl', chassis: 'general-x02' },
+          { name: 'amira', chassis: 'general-x02' }
+        ]
+      }],
       len = iterator.length;
 
   // create pirates
-  for(var j=0; j<3; j++) {
-    r1 = (global.Math.random() * 2 - 1) * 4096;
-    r2 = (global.Math.random() * 2 - 1) * 4096;
-    for(var i=0; i<len; i++) {
+  for(var i=0; i<len; i++) {
+    base = iterator[i];
+    for(var s=0; s<base.ships.length; s++) {
+      ship = base.ships[s];
       this.create({
-        name: iterator[i].name,
-        chassis: iterator[i].chassis,
+        name: ship.name,
+        chassis: ship.chassis,
         throttle: 1.0,
         ai: 'pirate',
-        x: 2048 + r1,
-        y: 2048 + r2
+        x: base.location.x,
+        y: base.location.y
       });
     }
   }
-
-  // zeus
-  this.create({
-    name: 'zeus',
-    chassis: 'general-x03',
-    throttle: 1.0,
-    ai: 'pirate',
-    x: -2048,
-    y: 2048
-  });
 };
 
 ShipManager.prototype.generateRandomShip = function(chassis, race, ai) {
