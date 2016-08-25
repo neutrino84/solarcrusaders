@@ -49,22 +49,12 @@ function ButtonIcon(game, key, settings) {
     this.disabled = true;
   }
 
-  // input handler
-  this.input = new engine.InputHandler(this);
-  this.input.start(2);
-
   // color blend
   this.colorBlend = new ColorBlend(game, this.image);
   this.colorBlend.setColor(0x336699, 0x33cc33, 250, engine.Easing.Quadratic.InOut, true);
   this.colorBlend.on('stop', function() {
     this.image.tint = 0xFFFFFF;
   }, this);
-
-  // event handling
-  this.on('inputOver', this._inputOver, this);
-  this.on('inputOut', this._inputOut, this);
-  this.on('inputDown', this._inputDown, this);
-  this.on('inputUp', this._inputUp, this);
 
   // build icon
   if(this.settings.bg) {
@@ -74,6 +64,15 @@ function ButtonIcon(game, key, settings) {
   } else {
     this.bg = {};
   }
+
+  // input handler
+  this.input = new engine.InputHandler(this.bg);
+
+  // event handling
+  this.bg.on('inputOver', this._inputOver, this);
+  this.bg.on('inputOut', this._inputOut, this);
+  this.bg.on('inputDown', this._inputDown, this);
+  this.bg.on('inputUp', this._inputUp, this);
 
   this.addPanel(Layout.USE_PS_SIZE, this.image);
 };
@@ -119,14 +118,15 @@ ButtonIcon.prototype._inputUp = function() {
     }
     this.bg.tint = 0xffffff;
     this.image.bg.tint = 0xffffff;
+    this.emit('inputUp', this);
   }
 };
 
 ButtonIcon.prototype._inputDown = function() {
   if(this.disabled) { return; }
-
   this.bg.tint = 0xaaccee;
   this.image.bg.tint = 0xaaccee;
+  this.emit('inputDown', this);
 };
 
 ButtonIcon.prototype._inputOver = function() {
