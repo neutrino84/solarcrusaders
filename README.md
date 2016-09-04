@@ -6,11 +6,12 @@
 
 You will need to have a redis instance running locally.
 * [Windows](https://github.com/MSOpenTech/redis)
-* [OSX](http://jasdeep.ca/2012/05/installing-redis-on-mac-os-x/) *homebrew recommended
+* [OSX](http://jasdeep.ca/2012/05/installing-redis-on-mac-os-x/)
+
+#### initialize required packages
 
     npm install
     bower install
-    grunt
 
 #### update your hosts file
 
@@ -39,3 +40,11 @@ You will need to have a redis instance running locally.
         "options": {}
       }
     }
+
+#### run in development mode
+
+    grunt
+
+#### run without development packages
+
+    ./solarcrusaders start
