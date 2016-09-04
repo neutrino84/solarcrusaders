@@ -2,13 +2,13 @@
 # solarcrusaders
 ## install notes
 
-### install and run redis-server
+#### install and run redis-server
 
     npm install
     bower install
     grunt
 
-### update your hosts file
+#### update your hosts file
 
     #
     # Hosts file
@@ -18,7 +18,7 @@
     127.0.0.1   www.localhost.dev
     127.0.0.1   play.localhost.dev
 
- ### update config.json
+#### update config.json
 
     {
       "silent": false,
