@@ -61,6 +61,30 @@ Clock.prototype.benchmark = function() {
   }, this);
 };
 
+Clock.prototype.throttle = function(fn, threshhold, context, bounce) {
+  var last,
+      deferTimer,
+      threshhold = threshhold || 250,
+      bounce = bounce || false;
+      clock = this;
+  return function(arg) {
+    var context = context || this,
+        now = clock.time;
+    if(last && now < last + threshhold) {
+      clearTimeout(deferTimer);
+      deferTimer = setTimeout(function () {
+        last = now;
+        if(bounce == false) {
+          fn.call(context, arg);
+        }
+      }, threshhold);
+    } else {
+      last = now;
+      fn.call(context, arg);
+    }
+  };
+};
+
 Clock.prototype.add = function(timer) {
   this._timers.push(timer);
   return timer;
