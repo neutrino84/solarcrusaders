@@ -5,8 +5,10 @@
 #### install and run redis-server
 
 You will need to have a redis instance running locally.
-* [Windows](https://github.com/MSOpenTech/redis)
 * [OSX](http://jasdeep.ca/2012/05/installing-redis-on-mac-os-x/)
+* Windows Subsystem for Linux
+
+    apt-get install redis-server
 
 #### initialize required packages
 
@@ -33,13 +35,13 @@ You will need to have a redis instance running locally.
       "daemon": false,
       "production": false,
       "url": "http://localhost.dev:4567",
-      "secret": "",
+      "secret": "secret",
       "database": "redis",
       "redis": {
         "host": "127.0.0.1",
         "port": "6379",
         "password": "",
-        "database": "1",
+        "database": "0",
         "options": {}
       }
     }
@@ -52,11 +54,26 @@ You will need to have a redis instance running locally.
     touch /logs/loader.log
     touch /logs/server.log
 
-## Run in Windows 10 Ubuntu Subsystem
+## Run in Windows Subsystem for Linux
+
+It is recommended that you clone solarcrusaders into /mnt/c/Users/*/Documents/* if you'd like to use Sublime or Windows IDE to edit project src files.
 
 #### start redis
 
     sudo service redis-server start
+
+#### build core and solar client javascript
+
+First comment out all lines with "watch: true" in Gruntfile.js, there should be 3 instances. Windows Subsystem for Linux does not yet properly support watching files for changes.
+
+Then run:
+
+    grunt build:core
+    grunt build:solar
+
+Every time you make changes to ./solarcrusaders/src/* you will need to re-run:
+
+    grunt build:solar
 
 #### run without app loader
 
