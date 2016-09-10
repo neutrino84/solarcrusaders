@@ -139,7 +139,7 @@ module.exports = function(grunt) {
       }
     },
 
-    cssmin: {
+    'cssmin': {
       options: {
         shorthandCompacting: false,
         roundingPrecision: -1
@@ -227,15 +227,17 @@ module.exports = function(grunt) {
     'watch:dev'
   ]);
 
-  // grunt.registerTask('debug', [
-  //   'browserify:socket',
-  //   'browserify:pixi',
-  //   'browserify:engine',
-  //   'browserify:solar',
-  //   'concat:dev',
-  //   'develop:debug',
-  //   'node-inspector:dev'
-  // ]);
+  grunt.registerTask('build:core', [
+    'browserify:socket',
+    'browserify:xhr',
+    'browserify:pixi'
+  ]);
+
+  grunt.registerTask('build:solar', [
+    'browserify:engine',
+    'browserify:solar',
+    'browserify:website'
+  ]);
 
   grunt.registerTask('build', [
     'browserify:website',
