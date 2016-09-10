@@ -52,17 +52,21 @@ You will need to have a redis instance running locally.
     touch /logs/loader.log
     touch /logs/server.log
 
+## Run in Windows 10 Ubuntu Subsystem
+
 #### start redis
 
     sudo service redis-server start
-
-## Run in Windows 10 Ubuntu Subsystem
 
 #### run without app loader
 
     node app.js
 
 ## Run in OSX or Linux
+
+#### start redis-server
+
+    redis-server
 
 #### run in development mode
 
