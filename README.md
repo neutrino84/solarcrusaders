@@ -41,6 +41,11 @@ You will need to have a redis instance running locally.
       }
     }
 
+#### create log files
+
+    touch /solarcrusaders/logs/loader.log
+    touch /solarcrusaders/logs/server.log
+
 #### run in development mode
 
     grunt
