@@ -42,9 +42,12 @@ You will need to have a redis instance running locally.
     }
 
 #### create log files
-
-    touch /solarcrusaders/logs/loader.log
-    touch /solarcrusaders/logs/server.log
+    
+    // make sure you're in the root solar
+    // crusaders directory
+    mkdir /logs
+    touch /logs/loader.log
+    touch /logs/server.log
 
 #### run in development mode
 
