@@ -3,13 +3,18 @@ require('./polyfill');
 
 var core = module.exports = require('../libs/pixi.js/src/core');
     core.mesh = require('../libs/pixi.js/src/mesh');
-    core.particles = require('../libs/pixi.js/src/particles');
+    // core.particles = require('../libs/pixi.js/src/particles');
     core.filters = {
-      BlurFilter: require('../libs/pixi.js/src/filters/blur/BlurFilter')
+      BlurFilter: require('../libs/pixi.js/src/filters/blur/BlurFilter')//,
+      // DisplacementFilter: require('../libs/pixi.js/src/filters/displacement/DisplacementFilter'),
+      // ColorMatrixFilter: require('../libs/pixi.js/src/filters/colormatrix/ColorMatrixFilter')
     };
+    
+    // sc pixi shims
+    core.TRANSFORM_MODE.DEFAULT = 1;
 
 // add core plugins.
-// core.extras         = require('../libs/pixi.js/src/extras');
+// core.extras         = require('../libs/pixi.js/src/extras'); 
 // core.filters        = require('../libs/pixi.js/src/filters');
 // core.interaction    = require('../libs/pixi.js/src/interaction');
 // core.loaders        = require('../libs/pixi.js/src/loaders');
