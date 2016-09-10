@@ -58,7 +58,7 @@ Install on Windows Subsystem for Linux:
 
 ## Run in Windows Subsystem for Linux
 
-It is recommended that you clone solarcrusaders into /mnt/c/Users/*/Documents/* if you'd like to use Sublime or Windows IDE to edit project src files.
+It is recommended that you clone solarcrusaders into /mnt/c/Users/name/Documents/ if you'd like to use Sublime or Windows IDE to edit project src files.
 
 #### start redis
 
