@@ -11,13 +11,10 @@ var engine = require('engine'),
     
     HeaderPane = require('../ui/panes/HeaderPane'),
     BottomPane = require('../ui/panes/BottomPane'),
-    ShipPane = require('../ui/panes/ShipPane'),
-    // ShipFittingPane = require('../ui/panes/Ship'),
 
     Alert = require('../ui/components/Alert'),
     FlashMessage = require('../ui/components/FlashMessage'),
     Modal = require('../ui/components/Modal'),
-    Selection = require('../ui/components/Selection'),
 
     RegistrationForm = require('../ui/html/RegistrationForm');
 
@@ -40,9 +37,9 @@ GUIState.prototype.preload = function() {
   this.game.load.image('full', 'imgs/game/fonts/full.png');
 
   // load tilesets
-  this.game.load.image('deck', 'imgs/game/tilesets/deck-mini.png');
-  this.game.load.image('wall', 'imgs/game/tilesets/wall-mini.png');
-  this.game.load.image('grid', 'imgs/game/tilesets/grid-mini.png');
+  // this.game.load.image('deck', 'imgs/game/tilesets/deck-mini.png');
+  // this.game.load.image('wall', 'imgs/game/tilesets/wall-mini.png');
+  // this.game.load.image('grid', 'imgs/game/tilesets/grid-mini.png');
     
   // load ship tilemap
   this.game.load.tilemap('ship-tilemap', 'data/ship-mini.json');
@@ -55,15 +52,14 @@ GUIState.prototype.preload = function() {
   this.game.load.atlasJSONHash('texture-atlas', 'imgs/game/texture-atlas.png', 'data/texture-atlas.json');
 
   // spritesheet
-  this.game.load.spritesheet('crew', 'imgs/game/spritesheets/crew-mini.png', 16, 16);
-  this.game.load.spritesheet('door', 'imgs/game/spritesheets/door-mini.png', 16, 16);
+  // this.game.load.spritesheet('crew', 'imgs/game/spritesheets/crew-mini.png', 16, 16);
+  // this.game.load.spritesheet('door', 'imgs/game/spritesheets/door-mini.png', 16, 16);
 };
 
 GUIState.prototype.create = function() {
   var game = this.game;
 
   this.focus = new Focus(game);
-  this.selection = new Selection(game);
 
   this.modalComponent = new Modal(game);
   this.modalComponent.visible = false;
@@ -77,32 +73,11 @@ GUIState.prototype.create = function() {
 
   this.headerPane = new HeaderPane(game);
 
-  // this.shipFittingPane = new ShipFittingPane(game);
-
-  this.shipPanel = new Panel(game, new FlowLayout(Layout.LEFT, Layout.TOP, Layout.VERTICAL, 6));
-  this.shipPanel.setPadding(6);
-  this.shipPanel.addPanel(Layout.NONE,
-    this.shipPane =
-      new ShipPane(game, {
-        player: true
-      }));
-
-  this.targetPanel = new Panel(game, new FlowLayout(Layout.RIGHT, Layout.TOP, Layout.VERTICAL, 6));
-  this.targetPanel.setPadding(6);
-  this.targetPanel.addPanel(Layout.NONE,
-    this.targetPane =
-      new ShipPane(game, {
-        player: false
-      }));
-
   this.topPanel = new Panel(game, new FlowLayout(Layout.CENTER, Layout.TOP, Layout.HORIZONTAL, 6));
   this.topPanel.addPanel(Layout.NONE, this.headerPane);
 
   this.bottomPane = new BottomPane(game);
 
-  this.centerPanel.addPanel(Layout.CENTER, this.shipPanel);
-  this.centerPanel.addPanel(Layout.RIGHT, this.targetPanel);
-  
   this.basePanel.addPanel(Layout.TOP, this.topPanel);
   this.basePanel.addPanel(Layout.BOTTOM, this.bottomPane);
 
@@ -112,7 +87,6 @@ GUIState.prototype.create = function() {
 
   // this.root.invalidate = this.invalidate.bind(this.root);
 
-  this.root.addPanel(Layout.STRETCH, this.selection);
   this.root.addPanel(Layout.STRETCH, this.basePanel);
   this.root.addPanel(Layout.STRETCH, this.centerPanel);
   this.root.addPanel(Layout.STRETCH, this.modalComponent);
@@ -182,10 +156,8 @@ GUIState.prototype.modal = function(show, content, lock, visible) {
   if(visible === undefined) { visible = true; }
 
   if(lock && show) {
-    this.selection.stop();
     this.game.input.keyboard.stop();
   } else {
-    this.selection.start();
     this.game.input.keyboard.start();
   }
 

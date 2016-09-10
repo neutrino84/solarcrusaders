@@ -25,20 +25,20 @@ function BottomPane(game) {
   });
 
   this.leftPane = new Pane(game, this.settings.pane);
-  this.centerPane = new Pane(game, this.settings.pane);
-  this.rightPane = new Pane(game, this.settings.pane);
+  // this.centerPane = new Pane(game, this.settings.pane);
+  // this.rightPane = new Pane(game, this.settings.pane);
 
   this.enhancementPane = new EnhancementPane(game);
   this.vitalsPane = new VitalsPane(game);
-  this.inventoryPane = new InventoryPane(game);
+  // this.inventoryPane = new InventoryPane(game);
 
-  this.leftPane.addPanel(Layout.NONE, this.enhancementPane);
+  this.leftPane.addPanel(Layout.STRETCH, this.enhancementPane);
   this.leftPane.addPanel(Layout.NONE, this.vitalsPane);
-  this.centerPane.addPanel(Layout.NONE, this.inventoryPane);
+  // this.centerPane.addPanel(Layout.NONE, this.inventoryPane);
 
   this.addPanel(Layout.NONE, this.leftPane);
-  this.addPanel(Layout.NONE, this.centerPane);
-  this.addPanel(Layout.NONE, this.rightPane);
+  // this.addPanel(Layout.NONE, this.centerPane);
+  // this.addPanel(Layout.NONE, this.rightPane);
 };
 
 BottomPane.prototype = Object.create(Pane.prototype);

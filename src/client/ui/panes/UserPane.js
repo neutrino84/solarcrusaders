@@ -116,7 +116,7 @@ function UserPane(game, settings) {
   this.reputationLabel = new Label(game, '0', this.settings.label);
   this.killsLabel = new Label(game, '0/0/0', this.settings.label);
 
-  this.user.addPanel(Layout.NONE, this.editionLabel);
+  // this.user.addPanel(Layout.NONE, this.editionLabel);
   this.user.addPanel(Layout.NONE, this.usernameLabel);
   this.user.addPanel(Layout.NONE, this.creditsImage);
   this.user.addPanel(Layout.NONE, this.creditsLabel);
@@ -124,7 +124,7 @@ function UserPane(game, settings) {
   this.user.addPanel(Layout.NONE, this.reputationLabel);
   this.user.addPanel(Layout.NONE, this.killsImage);
   this.user.addPanel(Layout.NONE, this.killsLabel);
-  this.user.addPanel(Layout.NONE, this.logoutButton);
+  // this.user.addPanel(Layout.NONE, this.logoutButton);
 
   this.addPanel(Layout.STRETCH, this.user);
 
@@ -143,20 +143,26 @@ UserPane.prototype.stop = function() {
 };
 
 UserPane.prototype.login = function(user) {
-  this.visible = true;
-  this.usernameLabel.text = user.username;
-  this.creditsLabel.text = engine.Math.formatMoney(user.credits);
-  this.reputationLabel.text = user.reputation;
-  this.updateEdition(user);
+  // this.visible = true;
+  this._updateUser(user);
+  this._updateEdition(user);
   this.invalidate(true);
 };
 
 UserPane.prototype.logout = function() {
-  this.visible = false;
-  this.invalidate(true)
+  // this.visible = false;
+  this._updateUser()
+  this.invalidate(true);
 };
 
-UserPane.prototype.updateEdition = function(data) {
+UserPane.prototype._updateUser = function() {
+  var user = user || this.game.auth.user;
+  this.usernameLabel.text = user.username;
+  this.creditsLabel.text = engine.Math.formatMoney(user.credits);
+  this.reputationLabel.text = user.reputation;
+};
+
+UserPane.prototype._updateEdition = function(data) {
   var group,
       edition = data.edition;
   switch(edition) {
@@ -167,7 +173,7 @@ UserPane.prototype.updateEdition = function(data) {
     case 'lieutenant':
       group = 'beta'; break;
     case 'none':
-      group = 'updating'; break;
+      group = 'alpha'; break;
     default:
       group = edition;
   }
