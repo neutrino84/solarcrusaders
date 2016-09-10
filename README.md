@@ -15,8 +15,8 @@ You will need to have a redis instance running locally.
 
 #### update your hosts file
 
-   // Linux/OSX: /etc/hosts
-   // Windows 10: C:\Windows\System32\Drivers\etc\hosts
+    // Linux/OSX: /etc/hosts
+    // Windows 10: C:\Windows\System32\Drivers\etc\hosts
 
     #
     # Hosts file
