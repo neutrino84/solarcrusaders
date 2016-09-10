@@ -11,6 +11,7 @@ function Camera(game, x, y, width, height) {
   
   this.view = new Rectangle(x, y, width, height);
   this.bounds = new Rectangle(x, y, width, height);
+  this.offset = new Point(0, 0);
 
   this.smooth = false;
   this.smoothStep = 0.1;
@@ -22,11 +23,9 @@ function Camera(game, x, y, width, height) {
 
   this._shaking = 0.0;
   this._smooth = false;
-  this._smoothStep = null;
   this._position = new Point();
   this._targetPosition = new Point();
   this._smoothPosition = new Point();
-  this._smoothTween = this.game.tweens.create(this);
 };
 
 Camera.FOLLOW_LOCKON = 0;
@@ -95,6 +94,7 @@ Camera.prototype.update = function() {
 
 Camera.prototype.updateTarget = function() {
   var x, y, distance,
+      offset = this.offset,
       smoothPosition = this._smoothPosition,
       targetPosition = this._targetPosition;
       targetPosition.copyFrom(this.target);
@@ -116,28 +116,14 @@ Camera.prototype.updateTarget = function() {
       y = targetPosition.y - this.deadzone.bottom;
     }
   } else {
-    x = targetPosition.x;
-    y = targetPosition.y;
+    x = targetPosition.x + offset.x;
+    y = targetPosition.y + offset.y;
   }
 
   if(this.smooth) {
-    if(!this._smooth) {
-      distance = targetPosition.distance(this.position);
-      if(distance > this.smoothThreshhold) {
-        this._smooth = true;
-        this._smoothStep = 0;
-        this._smoothTween && this._smoothTween.isRunning && this._smoothTween.stop();
-        this._smoothTween.to({ _smoothStep: 1.0 }, distance * 48.0, Easing.Default, true);
-        this._smoothTween.once('complete', function() {
-          this._smooth = false;
-        }, this);
-      }
-    }
-    if(this._smooth) {
-      smoothPosition = Point.interpolate(this.position, { x: x, y: y }, this._smoothStep, smoothPosition);
-      x = smoothPosition.x;
-      y = smoothPosition.y;
-    }
+    smoothPosition = Point.interpolate(this.position, { x: x, y: y }, 0.1, smoothPosition);
+    x = smoothPosition.x;
+    y = smoothPosition.y;
   }
 
   this.setPosition(x, y);
@@ -190,9 +176,6 @@ Camera.prototype.setPosition = function(x, y) {
   var view = this.view;
       view.x = x-view.halfWidth;
       view.y = y-view.halfHeight;
-  if(this.bounds) {
-    this.checkBounds();
-  }
 };
 
 Camera.prototype.pan = function(x, y) {
