@@ -6,7 +6,7 @@ var Sprite = require('./Sprite'),
 function Particle(game, key, frame) {
   Sprite.call(this, game, key, frame);
 
-  this.position = new Point(0, 0);
+  // this.position = new Point(0, 0);
   this.vector = new Point(0, 0);
   this.velocity = new Point(0, 0);
   this.drag = new Point(0, 0);
@@ -39,9 +39,9 @@ Particle.prototype.update = function() {
   // this.angularVelocity -= this.angularDrag * timeStep;
 
   // momentum
-  this.position.add(
-    this.velocity.x * this.vector.x * timeStep,
-    this.velocity.y * this.vector.y * timeStep
+  this.position.set(
+    this.position.x + this.velocity.x * this.vector.x * timeStep,
+    this.position.y + this.velocity.y * this.vector.y * timeStep
   );
 
   // friction
