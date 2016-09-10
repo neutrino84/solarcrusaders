@@ -50,9 +50,11 @@ You will need to have a redis instance running locally.
     touch /logs/server.log
 
 #### run in development mode
-
+    
+    ./solarcrusaders redis
     grunt
 
 #### run without development packages
 
+    ./solarcrusaders redis
     ./solarcrusaders start
