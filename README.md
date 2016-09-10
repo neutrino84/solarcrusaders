@@ -15,6 +15,9 @@ You will need to have a redis instance running locally.
 
 #### update your hosts file
 
+   // Linux/OSX: /etc/hosts
+   // Windows 10: C:\Windows\System32\Drivers\etc\hosts
+
     #
     # Hosts file
     #
@@ -30,7 +33,7 @@ You will need to have a redis instance running locally.
       "daemon": false,
       "production": false,
       "url": "http://localhost.dev:4567",
-      "secret": "121daf16-401d-409b-8b63-12232c0a211c",
+      "secret": "",
       "database": "redis",
       "redis": {
         "host": "127.0.0.1",
@@ -43,18 +46,28 @@ You will need to have a redis instance running locally.
 
 #### create log files
     
-    // make sure you're in the root solar
-    // crusaders directory
+    // make sure you're in the
+    // root solarcrusaders directory
     mkdir /logs
     touch /logs/loader.log
     touch /logs/server.log
 
+#### start redis
+
+    sudo service redis-server start
+
+## Run in Windows 10 Ubuntu Subsystem
+
+#### run without app loader
+
+    node app.js
+
+## Run in OSX or Linux
+
 #### run in development mode
-    
-    ./solarcrusaders redis
+
     grunt
 
 #### run without development packages
 
-    ./solarcrusaders redis
     ./solarcrusaders start
