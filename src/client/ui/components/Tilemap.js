@@ -123,15 +123,15 @@ Tilemap.prototype.createLayers = function() {
       mask.renderable = false;
 
       outline = this.layers['outline'] = new ImageView(game);
-      outline.texture = game.cache.getRenderTexture(this.ship.name + '-outline').texture;
-      outline.blendMode = engine.BlendMode.ADD;
-      outline.tint = 0x5588bb;
-      outline.alpha = 1.75;
-      outline.pivot.set(outline.width/2, outline.height/2);
-      outline.position.set(this.tilemap.widthInPixels/2, this.tilemap.heightInPixels/2);
-      outline.scale.set(1.25, 1.25);
-      outline.rotation = global.Math.PI;
-      outline.mask = mask;
+      // outline.texture = game.cache.getRenderTexture(this.ship.name + '-outline').texture;
+      // outline.blendMode = engine.BlendMode.ADD;
+      // outline.tint = 0x5588bb;
+      // outline.alpha = 1.75;
+      // outline.pivot.set(outline.width/2, outline.height/2);
+      // outline.position.set(this.tilemap.widthInPixels/2, this.tilemap.heightInPixels/2);
+      // outline.scale.set(1.25, 1.25);
+      // outline.rotation = global.Math.PI;
+      // outline.mask = mask;
 
       this.colorBlend.target = outline;
 
