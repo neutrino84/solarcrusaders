@@ -38,7 +38,6 @@ module.exports = function(grunt) {
         dest: 'public/build/engine.js',
         options: {
           external: ['pixi', 'socket'],
-          watch: true,
           alias: {
             engine: './src/client/engine/index.js'
           },
@@ -50,7 +49,6 @@ module.exports = function(grunt) {
         dest: 'public/build/solar.js',
         options: {
           external: ['pixi', 'engine', 'xhr'],
-          watch: true,
           transform: ['glslify', 'browserify-versionify']
         }
       },
@@ -58,7 +56,6 @@ module.exports = function(grunt) {
         src: ['src/website/index.js'],
         dest: 'public/build/website.js',
         options: {
-          watch: true,
           alias: {
             jquery: './src/libs/jquery/dist/jquery',
             fullpage: './src/libs/fullpage.js/jquery.fullPage',
@@ -155,8 +152,11 @@ module.exports = function(grunt) {
     'watch': {
       dev: {
         files: ['src/**/*', 'views/**/*', 'public/build/solar.js', 'public/build/engine.js'],
-        tasks: ['develop:dev'],
-        options: { nospawn: true }
+        tasks: ['build:solar', 'develop:dev'],
+        options: {
+          nospawn: true//,
+          // mode: 'poll'
+        }
       }
     },
 
