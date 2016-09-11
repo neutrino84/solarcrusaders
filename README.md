@@ -14,6 +14,25 @@ Install on Windows Subsystem for Linux:
 
 #### initialize required packages
 
+##### You will need to install nodejs, bower, and grunt.
+
+Install nodejs on OSX:
+    
+    brew install node
+
+Install nodejs on Windows Subsystem for Linux:
+    
+    // you can use node --version 4.x or 6.x
+    curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+    sudo apt-get install -y nodejs
+
+Install bower and grunt:
+
+    sudo npm install -g bower
+    sudo npm install -g grunt-cli
+
+Install solarcrusaders required packages
+
     npm install
     bower install
 
@@ -52,11 +71,11 @@ Install on Windows Subsystem for Linux:
     
     // make sure you're in the
     // root solarcrusaders directory
-    mkdir /logs
-    touch /logs/loader.log
-    touch /logs/server.log
+    mkdir ./logs
+    touch ./logs/loader.log
+    touch ./logs/server.log
 
-## Run in Windows Subsystem for Linux
+## Run the game server in Windows Subsystem for Linux
 
 It is recommended that you clone solarcrusaders into /mnt/c/Users/name/Documents/ if you'd like to use Sublime or Windows IDE to edit project src files.
 
@@ -77,11 +96,11 @@ Every time you make changes to ./solarcrusaders/src/* you will need to re-run:
 
     grunt build:solar
 
-#### run without app loader
+#### run in development mode
 
     node app.js
 
-## Run in OSX or Linux
+## Run the game server in OSX or Linux
 
 #### start redis-server
 
@@ -91,6 +110,10 @@ Every time you make changes to ./solarcrusaders/src/* you will need to re-run:
 
     grunt
 
-#### run without development packages
+#### run in production mode
 
     ./solarcrusaders start
+
+## See if your local game server is running
+
+Open a web browser and navigate to http://play.localhost.dev:4567/
