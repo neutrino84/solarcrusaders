@@ -154,8 +154,7 @@ module.exports = function(grunt) {
         files: ['src/**/*', 'views/**/*', 'public/build/solar.js', 'public/build/engine.js'],
         tasks: ['build:solar', 'develop:dev'],
         options: {
-          nospawn: true//,
-          // mode: 'poll'
+          nospawn: true
         }
       }
     },
