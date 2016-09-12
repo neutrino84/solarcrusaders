@@ -85,8 +85,6 @@ It is recommended that you clone solarcrusaders into /mnt/c/Users/name/Documents
 
 #### build core and solar client javascript
 
-First comment out all lines with "watch: true" in Gruntfile.js, there should be 3 instances. Windows Subsystem for Linux does not yet properly support watching files for changes.
-
 Then run:
 
     grunt build:core
