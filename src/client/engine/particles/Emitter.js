@@ -151,6 +151,13 @@ Emitter.prototype.makeParticles = function(keys, frames, quantity, collide, coll
 
     particle.exists = false;
     particle.visible = false;
+
+    // delete this eventually
+    // but in pixi.js
+    if(!particle.anchor.cb) {
+      particle.anchor.cb = function() {};
+    }
+    
     particle.anchor.copy(this.particleAnchor);
 
     this.add(particle);

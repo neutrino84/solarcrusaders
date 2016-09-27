@@ -27,6 +27,9 @@ var pixi = require('pixi'),
       global.game = game;
     };
 
+// edit default pixi env
+pixi.TRANSFORM_MODE.DEFAULT = 1;
+
 engine.Device.whenReady(function() {
   var el = global.document.getElementById('content'),
       dialog = global.document.getElementById('dialog'),

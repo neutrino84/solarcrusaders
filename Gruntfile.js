@@ -30,7 +30,7 @@ module.exports = function(grunt) {
           alias: {
             pixi: './src/client/pixi.js'
           },
-          transform: [['babelify', { presets: ['es2015'] }], 'glslify', 'browserify-versionify']
+          transform: [['babelify', {presets: [['es2015', {'loose': true}]]}], 'glslify', 'browserify-versionify']
         }
       },
       engine: {

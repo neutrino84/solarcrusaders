@@ -1,20 +1,19 @@
 
-import mesh from '../libs/pixi.js/src/mesh';
-import particles from '../libs/pixi.js/src/particles';
-import extract from '../libs/pixi.js/src/extract';
-import prepare from '../libs/pixi.js/src/prepare';
-import core from '../libs/pixi.js/src/core';
+// import polyfills first
+import './polyfill';
 
-// run the polyfills
-require('./polyfill');
+// export lib
+import * as extras from '../libs/pixi.js/src/extras';
+import * as mesh from '../libs/pixi.js/src/mesh';
+import * as particles from '../libs/pixi.js/src/particles';
+import * as extract from '../libs/pixi.js/src/extract';
+import * as prepare from '../libs/pixi.js/src/prepare';
 
-// sc pixi shims
-core.TRANSFORM_MODE.DEFAULT = 1;
-
-// add core plugins
-module.exports = Object.assign(core, {
+export * from '../libs/pixi.js/src/core';
+export {
+  extras,
   extract,
   mesh,
   particles,
   prepare
-});
+};
