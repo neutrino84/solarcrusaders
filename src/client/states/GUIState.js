@@ -12,6 +12,8 @@ var engine = require('engine'),
     HeaderPane = require('../ui/panes/HeaderPane'),
     BottomPane = require('../ui/panes/BottomPane'),
 
+    Leaderboard = require('../ui/panes/Leaderboard'),
+
     Alert = require('../ui/components/Alert'),
     FlashMessage = require('../ui/components/FlashMessage'),
     Modal = require('../ui/components/Modal'),
@@ -71,6 +73,9 @@ GUIState.prototype.create = function() {
   this.basePanel = new Panel(game, new BorderLayout(0, 0));
   this.basePanel.setPadding(6, 0, 0, 0);
 
+  //added leaderBoard pane
+  this.leaderBoard = new Leaderboard(game);
+
   this.headerPane = new HeaderPane(game);
 
   this.topPanel = new Panel(game, new FlowLayout(Layout.CENTER, Layout.TOP, Layout.HORIZONTAL, 6));
@@ -81,15 +86,22 @@ GUIState.prototype.create = function() {
   this.basePanel.addPanel(Layout.TOP, this.topPanel);
   this.basePanel.addPanel(Layout.BOTTOM, this.bottomPane);
 
+
+  // leaderBoard pane added to canvas
+  this.leaderBoardPanel = new Panel(game, new FlowLayout(Layout.RIGHT, Layout.TOP, Layout.HORIZONTAL, 6));
+  this.leaderBoardPanel.addPanel(Layout.NONE, this.leaderBoard);
+  this.leaderBoardPanel.visible = true;
+
   this.root = new Panel(game, new StackLayout());
   this.root.setSize(game.width, game.height);
-  this.root.visible = false;
+  this.root.visible = true;
 
   // this.root.invalidate = this.invalidate.bind(this.root);
 
   this.root.addPanel(Layout.STRETCH, this.basePanel);
   this.root.addPanel(Layout.STRETCH, this.centerPanel);
   this.root.addPanel(Layout.STRETCH, this.modalComponent);
+  this.root.addPanel(Layout.STRETCH, this.leaderBoardPanel);
 
   // add root to stage
   this.game.stage.addChild(this.root);
