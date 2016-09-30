@@ -12,7 +12,7 @@ var engine = require('engine'),
     HeaderPane = require('../ui/panes/HeaderPane'),
     BottomPane = require('../ui/panes/BottomPane'),
 
-    Leaderboard = require('../ui/panes/Leaderboard'),
+    LeaderboardPane = require('../ui/panes/LeaderboardPane'),
 
     Alert = require('../ui/components/Alert'),
     FlashMessage = require('../ui/components/FlashMessage'),
@@ -74,7 +74,7 @@ GUIState.prototype.create = function() {
   this.basePanel.setPadding(6, 0, 0, 0);
 
   //added leaderBoard pane
-  this.leaderBoard = new Leaderboard(game);
+  this.leaderBoard = new LeaderboardPane(game);
 
   this.headerPane = new HeaderPane(game);
 
@@ -108,7 +108,7 @@ GUIState.prototype.create = function() {
 
   this.auth.on('sync', this.login, this);
   this.auth.on('data', this.data, this);
-  this.auth.on('disconnected', this._disconnected, this);
+  //this.auth.on('disconnected', this._disconnected, this);
 
   this.game.on('gui/modal', this.modal, this);
   this.game.on('fpsProblem', this._fpsProblem, this);

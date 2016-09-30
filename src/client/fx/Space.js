@@ -96,7 +96,7 @@ Space.prototype._renderWebGL = function(renderer) {
   uTransform[1] = (this.tilePosition.y / this._height) + 0.5 - ((1-this.tileScale.y) * (this.tilePosition.y / this._height));
   uTransform[2] = (textureBaseWidth / this._width) * this.tileScale.x;
   uTransform[3] = (textureBaseHeight / this._height) * this.tileScale.y;
-  
+
   glData.shader.uniforms.uTransform = uTransform;
   glData.shader.uniforms.alpha = this.worldAlpha;
   glData.shader.uniforms.uMapSampler = 1;
