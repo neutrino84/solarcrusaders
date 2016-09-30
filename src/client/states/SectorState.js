@@ -1,5 +1,6 @@
 var engine = require('engine'),
     Space = require('../fx/Space'),
+    SpaceMap = require('../fx/SpaceMap'),
     Planet = require('../fx/Planet'),
     NebulaCluster = require('../fx/NebulaCluster'),
     // ShockwaveManager = require('../fx/ShockwaveManager'),
@@ -76,6 +77,7 @@ SectorState.prototype.create = function() {
   this.createAsteroids();
   this.createSpace();
   this.createSnow();
+  this.createSpaceMap();
 
   // AUDIO TEST
   // this.sound = this.game.sound.add('background', 0, true);
@@ -117,7 +119,7 @@ SectorState.prototype.createSpace = function() {
 
   this.game.world.static.add(this.space);
   this.game.world.foreground.add(this.nebula);
-  this.game.world.background.add(this.planet);
+  //this.game.world.background.add(this.planet);
 };
 
 SectorState.prototype.createManagers = function() {
@@ -144,6 +146,11 @@ SectorState.prototype.createAsteroids = function() {
 
     this.game.world.foreground.add(asteroid);
   }
+};
+
+SectorState.prototype.createSpaceMap = function() {
+  this.spaceMap = new SpaceMap(this.game);
+  this.game.stage.addChild(this.spaceMap);
 };
 
 SectorState.prototype.focus = function() {

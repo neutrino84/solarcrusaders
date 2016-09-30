@@ -98,6 +98,7 @@ Alert.prototype.constructor = Alert;
 Alert.prototype._alert = function(message, confirmation, title) {
   this.title.text = title || 'alert';
   this.message.text = message || '';
+
   if(confirmation === false) {
     this.button.visible = false;
   } else {

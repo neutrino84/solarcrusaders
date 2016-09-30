@@ -9,7 +9,7 @@ function getRandomInt ( min, max ) {
 }
 
 
-function Leaderboard ( game, settings ) {
+function LeaderboardPane ( game, settings ) {
     Pane.call( this, game, {
         width : 188,
         height : 250,
@@ -132,15 +132,15 @@ function Leaderboard ( game, settings ) {
     game.clock.events.loop(2000, this._updateInfo, this);
 };
 
-Leaderboard.prototype = Object.create( Pane.prototype );
-Leaderboard.prototype.constructor = Leaderboard;
+LeaderboardPane.prototype = Object.create( Pane.prototype );
+LeaderboardPane.prototype.constructor = LeaderboardPane;
 
 
-Leaderboard.prototype.validate = function () {
+LeaderboardPane.prototype.validate = function () {
     return Pane.prototype.validate.call( this );
 };
 
-Leaderboard.prototype.addUsers = function(){
+LeaderboardPane.prototype.addUsers = function(){
 
     for ( var i = 0; i < this.max; i++ ) {
 
@@ -150,7 +150,7 @@ Leaderboard.prototype.addUsers = function(){
 
 };
 
-Leaderboard.prototype.addPlayer = function ( user ) {
+LeaderboardPane.prototype.addPlayer = function ( user ) {
 
     user.uuid = this.uuid++;
 
@@ -165,7 +165,7 @@ Leaderboard.prototype.addPlayer = function ( user ) {
 };
 
 
-Leaderboard.prototype.removePlayer = function ( user ) {
+LeaderboardPane.prototype.removePlayer = function ( user ) {
 
     this.users.splice(this.users.indexOf(user), 1);
 
@@ -173,7 +173,7 @@ Leaderboard.prototype.removePlayer = function ( user ) {
 
 };
 
-Leaderboard.prototype.redraw = function (){
+LeaderboardPane.prototype.redraw = function (){
 
     draw( this.currentUserRow, this.currentUser);
 
@@ -212,7 +212,7 @@ Leaderboard.prototype.redraw = function (){
 
 };
 
-Leaderboard.prototype.getSortedUsers = function(){
+LeaderboardPane.prototype.getSortedUsers = function(){
 
     this.sortedUsers = this.users.concat().splice(0, 10);
 
@@ -223,7 +223,7 @@ Leaderboard.prototype.getSortedUsers = function(){
 };
 
 
-Leaderboard.prototype._updateInfo = function () {
+LeaderboardPane.prototype._updateInfo = function () {
 
     for(var i = 0, j = this.users.length; i < j; i++){
         this.users[i ].score = getRandomInt(0, 500 ).toString();
@@ -253,4 +253,4 @@ Leaderboard.prototype._updateInfo = function () {
 
 };
 
-module.exports = Leaderboard;
+module.exports = LeaderboardPane;
