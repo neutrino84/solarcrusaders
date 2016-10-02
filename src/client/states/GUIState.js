@@ -100,15 +100,16 @@ GUIState.prototype.create = function() {
 
   this.root.addPanel(Layout.STRETCH, this.basePanel);
   this.root.addPanel(Layout.STRETCH, this.centerPanel);
-  this.root.addPanel(Layout.STRETCH, this.modalComponent);
   this.root.addPanel(Layout.STRETCH, this.leaderBoardPanel);
+  this.root.addPanel(Layout.STRETCH, this.modalComponent);
+
 
   // add root to stage
   this.game.stage.addChild(this.root);
 
   this.auth.on('sync', this.login, this);
   this.auth.on('data', this.data, this);
-  //this.auth.on('disconnected', this._disconnected, this);
+  this.auth.on('disconnected', this._disconnected, this);
 
   this.game.on('gui/modal', this.modal, this);
   this.game.on('fpsProblem', this._fpsProblem, this);

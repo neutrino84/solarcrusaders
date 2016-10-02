@@ -119,7 +119,7 @@ SectorState.prototype.createSpace = function() {
 
   this.game.world.static.add(this.space);
   this.game.world.foreground.add(this.nebula);
-  //this.game.world.background.add(this.planet);
+  this.game.world.background.add(this.planet);
 };
 
 SectorState.prototype.createManagers = function() {
@@ -198,6 +198,7 @@ SectorState.prototype.preRender = function() {
 SectorState.prototype.resize = function(width, height) {
   this.space && this.space.resize(width, height);
   this.snow && this.snow.resize(width, height);
+  this.spaceMap && this.spaceMap.resize(width, height);
 };
 
 // paused = function() {};
