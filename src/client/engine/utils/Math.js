@@ -421,6 +421,14 @@ module.exports = {
     } else {
       return (a - base) / b;
     }
+  },
+
+  getRandomInt: function (min, max) {
+    return Math.floor(Math.random() * (max - min)) + min;
+  },
+
+  reverseVector: function(v){
+    return {x: v.x * -1, y: v.y * -1};
   }
 
 };
