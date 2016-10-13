@@ -73,6 +73,7 @@ Routes.prototype.init = function(next) {
    * Play Subdomain
    */
   this.play.get('/', function(req, res, next) {
+
     res.render('play',
       Utils.extend({
         title: 'Play | Solar Crusaders',

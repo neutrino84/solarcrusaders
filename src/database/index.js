@@ -41,8 +41,35 @@ Database.prototype.init = function(next) {
   this.schema.client = this.client;
   this.schema.settings.database = db;
   this.schema.adapter.initialize(this.client);
+  var scope = this;
   this.schema.on('connected', function() {
     winston.info('[Database] Redis client ready...');
+    //this.client.set('myKey', 'Hello Redis5', function (err, repl) {
+    //  if (err) {
+    //    console.log('Some error: ' + err);
+    //  } else {
+    //    scope.client.get('sess:tb4drmggrdJdLzIgjJ7xuctBJZqL7EEU', function (err, repl) {
+    //      if (err) {
+    //        console.log('Error: ' + err);
+    //      } else if (repl) {
+    //        console.log('Key: ' + repl);
+    //      } else {
+    //        console.log('Key not found.' + repl);
+    //
+    //      };
+    //    });
+    //    scope.client.keys('*', function (err, repl) {
+    //      if (err) {
+    //        console.log('Error: ' + err);
+    //      } else if (repl) {
+    //        console.log('Keys: ' + repl);
+    //      } else {
+    //        console.log('Key not found.' + repl);
+    //
+    //      };
+    //    });
+    //  };
+    //});
     next();
   });
 };

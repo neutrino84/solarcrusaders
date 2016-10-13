@@ -48,6 +48,17 @@ Authentication.prototype.init = function() {
       req.session.user = guest.toStreamObject();
 
       req.session.save(function() {
+        self.io.on('connection', function(socket) {
+          socket.handshake.session.user = req.session.user;
+          self.game.emit('auth/connection', socket);
+            socket.on('disconnect', function() {
+              var session = this.handshake.session,
+                  socket = session.socket;
+
+              winston.info('[Authentication] Socket ' + socket + ' closed');
+              self.game.emit('auth/disconnect', this);
+            });
+        });
         next();
       });
     } else {
@@ -55,17 +66,20 @@ Authentication.prototype.init = function() {
     }
   });
 
-  // monitor socket disconnect
-  this.io.on('connection', function(socket) {
-    self.game.emit('auth/connection', socket);
-    socket.on('disconnect', function() {
-      var session = this.handshake.session,
-          socket = session.socket;
 
-      winston.info('[Authentication] Socket ' + socket + ' closed');
-      self.game.emit('auth/disconnect', this);
-    });
-  });
+  // monitor socket disconnect
+  //this.io.on('connection', function(socket) {
+  //  self.game.emit('auth/connection', socket);
+  //  socket.on('disconnect', function() {
+  //    var session = this.handshake.session,
+  //        socket = session.socket;
+  //
+  //    winston.info('[Authentication] Socket ' + socket + ' closed');
+  //    self.game.emit('auth/disconnect', this);
+  //  });
+  //});
+
+
 };
 
 Authentication.prototype.register = function(req, res, next) {
