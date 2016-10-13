@@ -203,6 +203,7 @@ EnhancementPane.prototype._player = function(ship) {
   }
 
   this.invalidate(true);
+  this.invalidate(false);
 };
 
 

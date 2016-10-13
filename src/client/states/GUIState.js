@@ -12,7 +12,7 @@ var engine = require('engine'),
     HeaderPane = require('../ui/panes/HeaderPane'),
     BottomPane = require('../ui/panes/BottomPane'),
 
-    Leaderboard = require('../ui/panes/Leaderboard'),
+    Leaderboard = require('../ui/panes/LeaderBoard'),
 
     Alert = require('../ui/components/Alert'),
     FlashMessage = require('../ui/components/FlashMessage'),
@@ -126,7 +126,7 @@ GUIState.prototype.login = function(user) {
     this.headerPane.invalidate(true);
     this.registrationForm && (this.registrationForm = this.registrationForm.destroy());
   } else {
-    this.headerPane.logout()
+    this.headerPane.logout();
     this.registrationForm = new RegistrationForm(game);
   }
   if(this.modalComponent.visible) {
