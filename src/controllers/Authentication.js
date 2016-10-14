@@ -39,11 +39,14 @@ Authentication.prototype.init = function() {
 
   // create guest user
   this.routes.play.get('/', function(req, res, next) {
+
     if(!req.session.user) {
       var name = Generator.getUsername(),
           username = Generator.getGuest(),
           guest = new self.model.User({ name: name, username: username });
+
       req.session.user = guest.toStreamObject();
+
       req.session.save(function() {
         next();
       });
@@ -58,6 +61,7 @@ Authentication.prototype.init = function() {
     socket.on('disconnect', function() {
       var session = this.handshake.session,
           socket = session.socket;
+
       winston.info('[Authentication] Socket ' + socket + ' closed');
       self.game.emit('auth/disconnect', this);
     });

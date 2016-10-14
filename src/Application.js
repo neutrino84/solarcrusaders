@@ -89,6 +89,7 @@ Application.prototype.start = function() {
       winston.info('[Application] Starting sockets engine...');
     },
     function(next) {
+
       self.game = new Game(self);
       self.game.init(next);
 

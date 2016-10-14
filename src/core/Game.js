@@ -5,6 +5,7 @@ var EventEmitter = require('eventemitter3'),
     SectorManager = require('./SectorManager');
 
 function Game(app) {
+
   this.app = app;
   this.winston = app.winston;
   this.database = app.database;

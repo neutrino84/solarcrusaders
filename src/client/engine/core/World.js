@@ -23,7 +23,7 @@ World.prototype.boot = function() {
   this.static = new Group(this.game, this.game.stage);
   this.background = new Group(this.game, this.game.stage);
   this.foreground = new Group(this.game, this.game.stage);
-  
+
   // create camera
   this.camera = new Camera(this.game, 0, 0, this.game.width, this.game.height);
   this.game.camera = this.camera;

@@ -12,7 +12,7 @@ var engine = require('engine'),
     HeaderPane = require('../ui/panes/HeaderPane'),
     BottomPane = require('../ui/panes/BottomPane'),
 
-    Leaderboard = require('../ui/panes/Leaderboard'),
+    LeaderboardPane = require('../ui/panes/LeaderboardPane'),
 
     Alert = require('../ui/components/Alert'),
     FlashMessage = require('../ui/components/FlashMessage'),
@@ -74,7 +74,7 @@ GUIState.prototype.create = function() {
   this.basePanel.setPadding(6, 0, 0, 0);
 
   //added leaderBoard pane
-  this.leaderBoard = new Leaderboard(game);
+  this.leaderBoard = new LeaderboardPane(game);
 
   this.headerPane = new HeaderPane(game);
 
@@ -100,8 +100,9 @@ GUIState.prototype.create = function() {
 
   this.root.addPanel(Layout.STRETCH, this.basePanel);
   this.root.addPanel(Layout.STRETCH, this.centerPanel);
-  this.root.addPanel(Layout.STRETCH, this.modalComponent);
   this.root.addPanel(Layout.STRETCH, this.leaderBoardPanel);
+  this.root.addPanel(Layout.STRETCH, this.modalComponent);
+
 
   // add root to stage
   this.game.stage.addChild(this.root);

@@ -132,7 +132,7 @@ EnhancementPane.prototype._select = function(button) {
   
   // disable
   button.disabled = true;
-  
+
   // send event
   game.emit('ship/enhancement/start', {
     uuid: data.uuid,
@@ -197,10 +197,15 @@ EnhancementPane.prototype._player = function(ship) {
     button.id = enhancement;
     button.on('inputUp', this._select, this);
     button.start();
-    
+
     this.buttons[enhancement] = button;
     this.content.addPanel(Layout.NONE, button);
   }
+
+  this.game.input.on('keypress', function(event, key){
+    var button = this.buttons[enhancements[key-1]];
+    button && this._select(button);
+  }, this);
 
   this.invalidate(true);
 };
