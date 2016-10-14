@@ -179,8 +179,7 @@ EnhancementPane.prototype._cancelled = function(data) {
 
 EnhancementPane.prototype._player = function(ship) {
   var enhancement, button,
-      enhancements = ship.details.enhancements,
-      keyboard = this.game.input.keyboard;
+      enhancements = ship.details.enhancements;
 
   // set data object
   this.data = ship.details;
