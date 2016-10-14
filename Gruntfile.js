@@ -10,7 +10,7 @@ module.exports = function(grunt) {
         dest: 'public/build/socket.js',
         options: {
           alias: {
-            socket: './node_modules/socket.io/node_modules/socket.io-client'
+            socket: './node_modules/socket.io-client'
           }
         }
       },
