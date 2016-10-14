@@ -202,6 +202,11 @@ EnhancementPane.prototype._player = function(ship) {
     this.content.addPanel(Layout.NONE, button);
   }
 
+  this.game.input.on('keypress', function(event, key){
+    var button = this.buttons[enhancements[key-1]];
+    button && this._select(button);
+  }, this);
+
   this.invalidate(true);
 };
 
