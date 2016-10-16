@@ -211,6 +211,18 @@ Panel.prototype.setLocation = function(xx, yy) {
   }
 };
 
+Panel.prototype.getAbsoluteLocation = function () {
+  var absLocation;
+  if (this.parent instanceof Panel)
+  {
+    absLocation = this.parent.getAbsoluteLocation();
+    absLocation.x += this.position.x;
+    absLocation.y += this.position.y;
+  } else
+    absLocation = this.position.clone();
+  return absLocation;
+};
+
 Panel.prototype.setPreferredSize = function(width, height) {
   if(width != this.psWidth || height != this.psHeight) {
     this.psWidth = width;

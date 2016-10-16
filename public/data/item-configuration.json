@@ -125,7 +125,8 @@
         "heal": {
           "value": 2.0
         }
-      }
+      },
+      "tooltip": "Increases heal rate by {statValue} hp per second"
     },
     "booster": {
       "cost": -30,
@@ -135,7 +136,8 @@
         "speed": {
           "value": 30.0
         }
-      }
+      },
+      "tooltip": "Increases your maximum speed by {statValue}"
     },
     "shield": {
       "cost": -30,
@@ -145,7 +147,8 @@
         "armor": {
           "value": 4
         }
-      }
+      },
+      "tooltip": "Decreases incoming damage by {statValue} hp"
     },
     "piercing": {
       "cost": -30,
@@ -155,7 +158,8 @@
         "damage": {
           "value": 5
         }
-      }
+      },
+      "tooltip": "Increases damage by {statValue} hp"
     }
   }
 }

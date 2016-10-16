@@ -1,5 +1,6 @@
 
 var engine = require('engine'),
+    client = require('client'),
     Panel = require('../Panel'),
     Layout = require('../Layout'),
     Pane = require('../components/Pane'),
@@ -8,6 +9,7 @@ var engine = require('engine'),
     BorderLayout = require('../layouts/BorderLayout'),
     BackgroundView = require('../views/BackgroundView'),
     ButtonIcon = require('../components/ButtonIcon'),
+    Tooltip = require('../components/Tooltip'),
     Class = engine.Class;
 
 function EnhancementPane(game, string, settings) {
@@ -179,6 +181,8 @@ EnhancementPane.prototype._cancelled = function(data) {
 
 EnhancementPane.prototype._player = function(ship) {
   var enhancement, button,
+      enhancementData, enhancementStats,
+      tooltipText, tooltip,
       enhancements = ship.details.enhancements;
 
   // set data object
@@ -200,6 +204,13 @@ EnhancementPane.prototype._player = function(ship) {
     
     this.buttons[enhancement] = button;
     this.content.addPanel(Layout.NONE, button);
+    
+    enhancementData = client.ItemConfiguration['enhancement'][enhancement];
+    enhancementStats = Object.keys(enhancementData.stats);
+    tooltipText = enhancementData.tooltip.replace('{statValue}', enhancementData.stats[enhancementStats[0]].value);
+  
+    tooltip = new Tooltip(game, tooltipText, button);
+    tooltip.attach();
   }
 
   this.game.input.on('keypress', function(event, key){
