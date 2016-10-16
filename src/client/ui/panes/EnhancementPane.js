@@ -207,7 +207,7 @@ EnhancementPane.prototype._player = function(ship) {
     button && this._select(button);
   }, this);
 
-  this.invalidate(true);
+  this.parent.parent.invalidate(true);
 };
 
 
