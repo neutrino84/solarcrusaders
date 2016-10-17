@@ -1,5 +1,5 @@
 
-var engine = require('engine')
+var engine = require('engine'),
     EventEmitter = require('eventemitter3');
 
 ShipData.SYSTEM_SORT_ORDER = ['hull', 'reactor', 'pilot', 'engine', 'shield', 'targeting', 'scanner', 'repair', 'cloak'];
