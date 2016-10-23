@@ -332,6 +332,8 @@ Pointer.prototype = {
     while(i--) {
       input.moveCallbacks[i].callback.call(input.moveCallbacks[i].context, this, this.x, this.y, fromClick);
     }
+    
+    input.interactiveItems.callAll('_pointerMoveHandler', this);
 
     // Easy out if we're dragging something and it still exists
     if(this.targetObject !== null && this.targetObject.isDragged === true) {

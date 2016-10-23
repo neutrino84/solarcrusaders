@@ -12,15 +12,16 @@ function Selection(game) {
       return true;
     };
 
-  this.world.on('inputUp', this._onInput, this);
-  this.world.on('inputDown', this._onInput, this);
-};
+  this.world.on('inputUp', this._onInputUpDown, this);
+  this.world.on('inputDown', this._onInputUpDown, this);
+  this.world.on('inputMove', this._onInputMove, this);
+}
 
 Selection.prototype.constructor = Selection;
 
-Selection.prototype._onInput = function(world, pointer) {
+Selection.prototype._emitInputAction = function(dataType, pointer) {
   var data = {
-        type: pointer.isDown ? 'start' : 'stop',
+        type: dataType,
         target: {
           x: pointer.x,
           y: pointer.y
@@ -33,11 +34,20 @@ Selection.prototype._onInput = function(world, pointer) {
   }
 };
 
+Selection.prototype._onInputUpDown = function(world, pointer) {
+  this._emitInputAction(pointer.isDown ? 'start' : 'stop', pointer);
+};
+
+Selection.prototype._onInputMove = function(world, pointer) {
+  this._emitInputAction('move', pointer);
+};
+
 Selection.prototype.destroy = function() {
   this.input.destroy();
 
-  this.world.removeListener('onDown', this._onInput);
-  this.world.removeListener('onUp', this._onInput);
+  this.world.removeListener('inputDown', this._onInputUpDown);
+  this.world.removeListener('inputUp', this._onInputUpDown);
+  this.world.removeListener('inputMove', this._onInputMove);
 
   this.game =
     this.input = undefined;
