@@ -220,7 +220,7 @@ ShipManager.prototype._primary = function(data) {
           y: input.mousePointer.y
         });
       });
-    } else {
+    } else if (data.type === 'stop') {
       this.autofire && clock.events.remove(this.autofire);
     }
   }
