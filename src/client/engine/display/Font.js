@@ -77,7 +77,7 @@ Font.prototype.update = function() {
   if(this._fixedwidth > 0) {
     this.texture.resize(this._fixedwidth, len * character.height, false);
   } else {
-    this.texture.resize(this.getLongestLine() * character.width, len * character.height, false);
+    this.texture.resize(this.getLongestLine() * character.width, len * character.height + ((len * spacing.y) - spacing.y), false);
   }
   for(var i=0; i<len; i++) {
     cx = 0;
@@ -87,7 +87,7 @@ Font.prototype.update = function() {
       cx = (this.width / 2) - ((lines[i].length * character.width) / 2);
     }
     this.render(lines[i], cx, cy);
-    cy += character.height;
+    cy += character.height + spacing.y;
   }
 };
 

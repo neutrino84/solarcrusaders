@@ -18,7 +18,7 @@ function TextView(game, text, settings) {
         width: 6,
         height: 8,
         size: 0,
-        spacing: { x: 0, y: 0 },
+        spacing: { x: 0, y: 2 },
         offset: { x: 0, y: 0 }
       }
     },
@@ -30,7 +30,7 @@ function TextView(game, text, settings) {
         width: 8,
         height: 7,
         size: 0,
-        spacing: { x: 0, y: 0 },
+        spacing: { x: 0, y: 2 },
         offset: { x: 0, y: 0 }
       }
     },
@@ -42,7 +42,7 @@ function TextView(game, text, settings) {
         width: 5,
         height: 5,
         size: 0,
-        spacing: { x: 0, y: 0 },
+        spacing: { x: 0, y: 2 },
         offset: { x: 0, y: 0 }
       }
     }
