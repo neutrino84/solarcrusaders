@@ -70,13 +70,13 @@ module.exports = function(grunt) {
         options: {
           alias: {
             xhr: './node_modules/xhr',
-            socket: './node_modules/socket.io/node_modules/socket.io-client'
+            socket: './node_modules/socket.io-client'
           },
           require: [
             ['./src/client/engine/index.js', { expose: 'engine', plugin: [bundleCollapser] }],
             ['./src/client/pixi.js', { expose: 'pixi', plugin: [bundleCollapser] }]
           ],
-          transform: ['glslify', 'browserify-versionify'],
+          transform: [['babelify', {presets: [['es2015', {'loose': true}]]}], 'glslify', 'browserify-versionify'],
           plugin: [bundleCollapser]
         }
       }
