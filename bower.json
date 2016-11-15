@@ -3,7 +3,7 @@
     "name": "solarcrusaders",
     "version": "0.0.1",
     "dependencies": {
-        "pixi.js": "dev",
+        "pixi.js": "https://github.com/pixijs/pixi.js.git#08caa94141002584b93d5b7b69d26e737a13f7c8",
         "jquery": "2.2.x",
         "fullpage.js": "2.7.x",
         "slick-carousel": "1.5.x",
