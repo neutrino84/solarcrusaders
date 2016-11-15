@@ -57,7 +57,7 @@ SectorState.prototype.create = function() {
       mouse.capture = true;
       mouse.mouseWheelCallback = function(event) {
         var delta = event.deltaY / sensitivity,
-            scale = engine.Math.clamp(this.world.scale.x - delta, 0.34, 1.0);
+            scale = engine.Math.clamp(this.world.scale.x - delta, 0.25, 1.0);
         if(self.game.paused) { return; }
         if(self.zoom && self.zoom.isRunning) {
           self.zoom.stop();
@@ -66,7 +66,7 @@ SectorState.prototype.create = function() {
       };
 
   this.game.world.setBounds(0, 0, 4096, 4096);
-  this.game.world.scale.set(0.34, 0.34);
+  this.game.world.scale.set(0.54, 0.54);
 
   this.game.camera.bounds = null;
   this.game.camera.focusOnXY(2048, 2048);
@@ -75,7 +75,7 @@ SectorState.prototype.create = function() {
   this.createManagers();
   this.createAsteroids();
   this.createSpace();
-  this.createSnow();
+  // this.createSnow();
 
   // AUDIO TEST
   // this.sound = this.game.sound.add('background', 0, true);
@@ -85,15 +85,18 @@ SectorState.prototype.create = function() {
   // });
 
   // start zoom in
-  // this.game.once('ship/follow', function() {
-  //   this.zoom = this.game.tweens.create(this.game.world.scale);
-  //   this.zoom.to({ x: 0.54, y: 0.54 }, 6000, engine.Easing.Quadratic.InOut, true);
-  // }, this);
+  this.game.once('ship/follow', function() {
+    this.zoom = this.game.tweens.create(this.game.world.scale);
+    this.zoom.to({ x: 0.28, y: 0.28 }, 3000, engine.Easing.Quadratic.InOut, true);
+  }, this);
 
   // login
   if(game.auth.ready) {
     this.game.gui.login(game.auth.user);
   }
+
+  // initialize net manager
+  this.game.shipNetManager.init();
 
   // benchmark
   // this.game.clock.benchmark();
