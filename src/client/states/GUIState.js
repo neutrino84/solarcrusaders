@@ -73,7 +73,7 @@ GUIState.prototype.create = function() {
   this.basePanel = new Panel(game, new BorderLayout(0, 0));
   this.basePanel.setPadding(6, 0, 0, 0);
 
-  //added leaderBoard pane
+  // added leaderBoard pane
   this.leaderBoardPane = new LeaderBoardPane(game);
 
   this.headerPane = new HeaderPane(game);
@@ -89,11 +89,10 @@ GUIState.prototype.create = function() {
   // leaderBoard pane added to canvas
   this.leaderBoardPanel = new Panel(game, new FlowLayout(Layout.RIGHT, Layout.TOP, Layout.HORIZONTAL, 6));
   this.leaderBoardPanel.addPanel(Layout.NONE, this.leaderBoardPane);
-  // this.leaderBoardPanel.visible = true;
 
   this.root = new Panel(game, new StackLayout());
   this.root.setSize(game.width, game.height);
-  this.root.visible = true;
+  this.root.visible = false;
 
   // this.root.invalidate = this.invalidate.bind(this.root);
 

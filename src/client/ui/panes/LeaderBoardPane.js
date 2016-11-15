@@ -3,12 +3,7 @@ var engine = require('engine' ),
     Pane = require('../components/Pane'),
     Label = require('../components/Label'),
     Image = require('../components/Image'),
-
     Panel = require('../Panel');
-
-function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max-min)) + min;
-};
 
 function LeaderboardPane(game, settings) {
   Pane.call(this, game, {
@@ -60,30 +55,28 @@ function LeaderboardPane(game, settings) {
     }
   });
 
-  this.uuid = 0;
+  // this.uuid = 0;
   this.max = 9;
-  this.users = [];
+  this.ships = [];
   this.sortedUsers = [];
   this.rows = [];
 
   this.infoUsersPane = new Pane(game, this.settings.usersPane);
   this.infoCurrentUserPane = new Pane(game, this.settings.currentUserPane);
 
-  //..tmp
+  // connect to messaging
+  this.game.on('ship/added', this.addPlayer, this);
+  this.game.on('ship/removed', this.removePlayer, this);
+
   this.initialize();
-
-  game.clock.events.loop(1000, this._updateInfo, this);
 };
-
 
 LeaderboardPane.prototype = Object.create(Pane.prototype);
 LeaderboardPane.prototype.constructor = LeaderboardPane;
 
 LeaderboardPane.prototype.initialize = function() {
-  var self = this;
-
-  this.player = { name: 'neutrino84', score: '300', isPlayer: true };
-  this.users.push(this.player);
+  var self = this,
+      game = this.game;
 
   this.addPanel(Layout.STRETCH, this.infoUsersPane);
   this.addPanel(Layout.STRETCH, this.infoCurrentUserPane);
@@ -93,14 +86,12 @@ LeaderboardPane.prototype.initialize = function() {
     drawRow((i+1) + ') ', false);
   }
 
-  this.addUsers();
-
   function drawRow(number, isPlayer) {
     var panel = isPlayer ? self.infoCurrentUserPane : self.infoUsersPane,
         row = new Pane(game, self.settings.userRowPane),
         userNumber = new Label(game, number, self.settings.userRowLabel),
-        userName = new Label(game, 'name', self.settings.userRowLabel),
-        userScore = new Label(game, 'score', self.settings.userRowLabel);
+        userName = new Label(game, '', self.settings.userRowLabel),
+        userScore = new Label(game, '', self.settings.userRowLabel);
 
     row.addPanel(Layout.LEFT, userNumber);
     row.addPanel(Layout.CENTER, userName);
@@ -120,45 +111,46 @@ LeaderboardPane.prototype.initialize = function() {
   }
 };
 
-LeaderboardPane.prototype.validate = function() {
-  return Pane.prototype.validate.call(this);
-};
+LeaderboardPane.prototype.addPlayer = function(ship) {
+  var auth = this.game.auth,
+      ships = this.ships
 
-LeaderboardPane.prototype.addUsers = function() {
-  for(var i = 0; i<this.max; i++) {
-    this.addPlayer({
-      name: 'guest-' + i + i + i + i * getRandomInt(0, 500),
-      score: getRandomInt(0, 500).toString()
-    });
+  if(ship.user === auth.user.uuid) {
+    this.player = ship;
   }
-};
 
-LeaderboardPane.prototype.addPlayer = function(user) {
-  user.uuid = this.uuid++;
-
-  this.users.push(user);
-  this.users.sort(function(a, b) {
-    return b.score - a.score;
+  ship.on('data', this.redraw, this);
+  ships.push(ship);
+  ships.sort(function(a, b) {
+    return b.credits - a.credits;
   });
 
-  if(this.rows.length > this.max-1) {
-    this.redraw();
-  }
-};
-
-LeaderboardPane.prototype.removePlayer = function(user) {
-  this.users.splice(this.users.indexOf(user), 1);
   this.redraw();
 };
 
-LeaderboardPane.prototype.redraw = function (){
+LeaderboardPane.prototype.removePlayer = function(ship) {
+  var ships = this.ships;
+  for(var i=0; i<ships.length; i++) {
+    if(ship.uuid === ships[i].uuid) {
+      this.ships.splice(i, 1);
+      break;
+    }
+  }
+  this.redraw();
+};
+
+LeaderboardPane.prototype.updatePlayers = function() {
+
+};
+
+LeaderboardPane.prototype.redraw = function () {
   var self = this,
       playerRow = this.playerRow,
       user, row, player = this.player,
       isUserRanked = false;
 
   for(var i=0; i<this.max; i++) {
-    user = this.users[i];
+    user = this.ships[i];
     row = this.rows[i];
     if(user) {
       if(user == player) {
@@ -180,55 +172,20 @@ LeaderboardPane.prototype.redraw = function (){
   function draw(row, user) {
     var right, color;
     if(user) {
-      right = 180 * (4 / (user.name.length == 0 ? 4 : user.name.length));
+      right = 128 * (4 / (user.username.length == 0 ? 4 : user.username.length));
       color = user.isPlayer ? 0x09FF7A : 0xFFFFFF;
       row.userName.tint =
         row.userScore.tint =
         row.userNumber.tint = color;
       row.userName.padding.right = right;
-      row.userName.text = user.name;
-      row.userScore.text = user.score;
+      row.userName.text = user.username;
+      row.userScore.text = user.credits;
       row.visible = true;
     } else {
       row.visible = false;
     }
     self.invalidate(true);
   }
-};
-
-LeaderboardPane.prototype.getSortedUsers = function() {
-  this.sortedUsers = this.users.concat().splice(0, 10);
-  if(this.sortedUsers.indexOf(this.player) == -1) {
-    this.sortedUsers[ this.max - 1 ] = this.player;
-  }
-};
-
-LeaderboardPane.prototype._updateInfo = function () {
-  for(var i=0, j=this.users.length; i<j; i++){
-    this.users[i].score = getRandomInt(0, 500).toString();
-  }
-
-  this.users.sort(function(a, b) {
-    return b.score - a.score;
-  });
-
-  var index = getRandomInt(0, this.users.length - 1);
-  if(this.users[index ].isPlayer){
-    if(index >= this.users.length) {
-      index--;
-    } else {
-      index++;
-    }
-  }
-
-  // var random = getRandomInt(0, 5);
-  // if(random < 2 && this.users.length > 2) {
-  //   this.removePlayer(this.users[index ]);
-  // } else if(random > 2 && this.users.length <= this.max * 3) {
-  //   this.addPlayer({ name : 'User' + this.uuid, score : getRandomInt( 0, 500 ).toString() });
-  // }
-
-  this.redraw();
 };
 
 module.exports = LeaderboardPane;

@@ -176,6 +176,7 @@ Ship.prototype.attack = function(data, rtt) {
   var game = this.game,
       sockets = this.sockets,
       ships = this.manager.ships,
+      attacker = ships[data.uuid],
       compensated = this.movement.compensated(rtt),
       distance = compensated.distance(data.targ),
       time;
@@ -196,22 +197,23 @@ Ship.prototype.attack = function(data, rtt) {
         ship = ships[s];
 
         if(ship.game && ship != this) {
-          ship.hit(this, data.targ);
+          ship.hit(this, attacker, data.targ);
         }
       }
     }, this);
   }
 };
 
-Ship.prototype.hit = function(ship, point) {
-  var sockets = this.sockets,
+Ship.prototype.hit = function(ship, attacker, point) {
+  var updates = [],
+      sockets = this.sockets,
       movement = this.movement,
       data = this.data,
       ai = this.ai,
       compensated = movement.compensated(),
       distance = compensated.distance(point),
       ratio =  distance / 128.0,
-      damage, health, update;
+      damage, health;
   if(ratio < 1.0) {
 
     // calc damage
@@ -222,17 +224,24 @@ Ship.prototype.hit = function(ship, point) {
     if(!this.disabled && health > 0) {
       // update health
       data.health = health;
-      update = {
+      updates.push({
         uuid: this.uuid,
         health: data.health
-      };
+      });
+
+      // update attacker
+      attacker.credits = global.Math.floor(attacker.credits + damage + (ai && ai.type === 'pirate' ? damage : 0));
+      updates.push({
+        uuid: ship.uuid,
+        credits: attacker.credits
+      });
 
       // defend
       ai && ai.engage(ship);
 
       // broadcast
       sockets.io.sockets.emit('ship/data', {
-        type: 'update', ships: [update]
+        type: 'update', ships: updates
       });
     } else {
       // disengage attacker
@@ -348,6 +357,16 @@ Ship.prototype.destroy = function() {
     this.enhancements = this.hardpoints =
     this.rooms = this.data = undefined;
 };
+
+Object.defineProperty(Ship.prototype, 'credits', {
+  get: function() {
+    return this.data.credits;
+  },
+
+  set: function(value) {
+    this.data.credits = value;
+  }
+});
 
 Object.defineProperty(Ship.prototype, 'capacity', {
   get: function() {

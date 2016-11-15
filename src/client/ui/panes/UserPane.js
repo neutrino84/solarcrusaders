@@ -124,10 +124,11 @@ function UserPane(game, settings) {
   this.user.addPanel(Layout.NONE, this.reputationLabel);
   this.user.addPanel(Layout.NONE, this.killsImage);
   this.user.addPanel(Layout.NONE, this.killsLabel);
-  // this.user.addPanel(Layout.NONE, this.logoutButton);
+  this.user.addPanel(Layout.NONE, this.logoutButton);
 
   this.addPanel(Layout.STRETCH, this.user);
 
+  this.game.on('ship/player', this._player, this);
   this.game.on('gui/player/select', this._playerSelect, this);
 };
 
@@ -143,23 +144,35 @@ UserPane.prototype.stop = function() {
 };
 
 UserPane.prototype.login = function(user) {
-  // this.visible = true;
+  this.logoutButton.visible = true;
   this._updateUser(user);
   this._updateEdition(user);
   this.invalidate(true);
 };
 
 UserPane.prototype.logout = function() {
-  // this.visible = false;
+  this.logoutButton.visible = false;
   this._updateUser()
   this.invalidate(true);
+};
+
+UserPane.prototype._player = function(ship) {
+  this.player = ship;
+  this.player && this.player.removeListener('data', this._updateShip);
+  this.player.details.on('data', this._updateShip, this);
+  this.creditsLabel.text = this.player.details.credits; 
 };
 
 UserPane.prototype._updateUser = function() {
   var user = user || this.game.auth.user;
   this.usernameLabel.text = user.username;
-  this.creditsLabel.text = engine.Math.formatMoney(user.credits);
   this.reputationLabel.text = user.reputation;
+};
+
+UserPane.prototype._updateShip = function(data) {
+  if(data.credits) {
+    this.creditsLabel.text = data.credits; //engine.Math.formatMoney();
+  }
 };
 
 UserPane.prototype._updateEdition = function(data) {

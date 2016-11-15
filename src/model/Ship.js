@@ -15,6 +15,7 @@ var Ship = schema.define('ship', {
   kills:      { type: schema.Integer, default: 0 },
   disables:   { type: schema.Integer, default: 0 },
   assists:    { type: schema.Integer, default: 0 },
+  credits:    { type: schema.Double, default: 0.0 },
   x:          { type: schema.Double, default: 2048.0 },
   y:          { type: schema.Double, default: 2048.0 },
   throttle:   { type: schema.Double, default: 1.0 },

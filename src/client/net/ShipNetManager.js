@@ -7,7 +7,11 @@ function ShipNetManager(game) {
   this.socket = game.net.socket;
 
   this.ships = {};
+};
 
+ShipNetManager.prototype.constructor = ShipNetManager;
+
+ShipNetManager.prototype.init = function() {
   this.socket.on('ship/sync', this._sync.bind(this));
   this.socket.on('ship/data', this._data.bind(this));
   this.socket.on('ship/removed', this._removed.bind(this));
@@ -17,8 +21,6 @@ function ShipNetManager(game) {
   this.socket.on('ship/enhancement/stopped', this._stopped.bind(this));
   this.socket.on('ship/enhancement/cancelled', this._cancelled.bind(this));
 };
-
-ShipNetManager.prototype.constructor = ShipNetManager;
 
 ShipNetManager.prototype.getShipData = function(uuid) {
   return this.ships[uuid];
@@ -33,6 +35,7 @@ ShipNetManager.prototype._data = function(data) {
       ship = ships[s];
       if(data.type === 'sync' && this.ships[ship.uuid] === undefined) {
         this.ships[ship.uuid] = new ShipData(this.game, ship);
+        this.game.emit('ship/added', this.ships[ship.uuid]);
       } else if(this.ships[ship.uuid]) {
         this.ships[ship.uuid].update(ship);
       }
