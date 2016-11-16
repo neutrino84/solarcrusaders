@@ -58,7 +58,6 @@ function LeaderboardPane(game, settings) {
   // this.uuid = 0;
   this.max = 9;
   this.ships = [];
-  this.sortedUsers = [];
   this.rows = [];
 
   this.infoUsersPane = new Pane(game, this.settings.usersPane);
@@ -111,6 +110,11 @@ LeaderboardPane.prototype.initialize = function() {
   }
 };
 
+LeaderboardPane.prototype.update = function() {
+  this.sort();
+  this.redraw();
+};
+
 LeaderboardPane.prototype.addPlayer = function(ship) {
   var auth = this.game.auth,
       ships = this.ships
@@ -119,46 +123,50 @@ LeaderboardPane.prototype.addPlayer = function(ship) {
     this.player = ship;
   }
 
-  ship.on('data', this.redraw, this);
+  ship.on('data', this.update, this);
   ships.push(ship);
-  ships.sort(function(a, b) {
-    return b.credits - a.credits;
-  });
 
-  this.redraw();
+  this.update();
 };
 
 LeaderboardPane.prototype.removePlayer = function(ship) {
   var ships = this.ships;
+
   for(var i=0; i<ships.length; i++) {
     if(ship.uuid === ships[i].uuid) {
-      this.ships.splice(i, 1);
+      ships[i].removeListener('data', this.update);
+      ships.splice(i, 1);
       break;
     }
   }
-  this.redraw();
+
+  this.update();
 };
 
-LeaderboardPane.prototype.updatePlayers = function() {
-
+LeaderboardPane.prototype.sort = function() {
+  this.ships.sort(function(a, b) {
+    return b.credits - a.credits;
+  });
 };
 
-LeaderboardPane.prototype.redraw = function () {
+LeaderboardPane.prototype.redraw = function() {
   var self = this,
       playerRow = this.playerRow,
-      user, row, player = this.player,
-      isUserRanked = false;
+      player = this.player,
+      ship, row, isUserRanked = false;
 
   for(var i=0; i<this.max; i++) {
-    user = this.ships[i];
+    ship = this.ships[i];
     row = this.rows[i];
-    if(user) {
-      if(user == player) {
+    if(ship) {
+      if(ship == player) {
         isUserRanked = true;
+        draw(row, ship, 0x09FF7A);
+      } else {
+        draw(row, ship, 0xFFFFFF);
       }
-      draw(row, user);
     } else {
-      draw(row, undefined);
+      draw(row);
     }
   }
 
@@ -166,20 +174,19 @@ LeaderboardPane.prototype.redraw = function () {
     playerRow.visible = false;
   } else {
     playerRow.visible = true;
-    draw(playerRow, player);
+    draw(playerRow, player, 0x09FF7A);
   }
 
-  function draw(row, user) {
+  function draw(row, ship, color) {
     var right, color;
-    if(user) {
-      right = 128 * (4 / (user.username.length == 0 ? 4 : user.username.length));
-      color = user.isPlayer ? 0x09FF7A : 0xFFFFFF;
+    if(ship) {
+      right = 128 * (4 / (ship.username.length == 0 ? 4 : ship.username.length));
       row.userName.tint =
         row.userScore.tint =
         row.userNumber.tint = color;
       row.userName.padding.right = right;
-      row.userName.text = user.username;
-      row.userScore.text = user.credits;
+      row.userName.text = ship.username;
+      row.userScore.text = ship.credits;
       row.visible = true;
     } else {
       row.visible = false;
