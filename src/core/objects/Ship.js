@@ -176,7 +176,6 @@ Ship.prototype.attack = function(data, rtt) {
   var game = this.game,
       sockets = this.sockets,
       ships = this.manager.ships,
-      attacker = ships[data.uuid],
       compensated = this.movement.compensated(rtt),
       distance = compensated.distance(data.targ),
       time;
@@ -197,14 +196,14 @@ Ship.prototype.attack = function(data, rtt) {
         ship = ships[s];
 
         if(ship.game && ship != this) {
-          ship.hit(this, attacker, data.targ);
+          ship.hit(this, data.targ);
         }
       }
     }, this);
   }
 };
 
-Ship.prototype.hit = function(ship, attacker, point) {
+Ship.prototype.hit = function(attacker, point) {
   var updates = [],
       sockets = this.sockets,
       movement = this.movement,
@@ -217,7 +216,7 @@ Ship.prototype.hit = function(ship, attacker, point) {
   if(ratio < 1.0) {
 
     // calc damage
-    damage = global.Math.max(0, ship.damage * (1-ratio) - this.armor);
+    damage = global.Math.max(0, attacker.damage * (1-ratio) - this.armor);
     health = data.health-damage;
 
     // update damage
@@ -232,25 +231,27 @@ Ship.prototype.hit = function(ship, attacker, point) {
       // update attacker
       attacker.credits = global.Math.floor(attacker.credits + damage + (ai && ai.type === 'pirate' ? damage : 0));
       updates.push({
-        uuid: ship.uuid,
+        uuid: attacker.uuid,
         credits: attacker.credits
       });
 
       // defend
-      ai && ai.engage(ship);
-
-      // broadcast
-      sockets.io.sockets.emit('ship/data', {
-        type: 'update', ships: updates
-      });
+      ai && ai.engage(attacker);
     } else {
       // disengage attacker
-      ship.ai && ship.ai.disengage();
+      attacker.ai && attacker.ai.disengage();
 
       // disable ship
       if(!this.disabled) {
         this.disable();
       }
+    }
+
+    // broadcast
+    if(updates.length) {
+      sockets.io.sockets.emit('ship/data', {
+        type: 'update', ships: updates
+      });
     }
   }
 };
