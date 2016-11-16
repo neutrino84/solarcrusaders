@@ -56,7 +56,7 @@ Movement.prototype.update = function() {
       direction = this._direction,
       spd = this._speed,
       ship = this.parent,
-      distance, speed, multiplier;
+      distance, speed, multiplier, a1, a2;
 
   // ship position to point
   position.set(ship.position.x, ship.position.y);

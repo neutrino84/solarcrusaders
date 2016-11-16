@@ -23,7 +23,7 @@ StackLayout.prototype.calcPreferredSize = function(target) {
 };
 
 StackLayout.prototype.doLayout = function(target) {
-  var child, ps,
+  var child, ps, constraint,
       top = target.top,
       hh = target.size.height - target.bottom - top,
       left = target.left,

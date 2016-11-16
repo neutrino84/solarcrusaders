@@ -31,8 +31,8 @@ ShapeView.prototype.constructor = ShapeView;
 
 ShapeView.prototype.paint = function (top, left, bottom, right) {
   var settings = this.settings,
-      offset = this.settings.offset ? this.settings.offset : {x: 0, y: 0};
-  points = this.settings.shape;
+      offset = this.settings.offset ? this.settings.offset : {x: 0, y: 0},
+      points = this.settings.shape;
 
   this.clear();
 

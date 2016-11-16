@@ -16,7 +16,8 @@ LoadTexture.prototype = {
     this.key = key;
     this.customRender = false;
     
-    var setFrame = true,
+    var img,
+        setFrame = true,
         smoothed = !this.texture.baseTexture.scaleMode;
     if(key instanceof pixi.RenderTexture || key instanceof pixi.Texture) {
       this.texture = key;
@@ -39,7 +40,7 @@ LoadTexture.prototype = {
       this.texture.baseTexture.scaleMode = 1;
     }
 
-    if(img.base.isPowerOfTwo) {
+    if(img && img.base.isPowerOfTwo) {
       img.base.mipmap = true;
     }
   },

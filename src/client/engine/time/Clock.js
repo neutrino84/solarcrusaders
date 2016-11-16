@@ -65,7 +65,7 @@ Clock.prototype.throttle = function(fn, threshhold, context, bounce) {
   var last,
       deferTimer,
       threshhold = threshhold || 250,
-      bounce = bounce || false;
+      bounce = bounce || false,
       clock = this;
   return function(arg) {
     var context = context || this,

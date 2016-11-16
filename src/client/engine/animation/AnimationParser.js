@@ -1,7 +1,7 @@
 var Frame = require('./Frame'),
     FrameData = require('./FrameData');
 
-AnimationParser = {
+var AnimationParser = {
 
   spriteSheet: function(game, key, frameWidth, frameHeight, frameMax, margin, spacing) {
     var img = key;
