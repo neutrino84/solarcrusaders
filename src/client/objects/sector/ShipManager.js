@@ -254,7 +254,8 @@ ShipManager.prototype._unfollow = function() {
 };
 
 ShipManager.prototype._disabled = function(data) {
-  var ship = this.ships[data.uuid];
+  var ship = this.ships[data.uuid],
+      clock = this.clock;
   if(ship !== undefined) {
     ship.disable();
 
