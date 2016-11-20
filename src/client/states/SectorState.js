@@ -5,6 +5,7 @@ var engine = require('engine'),
     // ShockwaveManager = require('../fx/ShockwaveManager'),
     Snow = require('../fx/Snow'),
     InputManager = require('../objects/sector/InputManager'),
+    ArrowsKeysManager = require('../objects/sector/ArrowKeysManager'),
     ShipManager = require('../objects/sector/ShipManager'),
     StationManager = require('../objects/sector/StationManager'),
     Asteroid = require('../objects/sector/misc/Asteroid');
@@ -128,6 +129,7 @@ SectorState.prototype.createManagers = function() {
   
   this.shipManager = new ShipManager(this.game);
   this.inputManager = new InputManager(this.game);
+  this.arrowKeysManager = new ArrowsKeysManager(this.game);
 };
 
 SectorState.prototype.createSnow = function() {
@@ -163,7 +165,7 @@ SectorState.prototype.update = function() {
       x = 0, y = 0,
       amount = 512;
 
-  if(!this.scrollLock) {
+  if(!this.scrollLock && !this.arrowKeysManager) {
     if(keyboard.isDown(engine.Keyboard.A) || keyboard.isDown(engine.Keyboard.LEFT)) {
       x = -amount;
     }

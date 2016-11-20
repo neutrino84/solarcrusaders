@@ -78,6 +78,8 @@ function ShipManager(game) {
   this.game.on('ship/removed', this._removed, this);
   this.game.on('ship/disabled', this._disabled, this);
   this.game.on('ship/enabled', this._enabled, this);
+
+  this.game.on('ship/moveTo', this._moveTo, this);
 };
 
 ShipManager.prototype.constructor = ShipManager;
@@ -240,6 +242,18 @@ ShipManager.prototype._secondary = function(data) {
         destination: destination
       });
     }
+  }
+};
+
+ShipManager.prototype._moveTo = function(data) {
+  var ship = this.player,
+      socket = this.socket;
+  if(ship) {
+      var destination = new engine.Point(data.offset, 0).rotate(0, 0, ship.rotation + data.rotation );
+      socket.emit('ship/plot', {
+        uuid: ship.uuid,
+        destination: destination
+      });
   }
 };
 
