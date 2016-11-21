@@ -7,7 +7,7 @@ function KeySelection(game) {
 	this.settings = {
 		stepOffset: 100,
 		stepRotation: 1,
-		speed: 1
+		speed: 1.5
 	};
 
 	this.game.input.on('keydown', this._onDown, this);
@@ -46,7 +46,7 @@ KeySelection.prototype._onDown = function(event, key) {
 KeySelection.prototype._onUp = function(event, key) {
 	var keyboard = this.game.input.keyboard;
 	var data = {
-		offset: 0,
+		offset: 1,
 		rotation: 0
 	};
 	if(keyboard.isDown(engine.Keyboard.LEFT) || keyboard.isDown(engine.Keyboard.UP) || keyboard.isDown(engine.Keyboard.RIGHT)){
