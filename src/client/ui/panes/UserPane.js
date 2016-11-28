@@ -173,6 +173,9 @@ UserPane.prototype._updateShip = function(data) {
   if(data.credits) {
     this.creditsLabel.text = data.credits; //engine.Math.formatMoney();
   }
+  if(data.reputation) {
+    this.reputationLabel.text = data.reputation; //engine.Math.formatMoney();
+  }
 };
 
 UserPane.prototype._updateEdition = function(data) {

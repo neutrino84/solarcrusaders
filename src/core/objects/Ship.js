@@ -245,6 +245,13 @@ Ship.prototype.hit = function(attacker, point) {
       if(!this.disabled) {
         this.disable();
       }
+      
+      // update attacker reputation
+      attacker.reputation = global.Math.floor(attacker.reputation + ((ai && ai.type === 'pirate') ? (this.reputation * -0.05) : 0));
+      updates.push({
+        uuid: attacker.uuid,
+        reputation: attacker.reputation
+      });
     }
 
     // broadcast
@@ -366,6 +373,16 @@ Object.defineProperty(Ship.prototype, 'credits', {
 
   set: function(value) {
     this.data.credits = value;
+  }
+});
+
+Object.defineProperty(Ship.prototype, 'reputation', {
+  get: function() {
+    return this.data.reputation;
+  },
+
+  set: function(value) {
+    this.data.reputation = value;
   }
 });
 

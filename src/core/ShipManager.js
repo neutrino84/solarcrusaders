@@ -164,6 +164,7 @@ ShipManager.prototype.data = function(sock, args, next) {
         throttle: ship.throttle,
         rotation: ship.rottion,
         credits: ship.data.credits,
+        reputation: ship.data.reputation,
         kills: ship.data.kills,
         disables: ship.data.disables,
         assists: ship.data.assists,
@@ -237,36 +238,36 @@ ShipManager.prototype.generatePirateShips = function() {
       iterator = [{
         location: { x: -2048, y: 2048 },
         ships: [
-          { name: 'xinli', chassis: 'general-x01', credits: 1500 },
-          { name: 'mavero', chassis: 'general-x01', credits: 1500 },
-          { name: 'ardelle', chassis: 'general-x01', credits: 1500 },
-          { name: 'vega', chassis: 'general-x02', credits: 3000 },
-          { name: 'thak', chassis: 'general-x02', credits: 3000 },
-          { name: 'zeus', chassis: 'general-x03', credits: 8500 }
+          { name: 'xinli', chassis: 'general-x01', credits: 1500, reputation: -100 },
+          { name: 'mavero', chassis: 'general-x01', credits: 1500, reputation: -100 },
+          { name: 'ardelle', chassis: 'general-x01', credits: 1500, reputation: -100 },
+          { name: 'vega', chassis: 'general-x02', credits: 3000, reputation: -200 },
+          { name: 'thak', chassis: 'general-x02', credits: 3000, reputation: -200 },
+          { name: 'zeus', chassis: 'general-x03', credits: 8500, reputation: -250 }
         ]
       }, {
         location: { x: 6144, y: 2048 },
         ships: [
-          { name: 'satel', chassis: 'general-x01', credits: 1500 },
-          { name: 'thath', chassis: 'general-x01', credits: 1500 },
-          { name: 'sai', chassis: 'general-x02', credits: 3000 },
-          { name: 'ramir', chassis: 'general-x02', credits: 3000 }
+          { name: 'satel', chassis: 'general-x01', credits: 1500, reputation: -100 },
+          { name: 'thath', chassis: 'general-x01', credits: 1500, reputation: -100 },
+          { name: 'sai', chassis: 'general-x02', credits: 3000, reputation: -200 },
+          { name: 'ramir', chassis: 'general-x02', credits: 3000, reputation: -200 }
         ]
       }, {
         location: { x: 2048, y: -2048 },
         ships: [
-          { name: 'manduk', chassis: 'general-x01', credits: 1500 },
-          { name: 'talai', chassis: 'general-x01', credits: 1500 },
-          { name: 'prelloc', chassis: 'general-x01', credits: 1500 },
-          { name: 'kresthaa', chassis: 'general-x01', credits: 1500 }
+          { name: 'manduk', chassis: 'general-x01', credits: 1500, reputation: -100 },
+          { name: 'talai', chassis: 'general-x01', credits: 1500, reputation: -100 },
+          { name: 'prelloc', chassis: 'general-x01', credits: 1500, reputation: -100 },
+          { name: 'kresthaa', chassis: 'general-x01', credits: 1500, reputation: -100 }
         ]
       }, {
         location: { x: 2048, y: 6144 },
         ships: [
-          { name: 'theni', chassis: 'general-x02', credits: 3000 },
-          { name: 'saroc', chassis: 'general-x02', credits: 3000 },
-          { name: 'gahl', chassis: 'general-x02', credits: 3000 },
-          { name: 'amira', chassis: 'general-x02', credits: 3000 }
+          { name: 'theni', chassis: 'general-x02', credits: 3000, reputation: -200 },
+          { name: 'saroc', chassis: 'general-x02', credits: 3000, reputation: -200 },
+          { name: 'gahl', chassis: 'general-x02', credits: 3000, reputation: -200 },
+          { name: 'amira', chassis: 'general-x02', credits: 3000, reputation: -200 }
         ]
       }],
       len = iterator.length;
@@ -280,6 +281,7 @@ ShipManager.prototype.generatePirateShips = function() {
         name: ship.name,
         chassis: ship.chassis,
         credits:  global.Math.floor(ship.credits * global.Math.random() + 100),
+        reputation: global.Math.floor(ship.reputation * (1 + global.Math.random())),
         throttle: 1.0,
         ai: 'pirate',
         x: base.location.x,
@@ -298,7 +300,8 @@ ShipManager.prototype.generateRandomShip = function(chassis, race, ai) {
         chassis: chassis,
         throttle: throttle,
         ai: ai,
-        credits: global.Math.floor(global.Math.random() * 250 + 50)
+        credits: global.Math.floor(global.Math.random() * 250 + 50),
+        reputation: 0
       });
 };
 
