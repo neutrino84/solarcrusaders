@@ -301,7 +301,7 @@ ShipManager.prototype.generateRandomShip = function(chassis, race, ai) {
         throttle: throttle,
         ai: ai,
         credits: global.Math.floor(global.Math.random() * 250 + 50),
-        reputation: 0
+        reputation: global.Math.floor(100 * (1 + global.Math.random()))
       });
 };
 
