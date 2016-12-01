@@ -37,6 +37,9 @@ function ShipManager(game) {
   this.glowEmitter = new GlowEmitter(this.game);
   this.shockwaveEmitter = new ShockwaveEmitter(this.game);
   this.fireEmitter = new FireEmitter(this.game);
+  
+  // throttled function to plot ship course
+  this._throttledPlot = null;
 
   this.game.particles.add(this.explosionEmitter);
   this.game.particles.add(this.flashEmitter);
@@ -217,7 +220,7 @@ ShipManager.prototype._primary = function(data) {
           y: input.mousePointer.y
         });
       });
-    } else {
+    } else if (data.type === 'stop') {
       this.autofire && clock.events.remove(this.autofire);
     }
   }
@@ -225,6 +228,7 @@ ShipManager.prototype._primary = function(data) {
 
 ShipManager.prototype._secondary = function(data) {
   var game = this.game,
+      clock = this.clock,
       ship = this.player,
       socket = this.socket,
       indicator = this.indicator,
@@ -236,6 +240,14 @@ ShipManager.prototype._secondary = function(data) {
     if(data.type === 'start') {
       indicator.show(position);
       socket.emit('ship/plot', {
+        uuid: ship.uuid,
+        destination: destination
+      });
+    } else if (data.type === 'move') {
+      this._throttledPlot = this._throttledPlot || clock.throttle(function (data) {
+        socket.emit('ship/plot', data);
+      }, 250); // throttle threshold
+      this._throttledPlot({
         uuid: ship.uuid,
         destination: destination
       });

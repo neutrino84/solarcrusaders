@@ -426,6 +426,23 @@ InputHandler.prototype = {
       }
     }
   },
+  
+  _pointerMoveHandler: function(pointer) {
+    // Abort. We've been destroyed.
+    if(this.sprite === null) { return; }
+
+    var sendEvent, data = this._pointerData[pointer.id];
+    if(data.isOver || pointer.dirty) {
+      sendEvent = data.isOver;
+
+      data.x = pointer.x - this.sprite.x;
+      data.y = pointer.y - this.sprite.y;
+
+      if(sendEvent && this.sprite) {
+        this.sprite.emit('inputMove', this.sprite, pointer);
+      }
+    }
+  },
 
   _pointerOutHandler: function(pointer) {
     // Abort. We've been destroyed.
