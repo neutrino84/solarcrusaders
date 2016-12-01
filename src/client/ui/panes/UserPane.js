@@ -173,6 +173,10 @@ UserPane.prototype._updateShip = function(data) {
   if(data.credits) {
     this.creditsLabel.text = data.credits; //engine.Math.formatMoney();
   }
+  // reputation might be updated to 0 after destroying both positive and negative reputation ships
+  if(data.reputation !== undefined) { 
+    this.reputationLabel.text = data.reputation;
+  }
 };
 
 UserPane.prototype._updateEdition = function(data) {
