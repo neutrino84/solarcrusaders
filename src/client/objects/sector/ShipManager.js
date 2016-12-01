@@ -8,8 +8,10 @@ var engine = require('engine'),
     ShockwaveEmitter = require('./emitters/ShockwaveEmitter'),
     FireEmitter = require('./emitters/FireEmitter'),
     Indicator = require('./misc/Indicator');
+    // SectorState = require('../states/SectorState')
 
 function ShipManager(game) {
+
   this.game = game;
   this.clock = game.clock;
   this.net = game.net;
@@ -18,8 +20,37 @@ function ShipManager(game) {
   this.enhancementManager = new EnhancementManager(this);
 
   // player
-  this.player = null;
+  // this.player = null;
 
+  //this is my attempt at making a player object I can understand/use -Richard
+  this.game.playerObj = {};
+  this.player = this.game.playerObj
+
+  
+
+
+  this.laserArr = []
+  this.heavyLaserArr = []
+  this.rocketArr = []
+  this.thrustersArr = []
+  this.heavyThrustersArr = []
+
+  for(var i = 1; i<18; i++){
+    this.laserArr.push(this.game.sound.add(('laser'+i),0,true));
+  }
+  for(var i = 1;i<4;i++){
+    this.rocketArr.push(this.game.sound.add(('rocket'+i),0,true));
+  }
+  for(var i = 1;i<4;i++){
+    this.thrustersArr.push(this.game.sound.add(('mediumThrusters'+i),0,true));
+  }
+  for(var i = 1;i<3;i++){
+    this.heavyThrustersArr.push(this.game.sound.add(('heavyThrusters'+i),0,true));
+  }
+  for(var i = 1;i<7;i++){
+    this.heavyLaserArr.push(this.game.sound.add(('heavyLaser'+i),0,true));
+  }
+  // this.mediumThrusters = this.game.sound.add(('heavyThrusters'),0,true)
   // ship cache
   this.ships = {};
 
@@ -195,12 +226,79 @@ ShipManager.prototype._sync = function(data) {
 
 ShipManager.prototype._player = function(ship) {
   this.player = ship;
+  // var hasLaser = false;
+  // for (var prop in ship.details.cargo){
+  //   var item = ship.details.cargo[prop].sprite
+  //   if(item === 'item-laser-a'){
+  //     hasLaser=true
+  //     this.player.details.weapon = 'laser'
+  //     this.game.playerObj.weapon = 'laser'
+  //   } else {this.player.details.weapon = 'rocket', this.game.playerObj.weapon = 'rocket'}
+  // }
+  this.game.playerObj.name = ship.name
+  // console.log(this.game.playerObj.name)
 };
+
+ShipManager.prototype.laserFireSFX = function(shipSize){
+  console.log('SHOT LASER')
+  if(shipSize === 'light'){
+  var maxNum = this.laserArr.length-1
+  var minNum = 0
+
+  var randomNum = Math.floor(Math.random() * (maxNum - minNum + 1)) + minNum;
+  this.laserArr[randomNum].play('', 0, 0.3, false);
+  // console.log(this.laserArr[randomNum])
+  }
+  if(shipSize === 'heavy'){
+  var maxNum = this.heavyLaserArr.length-1
+  var minNum = 0
+  var randomNum = Math.floor(Math.random() * (maxNum - minNum + 1)) + minNum;
+  var randomNum2 = Math.floor(Math.random() * (maxNum - minNum + 1)) + minNum;
+  this.heavyLaserArr[randomNum].play('', 0, 0.1, false);
+  this.heavyLaserArr[randomNum2].play('', 0, 0.1, false);
+  }
+}
+ShipManager.prototype.rocketFireSFX = function(){
+  console.log('SHOT ROCKKET')
+  var maxNum = this.rocketArr.length-1
+  var minNum = 0
+  var randomNum = Math.floor(Math.random() * (maxNum - minNum + 1)) + minNum;
+  this.rocketArr[randomNum].play('', 0, 0.3, false);
+  console.log(this.rocketArr[randomNum])
+}
+
+ShipManager.prototype.thrustersSFX = function(shipSize){
+  if(shipSize === 'light'){
+    var maxNum = this.thrustersArr.length-1
+    var minNum = 0
+    var randomNum = Math.floor(Math.random() * (maxNum - minNum + 1)) + minNum;
+    this.thrustersArr[randomNum].play('', 0, 0.7, false);
+  }
+  if(shipSize === 'heavy'){
+    var maxNum = this.heavyThrustersArr.length-1
+    var minNum = 0
+    var randomNum = Math.floor(Math.random() * (maxNum - minNum + 1)) + minNum;
+    this.heavyThrustersArr[randomNum].play('', 0, 0.4, false);
+  }
+}
+
 
 ShipManager.prototype._attack = function(data) {
   var ship = this.ships[data.uuid];
+
   if(ship != this.player) {
     ship.targetingComputer.attack(data.targ);
+  }
+  else {
+    if(this.ships[data.uuid].details.hardpoints[0].type === 'rocket'){
+      this.rocketFireSFX(0.1)
+    }
+    if(this.ships[data.uuid].details.hardpoints[0].type === 'laser' && this.game.playerObj.name === 'ubaidian-x02' || this.ships[data.uuid].details.hardpoints[0].type === 'laser' && this.game.playerObj.name === 'ubaidian-x01'){
+      this.laserFireSFX('heavy')  
+    }
+    else if(this.ships[data.uuid].details.hardpoints[0].type === 'laser'){
+      this.laserFireSFX('light')    
+    } 
   }
 };
 
@@ -222,6 +320,16 @@ ShipManager.prototype._primary = function(data) {
     }
   }
 };
+ShipManager.prototype.timerOn = false
+
+ShipManager.prototype.timer = function(){
+  if(this.timerOn === false){
+    ShipManager.prototype.timerOn = true
+    setTimeout(function(){
+      ShipManager.prototype.timerOn = false
+    }, 4500)
+  }
+}
 
 ShipManager.prototype._secondary = function(data) {
   var game = this.game,
@@ -235,6 +343,15 @@ ShipManager.prototype._secondary = function(data) {
   if(ship) {
     if(data.type === 'start') {
       indicator.show(position);
+
+      if(this.timerOn === false){
+        if(this.game.playerObj.name === 'ubaidian-x02'){this.thrustersSFX('heavy')}
+        else{this.thrustersSFX('light')}
+      }  
+      this.timer()
+      
+
+
       socket.emit('ship/plot', {
         uuid: ship.uuid,
         destination: destination

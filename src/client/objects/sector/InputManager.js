@@ -35,7 +35,7 @@ Selection.prototype._onInput = function(world, pointer) {
 
 Selection.prototype.destroy = function() {
   this.input.destroy();
-
+  console.log('engine.destroy()')
   this.world.removeListener('onDown', this._onInput);
   this.world.removeListener('onUp', this._onInput);
 

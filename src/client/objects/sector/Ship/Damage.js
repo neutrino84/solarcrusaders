@@ -4,7 +4,6 @@ var engine = require('engine');
 function Damage(ship) {
   this.ship = ship;
   this.game = ship.game;
-
   this.glow = new engine.Sprite(this.game, 'texture-atlas', 'explosion-d.png');
   this.glow.pivot.set(64, 64);
   this.glow.scale.set(24.0, 24.0);
@@ -22,9 +21,13 @@ function Damage(ship) {
   this.glowEmitter = ship.manager.glowEmitter;
   this.shockwaveEmitter = ship.manager.shockwaveEmitter;
   this.fireEmitter = ship.manager.fireEmitter;
+
+  this.deathExplosion = this.game.sound.add(('deathExplosion'),0,true)
+
 };
 
 Damage.prototype.constructor = Damage;
+
 
 Damage.prototype.inflict = function(position) {
   var game = this.game,
@@ -70,6 +73,8 @@ Damage.prototype.shockwave = function() {
 
 Damage.prototype.destroyed = function() {
   var ship = this.ship;
+  
+  this.deathExplosion.play('', 0, 0.1, false);
 
   // shockwave
   // this.shockwave();

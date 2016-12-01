@@ -4,6 +4,7 @@ var engine = require('engine');
 function Repair(parent) {
   this.parent = parent;
   this.game = parent.game;
+  this.repair1 = this.game.sound.add(('repair1'),0,true)
 };
 
 Repair.prototype.constructor = Repair;
@@ -16,6 +17,9 @@ Repair.prototype.create = function() {
 
 Repair.prototype.start = function() {
   this.sprite.alpha = 1.0;
+
+  console.log(this.game.sound._sounds[6].key)
+  this.repair1.play('', 0, 0.1, false);
 
   this.tween = this.game.tweens.create(this.sprite);
   this.tween.to({ alpha: 0.5 }, 1000, engine.Easing.Quadratic.InOut);
