@@ -51,24 +51,28 @@ function InputHandler(sprite) {
   this._wasEnabled = false;
 
   this._pointerData = [];
-  this._pointerData.push({
-    id: 0,
-    x: 0,
-    y: 0,
-    isDown: false,
-    isUp: false,
-    isOver: false,
-    isOut: false,
-    timeOver: 0,
-    timeOut: 0,
-    timeDown: 0,
-    timeUp: 0,
-    downDuration: 0,
-    isDragged: false
-  });
+  this._pointerData.push(this._defaultPointerData());
 };
 
 InputHandler.prototype = {
+  
+  _defaultPointerData: function (id) {
+    return {
+      id: id || 0,
+      x: 0,
+      y: 0,
+      isDown: false,
+      isUp: false,
+      isOver: false,
+      isOut: false,
+      timeOver: 0,
+      timeOut: 0,
+      timeDown: 0,
+      timeUp: 0,
+      downDuration: 0,
+      isDragged: false
+    };
+  },
 
   start: function(priority, useHandCursor) {
     if(useHandCursor === undefined) { useHandCursor = false; }
@@ -84,21 +88,7 @@ InputHandler.prototype = {
 
       // only ever 1 pointer
       for(var i = 0; i < 1; i++) {
-        this._pointerData[i] = {
-          id: i,
-          x: 0,
-          y: 0,
-          isDown: false,
-          isUp: false,
-          isOver: false,
-          isOut: false,
-          timeOver: 0,
-          timeOut: 0,
-          timeDown: 0,
-          timeUp: 0,
-          downDuration: 0,
-          isDragged: false
-        };
+        this._pointerData[i] = this._defaultPointerData(i);
       }
 
       this.snapOffset = new Point();
@@ -141,21 +131,7 @@ InputHandler.prototype = {
 
     // only ever 1 pointer
     for(var i = 0; i < 1; i++) {
-      this._pointerData[i] = {
-        id: i,
-        x: 0,
-        y: 0,
-        isDown: false,
-        isUp: false,
-        isOver: false,
-        isOut: false,
-        timeOver: 0,
-        timeOut: 0,
-        timeDown: 0,
-        timeUp: 0,
-        downDuration: 0,
-        isDragged: false
-      };
+      this._pointerData[i] = this._defaultPointerData(i);
     }
   },
 
