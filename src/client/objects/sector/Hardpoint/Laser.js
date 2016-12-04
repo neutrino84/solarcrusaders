@@ -6,8 +6,6 @@ function Laser(parent) {
   this.parent = parent;
   this.game = parent.game;
   this.data = parent.data;
-  // console.log('parent is: ',parent)
-  // console.log('laser parent.date is: ',parent.data)
   this.clock  = parent.game.clock;
 
   this.started = 0;
