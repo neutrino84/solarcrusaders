@@ -545,7 +545,7 @@ InputHandler.prototype = {
   },
   
   // for touch input only (not aware of different buttons)
-  _releasedHandler: function(pointer) {
+  _touchReleasedHandler: function(pointer) {
     // Abort. We've been destroyed.
     if(this.sprite === null) { return; }
 

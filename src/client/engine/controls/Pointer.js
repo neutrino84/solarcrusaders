@@ -491,7 +491,7 @@ Pointer.prototype = {
 
     input.interactiveItems.callAll('_dropHandler', this);
     if (!this.isMouse) {
-      input.interactiveItems.callAll('_releasedHandler', this);
+      input.interactiveItems.callAll('_touchReleasedHandler', this);
     } else {
       input.interactiveItems.callAll('_buttonUpHandler', this);
     }
@@ -568,7 +568,7 @@ Pointer.prototype = {
 
     if(this.targetObject) {
       if (!this.isMouse) {
-        this.targetObject._releasedHandler(this);
+        this.targetObject._touchReleasedHandler(this);
       } else {
         this.targetObject._buttonUpHandler(this);
       }
