@@ -20,15 +20,16 @@ Selection.prototype.constructor = Selection;
 
 Selection.prototype._onInput = function(world, pointer) {
   var data = {
-        type: pointer.isDown ? 'start' : 'stop',
         target: {
           x: pointer.x,
           y: pointer.y
         }
       };
   if(pointer.button === engine.Mouse.LEFT_BUTTON) {
+    data.type = pointer.leftButton.isDown ? 'start' : 'stop';
     this.game.emit('ship/primary', data);
   } else if(pointer.button === engine.Mouse.RIGHT_BUTTON) {
+    data.type = pointer.rightButton.isDown ? 'start' : 'stop';
     this.game.emit('ship/secondary', data);
   }
 };

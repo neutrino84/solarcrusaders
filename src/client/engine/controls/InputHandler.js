@@ -1,4 +1,5 @@
-var Point = require('../geometry/Point');
+var Point = require('../geometry/Point'),
+    Mouse = require('../controls/Mouse');
 
 function InputHandler(sprite) {
   this.sprite = sprite;
@@ -56,22 +57,50 @@ function InputHandler(sprite) {
 
 InputHandler.prototype = {
   
+  _defaultPointerButtonData: function () {
+    return {
+      isDown: false, 
+      timeDown: 0,
+      timeUp: 0,
+      downDuration: 0
+    };
+  },
+  
   _defaultPointerData: function (id) {
     return {
       id: id || 0,
       x: 0,
       y: 0,
-      isDown: false,
-      isUp: false,
+      // for touch input:
+      isDown: false, // in case of mouse: is any of the buttons down
+      isUp: false, // in case of mouse: are all of the buttons up
+      timeDown: 0,
+      timeUp: 0,
+      downDuration: 0,
+      // for mouse input:
+      leftButton: this._defaultPointerButtonData(),
+      middleButton: this._defaultPointerButtonData(),
+      rightButton: this._defaultPointerButtonData(),
+      // general
       isOver: false,
       isOut: false,
       timeOver: 0,
       timeOut: 0,
-      timeDown: 0,
-      timeUp: 0,
-      downDuration: 0,
       isDragged: false
     };
+  },
+  
+  _getPointerButtonData: function (pointer) {
+    if (pointer.button === Mouse.LEFT_BUTTON) {
+      return this._pointerData[pointer.id].leftButton;
+    }
+    if (pointer.button === Mouse.MIDDLE_BUTTON) {
+      return this._pointerData[pointer.id].middleButton;
+    }
+    if (pointer.button === Mouse.RIGHT_BUTTON) {
+      return this._pointerData[pointer.id].rightButton;
+    }
+    return null;
   },
 
   start: function(priority, useHandCursor) {
@@ -421,7 +450,30 @@ InputHandler.prototype = {
       this.sprite.emit('inputOut', this.sprite, pointer);
     }
   },
+  
+  // general code for both touch and mouse input, when a down event is detected
+  // from outside the appropriate specific (touch or mouse) handler needs to be called!
+  _handlePointerDown: function (pointer) {
+    if (this.sprite) {
+      this.sprite.emit('inputDown', this.sprite, pointer);
+    }
 
+    // It's possible the onInputDown event
+    // created a new Sprite that is on-top of this one,
+    // so we ought to force a Pointer update
+    pointer.dirty = true;
+
+    // Start drag
+    if (((!pointer.isMouse) || (pointer.button === Mouse.LEFT_BUTTON)) && this.draggable && (this.isDragged === false)) {
+      this.startDrag(pointer);
+    }
+
+    if (this.bringToTop) {
+      this.sprite.bringToTop();
+    }
+  },
+
+  // for touch input only (not aware of different buttons)
   _touchedHandler: function(pointer) {
     // Abort. We've been destroyed.
     if(this.sprite === null) { return; }
@@ -434,25 +486,65 @@ InputHandler.prototype = {
       data.isUp = false;
       data.timeDown = this.game.clock.time;
 
-      if(this.sprite) {
-        this.sprite.emit('inputDown', this.sprite, pointer);
-      }
-
-      // It's possible the onInputDown event
-      // created a new Sprite that is on-top of this one,
-      // so we ought to force a Pointer update
-      pointer.dirty = true;
-
-      // Start drag
-      if(this.draggable && this.isDragged === false) {
-        this.startDrag(pointer);
-      }
-
-      if(this.bringToTop) {
-        this.sprite.bringToTop();
-      }
+      this._handlePointerDown(pointer);
     }
   },
+  
+  // for mouse input (handles different mouse buttons)
+  _buttonDownHandler: function(pointer) {
+    // Abort. We've been destroyed.
+    if(this.sprite === null) { return; }
+
+    var data = this._pointerData[pointer.id],
+        buttonData = this._getPointerButtonData(pointer);
+    if (!buttonData) { return; } // unrecognized mouse button
+    if (!buttonData.isDown && data.isOver) {
+      if(this.pixelPerfectClick && !this.checkPixel(null, null, pointer)) { return; }
+
+      data.isDown = true;
+      data.isUp = false;
+      
+      buttonData.isDown = true;
+      buttonData.timeDown = this.game.clock.time;
+
+      this._handlePointerDown(pointer);
+    }
+  },
+  
+  // general code for both touch and mouse input, when an up event is detected
+  // from outside the appropriate specific (touch or mouse) handler needs to be called!
+  _handlePointerUp: function (pointer) {
+    // Only release the InputUp signal if the
+    // pointer is still over this sprite
+    var isOver = this.checkPointerOver(pointer);
+    if (this.sprite) {
+      this.sprite.emit('inputUp', this.sprite, pointer, isOver);
+
+      // The onInputUp event may have changed the sprite so
+      // that checkPointerOver is no longer true, so update
+      if (isOver) {
+        isOver = this.checkPointerOver(pointer);
+      }
+    }
+
+    this._pointerData[pointer.id].isOver = isOver;
+
+    if (!isOver && this.useHandCursor) {
+      this.game.canvas.style.cursor = '';
+      this._setHandCursor = false;
+    }
+
+    // It's possible the onInputUp event created a new
+    // Sprite that is on-top of this one, so force a Pointer update
+    pointer.dirty = true;
+
+    // Stop drag
+    if ((!pointer.isMouse || (pointer.button === Mouse.LEFT_BUTTON)) && this.draggable && this.isDragged && this._draggedPointerID === pointer.id) {
+      this.stopDrag(pointer);
+    }
+  },
+  
+  // for touch input only (not aware of different buttons)
   _releasedHandler: function(pointer) {
     // Abort. We've been destroyed.
     if(this.sprite === null) { return; }
@@ -466,32 +558,30 @@ InputHandler.prototype = {
       data.timeUp = this.game.clock.time;
       data.downDuration = data.timeUp - data.timeDown;
 
-      // Only release the InputUp signal if the
-      // pointer is still over this sprite
-      var isOver = this.checkPointerOver(pointer);
-      if(this.sprite) {
-        this.sprite.emit('inputUp', this.sprite, pointer, isOver);
+      this._handlePointerUp(pointer);
+    }
+  },
+  
+  // for mouse input (handles different mouse buttons)
+  _buttonUpHandler: function(pointer) {
+    // Abort. We've been destroyed.
+    if(this.sprite === null) { return; }
 
-        // The onInputUp event may have changed the sprite so
-        // that checkPointerOver is no longer true, so update
-        if(isOver) { isOver = this.checkPointerOver(pointer); }
-      }
+    // If was previously clicked on by this Pointer, 
+    // check if still is AND still over this item
+    var data = this._pointerData[pointer.id],
+        buttonData = this._getPointerButtonData(pointer);
+    if (!buttonData) { return; } // unrecognized mouse button
+    if (buttonData.isDown) {
+      
+      buttonData.isDown = false;
+      buttonData.timeUp = this.game.clock.time;
+      buttonData.downDuration = buttonData.timeUp - buttonData.timeDown;
+      
+      data.isDown = data.leftButton.isDown || data.middleButton.isDown || data.rightButton.isDown;
+      data.isUp = !data.isDown;
 
-      data.isOver = isOver;
-
-      if(!isOver && this.useHandCursor) {
-        this.game.canvas.style.cursor = '';
-        this._setHandCursor = false;
-      }
-
-      // It's possible the onInputUp event created a new
-      // Sprite that is on-top of this one, so force a Pointer update
-      pointer.dirty = true;
-
-      // Stop drag
-      if(this.draggable && this.isDragged && this._draggedPointerID === pointer.id) {
-        this.stopDrag(pointer);
-      }
+      this._handlePointerUp(pointer);
     }
   },
 
