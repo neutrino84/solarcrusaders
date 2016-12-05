@@ -153,7 +153,9 @@ SelectionView.prototype._touchedHandler = function(pointer) {
   }
 };
 
-SelectionView.prototype._releasedHandler = function(pointer) {
+SelectionView.prototype._buttonDownHandler = SelectionView.prototype._touchedHandler;
+
+SelectionView.prototype._touchReleasedHandler = function(pointer) {
   var data = this._pointerData[pointer.id];
   if(data.isDown && pointer.isUp) {
     data.isDown = false;
@@ -167,6 +169,8 @@ SelectionView.prototype._releasedHandler = function(pointer) {
     }
   }
 };
+
+SelectionView.prototype._buttonUpHandler = SelectionView.prototype._touchReleasedHandler;
 
 SelectionView.prototype._startDrag = function(pointer) {
   var x = pointer.x,
