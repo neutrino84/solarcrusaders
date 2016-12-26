@@ -9,6 +9,7 @@ function Movement(parent) {
 
   this.velocity = 0;
   
+  this._serverPlotTime = 0;
   this._last = 0;
   this._delay = 0;
   this._speed = 0;
@@ -56,6 +57,8 @@ Movement.prototype.update = function() {
       direction = this._direction,
       spd = this._speed,
       ship = this.parent,
+      time = this.game.clock.time,
+      step = 100, // = (1000 / Clock.desiredFps on the server side)
       distance, speed, multiplier, a1, a2;
 
   // ship position to point
@@ -67,15 +70,28 @@ Movement.prototype.update = function() {
   // calculate speed
   speed = (spd / (1/10)) * (1/60);
   multiplier = speed; //speed / distance < 1.0 ? speed * 1.01 : speed * 0.99;
-  
+
   // calculate vector
   vector.set(destination.x - position.x, destination.y - position.y);
   vector.normalize();
 
-  // update direction
-  direction.interpolate({
-    x: vector.x * multiplier,
-    y: vector.y * multiplier }, 0.15, direction);
+  // check for packet loss:
+  // if we haven't received a new plot within the expected time interval, invalidate the last plot,
+  // blocking further direction updates until a new valid plot arrives (avoid the ship jittering as
+  // it moves over/past invalid destinations)
+  if (this._plotValid && ((time - this._last) > (step * 1.15))) { // 15% delay is allowed
+    this._plotValid = false;
+//    if (!this.parent.details.ai) {
+//      console.log("plot invalidated " + vector.x.toFixed(2) + " " + vector.y.toFixed(2));
+//    }
+  }
+
+  // direction updates blocked for invalid plots
+  if (this._plotValid) {
+    direction.interpolate({
+      x: vector.x * multiplier,
+      y: vector.y * multiplier}, 0.15, direction);
+  }
 
   // update ship position
   ship.position.set(position.x + direction.x, position.y + direction.y);
@@ -90,24 +106,33 @@ Movement.prototype.update = function() {
       ship.rotation = 0;
     }
   }
-
+  
   // set velocity
   this.velocity = speed * 6;
 };
 
 Movement.prototype.plot = function(data) {
   var time = this.game.clock.time,
-      a1, a2, ship = this.parent,
-      distance;
+      ship = this.parent;
 
-  this._delay = time - this._last;
-  this._last = time;
-  this._destination.copyFrom(data.pos);
-  this._speed = data.spd;
+//  var dt = data.time - this._serverPlotTime;
+//  if (!this.parent.details.ai) {
+//    console.log(dt + " " + (time - data.time));
+//  }
 
-  // update position
-  if(this._position.distance(this._destination) > 256) {
-    ship.position.set(this._destination.x, this._destination.y);
+  // protect against reordered packets: check server timestamp
+  if (data.time > this._serverPlotTime) {
+    this._serverPlotTime = data.time;
+    this._delay = time - this._last;
+    this._last = time;
+    this._destination.copyFrom(data.pos);
+    this._speed = data.spd;
+    this._plotValid = true;
+
+    // update position
+    if (this._position.distance(this._destination) > 256) {
+      ship.position.set(this._destination.x, this._destination.y);
+    }
   }
 };
 

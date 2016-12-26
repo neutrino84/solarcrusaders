@@ -196,7 +196,7 @@ ShipManager.prototype.data = function(sock, args, next) {
 
 ShipManager.prototype.update = function() {
   var data, ship, position, movement,
-      moving, ships = this.ships,
+      ships = this.ships,
       arr = [];
   for(var s in ships) {
     ship = ships[s];
@@ -206,7 +206,8 @@ ShipManager.prototype.update = function() {
     data = {
       uuid: ship.uuid,
       pos: { x: position.x, y: position.y },
-      spd: ship.speed * movement.throttle
+      spd: ship.speed * movement.throttle,
+      time: this.game.clock.time // include timestamps so the client can check for correct order
     };
     arr.push(data);
   }
