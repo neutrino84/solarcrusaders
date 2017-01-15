@@ -1,7 +1,8 @@
 
-var uuid = require('uuid'),
-    engine = require('engine')
-    client = require('client'),
+// for linters
+/*global module*/
+
+var ObjectManager = require('./ObjectManager'),
     ShipManager = require('./ShipManager'),
     UserManager = require('./UserManager');
 
@@ -13,15 +14,15 @@ function SectorManager(game) {
   // this.iorouter = game.sockets.iorouter;
 
   this.userManager = new UserManager(game);
+  this.staticManager = new ObjectManager(game, 'static');
   this.shipManager = new ShipManager(game);
-};
+}
 
 SectorManager.prototype.constructor = SectorManager;
 
 SectorManager.prototype.init = function() {
-  var self = this;
-
   this.userManager.init();
+  this.staticManager.init();
   this.shipManager.init();
 };
 
