@@ -15,8 +15,8 @@ function ShieldGenerator(parent) {
   this.width = this.shieldSprite.width
   this.height = this.shieldSprite.height;
 
-  this.shieldsUpSFX = this.game.sound.add(('shieldsUp'),0,true)
-  this.heavyShieldsUpSFX = this.game.sound.add(('heavyShieldsUp'),0,true)
+  this.shieldsUpSFX = this.game.soundManager.shieldsUpSFX
+  this.heavyShieldsUpSFX = this.game.soundManager.heavyShieldsUpSFX
 };
 
 ShieldGenerator.prototype.constructor = ShieldGenerator;
@@ -31,7 +31,6 @@ ShieldGenerator.prototype.start = function() {
   if(this.game.playerObj.name === 'ubaidian-x02' || this.game.playerObj.name === 'ubaidian-x01'){this.heavyShieldsUpSFX.play('', 0, 0.7, false);}
   else {
     this.shieldsUpSFX.play('', 0, 1, false);
-    console.log(this.shieldsUpSFX)
   }
   
 

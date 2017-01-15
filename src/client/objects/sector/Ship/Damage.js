@@ -30,6 +30,7 @@ Damage.prototype.constructor = Damage;
 
 
 Damage.prototype.inflict = function(position) {
+  console.log('DAMAGE INFLICTED')
   var game = this.game,
       ship = this.ship,
       fire = this.fireEmitter,
@@ -74,8 +75,8 @@ Damage.prototype.shockwave = function() {
 Damage.prototype.destroyed = function() {
   var ship = this.ship;
   
-  this.deathExplosion.play('', 0, 0.1, false);
-
+  this.game.soundManager.deathExplosion.play('', 0, 0.2, false);
+  console.log('got to Damage.destroyed()')
   // shockwave
   // this.shockwave();
 

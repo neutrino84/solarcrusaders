@@ -86,6 +86,14 @@ Ship.prototype.data = function(data) {
   var hud = this.hud,
       config = this.config,
       percent;
+
+
+  if(this.isPlayer) {
+    if(data && data.health) {
+      this.game.emit('ship/damaged', this.details.percentHealth);
+    }
+  }
+
   if(data.health !== undefined) {
     percent = data.health / config.stats.health;
     hud.healthBar.setProgressBar(global.Math.min(1.0, percent));
@@ -93,6 +101,11 @@ Ship.prototype.data = function(data) {
   if(data.kills || data.assists || data.disables) {
     hud.updateStats(this.details);
   }
+  if(this.isPlayer){
+    // console.log('in Ship.data. isPlayer activated', this)
+  }
+
+  
 };
 
 Ship.prototype.update = function() {

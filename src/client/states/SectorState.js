@@ -6,9 +6,9 @@ var engine = require('engine'),
     Snow = require('../fx/Snow'),
     InputManager = require('../objects/sector/InputManager'),
     ShipManager = require('../objects/sector/ShipManager'),
+    SoundManager = require('../objects/sector/SoundManager')
     StationManager = require('../objects/sector/StationManager'),
     Asteroid = require('../objects/sector/misc/Asteroid');
-    
 function SectorState() {}
 
 SectorState.prototype = Object.create(engine.State.prototype);
@@ -19,6 +19,7 @@ SectorState.prototype.init = function(args) {
 
   this.scrollLock = true;
   this.game.stage.disableVisibilityChange = true;
+  this.soundManager = SoundManager.prototype
 };
 
 SectorState.prototype.preload = function() {
@@ -43,57 +44,61 @@ SectorState.prototype.preload = function() {
   load.image('laser-red', 'imgs/game/fx/laser-red.png');
   // load.image('trails', 'imgs/game/fx/trails.png');
 
+  SoundManager.prototype.preload()
+
+
+  // this.SoundManager.preload()
   // test load sound
-  load.audio('background', 'imgs/game/sounds/mood.mp3');
+  // load.audio('background', 'imgs/game/sounds/mood.mp3');
 
-  load.audio('laser1','imgs/game/sounds/lasers/laser1.mp3');
-   load.audio('laser2','imgs/game/sounds/lasers/laser2.mp3');
-    load.audio('laser3','imgs/game/sounds/lasers/laser3.mp3');
-     load.audio('laser4','imgs/game/sounds/lasers/laser4.mp3');
-      load.audio('laser5','imgs/game/sounds/lasers/laser5.1.mp3');
-       load.audio('laser6','imgs/game/sounds/lasers/laser6.1.mp3');
-        load.audio('laser7','imgs/game/sounds/lasers/laser7.1.mp3');
-         load.audio('laser8','imgs/game/sounds/lasers/laser8.1.mp3');
-          load.audio('laser9','imgs/game/sounds/lasers/laser9.1.mp3');
-           load.audio('laser10','imgs/game/sounds/lasers/laser10.1.mp3');
-            load.audio('laser11','imgs/game/sounds/lasers/laser11.1.mp3');
-             load.audio('laser12','imgs/game/sounds/lasers/laser12.1.mp3');
-              load.audio('laser13','imgs/game/sounds/lasers/laser13.1.mp3');
-               load.audio('laser14','imgs/game/sounds/lasers/laser14.1.mp3');
-                load.audio('laser15','imgs/game/sounds/lasers/laser15.1.mp3');
-                 load.audio('laser16','imgs/game/sounds/lasers/laser16.1.mp3');
-                  load.audio('laser17','imgs/game/sounds/lasers/laser17.1.mp3');
-  load.audio('heavyLaser1','imgs/game/sounds/lasers/heavyLasers1.mp3');
-  load.audio('heavyLaser2','imgs/game/sounds/lasers/heavyLasers2.mp3');
-  load.audio('heavyLaser3','imgs/game/sounds/lasers/heavyLasers3.mp3');
-  load.audio('heavyLaser4','imgs/game/sounds/lasers/heavyLasers4.mp3');
-  load.audio('heavyLaser5','imgs/game/sounds/lasers/heavyLasers5.mp3');
-  load.audio('heavyLaser6','imgs/game/sounds/lasers/heavyLasers6.mp3');
-  load.audio('heavyLaser7','imgs/game/sounds/lasers/heavyLasers7.mp3');
-
-
-  load.audio('rocket1','imgs/game/sounds/rockets/rocket1.mp3');
-  load.audio('rocket2','imgs/game/sounds/rockets/rocket2.mp3');
-  load.audio('rocket3','imgs/game/sounds/rockets/rocket3.mp3');
-
-  load.audio('mediumThrusters1','imgs/game/sounds/thrusters/mediumThrusters1.mp3');
-  load.audio('mediumThrusters2','imgs/game/sounds/thrusters/mediumThrusters2.mp3');
-  load.audio('mediumThrusters3','imgs/game/sounds/thrusters/mediumThrusters3.mp3');
-
-  load.audio('heavyThrusters1','imgs/game/sounds/thrusters/heavy/heavyThrusters1.7.mp3');
-  load.audio('heavyThrusters2','imgs/game/sounds/thrusters/heavy/heavyThrusters2.7.mp3');
-  load.audio('heavyOverdrive','imgs/game/sounds/thrusters/heavy/heavyOverdrive.mp3');
+  // load.audio('laser1','imgs/game/sounds/lasers/laser1.mp3');
+  //  load.audio('laser2','imgs/game/sounds/lasers/laser2.mp3');
+  //   load.audio('laser3','imgs/game/sounds/lasers/laser3.mp3');
+  //    load.audio('laser4','imgs/game/sounds/lasers/laser4.mp3');
+  //     load.audio('laser5','imgs/game/sounds/lasers/laser5.1.mp3');
+  //      load.audio('laser6','imgs/game/sounds/lasers/laser6.1.mp3');
+  //       load.audio('laser7','imgs/game/sounds/lasers/laser7.1.mp3');
+  //        load.audio('laser8','imgs/game/sounds/lasers/laser8.1.mp3');
+  //         load.audio('laser9','imgs/game/sounds/lasers/laser9.1.mp3');
+  //          load.audio('laser10','imgs/game/sounds/lasers/laser10.1.mp3');
+  //           load.audio('laser11','imgs/game/sounds/lasers/laser11.1.mp3');
+  //            load.audio('laser12','imgs/game/sounds/lasers/laser12.1.mp3');
+  //             load.audio('laser13','imgs/game/sounds/lasers/laser13.1.mp3');
+  //              load.audio('laser14','imgs/game/sounds/lasers/laser14.1.mp3');
+  //               load.audio('laser15','imgs/game/sounds/lasers/laser15.1.mp3');
+  //                load.audio('laser16','imgs/game/sounds/lasers/laser16.1.mp3');
+  //                 load.audio('laser17','imgs/game/sounds/lasers/laser17.1.mp3');
+  // load.audio('heavyLaser1','imgs/game/sounds/lasers/heavyLasers1.mp3');
+  // load.audio('heavyLaser2','imgs/game/sounds/lasers/heavyLasers2.mp3');
+  // load.audio('heavyLaser3','imgs/game/sounds/lasers/heavyLasers3.mp3');
+  // load.audio('heavyLaser4','imgs/game/sounds/lasers/heavyLasers4.mp3');
+  // load.audio('heavyLaser5','imgs/game/sounds/lasers/heavyLasers5.mp3');
+  // load.audio('heavyLaser6','imgs/game/sounds/lasers/heavyLasers6.mp3');
+  // load.audio('heavyLaser7','imgs/game/sounds/lasers/heavyLasers7.mp3');
 
 
-  load.audio('shieldsUp','imgs/game/sounds/shields/shieldsUp1.mp3');
-  load.audio('heavyShieldsUp','imgs/game/sounds/shields/heavyShieldsUp.mp3');
+  // load.audio('rocket1','imgs/game/sounds/rockets/rocket1.mp3');
+  // load.audio('rocket2','imgs/game/sounds/rockets/rocket2.mp3');
+  // load.audio('rocket3','imgs/game/sounds/rockets/rocket3.mp3');
 
-  load.audio('piercingDamageActivate','imgs/game/sounds/piercingDamage/piercingDamageActivate.mp3');
-  load.audio('repair1','imgs/game/sounds/repair/HealthUp1.mp3')
-  load.audio('deathExplosion','imgs/game/sounds/deathExplosion/deathExplosion.mp3')
+  // load.audio('mediumThrusters1','imgs/game/sounds/thrusters/mediumThrusters1.mp3');
+  // load.audio('mediumThrusters2','imgs/game/sounds/thrusters/mediumThrusters2.mp3');
+  // load.audio('mediumThrusters3','imgs/game/sounds/thrusters/mediumThrusters3.mp3');
 
-  load.audio('blip1','imgs/game/sounds/selectionSFX/selectionSFX1_converted.mp3');
-  load.audio('blip2','imgs/game/sounds/selectionSFX/selectionSFX2_converted.mp3');
+  // load.audio('heavyThrusters1','imgs/game/sounds/thrusters/heavy/heavyThrusters1.7.mp3');
+  // load.audio('heavyThrusters2','imgs/game/sounds/thrusters/heavy/heavyThrusters2.7.mp3');
+  // load.audio('heavyOverdrive','imgs/game/sounds/thrusters/heavy/heavyOverdrive.mp3');
+
+
+  // load.audio('shieldsUp','imgs/game/sounds/shields/shieldsUp1.mp3');
+  // load.audio('heavyShieldsUp','imgs/game/sounds/shields/heavyShieldsUp.mp3');
+
+  // load.audio('piercingDamageActivate','imgs/game/sounds/piercingDamage/piercingDamageActivate.mp3');
+  // load.audio('repair1','imgs/game/sounds/repair/HealthUp1.mp3')
+  // load.audio('deathExplosion','imgs/game/sounds/deathExplosion/deathExplosion.mp3')
+
+  // load.audio('blip1','imgs/game/sounds/selectionSFX/selectionSFX1_converted.mp3');
+  // load.audio('blip2','imgs/game/sounds/selectionSFX/selectionSFX2_converted.mp3');
 
 };
 
@@ -131,7 +136,7 @@ SectorState.prototype.create = function() {
 
 
   this.background = this.game.sound.add('background', 0, true);
-  this.heavyThrusters = this.game.sound.add('heavyThrusters', 0, true);
+  // this.heavyThrusters = this.game.sound.add('heavyThrusters', 0, true);
   
 
   this.background.on('decoded', function() {
@@ -153,6 +158,9 @@ SectorState.prototype.create = function() {
 
   // initialize net manager
   this.game.shipNetManager.init();
+
+  // this.game.soundManager.init();
+
 
   // benchmark
   // this.game.clock.benchmark();
@@ -186,6 +194,9 @@ SectorState.prototype.createManagers = function() {
   this.stationManager.boot();
   
   this.shipManager = new ShipManager(this.game);
+
+  this.soundManager = new SoundManager(this.game)
+
   this.inputManager = new InputManager(this.game);
 };
 

@@ -39,6 +39,8 @@ function ShipData(game, data) {
 
   this.game = game;
 
+  this.percentHealth = 100;
+
   this.config = {
     binding: ShipData.STAT_SYSTEM_BINDING,
     sort: ShipData.SYSTEM_SORT_ORDER,
@@ -65,6 +67,10 @@ ShipData.prototype.constructor = ShipData;
 
 ShipData.prototype.update = function(data) {
   engine.Class.mixin(data, this);
+
+  if(data && data.health) {
+    this.percentHealth = this.health / this.config.ship.stats.health;
+  }
 
   this.emit('data', data);
 };

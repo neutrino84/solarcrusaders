@@ -2,6 +2,7 @@
 var engine = require('engine'),
     Ship = require('./Ship'),
     EnhancementManager = require('./EnhancementManager'),
+    SoundManager = require('./SoundManager'),
     ExplosionEmitter = require('./emitters/ExplosionEmitter'),
     FlashEmitter = require('./emitters/FlashEmitter'),
     GlowEmitter = require('./emitters/GlowEmitter'),
@@ -9,9 +10,7 @@ var engine = require('engine'),
     FireEmitter = require('./emitters/FireEmitter'),
     Indicator = require('./misc/Indicator');
     // SectorState = require('../states/SectorState')
-
 function ShipManager(game) {
-
   this.game = game;
   this.clock = game.clock;
   this.net = game.net;
@@ -23,37 +22,12 @@ function ShipManager(game) {
   // this.player = null;
 
   //this is my attempt at making a player object I can understand/use -Richard
+  //will refactor later
   this.game.playerObj = {};
   this.player = this.game.playerObj
 
-  
-
-
-  this.laserArr = []
-  this.heavyLaserArr = []
-  this.rocketArr = []
-  this.thrustersArr = []
-  this.heavyThrustersArr = []
-
-  for(var i = 1; i<18; i++){
-    this.laserArr.push(this.game.sound.add(('laser'+i),0,true));
-  }
-  for(var i = 1;i<4;i++){
-    this.rocketArr.push(this.game.sound.add(('rocket'+i),0,true));
-  }
-  for(var i = 1;i<4;i++){
-    this.thrustersArr.push(this.game.sound.add(('mediumThrusters'+i),0,true));
-  }
-  for(var i = 1;i<3;i++){
-    this.heavyThrustersArr.push(this.game.sound.add(('heavyThrusters'+i),0,true));
-  }
-  for(var i = 1;i<7;i++){
-    this.heavyLaserArr.push(this.game.sound.add(('heavyLaser'+i),0,true));
-  }
-  // this.mediumThrusters = this.game.sound.add(('heavyThrusters'),0,true)
   // ship cache
   this.ships = {};
-
   // create indicator
   this.indicator = new Indicator(game);
 
@@ -109,9 +83,16 @@ function ShipManager(game) {
   this.game.on('ship/removed', this._removed, this);
   this.game.on('ship/disabled', this._disabled, this);
   this.game.on('ship/enabled', this._enabled, this);
+
+
+
+  // this.laserArr = this.game.soundManager.laserArr
+  // tried to do this ^ but this.game.soundManager doesn't exist yet apparently
 };
 
 ShipManager.prototype.constructor = ShipManager;
+
+
 
 // ShipManager.prototype.focus = function() {
 //   this.game.input.on('keydown', this._unfollow, this);
@@ -201,6 +182,8 @@ ShipManager.prototype.destroy = function() {
   this.removeAll();
 };
 
+
+
 ShipManager.prototype._sync = function(data) {
   var ship, cached,
       game = this.game,
@@ -226,59 +209,51 @@ ShipManager.prototype._sync = function(data) {
 
 ShipManager.prototype._player = function(ship) {
   this.player = ship;
-  // var hasLaser = false;
-  // for (var prop in ship.details.cargo){
-  //   var item = ship.details.cargo[prop].sprite
-  //   if(item === 'item-laser-a'){
-  //     hasLaser=true
-  //     this.player.details.weapon = 'laser'
-  //     this.game.playerObj.weapon = 'laser'
-  //   } else {this.player.details.weapon = 'rocket', this.game.playerObj.weapon = 'rocket'}
-  // }
   this.game.playerObj.name = ship.name
-  // console.log(this.game.playerObj.name)
 };
 
 ShipManager.prototype.laserFireSFX = function(shipSize){
-  console.log('SHOT LASER')
+  var laserArr = this.game.soundManager.laserArr
+  var heavyLaserArr = this.game.soundManager.heavyLaserArr
+
   if(shipSize === 'light'){
-  var maxNum = this.laserArr.length-1
+  var maxNum = laserArr.length-1
   var minNum = 0
 
   var randomNum = Math.floor(Math.random() * (maxNum - minNum + 1)) + minNum;
-  this.laserArr[randomNum].play('', 0, 0.3, false);
-  // console.log(this.laserArr[randomNum])
+  laserArr[randomNum].play('', 0, 0.3, false);
   }
   if(shipSize === 'heavy'){
-  var maxNum = this.heavyLaserArr.length-1
+  var maxNum = heavyLaserArr.length-1
   var minNum = 0
   var randomNum = Math.floor(Math.random() * (maxNum - minNum + 1)) + minNum;
   var randomNum2 = Math.floor(Math.random() * (maxNum - minNum + 1)) + minNum;
-  this.heavyLaserArr[randomNum].play('', 0, 0.1, false);
-  this.heavyLaserArr[randomNum2].play('', 0, 0.1, false);
+  heavyLaserArr[randomNum].play('', 0, 0.1, false);
+  heavyLaserArr[randomNum2].play('', 0, 0.1, false);
   }
 }
 ShipManager.prototype.rocketFireSFX = function(){
-  console.log('SHOT ROCKKET')
-  var maxNum = this.rocketArr.length-1
+  var rocketArr = this.game.soundManager.rocketArr
+  var maxNum = rocketArr.length-1
   var minNum = 0
   var randomNum = Math.floor(Math.random() * (maxNum - minNum + 1)) + minNum;
-  this.rocketArr[randomNum].play('', 0, 0.3, false);
-  console.log(this.rocketArr[randomNum])
+  rocketArr[randomNum].play('', 0, 0.3, false);
 }
 
 ShipManager.prototype.thrustersSFX = function(shipSize){
+  var thrustersArr = this.game.soundManager.thrustersArr
+  var heavyThrustersArr = this.game.soundManager.heavyThrustersArr
   if(shipSize === 'light'){
-    var maxNum = this.thrustersArr.length-1
+    var maxNum = thrustersArr.length-1
     var minNum = 0
     var randomNum = Math.floor(Math.random() * (maxNum - minNum + 1)) + minNum;
-    this.thrustersArr[randomNum].play('', 0, 0.7, false);
+    thrustersArr[randomNum].play('', 0, 1, false);
   }
   if(shipSize === 'heavy'){
-    var maxNum = this.heavyThrustersArr.length-1
+    var maxNum = heavyThrustersArr.length-1
     var minNum = 0
     var randomNum = Math.floor(Math.random() * (maxNum - minNum + 1)) + minNum;
-    this.heavyThrustersArr[randomNum].play('', 0, 0.4, false);
+    heavyThrustersArr[randomNum].play('', 0, 0.3, false);
   }
 }
 

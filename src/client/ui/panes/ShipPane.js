@@ -40,6 +40,7 @@ function ShipPane(game, settings) {
   this.current = null;
   this.last = null;
   this.isPlayer = settings.player;
+  console.log('settings.player is: ',settings.player)
 
   this.panes = {};
 
