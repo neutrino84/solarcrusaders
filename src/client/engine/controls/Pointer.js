@@ -222,7 +222,11 @@ Pointer.prototype = {
     this.totalTouches++;
 
     if(this.targetObject !== null) {
-      this.targetObject._touchedHandler(this);
+      if (!this.isMouse) {
+        this.targetObject._touchedHandler(this);
+      } else {
+        this.targetObject._buttonDownHandler(this);
+      }
     }
 
     return this;
@@ -486,7 +490,11 @@ Pointer.prototype = {
     }
 
     input.interactiveItems.callAll('_dropHandler', this);
-    input.interactiveItems.callAll('_releasedHandler', this);
+    if (!this.isMouse) {
+      input.interactiveItems.callAll('_touchReleasedHandler', this);
+    } else {
+      input.interactiveItems.callAll('_buttonUpHandler', this);
+    }
 
     if(this._clickTrampolines) {
       this._trampolineTargetObject = this.targetObject;
@@ -559,7 +567,11 @@ Pointer.prototype = {
     this.resetButtons();
 
     if(this.targetObject) {
-      this.targetObject._releasedHandler(this);
+      if (!this.isMouse) {
+        this.targetObject._touchReleasedHandler(this);
+      } else {
+        this.targetObject._buttonUpHandler(this);
+      }
     }
 
     this.targetObject = null;
