@@ -1,16 +1,12 @@
 var pixi = require('pixi'),
     Const = require('../const'),
     Cache = require('../load/Cache'),
-    Core = require('./components/Core');
+    Core = require('./components/Core'),
+    Destroy = require('./components/Destroy');
 
 function Strip(game, key, points) {
   key = key || null;
   points = points || [];
-
-  this.points = [];
-
-  this._hasUpdateAnimation = false;
-  this._updateAnimationCallback = null;
 
   this.type = Const.STRIP;
 
@@ -25,36 +21,20 @@ Strip.prototype.constructor = Strip;
 Core.install.call(
   Strip.prototype, [
     'Mixin',
-    'Bounds',
     'Destroy',
     'LoadTexture'
   ]
 );
 
-Strip.prototype.preUpdateCore = Core.preUpdate;
+Strip.prototype.updateCore = Core.update;
 
 Strip.prototype.update = function() {
-  this.preUpdateCore();
-
-  if(this._hasUpdateAnimation) {
-    this.updateAnimation.call(this);
-  }
+  this.updateCore();
 };
 
-Object.defineProperty(Strip.prototype, 'updateAnimation', {
-  get: function () {
-    return this._updateAnimation;
-  },
-
-  set: function (value) {
-    if (value && typeof value === 'function') {
-      this._hasUpdateAnimation = true;
-      this._updateAnimation = value;
-    } else {
-      this._hasUpdateAnimation = false;
-      this._updateAnimation = null;
-    }
-  }
-});
+// Strip.prototype.destroy = function(destroyChildren) {
+//   Destroy.prototype.destroy.call(this, destroyChildren);
+//   // pixi.mesh.Rope.prototype.destroy.call(this, destroyChildren);
+// };
 
 module.exports = Strip;

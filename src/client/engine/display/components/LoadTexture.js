@@ -4,112 +4,80 @@ var pixi = require('pixi'),
 function LoadTexture() {};
 
 LoadTexture.prototype = {
-  customRender: false,
+  
+  loadTexture: function(key, frame, animations) {
+    if(this.animations) { this.animations.stop(); }
 
-  _frame: null,
-
-  loadTexture: function(key, frame, stopAnimation) {
-    if((stopAnimation || typeof stopAnimation === 'undefined') && this.animations) {
-      this.animations.stop();
-    }
-
-    this.key = key;
-    this.customRender = false;
-    
-    var img,
-        setFrame = true,
-        smoothed = !this.texture.baseTexture.scaleMode;
+    var cache = this.game.cache,
+        frameData, frameRectangle;
     if(key instanceof pixi.RenderTexture || key instanceof pixi.Texture) {
       this.texture = key;
     } else {
-      img = this.game.cache.getImage(key, true);
+      this.texture = new pixi.Texture(cache.getBaseTexture(key));
+      this.frameData = cache.getFrameData(key);
 
-      this.key = img.key;
-      this.texture = new pixi.Texture(img.base);
+      if(this.animations && animations != undefined) {
+        this.animations.loadFrameData(frameData);
+        
+        // add animations
+        for(var name in animations) {
+          this.animations.add(
+            name,
+            animations[name].frames,
+            animations[name].frameRate,
+            animations[name].loop
+          );
+        }
+      }
 
-      if(this.animations) {
-        setFrame = !this.animations.loadFrameData(img.frameData, frame || 0);
+      if(frame != undefined) {
+        this.setFrameByName(frame);
       }
     }
+  },
+
+  setFrameByName: function(name) {
+    if(this.frameData == undefined) { return; }
     
-    if(setFrame) {
-      this._frame = Rectangle.clone(this.texture.frame);
-    }
+    var frameData = this.frameData,
+        frame = frameData.getFrameByName(name);
 
-    if(!smoothed) {
-      this.texture.baseTexture.scaleMode = 1;
-    }
-
-    if(img && img.base.isPowerOfTwo) {
-      img.base.mipmap = true;
-    }
+    this.setFrame(frame);
   },
 
   setFrame: function(frame) {
-    this._frame = frame;
+    var texture = this.texture;
 
-    this.texture.frame.x = frame.x;
-    this.texture.frame.y = frame.y;
-    this.texture.frame.width = frame.width;
-    this.texture.frame.height = frame.height;
+    // update frame
+    texture.frame.x = frame.x;
+    texture.frame.y = frame.y;
+    texture.frame.width = frame.width;
+    texture.frame.height = frame.height;
+    texture.orig.x = frame.x;
+    texture.orig.y = frame.y;
+    texture.orig.width = frame.width;
+    texture.orig.height = frame.height;
 
-    this.texture.orig.x = frame.x;
-    this.texture.orig.y = frame.y;
-    this.texture.orig.width = frame.width;
-    this.texture.orig.height = frame.height;
-
+    // update trim
     if(frame.trimmed) {
-      if(this.texture.trim) {
-        this.texture.trim.x = frame.spriteSourceSizeX;
-        this.texture.trim.y = frame.spriteSourceSizeY;
-        this.texture.trim.width = frame.sourceSizeW;
-        this.texture.trim.height = frame.sourceSizeH;
+      if(texture.trim) {
+        texture.trim.x = frame.spriteSourceSizeX;
+        texture.trim.y = frame.spriteSourceSizeY;
+        texture.trim.width = frame.sourceSizeW;
+        texture.trim.height = frame.sourceSizeH;
       } else {
-        this.texture.trim = {
-          x: frame.spriteSourceSizeX, y: frame.spriteSourceSizeY,
-          width: frame.sourceSizeW, height: frame.sourceSizeH
+        texture.trim = {
+          x: frame.spriteSourceSizeX,
+          y: frame.spriteSourceSizeY,
+          width: frame.sourceSizeW,
+          height: frame.sourceSizeH
         };
       }
-
-      this.texture.width = frame.sourceSizeW;
-      this.texture.height = frame.sourceSizeH;
-      this.texture.frame.width = frame.sourceSizeW;
-      this.texture.frame.height = frame.sourceSizeH;
-    } else if(!frame.trimmed && this.texture.trim) {
-      this.texture.trim = null;
+    } else if(!frame.trimmed && texture.trim) {
+      texture.trim = null;
     }
 
-    if(this.cropRect) {
-      this.updateCrop();
-    }
-
-    this.texture.requiresReTint = true;
-    this.texture._updateUvs();
-
-    if(this.tilingTexture) {
-      this.refreshTexture = true;
-    }
-  },
-
-  resizeFrame: function(parent, width, height) {
-    this.texture.frame.resize(width, height);
-    this.texture.setFrame(this.texture.frame);
-  },
-
-  resetFrame: function() {
-    if(this._frame) {
-      this.setFrame(this._frame);
-    }
-  },
-
-  frame: {
-    get: function() {
-      return this.animations.frame;
-    },
-
-    set: function(value) {
-      this.animations.frame = value;
-    }
+    texture._updateUvs();
   }
 };
 

@@ -16,13 +16,6 @@ function Loader(game) {
   this.baseURL = '';
   this.path = '';
 
-  // this.onLoadStart = new Phaser.Signal();
-  // this.onLoadComplete = new Phaser.Signal();
-  // this.onPackComplete = new Phaser.Signal();
-  // this.onFileStart = new Phaser.Signal();
-  // this.onFileComplete = new Phaser.Signal();
-  // this.onFileError = new Phaser.Signal();
-
   this.useXDomainRequest = false;
   this.enableParallel = true;
   this.maxParallelDownloads = 6;
@@ -36,10 +29,7 @@ function Loader(game) {
   this._processingHead = 0;
   this._fileLoadStarted = false;
 
-  this._totalPackCount = 0;
   this._totalFileCount = 0;
-
-  this._loadedPackCount = 0;
   this._loadedFileCount = 0;
 
   EventEmitter.call(this);
@@ -280,10 +270,7 @@ Loader.prototype.atlas = function(key, textureURL, atlasURL, atlasData, format) 
   if(atlasURL === undefined) { atlasURL = null; }
   if(atlasData === undefined) { atlasData = null; }
   if(format === undefined) { format = Loader.TEXTURE_ATLAS_JSON_ARRAY; }
-
-  if(!atlasURL && !atlasData) {
-    atlasURL = key + '.json';
-  }
+  if(atlasURL === null && atlasData === null) { atlasURL = key + '.json'; }
 
   // a url to a json file has been given
   if(atlasURL) {
@@ -341,7 +328,6 @@ Loader.prototype.start = function() {
   this.hasLoaded = false;
   this.isLoading = true;
 
-  this.updateProgress();
   this.processLoadQueue();
 };
 
@@ -374,8 +360,8 @@ Loader.prototype.processLoadQueue = function() {
   }
 
   // When true further non-pack file downloads are suppressed
-  var syncblock = false;
-  var inflightLimit = this.enableParallel ? Math.clamp(this.maxParallelDownloads, 1, 12) : 1;
+  var syncblock = false,
+      inflightLimit = this.enableParallel ? this.maxParallelDownloads : 1;
   for(var i = this._processingHead; i < this._fileList.length; i++) {
     var file = this._fileList[i];
 
@@ -412,8 +398,6 @@ Loader.prototype.processLoadQueue = function() {
       break;
     }
   }
-
-  this.updateProgress();
 
   // True when all items in the queue have been advanced over
   // (There should be no inflight items as they are complete - loaded/error.)
@@ -481,7 +465,6 @@ Loader.prototype.loadFile = function(file) {
     case 'textureatlas':
       this.loadImageTag(file);
       break;
-
     case 'audio':
       file.url = this.getAudioURL(file.url);
       if(file.url) {
@@ -495,30 +478,127 @@ Loader.prototype.loadFile = function(file) {
         this.fileError(file, null, 'No supported audio URL specified or device does not have audio playback support');
       }
       break;
-
     case 'json':
       this.xhrLoad(file, this.transformUrl(file.url, file), 'text', this.jsonLoadComplete);
       break;
-
     case 'xml':
       this.xhrLoad(file, this.transformUrl(file.url, file), 'text', this.xmlLoadComplete);
       break;
-
     case 'tilemap':
       this.xhrLoad(file, this.transformUrl(file.url, file), 'text', this.jsonLoadComplete);
       break;
-
     case 'text':
     case 'script':
     case 'shader':
       this.xhrLoad(file, this.transformUrl(file.url, file), 'text', this.fileComplete);
       break;
-
     case 'binary':
       this.xhrLoad(file, this.transformUrl(file.url, file), 'arraybuffer', this.fileComplete);
       break;
   }
+};
 
+Loader.prototype.fileComplete = function(file, xhr) {
+  var loadNext = true,
+      game = this.game,
+      cache = this.cache;
+  switch(file.type) {
+    case 'image':
+      cache.addImage(file.key, file.url, file.data);
+      break;
+    case 'spritesheet':
+      cache.addSpriteSheet(file.key, file.url, file.data, file.frameWidth, file.frameHeight, file.frameMax, file.margin, file.spacing);
+      break;
+    case 'textureatlas':
+      if(file.atlasURL == null) {
+        cache.addTextureAtlas(file.key, file.url, file.data, file.atlasData, file.format);
+      } else {
+        // load the JSON before carrying on with the next file
+        loadNext = false;
+
+        if(file.format == Loader.TEXTURE_ATLAS_JSON_ARRAY || file.format == Loader.TEXTURE_ATLAS_JSON_HASH) {
+          this.xhrLoad(file, this.transformUrl(file.atlasURL, file), 'text', this.jsonLoadComplete);
+        } else {
+          throw new Error('Loader - Invalid Texture Atlas format: ' + file.format);
+        }
+      }
+      break;
+    case 'audio':
+      if(game.sound.usingWebAudio) {
+        file.data = xhr.response;
+        cache.addSound(file.key, file.url, file.data, true, false);
+
+        if(file.autoDecode) {
+          game.sound.decode(file.key);
+        }
+      } else {
+        cache.addSound(file.key, file.url, file.data, false, true);
+      }
+      break;
+    case 'text':
+      file.data = xhr.responseText;
+      cache.addText(file.key, file.url, file.data);
+      break;
+    case 'shader':
+      file.data = xhr.responseText;
+      cache.addShader(file.key, file.url, file.data);
+      break;
+    case 'script':
+      file.data = document.createElement('script');
+      file.data.language = 'javascript';
+      file.data.type = 'text/javascript';
+      file.data.defer = false;
+      file.data.text = xhr.responseText;
+
+      document.head.appendChild(file.data);
+
+      if(file.callback) {
+        file.data = file.callback.call(file.callbackContext, file.key, xhr.responseText);
+      }
+      break;
+    case 'binary':
+      if(file.callback) {
+        file.data = file.callback.call(file.callbackContext, file.key, xhr.response);
+      } else {
+        file.data = xhr.response;
+      }
+      cache.addBinary(file.key, file.data);
+      break;
+  }
+  if(loadNext) {
+    this.asyncComplete(file);
+  }
+};
+
+Loader.prototype.jsonLoadComplete = function(file, xhr) {
+  var data = JSON.parse(xhr.responseText);
+  if(file.type === 'tilemap') {
+    this.cache.addTilemap(file.key, file.url, data);
+  } else if(file.type === 'json') {
+    this.cache.addJSON(file.key, file.url, data);
+  } else if(file.type === 'textureatlas') {
+    this.cache.addTextureAtlas(file.key, file.url, file.data, data, file.format);
+  }
+  this.asyncComplete(file);
+};
+
+Loader.prototype.xmlLoadComplete = function(file, xhr) {
+  // Always try parsing the content as XML, regardless of actually response type
+  var data = xhr.responseText;
+  var xml = this.parseXml(data);
+
+  if(!xml) {
+    var responseType = xhr.responseType || xhr.contentType; // contentType for MS-XDomainRequest
+    console.warn('Loader - ' + file.key + ': invalid XML (' + responseType + ')');
+    this.asyncComplete(file, 'invalid XML');
+    return;
+  }
+
+  if(file.type === 'xml') {
+    this.cache.addXML(file.key, file.url, xml);
+  }
+
+  this.asyncComplete(file);
 };
 
 Loader.prototype.loadImageTag = function(file) {
@@ -592,13 +672,12 @@ Loader.prototype.loadAudioTag = function(file) {
 };
 
 Loader.prototype.xhrLoad = function(file, url, type, onload, onerror) {
-  var xhr = new XMLHttpRequest();
+  var self = this,
+      xhr = new XMLHttpRequest();
       xhr.open('GET', url, true);
-      xhr.responseType = type;
+      xhr.responseType = type,
+      onerror = onerror || this.fileError;
 
-  onerror = onerror || this.fileError;
-
-  var self = this;
   xhr.onload = function() {
     try {
       return onload.call(self, file, xhr);
@@ -685,119 +764,6 @@ Loader.prototype.fileError = function(file, xhr, reason) {
   this.asyncComplete(file, message);
 };
 
-Loader.prototype.fileComplete = function(file, xhr) {
-  var loadNext = true;
-  switch(file.type) {
-    case 'image':
-      this.cache.addImage(file.key, file.url, file.data);
-      break;
-
-    case 'spritesheet':
-      this.cache.addSpriteSheet(file.key, file.url, file.data, file.frameWidth, file.frameHeight, file.frameMax, file.margin, file.spacing);
-      break;
-
-    case 'textureatlas':
-      if(file.atlasURL == null) {
-        this.cache.addTextureAtlas(file.key, file.url, file.data, file.atlasData, file.format);
-      } else {
-        // load the JSON before carrying on with the next file
-        loadNext = false;
-
-        if(file.format == Loader.TEXTURE_ATLAS_JSON_ARRAY ||
-            file.format == Loader.TEXTURE_ATLAS_JSON_HASH ||
-            file.format == Loader.TEXTURE_ATLAS_JSON_PYXEL) {
-          this.xhrLoad(file, this.transformUrl(file.atlasURL, file), 'text', this.jsonLoadComplete);
-        } else {
-          throw new Error('Loader - Invalid Texture Atlas format: ' + file.format);
-        }
-      }
-      break;
-
-    case 'audio':
-      if(this.game.sound.usingWebAudio) {
-        file.data = xhr.response;
-
-        this.cache.addSound(file.key, file.url, file.data, true, false);
-
-        if(file.autoDecode) {
-          this.game.sound.decode(file.key);
-        }
-      } else {
-        this.cache.addSound(file.key, file.url, file.data, false, true);
-      }
-      break;
-
-    case 'text':
-      file.data = xhr.responseText;
-      this.cache.addText(file.key, file.url, file.data);
-      break;
-
-    case 'shader':
-      file.data = xhr.responseText;
-      this.cache.addShader(file.key, file.url, file.data);
-      break;
-
-    case 'script':
-      file.data = document.createElement('script');
-      file.data.language = 'javascript';
-      file.data.type = 'text/javascript';
-      file.data.defer = false;
-      file.data.text = xhr.responseText;
-
-      document.head.appendChild(file.data);
-
-      if(file.callback) {
-        file.data = file.callback.call(file.callbackContext, file.key, xhr.responseText);
-      }
-      break;
-
-    case 'binary':
-      if(file.callback) {
-        file.data = file.callback.call(file.callbackContext, file.key, xhr.response);
-      } else {
-        file.data = xhr.response;
-      }
-
-      this.cache.addBinary(file.key, file.data);
-      break;
-  }
-
-  if(loadNext) {
-    this.asyncComplete(file);
-  }
-};
-
-Loader.prototype.jsonLoadComplete = function(file, xhr) {
-  var data = JSON.parse(xhr.responseText);
-  if(file.type === 'tilemap') {
-    this.cache.addTilemap(file.key, file.url, data);
-  } else if(file.type === 'json') {
-    this.cache.addJSON(file.key, file.url, data);
-  } else if(file.type === 'textureatlas') {
-    this.cache.addTextureAtlas(file.key, file.url, file.data, data, file.format);
-  }
-  this.asyncComplete(file);
-};
-
-Loader.prototype.xmlLoadComplete = function(file, xhr) {
-  // Always try parsing the content as XML, regardless of actually response type
-  var data = xhr.responseText;
-  var xml = this.parseXml(data);
-
-  if(!xml) {
-    var responseType = xhr.responseType || xhr.contentType; // contentType for MS-XDomainRequest
-    console.warn('Loader - ' + file.key + ': invalid XML (' + responseType + ')');
-    this.asyncComplete(file, 'invalid XML');
-    return;
-  }
-
-  if(file.type === 'xml') {
-    this.cache.addXML(file.key, file.url, xml);
-  }
-
-  this.asyncComplete(file);
-};
-
 Loader.prototype.parseXml = function(data) {
   var xml;
   try {
@@ -821,24 +787,12 @@ Loader.prototype.parseXml = function(data) {
   }
 };
 
-Loader.prototype.updateProgress = function() {
-  //.. update loading sprite
-};
-
 Loader.prototype.totalLoadedFiles = function() {
   return this._loadedFileCount;
 };
 
 Loader.prototype.totalQueuedFiles = function() {
   return this._totalFileCount - this._loadedFileCount;
-};
-
-Loader.prototype.totalLoadedPacks = function() {
-  return this._totalPackCount;
-};
-
-Loader.prototype.totalQueuedPacks = function() {
-  return this._totalPackCount - this._loadedPackCount;
 };
 
 Object.defineProperty(Loader.prototype, 'progressRaw', {

@@ -14,8 +14,9 @@ function Space(game) {
   this.tileScale = new pixi.Point(1, 1);
   this.tilePosition = new pixi.Point(0, 0);
 
-  this._width = game.width;
-  this._height = game.height;
+  this.width = game.width;
+  this.height = game.height;
+
   this._glDatas = [];
 };
 
@@ -30,7 +31,8 @@ Space.prototype.update = function() {
   this.tilePosition.x = -view.x/20;
   this.tilePosition.y = -view.y/20;
 
-  this.tileScale.set(scale, scale);
+  this.tileScale.x = scale
+  this.tileScale.y = scale;
 };
 
 Space.prototype.resize = function(width, height) {
@@ -39,23 +41,15 @@ Space.prototype.resize = function(width, height) {
 };
 
 Space.prototype.getRepeatTexture = function(key) {
-  var base = game.cache.getImage(key, true).base;
+  var base = game.cache.getBaseTexture(key);
       base.wrapMode = pixi.WRAP_MODES.REPEAT;
   return base;
-};
-
-Space.prototype._onTextureUpdate = function() {
-  return;
 };
 
 Space.prototype._renderWebGL = function(renderer) {
   var gl, glData, vertices,
       textureUvs, textureWidth, textureHeight,
-      textureBaseWidth, textureBaseHeight,
-      uPixelSize, uFrame, uTransform,
-      texture = this._texture;
-
-  if(!texture || !texture._uvs) { return; }
+      uTransform, texture = this._texture;
 
   renderer.flush();
 
@@ -63,17 +57,20 @@ Space.prototype._renderWebGL = function(renderer) {
   glData = this._glDatas[renderer.CONTEXT_UID];
 
   if(!glData) {
-    glData = {
-      shader: new Shader(gl,
+    renderer.bindVao(null);
+
+    glData = this._glDatas[renderer.CONTEXT_UID] = {
+      shader: new pixi.Shader(gl,
         glslify(__dirname + '/shaders/space.vert', 'utf8'),
         glslify(__dirname + '/shaders/space.frag', 'utf8')
       ),
-      quad: new pixi.Quad(gl)
+      quad: new pixi.Quad(gl, renderer.state.attribState)
     };
 
-    this._glDatas[renderer.CONTEXT_UID] = glData;
     glData.quad.initVao(glData.shader);
   }
+
+  renderer.bindVao(glData.quad.vao);
 
   vertices = glData.quad.vertices;
   vertices[0] = vertices[6] = (this._width) * -this.anchor.x;
@@ -81,132 +78,42 @@ Space.prototype._renderWebGL = function(renderer) {
   vertices[2] = vertices[4] = (this._width) * (1-this.anchor.x);
   vertices[5] = vertices[7] = this._height * (1-this.anchor.y);
 
+  vertices = glData.quad.uvs;
+  vertices[0] = vertices[6] = -this.anchor.x;
+  vertices[1] = vertices[3] = -this.anchor.y;
+  vertices[2] = vertices[4] = 1.0 - this.anchor.x;
+  vertices[5] = vertices[7] = 1.0 - this.anchor.y;
+
   glData.quad.upload();
 
   renderer.bindShader(glData.shader);
 
-  textureUvs = texture._uvs,
-  textureWidth = texture._frame.width,
-  textureHeight = texture._frame.height,
-  textureBaseWidth = texture.baseTexture.width,
-  textureBaseHeight = texture.baseTexture.height;
-
   uTransform = glData.shader.uniforms.uTransform;
   uTransform[0] = (this.tilePosition.x / this._width) + 0.5 - ((1-this.tileScale.x) * (this.tilePosition.x / this._width));
   uTransform[1] = (this.tilePosition.y / this._height) + 0.5 - ((1-this.tileScale.y) * (this.tilePosition.y / this._height));
-  uTransform[2] = (textureBaseWidth / this._width) * this.tileScale.x;
-  uTransform[3] = (textureBaseHeight / this._height) * this.tileScale.y;
+  uTransform[2] = (texture.baseTexture.width / this._width) * this.tileScale.x;
+  uTransform[3] = (texture.baseTexture.height / this._height) * this.tileScale.y;
   
   glData.shader.uniforms.uTransform = uTransform;
-  glData.shader.uniforms.alpha = this.worldAlpha;
-  glData.shader.uniforms.uMapSampler = 1;
-
-  renderer.bindTexture(this.nebulaTexture, 1);
-  renderer.bindTexture(this._texture, 0);
+  glData.shader.uniforms.uSampler = renderer.bindTexture(this.spaceTexture, 0);
+  glData.shader.uniforms.uMapSampler = renderer.bindTexture(this.nebulaTexture, 1);
 
   renderer.state.setBlendMode(this.blendMode);
 
-  glData.quad.draw();
-};
-
-Space.prototype.getBounds = function() {
-  var width = this._width;
-  var height = this._height;
-
-  var w0 = width * (1-this.anchor.x);
-  var w1 = width * -this.anchor.x;
-
-  var h0 = height * (1-this.anchor.y);
-  var h1 = height * -this.anchor.y;
-
-  var worldTransform = this.worldTransform;
-
-  var a = worldTransform.a;
-  var b = worldTransform.b;
-  var c = worldTransform.c;
-  var d = worldTransform.d;
-  var tx = worldTransform.tx;
-  var ty = worldTransform.ty;
-
-  var x1 = a * w1 + c * h1 + tx;
-  var y1 = d * h1 + b * w1 + ty;
-
-  var x2 = a * w0 + c * h1 + tx;
-  var y2 = d * h1 + b * w0 + ty;
-
-  var x3 = a * w0 + c * h0 + tx;
-  var y3 = d * h0 + b * w0 + ty;
-
-  var x4 =  a * w1 + c * h0 + tx;
-  var y4 =  d * h0 + b * w1 + ty;
-
-  var minX,
-      maxX,
-      minY,
-      maxY;
-
-  minX = x1;
-  minX = x2 < minX ? x2 : minX;
-  minX = x3 < minX ? x3 : minX;
-  minX = x4 < minX ? x4 : minX;
-
-  minY = y1;
-  minY = y2 < minY ? y2 : minY;
-  minY = y3 < minY ? y3 : minY;
-  minY = y4 < minY ? y4 : minY;
-
-  maxX = x1;
-  maxX = x2 > maxX ? x2 : maxX;
-  maxX = x3 > maxX ? x3 : maxX;
-  maxX = x4 > maxX ? x4 : maxX;
-
-  maxY = y1;
-  maxY = y2 > maxY ? y2 : maxY;
-  maxY = y3 > maxY ? y3 : maxY;
-  maxY = y4 > maxY ? y4 : maxY;
-
-  var bounds = this._bounds;
-
-  bounds.x = minX;
-  bounds.width = maxX - minX;
-
-  bounds.y = minY;
-  bounds.height = maxY - minY;
-
-  // store a reference so that if this function gets called again in the render cycle we do not have to recalculate
-  this._currentBounds = bounds;
-
-  return bounds;
+  glData.quad.vao.draw(renderer.gl.TRIANGLES, 6, 0);
 };
 
 Space.prototype.destroy = function() {
   pixi.Sprite.prototype.destroy.call(this);
 
+  this.game = null;
   this.tileScale = null;
   this.tilePosition = null;
+  this.spaceTexture = null;
+  this.nebulaTexture = null;
+  
   this._tileScaleOffset = null;
+  this._glDatas = null;
 };
-
-Object.defineProperties(Space.prototype, {
-  width: {
-    get: function() {
-      return this._width;
-    },
-    
-    set: function(value) {
-      this._width = value;
-    }
-  },
-
-  height: {
-    get: function() {
-      return this._height;
-    },
-
-    set: function(value) {
-      this._height = value;
-    }
-  }
-});
 
 module.exports = Space;

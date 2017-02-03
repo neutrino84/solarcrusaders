@@ -12,6 +12,7 @@ function Movement(parent) {
   this._last = 0;
   this._delay = 0;
   this._speed = 0;
+  this._velocity = 0;
 
   this._destination = new engine.Point();
   this._position = new engine.Point();
@@ -19,10 +20,10 @@ function Movement(parent) {
   this._direction = new engine.Point();
   this._temp = new engine.Point();
 
-  this._move = this.game.clock.throttle(this.move, 100, this);
-  this._test = this.game.clock.throttle(function() {
+  // this._move = this.game.clock.throttle(this.move, 100, this);
+  // this._test = this.game.clock.throttle(function() {
 
-  }, 2000, this);
+  // }, 2000, this);
 }
 
 Movement.prototype.constructor = Movement;
@@ -54,9 +55,10 @@ Movement.prototype.update = function() {
       destination = this._destination,
       vector = this._vector,
       direction = this._direction,
-      spd = this._speed,
+      speed = this._speed,
+      velocity = this._velocity,
       ship = this.parent,
-      distance, speed, multiplier, a1, a2;
+      distance, a1, a2;
 
   // ship position to point
   position.set(ship.position.x, ship.position.y);
@@ -64,9 +66,9 @@ Movement.prototype.update = function() {
   // calculate distance
   distance = position.distance(destination);
 
-  // calculate speed
-  speed = (spd / (1/10)) * (1/60);
-  multiplier = speed; //speed / distance < 1.0 ? speed * 1.01 : speed * 0.99;
+  if(speed * 2.0 < distance) {
+    velocity *= 1.1;
+  }
   
   // calculate vector
   vector.set(destination.x - position.x, destination.y - position.y);
@@ -74,14 +76,14 @@ Movement.prototype.update = function() {
 
   // update direction
   direction.interpolate({
-    x: vector.x * multiplier,
-    y: vector.y * multiplier }, 0.15, direction);
+    x: vector.x * velocity,
+    y: vector.y * velocity }, 0.15, direction);
 
   // update ship position
   ship.position.set(position.x + direction.x, position.y + direction.y);
 
   // update rotation
-  if(spd > 0) {
+  if(velocity > 0) {
     a1 = position.y - ship.position.y;
     a2 = position.x - ship.position.x;
     if(a1 !== 0 && a2 !== 0) {
@@ -90,9 +92,6 @@ Movement.prototype.update = function() {
       ship.rotation = 0;
     }
   }
-
-  // set velocity
-  this.velocity = speed * 6;
 };
 
 Movement.prototype.plot = function(data) {
@@ -104,15 +103,19 @@ Movement.prototype.plot = function(data) {
   this._last = time;
   this._destination.copyFrom(data.pos);
   this._speed = data.spd;
+  this._velocity = (data.spd / (1/10)) * (1/60);
+
+  // set velocity
+  this.velocity = this._velocity * 6;
 
   // update position
-  if(this._position.distance(this._destination) > 256) {
-    ship.position.set(this._destination.x, this._destination.y);
-  }
+  // if(this._position.distance(this._destination) > 128) {
+  //   ship.position.set(this._destination.x, this._destination.y);
+  // }
 };
 
 Movement.prototype.destroy = function() {
-  this.parent = this.game = this.config = this._target =
+  this.parent = this.game = this.config =
     this._destination = this._origin = this._position =
     this._vector = this._direction = this._temp = undefined;
 };

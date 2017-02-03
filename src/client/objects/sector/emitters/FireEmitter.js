@@ -9,9 +9,9 @@ function FireEmitter(game) {
 
   this.blendMode = engine.BlendMode.ADD;
   
-  this.setScale(0.2, 1.0, 0.2, 1.0, 500);
+  this.setScale(0.1, 0.5, 0.1, 0.5, 500);
   this.setAlpha(1.0, 0.0, 500);
-  this.setTint(0xFF6666, 0x333333, 500);
+  this.setTint(0xFFFFFF, 0xFF0000, 250);
 
   this.makeParticles('texture-atlas', [
     'explosion-d.png'

@@ -7,6 +7,7 @@ function Movement(parent) {
 
   this.throttle = 0.0;
   this.magnitude = 0.0;
+  this.speed = 0.0;
   this.rotation = global.Math.PI;
   this.time = this.game.clock.time;
   
@@ -15,6 +16,7 @@ function Movement(parent) {
     y: global.parseFloat(parent.data.y)
   }
 
+  this.last = new engine.Point(this.start.x, this.start.y);
   this.position = new engine.Point(this.start.x, this.start.y);
   this.destination = new engine.Point();
   this.vector = new engine.Point();
@@ -36,10 +38,11 @@ Movement.prototype.constructor = Movement;
 Movement.prototype.update = function() {
   var parent = this.parent,
       destination = this.destination,
+      last = this.last,
       position = this.position,
       vector = this.vector,
       direction = this.direction,
-      speed, cross, dot;
+      cross, dot;
 
   // time compensation
   this.time = this.game.clock.time;
@@ -51,8 +54,7 @@ Movement.prototype.update = function() {
 
   if(this.magnitude > Movement.STOP_THRESHOLD) {
     this.throttle = global.Math.min(this.magnitude / Movement.THROTTLE_THRESHOLD, 1.0);
-
-    speed = parent.speed * this.throttle;
+    this.speed = parent.speed * this.throttle;
 
     vector.set(destination.x, destination.y);
     vector.normalize();
@@ -72,28 +74,36 @@ Movement.prototype.update = function() {
       this.rotation -= parent.evasion
     }
 
+    // last position
+    last.set(position.x, position.y);
+
     // linear speed
     position.add(
-      speed * direction.x,
-      speed * direction.y);
+      this.speed * direction.x,
+      this.speed * direction.y);
   } else {
     this.magnitude = 0.0;
     this.throttle = 0.0;
+    this.speed = 0.0;
   }
 };
 
 Movement.prototype.compensated = function(rtt) {
-  var rtt = rtt || 0,
-      position = this.position,
-      direction = this.direction,
+  var position = this.position,
+      last = this.last,
       relative = this.relative,
-      modifier = (this.game.clock.time - this.time) / Movement.CLOCK_RATE,
-      velocity = -this.parent.speed * this.throttle,
-      offset = rtt * (velocity / Movement.CLOCK_RATE),
-      compensated = (velocity + (velocity * modifier)) + offset;
-  return this.relative.setTo(
-    position.x + direction.x * compensated,
-    position.y + direction.y * compensated);
+      direction = this.direction,
+      modifier = (this.game.clock.time - this.time) / Movement.CLOCK_RATE;
+
+  if(this.magnitude > Movement.STOP_THRESHOLD) {
+    relative.set(last.x, last.y);
+    relative.interpolate(position, modifier, relative);
+    relative.subtract(this.speed * direction.x, this.speed * direction.y);
+  } else {
+    relative.set(position.x, position.y);
+  }
+
+  return relative;
 };
 
 Movement.prototype.plot = function(destination, magnitude) {

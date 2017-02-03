@@ -7,7 +7,7 @@ function Pirate(ship) {
   this.type = 'pirate';
 
   this.aimRadius = 128;
-  this.attackRate = 500;
+  this.attackRate = 300;
   this.respawnTime = 3600000;
   this.disengageTime = 16000;
   this.defaultSpeedMagnitude = 192;

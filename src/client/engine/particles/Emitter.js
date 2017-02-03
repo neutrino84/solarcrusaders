@@ -234,7 +234,8 @@ Emitter.prototype.start = function(explode, lifespan, frequency, quantity) {
 };
 
 Emitter.prototype.emitParticle = function() {
-  var particle = this.getFirstExists(false);
+  var frame,
+      particle = this.getFirstExists(false);
 
   if(particle === null) {
     return false;
@@ -262,11 +263,13 @@ Emitter.prototype.emitParticle = function() {
     particle.scale.set(this.game.rnd.realInRange(this._minParticleScale.x, this._maxParticleScale.x), this.game.rnd.realInRange(this._minParticleScale.y, this._maxParticleScale.y));
   }
 
-  if(Array.isArray(this._frames === 'object')) {
-    particle.frame = this.game.rnd.pick(this._frames);
+  if(Array.isArray(this._frames)) {
+    frame = this.game.rnd.pick(this._frames);
   } else {
-    particle.frame = this._frames;
+    frame = this._frames;
   }
+
+  particle.setFrameByName(frame);
 
   if(this.autoAlpha) {
     particle.setAlphaData(this.alphaData);

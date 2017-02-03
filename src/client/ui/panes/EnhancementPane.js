@@ -209,8 +209,8 @@ EnhancementPane.prototype._player = function(ship) {
     enhancementStats = Object.keys(enhancementData.stats);
     tooltipText = enhancementData.tooltip.replace('{statValue}', enhancementData.stats[enhancementStats[0]].value);
   
-    tooltip = new Tooltip(game, tooltipText, button);
-    tooltip.attach();
+    // tooltip = new Tooltip(game, tooltipText, button);
+    // tooltip.attach();
   }
 
   this.game.input.on('keypress', function(event, key){

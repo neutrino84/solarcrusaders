@@ -15,7 +15,7 @@ function Pane(game, settings) {
 
   this.settings = Class.mixin(settings, {
     padding: [0],
-    border: [0],
+    margin: [0],
     layout: {
       ax: Layout.LEFT,
       ay: Layout.TOP,
@@ -26,8 +26,7 @@ function Pane(game, settings) {
     },
     bg: {
       fillAlpha: 1.0,
-      color: 0x3868b8,
-      borderSize: 0.0
+      color: 0x000000
     }
   });
 
@@ -59,6 +58,11 @@ function Pane(game, settings) {
         this.settings.layout.direction, this.settings.layout.gap);
       break;
   }
+
+  // set constraint
+  if(this.settings.constraint) {
+    this.constraint = this.settings.constraint;
+  }
   
   // set size
   if(this.settings.width || this.settings.height) {
@@ -68,7 +72,7 @@ function Pane(game, settings) {
   }
 
   this.setPadding.apply(this, this.settings.padding);
-  this.setBorder.apply(this, this.settings.border);
+  this.setMargin.apply(this, this.settings.margin);
 
   // bg
   if(this.settings.bg) {

@@ -10,10 +10,10 @@ function Snow(game, width, height) {
   this.tileScale = new pixi.Point(1, 1);
   this.tilePosition = new pixi.Point(0, 0);
 
-  this._width = width;
-  this._height = height;
+  this.width = width;
+  this.height = height;
 
-  this.transform.updated = false;
+  this.alpha = 0.0;
 }
 
 Snow.prototype = Object.create(engine.Shader.prototype);
@@ -22,17 +22,21 @@ Snow.prototype.constructor = Snow;
 Snow.prototype.update = function() {
   var game = this.game,
       view = game.camera.view,
-      scale = game.world.scale.x;
+      scale = game.world.scale.x,
+      tileScale = scale;
 
-  this.tilePosition.x = -view.x * 1.4;
-  this.tilePosition.y = -view.y * 1.4;
+  this.alpha = (1 - game.world.scale.x);
 
-  this.tileScale.set(scale, scale);
+  this.tilePosition.x = -view.x * 3;
+  this.tilePosition.y = -view.y * 3;
+
+  this.tileScale.x = tileScale;
+  this.tileScale.y = tileScale;
 };
 
 Snow.prototype.resize = function(width, height) {
-  this._width = width;
-  this._height = height;
+  this.width = width;
+  this.height = height;
 };
 
 Snow.prototype.apply = function(renderer, shader) {
@@ -43,9 +47,8 @@ Snow.prototype.apply = function(renderer, shader) {
       uTransform[3] = (1024 / this._height) * this.tileScale.y;
 
   shader.uniforms.uTransform = uTransform;
-  shader.uniforms.time = this.game.clock.totalElapsedSeconds();
-
-  renderer.bindTexture(this._texture, 0);
+  shader.uniforms.uSampler = renderer.bindTexture(this.texture, 0);
+  shader.uniforms.alpha = this.alpha;
 };
 
 Snow.prototype.getShader = function(gl) {
@@ -54,27 +57,5 @@ Snow.prototype.getShader = function(gl) {
     glslify(__dirname + '/shaders/snow.frag', 'utf8')
   );
 };
-
-Object.defineProperties(Snow.prototype, {
-  width: {
-    get: function() {
-      return this._width;
-    },
-    
-    set: function(value) {
-      this._width = value;
-    }
-  },
-
-  height: {
-    get: function() {
-      return this._height;
-    },
-
-    set: function(value) {
-      this._height = value;
-    }
-  }
-});
 
 module.exports = Snow;

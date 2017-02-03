@@ -1,16 +1,13 @@
 var pixi = require('pixi'),
     Const = require('../const'),
     Point = require('../geometry/Point'),
-    Rectangle = require('../geometry/Rectangle'),
     Core = require('./components/Core'),
-    InWorld = require('./components/InWorld');
+    Destroy = require('./components/Destroy');
 
 function Sprite(game, key, frame) {
   key = key || null;
-  frame = frame || null;
 
   this.type = Const.SPRITE;
-  this.bounds = new Rectangle();
 
   pixi.Sprite.call(this);
 
@@ -22,30 +19,23 @@ Sprite.prototype.constructor = Sprite;
 
 Core.install.call(
   Sprite.prototype, [
-    // 'Angle',
     'Mixin',
     'Animation',
-    'AutoCull',
-    'Bounds',
     'Destroy',
     'LoadTexture',
-    'InWorld',
-    'InputEnabled',
-    'Overlap'
-    // 'Reset'
+    'InputEnabled'
   ]
 );
 
-Sprite.prototype.preUpdateCore = Core.preUpdate;
-Sprite.prototype.preUpdateInWorld = InWorld.preUpdate;
+Sprite.prototype.updateCore = Core.update;
 
 Sprite.prototype.update = function() {
-  this.preUpdateInWorld()
-  this.preUpdateCore();
+  this.updateCore();
 };
 
-Sprite.prototype.getBounds = function() {
-  return this.bounds.copyFrom(pixi.Sprite.prototype.getBounds.call(this));
-};
+// Sprite.prototype.destroy = function(destroyChildren) {
+//   Destroy.prototype.destroy.call(this, destroyChildren);
+//   // 
+// };
 
 module.exports = Sprite;

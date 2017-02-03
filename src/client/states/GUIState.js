@@ -38,27 +38,13 @@ GUIState.prototype.preload = function() {
   this.game.load.image('medium', 'imgs/game/fonts/medium.png');
   this.game.load.image('full', 'imgs/game/fonts/full.png');
 
-  // load tilesets
-  // this.game.load.image('deck', 'imgs/game/tilesets/deck-mini.png');
-  // this.game.load.image('wall', 'imgs/game/tilesets/wall-mini.png');
-  // this.game.load.image('grid', 'imgs/game/tilesets/grid-mini.png');
-    
   // load ship tilemap
   this.game.load.tilemap('ship-tilemap', 'data/ship-mini.json');
-
-  // load ship configuration
-  this.game.load.json('ship-configuration', 'data/ship-configuration.json');
-  this.game.load.json('item-configuration', 'data/item-configuration.json');
-
-  // load texture atlas
-  this.game.load.atlasJSONHash('texture-atlas', 'imgs/game/texture-atlas.png', 'data/texture-atlas.json');
-
-  // spritesheet
-  // this.game.load.spritesheet('crew', 'imgs/game/spritesheets/crew-mini.png', 16, 16);
-  // this.game.load.spritesheet('door', 'imgs/game/spritesheets/door-mini.png', 16, 16);
 };
 
 GUIState.prototype.create = function() {
+  return;
+
   var game = this.game;
 
   this.focus = new Focus(game);
@@ -94,15 +80,13 @@ GUIState.prototype.create = function() {
   this.root.setSize(game.width, game.height);
   this.root.visible = false;
 
-  // this.root.invalidate = this.invalidate.bind(this.root);
-
   this.root.addPanel(Layout.STRETCH, this.basePanel);
   this.root.addPanel(Layout.STRETCH, this.centerPanel);
   this.root.addPanel(Layout.STRETCH, this.leaderBoardPanel);
   this.root.addPanel(Layout.STRETCH, this.modalComponent);
 
   // add root to stage
-  this.game.stage.addChild(this.root);
+  // this.game.stage.addChild(this.root);
 
   this.auth.on('sync', this.login, this);
   this.auth.on('data', this.data, this);
@@ -113,12 +97,9 @@ GUIState.prototype.create = function() {
   this.game.on('game/pause', this._pause, this);
 };
 
-// GUIState.prototype.invalidate = function(local) {
-//   console.log('root invalidate');
-//   Panel.prototype.invalidate.call(this, local);
-// };
-
 GUIState.prototype.login = function(user) {
+  return;
+  
   if(this.auth.isUser()) {
     this.headerPane.login(user);
     this.headerPane.invalidate(true);

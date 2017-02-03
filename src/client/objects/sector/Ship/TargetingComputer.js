@@ -5,6 +5,8 @@ var engine = require('engine'),
 function TargetingComputer(parent, config) {
   this.parent = parent;
   this.game = parent.game;
+  this.manager = parent.manager,
+  this.stats = parent.config.stats;
   this.config = config;
 
   this.hardpoints = [];
@@ -12,9 +14,7 @@ function TargetingComputer(parent, config) {
 
   this.target = new engine.Point();
 
-  // attack rate locked at
-  // 500ms but will be dynamic
-  this.fire = this.game.clock.throttle(this.fired, 500, this, true);
+  this.fire = this.game.clock.throttle(this.fired, this.stats.rate, this, true);
 };
 
 TargetingComputer.prototype.constructor = TargetingComputer;
@@ -27,13 +27,14 @@ TargetingComputer.prototype.create = function() {
     slot = hardpoints[h].slot;
 
     hardpoint = new Hardpoint(this, hardpoints[h], this.config.hardpoints[slot]);
+    hardpoint.subGroup = parent.manager.subGroup;
     hardpoint.fxGroup = parent.manager.fxGroup;
     hardpoint.flashEmitter = parent.manager.flashEmitter;
     hardpoint.explosionEmitter = parent.manager.explosionEmitter;
     hardpoint.glowEmitter = parent.manager.glowEmitter;
     hardpoint.fireEmitter = parent.manager.fireEmitter;
 
-    this.hardpoints.push(hardpoint);
+    this.hardpoints[slot] = hardpoint;
   }
 };
 
@@ -46,14 +47,17 @@ TargetingComputer.prototype.attack = function(target) {
     // update target
     this.target.set(target.x, target.y);
 
-    // distance
-    distance = engine.Point.distance(parent.position, this.target);
-
     // display
     for(var i=0; i<length; i++) {
-      hardpoints[i].fire(distance);
+      hardpoints[i].fire(this.target);
     }
   }
+};
+
+TargetingComputer.prototype.hit = function(hardpoint) {
+  var ship = this.manager.ships[hardpoint.target],
+      hardpoint = this.hardpoints[hardpoint.slot];
+      ship && hardpoint.hit(ship);
 };
 
 TargetingComputer.prototype.fired = function(target) {
@@ -61,31 +65,28 @@ TargetingComputer.prototype.fired = function(target) {
       parent = this.parent,
       hardpoints = this.hardpoints,
       socket = parent.manager.socket,
-      details = parent.details,
-      distance;
+      delay, delays = [],
+      hardpoint;
   if(hardpoints.length > 0) {
     game.world.worldTransform.applyInverse(target, this.target);
-    distance = engine.Point.distance(parent.position, this.target);
-    
-    // check range
-    if(distance > details.range) {
-      engine.Line.pointAtDistance(parent.position, this.target, details.range, this.target);
-      distance = details.range;
+
+    // display
+    for(var i=0; i<hardpoints.length; i++) {
+      hardpoint = hardpoints[i];
+      delay = global.Math.random() * hardpoint.data.delay,
+      hardpoint.fire(this.target, delay);
+      delays.push(delay);
     }
-    
+
     // server
     socket.emit('ship/attack', {
       uuid: parent.uuid,
+      delays: delays,
       targ: {
         x: this.target.x,
         y: this.target.y
       }
     });
-
-    // display
-    for(var i=0; i<hardpoints.length; i++) {
-      hardpoints[i].fire(distance);
-    }
   }
 };
 

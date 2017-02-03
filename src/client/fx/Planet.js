@@ -25,10 +25,8 @@ Planet.prototype.constructor = Planet;
 Planet.prototype.apply = function(renderer, shader) {
   shader.uniforms.time = this.game.clock.totalElapsedSeconds();
   shader.uniforms.translationMatrix = this.worldTransform.toArray(true);
-  shader.uniforms.uClouds = 1;
-
-  renderer.bindTexture(this._texture, 0);
-  renderer.bindTexture(this.cloudsTexture, 1);
+  shader.uniforms.uSampler = renderer.bindTexture(this.planetTexture, 0);
+  shader.uniforms.uClouds = renderer.bindTexture(this.cloudsTexture, 1);
 };
 
 Planet.prototype.getShader = function(gl) {

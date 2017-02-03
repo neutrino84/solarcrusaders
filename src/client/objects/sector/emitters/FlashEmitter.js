@@ -9,9 +9,9 @@ function FlashEmitter(game) {
 
   this.blendMode = engine.BlendMode.ADD;
 
-  this.setScale(0.1, 0.5, 0.1, 0.5, 500);
-  this.setAlpha(1.0, 0.0, 500);
-  this.setTint(0xFFFFFF, 0x888888, 400);
+  this.setScale(0.25, 0.5, 0.25, 0.5, 250);
+  this.setAlpha(1.0, 0.0, 250);
+  this.setTint(0xFFFFFF, 0x666666, 125);
   
   this.makeParticles('texture-atlas', 'explosion-d.png');
 };

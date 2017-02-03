@@ -1,50 +1,34 @@
 
 var engine = require('engine'),
+    Layout = require('./Layout'),
     StackLayout = require('./layouts/StackLayout');
 
 function Panel(game, layout, constraint) {
   engine.Group.call(this, game);
 
   this.layout = layout || new StackLayout();
-  this.constraint = constraint;
+  this.constraint = constraint || Layout.NONE;
   
-  this.cachedHeight = 0;
-  this.psWidth = this.psHeight = this.cachedWidth = -1;
+  this.psWidth = this.psHeight =
+    this.cachedWidth = this.cachedHeight = -1;
 
   this.size = { width: 0, height: 0 };
-  this.border = { top: 0, left: 0, bottom: 0, right: 0 };
+  this.margin = { top: 0, left: 0, bottom: 0, right: 0 };
   this.padding = { top: 0, left: 0, bottom: 0, right: 0 };
 
   this.views = [];
   this.panels = [];
 
-  this.isValid = false;
+  this.isViewValid = false;
   this.isLayoutValid = false;
 }
 
 Panel.prototype = Object.create(engine.Group.prototype);
 Panel.prototype.constructor = Panel;
 
-Panel.prototype.addPanel = function(constraint, panel) {
-  if(panel.constraint != null) {
-    constr = panel.constraint;
-  } else {
-    panel.constraint = constraint;
-  }
-
+Panel.prototype.addPanel = function(panel) {
   this.panels.push(panel);
   this.add(panel);
-};
-
-Panel.prototype.addPanelAt = function(constraint, panel, index) {
-  if(panel.constraint != null) {
-    constr = panel.constraint;
-  } else {
-    panel.constraint = constraint;
-  }
-
-  this.panels.splice(index, 0, panel);
-  this.addAt(panel, index);
 };
 
 Panel.prototype.removePanel = function(panel, destroy) {
@@ -67,34 +51,22 @@ Panel.prototype.addView = function(view) {
   this.add(view);
 };
 
-Panel.prototype.invalidate = function(local) {
-  this.isValid = false;
-  this.isLayoutValid = false;
+Panel.prototype.invalidate = function(layout, view) {
+  this.isLayoutValid = layout || false;
+  this.isViewValid =  view || false;
   this.cachedWidth = -1;
-  // this.transform.updated = true;
+  this.cachedHeight = -1;
   
-  if(local) {
-    for(var i=0; i<this.panels.length; i++) {
-      this.panels[i].invalidate(local);
-    }
-    this.validate();
-    this.repaint();
-  } else if(this.parent && this.parent.invalidate) {
-    this.parent.invalidate();
-  } else if(this.parent && !this.parent.invalidate) {
-    this.validate();
-    this.repaint();
+  for(var i=0; i<this.panels.length; i++) {
+    this.panels[i].invalidate(layout, view);
   }
 
-  // this.transform.updated = false;
+  !this.isLayoutValid && this.validate();
+  !this.isViewValid && this.repaint();
 };
 
 Panel.prototype.validate = function() {
-  this.validateMetric();
-
-  if(this.size.width > 0 && this.size.height > 0 &&
-      this.isLayoutValid === false &&
-      this.visible === true) {
+  if(this.isLayoutValid === false && this.visible === true) {
 
     this.layout.doLayout(this);
 
@@ -108,39 +80,27 @@ Panel.prototype.validate = function() {
   }
 };
 
-Panel.prototype.validateMetric = function() {
-  if(this.isValid === false) {
-    if(this.recalc) {
-      this.recalc();
-    }
-  }
-};
-
 Panel.prototype.repaint = function() {
   this.paint();
 
   if(this.visible === true) {
     for(var i=0; i<this.panels.length; i++) {
-      if(!this.panels[i].isValid) {
+      if(!this.panels[i].isViewValid) {
         this.panels[i].repaint();
       }
     }
   }
   
-  this.isValid = true;
+  this.isViewValid = true;
 };
 
 Panel.prototype.paint = function() {
   for(var i=0; i<this.views.length; i++) {
-    this.views[i].paint(this.top, this.left, this.bottom, this.right);
+    this.views[i].paint();
   }
 };
 
-Panel.prototype.resize = function(width, height) {
-  //.. resize
-};
-
-Panel.prototype.setBorder = function(top, left, bottom, right) {
+Panel.prototype.setMargin = function(top, left, bottom, right) {
   if(arguments.length == 1) {
     left = bottom = right = top;
   }
@@ -150,15 +110,15 @@ Panel.prototype.setBorder = function(top, left, bottom, right) {
     right = left;
   }
   
-  if(this.border.top != top ||
-      this.border.left != left ||
-      this.border.bottom != bottom ||
-      this.border.right != right) {
+  if(this.margin.top != top ||
+      this.margin.left != left ||
+      this.margin.bottom != bottom ||
+      this.margin.right != right) {
 
-    this.border.top = top;
-    this.border.left = left;
-    this.border.bottom = bottom;
-    this.border.right = right;
+    this.margin.top = top;
+    this.margin.left = left;
+    this.margin.bottom = bottom;
+    this.margin.right = right;
   }
 
   return this;
@@ -193,9 +153,8 @@ Panel.prototype.setSize = function(width, height) {
     this.size.width = width;
     this.size.height = height;
     
-    this.isValid = false;
+    this.isViewValid = false;
     this.isLayoutValid = false;
-    this.resize(width, height);
   }
   return this;
 };
@@ -211,17 +170,17 @@ Panel.prototype.setLocation = function(xx, yy) {
   }
 };
 
-Panel.prototype.getAbsoluteLocation = function () {
-  var absLocation;
-  if (this.parent instanceof Panel)
-  {
-    absLocation = this.parent.getAbsoluteLocation();
-    absLocation.x += this.position.x;
-    absLocation.y += this.position.y;
-  } else
-    absLocation = this.position.clone();
-  return absLocation;
-};
+// Panel.prototype.getAbsoluteLocation = function () {
+//   var absLocation;
+//   if (this.parent instanceof Panel)
+//   {
+//     absLocation = this.parent.getAbsoluteLocation();
+//     absLocation.x += this.position.x;
+//     absLocation.y += this.position.y;
+//   } else
+//     absLocation = this.position.clone();
+//   return absLocation;
+// };
 
 Panel.prototype.setPreferredSize = function(width, height) {
   if(width != this.psWidth || height != this.psHeight) {
@@ -231,8 +190,6 @@ Panel.prototype.setPreferredSize = function(width, height) {
 };
 
 Panel.prototype.getPreferredSize = function() {
-  this.validateMetric();
-  
   if(this.cachedWidth < 0) {
     var ps = (this.psWidth < 0 || this.psHeight < 0) ? this.layout.calcPreferredSize(this) : { width: 0, height: 0 };
 
@@ -254,7 +211,7 @@ Panel.prototype.getPreferredSize = function() {
 Panel.prototype.destroy = function() {
   engine.Group.prototype.destroy.call(this);
 
-  this.layout = this.border = this.padding = undefined;
+  this.layout = this.margin = this.padding = undefined;
   
   this.views = [];
   this.panels = [];
@@ -262,25 +219,25 @@ Panel.prototype.destroy = function() {
 
 Object.defineProperty(Panel.prototype, 'top', {
   get: function() {
-    return this.padding.top + this.border.top;
+    return this.padding.top + this.margin.top;
   }
 });
 
 Object.defineProperty(Panel.prototype, 'left', {
   get: function() {
-    return this.padding.left + this.border.left;
+    return this.padding.left + this.margin.left;
   }
 });
 
 Object.defineProperty(Panel.prototype, 'bottom', {
   get: function() {
-    return this.padding.bottom + this.border.bottom;
+    return this.padding.bottom + this.margin.bottom;
   }
 });
 
 Object.defineProperty(Panel.prototype, 'right', {
   get: function() {
-    return this.padding.right + this.border.right;
+    return this.padding.right + this.margin.right;
   }
 });
 

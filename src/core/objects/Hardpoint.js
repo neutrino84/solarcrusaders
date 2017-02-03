@@ -5,7 +5,7 @@ var client = require('client'),
 function Hardpoint(slot, type, subtype) {
   this.slot = slot;
   this.type = type;
-  this.subtype = subtype || 'alpha';
+  this.subtype = subtype || 'basic';
 
   this.config = client.ItemConfiguration['hardpoint'][type][this.subtype];
 };

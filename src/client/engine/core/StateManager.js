@@ -5,10 +5,8 @@ function StateManager(game, state) {
   this.game = game;
 
   this.states = {};
-  this.backgroundStates = {};
   this._current = '';
 
-  this._pendingBackgroundStates = [];
   this._pendingState = state || null;
   this._clearWorld = false;
   this._clearCache = false;
@@ -17,7 +15,6 @@ function StateManager(game, state) {
   this._args = [];
 
   this.callbackContext = null;
-  this.backgroundStateContext = null;
 
   EventEmitter.call(this);
 };
@@ -26,29 +23,18 @@ StateManager.prototype = Object.create(EventEmitter.prototype);
 StateManager.prototype.constructor = StateManager;
 
 StateManager.prototype.boot = function() {
-  //
-  // todo: link pause/resume
-  //
-
   if(this._pendingState !== null && typeof this._pendingState !== 'string') {
     this.add('default', this._pendingState, true);
   }
 };
 
-StateManager.prototype.add = function(key, state, autoStart, background) {
+StateManager.prototype.add = function(key, state, autoStart) {
   autoStart = autoStart || false;
-  background = background || false;
 
-  if(background === false) {
-    this.states[key] = state;
-  } else {
-    this.backgroundStates[key] = state;
-  }
+  this.states[key] = state;
 
   if(autoStart) {
-    if(background) {
-      this._pendingBackgroundStates.push(key);
-    } else if(this.game.isBooted) {
+    if(this.game.isBooted) {
       this.start(key);
     } else { 
       this._pendingState = key;
@@ -127,21 +113,6 @@ StateManager.prototype.clearCurrentState = function() {
   }
 };
 
-StateManager.prototype.clearBackgroundStates = function() {
-  var backgroundStates = this.backgroundStates;
-  for(var b in backgroundStates) {
-    backgroundStates[b].shutdown();
-  }
-};
-
-StateManager.prototype.setCurrentBackgroundState = function(key) {
-  this.backgroundStateContext = this.backgroundStates[key];
-  this.backgroundStateContext.game = this.game;
-  this.backgroundStateContext.init();
-
-  this.game._kickstart = true;
-};
-
 StateManager.prototype.setCurrentState = function(key) {
   // set key
   this._current = key;
@@ -166,29 +137,8 @@ StateManager.prototype.setCurrentState = function(key) {
   this.game._kickstart = true;
 };
 
-StateManager.prototype.getBackgroundState = function(key) {
-  return this.backgroundStates[key];
-};
-
 StateManager.prototype.preUpdate = function() {
-  // block when loading a background state
-  if(this.backgroundStateContext) { return; }
-
-  if(this._pendingBackgroundStates.length > 0) {
-    this.setCurrentBackgroundState(this._pendingBackgroundStates.pop());
-
-    if(this.backgroundStateContext.preload) {
-      this.backgroundStateContext.preload();
-
-      if(this.game.load.totalQueuedFiles() === 0 && this.game.load.totalQueuedPacks() === 0) {
-        this.backgroundLoadComplete();
-      } else {
-        this.game.load.start();
-      }
-    } else {
-      this.backgroundLoadComplete();
-    }
-  } else if(this._pendingState && this.game.isBooted) {
+  if(this._pendingState && this.game.isBooted) {
     var previousStateKey = this._current;
 
     this._clearWorld = true;
@@ -211,7 +161,7 @@ StateManager.prototype.preUpdate = function() {
       this.game.load.reset(true);
       this.callbackContext.preload();
 
-      if(this.game.load.totalQueuedFiles() === 0 && this.game.load.totalQueuedPacks() === 0) {
+      if(this.game.load.totalQueuedFiles() === 0) {
         this.loadComplete();
       } else {
         this.game.load.start();
@@ -232,11 +182,6 @@ StateManager.prototype.loadComplete = function() {
   }
 };
 
-StateManager.prototype.backgroundLoadComplete = function() {
-  this.backgroundStateContext.create();
-  this.backgroundStateContext = null;
-};
-
 StateManager.prototype.pause = function() {
   if(this._created && this.callbackContext.paused) {
     this.callbackContext.paused();
@@ -250,14 +195,6 @@ StateManager.prototype.resume = function() {
 };
 
 StateManager.prototype.update = function() {
-  if(this.backgroundStateContext) {
-    if(this.backgroundStateContext.loadUpdate && !this.game.load.hasLoaded) {
-      this.backgroundStateContext.loadUpdate();
-    } else if(this.game.load.hasLoaded)  {
-      this.backgroundLoadComplete();
-    }
-  }
-
   if(this._created) {
     if(this.callbackContext.update) {
       this.callbackContext.update();
@@ -276,12 +213,6 @@ StateManager.prototype.pauseUpdate = function() {
     if(this.callbackContext.pauseUpdate) {
       this.callbackContext.pauseUpdate();
     }
-  } else if(this.backgroundStateContext) {
-    if(this.backgroundStateContext.loadUpdate && !this.game.load.hasLoaded) {
-      this.backgroundStateContext.loadUpdate();
-    } else if(this.game.load.hasLoaded)  {
-      this.backgroundLoadComplete();
-    }
   }
 };
 
@@ -296,22 +227,15 @@ StateManager.prototype.resize = function(width, height) {
   if(this._created && this.callbackContext.resize) {
     this.callbackContext.resize(width, height);
   }
-
-  // resize background states
-  for(var b in this.backgroundStates) {
-    this.backgroundStates[b].resize(width, height);
-  }
 };
 
 StateManager.prototype.destroy = function() {
   this.clearCurrentState();
-  this.clearBackgroundStates();
 
   this.callbackContext = null;
 
   this.game = null;
   this.states = {};
-  this.backgroundStates = {};
 
   this._current = '';
   this._pendingState = null;
@@ -325,13 +249,7 @@ Object.defineProperty(StateManager.prototype, 'current', {
 
 Object.defineProperty(StateManager.prototype, 'hasPendingState', {
   get: function() {
-    return this._pendingState !== null || this._pendingBackgroundStates.length > 0;
-  }
-});
-
-Object.defineProperty(StateManager.prototype, 'pendingLength', {
-  get: function() {
-    return this._pendingBackgroundStates.length + (this._pendingState !== null ? 1 : 0);
+    return this._pendingState !== null;
   }
 });
 

@@ -24,10 +24,10 @@ NebulaCluster.prototype.create = function(density) {
   for(var i=0; i<density; i++) {
     nebula = new Nebula(game, i * 5.0);
     nebula.cache();
-    nebula.pivot.set(512, 512);
-    nebula.position.set(global.Math.random() * 256, global.Math.random() * 256);
+    nebula.pivot.set(256, 256);
+    nebula.position.set(global.Math.random() * 128, global.Math.random() * 128);
     nebula.rotation = (2 * global.Math.PI / density) * i;
-    nebula.scale.set(i%3+1/d, i%3+1/d)
+    nebula.scale.set(i%3+3/d, i%3+3/d)
 
     this.addChild(nebula);
     this.sprites.push(nebula);
@@ -35,7 +35,7 @@ NebulaCluster.prototype.create = function(density) {
   
   this.lightning = new pixi.Sprite();
   this.lightning.blendMode = engine.BlendMode.ADD;
-  this.lightning.pivot.set(512, 512);
+  this.lightning.pivot.set(256, 256);
   this.lightning.alpha = 0.0;
 
   this.lightningTween = tweens.create(this.lightning);

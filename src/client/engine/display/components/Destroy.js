@@ -1,24 +1,15 @@
-
 var pixi = require('pixi'),
-    Group = require('../../core/Group');
+    engine = require('engine');
 
 function Destroy() {};
 
 Destroy.prototype = {
-  destroyPhase: false,
-
   destroy: function(destroyChildren) {
-    if(this.game === null || this.destroyPhase) { return; }
+    if(this.game === undefined) { return; }
     if(destroyChildren === undefined) { destroyChildren = true; }
 
-    this.destroyPhase = true;
-
     if(this.parent) {
-      if(this.parent instanceof Group) {
-        this.parent.remove(this);
-      } else {
-        this.parent.removeChild(this);
-      }
+      this.parent.removeChild(this);
     }
 
     if(this.input) {
@@ -42,20 +33,20 @@ Destroy.prototype = {
       }
     }
 
-    if(this._frame) {
-      this._frame = null;
+    switch(this.type) {
+      case engine.CONST.SPRITE:
+        pixi.Sprite.prototype.destroy.call(this, destroyChildren);
+        break;
+      case engine.CONST.GRAPHICS:
+        pixi.Graphics.prototype.destroy.call(this, destroyChildren);
+        break;
+      case engine.CONST.STRIP:
+        pixi.Rope.prototype.destroy.call(this, destroyChildren);
+        break;
     }
 
-    this.exists = false;
-    this.visible = false;
-    this.game = null;
-
-    this.renderable = false;
-
-    pixi.Sprite.prototype.destroy.call(this);
-
-    this.destroyPhase = false;
-    this.pendingDestroy = false;
+    this.game = this.components = 
+      this.animations = this.input = undefined;
   }
 };
 

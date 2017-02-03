@@ -1,7 +1,6 @@
 
 var Sprite = require('./Sprite'),
     Point = require('../geometry/Point');
-    // Reset = require('./components/Reset');
 
 function Particle(game, key, frame) {
   Sprite.call(this, game, key, frame);
@@ -49,10 +48,6 @@ Particle.prototype.update = function() {
   //   this.drag.x * timeStep,
   //   this.drag.y * timeStep
   // );
-
-  if(!this.autoScale && !this.autoAlpha && !this.autoTint) {
-    this.exists = false
-  }
 
   if(this.autoScale) {
     this._s--;
@@ -109,13 +104,10 @@ Particle.prototype.setTintData = function(data) {
   this.autoTint = true;
 }
 
-Particle.prototype.reset = function(x, y) { //, health) {
-  // Component.Reset.prototype.reset.call(this, x, y, health);
-  
+Particle.prototype.reset = function(x, y) {
   this.position.set(x, y);
 
   this.fresh = true;
-  this.exists = true;
   this.visible = true;
   this.renderable = true;
 

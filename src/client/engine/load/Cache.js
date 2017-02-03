@@ -28,9 +28,9 @@ function Cache(game) {
     renderTexture: {}
   };
 
-  this._urlMap = {};
-  this._urlResolver = new Image();
-  this._urlTemp = null;
+  // this._urlMap = {};
+  // this._urlResolver = new Image();
+  // this._urlTemp = null;
 
   // this.onSoundUnlock = new Phaser.Signal();
 
@@ -93,10 +93,10 @@ Cache.prototype = {
           frameData: new FrameData()
         };
 
-    img.frameData.addFrame(new Frame(0, 0, 0, data.width, data.height, url));
+    // img.frameData.addFrame(new Frame(0, 0, 0, data.width, data.height, url));
 
     this._cache.image[key] = img;
-    this._resolveURL(url, img);
+    // this._resolveURL(url, img);
 
     // add to PIXI cache
     pixi.utils.BaseTextureCache[key] = baseTexture;
@@ -119,7 +119,7 @@ Cache.prototype = {
   },
 
   addDefaultTexture: function() {
-    var base = this.getImage('__default', true).base,
+    var base = this.getBaseTexture('__default'),
         texture = new pixi.Texture(base);
     this.addTexture('__default', texture);
   },
@@ -144,17 +144,17 @@ Cache.prototype = {
       locked: this.game.sound.touchLocked
     };
 
-    this._resolveURL(url, this._cache.sound[key]);
+    // this._resolveURL(url, this._cache.sound[key]);
   },
 
   addText: function(key, url, data) {
     this._cache.text[key] = { url: url, data: data };
-    this._resolveURL(url, this._cache.text[key]);
+    // this._resolveURL(url, this._cache.text[key]);
   },
 
   addTilemap: function(key, url, mapData) {
     this._cache.tilemap[key] = { url: url, data: mapData };
-    this._resolveURL(url, this._cache.tilemap[key]);
+    // this._resolveURL(url, this._cache.tilemap[key]);
   },
 
   addBinary: function(key, binaryData) {
@@ -173,17 +173,17 @@ Cache.prototype = {
 
   addJSON: function(key, url, data) {
     this._cache.json[key] = { url: url, data: data };
-    this._resolveURL(url, this._cache.json[key]);
+    // this._resolveURL(url, this._cache.json[key]);
   },
 
   addXML: function(key, url, data) {
     this._cache.xml[key] = { url: url, data: data };
-    this._resolveURL(url, this._cache.xml[key]);
+    // this._resolveURL(url, this._cache.xml[key]);
   },
 
   addShader: function(key, url, data) {
     this._cache.shader[key] = { url: url, data: data };
-    this._resolveURL(url, this._cache.shader[key]);
+    // this._resolveURL(url, this._cache.shader[key]);
   },
 
   addRenderTexture: function(key, texture) {
@@ -212,31 +212,26 @@ Cache.prototype = {
     };
 
     this._cache.image[key] = obj;
-    this._resolveURL(url, obj);
+    // this._resolveURL(url, obj);
   },
 
-  addTextureAtlas: function (key, url, data, atlasData, format) {
-    var obj = {
+  addTextureAtlas: function(key, url, data, atlasData, format) {
+    var atlas = {
       key: key,
       url: url,
       data: data,
       base: new pixi.BaseTexture(data)
     };
 
-    if(format === Loader.TEXTURE_ATLAS_JSON_PYXEL) {
-      // currently unsupported
-      obj.frameData = AnimationParser.JSONDataPyxel(this.game, atlasData, key);
+    // let's just work it out from the frames array
+    if(Array.isArray(atlasData.frames)) {
+      atlas.frameData = AnimationParser.JSONData(this.game, atlasData, key);
     } else {
-      // let's just work it out from the frames array
-      if(Array.isArray(atlasData.frames)) {
-        obj.frameData = AnimationParser.JSONData(this.game, atlasData, key);
-      } else {
-        obj.frameData = AnimationParser.JSONDataHash(this.game, atlasData, key);
-      }
+      atlas.frameData = AnimationParser.JSONDataHash(this.game, atlasData, key);
     }
 
-    this._cache.image[key] = obj;
-    this._resolveURL(url, obj);
+    this._cache.image[key] = atlas;
+    // this._resolveURL(url, obj);
   },
 
   reloadSound: function(key) {
@@ -276,14 +271,14 @@ Cache.prototype = {
   },
 
   isSoundDecoded: function(key) {
-    var sound = this.getItem(key, Cache.SOUND, 'isSoundDecoded');
+    var sound = this.getItem(key, Cache.SOUND);
     if(sound) {
       return sound.decoded;
     }
   },
 
   isSoundReady: function(key) {
-    var sound = this.getItem(key, Cache.SOUND, 'isSoundDecoded');
+    var sound = this.getItem(key, Cache.SOUND);
     if(sound) {
       return (sound.decoded && !this.game.sound.touchLocked);
     }
@@ -296,12 +291,12 @@ Cache.prototype = {
     return false;
   },
 
-  checkURL: function(url) {
-    if(this._urlMap[this._resolveURL(url)]) {
-      return true;
-    }
-    return false;
-  },
+  // checkURL: function(url) {
+  //   if(this._urlMap[this._resolveURL(url)]) {
+  //     return true;
+  //   }
+  //   return false;
+  // },
 
   checkCanvasKey: function(key) {
     return this.checkKey(Cache.CANVAS, key);
@@ -351,11 +346,9 @@ Cache.prototype = {
     return this.checkKey(Cache.RENDER_TEXTURE, key);
   },
 
-  getItem: function(key, cache, method, property) {
+  getItem: function(key, cache, property) {
     if(!this.checkKey(cache, key)) {
-      if(method) {
-        console.warn('Cache.' + method + ': Key "' + key + '" not found in Cache.');
-      }
+      console.warn('Cache: Key "' + key + '" not found in Cache.');
     } else {
       if(property === undefined) {
         return this._cacheMap[cache][key];
@@ -367,55 +360,39 @@ Cache.prototype = {
   },
 
   getCanvas: function(key) {
-    return this.getItem(key, Cache.CANVAS, 'getCanvas', 'canvas');
-  },
-
-  getImage: function(key, full) {
-    if(key === undefined || key === null) { key = '__default'; }
-    if(full === undefined) { full = false; }
-
-    var img = this.getItem(key, Cache.IMAGE, 'getImage');
-    if(img === null) {
-      img = this.getItem('__missing', Cache.IMAGE, 'getImage');
-    }
-
-    if(full) {
-      return img;
-    } else {
-      return img.data;
-    }
+    return this.getItem(key, Cache.CANVAS, 'canvas');
   },
 
   getTextureFrame: function(key) {
-    return this.getItem(key, Cache.TEXTURE, 'getTextureFrame', 'frame');
+    return this.getItem(key, Cache.TEXTURE, 'frame');
   },
 
   getSound: function(key) {
-    return this.getItem(key, Cache.SOUND, 'getSound');
+    return this.getItem(key, Cache.SOUND);
   },
 
   getSoundData: function(key) {
-    return this.getItem(key, Cache.SOUND, 'getSoundData', 'data');
+    return this.getItem(key, Cache.SOUND, 'data');
   },
 
   getText: function(key) {
-    return this.getItem(key, Cache.TEXT, 'getText', 'data');
+    return this.getItem(key, Cache.TEXT, 'data');
   },
 
   getTilemapData: function(key) {
-    return this.getItem(key, Cache.TILEMAP, 'getTilemapData');
+    return this.getItem(key, Cache.TILEMAP);
   },
 
   getBinary: function(key) {
-    return this.getItem(key, Cache.BINARY, 'getBinary');
+    return this.getItem(key, Cache.BINARY);
   },
 
   getBitmapData: function(key) {
-    return this.getItem(key, Cache.BITMAPDATA, 'getBitmapData', 'data');
+    return this.getItem(key, Cache.BITMAPDATA, 'data');
   },
 
   getJSON: function(key, clone) {
-    var data = this.getItem(key, Cache.JSON, 'getJSON', 'data');
+    var data = this.getItem(key, Cache.JSON, 'data');
     if(data) {
       if(clone) {
         return Class.extend(true, data);
@@ -428,25 +405,46 @@ Cache.prototype = {
   },
 
   getXML: function(key) {
-    return this.getItem(key, Cache.XML, 'getXML', 'data');
+    return this.getItem(key, Cache.XML, 'data');
   },
 
   getShader: function(key) {
-    return this.getItem(key, Cache.SHADER, 'getShader', 'data');
+    return this.getItem(key, Cache.SHADER, 'data');
   },
 
   getRenderTexture: function(key) {
-    return this.getItem(key, Cache.RENDER_TEXTURE, 'getRenderTexture');
+    return this.getItem(key, Cache.RENDER_TEXTURE);
+  },
+
+  getImage: function(key) {
+    if(key === undefined || key === null) { key = '__default'; }
+    var img = this.getItem(key, Cache.IMAGE);
+    if(img === null) {
+      img = this.getItem('__missing', Cache.IMAGE);
+    }
+    return img.data;
   },
 
   getBaseTexture: function(key, cache) {
     if(cache === undefined) { cache = Cache.IMAGE; }
-    return this.getItem(key, cache, 'getBaseTexture', 'base');
+    return this.getItem(key, cache, 'base');
   },
 
   getFrame: function(key, cache) {
     if(cache === undefined) { cache = Cache.IMAGE; }
-    return this.getItem(key, cache, 'getFrame', 'frame');
+    return this.getItem(key, cache, 'frame');
+  },
+
+  getFrameData: function(key, cache) {
+    if(cache === undefined) { cache = Cache.IMAGE; }
+    return this.getItem(key, cache, 'frameData');
+  },
+
+  updateFrameData: function(key, frameData, cache) {
+    if(cache === undefined) { cache = Cache.IMAGE; }
+    if(this._cacheMap[cache][key]) {
+      this._cacheMap[cache][key].frameData = frameData;
+    }
   },
 
   getFrameCount: function(key, cache) {
@@ -455,23 +453,6 @@ Cache.prototype = {
       return data.total;
     } else {
       return 0;
-    }
-  },
-
-  getFrameData: function(key, cache) {
-    if(cache === undefined) { cache = Cache.IMAGE; }
-    return this.getItem(key, cache, 'getFrameData', 'frameData');
-  },
-
-  hasFrameData: function(key, cache) {
-    if(cache === undefined) { cache = Cache.IMAGE; }
-    return (this.getItem(key, cache, '', 'frameData') !== null);
-  },
-
-  updateFrameData: function(key, frameData, cache) {
-    if(cache === undefined) { cache = Cache.IMAGE; }
-    if(this._cacheMap[cache][key]) {
-      this._cacheMap[cache][key].frameData = frameData;
     }
   },
 
@@ -493,33 +474,15 @@ Cache.prototype = {
     }
   },
 
-  getPixiTexture: function(key) {
-    if(pixi.TextureCache[key]) {
-      return pixi.TextureCache[key];
-    } else {
-      console.warn('Cache.getPixiTexture: Invalid key: "' + key + '"');
-      return null;
-    }
-  },
-
-  getPixiBaseTexture: function(key) {
-    if(pixi.BaseTextureCache[key]) {
-      return pixi.BaseTextureCache[key];
-    } else {
-      console.warn('Cache.getPixiBaseTexture: Invalid key: "' + key + '"');
-      return null;
-    }
-  },
-
-  getURL: function(url) {
-    var url = this._resolveURL(url);
-    if(url) {
-      return this._urlMap[url];
-    } else {
-        console.warn('Cache.getUrl: Invalid url: "' + url  + '" or Cache.autoResolveURL was false');
-      return null;
-    }
-  },
+  // getURL: function(url) {
+  //   var url = this._resolveURL(url);
+  //   if(url) {
+  //     return this._urlMap[url];
+  //   } else {
+  //       console.warn('Cache.getUrl: Invalid url: "' + url  + '" or Cache.autoResolveURL was false');
+  //     return null;
+  //   }
+  // },
 
   getKeys: function(cache) {
     if(cache === undefined) { cache = Cache.IMAGE; }
@@ -539,8 +502,9 @@ Cache.prototype = {
   },
 
   removeImage: function(key) {
-    var img = this.getImage(key, true);
+    var img = this._cache.image[key];
         img.base.destroy();
+        img.framedata.destroy();
     delete this._cache.image[key];
   },
 
@@ -588,24 +552,24 @@ Cache.prototype = {
     delete this._cache.atlas[key];
   },
 
-  _resolveURL: function(url, data) {
-    if(!this.autoResolveURL) {
-      return null;
-    }
+  // _resolveURL: function(url, data) {
+  //   if(!this.autoResolveURL) {
+  //     return null;
+  //   }
 
-    this._urlResolver.src = this.game.load.baseURL + url;
-    this._urlTemp = this._urlResolver.src;
+  //   this._urlResolver.src = this.game.load.baseURL + url;
+  //   this._urlTemp = this._urlResolver.src;
 
-    //  Ensure no request is actually made
-    this._urlResolver.src = '';
+  //   //  Ensure no request is actually made
+  //   this._urlResolver.src = '';
 
-    //  Record the URL to the map
-    if(data) {
-      this._urlMap[this._urlTemp] = data;
-    }
+  //   //  Record the URL to the map
+  //   if(data) {
+  //     this._urlMap[this._urlTemp] = data;
+  //   }
 
-    return this._urlTemp;
-  },
+  //   return this._urlTemp;
+  // },
 
   destroy: function() {
     for(var i = 0; i < this._cacheMap.length; i++) {
@@ -621,9 +585,9 @@ Cache.prototype = {
       }
     }
 
-    this._urlMap = null;
-    this._urlResolver = null;
-    this._urlTemp = null;
+    // this._urlMap = null;
+    // this._urlResolver = null;
+    // this._urlTemp = null;
   }
 
 };

@@ -24,23 +24,23 @@ var Ship = schema.define('ship', {
   health:     { type: schema.Double },
   heal:       { type: schema.Double },
   capacity:   { type: schema.Double },
+  size:       { type: schema.Double },
   energy:     { type: schema.Double },
   recharge:   { type: schema.Double },
   armor:      { type: schema.Double },
-  accuracy:   { type: schema.Double },
   evasion:    { type: schema.Double },
   durability: { type: schema.Double },
   speed:      { type: schema.Double },
-  range:      { type: schema.Double },
+  rate:       { type: schema.Double },
   critical:   { type: schema.Double }
 });
 
-Ship.NAMES = [
-  'ubaidian-x01', 'ubaidian-x02', 'ubaidian-x03', 'ubaidian-x04',
-  'hederaa-x01',
-  'mechan-x01', 'mechan-x02', 'mechan-x03',
-  'general-x01', 'general-x02'
-];
+// Ship.NAMES = [
+//   'ubaidian-x01', 'ubaidian-x02', 'ubaidian-x03', 'ubaidian-x04',
+//   'hederaa-x01',
+//   'mechan-x01', 'mechan-x02', 'mechan-x03',
+//   'general-x01', 'general-x02', 'general-x03'
+// ];
 
 Ship.CLASSES = [
   'mining',           // 1 light socket
@@ -57,7 +57,7 @@ Ship.CLASSES = [
 
 Ship.validatesLengthOf('name', { min: 2, max: 64 });
 
-Ship.validatesInclusionOf('chassis', { in: Ship.NAMES });
+// Ship.validatesInclusionOf('chassis', { in: Ship.NAMES });
 Ship.validatesInclusionOf('class', { in: Ship.CLASSES });
 Ship.validatesInclusionOf('race', { in: Faction.RACES });
 
@@ -68,13 +68,14 @@ Ship.validatesNumericalityOf('rotation');
 Ship.validatesNumericalityOf('health');
 Ship.validatesNumericalityOf('heal');
 Ship.validatesNumericalityOf('capacity');
+Ship.validatesNumericalityOf('size');
 Ship.validatesNumericalityOf('energy');
 Ship.validatesNumericalityOf('recharge');
 Ship.validatesNumericalityOf('armor');
-Ship.validatesNumericalityOf('accuracy');
 Ship.validatesNumericalityOf('evasion');
 Ship.validatesNumericalityOf('durability');
 Ship.validatesNumericalityOf('speed');
+Ship.validatesNumericalityOf('rate');
 Ship.validatesNumericalityOf('critical');
 
 Ship.prototype.init = function() {
@@ -89,14 +90,14 @@ Ship.prototype.init = function() {
     if(!this.health) { this.health = stats.health; }
     if(!this.heal) { this.heal = stats.heal; }
     if(!this.capacity) { this.capacity = stats.capacity; }
+    if(!this.size) { this.size = stats.size; }
     if(!this.energy) { this.energy = stats.energy; }
     if(!this.recharge) { this.recharge = stats.recharge; }
     if(!this.armor) { this.armor = stats.armor; }
-    if(!this.accuracy) { this.accuracy = stats.accuracy; }
     if(!this.evasion) { this.evasion = stats.evasion; }
     if(!this.durability) { this.durability = stats.durability; }
     if(!this.speed) { this.speed = stats.speed; }
-    if(!this.range) { this.range = stats.range; }
+    if(!this.rate) { this.rate = stats.rate; }
     if(!this.critical) { this.critical = stats.critical; }
   }
 };

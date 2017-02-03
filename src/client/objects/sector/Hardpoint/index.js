@@ -1,55 +1,109 @@
 
 var engine = require('engine'),
-    Laser = require('./Laser'),
-    Missile = require('./Missile');
+    Energy = require('./Energy'),
+    Projectile = require('./Projectile'),
+    Pulse = require('./Pulse');
 
 function Hardpoint(parent, data, config) {
   this.parent = parent;
   this.game = parent.game;
   this.ship = parent.parent;
-  this.target = parent.target;
   this.config = config;
   this.data = data;
 
-  this.position = new engine.Point();
+  this.isRunning = false;
+  this.actives = [];
+  this.types = {
+    rocket: Projectile,
+    energy: Energy,
+    pulse: Pulse
+  }
 
-  // move this out
-  // this.absolute = new engine.Point();
+  this.target = new engine.Point();
+  this.origin = new engine.Point();
 
   this.cap = new engine.Sprite(this.game, 'texture-atlas', 'turret-cap-' + this.ship.config.race + '.png');
+  
   this.sprite = new engine.Sprite(this.game, 'texture-atlas', data.sprite + '.png');
   this.sprite.position.set(config.position.x, config.position.y);
   this.sprite.pivot.set(config.pivot.x, config.pivot.y);
+  
   this.ship.addChild(this.sprite);
   this.sprite.addChild(this.cap);
-
-  this.manager = this.create(data.type);
 };
 
 Hardpoint.prototype.constructor = Hardpoint;
 
-Hardpoint.prototype.create = function(type) {
-  switch(type) {
-    case 'rocket':
-      return new Missile(this);
-    case 'laser':
-    default:
-      return new Laser(this);
+Hardpoint.prototype.fire = function(targ, delay) {
+  var time, launcher,
+      data = this.data,
+      ship = this.ship,
+      types = this.types,
+      target = this.target,
+      actives = this.actives,
+      length = actives.length,
+      spawn = data.spawn,
+      distance = engine.Point.distance(ship.position, targ);
+
+  if(distance <= data.range) {
+    target.copyFrom(targ);
+
+    for(var i=0; i<length; i++) {
+      launcher = actives[i];
+
+      if(!launcher.isDone) {
+        spawn--;
+      }
+    }
+
+    for(var i=0; i<spawn; i++) {
+      launcher = new types[data.type](this);
+      launcher.start(target, distance, delay);
+
+      actives.push(launcher);
+    }
+
+    this.isRunning = true;
   }
 };
 
-Hardpoint.prototype.fire = function(distance) {
-  this.updateTransform();
-  this.manager.start(this.position, this.target, distance);
+Hardpoint.prototype.hit = function(ship) {
+  var launcher,
+      actives = this.actives,
+      length = actives.length;
+  for(var i=0; i<length; i++) {
+    launcher = actives[i];
+    launcher.hit && launcher.hit(ship);
+  }
 };
 
 Hardpoint.prototype.update = function() {
-  var position = this.position,
-      target = this.target;
-  if(this.manager.update && this.manager.isRunning) {
-    this.updateTransform();
-    this.manager.update(position, target);
-  }  
+  if(!this.isRunning) { return; }
+
+  var launcher,
+      remove = [],
+      actives = this.actives,
+      length = actives.length;
+
+  for(var i=0; i<length; i++) {
+    launcher = actives[i];
+    
+    if(launcher.isRunning) {
+      launcher.update();
+    } else {
+      launcher.destroy();
+      remove.push(launcher);
+    }
+  }
+
+  while(remove.length > 0) {
+    actives.splice(remove.pop(), 1);
+  }
+
+  // stop
+  if(length == 0) {
+    this.isRunning = false;
+  }
 };
 
 Hardpoint.prototype.explode = function(target) {
@@ -60,12 +114,7 @@ Hardpoint.prototype.explode = function(target) {
     if(parent == ship) { return };
     if(ship.contains(target.x, target.y)) {
       manager.explosionEmitter.at({ center: target });
-      manager.explosionEmitter.explode(2);
-
-      // inflict damage
-      // game.world.worldTransform.apply(this.target, this.absolute);
-      // ship.worldTransform.applyInverse(this.absolute, this.absolute);
-      // ship.damage.inflict(this.absolute);        
+      manager.explosionEmitter.explode(1);
 
       if(ship.isPlayer) {
         game.camera.shake();
@@ -75,28 +124,26 @@ Hardpoint.prototype.explode = function(target) {
   }, this);
 };
 
-Hardpoint.prototype.updateTransform = function() {
+Hardpoint.prototype.updateTransform = function(target) {
   var game = this.game,
       ship = this.ship,
       sprite = this.sprite,
-      position = this.position,
-      target = this.target;
+      origin = this.origin,
+      target = target || this.target;
 
-  // absolute position
+  // absolute origin
   ship.updateTransform();
-  game.world.worldTransform.applyInverse(ship.worldTransform.apply(sprite), position);
-  engine.Line.pointAtDistance({ x: position.x, y: position.y }, target, 18, position);
-  
-  // update rotation
-  sprite.rotation = engine.Point.angle(position, target)-ship.rotation;
+  game.world.worldTransform.applyInverse(ship.worldTransform.apply(sprite), origin);
+  engine.Line.pointAtDistance({ x: origin.x, y: origin.y }, target, 18, origin);
+  sprite.rotation = engine.Point.angle(origin, target)-ship.rotation;
+
+  return origin;
 };
 
 Hardpoint.prototype.destroy = function() {
-  this.manager && this.manager.destroy();
-  
   this.parent = this.game = this.ship =
     this.config = this.target = this.cap =
-    this.position = this.sprite = this.manager =
+    this.position = this.sprite = this.launcher =
     this.data = undefined;
 };
 

@@ -2,13 +2,13 @@
 var engine = require('engine');
 
 function ExplosionEmitter(game) {
-  engine.Emitter.call(this, game, 0, 0);
+  engine.Emitter.call(this, game, 0, 0, 500);
    
-  this.minRotation = -15;
-  this.maxRotation = 15;
+  this.minRotation = -30;
+  this.maxRotation = 30;
 
-  this.setScale(1.0, 3.0, 1.0, 3.0, 3000);
-  this.setAlpha(1.0, 0.0, 3000);
+  this.setScale(0.25, 1.5, 0.25, 1.5, 1000);
+  this.setAlpha(1.0, 0.0, 1000);
   this.setTint(0xFF8888, 0x181818, 500);
 
   this.makeParticles('texture-atlas', [

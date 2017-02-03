@@ -18,8 +18,6 @@ function Frame(index, x, y, width, height, name) {
   this.distance = Math.distance(0, 0, width, height);
 
   this.rotated = false;
-  this.rotationDirection = 'cw';
-
   this.trimmed = false;
 
   this.sourceSizeW = width;
@@ -71,15 +69,6 @@ Frame.prototype = {
       }
     }
     return output;
-  },
-
-  getRect: function(out) {
-    if(typeof out === 'undefined') {
-      out = new Rectangle(this.x, this.y, this.width, this.height);
-    } else {
-      out.setTo(this.x, this.y, this.width, this.height);
-    }
-    return out;
   }
 
 };

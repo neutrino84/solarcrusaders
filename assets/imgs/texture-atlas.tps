@@ -86,9 +86,9 @@
         <key>maxTextureSize</key>
         <QSize>
             <key>width</key>
-            <int>2048</int>
+            <int>512</int>
             <key>height</key>
-            <int>2048</int>
+            <int>512</int>
         </QSize>
         <key>fixedTextureSize</key>
         <QSize>
@@ -104,7 +104,7 @@
             <key>freeSizeMode</key>
             <enum type="AlgorithmSettings::AlgorithmFreeSizeMode">Best</enum>
             <key>sizeConstraints</key>
-            <enum type="AlgorithmSettings::SizeConstraints">AnySize</enum>
+            <enum type="AlgorithmSettings::SizeConstraints">POT</enum>
             <key>forceSquared</key>
             <true/>
             <key>maxRects</key>
@@ -195,7 +195,7 @@
             <key type="filename">fx/explosion-b.png</key>
             <key type="filename">fx/explosion-c.png</key>
             <key type="filename">fx/explosion-d.png</key>
-            <key type="filename">fx/laser-piercing.png</key>
+            <key type="filename">fx/turret-glow.png</key>
             <key type="filename">icons/enhancement-booster.png</key>
             <key type="filename">icons/enhancement-heal.png</key>
             <key type="filename">icons/enhancement-piercing.png</key>
@@ -245,7 +245,6 @@
             <filename>fx/explosion-a.png</filename>
             <filename>fx/explosion-b.png</filename>
             <filename>fx/explosion-d.png</filename>
-            <filename>fx/laser-piercing.png</filename>
             <filename>icons/enhancement-booster.png</filename>
             <filename>icons/enhancement-piercing.png</filename>
             <filename>icons/enhancement-shield.png</filename>
@@ -283,6 +282,7 @@
             <filename>objects/asteroid-x06.png</filename>
             <filename>turrets/turret-rocket-a.png</filename>
             <filename>icons/enhancement-heal.png</filename>
+            <filename>fx/turret-glow.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

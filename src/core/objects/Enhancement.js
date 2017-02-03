@@ -2,13 +2,14 @@
 var client = require('client'),
     EventEmitter = require('eventemitter3');
 
-function Enhancement(parent, enhancement) {
+function Enhancement(parent, type, subtype) {
   this.parent = parent;
-  this.name = enhancement;
   this.game = parent.game;
+  this.type = type;
+  this.subtype = subtype || 'basic';
 
   this.activated = false;
-  this.config = client.ItemConfiguration['enhancement'][enhancement];
+  this.config = client.ItemConfiguration['enhancement'][this.type][this.subtype];
 
   EventEmitter.call(this);
 };

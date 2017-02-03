@@ -31,13 +31,12 @@ ShipManager.prototype.init = function() {
   // io router
   this.sockets.iorouter.on('ship/data', this.data.bind(this));
   this.sockets.iorouter.on('ship/plot', this.plot.bind(this));
-  // this.sockets.iorouter.on('ship/canister', this.canister.bind(this));
   this.sockets.iorouter.on('ship/attack', this.attack.bind(this));
   this.sockets.iorouter.on('ship/enhancement/*', this.enhancement.bind(this));
 
   // generate npcs
   this.generateRandomShips();
-  this.generatePirateShips();
+  // this.generatePirateShips();
 };
 
 ShipManager.prototype.add = function(ship) {
@@ -77,18 +76,6 @@ ShipManager.prototype.remove = function(ship) {
     });
   }
 };
-
-// ShipManager.prototype.canister = function(sock, args, next) {
-//   var user = sock.sock.handshake.session.user,
-//       data = args[1],
-//       ship = this.ships[data.uuid];
-//   if(ship && ship.user && ship.user.ship === user.ship) {
-//     ship.user.data.credits += 1000;
-//     this.game.emit('user/data', ship.user, {
-//       credits: ship.user.data.credits
-//     });
-//   }
-// };
 
 ShipManager.prototype.plot = function(sock, args, next) {
   var user = sock.sock.handshake.session.user,
@@ -170,16 +157,15 @@ ShipManager.prototype.data = function(sock, args, next) {
         assists: ship.data.assists,
         durability: ship.durability,
         capacity: ship.capacity,
+        size: ship.size,
         energy: ship.energy,
         recharge: ship.recharge,
         health: ship.health,
         heal: ship.heal,
         armor: ship.armor,
-        range: ship.range,
+        rate: ship.rate,
         speed: ship.speed,
-        damage: ship.damage,
         critical: ship.critical,
-        accuracy: ship.accuracy,
         evasion: ship.evasion,
         hardpoints: ship.hardpoints,
         systems: ship.systems,
@@ -217,14 +203,14 @@ ShipManager.prototype.update = function() {
 
 ShipManager.prototype.generateRandomShips = function() {
   var iterator = {
-        'ubaidian-x01': { race: 'ubaidian', count: 0 },
-        'ubaidian-x02': { race: 'ubaidian', count: 0 },
-        'ubaidian-x03': { race: 'ubaidian', count: 1 },
-        'ubaidian-x04': { race: 'ubaidian', count: 2 },
+        'ubaidian-x01': { race: 'ubaidian', count: 1 },
+        'ubaidian-x02': { race: 'ubaidian', count: 1 },
+        'ubaidian-x03': { race: 'ubaidian', count: 3 },
+        'ubaidian-x04': { race: 'ubaidian', count: 4 },
         'hederaa-x01': { race: 'hederaa', count: 0 },
-        'mechan-x01': { race: 'mechan', count: 2 },
-        'general-x01': { race: 'ubaidian', count: 0 },
-        'general-x02': { race: 'ubaidian', count: 0 }
+        'mechan-x01': { race: 'mechan', count: 0 },
+        'general-x01': { race: 'ubaidian', count: 2 },
+        'general-x02': { race: 'ubaidian', count: 2 }
       };
   for(var chassis in iterator) {
     for(var i=0; i<iterator[chassis].count; i++) {

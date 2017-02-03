@@ -6,29 +6,18 @@ var engine = require('engine'),
     Class = engine.Class;
 
 function Label(game, string, settings) {
-  Panel.call(this, game, this);
+  Panel.call(this, game, this, settings.constraint);
 
-  string = string || '';
   this.settings = Class.mixin(settings, {
-    padding: [6, 12],
-    border: [0],
+    padding: [0],
+    margin: [0],
     color: 0xFFFFFF,
-    bg: {},
     text: {},
     align: 'left'
   });
 
-  // set size
-  if(this.settings.width || this.settings.height) {
-    this.setPreferredSize(
-      this.settings.width,
-      this.settings.height);
-  }
-
   this.setPadding.apply(this, this.settings.padding);
-  this.setBorder.apply(this, this.settings.border);
-
-  this.align = this.settings.align;
+  this.setMargin.apply(this, this.settings.margin);
 
   if(this.settings.bg) {
     this.bg = new BackgroundView(game, this.settings.bg);
@@ -45,14 +34,18 @@ Label.prototype = Object.create(Panel.prototype);
 Label.prototype.constructor = Label;
 
 Label.prototype.calcPreferredSize = function(target) {
-  return { width: this.textView.width, height: this.textView.height };
+  return {
+    width: this.textView.width,
+    height: this.textView.height
+  };
 };
 
 Label.prototype.doLayout = function() {
-  var left = this.left;
-  if(this.align === 'right') {
+  var left = this.left,
+      settings = this.settings;
+  if(settings.align === 'right') {
     left = this.size.width-this.textView.width-this.right;
-  } else if(this.align === 'center') {
+  } else if(settings.align === 'center') {
     left = global.Math.floor(this.size.width/2-(this.textView.width/2));
   }
   this.textView.position.set(left, this.top);

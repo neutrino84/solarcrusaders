@@ -53,7 +53,7 @@ EngineCore.prototype.create = function() {
     glow.tint = conf.tint;
     glow.blendMode = engine.BlendMode.ADD;
 
-    parent.addChildAt(glow, 1);
+    parent.addChildAt(glow, 0);
     parent.addChild(highlight);
 
     glows.push(glow);

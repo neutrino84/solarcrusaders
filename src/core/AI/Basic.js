@@ -38,7 +38,7 @@ Basic.prototype.update = function() {
 };
 
 Basic.prototype.engage = function(target) {
-  if(target.ai) { return };
+  // if(target.ai) { return };
   if(this.target != target) {
     this.target = target;
 
@@ -73,7 +73,7 @@ Basic.prototype.attack = function() {
 };
 
 Basic.prototype.getHomePosition = function() {
-  return this.manager.generateRandomPosition(1024);
+  return this.manager.generateRandomPosition(2048);
 };
 
 Basic.prototype.destroy = function() {

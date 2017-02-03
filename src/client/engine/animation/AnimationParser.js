@@ -2,7 +2,6 @@ var Frame = require('./Frame'),
     FrameData = require('./FrameData');
 
 var AnimationParser = {
-
   spriteSheet: function(game, key, frameWidth, frameHeight, frameMax, margin, spacing) {
     var img = key;
 
@@ -58,38 +57,41 @@ var AnimationParser = {
 
   JSONData: function(game, json) {
     //  Malformed?
-    if(!json['frames']) {
+    if(!json.frames) {
       console.warn("AnimationParser.JSONData: Invalid Texture Atlas JSON given, missing 'frames' array");
       console.log(json);
       return;
     }
 
     //  Let's create some frames then
-    var data = new FrameData();
+    var frames = json.frames,
+        frameData = new FrameData(),
+        frame, atlas;
 
-    //  By this stage frames is a fully parsed array
-    var frames = json['frames'];
-    var newFrame;
+    for(var i=0; i<frames.length; i++) {
+      atlas = frames[i];
+      
+      // create and add frame
+      frame = frameData.addFrame(
+        new Frame(i,
+          atlas.frame.x,
+          atlas.frame.y,
+          atlas.frame.w,
+          atlas.frame.h,
+          atlas.filename
+        )
+      );
 
-    for(var i = 0; i < frames.length; i++) {
-      newFrame = data.addFrame(new Frame(
-        i,
-        frames[i].frame.x,
-        frames[i].frame.y,
-        frames[i].frame.w,
-        frames[i].frame.h,
-        frames[i].filename
-      ));
-
-      if(frames[i].trimmed) {
-        newFrame.setTrim(
-          frames[i].trimmed,
-          frames[i].sourceSize.w,
-          frames[i].sourceSize.h,
-          frames[i].spriteSourceSize.x,
-          frames[i].spriteSourceSize.y,
-          frames[i].spriteSourceSize.w,
-          frames[i].spriteSourceSize.h
+      // trim if necessary
+      if(atlas.trimmed) {
+        frame.setTrim(
+          atlas.trimmed,
+          atlas.sourceSize.w,
+          atlas.sourceSize.h,
+          atlas.spriteSourceSize.x,
+          atlas.spriteSourceSize.y,
+          atlas.spriteSourceSize.w,
+          atlas.spriteSourceSize.h
         );
       }
     }
@@ -99,45 +101,46 @@ var AnimationParser = {
 
   JSONDataHash: function(game, json) {
     //  Malformed?
-    if(!json['frames']) {
+    if(!json.frames) {
       console.warn("AnimationParser.JSONDataHash: Invalid Texture Atlas JSON given, missing 'frames' object");
       console.log(json);
       return;
     }
 
-    //  Let's create some frames then
-    var data = new FrameData();
+    var frames = json.frames,
+        frameData = new FrameData(),
+        frame, atlas,
+        i = 0;
 
-    //  By this stage frames is a fully parsed array
-    var frames = json['frames'];
-    var newFrame;
-    var i = 0;
     for(var key in frames) {
-      newFrame = data.addFrame(new Frame(
-        i,
-        frames[key].frame.x,
-        frames[key].frame.y,
-        frames[key].frame.w,
-        frames[key].frame.h,
-        key
-      ));
+      atlas = frames[key];
+      frame = frameData.addFrame(
+        new Frame(
+          i,
+          atlas.frame.x,
+          atlas.frame.y,
+          atlas.frame.w,
+          atlas.frame.h,
+          key
+        )
+      );
 
-      if(frames[key].trimmed) {
-        newFrame.setTrim(
-          frames[key].trimmed,
-          frames[key].sourceSize.w,
-          frames[key].sourceSize.h,
-          frames[key].spriteSourceSize.x,
-          frames[key].spriteSourceSize.y,
-          frames[key].spriteSourceSize.w,
-          frames[key].spriteSourceSize.h
+      if(atlas.trimmed) {
+        frame.setTrim(
+          atlas.trimmed,
+          atlas.sourceSize.w,
+          atlas.sourceSize.h,
+          atlas.spriteSourceSize.x,
+          atlas.spriteSourceSize.y,
+          atlas.spriteSourceSize.w,
+          atlas.spriteSourceSize.h
         );
       }
 
       i++;
     }
 
-    return data;
+    return frameData;
   }
 };
 

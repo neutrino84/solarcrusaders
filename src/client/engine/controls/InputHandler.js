@@ -604,29 +604,16 @@ InputHandler.prototype = {
 
     var px = this.globalToLocalX(pointer.x) + this._dragPoint.x + this.dragOffset.x;
     var py = this.globalToLocalY(pointer.y) + this._dragPoint.y + this.dragOffset.y;
-    
-    if(this.sprite.fixedToCamera) {
-      if(this.allowHorizontalDrag) { this.sprite.cameraOffset.x = px; }
-      if(this.allowVerticalDrag) { this.sprite.cameraOffset.y = py; }
-      if(this.boundsRect) { this.checkBoundsRect(); }
-      if(this.boundsSprite) { this.checkBoundsSprite(); }
 
-      if(this.snapOnDrag) {
-        this.sprite.cameraOffset.x = Math.round((this.sprite.cameraOffset.x - (this.snapOffsetX % this.snapX)) / this.snapX) * this.snapX + (this.snapOffsetX % this.snapX);
-        this.sprite.cameraOffset.y = Math.round((this.sprite.cameraOffset.y - (this.snapOffsetY % this.snapY)) / this.snapY) * this.snapY + (this.snapOffsetY % this.snapY);
-        this.snapPoint.set(this.sprite.cameraOffset.x, this.sprite.cameraOffset.y);
-      }
-    } else {
-      if(this.allowHorizontalDrag) { this.sprite.x = px; }
-      if(this.allowVerticalDrag) { this.sprite.y = py; }
-      if(this.boundsRect) { this.checkBoundsRect(); }
-      if(this.boundsSprite) { this.checkBoundsSprite(); }
+    if(this.allowHorizontalDrag) { this.sprite.x = px; }
+    if(this.allowVerticalDrag) { this.sprite.y = py; }
+    if(this.boundsRect) { this.checkBoundsRect(); }
+    if(this.boundsSprite) { this.checkBoundsSprite(); }
 
-      if(this.snapOnDrag) {
-        this.sprite.x = Math.round((this.sprite.x - (this.snapOffsetX % this.snapX)) / this.snapX) * this.snapX + (this.snapOffsetX % this.snapX);
-        this.sprite.y = Math.round((this.sprite.y - (this.snapOffsetY % this.snapY)) / this.snapY) * this.snapY + (this.snapOffsetY % this.snapY);
-        this.snapPoint.set(this.sprite.x, this.sprite.y);
-      }
+    if(this.snapOnDrag) {
+      this.sprite.x = Math.round((this.sprite.x - (this.snapOffsetX % this.snapX)) / this.snapX) * this.snapX + (this.snapOffsetX % this.snapX);
+      this.sprite.y = Math.round((this.sprite.y - (this.snapOffsetY % this.snapY)) / this.snapY) * this.snapY + (this.snapOffsetY % this.snapY);
+      this.snapPoint.set(this.sprite.x, this.sprite.y);
     }
 
     this.sprite.emit('dragUpdate', this.sprite, pointer, px, py, this.snapPoint);
@@ -728,23 +715,14 @@ InputHandler.prototype = {
     this._draggedPointerID = pointer.id;
     this._pointerData[pointer.id].isDragged = true;
 
-    if(this.sprite.fixedToCamera) {
-      if(this.dragFromCenter) {
-        this.sprite.centerOn(pointer.x, pointer.y);
-        this._dragPoint.setTo(this.sprite.cameraOffset.x - pointer.x, this.sprite.cameraOffset.y - pointer.y);
-      } else {
-        this._dragPoint.setTo(this.sprite.cameraOffset.x - pointer.x, this.sprite.cameraOffset.y - pointer.y);
-      }
-    } else {
-      if(this.dragFromCenter) {
-        var bounds = this.sprite.getBounds();
+    if(this.dragFromCenter) {
+      var bounds = this.sprite.getBounds();
 
-        this.sprite.x = this.globalToLocalX(pointer.x) + (this.sprite.x - bounds.centerX);
-        this.sprite.y = this.globalToLocalY(pointer.y) + (this.sprite.y - bounds.centerY);
-      }
-
-      this._dragPoint.setTo(this.sprite.x - this.globalToLocalX(pointer.x), this.sprite.y - this.globalToLocalY(pointer.y));
+      this.sprite.x = this.globalToLocalX(pointer.x) + (this.sprite.x - bounds.centerX);
+      this.sprite.y = this.globalToLocalY(pointer.y) + (this.sprite.y - bounds.centerY);
     }
+
+    this._dragPoint.setTo(this.sprite.x - this.globalToLocalX(pointer.x), this.sprite.y - this.globalToLocalY(pointer.y));
 
     this.updateDrag(pointer);
 
@@ -780,13 +758,8 @@ InputHandler.prototype = {
     this._dragPhase = false;
 
     if(this.snapOnRelease) {
-      if(this.sprite.fixedToCamera) {
-        this.sprite.cameraOffset.x = Math.round((this.sprite.cameraOffset.x - (this.snapOffsetX % this.snapX)) / this.snapX) * this.snapX + (this.snapOffsetX % this.snapX);
-        this.sprite.cameraOffset.y = Math.round((this.sprite.cameraOffset.y - (this.snapOffsetY % this.snapY)) / this.snapY) * this.snapY + (this.snapOffsetY % this.snapY);
-      } else {
-        this.sprite.x = Math.round((this.sprite.x - (this.snapOffsetX % this.snapX)) / this.snapX) * this.snapX + (this.snapOffsetX % this.snapX);
-        this.sprite.y = Math.round((this.sprite.y - (this.snapOffsetY % this.snapY)) / this.snapY) * this.snapY + (this.snapOffsetY % this.snapY);
-      }
+      this.sprite.x = Math.round((this.sprite.x - (this.snapOffsetX % this.snapX)) / this.snapX) * this.snapX + (this.snapOffsetX % this.snapX);
+      this.sprite.y = Math.round((this.sprite.y - (this.snapOffsetY % this.snapY)) / this.snapY) * this.snapY + (this.snapOffsetY % this.snapY);
     }
 
     this.sprite.emit('dragStop', this.sprite, pointer);
@@ -824,76 +797,48 @@ InputHandler.prototype = {
   },
 
   checkBoundsRect: function() {
-    if(this.sprite.fixedToCamera) {
-      if(this.sprite.cameraOffset.x < this.boundsRect.left) {
-        this.sprite.cameraOffset.x = this.boundsRect.left;
-      } else if((this.sprite.cameraOffset.x + this.sprite.width) > this.boundsRect.right) {
-        this.sprite.cameraOffset.x = this.boundsRect.right - this.sprite.width;
-      }
-
-      if(this.sprite.cameraOffset.y < this.boundsRect.top) {
-        this.sprite.cameraOffset.y = this.boundsRect.top;
-      } else if((this.sprite.cameraOffset.y + this.sprite.height) > this.boundsRect.bottom) {
-        this.sprite.cameraOffset.y = this.boundsRect.bottom - this.sprite.height;
-      }
-    } else {
-      if(this.sprite.left < this.boundsRect.left) {
-        this.sprite.x = this.boundsRect.x + this.sprite.offsetX;
-      } else if(this.sprite.right > this.boundsRect.right) {
-        this.sprite.x = this.boundsRect.right - (this.sprite.width - this.sprite.offsetX);
-      }
-      if(this.sprite.top < this.boundsRect.top) {
-        this.sprite.y = this.boundsRect.top + this.sprite.offsetY;
-      } else if(this.sprite.bottom > this.boundsRect.bottom) {
-        this.sprite.y = this.boundsRect.bottom - (this.sprite.height - this.sprite.offsetY);
-      }
+    if(this.sprite.left < this.boundsRect.left) {
+      this.sprite.x = this.boundsRect.x + this.sprite.offsetX;
+    } else if(this.sprite.right > this.boundsRect.right) {
+      this.sprite.x = this.boundsRect.right - (this.sprite.width - this.sprite.offsetX);
+    }
+    if(this.sprite.top < this.boundsRect.top) {
+      this.sprite.y = this.boundsRect.top + this.sprite.offsetY;
+    } else if(this.sprite.bottom > this.boundsRect.bottom) {
+      this.sprite.y = this.boundsRect.bottom - (this.sprite.height - this.sprite.offsetY);
     }
   },
 
   checkBoundsSprite: function() {
-    if(this.sprite.fixedToCamera && this.boundsSprite.fixedToCamera) {
-      if(this.sprite.cameraOffset.x < this.boundsSprite.cameraOffset.x) {
-        this.sprite.cameraOffset.x = this.boundsSprite.cameraOffset.x;
-      } else if((this.sprite.cameraOffset.x + this.sprite.width) > (this.boundsSprite.cameraOffset.x + this.boundsSprite.width)) {
-        this.sprite.cameraOffset.x = (this.boundsSprite.cameraOffset.x + this.boundsSprite.width) - this.sprite.width;
-      }
-
-      if(this.sprite.cameraOffset.y < this.boundsSprite.cameraOffset.y) {
-        this.sprite.cameraOffset.y = this.boundsSprite.cameraOffset.y;
-      } else if((this.sprite.cameraOffset.y + this.sprite.height) > (this.boundsSprite.cameraOffset.y + this.boundsSprite.height)) {
-        this.sprite.cameraOffset.y = (this.boundsSprite.cameraOffset.y + this.boundsSprite.height) - this.sprite.height;
-      }
-    } else {
-      if(this.sprite.left < this.boundsSprite.left) {
-        this.sprite.x = this.boundsSprite.left + this.sprite.offsetX;
-      } else if(this.sprite.right > this.boundsSprite.right) {
-        this.sprite.x = this.boundsSprite.right - (this.sprite.width - this.sprite.offsetX);
-      }
-
-      if(this.sprite.top < this.boundsSprite.top) {
-        this.sprite.y = this.boundsSprite.top + this.sprite.offsetY;
-      } else if(this.sprite.bottom > this.boundsSprite.bottom) {
-        this.sprite.y = this.boundsSprite.bottom - (this.sprite.height - this.sprite.offsetY);
-      }
-
-      // if(this.sprite.x < this.boundsSprite.x)
-      // {
-      //    this.sprite.x = this.boundsSprite.x;
-      // }
-      // else if((this.sprite.x + this.sprite.width) > (this.boundsSprite.x + this.boundsSprite.width))
-      // {
-      //    this.sprite.x = (this.boundsSprite.x + this.boundsSprite.width) - this.sprite.width;
-      // }
-
-      // if(this.sprite.y < this.boundsSprite.y)
-      // {
-      //    this.sprite.y = this.boundsSprite.y;
-      // }
-      // else if((this.sprite.y + this.sprite.height) > (this.boundsSprite.y + this.boundsSprite.height))
-      // {
-      //    this.sprite.y = (this.boundsSprite.y + this.boundsSprite.height) - this.sprite.height;
-      // }
+    if(this.sprite.left < this.boundsSprite.left) {
+      this.sprite.x = this.boundsSprite.left + this.sprite.offsetX;
+    } else if(this.sprite.right > this.boundsSprite.right) {
+      this.sprite.x = this.boundsSprite.right - (this.sprite.width - this.sprite.offsetX);
     }
+
+    if(this.sprite.top < this.boundsSprite.top) {
+      this.sprite.y = this.boundsSprite.top + this.sprite.offsetY;
+    } else if(this.sprite.bottom > this.boundsSprite.bottom) {
+      this.sprite.y = this.boundsSprite.bottom - (this.sprite.height - this.sprite.offsetY);
+    }
+
+    // if(this.sprite.x < this.boundsSprite.x)
+    // {
+    //    this.sprite.x = this.boundsSprite.x;
+    // }
+    // else if((this.sprite.x + this.sprite.width) > (this.boundsSprite.x + this.boundsSprite.width))
+    // {
+    //    this.sprite.x = (this.boundsSprite.x + this.boundsSprite.width) - this.sprite.width;
+    // }
+
+    // if(this.sprite.y < this.boundsSprite.y)
+    // {
+    //    this.sprite.y = this.boundsSprite.y;
+    // }
+    // else if((this.sprite.y + this.sprite.height) > (this.boundsSprite.y + this.boundsSprite.height))
+    // {
+    //    this.sprite.y = (this.boundsSprite.y + this.boundsSprite.height) - this.sprite.height;
+    // }
   }
 };
 

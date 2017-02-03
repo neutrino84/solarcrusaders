@@ -110,7 +110,7 @@ LeaderboardPane.prototype.initialize = function() {
   }
 };
 
-LeaderboardPane.prototype.update = function() {
+LeaderboardPane.prototype.draw = function() {
   this.sort();
   this.redraw();
 };
@@ -123,10 +123,10 @@ LeaderboardPane.prototype.addPlayer = function(ship) {
     this.player = ship;
   }
 
-  ship.on('data', this.update, this);
+  ship.on('data', this.draw, this);
   ships.push(ship);
 
-  this.update();
+  this.draw();
 };
 
 LeaderboardPane.prototype.removePlayer = function(ship) {
@@ -134,13 +134,13 @@ LeaderboardPane.prototype.removePlayer = function(ship) {
 
   for(var i=0; i<ships.length; i++) {
     if(ship.uuid === ships[i].uuid) {
-      ships[i].removeListener('data', this.update);
+      ships[i].removeListener('data', this.draw);
       ships.splice(i, 1);
       break;
     }
   }
 
-  this.update();
+  this.draw();
 };
 
 LeaderboardPane.prototype.sort = function() {

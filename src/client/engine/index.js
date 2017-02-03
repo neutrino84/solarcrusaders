@@ -1,7 +1,6 @@
 var Device = require('./system/Device'),
     Game = require('./core/Game'),
     State = require('./core/State'),
-    // Batch = require('./core/Batch'),
     Group = require('./core/Group'),
     Sprite = require('./display/Sprite'),
     Shader = require('./display/Shader'),
@@ -42,7 +41,6 @@ var core = module.exports =
     State: State,
 
     // display
-    // Batch: Batch,
     Group: Group,
     Pinned: Pinned,
     Sprite: Sprite,

@@ -1,43 +1,52 @@
 
-var engine = require('engine');
+var pixi = require('pixi'),
+    engine = require('engine');
 
 function Projectile(parent) {
-  this.parent = parent.parent;
+  this.parent = parent;
   this.game = parent.game;
   this.data = parent.data;
   this.clock  = parent.game.clock;
+  this.spread = {
+    x: global.Math.random() * this.data.spread - this.data.spread / 2,
+    y: global.Math.random() * this.data.spread - this.data.spread / 2
+  }
 
   this.started = 0;
   this.elapsed = 0;
+  this.length = 0;
+  this.duration = 0;
 
-  this.delay = 200;
-  this.duration = 800;
+  this.isDone = false;
   this.isRunning = false;
-  this.hasExploded = false;
-  this.easing = engine.Easing.Sinusoidal.In;
 
+  this.target = new engine.Point();
   this.origin = new engine.Point();
   this.destination = new engine.Point();
-  this.position = new engine.Point();
-
-  this.projectile = new engine.Sprite(this.game, 'texture-atlas', 'turret-rocket-a.png');
-  this.projectile.scale.set(1.0, 1.0);
-  this.projectile.pivot.set(17, 25);
+  this.offset = new engine.Point(this.spread.x, this.spread.y);
+  
+  this.projectile = new engine.Sprite(this.game, 'texture-atlas', this.data.texture);
+  this.projectile.scale.set(0.5, 0.5);
+  this.projectile.pivot.set(32, 32);
+  this.projectile.position.set(0, 16);
+  this.projectile.rotation = global.Math.PI * global.Math.random();
 };
 
-Projectile.prototype.start = function(origin, destination, distance) {
-  this.started = this.clock.time;
+Projectile.prototype.start = function(destination, duration, delay) {
   this.elapsed = 0;
+  this.duration = duration * this.data.projection;
+  this.delay = delay;
+  this.started = this.clock.time + delay;
 
-  this.delay = distance/2;
-  this.duration = distance;
+  this.isDone = false;
   this.isRunning = true;
   this.hasExploded = false;
 
-  this.origin.copyFrom(origin);
-  this.destination.copyFrom(destination);
+  this.length = this.data.length;
+  this.runtime = this.duration + this.length;
 
-  this.projectile.rotation = this.origin.angle(this.destination) - (global.Math.PI / 2);
+  this.target.copyFrom(destination);
+  this.destination.copyFrom(destination);
 
   this.parent.fxGroup.addChild(this.projectile);
 };
@@ -45,53 +54,56 @@ Projectile.prototype.start = function(origin, destination, distance) {
 Projectile.prototype.stop = function() {
   this.isRunning = false;
   this.parent.fxGroup.removeChild(this.projectile);
-  this.projectile.destroy();
-  this.destroy();
 };
 
 Projectile.prototype.explode = function() {
-  this.hasExploded = true;
+  this.parent.fireEmitter.at({ center: this.destination });
+  this.parent.fireEmitter.explode(1);
 
-  this.parent.explosionEmitter.at({ center: this.destination });
-  this.parent.explosionEmitter.explode(1);
-  
-  this.parent.explode(this.destination);
+  if(!this.hasExploded) {
+    this.parent.explode(this.destination);
+  }
+
+  this.hasExploded = true;
 };
 
-Projectile.prototype.update = function(origin, destination) {
+Projectile.prototype.update = function() {
+  var f1, f2, f3;
+
   if(this.isRunning === true) {
     this.elapsed = this.clock.time - this.started;
 
-    // update
-    this.origin.copyFrom(origin);
-    
-    // percent complete
-    var percent = this.elapsed / this.duration;
-    if(this.elapsed <= this.duration) {
-      this.origin.interpolate(this.destination, this.easing(percent), this.position);
-      this.projectile.position.set(this.position.x, this.position.y);
-    } else {
-      this.projectile.position.set(this.destination.x, this.destination.y);
-    }
+    if(this.elapsed < 0) { return; }
 
-    if(this.elapsed >= this.delay) {
-      this.parent.flashEmitter.at({ center: this.position });
-      this.parent.flashEmitter.explode(1);
-    }
+    f1 = this.elapsed/this.runtime;
 
-    if(this.elapsed >= this.duration) {
-      if(this.hasExploded == false) {
-        this.explode();
-      }
+    this.destination.x = this.target.x + (this.offset.x * f1);
+    this.destination.y = this.target.y + (this.offset.y * f1);
+
+    // update orig / dest
+    this.origin.copyFrom(this.parent.updateTransform(this.destination));
+
+    this.projectile.position.x = this.destination.x;
+    this.projectile.position.y = this.destination.y;
+
+    if(this.elapsed > this.runtime) {
+      this.explode();
       this.stop();
     }
   }
 };
 
 Projectile.prototype.destroy = function() {
-  this.parent = this.game = this.data = this.clock
-    this.easing = this.origin = this.destination =
-    this.position = this.projectile = undefined;
+  this.isRunning && this.stop();
+
+  this.texture.destroy();
+  this.strip.destroy();
+  this.glow.destroy();
+
+  this.parent = this.game = 
+    this.data = this.clock = this._start =
+    this._end = this.destination = this.origin =
+    this.target = this.offset = undefined;
 };
 
 module.exports = Projectile;

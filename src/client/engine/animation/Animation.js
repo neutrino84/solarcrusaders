@@ -1,36 +1,29 @@
 
 var EventEmitter = require('eventemitter3');
 
-function Animation(game, parent, name, frameData, frames, frameRate, loop) {
+function Animation(game, name, sprite, frameData, frames, frameRate, loop) {
+  if(frameRate === undefined) { frameRate = 60; }
   if(loop === undefined) { loop = false; }
 
   this.game = game;
   this.name = name;
-  this.parent = parent;
+  this.sprite = sprite;
 
   this._frameData = frameData;
-  this._frames = [];
-  this._frames = this._frames.concat(frames);
+  this._frames = frames;
 
   this.delay = 1000 / frameRate;
   this.loop = loop;
   this.loopCount = 0;
 
-  this.killOnComplete = false;
-  this.isFinished = false;
   this.isPlaying = false;
-  this.isPaused = false;
 
   this._pauseStartTime = 0;
   this._frameIndex = 0;
   this._frameDiff = 0;
   this._frameSkip = 1;
 
-  this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
-
-  ////  Set-up some event listeners
-  this.game.on('game/pause', this.onPause, this);
-  this.game.on('game/resume', this.onResume, this);
+  this.updateCurrentFrame();
 
   EventEmitter.call(this);
 };
@@ -38,62 +31,25 @@ function Animation(game, parent, name, frameData, frames, frameRate, loop) {
 Animation.prototype = Object.create(EventEmitter.prototype);
 Animation.prototype.constructor = Animation;
 
-Animation.prototype.play = function(frameRate, loop, killOnComplete) {
-  if(typeof frameRate === 'number') {
-    // if they set a new frame rate then use it, otherwise use the one set on creation
-    this.delay = 1000 / frameRate;
-  }
-
+Animation.prototype.play = function(loop, frameRate) {
   if(typeof loop === 'boolean') {
     // if they set a new loop value then use it, otherwise use the one set on creation
     this.loop = loop;
   }
 
-  if(killOnComplete !== undefined) {
-    // remove the parent sprite once the animation has finished?
-    this.killOnComplete = killOnComplete;
+  if(typeof frameRate === 'number') {
+    // if they set a new frame rate then use it, otherwise use the one set on creation
+    this.delay = 1000 / frameRate;
   }
 
-  this.isPlaying = true;
-  this.isFinished = false;
-  this.paused = false;
   this.loopCount = 0;
+  this.isPlaying = true;
 
+  this._frameIndex = 0;
   this._timeLastFrame = this.game.clock.time;
   this._timeNextFrame = this.game.clock.time + this.delay;
 
-  this._frameIndex = 0;
-  this.updateCurrentFrame(true);
-
-  this.emit('start', this.parent, this);
-
-  this.parent.emit('animationStart', this);
-  this.parent.animations.currentAnim = this;
-  this.parent.animations.currentFrame = this.currentFrame;
-
-  return this;
-};
-
-Animation.prototype.restart = function() {
-  this.isPlaying = true;
-  this.isFinished = false;
-  this.paused = false;
-  this.loopCount = 0;
-
-  this._timeLastFrame = this.game.clock.time;
-  this._timeNextFrame = this.game.clock.time + this.delay;
-
-  this._frameIndex = 0;
-
-  this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
-
-  this.parent.setFrame(this.currentFrame);
-
-  this.emit('start', this.parent, this);
-
-  this.parent.emit('animationStart', this);
-  this.parent.animations.currentAnim = this;
-  this.parent.animations.currentFrame = this.currentFrame;
+  this.updateCurrentFrame();
 };
 
 Animation.prototype.setFrame = function(frameId, useLocalFrameIndex) {
@@ -139,100 +95,54 @@ Animation.prototype.stop = function(resetFrame, dispatchComplete) {
   if(dispatchComplete === undefined) { dispatchComplete = false; }
 
   this.isPlaying = false;
-  this.isFinished = true;
-  this.paused = false;
 
   if(resetFrame) {
-    this.currentFrame = this._frameData.getFrame(this._frames[0]);
-    this.parent.setFrame(this.currentFrame);
+    this._frameIndex = 0;
+    this.updateCurrentFrame();
   }
 
   if(dispatchComplete) {
-    this.parent.emit('animationComplete', this);
-    this.emit('complete', this.parent, this);
-  }
-};
-
-Animation.prototype.onPause = function() {
-  if(this.isPlaying) {
-    this._frameDiff = this._timeNextFrame - this.game.clock.time;
-  }
-};
-
-Animation.prototype.onResume = function() {
-  if(this.isPlaying) {
-    this._timeNextFrame = this.game.clock.time + this._frameDiff;
+    //..
   }
 };
 
 Animation.prototype.update = function() {
-  if(this.isPaused) { return false; }
-
-  if(this.isPlaying && this.game.clock.time >= this._timeNextFrame) {
+  var time = this.game.clock.time;
+  if(this.isPlaying && time >= this._timeNextFrame) {
     this._frameSkip = 1;
 
-    //  Lagging?
-    this._frameDiff = this.game.clock.time - this._timeNextFrame;
-    this._timeLastFrame = this.game.clock.time;
+    // lag control
+    this._frameDiff = time - this._timeNextFrame;
+    this._timeLastFrame = time;
 
     if(this._frameDiff > this.delay) {
-      //  We need to skip a frame, work out how many
-      this._frameSkip = Math.floor(this._frameDiff / this.delay);
-      this._frameDiff -= (this._frameSkip * this.delay);
+      // need to skip frames
+      this._frameSkip = global.Math.floor(this._frameDiff / this.delay);
+      this._frameDiff -= this._frameSkip * this.delay;
     }
 
-    //  And what's left now?
-    this._timeNextFrame = this.game.clock.time + (this.delay - this._frameDiff);
+    // calculate next time
+    this._timeNextFrame = time + (this.delay - this._frameDiff);
     this._frameIndex += this._frameSkip;
 
+    // update, loop, or complete
     if(this._frameIndex >= this._frames.length) {
       if(this.loop) {
-        // Update current state before event callback
-        this._frameIndex %= this._frames.length;
-        this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
-
-        //  Instead of calling updateCurrentFrame we do it here instead
-        if(this.currentFrame) {
-          this.parent.setFrame(this.currentFrame);
-        }
-
         this.loopCount++;
-
-        // dispatch events
-        // this.parent.emit('animationLoop', this);
-        // this.emit('loop', this.parent, this);
-
-        return true;
+        this._frameIndex %= this._frames.length;
+        this.updateCurrentFrame();
       } else {
         this.complete();
-        return false;
       }
     } else {
-      return this.updateCurrentFrame();
+      this.updateCurrentFrame();
     }
   }
-
-  return false;
 };
 
-Animation.prototype.updateCurrentFrame = function(fromPlay) {
-  if(fromPlay === undefined) { fromPlay = false; }
-
-  if(!this._frameData) {
-    // the animation is already destroyed, probably from a callback
-    return false;
-  }
-
-  // previous index
-  var idx = this.currentFrame.index;
-
+Animation.prototype.updateCurrentFrame = function() {
   this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
-
-  if(this.currentFrame && (fromPlay || (!fromPlay && idx !== this.currentFrame.index))) {
-    this.parent.setFrame(this.currentFrame);
-  }
-
-  return true;
+  this.sprite.setFrame(this.currentFrame);
 };
 
 Animation.prototype.next = function(quantity) {
@@ -279,11 +189,8 @@ Animation.prototype.updateFrameData = function(frameData) {
 Animation.prototype.destroy = function() {
   if(!this._frameData) { return; }
 
-  // this.game.removeListener('pause', this.onPause, this);
-  // this.game.removeListener('resume', this.onResume, this);
-
   this.game = null;
-  this.parent = null;
+  this.sprite = null;
   this._frames = null;
   this._frameData = null;
   this.currentFrame = null;
@@ -297,37 +204,9 @@ Animation.prototype.complete = function() {
   this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
 
   this.isPlaying = false;
-  this.isFinished = true;
-  this.paused = false;
-
-  this.parent.on('animationComplete', this);
-  this.on('complete', this.parent, this);
-
-  if(this.killOnComplete) {
-    this.parent.kill();
-  }
 };
 
-Object.defineProperty(Animation.prototype, 'paused', {
-  get: function() {
-    return this.isPaused;
-  },
-
-  set: function(value) {
-    this.isPaused = value;
-    if(value) {
-      //  Paused
-      this._pauseStartTime = this.game.clock.time;
-    } else {
-      //  Un-paused
-      if(this.isPlaying) {
-        this._timeNextFrame = this.game.clock.time + this.delay;
-      }
-    }
-  }
-});
-
-Object.defineProperty(Animation.prototype, 'frameTotal', {
+Object.defineProperty(Animation.prototype, 'total', {
   get: function() {
     return this._frames.length;
   }
@@ -347,7 +226,7 @@ Object.defineProperty(Animation.prototype, 'frame', {
 
     if(this.currentFrame !== null) {
       this._frameIndex = value;
-      this.parent.setFrame(this.currentFrame);
+      this.sprite.setFrame(this.currentFrame);
     }
   }
 });

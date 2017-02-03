@@ -8,21 +8,20 @@ var engine = require('engine'),
     Damage = require('./Damage'),
     Hud = require('../../../ui/components/Hud');
 
-function Ship(manager, key) {
-  engine.Group.call(this, manager.game, false);
+function Ship(manager, name) {
+  engine.Sprite.call(this, manager.game, 'texture-atlas', name + '.png');
 
-  this.name = key;
+  this.name = name;
   this.manager = manager;
-  this.game = manager.game;
-  this.config = manager.game.cache.getJSON('ship-configuration', false)[key];
+  this.config = manager.game.cache.getJSON('ship-configuration', false)[name];
 
   // registry
   this.timers = [];
   this.rotation = 0.0;
-  this.chassis = new engine.Sprite(manager.game, 'texture-atlas', key + '.png');
-  this.pivot.set(this.chassis.texture.frame.width / 2, this.chassis.texture.frame.height / 2);
+  this.chassis = new engine.Sprite(manager.game, 'texture-atlas', name + '.png');
+  this.pivot.set(this.texture.frame.width / 2, this.texture.frame.height / 2);
 
-  this.hud = new Hud(this);
+  // this.hud = new Hud(this);
   this.damage = new Damage(this);
   this.movement = new Movement(this);
   
@@ -40,36 +39,36 @@ function Ship(manager, key) {
   
   // selection
   this.selected = false;
-  this.graphics = new engine.Graphics(manager.game);
-  this.graphics.blendMode = engine.BlendMode.ADD;
-  this.graphics.objectRenderer = 'wireframe';
+  // this.graphics = new engine.Graphics(manager.game);
+  // this.graphics.blendMode = engine.BlendMode.ADD;
+  // this.graphics.objectRenderer = 'wireframe';
 }
 
-Ship.prototype = Object.create(engine.Group.prototype);
+Ship.prototype = Object.create(engine.Sprite.prototype);
 Ship.prototype.constructor = Ship;
 
 Ship.prototype.boot = function() {
-  this.add(this.graphics);
-  this.add(this.chassis);
+  // this.addChild(this.graphics);
+  this.addChild(this.chassis);
 
   this.engineCore.create();
   this.targetingComputer.create();
   this.shieldGenerator.create();
   this.repair.create();
-  this.hud.create();
+  // this.hud.create();
 
   this.details.on('data', this.data, this);
 
   // max range
-  this.graphics.lineStyle(1.0, this.isPlayer ? 0xFFFFFF : 0xFF0000, this.isPlayer ? 0.1 : 1.0);
-  this.graphics.drawCircle(this.circle.x, this.circle.y, this.circle.radius);
+  // this.graphics.lineStyle(1.0, this.isPlayer ? 0xFFFFFF : 0xFF0000, this.isPlayer ? 0.1 : 1.0);
+  // this.graphics.drawCircle(this.circle.x, this.circle.y, this.circle.radius);
 
   // update health
-  this.hud.healthBar.setProgressBar(global.Math.min(1.0,
-    this.details.health / this.config.stats.health));
+  // this.hud.healthBar.setProgressBar(global.Math.min(1.0,
+  //   this.details.health / this.config.stats.health));
 
   // update stats
-  this.hud.updateStats(this.details);
+  // this.hud.updateStats(this.details);
 
   // set player
   if(this.isPlayer) {
@@ -85,13 +84,17 @@ Ship.prototype.boot = function() {
 Ship.prototype.data = function(data) {
   var hud = this.hud,
       config = this.config,
+      targetingComputer = this.targetingComputer,
       percent;
+  if(data.hardpoint) {
+    targetingComputer.hit(data.hardpoint);
+  }
   if(data.health !== undefined) {
-    percent = data.health / config.stats.health;
-    hud.healthBar.setProgressBar(global.Math.min(1.0, percent));
+    // percent = data.health / config.stats.health;
+    // hud.healthBar.setProgressBar(global.Math.min(1.0, percent));
   }
   if(data.kills || data.assists || data.disables) {
-    hud.updateStats(this.details);
+    // hud.updateStats(this.details);
   }
 };
 
@@ -101,17 +104,18 @@ Ship.prototype.update = function() {
   if(!this.disabled){
     this.engineCore.update(this.movement.velocity / this.details.speed);
   }
-  this.hud.update();
+  // this.hud.update();
+  engine.Sprite.prototype.update.call(this);
 };
 
 Ship.prototype.select = function() {
   this.selected = true;
-  this.graphics.renderable = true;
+  // this.graphics.renderable = true;
 };
 
 Ship.prototype.deselect = function() {
   this.selected = false;
-  this.graphics.renderable = false;
+  // this.graphics.renderable = false;
 };
 
 Ship.prototype.highlight = function() {
@@ -147,7 +151,7 @@ Ship.prototype.enable = function() {
   this.disabled = false;
   this.chassis.tint = 0xFFFFFF;
   this.engineCore.show(true);
-  this.hud.healthBar.setProgressBar(1.0);
+  // this.hud.healthBar.setProgressBar(1.0);
 };
 
 Ship.prototype.disable = function() {
@@ -157,7 +161,7 @@ Ship.prototype.disable = function() {
   this.engineCore.show(false);
   this.shieldGenerator.stop();
   this.repair.stop();
-  this.hud.healthBar.setProgressBar(0.0);
+  // this.hud.healthBar.setProgressBar(0.0);
 
   if(!this.isPlayer) {
     this.deselect();
@@ -172,7 +176,7 @@ Ship.prototype.destroy = function() {
     this.game.clock.events.remove(this.timers.pop());
   }
 
-  this.hud.destroy();
+  // this.hud.destroy();
   this.damage.destroy();
   this.movement.destroy();
   this.engineCore.destroy();
@@ -182,7 +186,7 @@ Ship.prototype.destroy = function() {
   this.details.removeListener('data', this.data);
 
   // children destroy themselves
-  engine.Group.prototype.destroy.call(this, false);
+  engine.Sprite.prototype.destroy.call(this);
 
   this.manager = this.game = this.config =
     this.movement = this.circle = this.hud =

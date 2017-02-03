@@ -1,165 +1,164 @@
 {
   "system": {
     "reactor": {
-      "alpha": {
+      "basic": {
         "name": "",
         "type": "reactor",
-        "cargo": "item-system-reactor",
+        "icon": "item-system-reactor",
         "mass": 50.0,
         "modifier": 1.0,
-        "health": 100.0,
-        "heal": 1.0,
-        "durability": 1000.0,
-        "failure": 0.05,
-        "enhancement": "heal"
+        "durability": 1000.0
       }
     },
     "pilot": {
-      "alpha": {
+      "basic": {
         "name": "",
         "type": "pilot",
-        "cargo": "item-system-pilot",
+        "icon": "item-system-pilot",
         "mass": 50.0,
         "modifier": 1.0,
-        "health": 100.0,
-        "heal": 1.0,
-        "durability": 1000.0,
-        "failure": 0.05
+        "durability": 1000.0
       }
     },
     "engine": {
-      "alpha": {
+      "basic": {
         "name": "",
         "type": "engine",
-        "cargo": "item-system-engine",
+        "icon": "item-system-engine",
         "mass": 50.0,
         "modifier": 1.0,
-        "health": 100.0,
-        "heal": 1.0,
-        "durability": 1000.0,
-        "failure": 0.05,
-        "enhancement": "booster"
+        "durability": 1000.0
       }
     },
     "shield": {
-      "alpha": {
+      "basic": {
         "name": "",
         "type": "shield",
-        "cargo": "item-system-shield",
+        "icon": "item-system-shield",
         "mass": 50.0,
         "modifier": 1.0,
-        "health": 100.0,
-        "heal": 1.0,
-        "durability": 1000.0,
-        "failure": 0.05,
-        "enhancement": "shield"
+        "durability": 1000.0
       }
     },
     "targeting": {
-      "alpha": {
+      "basic": {
         "name": "",
         "type": "targeting",
-        "cargo": "item-system-targeting",
+        "icon": "item-system-targeting",
         "mass": 50.0,
         "modifier": 1.0,
-        "health": 100.0,
-        "heal": 1.0,
-        "durability": 1000.0,
-        "failure": 0.05,
-        "enhancement": "piercing"
-      }
-    },
-    "teleport": {
-      "alpha": {
-        "name": "",
-        "type": "teleport",
-        "cargo": "item-system-teleport",
-        "mass": 50.0,
-        "modifier": 1.0,
-        "health": 100.0,
-        "heal": 1.0,
         "durability": 1000.0,
         "failure": 0.05
       }
     }
   },
   "hardpoint": {
-    "mining": {},
-    "laser": {
-      "alpha": {
+    "energy": {
+      "basic": {
         "name": "Type 1 Laser",
-        "type": "laser",
-        "subtype": "alpha",
+        "type": "energy",
+        "subtype": "basic",
         "sprite": "turret-a",
-        "cargo": "item-laser-a",
+        "texture": "laser-red",
+        "icon": "item-laser-a",
+        "range": 2048,
+        "projection": 0.1,
+        "delay": 1024,
+        "spread": 64,
+        "damage": 1.0,
+        "length": 2048,
+        "spawn": 1,
+        "durability": 1000.0
+      }
+    },
+    "pulse": {
+      "basic": {
+        "name": "Type 1 Pulse",
+        "type": "pulse",
+        "subtype": "ion",
+        "sprite": "turret-a",
+        "texture": "laser-blue",
+        "icon": "item-laser-a",
+        "range": 2048,
+        "projection": 0.2,
+        "delay": 256,
+        "spread": 64,
         "damage": 2.0,
-        "durability": 1000.0,
-        "enhancement": null,
-        "dispersion": {}
+        "length": 64,
+        "spawn": 2,
+        "durability": 1000.0
       }
     },
     "rocket": {
-      "alpha": {
+      "basic": {
         "name": "Type 1 Launcher",
         "type": "rocket",
-        "subtype": "alpha",
+        "subtype": "basic",
         "sprite": "turret-b",
-        "cargo": "item-rocket-a",
+        "texture": "turret-rocket-a.png",
+        "icon": "item-rocket-a",
+        "range": 2048,
+        "projection": 0.5,
+        "delay": 256,
+        "spread": 256,
         "damage": 4.0,
-        "durability": 1000.0,
-        "enhancement": null,
-        "dispersion": {}
+        "length": 512,
+        "spawn": 2,
+        "durability": 1000.0
       }
     },
-    "bomb": {},
     "ion": {},
     "plasma": {},
     "flak": {}
   },
   "enhancement": {
     "heal": {
-      "cost": -30,
-      "cooldown": 60,
-      "active": 5,
-      "stats": {
-        "heal": {
-          "value": 2.0
+      "basic": {
+        "cost": -30,
+        "cooldown": 60,
+        "active": 5,
+        "stats": {
+          "heal": {
+            "value": 2.0
+          }
         }
-      },
-      "tooltip": "Increases heal rate by {statValue} hp per second"
+      }
     },
     "booster": {
-      "cost": -30,
-      "cooldown": 10,
-      "active": 3,
-      "stats": {
-        "speed": {
-          "value": 30.0
+      "basic": {
+        "cost": -30,
+        "cooldown": 10,
+        "active": 3,
+        "stats": {
+          "speed": {
+            "value": 30.0
+          }
         }
-      },
-      "tooltip": "Increases your maximum speed by {statValue}"
+      }
     },
     "shield": {
-      "cost": -30,
-      "cooldown": 10,
-      "active": 5,
-      "stats": {
-        "armor": {
-          "value": 4
+      "basic": {
+        "cost": -30,
+        "cooldown": 10,
+        "active": 5,
+        "stats": {
+          "armor": {
+            "value": 4
+          }
         }
-      },
-      "tooltip": "Decreases incoming damage by {statValue} hp"
+      }
     },
     "piercing": {
-      "cost": -30,
-      "cooldown": 20,
-      "active": 6,
-      "stats": {
-        "damage": {
-          "value": 5
+      "basic": {
+        "cost": -30,
+        "cooldown": 20,
+        "active": 6,
+        "stats": {
+          "damage": {
+            "value": 5
+          }
         }
-      },
-      "tooltip": "Increases damage by {statValue} hp"
+      }
     }
   }
 }

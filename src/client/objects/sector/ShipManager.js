@@ -27,6 +27,7 @@ function ShipManager(game) {
   this.indicator = new Indicator(game);
 
   // create containers
+  this.subGroup = new engine.Group(game);
   this.shipsGroup = new engine.Group(game);
   this.fxGroup = new engine.Group(game);
   this.trajectoryGroup = new engine.Group(game);
@@ -47,6 +48,7 @@ function ShipManager(game) {
   // add ships to world
   this.game.world.add(this.trajectoryGroup);
   this.game.world.add(this.flashEmitter);
+  this.game.world.add(this.subGroup);
   this.game.world.add(this.shipsGroup);
   this.game.world.add(this.fxGroup);
   this.game.world.add(this.fireEmitter);
@@ -65,6 +67,7 @@ function ShipManager(game) {
   // TODO: move to ShipNetManager... maybe not?
   this.socket.on('ship/sync', this._syncBind = this._sync.bind(this));
   this.socket.on('ship/attack', this.attackBind = this._attack.bind(this));
+  this.socket.on('ship/test', this._test.bind(this));
 
   // subscribe to messages
   this.game.on('game/pause', this._pause, this);
@@ -185,10 +188,14 @@ ShipManager.prototype._sync = function(data) {
       cached = created ? this.ships[ship.uuid] = this.create(ship, details) : this.ships[ship.uuid];
       cached.movement.plot(ship);
 
-      // this.trajectoryGraphics.lineStyle(0);
-      // this.trajectoryGraphics.beginFill(0x0000FF, 0.5);
-      // this.trajectoryGraphics.drawCircle(ship.pos.x, ship.pos.y, 6);
-      // this.trajectoryGraphics.endFill();
+      // if(cached.movement._speed > 0) {
+      //   console.log(cached.movement._speed);
+      
+      //   this.trajectoryGraphics.lineStyle(0);
+      //   this.trajectoryGraphics.beginFill(0x0000FF, 0.5);
+      //   this.trajectoryGraphics.drawCircle(ship.pos.x, ship.pos.y, 6);
+      //   this.trajectoryGraphics.endFill();
+      // }
     }
   }
 };
@@ -202,6 +209,27 @@ ShipManager.prototype._attack = function(data) {
   if(ship != this.player) {
     ship.targetingComputer.attack(data.targ);
   }
+};
+
+ShipManager.prototype._test = function(data) {
+  var ship = this.ships[data.uuid],
+      position = new engine.Point(ship.position.x, ship.position.y),
+      compensated = new engine.Point(data.compensated.x, data.compensated.y);
+
+  this.trajectoryGraphics.lineStyle(0);
+  this.trajectoryGraphics.beginFill(0x336699, 1.0);
+  this.trajectoryGraphics.drawCircle(position.x, position.y, 24);
+  this.trajectoryGraphics.endFill();
+
+  this.trajectoryGraphics.lineStyle(0);
+  this.trajectoryGraphics.beginFill(0x669933, 1.0);
+  this.trajectoryGraphics.drawCircle(data.targ.x, data.targ.y, 14);
+  this.trajectoryGraphics.endFill();
+
+  this.trajectoryGraphics.lineStyle(0);
+  this.trajectoryGraphics.beginFill(0x996633, 1.0);
+  this.trajectoryGraphics.drawCircle(compensated.x, compensated.y, 6);
+  this.trajectoryGraphics.endFill();
 };
 
 ShipManager.prototype._primary = function(data) {

@@ -8,14 +8,9 @@ function Group(game, parent) {
   pixi.Container.call(this);
   
   this.game = game;
-  
-  this.z = 0;
   this.type = CONST.GROUP;
-  this.pendingDestroy = false;
-  this.exists = true;
 
   if(parent) {
-    this.z = parent.children.length;
     parent.addChild(this);
   }
 };
@@ -29,24 +24,17 @@ Group.SORT_DESCENDING = 1;
 Group.prototype = Object.create(pixi.Container.prototype);
 Group.prototype.constructor = Group;
 
-Group.prototype.add = function(child, silent) {
-  if(silent === undefined) { silent = false; }
-
+Group.prototype.add = function(child) {
   if(child.parent !== this) {
     this.addChild(child);
-    child.z = this.children.length;
   }
-
   return child;
 };
 
-Group.prototype.addAt = function(child, index, silent) {
-  if(silent === undefined) { silent = false; }
-
+Group.prototype.addAt = function(child, index) {
   if(child.parent !== this) {
     this.addChildAt(child, index);
   }
-
   return child;
 };
 
@@ -132,24 +120,17 @@ Group.prototype.swap = function(child1, child2) {
   this.swapChildren(child1, child2);
 };
 
-Group.prototype.remove = function(child, destroy, silent) {
-  if(this.children.length === 0 || this.children.indexOf(child) === -1) { return false; }
+Group.prototype.remove = function(child, destroy) {
   if(destroy === undefined) { destroy = false; }
-  if(silent === undefined) { silent = false; }
-
   var removed = this.removeChild(child);
   if(destroy && removed) {
     removed.destroy(true);
   }
-
   return true;
 };
 
-Group.prototype.removeAll = function(destroy, silent) {
+Group.prototype.removeAll = function(destroy) {
   if(destroy === undefined) { destroy = false; }
-  if(silent === undefined) { silent = false; }
-  if(this.children.length === 0) { return; }
-
   var removed;
   do {
     removed = this.removeChild(this.children[0]);
@@ -160,16 +141,6 @@ Group.prototype.removeAll = function(destroy, silent) {
 };
 
 Group.prototype.update = function() {
-  if(this.pendingDestroy) {
-    this.destroy();
-    return false;
-  }
-
-  if(!this.exists || !this.parent.exists) {
-    this.renderOrderID = -1;
-    return false;
-  }
-
   var i = this.children.length;
   while (i--) {
     this.children[i].update();
@@ -185,7 +156,6 @@ Group.prototype.destroy = function(destroyChildren, soft) {
   this.removeAllListeners();
 
   this.filters = null;
-  this.pendingDestroy = false;
 
   if(!soft) {
     if(this.parent) {

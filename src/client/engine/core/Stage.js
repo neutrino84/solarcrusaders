@@ -23,11 +23,11 @@ Stage.prototype.boot = function() {
 
 Stage.prototype.update = function() {
   this.currentRenderOrderID = 0;
+  this.game.world.camera.update();
   var i = this.children.length;
   while(i--) {
     this.children[i].update();
   }
-  this.game.world.camera.update();
 };
 
 Stage.prototype.checkVisibility = function() {
@@ -44,9 +44,9 @@ Stage.prototype.checkVisibility = function() {
   }
 
   var self = this;
-  this._onChange = function(event) {
-    return self.visibilityChange(event);
-  };
+      this._onChange = function(event) {
+        return self.visibilityChange(event);
+      };
 
   if(this._hiddenVar) {
     global.document.addEventListener(this._hiddenVar, this._onChange, false);

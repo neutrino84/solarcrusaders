@@ -1,4 +1,5 @@
 var engine = require('engine'),
+    pixi = require('pixi'),
     Space = require('../fx/Space'),
     Planet = require('../fx/Planet'),
     NebulaCluster = require('../fx/NebulaCluster'),
@@ -17,34 +18,40 @@ SectorState.prototype.constructor = engine.State;
 SectorState.prototype.init = function(args) {
   global.state = this;
 
-  this.scrollLock = true;
+  this.scrollLock = false;
   this.game.stage.disableVisibilityChange = true;
 };
 
 SectorState.prototype.preload = function() {
-  var load = this.game.load;
+  var game  = this.game;
 
   // load background
-  load.image('space', 'imgs/game/space/sector-a.jpg');
-  load.image('nebula', 'imgs/game/space/nebula-a.jpg');
-  load.image('snow', 'imgs/game/space/snow.jpg');
+  game.load.image('space', 'imgs/game/space/sector-a.jpg');
+  game.load.image('nebula', 'imgs/game/space/nebula-a.jpg');
+  game.load.image('snow', 'imgs/game/space/snow.jpg');
 
-  // load.image('draghe', 'imgs/game/planets/draghe.jpg');
-  // load.image('eamon', 'imgs/game/planets/eamon-alpha.jpg');
-  // load.image('arkon', 'imgs/game/planets/arkon.jpg');
-  load.image('planet', 'imgs/game/planets/eamon-alpha.jpg');
-  load.image('clouds', 'imgs/game/planets/clouds.jpg');
+  // game.load.image('draghe', 'imgs/game/planets/draghe.jpg');
+  // game.load.image('eamon', 'imgs/game/planets/eamon-alpha.jpg');
+  // game.load.image('arkon', 'imgs/game/planets/arkon.jpg');
+  game.load.image('planet', 'imgs/game/planets/eamon-alpha.jpg');
+  game.load.image('clouds', 'imgs/game/planets/clouds.jpg');
 
   // load stations
-  load.image('station', 'imgs/game/stations/ubaidian-x01.png');
-  load.image('station-cap', 'imgs/game/stations/ubaidian-cap-x01.png');
+  game.load.image('station', 'imgs/game/stations/ubaidian-x01.png');
+  game.load.image('station-cap', 'imgs/game/stations/ubaidian-cap-x01.png');
 
-  load.image('laser-blue', 'imgs/game/fx/laser-blue.png');
-  load.image('laser-red', 'imgs/game/fx/laser-red.png');
-  // load.image('trails', 'imgs/game/fx/trails.png');
+  game.load.image('laser-blue', 'imgs/game/fx/laser-blue.png');
+  game.load.image('laser-red', 'imgs/game/fx/laser-red.png');
 
   // test load sound
   // load.audio('background', 'imgs/game/sounds/mood.mp3');
+
+  // load texture atlas
+  game.load.atlasJSONHash('texture-atlas', 'imgs/game/texture-atlas.png', 'data/texture-atlas.json');
+
+  // load ship configuration
+  game.load.json('ship-configuration', 'data/ship-configuration.json');
+  game.load.json('item-configuration', 'data/item-configuration.json');
 };
 
 // loadUpdate = function() {};
@@ -57,7 +64,7 @@ SectorState.prototype.create = function() {
       mouse.capture = true;
       mouse.mouseWheelCallback = function(event) {
         var delta = event.deltaY / sensitivity,
-            scale = engine.Math.clamp(this.world.scale.x - delta, 0.25, 1.0);
+            scale = engine.Math.clamp(this.world.scale.x - delta, 0.2, 1.0);
         if(self.game.paused) { return; }
         if(self.zoom && self.zoom.isRunning) {
           self.zoom.stop();
@@ -66,16 +73,16 @@ SectorState.prototype.create = function() {
       };
 
   this.game.world.setBounds(0, 0, 4096, 4096);
-  this.game.world.scale.set(0.54, 0.54);
+  this.game.world.scale.set(0.2, 0.2);
 
   this.game.camera.bounds = null;
   this.game.camera.focusOnXY(2048, 2048);
 
   // create sector
   this.createManagers();
-  this.createAsteroids();
+  // this.createAsteroids();
   this.createSpace();
-  // this.createSnow();
+  this.createSnow();
 
   // AUDIO TEST
   // this.sound = this.game.sound.add('background', 0, true);
@@ -85,15 +92,15 @@ SectorState.prototype.create = function() {
   // });
 
   // start zoom in
-  this.game.once('ship/follow', function() {
-    this.zoom = this.game.tweens.create(this.game.world.scale);
-    this.zoom.to({ x: 0.28, y: 0.28 }, 3000, engine.Easing.Quadratic.InOut, true);
-  }, this);
+  // this.game.once('ship/follow', function() {
+  //   this.zoom = this.game.tweens.create(this.game.world.scale);
+  //   this.zoom.to({ x: 0.2, y: 0.2 }, 3000, engine.Easing.Quadratic.InOut, true);
+  // }, this);
 
   // login
-  if(game.auth.ready) {
-    this.game.gui.login(game.auth.user);
-  }
+  // if(game.auth.ready) {
+  //   this.game.gui.login(game.auth.user);
+  // }
 
   // initialize net manager
   this.game.shipNetManager.init();
@@ -115,12 +122,12 @@ SectorState.prototype.createSpace = function() {
   this.planet = new Planet(this.game);
 
   this.nebula = new NebulaCluster(this.game);
-  this.nebula.position.set(-512, 1024);
+  this.nebula.position.set(-256, 1024);
   this.nebula.create(3);
 
   this.game.world.static.add(this.space);
-  this.game.world.foreground.add(this.nebula);
   this.game.world.background.add(this.planet);
+  this.game.world.foreground.add(this.nebula);
 };
 
 SectorState.prototype.createManagers = function() {
@@ -136,7 +143,6 @@ SectorState.prototype.createManagers = function() {
 SectorState.prototype.createSnow = function() {
   this.snow = new Snow(this.game, this.game.width, this.game.height);
   this.game.stage.addChild(this.snow);
-  this.game.stage.swapChildren(this.snow, this.game.gui.root);
 };
 
 SectorState.prototype.createAsteroids = function() {
@@ -164,7 +170,7 @@ SectorState.prototype.update = function() {
       camera = game.camera,
       keyboard = game.input.keyboard,
       x = 0, y = 0,
-      amount = 512;
+      amount = 1024;
 
   if(!this.scrollLock) {
     if(keyboard.isDown(engine.Keyboard.A) || keyboard.isDown(engine.Keyboard.LEFT)) {
