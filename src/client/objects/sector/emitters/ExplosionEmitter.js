@@ -3,6 +3,8 @@ var engine = require('engine');
 
 function ExplosionEmitter(game) {
   engine.Emitter.call(this, game, 0, 0, 500);
+
+  this.lifespan = 1000;
    
   this.minRotation = -30;
   this.maxRotation = 30;

@@ -5,7 +5,8 @@ var Sprite = require('./Sprite'),
 function Particle(game, key, frame) {
   Sprite.call(this, game, key, frame);
 
-  // this.position = new Point(0, 0);
+  this.clock = game.clock;
+
   this.vector = new Point(0, 0);
   this.velocity = new Point(0, 0);
   this.drag = new Point(0, 0);
@@ -31,7 +32,9 @@ Particle.prototype = Object.create(Sprite.prototype);
 Particle.prototype.constructor = Particle;
 
 Particle.prototype.update = function() {
-  var timeStep = this.game.clock.elapsedMS / 1000;
+  var timeStep = this.clock.elapsedMS / 1000;
+
+  this.elapsed = this.clock.time - this.started;
 
   // spin
   this.rotation += this.angularVelocity * timeStep;
@@ -78,6 +81,11 @@ Particle.prototype.update = function() {
       this.autoTint = false;
     }
   }
+
+  // check if dead
+  if(this.elapsed >= this.lifespan) {
+    this.exists = false;
+  }
 };
 
 Particle.prototype.onEmit = function() {
@@ -107,12 +115,15 @@ Particle.prototype.setTintData = function(data) {
 Particle.prototype.reset = function(x, y) {
   this.position.set(x, y);
 
-  this.fresh = true;
+  this.elapsed = 0;
+  this.started = this.clock.time;
+
   this.visible = true;
+  this.exists = true;
   this.renderable = true;
 
   this.alpha = 1;
-  this.scale.set(1);
+  this.scale.set(1.0, 1.0);
 
   this.autoScale = false;
   this.autoAlpha = false;

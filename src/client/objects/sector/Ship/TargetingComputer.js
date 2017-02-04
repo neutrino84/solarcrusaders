@@ -38,9 +38,11 @@ TargetingComputer.prototype.create = function() {
   }
 };
 
-TargetingComputer.prototype.attack = function(target) {
+TargetingComputer.prototype.attack = function(data) {
   var hardpoints = this.hardpoints,
       parent = this.parent,
+      target = data.targ,
+      delays = data.delays,
       length = hardpoints.length,
       distance;
   if(length > 0) {
@@ -49,7 +51,7 @@ TargetingComputer.prototype.attack = function(target) {
 
     // display
     for(var i=0; i<length; i++) {
-      hardpoints[i].fire(this.target);
+      hardpoints[i].fire(this.target, delays[i]);
     }
   }
 };

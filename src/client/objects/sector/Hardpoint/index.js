@@ -22,14 +22,16 @@ function Hardpoint(parent, data, config) {
   this.target = new engine.Point();
   this.origin = new engine.Point();
 
-  this.cap = new engine.Sprite(this.game, 'texture-atlas', 'turret-cap-' + this.ship.config.race + '.png');
-  
-  this.sprite = new engine.Sprite(this.game, 'texture-atlas', data.sprite + '.png');
-  this.sprite.position.set(config.position.x, config.position.y);
-  this.sprite.pivot.set(config.pivot.x, config.pivot.y);
-  
-  this.ship.addChild(this.sprite);
-  this.sprite.addChild(this.cap);
+  if(!config.type || config.type.indexOf('projectile') == -1) {
+    this.cap = new engine.Sprite(this.game, 'texture-atlas', 'turret-cap-' + this.ship.config.race + '.png');
+    
+    this.sprite = new engine.Sprite(this.game, 'texture-atlas', data.sprite + '.png');
+    this.sprite.position.set(config.position.x, config.position.y);
+    this.sprite.pivot.set(config.pivot.x, config.pivot.y);
+    
+    this.ship.addChild(this.sprite);
+    this.sprite.addChild(this.cap);
+  }
 };
 
 Hardpoint.prototype.constructor = Hardpoint;

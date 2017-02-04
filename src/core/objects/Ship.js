@@ -154,7 +154,7 @@ Ship.prototype.createHardpoints = function() {
     stats = hardpoints[i];
 
     // if(global.Math.random() > 0.5) {
-      type = 'rocket';
+      type = 'pulse';
       subtype = 'basic';
     // }
 
@@ -207,7 +207,7 @@ Ship.prototype.attack = function(data, rtt) {
 
     if(distance <= hardpoint.range) {
       // compute travel time
-      time = distance * hardpoint.projection;
+      time = distance * hardpoint.projection + data.delays[slot];
 
       // time collisions
       (function(self, ships, hardpoint, data) {

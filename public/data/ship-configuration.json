@@ -79,6 +79,7 @@
     "targeting": {
       "hardpoints": [
         {
+          "type": ["energy", "pulse"],
           "pivot": {
             "x": 20,
             "y": 16
@@ -89,6 +90,7 @@
           }
         },
         {
+          "type": ["energy", "pulse"],
           "pivot": {
             "x": 20,
             "y": 16
@@ -99,6 +101,7 @@
           }
         },
         {
+          "type": ["energy", "pulse"],
           "pivot": {
             "x": 20,
             "y": 16
