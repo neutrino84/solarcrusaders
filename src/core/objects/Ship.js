@@ -153,10 +153,12 @@ Ship.prototype.createHardpoints = function() {
   for(var i=0; i<length; i++) {
     stats = hardpoints[i];
 
-    // if(global.Math.random() > 0.5) {
+    if(stats.default) {
+      type = stats.default.type;
+      subtype = stats.default.subtype;
+    } else {
       type = 'pulse';
-      subtype = 'basic';
-    // }
+    }
 
     // else {  
     //   type = 'energy';
