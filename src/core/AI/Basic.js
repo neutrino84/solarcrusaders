@@ -68,8 +68,7 @@ Basic.prototype.attack = function() {
   // attack
   ship.attack({
     uuid: ship.uuid,
-    targ: point,
-    delays: [0, 0, 0, 0]
+    targ: point
   });
 };
 

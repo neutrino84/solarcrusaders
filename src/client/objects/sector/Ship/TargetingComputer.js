@@ -2,11 +2,11 @@
 var engine = require('engine'),
     Hardpoint = require('../Hardpoint');
 
-function TargetingComputer(parent, config) {
-  this.parent = parent;
-  this.game = parent.game;
-  this.manager = parent.manager,
-  this.stats = parent.config.stats;
+function TargetingComputer(ship, config) {
+  this.ship = ship;
+  this.game = ship.game;
+  this.manager = ship.manager,
+  this.stats = ship.config.stats;
   this.config = config;
 
   this.hardpoints = [];
@@ -21,18 +21,18 @@ TargetingComputer.prototype.constructor = TargetingComputer;
 
 TargetingComputer.prototype.create = function() {
   var hardpoint, config, data, slot,
-      parent = this.parent,
-      hardpoints = parent.details.hardpoints;
+      ship = this.ship,
+      hardpoints = ship.details.hardpoints;
   for(var h in hardpoints) {
     slot = hardpoints[h].slot;
 
     hardpoint = new Hardpoint(this, hardpoints[h], this.config.hardpoints[slot]);
-    hardpoint.subGroup = parent.manager.subGroup;
-    hardpoint.fxGroup = parent.manager.fxGroup;
-    hardpoint.flashEmitter = parent.manager.flashEmitter;
-    hardpoint.explosionEmitter = parent.manager.explosionEmitter;
-    hardpoint.glowEmitter = parent.manager.glowEmitter;
-    hardpoint.fireEmitter = parent.manager.fireEmitter;
+    hardpoint.subGroup = ship.manager.subGroup;
+    hardpoint.fxGroup = ship.manager.fxGroup;
+    hardpoint.flashEmitter = ship.manager.flashEmitter;
+    hardpoint.explosionEmitter = ship.manager.explosionEmitter;
+    hardpoint.glowEmitter = ship.manager.glowEmitter;
+    hardpoint.fireEmitter = ship.manager.fireEmitter;
 
     this.hardpoints[slot] = hardpoint;
   }
@@ -40,18 +40,15 @@ TargetingComputer.prototype.create = function() {
 
 TargetingComputer.prototype.attack = function(data) {
   var hardpoints = this.hardpoints,
-      parent = this.parent,
-      target = data.targ,
-      delays = data.delays,
       length = hardpoints.length,
-      distance;
+      target = data.targ;
   if(length > 0) {
     // update target
     this.target.set(target.x, target.y);
 
     // display
     for(var i=0; i<length; i++) {
-      hardpoints[i].fire(this.target, delays[i]);
+      hardpoints[i].fire(target);
     }
   }
 };
@@ -64,26 +61,23 @@ TargetingComputer.prototype.hit = function(hardpoint) {
 
 TargetingComputer.prototype.fired = function(target) {
   var game = this.game,
-      parent = this.parent,
+      ship = this.ship,
       hardpoints = this.hardpoints,
-      socket = parent.manager.socket,
-      delay, delays = [],
-      hardpoint;
+      socket = ship.manager.socket,
+      hardpoint,
+      distance;
   if(hardpoints.length > 0) {
     game.world.worldTransform.applyInverse(target, this.target);
 
     // display
     for(var i=0; i<hardpoints.length; i++) {
       hardpoint = hardpoints[i];
-      delay = global.Math.random() * hardpoint.data.delay,
-      hardpoint.fire(this.target, delay);
-      delays.push(delay);
+      hardpoint.fire(this.target);
     }
 
     // server
     socket.emit('ship/attack', {
-      uuid: parent.uuid,
-      delays: delays,
+      uuid: ship.uuid,
       targ: {
         x: this.target.x,
         y: this.target.y

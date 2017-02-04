@@ -4,6 +4,8 @@ var engine = require('engine');
 function FlashEmitter(game) {
   engine.Emitter.call(this, game, 0, 0, 500);
 
+  this.lifespan = 250;
+
   this.minRotation = -20;
   this.maxRotation = 20;
 

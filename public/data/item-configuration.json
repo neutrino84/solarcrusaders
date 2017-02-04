@@ -63,10 +63,10 @@
         "icon": "item-laser-a",
         "range": 2048,
         "projection": 0.1,
-        "delay": 1024,
+        "delay": 128,
         "spread": 64,
         "damage": 1.0,
-        "length": 2048,
+        "length": 1024,
         "spawn": 1,
         "durability": 1000.0
       }
@@ -84,8 +84,8 @@
         "delay": 256,
         "spread": 64,
         "damage": 2.0,
-        "length": 64,
-        "spawn": 2,
+        "length": 32,
+        "spawn": 3,
         "durability": 1000.0
       }
     },
@@ -99,11 +99,11 @@
         "icon": "item-rocket-a",
         "range": 2048,
         "projection": 0.5,
-        "delay": 256,
+        "delay": 512,
         "spread": 256,
         "damage": 4.0,
-        "length": 512,
-        "spawn": 2,
+        "length": 64,
+        "spawn": 4,
         "durability": 1000.0
       }
     },

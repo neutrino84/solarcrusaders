@@ -138,7 +138,6 @@ Pulse.prototype.update = function() {
 Pulse.prototype.destroy = function() {
   this.isRunning && this.stop();
 
-  this.texture.destroy();
   this.strip.destroy();
   this.glow.destroy();
 

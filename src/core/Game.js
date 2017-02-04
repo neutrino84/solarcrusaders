@@ -29,28 +29,34 @@ Game.prototype.init = function(next) {
 
   this.isBooted = true;
 
-  this.timeout.init();
-  this.clock.init();
   this.sectorManager.init();
-
-  // calls game update
-  this.timeout.start();
+  this.clock.init();
+  this.timeout.init();
 
   //
   next();
 };
 
-Game.prototype.update = function(time) {
-  var step = 1000.0 / this.clock.desiredFps;
+Game.prototype.update = function() {
+  var clock = this.clock,
+      step = clock.stepSize,
+      elapsed = clock.elapsedMS;
 
   // update clock
-  this.clock.update(time);
+  clock.update();
+
+  // delta
+  this.delta += elapsed;
 
   // update at desired fps
-  this.delta += this.clock.elapsedMS;
   if(this.delta >= step) {
     this.sectorManager.update();
     this.delta -= step;
+  }
+
+  // check for overload
+  if(elapsed > step) {
+    this.winston.info('overload warning');
   }
 };
 

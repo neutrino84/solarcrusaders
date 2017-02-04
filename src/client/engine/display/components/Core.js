@@ -25,7 +25,7 @@ Core.install = function(components) {
   for(var i=0; i<components.length; i++) {
     id = components[i];
 
-    Class.mixinPrototype(this, Core.modules[id].prototype);
+    Class.mixinPrototype(this, Core.modules[id].prototype, true);
 
     this.components[id] = true;
   }

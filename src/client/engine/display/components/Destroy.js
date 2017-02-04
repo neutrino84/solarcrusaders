@@ -1,5 +1,5 @@
 var pixi = require('pixi'),
-    engine = require('engine');
+    Const = require('../../const');
 
 function Destroy() {};
 
@@ -34,14 +34,14 @@ Destroy.prototype = {
     }
 
     switch(this.type) {
-      case engine.CONST.SPRITE:
-        pixi.Sprite.prototype.destroy.call(this, destroyChildren);
+      case Const.SPRITE:
+        pixi.Sprite.prototype.destroy.call(this, false);
         break;
-      case engine.CONST.GRAPHICS:
-        pixi.Graphics.prototype.destroy.call(this, destroyChildren);
+      case Const.GRAPHICS:
+        pixi.Graphics.prototype.destroy.call(this, false);
         break;
-      case engine.CONST.STRIP:
-        pixi.Rope.prototype.destroy.call(this, destroyChildren);
+      case Const.STRIP:
+        pixi.mesh.Rope.prototype.destroy.call(this, false);
         break;
     }
 

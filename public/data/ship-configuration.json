@@ -113,6 +113,25 @@
           "position": {
             "x": 91,
             "y": 187
+          },
+          "default": {
+            "type": "energy",
+            "subtype": "basic"
+          }
+        },
+        {
+          "type": ["projectile"],
+          "pivot": {
+            "x": 20,
+            "y": 16
+          },
+          "position": {
+            "x": 128,
+            "y": 128
+          },
+          "default": {
+            "type": "rocket",
+            "subtype": "basic"
           }
         }
       ]

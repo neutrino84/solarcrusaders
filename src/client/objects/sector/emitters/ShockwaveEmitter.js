@@ -4,6 +4,8 @@ var engine = require('engine');
 function ShockwaveEmitter(game) {
   engine.Emitter.call(this, game, 0, 0);
 
+  this.lifespan = 4000;
+
   this.blendMode = engine.BlendMode.ADD;
 
   this.setScale(0.0, 2.0, 0.0, 2.0, 4000);

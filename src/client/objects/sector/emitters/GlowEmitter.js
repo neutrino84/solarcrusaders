@@ -4,6 +4,8 @@ var engine = require('engine');
 function GlowEmitter(game) {
   engine.Emitter.call(this, game, 0, 0);
 
+  this.lifespan = 250;
+
   this.blendMode = engine.BlendMode.ADD;
   
   this.setScale(0.1, 3.0, 0.1, 3.0, 250);

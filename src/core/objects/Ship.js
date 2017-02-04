@@ -187,21 +187,19 @@ Ship.prototype.createHardpoints = function() {
 Ship.prototype.attack = function(data, rtt) {
   if(this.disabled) { return; }
 
-  var game = this.game,
+  var attacker = this,
+      game = this.game,
       sockets = this.sockets,
       ships = this.manager.ships,
       movement = this.movement,
       hardpoints = this.hardpoints,
       time, hardpoint, compensated,
-      target,
+      target = data.targ,
       distance;
 
   // get updated data
   compensated = movement.compensated(rtt);
-  distance = compensated.distance(data.targ);
-
-  // emit to all ships
-  sockets.io.sockets.emit('ship/attack', data);
+  distance = compensated.distance(target);
 
   // validate attack
   for(var slot in hardpoints) {
@@ -209,45 +207,47 @@ Ship.prototype.attack = function(data, rtt) {
 
     if(distance <= hardpoint.range) {
       // compute travel time
-      time = distance * hardpoint.projection + data.delays[slot];
+      time = distance * hardpoint.projection + (hardpoint.delay/2);
 
       // time collisions
-      (function(self, ships, hardpoint, data) {
-        setTimeout(function() {
-          var ship;
-          if(self.game == undefined) { return; }
-          for(var s in ships) {
-            ship = ships[s];
+      game.clock.events.add(time, this.attacked, this, target, slot);
 
-            if(ship.game && ship != self) {
-              ship.hit(self, hardpoint, data.targ);
-            }
-          }
-        }, time);
-      })(this, ships, hardpoint, data);
+      // broadcast ataack
+      sockets.io.sockets.emit('ship/attack', data);
     }
   }
 };
 
-Ship.prototype.hit = function(attacker, hardpoint, point) {
+Ship.prototype.attacked = function(target, slot) {
+  var ship,
+      ships = this.manager.ships;
+  if(this.game == undefined) { return; }
+  for(var s in ships) {
+    ship = ships[s];
+    if(ship.game && ship != this) {
+      ship.hit(this, target, slot);
+    }
+  }
+};
+
+Ship.prototype.hit = function(attacker, target, slot) {
   var updates = [],
       sockets = this.sockets,
       movement = this.movement,
       data = this.data,
       ai = this.ai,
+      hardpoint = attacker.hardpoints[slot],
       compensated = movement.compensated(),
-      distance = compensated.distance(point),
+      distance = compensated.distance(target),
       ratio = distance / this.size,
       damage, health;
-
   if(ratio < 1.0) {
-
     // test data
     // if(!attacker.ai && this.ai) {
     //   sockets.io.sockets.emit('ship/test', {
     //     uuid: this.uuid,
     //     compensated: compensated,
-    //     targ: point
+    //     targ: target
     //   });
     // }
 

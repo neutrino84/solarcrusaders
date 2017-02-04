@@ -7,7 +7,7 @@ var engine = require('engine'),
 function Hardpoint(parent, data, config) {
   this.parent = parent;
   this.game = parent.game;
-  this.ship = parent.parent;
+  this.ship = parent.ship;
   this.config = config;
   this.data = data;
 
@@ -22,22 +22,24 @@ function Hardpoint(parent, data, config) {
   this.target = new engine.Point();
   this.origin = new engine.Point();
 
-  if(!config.type || config.type.indexOf('projectile') == -1) {
-    this.cap = new engine.Sprite(this.game, 'texture-atlas', 'turret-cap-' + this.ship.config.race + '.png');
-    
-    this.sprite = new engine.Sprite(this.game, 'texture-atlas', data.sprite + '.png');
-    this.sprite.position.set(config.position.x, config.position.y);
-    this.sprite.pivot.set(config.pivot.x, config.pivot.y);
-    
-    this.ship.addChild(this.sprite);
-    this.sprite.addChild(this.cap);
+  this.cap = new engine.Sprite(this.game, 'texture-atlas', 'turret-cap-' + this.ship.config.race + '.png');
+  
+  this.sprite = new engine.Sprite(this.game, 'texture-atlas', data.sprite + '.png');
+  this.sprite.position.set(config.position.x, config.position.y);
+  this.sprite.pivot.set(config.pivot.x, config.pivot.y);
+  
+  this.ship.addChild(this.sprite);
+  this.sprite.addChild(this.cap);
+
+  if(config.type && config.type.indexOf('projectile') > 0) {
+    this.sprite.alpha = 0;
   }
 };
 
 Hardpoint.prototype.constructor = Hardpoint;
 
-Hardpoint.prototype.fire = function(targ, delay) {
-  var time, launcher,
+Hardpoint.prototype.fire = function(targ) {
+  var delay, launcher,
       data = this.data,
       ship = this.ship,
       types = this.types,
@@ -59,14 +61,16 @@ Hardpoint.prototype.fire = function(targ, delay) {
     }
 
     for(var i=0; i<spawn; i++) {
+      delay = (global.Math.random() * data.delay);
+
       launcher = new types[data.type](this);
       launcher.start(target, distance, delay);
 
       actives.push(launcher);
     }
-
-    this.isRunning = true;
   }
+
+  this.isRunning = true;
 };
 
 Hardpoint.prototype.hit = function(ship) {
@@ -99,7 +103,8 @@ Hardpoint.prototype.update = function() {
   }
 
   while(remove.length > 0) {
-    actives.splice(remove.pop(), 1);
+    launcher = remove.pop();
+    actives.splice(actives.indexOf(launcher), 1);
   }
 
   // stop
