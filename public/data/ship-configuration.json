@@ -87,6 +87,10 @@
           "position": {
             "x": 91,
             "y": 70
+          },
+          "default": {
+            "type": "energy",
+            "subtype": "basic"
           }
         },
         {
