@@ -34,6 +34,7 @@ Destroy.prototype = {
     }
 
     switch(this.type) {
+      case Const.PARTICLE:
       case Const.SPRITE:
         pixi.Sprite.prototype.destroy.call(this, false);
         break;
