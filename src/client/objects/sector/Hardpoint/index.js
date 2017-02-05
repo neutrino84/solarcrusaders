@@ -31,8 +31,8 @@ function Hardpoint(parent, data, config) {
   this.ship.addChild(this.sprite);
   this.sprite.addChild(this.cap);
 
-  if(config.type && config.type.indexOf('projectile') > 0) {
-    this.sprite.alpha = 0;
+  if(config.type && config.type.indexOf('projectile') >= 0) {
+    this.sprite.visible = false;
   }
 };
 
