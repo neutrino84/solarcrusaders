@@ -5,9 +5,9 @@ var pixi = require('pixi'),
     Destroy = require('./components/Destroy');
 
 function Graphics(game) {
-  this.type = Const.GRAPHICS;
-
   pixi.Graphics.call(this);
+
+  this.type = Const.GRAPHICS;
 
   Core.init.call(this, game, null, null);
 };
@@ -26,18 +26,5 @@ Graphics.prototype.updateCore = Core.update;
 Graphics.prototype.update = function() {
   this.updateCore();
 };
-
-// Graphics.prototype.destroy = function(destroyChildren) {
-//   Destroy.prototype.destroy.call(this, destroyChildren);
-// };
-
-// Graphics.prototype._renderWebGL = function(renderer) {
-//   if(this.glDirty) {
-//     this.dirty = true;
-//     this.glDirty = false;
-//   }
-//   renderer.setObjectRenderer(renderer.plugins[this.objectRenderer]);
-//   renderer.plugins[this.objectRenderer].render(this);
-// };
 
 module.exports = Graphics;

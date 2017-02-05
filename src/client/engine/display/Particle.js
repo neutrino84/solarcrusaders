@@ -1,10 +1,12 @@
-
-var Sprite = require('./Sprite'),
-    Point = require('../geometry/Point');
+var pixi = require('pixi'),
+    Const = require('../const'),
+    Point = require('../geometry/Point'),
+    Core = require('./components/Core');
 
 function Particle(game, key, frame) {
-  Sprite.call(this, game, key, frame);
+  pixi.Sprite.call(this);
 
+  this.type = Const.PARTICLE;
   this.clock = game.clock;
 
   this.vector = new Point(0, 0);
@@ -26,10 +28,20 @@ function Particle(game, key, frame) {
   this._t = 0;
 
   this.rotation = global.Math.random() * global.Math.PI;
+
+  Core.init.call(this, game, key, frame);
 };
 
-Particle.prototype = Object.create(Sprite.prototype);
+Particle.prototype = Object.create(pixi.Sprite.prototype);
 Particle.prototype.constructor = Particle;
+
+Core.install.call(
+  Particle.prototype, [
+    'Mixin',
+    'Destroy',
+    'LoadTexture'
+  ]
+);
 
 Particle.prototype.update = function() {
   var timeStep = this.clock.elapsedMS / 1000;
@@ -84,7 +96,9 @@ Particle.prototype.update = function() {
 
   // check if dead
   if(this.elapsed >= this.lifespan) {
+    this.visible = false;
     this.exists = false;
+    this.renderable = false;
   }
 };
 
@@ -122,11 +136,12 @@ Particle.prototype.reset = function(x, y) {
   this.exists = true;
   this.renderable = true;
 
-  this.alpha = 1;
+  this.alpha = 1.0;
   this.scale.set(1.0, 1.0);
 
   this.autoScale = false;
   this.autoAlpha = false;
+  this.autoTint = false;
 
   return this;
 };

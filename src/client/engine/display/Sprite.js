@@ -5,11 +5,9 @@ var pixi = require('pixi'),
     Destroy = require('./components/Destroy');
 
 function Sprite(game, key, frame) {
-  key = key || null;
+  pixi.Sprite.call(this);
 
   this.type = Const.SPRITE;
-
-  pixi.Sprite.call(this);
 
   Core.init.call(this, game, key, frame);
 };
@@ -32,10 +30,5 @@ Sprite.prototype.updateCore = Core.update;
 Sprite.prototype.update = function() {
   this.updateCore();
 };
-
-// Sprite.prototype.destroy = function(destroyChildren) {
-//   Destroy.prototype.destroy.call(this, destroyChildren);
-//   // 
-// };
 
 module.exports = Sprite;

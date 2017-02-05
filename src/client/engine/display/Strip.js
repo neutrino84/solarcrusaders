@@ -5,14 +5,11 @@ var pixi = require('pixi'),
     Destroy = require('./components/Destroy');
 
 function Strip(game, key, points) {
-  key = key || null;
-  points = points || [];
+  pixi.mesh.Rope.call(this, game.cache.getItem('__default', Cache.TEXTURE).texture, points || []);
 
   this.type = Const.STRIP;
 
-  pixi.mesh.Rope.call(this, game.cache.getItem('__default', Cache.TEXTURE).texture, points);
-
-  Core.init.call(this, game, key); // frame not supported
+  Core.init.call(this, game, key);
 };
 
 Strip.prototype = Object.create(pixi.mesh.Rope.prototype);
@@ -31,10 +28,5 @@ Strip.prototype.updateCore = Core.update;
 Strip.prototype.update = function() {
   this.updateCore();
 };
-
-// Strip.prototype.destroy = function(destroyChildren) {
-//   Destroy.prototype.destroy.call(this, destroyChildren);
-//   // pixi.mesh.Rope.prototype.destroy.call(this, destroyChildren);
-// };
 
 module.exports = Strip;
