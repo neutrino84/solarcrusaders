@@ -54,7 +54,6 @@
     "grunt": "0.4.x",
     "grunt-develop": "0.4.x",
     "grunt-browserify": "5.0.x",
-    "grunt-node-inspector": "0.4.x",
     "grunt-contrib-concat": "1.0.x",
     "grunt-contrib-watch": "1.0.x",
     "grunt-contrib-uglify": "1.0.x",
