@@ -2,7 +2,7 @@
 var engine = require('engine');
 
 function GlowEmitter(game) {
-  engine.Emitter.call(this, game, 0, 0);
+  engine.Emitter.call(this, game, 0, 0, 500);
 
   this.lifespan = 250;
 
