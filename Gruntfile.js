@@ -150,9 +150,17 @@ module.exports = function(grunt) {
     },
 
     'watch': {
-      dev: {
-        files: ['src/**/*', 'views/**/*', 'public/build/solar.js', 'public/build/engine.js'],
-        tasks: ['build:solar', 'develop:dev'],
+      engine: {
+        files: ['src/client/engine/**/*'],
+        tasks: ['browserify:engine']
+      },
+      solar: {
+        files: ['src/client/**/*', '!src/client/engine/**/*'],
+        tasks: ['browserify:solar']
+      },
+      core: {
+        files: ['src/**/*', 'views/**/*', '!src/client/**/*'],
+        tasks: ['develop:dev'],
         options: {
           nospawn: true
         }
@@ -191,19 +199,19 @@ module.exports = function(grunt) {
       }
     },
     
-    'node-inspector': {
-      dev: {
-        options: {
-          'web-port': 1337,
-          'web-host': 'localhost',
-          'debug-port': 5858,
-          'save-live-edit': true,
-          'no-preload': true,
-          'stack-trace-limit': 4,
-          'hidden': ['node_modules']
-        }
-      }
-    }
+    // 'node-inspector': {
+    //   dev: {
+    //     options: {
+    //       'web-port': 1337,
+    //       'web-host': 'localhost',
+    //       'debug-port': 5858,
+    //       'save-live-edit': true,
+    //       'no-preload': true,
+    //       'stack-trace-limit': 4,
+    //       'hidden': ['node_modules']
+    //     }
+    //   }
+    // }
   });
 
   grunt.loadNpmTasks('grunt-develop');
@@ -213,7 +221,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-compress');
-  grunt.loadNpmTasks('grunt-node-inspector');
 
   grunt.registerTask('default', [
     'browserify:socket',
@@ -223,7 +230,7 @@ module.exports = function(grunt) {
     'browserify:solar',
     'browserify:website',
     'develop:dev',
-    'watch:dev'
+    'watch'
   ]);
 
   grunt.registerTask('build:core', [
