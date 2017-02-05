@@ -326,7 +326,11 @@ Ship.prototype.enable = function() {
 
   // broadcast
   this.sockets.io.sockets.emit('ship/enabled', {
-    uuid: this.uuid
+    uuid: this.uuid,
+    pos: {
+      x: this.movement.position.x,
+      y: this.movement.position.y
+    }
   });
 };
 
