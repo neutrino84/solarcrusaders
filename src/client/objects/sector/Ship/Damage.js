@@ -68,6 +68,23 @@ Damage.prototype.shockwave = function() {
   });
 };
 
+Damage.prototype.update = function(multiplier) {
+  var point,
+      ship = this.ship,
+      glow = this.glow;
+      
+  glow.position.set(ship.x, ship.y);
+
+  if(multiplier < 0.2) {
+    if(global.Math.random() < 0.1) {
+      point = game.world.worldTransform.applyInverse(ship.worldTransform.apply(ship.circle.random()));
+
+      this.explosionEmitter.at({ center: point });
+      this.explosionEmitter.explode(1);
+    }
+  }
+};
+
 Damage.prototype.destroyed = function() {
   var ship = this.ship;
 
@@ -75,7 +92,6 @@ Damage.prototype.destroyed = function() {
   // this.shockwave();
 
   // explosion glow
-  this.glow.position.set(ship.x, ship.y);
   this.glowTween.start();
   this.glowTween.once('complete', function() {
     this.game.world.remove(this.glow);
@@ -91,7 +107,7 @@ Damage.prototype.destroyed = function() {
     
     this.glowEmitter.color(null);
     this.glowEmitter.at({ center: point });
-    this.glowEmitter.explode(1);
+    this.glowEmitter.explode(2);
   }, this);
 
   // explosions 2
@@ -104,7 +120,7 @@ Damage.prototype.destroyed = function() {
       
       this.glowEmitter.color(null);
       this.glowEmitter.at({ center: point });
-      this.glowEmitter.explode(1);
+      this.glowEmitter.explode(2);
     }
   }, this);
 };

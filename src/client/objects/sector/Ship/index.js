@@ -101,10 +101,11 @@ Ship.prototype.data = function(data) {
 Ship.prototype.update = function() {
   this.movement.update();
   this.targetingComputer.update();
-  if(!this.disabled){
+  if(this.disabled){
+    this.damage.update(this.movement.velocity / this.details.speed);
+  } else {
     this.engineCore.update(this.movement.velocity / this.details.speed);
   }
-  // this.hud.update();
   engine.Sprite.prototype.update.call(this);
 };
 
@@ -147,10 +148,11 @@ Ship.prototype.overlap = function(r) {
   return !(right < r.x || bottom < r.y || this.x - this.pivot.x > r.right || this.y - this.pivot.y > r.bottom);
 };
 
-Ship.prototype.enable = function() {
+Ship.prototype.enable = function(data) {
   this.disabled = false;
   this.chassis.tint = 0xFFFFFF;
   this.engineCore.show(true);
+  this.position.set(data.pos.x, data.pos.y)
   // this.hud.healthBar.setProgressBar(1.0);
 };
 
