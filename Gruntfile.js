@@ -74,10 +74,10 @@ module.exports = function(grunt) {
           },
           require: [
             ['./src/client/engine/index.js', { expose: 'engine', plugin: [bundleCollapser] }],
-            ['./src/client/pixi.js', { expose: 'pixi', plugin: [bundleCollapser] }]
+            ['./src/client/pixi.js', { expose: 'pixi', plugin: ['version-inline'] }]
           ],
-          transform: [['babelify', {presets: [['es2015', {'loose': true}]]}], 'glslify', 'browserify-versionify'],
-          plugin: [bundleCollapser, 'version-inline']
+          transform: [['babelify', {presets: [['es2015', {'loose': true}]], plugins: ['version-inline', 'static-fs']}], 'glslify', 'browserify-versionify'],
+          plugin: [bundleCollapser]
         }
       }
     },
@@ -159,7 +159,7 @@ module.exports = function(grunt) {
         tasks: ['browserify:solar']
       },
       core: {
-        files: ['src/**/*', 'views/**/*', '!src/client/**/*'],
+        files: ['public/data/**/*', 'src/**/*', 'views/**/*', '!src/client/**/*'],
         tasks: ['develop:dev'],
         options: {
           nospawn: true
@@ -173,11 +173,7 @@ module.exports = function(grunt) {
         env: { NODE_ENV: 'development', port: 4567 },
         args: ['--no-daemon', '--no-silent'],
         nodeArgs: ['--debug']
-      }//,
-      // debug: {
-      //   file: 'app.js',
-      //   nodeArgs: ['--debug']
-      // }
+      }
     },
 
     'compress': {
@@ -197,21 +193,7 @@ module.exports = function(grunt) {
           ext: '.min.gz.js'
         }]
       }
-    },
-    
-    // 'node-inspector': {
-    //   dev: {
-    //     options: {
-    //       'web-port': 1337,
-    //       'web-host': 'localhost',
-    //       'debug-port': 5858,
-    //       'save-live-edit': true,
-    //       'no-preload': true,
-    //       'stack-trace-limit': 4,
-    //       'hidden': ['node_modules']
-    //     }
-    //   }
-    // }
+    }
   });
 
   grunt.loadNpmTasks('grunt-develop');
