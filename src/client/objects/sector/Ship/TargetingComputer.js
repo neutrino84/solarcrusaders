@@ -33,6 +33,7 @@ TargetingComputer.prototype.create = function() {
     hardpoint.explosionEmitter = ship.manager.explosionEmitter;
     hardpoint.glowEmitter = ship.manager.glowEmitter;
     hardpoint.fireEmitter = ship.manager.fireEmitter;
+    hardpoint.shockwaveEmitter = ship.manager.shockwaveEmitter;
 
     this.hardpoints[slot] = hardpoint;
   }
