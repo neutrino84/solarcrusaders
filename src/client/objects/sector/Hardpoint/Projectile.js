@@ -47,17 +47,26 @@ Projectile.prototype.start = function(destination, duration, delay) {
 
   this.destination.set(destination.x + this.spread.x, destination.y + this.spread.y);
 
-  this.parent.fxGroup.addChild(this.projectile);
+  this.parent.subGroup.addChild(this.projectile);
 };
 
 Projectile.prototype.stop = function() {
   this.isRunning = false;
-  this.parent.fxGroup.removeChild(this.projectile);
+  this.parent.subGroup.removeChild(this.projectile);
 };
 
 Projectile.prototype.explode = function() {
   if(!this.hasExploded) {
     this.parent.explode(this.destination);
+
+    this.parent.explosionEmitter.at({ center: this.projectile.position });
+    this.parent.explosionEmitter.explode(2);
+
+    this.parent.glowEmitter.at({ center: this.projectile.position });
+    this.parent.glowEmitter.explode(1);
+
+    this.parent.shockwaveEmitter.at({ center: this.destination });
+    this.parent.shockwaveEmitter.explode(1);
   }
 
   this.hasExploded = true;

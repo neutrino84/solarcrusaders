@@ -120,7 +120,7 @@
           }
         },
         {
-          "type": ["projectile"],
+          "type": ["projectile", "bomb"],
           "pivot": {
             "x": 20,
             "y": 16
@@ -231,6 +231,7 @@
     "targeting": {
       "hardpoints": [
         {
+          "type": ["energy", "pulse"],
           "pivot": {
             "x": 20,
             "y": 16
@@ -238,9 +239,14 @@
           "position": {
             "x": 136,
             "y": 87
+          },
+          "default": {
+            "type": "energy",
+            "subtype": "basic"
           }
         },
         {
+          "type": ["energy", "pulse"],
           "pivot": {
             "x": 20,
             "y": 16
@@ -248,9 +254,14 @@
           "position": {
             "x": 198,
             "y": 116
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "hydra"
           }
         },
         {
+          "type": ["energy", "pulse"],
           "pivot": {
             "x": 20,
             "y": 16
@@ -258,9 +269,14 @@
           "position": {
             "x": 198,
             "y": 201
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "hydra"
           }
         },
         {
+          "type": ["energy", "pulse"],
           "pivot": {
             "x": 20,
             "y": 16
@@ -268,6 +284,10 @@
           "position": {
             "x": 136,
             "y": 231
+          },
+          "default": {
+            "type": "energy",
+            "subtype": "basic"
           }
         }
       ]
@@ -448,6 +468,21 @@
           "position": {
             "x": 29,
             "y": 39
+          }
+        },
+        {
+          "type": ["projectile", "bomb"],
+          "pivot": {
+            "x": 20,
+            "y": 16
+          },
+          "position": {
+            "x": 29,
+            "y": 39
+          },
+          "default": {
+            "type": "rocket",
+            "subtype": "fast"
           }
         }
       ]

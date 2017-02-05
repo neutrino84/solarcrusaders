@@ -74,8 +74,16 @@ Pulse.prototype.stop = function() {
 };
 
 Pulse.prototype.explode = function() {
-  this.parent.fireEmitter.at({ center: this.destination });
-  this.parent.fireEmitter.explode(1);
+  if(this.data.name === 'Hydra Pulse Cannon') {
+    this.parent.explosionEmitter.at({ center: this.destination });
+    this.parent.explosionEmitter.explode(1);
+
+    this.parent.glowEmitter.at({ center: this.destination });
+    this.parent.glowEmitter.explode(1);
+  } else {
+    this.parent.fireEmitter.at({ center: this.destination });
+    this.parent.fireEmitter.explode(1);
+  }
 
   if(!this.hasExploded) {
     this.parent.explode(this.destination);
