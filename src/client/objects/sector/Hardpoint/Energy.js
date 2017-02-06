@@ -51,12 +51,8 @@ Energy.prototype.start = function(destination, duration, delay) {
   this.length = this.data.length;
   this.runtime = this.duration + this.length;
 
-  // this.origin.copyFrom(origin);
   this.target.copyFrom(destination);
   this.destination.copyFrom(destination);
-
-  // this._start.copyFrom(this.origin);
-  // this._end.copyFrom(this.origin);
 
   this.glow.alpha = 1.0;
 
@@ -71,6 +67,7 @@ Energy.prototype.stop = function() {
 };
 
 Energy.prototype.explode = function() {
+  this.parent.fireEmitter.color(this.data.emitter);
   this.parent.fireEmitter.at({ center: this.destination });
   this.parent.fireEmitter.explode(1);
 

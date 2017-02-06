@@ -11,8 +11,8 @@ function Hardpoint(parent, data, config) {
   this.config = config;
   this.data = data;
 
-  this.isRunning = false;
   this.actives = [];
+  this.isRunning = false;
   this.types = {
     rocket: Projectile,
     energy: Energy,
@@ -39,7 +39,7 @@ function Hardpoint(parent, data, config) {
 Hardpoint.prototype.constructor = Hardpoint;
 
 Hardpoint.prototype.fire = function(targ) {
-  var delay, launcher,
+  var launcher, origin,
       data = this.data,
       ship = this.ship,
       types = this.types,
@@ -61,10 +61,8 @@ Hardpoint.prototype.fire = function(targ) {
     }
 
     for(var i=0; i<spawn; i++) {
-      delay = (global.Math.random() * data.delay);
-
       launcher = new types[data.type](this);
-      launcher.start(target, distance, delay);
+      launcher.start(target, distance, spawn, i);
 
       actives.push(launcher);
     }
@@ -73,14 +71,18 @@ Hardpoint.prototype.fire = function(targ) {
   this.isRunning = true;
 };
 
-Hardpoint.prototype.hit = function(ship) {
+Hardpoint.prototype.hit = function(ship, target) {
   var launcher,
       actives = this.actives,
       length = actives.length;
   for(var i=0; i<length; i++) {
     launcher = actives[i];
-    launcher.hit && launcher.hit(ship);
+    launcher.hit && launcher.hit(ship, target);
   }
+  this.explosionEmitter.at({ center: target });
+  this.explosionEmitter.explode(3);
+  this.flashEmitter.at({ center: target });
+  this.flashEmitter.explode(1);
 };
 
 Hardpoint.prototype.update = function() {
