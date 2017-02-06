@@ -89,11 +89,12 @@ Movement.prototype.update = function() {
 };
 
 Movement.prototype.compensated = function(rtt) {
-  var position = this.position,
+  var rtt = rtt || 0,
+      position = this.position,
       last = this.last,
       relative = this.relative,
       direction = this.direction,
-      modifier = (this.game.clock.time - this.time) / Movement.CLOCK_RATE;
+      modifier = (this.game.clock.time - this.time - (rtt/2)) / Movement.CLOCK_RATE;
 
   if(this.magnitude > Movement.STOP_THRESHOLD) {
     relative.set(last.x, last.y);

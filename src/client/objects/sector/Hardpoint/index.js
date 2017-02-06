@@ -58,6 +58,9 @@ Hardpoint.prototype.fire = function(targ) {
       if(!launcher.isDone) {
         spawn--;
       }
+      if(launcher.continue) {
+        launcher.continue(target);
+      }
     }
 
     for(var i=0; i<spawn; i++) {

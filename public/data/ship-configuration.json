@@ -87,10 +87,6 @@
           "position": {
             "x": 91,
             "y": 70
-          },
-          "default": {
-            "type": "energy",
-            "subtype": "intermediate"
           }
         },
         {
@@ -102,10 +98,6 @@
           "position": {
             "x": 59,
             "y": 128
-          },
-          "default": {
-            "type": "energy",
-            "subtype": "intermediate"
           }
         },
         {
@@ -117,10 +109,6 @@
           "position": {
             "x": 91,
             "y": 187
-          },
-          "default": {
-            "type": "energy",
-            "subtype": "intermediate"
           }
         }
       ]
@@ -449,6 +437,10 @@
           "position": {
             "x": 29,
             "y": 39
+          },
+          "default": {
+            "type": "energy",
+            "subtype": "basic"
           }
         }
       ]

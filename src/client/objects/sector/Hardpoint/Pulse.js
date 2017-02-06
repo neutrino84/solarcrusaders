@@ -92,7 +92,7 @@ Pulse.prototype.update = function() {
       this.glow.alpha = f1 * 1.0;
       return;
     } else {
-      this.glow.scale.set(1, 1);
+      this.glow.scale.set(this.scale, this.scale);
       this.glow.alpha = 1.0;
     }
 

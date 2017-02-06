@@ -98,26 +98,6 @@ Ship.prototype.save = function(callback) {
   }
 };
 
-// Ship.prototype.createRooms = function() {
-//   var layer, objects, room, properties,
-//       layers = this.config.tilemap.layers,
-//       systems = this.systems;
-//   for(var l in layers) {
-//     layer = layers[l];
-//     if(layer.name === 'rooms' && layer.type === 'objectgroup') {
-//       objects = layer.objects;
-//       for(var o in objects) {
-//         room = objects[o];
-//         properties = room.properties;
-//         if(properties.system) {
-//           systems[properties.system] = null;
-//         }
-//         this.rooms.push(room);
-//       }
-//     }
-//   }
-// };
-
 /*
  * System Factory
  */
