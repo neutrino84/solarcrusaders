@@ -159,7 +159,7 @@ module.exports = function(grunt) {
         tasks: ['browserify:solar']
       },
       core: {
-        files: ['public/data/**/*', 'src/**/*', 'views/**/*', '!src/client/**/*'],
+        files: ['public/data/**/*', 'src/**/*', 'views/**/*', '!src/client/**/*', './config.json'],
         tasks: ['develop:dev'],
         options: {
           nospawn: true
