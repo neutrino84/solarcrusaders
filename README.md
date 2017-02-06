@@ -115,3 +115,33 @@ Every time you make changes to ./solarcrusaders/src/* you will need to re-run:
 ## See if your local game server is running
 
 Open a web browser and navigate to http://play.localhost.dev:4567/
+
+#### Traffic Shaping on Mac OSX
+
+## You may need to enable firewall in your security configuration settings
+
+    sudo vim /etc/pf.conf
+
+    dummynet-anchor "mop"
+    anchor "mop"
+
+    echo "dummynet in quick proto tcp from any to any port 4567 pipe 1" | sudo pfctl -a mop -f -
+    echo "dummynet out quick proto tcp from any to any port 4567 pipe 2" | sudo pfctl -a mop -f -
+
+    sudo c pipe 1 config delay 80ms bw 5Mbit/s plr 0.02
+    sudo dnctl pipe 2 config delay 80ms bw 5Mbit/s plr 0.02
+
+    sudo pfctl -E
+
+## Reset
+
+    sudo dnctl flush
+    sudo pfctl -f /etc/pf.conf
+
+## Disable
+
+    sudo pfctl -d
+
+
+
+
