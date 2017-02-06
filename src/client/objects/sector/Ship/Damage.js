@@ -105,7 +105,7 @@ Damage.prototype.destroyed = function() {
     this.explosionEmitter.at({ center: point });
     this.explosionEmitter.explode(2);
     
-    this.glowEmitter.color(null);
+    // this.glowEmitter.color(null);
     this.glowEmitter.at({ center: point });
     this.glowEmitter.explode(2);
   }, this);
@@ -118,7 +118,7 @@ Damage.prototype.destroyed = function() {
       this.explosionEmitter.at({ center: point });
       this.explosionEmitter.explode(2);
       
-      this.glowEmitter.color(null);
+      // this.glowEmitter.color(null);
       this.glowEmitter.at({ center: point });
       this.glowEmitter.explode(2);
     }
