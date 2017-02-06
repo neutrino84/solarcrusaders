@@ -387,7 +387,7 @@ Emitter.prototype.setScale = function(minX, maxX, minY, maxY, rate, ease, yoyo) 
   }
 };
 
-Emitter.prototype.setTint = function(startTint, endTint, rate, ease, yoyo) {
+Emitter.prototype.setTint = function(key, startTint, endTint, rate, ease, yoyo) {
   if(startTint === undefined) { minX = 0xFFFFFF; }
   if(endTint === undefined) { maxX = 0xFFFFFF; }
   if(rate === undefined) { rate = 0; }
@@ -398,8 +398,7 @@ Emitter.prototype.setTint = function(startTint, endTint, rate, ease, yoyo) {
   this.endTint = endTint;
   this.autoTint = false;
 
-  var key = startTint.toString() + endTint.toString() + rate.toString() + ease.toString() + yoyo.toString();
-  
+  var key = key;
   if(this.tintCache[key]) {
     this.tintData = this.tintCache[key];
     this.autoTint = true;

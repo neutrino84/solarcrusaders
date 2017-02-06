@@ -13,7 +13,7 @@ function FlashEmitter(game) {
 
   this.setScale(0.25, 0.5, 0.25, 0.5, 250);
   this.setAlpha(1.0, 0.0, 250);
-  this.setTint(0xFFFFFF, 0x666666, 125);
+  this.setTint('default', 0xFFFFFF, 0x666666, 125);
   
   this.makeParticles('texture-atlas', 'explosion-d.png');
 };

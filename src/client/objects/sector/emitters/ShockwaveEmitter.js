@@ -14,7 +14,7 @@ function ShockwaveEmitter(game) {
   this.maxRotation = 45;
 
   this.setAlpha(1.0, 0.0, 500);
-  this.setTint(0xFFFFFF, 0x000000, 250);
+  this.setTint('default', 0xFFFFFF, 0x000000, 250);
 
   this.makeParticles('texture-atlas', 'explosion-c.png');
 };
