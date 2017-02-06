@@ -169,10 +169,11 @@ Ship.prototype.createHardpoints = function() {
     //   subtype = 'basic';
     // }
 
-    hardpoint = new this.model.Hardpoint(new Hardpoint(i, type, subtype).toObject());
+    // hardpoint = new this.model.Hardpoint();
+    // hardpoint.toStreamObject();
     
     // cache to local object
-    this.hardpoints[i] = hardpoint.toStreamObject();
+    this.hardpoints[i] = new Hardpoint(i, type, subtype).toObject(); 
 
     // add cargo item
     // this.cargo[hardpoint.uuid] = {
@@ -207,7 +208,7 @@ Ship.prototype.attack = function(data, rtt) {
 
     if(distance <= hardpoint.range) {
       // compute travel time
-      time = distance * hardpoint.projection + (hardpoint.delay/2);
+      time = distance * hardpoint.projection + hardpoint.delay;
 
       // time collisions
       game.clock.events.add(time, this.attacked, this, target, slot);
@@ -271,7 +272,8 @@ Ship.prototype.hit = function(attacker, target, slot) {
         credits: attacker.credits,
         hardpoint: {
           slot: hardpoint.slot,
-          target: this.uuid
+          ship: this.uuid,
+          target: target
         }
       });
 
