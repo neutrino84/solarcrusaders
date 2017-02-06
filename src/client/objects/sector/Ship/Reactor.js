@@ -59,7 +59,7 @@ Reactor.prototype._update = function() {
     sprite.rotation = global.Math.random() * global.Math.PI;
     sprite.scale.set(scale, scale);
 
-    glowEmitter.color(0x00FF00);
+    // glowEmitter.color(0x00FF00);
     glowEmitter.at({ center: parent.position });
     glowEmitter.explode(global.Math.floor(global.Math.random() * 2) + 1);
   } else {
