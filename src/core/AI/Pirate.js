@@ -7,10 +7,10 @@ function Pirate(ship) {
   this.type = 'pirate';
 
   this.aimRadius = 128;
-  this.attackRate = 300;
-  this.respawnTime = 3600000;
+  this.attackRate = 500;
+  this.respawnTime = 60000;
   this.disengageTime = 16000;
-  this.defaultSpeedMagnitude = 192;
+  this.defaultSpeedMagnitude = 320;
   this.sightRange = 1024;
 
   this.sight = new engine.Circle();
@@ -35,14 +35,42 @@ Pirate.prototype.scan = function() {
     for(var s in ships) {
       p2 = ships[s].movement.position;
 
-      if(ships[s].disabled || ships[s].ai) { continue; }
+      if(ships[s].disabled || (ships[s].ai && ships[s].ai.type === 'pirate')) { continue; }
       if(sight.contains(p2.x, p2.y)) {
-        if(global.Math.random() > 0.5) {
+        if(global.Math.random() > 0.25) {
           this.engage(ships[s]);
           break;
         }
       }
     }
+  }
+};
+
+Pirate.prototype.engage = function(target) {
+  if(target.ai && target.ai.type === 'pirate') { return; }
+  if(this.target != target) {
+    this.target = target;
+
+    this.timer && this.game.clock.events.remove(this.timer);
+    this.timer = this.game.clock.events.loop(this.attackRate, this.attack, this);
+
+    this.countdown && this.game.clock.events.remove(this.countdown);
+    this.countdown = this.game.clock.events.loop(this.disengageTime, this.disengage, this);
+  }
+};
+
+Pirate.prototype.update = function() {
+  var ship = this.ship,
+      target = this.target,
+      movement = ship.movement,
+      position = movement.position,
+      destination;
+  if(target) {
+    destination = target.movement.position;
+    ship.movement.plot({ x: destination.x-position.x, y: destination.y-position.y });
+  } else {
+    destination = this.getHomePosition();
+    ship.movement.plot({ x: destination.x-position.x, y: destination.y-position.y }, this.defaultSpeedMagnitude);
   }
 };
 

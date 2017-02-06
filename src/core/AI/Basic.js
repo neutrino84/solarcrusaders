@@ -38,7 +38,7 @@ Basic.prototype.update = function() {
 };
 
 Basic.prototype.engage = function(target) {
-  // if(target.ai) { return };
+  if((target.ai && target.ai.type !== 'pirate') || target.user) { return; }
   if(this.target != target) {
     this.target = target;
 
