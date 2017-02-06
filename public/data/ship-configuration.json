@@ -90,7 +90,7 @@
           },
           "default": {
             "type": "energy",
-            "subtype": "basic"
+            "subtype": "intermediate"
           }
         },
         {
@@ -102,6 +102,10 @@
           "position": {
             "x": 59,
             "y": 128
+          },
+          "default": {
+            "type": "energy",
+            "subtype": "intermediate"
           }
         },
         {
@@ -116,22 +120,7 @@
           },
           "default": {
             "type": "energy",
-            "subtype": "basic"
-          }
-        },
-        {
-          "type": ["projectile", "bomb"],
-          "pivot": {
-            "x": 20,
-            "y": 16
-          },
-          "position": {
-            "x": 128,
-            "y": 128
-          },
-          "default": {
-            "type": "rocket",
-            "subtype": "basic"
+            "subtype": "intermediate"
           }
         }
       ]
@@ -254,10 +243,6 @@
           "position": {
             "x": 198,
             "y": 116
-          },
-          "default": {
-            "type": "pulse",
-            "subtype": "hydra"
           }
         },
         {
@@ -269,10 +254,6 @@
           "position": {
             "x": 198,
             "y": 201
-          },
-          "default": {
-            "type": "pulse",
-            "subtype": "hydra"
           }
         },
         {
@@ -468,21 +449,6 @@
           "position": {
             "x": 29,
             "y": 39
-          }
-        },
-        {
-          "type": ["projectile", "bomb"],
-          "pivot": {
-            "x": 20,
-            "y": 16
-          },
-          "position": {
-            "x": 29,
-            "y": 39
-          },
-          "default": {
-            "type": "rocket",
-            "subtype": "fast"
           }
         }
       ]
