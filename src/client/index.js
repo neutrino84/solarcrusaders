@@ -1,17 +1,14 @@
 // run the polyfills
 require('./polyfill');
 
-var pixi = require('pixi'),
-    engine = require('engine'),
-    LoadingState = require('./states/LoadingState'),
+var engine = require('engine'),
     Auth = require('./net/Auth'),
-    Web = require('./utils/Web'),
-    ShipNetManager = require('./net/ShipNetManager'),
+    LoadingState = require('./states/LoadingState'),
 
     startGameEngine = function() {
       var game = new engine.Game({
             parent: 'content',
-            antialias: Web.getQueryParameter('antialias', false),
+            antialias: false,
             width: 1024,
             height: 576
           }),
@@ -19,12 +16,9 @@ var pixi = require('pixi'),
 
       // activate net code
       game.auth = new Auth(game);
-      game.shipNetManager = new ShipNetManager(game);
 
       // create game state
-      game.state.add('loader', loadingState, true, true);
-
-      global.game = game;
+      game.states.add('loader', loadingState, true, true);
     };
 
 engine.Device.whenReady(function() {
