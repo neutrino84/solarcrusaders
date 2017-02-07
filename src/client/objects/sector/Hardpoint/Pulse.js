@@ -6,7 +6,7 @@ function Pulse(hardpoint) {
   this.hardpoint = hardpoint;
   this.game = hardpoint.game;
   this.data = hardpoint.data;
-  this.clock  = game.clock;
+  this.clock  = this.game.clock;
   this.spread = {
     x: global.Math.random() * this.data.spread - this.data.spread / 2,
     y: global.Math.random() * this.data.spread - this.data.spread / 2

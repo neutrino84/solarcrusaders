@@ -71,7 +71,8 @@ Damage.prototype.shockwave = function() {
 Damage.prototype.update = function(multiplier) {
   var point,
       ship = this.ship,
-      glow = this.glow;
+      glow = this.glow,
+      game = this.game;
       
   glow.position.set(ship.x, ship.y);
 
@@ -86,7 +87,8 @@ Damage.prototype.update = function(multiplier) {
 };
 
 Damage.prototype.destroyed = function() {
-  var ship = this.ship;
+  var ship = this.ship,
+      game = this.game;
 
   // shockwave
   // this.shockwave();
