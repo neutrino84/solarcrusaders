@@ -29,10 +29,8 @@ function Ship(manager, data) {
   this.ai = data.ai ? AI.create(data.ai, this) : null; // reformat this
 
   this.timers = [];
-  this.cargo = {};
-  this.hardpoints = {};
   this.systems = {};
-  
+  this.hardpoints = {};
   this.enhancements = {
     active: {
       energy: {},
@@ -102,22 +100,10 @@ Ship.prototype.save = function(callback) {
  * System Factory
  */
 Ship.prototype.createSystems = function() {
-  var system, type, enhancement,
-      systems = this.systems,
-      cargo = this.cargo;
-  for(var type in systems) {
-    system = new this.model.System(new System(type).toObject());
-    enhancement = system.enhancement;
-    if(enhancement) {
-      this.enhancements.available[enhancement] = new Enhancement(this, enhancement);
-    }
-    systems[type] = system.toStreamObject();
-    cargo[system.uuid] = {
-      uuid: system.uuid,
-      sprite: system.cargo,
-      enabled: true,
-      type: 'system'
-    };
+  var enhancement,
+      enhancements = this.config.enhancements;
+  for(var e in enhancements) {
+    this.enhancements.available[enhancements[e]] = new Enhancement(this, enhancements[e]);
   }
 };
 
@@ -154,14 +140,6 @@ Ship.prototype.createHardpoints = function() {
     
     // cache to local object
     this.hardpoints[i] = new Hardpoint(i, type, subtype).toObject(); 
-
-    // add cargo item
-    // this.cargo[hardpoint.uuid] = {
-    //   uuid: hardpoint.uuid,
-    //   sprite: hardpoint.cargo,
-    //   enabled: true,
-    //   type: 'hardpoint'
-    // };
   }
 };
 
@@ -322,7 +300,7 @@ Ship.prototype.activate = function(name) {
       available = enhancements.available,
       enhancement = available[name],
       stats, active, cooldown, update, cost;
-  
+
   if(enhancement) {
     cost = this.energy + enhancement.cost;
 
