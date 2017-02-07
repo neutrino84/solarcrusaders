@@ -344,7 +344,7 @@ ScaleManager.prototype = {
       // this.grid.onResize(width, height);
       // this.onSizeChange.dispatch(this, width, height);
 
-      this.game.state.resize(this.game.width, this.game.height);
+      this.game.states.resize(this.game.width, this.game.height);
     }
   },
 
