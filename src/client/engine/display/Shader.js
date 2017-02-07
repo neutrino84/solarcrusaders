@@ -96,7 +96,7 @@ Shader.prototype.getShader = function(gl) {
   //.. must be implemented
 };
 
-Shader.prototype.getRepeatTexture = function(key) {
+Shader.getRepeatTexture = function(game, key) {
   var base = game.cache.getBaseTexture(key);
       base.wrapMode = pixi.WRAP_MODES.REPEAT;
   return base;
