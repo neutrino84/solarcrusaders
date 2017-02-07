@@ -31,7 +31,7 @@ function Movement(parent) {
 Movement.CLOCK_RATE = 100;
 Movement.FRICTION = 1.04;
 Movement.STOP_THRESHOLD = 64.0;
-Movement.THROTTLE_THRESHOLD = 320.0;
+Movement.THROTTLE_THRESHOLD = 140.0;
 
 Movement.prototype.constructor = Movement;
 
@@ -94,7 +94,7 @@ Movement.prototype.compensated = function(rtt) {
       last = this.last,
       relative = this.relative,
       direction = this.direction,
-      modifier = (this.game.clock.time - this.time - (rtt/2)) / Movement.CLOCK_RATE;
+      modifier = (this.game.clock.time - this.time + rtt) / Movement.CLOCK_RATE;
 
   if(this.magnitude > Movement.STOP_THRESHOLD) {
     relative.set(last.x, last.y);
