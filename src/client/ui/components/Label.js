@@ -5,7 +5,7 @@ var engine = require('engine'),
     BackgroundView = require('../views/BackgroundView'),
     Class = engine.Class;
 
-function Label(game, string, settings) {
+function Label(game, settings) {
   Panel.call(this, game, this, settings.constraint);
 
   this.settings = Class.mixin(settings, {
@@ -24,7 +24,7 @@ function Label(game, string, settings) {
     this.addView(this.bg);
   }
   
-  this.textView = new TextView(game, string, this.settings.text);
+  this.textView = new TextView(game, this.settings.string, this.settings.text);
   this.textView.tint = this.settings.color;
   
   this.addView(this.textView);
@@ -40,7 +40,7 @@ Label.prototype.calcPreferredSize = function(target) {
   };
 };
 
-Label.prototype.doLayout = function() {
+Label.prototype.doLayout = function(target) {
   var left = this.left,
       settings = this.settings;
   if(settings.align === 'right') {

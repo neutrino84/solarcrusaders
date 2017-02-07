@@ -2,43 +2,52 @@
 var engine = require('engine'),
     Layout = require('../Layout'),
     Pane = require('../components/Pane'),
-    FlowLayout = require('../layouts/FlowLayout'),
-    EnhancementPane = require('./EnhancementPane'),
-    VitalsPane = require('./VitalsPane'),
-    InventoryPane = require('./InventoryPane');
+    // FlowLayout = require('../layouts/FlowLayout'),
+    EnhancementPane = require('./EnhancementPane');
+    // VitalsPane = require('./VitalsPane'),
+    // InventoryPane = require('./InventoryPane');
 
 function BottomPane(game) {
   Pane.call(this, game, {
-    padding: [0, 0, 5, 0],
-    border: [0],
+    constraint: Layout.BOTTOM,
+    padding: [3],
     layout: {
-      ax: Layout.CENTER,
-      ay: Layout.BOTTOM,
-      direction: Layout.HORIZONTAL,
-      gap: 3,
-      stretch: true
+      type: 'border',
+      gap: [0, 0]
     },
-    bg: false,
-    pane: {
-      bg: false
-    },
+    bg: false
   });
 
-  this.leftPane = new Pane(game, this.settings.pane);
-  // this.centerPane = new Pane(game, this.settings.pane);
-  // this.rightPane = new Pane(game, this.settings.pane);
+  this.leftPanel = new Pane(game, {
+    constraint: Layout.LEFT,
+    bg: false
+  });
+
+  this.centerPanel = new Pane(game, {
+    constraint: Layout.CENTER,
+    layout: {
+      type: 'border',
+      gap: [0, 0]
+    },
+    bg: false
+  });
+
+  this.rightPanel = new Pane(game, {
+    constraint: Layout.RIGHT,
+    bg: false
+  });
 
   this.enhancementPane = new EnhancementPane(game);
-  this.vitalsPane = new VitalsPane(game);
+  // this.vitalsPane = new VitalsPane(game);
   // this.inventoryPane = new InventoryPane(game);
 
-  this.leftPane.addPanel(Layout.STRETCH, this.enhancementPane);
-  this.leftPane.addPanel(Layout.NONE, this.vitalsPane);
+  this.centerPanel.addPanel(this.enhancementPane);
+  // this.leftPane.addPanel(Layout.NONE, this.vitalsPane);
   // this.centerPane.addPanel(Layout.NONE, this.inventoryPane);
 
-  this.addPanel(Layout.NONE, this.leftPane);
-  // this.addPanel(Layout.NONE, this.centerPane);
-  // this.addPanel(Layout.NONE, this.rightPane);
+  // this.addPanel(this.leftPanel);
+  this.addPanel(this.centerPanel);
+  // this.addPanel(this.rightPanel);
 };
 
 BottomPane.prototype = Object.create(Pane.prototype);
