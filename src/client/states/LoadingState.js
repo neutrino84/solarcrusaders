@@ -17,17 +17,13 @@ LoadingState.prototype.preload = function() {
   this.game.load.image('small', 'imgs/game/fonts/small.png');
 };
 
-LoadingState.prototype.init = function() {
-  
-};
-
 LoadingState.prototype.create = function() {
   var game = this.game,
       sectorState = new SectorState();
 
   // load game
-  game.state.add('sector', sectorState);
-  game.state.start('sector');
+  game.states.add('sector', sectorState);
+  game.states.start('sector');
 
   this.image = new Image(game, 'loading', {
     constraint: Layout.CENTER,
@@ -40,9 +36,10 @@ LoadingState.prototype.create = function() {
     height: 8
   });
 
-  this.status = new Label(game, 'loading', {
+  this.status = new Label(game, {
     constraint: Layout.CENTER,
     margin: [5],
+    string: 'Loading',
     bg: {
       fillAlpha: 0.0,
       borderSize: 0.0
@@ -111,6 +108,10 @@ LoadingState.prototype.resize = function(width, height) {
     this.root.setSize(width, height);
     this.root.invalidate();
   }
+};
+
+LoadingState.prototype.shutdown = function() {
+  //.. properly destroy
 };
 
 module.exports = LoadingState;
