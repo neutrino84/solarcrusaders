@@ -123,7 +123,7 @@ ShipManager.prototype.enhancement = function(sock, args, next) {
 };
 
 ShipManager.prototype.data = function(sock, args, next) {
-  var self = this, ship, enhancements, systems, ai,
+  var self = this, ship, enhancements, ai,
       cargo, uuid, username,
       user = sock.sock.handshake.session.user,
       uuids = args[1].uuids,
@@ -136,7 +136,6 @@ ShipManager.prototype.data = function(sock, args, next) {
       enhancements = Object.keys(ship.enhancements.available);
       uuid = ship.user ? ship.user.uuid : null;
       ai = ship.ai ? ship.ai.type : null;
-      cargo = uuid === user.uuid ? ship.cargo : {};
       ships.push({
         id: ship.id,
         uuid: ship.uuid,
@@ -168,9 +167,7 @@ ShipManager.prototype.data = function(sock, args, next) {
         critical: ship.critical,
         evasion: ship.evasion,
         hardpoints: ship.hardpoints,
-        systems: ship.systems,
-        enhancements: enhancements,
-        cargo: cargo
+        enhancements: enhancements
       });
       ship.ignoreEnhancements = false;
     }
@@ -204,11 +201,11 @@ ShipManager.prototype.update = function() {
 ShipManager.prototype.generateRandomShips = function() {
   var iterator = {
         'ubaidian-x01': { race: 'ubaidian', count: 2 },
-        'ubaidian-x02': { race: 'ubaidian', count: 1 },
+        'ubaidian-x02': { race: 'ubaidian', count: 2 },
         'ubaidian-x03': { race: 'ubaidian', count: 4 },
         'ubaidian-x04': { race: 'ubaidian', count: 10 },
         'hederaa-x01': { race: 'hederaa', count: 0 },
-        'mechan-x01': { race: 'mechan', count: 4 },
+        'mechan-x01': { race: 'mechan', count: 0 },
         'general-x01': { race: 'ubaidian', count: 0 },
         'general-x02': { race: 'ubaidian', count: 0 }
       };
