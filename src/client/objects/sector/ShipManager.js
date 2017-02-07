@@ -14,7 +14,7 @@ function ShipManager(game) {
   this.clock = game.clock;
   this.net = game.net;
   this.socket = game.net.socket;
-  this.shipNetManager = game.shipNetManager;
+  this.shipNetManager = game.states.current.shipNetManager;
   this.enhancementManager = new EnhancementManager(this);
 
   // player

@@ -6,7 +6,7 @@ function RegistrationForm(game) {
   this.game = game;
   this.game.on('gui/registration', this._show, this);
 
-  this.sectorState = this.game.state.states['sector'];
+  this.sectorState = this.game.state;
 
   this.modalElement = global.document.getElementById('registration-login');
   this.cancelElement = global.document.getElementById('registration-cancel');
