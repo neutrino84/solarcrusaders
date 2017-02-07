@@ -45,7 +45,7 @@ function Game(config) {
   this._codePaused = false;
 
   this.rnd = new RandomGenerator([(global.Date.now() * global.Math.random()).toString()]);
-  this.state = new StateManager(this, new State()); // this needs to be changed to a loading state
+  this.states = new StateManager(this);
 
   Device.whenReady(this.boot, this);
 
@@ -81,7 +81,7 @@ Game.prototype.boot = function() {
   this.scale.boot();
   this.input.boot();
   this.sound.boot();
-  this.state.boot();
+  this.states.boot();
   this.net.boot();
 
   this.raf = new ReqAnimFrame(this, false);
@@ -128,10 +128,10 @@ Game.prototype.updateLogic = function() {
   if(!this._paused) {
     // preUpdate
     this.scale.preUpdate();
-    this.state.preUpdate();
+    this.states.preUpdate();
 
     // update
-    this.state.update();
+    this.states.update();
     this.stage.update();
     this.tweens.update();
     this.input.update();
@@ -140,7 +140,7 @@ Game.prototype.updateLogic = function() {
   } else {
     // pauseUpdate
     this.scale.pauseUpdate();
-    this.state.pauseUpdate();
+    this.states.pauseUpdate();
   }
 };
 
@@ -149,7 +149,7 @@ Game.prototype.updateRender = function() {
   this.stage.updateTransform();
 
   // pre-render
-  this.state.preRender();
+  this.states.preRender();
 
   // render scene graph
   this.renderer.render(this.stage, null, false, null, true);
@@ -158,7 +158,7 @@ Game.prototype.updateRender = function() {
 Game.prototype.destroy = function() {
   this.raf.stop();
 
-  this.state.destroy();
+  this.states.destroy();
   this.scale.destroy();
   this.stage.destroy();
   this.input.destroy();
@@ -209,6 +209,12 @@ Game.prototype.focusGain = function(event) {
     this.gameResumed(event);
   }
 };
+
+Object.defineProperty(Game.prototype, 'state', {
+  get: function() {
+    return this.states.states[this._current];
+  }
+});
 
 Object.defineProperty(Game.prototype, 'paused', {
   get: function() {
