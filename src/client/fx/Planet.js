@@ -6,8 +6,8 @@ var pixi = require('pixi'),
     Atmosphere = require('./Atmosphere');
 
 function Planet(game) {
-  this.planetTexture = new pixi.Texture(this.getRepeatTexture('planet')),
-  this.cloudsTexture = new pixi.Texture(this.getRepeatTexture('clouds'));
+  this.planetTexture = new pixi.Texture(engine.Shader.getRepeatTexture(game, 'planet')),
+  this.cloudsTexture = new pixi.Texture(engine.Shader.getRepeatTexture(game, 'clouds'));
 
   engine.Shader.call(this, game, this.planetTexture);
 

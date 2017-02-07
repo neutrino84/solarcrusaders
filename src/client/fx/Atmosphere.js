@@ -5,7 +5,7 @@ var pixi = require('pixi'),
     Shader = require('pixi-gl-core').GLShader;
 
 function Atmosphere(game) {
-  engine.Shader.call(this, game, new pixi.Texture(this.getRepeatTexture('planet')));
+  engine.Shader.call(this, game, new pixi.Texture(engine.Shader.getRepeatTexture(game, 'planet')));
 };
 
 Atmosphere.prototype = Object.create(engine.Shader.prototype);

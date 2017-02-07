@@ -4,8 +4,8 @@ var pixi = require('pixi'),
     Shader = require('pixi-gl-core').GLShader;
 
 function Space(game) {
-  this.spaceTexture = new pixi.Texture(this.getRepeatTexture('space'));
-  this.nebulaTexture = new pixi.Texture(this.getRepeatTexture('nebula'));
+  this.spaceTexture = new pixi.Texture(engine.Shader.getRepeatTexture(game, 'space'));
+  this.nebulaTexture = new pixi.Texture(engine.Shader.getRepeatTexture(game, 'nebula'));
 
   pixi.Sprite.call(this, this.spaceTexture);
 
@@ -41,7 +41,7 @@ Space.prototype.resize = function(width, height) {
 };
 
 Space.prototype.getRepeatTexture = function(key) {
-  var base = game.cache.getBaseTexture(key);
+  var base = this.game.cache.getBaseTexture(key);
       base.wrapMode = pixi.WRAP_MODES.REPEAT;
   return base;
 };

@@ -16,8 +16,9 @@ NebulaCluster.prototype = Object.create(pixi.Container.prototype);
 NebulaCluster.prototype.constructor = NebulaCluster;
 
 NebulaCluster.prototype.create = function(density) {
-  var nebula, tween, d = density/2,
-      tweens = this.game.tweens;
+  var game = this.game,
+      nebula, tween, d = density/2,
+      tweens = game.tweens;
 
   this.density = density;
 

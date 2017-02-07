@@ -5,7 +5,7 @@ var pixi = require('pixi'),
     Shader = require('pixi-gl-core').GLShader;
 
 function Snow(game, width, height) {
-  engine.Shader.call(this, game, new pixi.Texture(this.getRepeatTexture('snow')));
+  engine.Shader.call(this, game, new pixi.Texture(engine.Shader.getRepeatTexture(game, 'snow')));
 
   this.tileScale = new pixi.Point(1, 1);
   this.tilePosition = new pixi.Point(0, 0);
