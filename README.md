@@ -128,8 +128,8 @@ Open a web browser and navigate to http://play.localhost.dev:4567/
     echo "dummynet in quick proto tcp from any to any port 4567 pipe 1" | sudo pfctl -a mop -f -
     echo "dummynet out quick proto tcp from any to any port 4567 pipe 2" | sudo pfctl -a mop -f -
 
-    sudo dnctl pipe 1 config delay 50ms bw 25Mbit/s plr 0.01
-    sudo dnctl pipe 2 config delay 50ms bw 25Mbit/s plr 0.01
+    sudo dnctl pipe 1 config delay 25ms bw 50Mbit/s plr 0.01
+    sudo dnctl pipe 2 config delay 25ms bw 50Mbit/s plr 0.01
 
 ## Start
 
