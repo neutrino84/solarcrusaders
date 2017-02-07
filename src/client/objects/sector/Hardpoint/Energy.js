@@ -6,7 +6,7 @@ function Energy(hardpoint) {
   this.hardpoint = hardpoint;
   this.game = hardpoint.game;
   this.data = hardpoint.data;
-  this.clock  = game.clock;
+  this.clock  = this.game.clock;
   this.spread = {
     x: global.Math.random() * this.data.spread - this.data.spread / 2,
     y: global.Math.random() * this.data.spread - this.data.spread / 2
@@ -93,9 +93,10 @@ Energy.prototype.continue = function(target) {
 
 Energy.prototype.hit = function(ship, target) {
   if(this.isContinue) {
-    this.runtime = this.length * 2;
+    this.runtime = this.length * 4;
     this.started = this.clock.time - this.length;
 
+    this.ship = ship;
     this.offset.copyFrom(ship.position);
     // this.offset.add(this.spread.x, this.spread.y);
 
@@ -135,6 +136,10 @@ Energy.prototype.update = function() {
       this.stop();
     }
 
+    if(this.ship) {
+      this.offset.copyFrom(this.ship.position);
+    }
+
     f3 = this.elapsed/this.runtime;
 
     // move target
@@ -155,8 +160,10 @@ Energy.prototype.update = function() {
       this.hardpoint.fireEmitter.at({ center: this.destination });
       this.hardpoint.fireEmitter.explode(1);
 
-      this.hardpoint.glowEmitter.at({ center: this.destination });
-      this.hardpoint.glowEmitter.explode(1);
+      if(global.Math.random() > 0.5) {
+        this.hardpoint.glowEmitter.at({ center: this.destination });
+        this.hardpoint.glowEmitter.explode(1);
+      }
 
       this.isContinue = true;
     }
