@@ -1,5 +1,6 @@
 
 var pixi = require('pixi'),
+    engine = require('engine'),
     glslify = require('glslify'),
     Shader = require('pixi-gl-core').GLShader;
 
