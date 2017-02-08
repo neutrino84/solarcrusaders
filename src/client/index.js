@@ -12,7 +12,7 @@ var engine = require('engine'),
             width: 1024,
             height: 576
           }),
-          loadingState = new LoadingState();
+          loadingState = new LoadingState(game);
 
       // activate net code
       game.auth = new Auth(game);
