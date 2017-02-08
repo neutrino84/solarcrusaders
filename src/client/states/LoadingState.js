@@ -19,59 +19,63 @@ LoadingState.prototype.preload = function() {
 
 LoadingState.prototype.create = function() {
   var game = this.game,
-      sectorState = new SectorState();
+      sectorState = new SectorState(game);
 
   // load game
   game.states.add('sector', sectorState);
   game.states.start('sector');
 
-  this.image = new Image(game, 'loading', {
-    constraint: Layout.CENTER,
-    margin: [10]
-  });
+  // this.image = new Image(game, {
+  //   margin: [10],
+  //   padding: [10],
+  //   key: 'loading',
+  //   bg: {
+  //     color: 0xFFFFFF
+  //   }
+  // });
 
-  this.progress = new ProgressBar(game, {
-    constraint: Layout.CENTER,
-    width: 162,
-    height: 8
-  });
+  // this.progress = new ProgressBar(game, {
+  //   constraint: Layout.CENTER,
+  //   width: 162,
+  //   height: 8
+  // });
 
-  this.status = new Label(game, {
-    constraint: Layout.CENTER,
-    margin: [5],
-    string: 'Loading',
-    bg: {
-      fillAlpha: 0.0,
-      borderSize: 0.0
-    },
-    text: { fontName: 'small' }
-  });
+  // this.status = new Label(game, {
+  //   constraint: Layout.CENTER,
+  //   margin: [5],
+  //   string: 'Loading',
+  //   bg: {
+  //     fillAlpha: 0.0,
+  //     borderSize: 0.0
+  //   },
+  //   text: { fontName: 'small' }
+  // });
 
-  this.root = new Pane(game, {
-    layout: {
-      type: 'flow',
-      ax: Layout.CENTER,
-      ay: Layout.CENTER,
-      direction: Layout.VERTICAL
-    },
-    bg: { color: 0x000000 }
-  });
+  // this.root = new Pane(game, {
+  //   layout: {
+  //     type: 'flow',
+  //     ax: Layout.CENTER,
+  //     ay: Layout.CENTER,
+  //     direction: Layout.VERTICAL
+  //   },
+  //   bg: { color: 0x000000 }
+  // });
 
   // set base size
-  this.root.setSize(game.width, game.height);
+  // this.root.resize(game.width, game.height);
 
   // add ui elements
-  this.root.addPanel(this.image);
-  this.root.addPanel(this.progress);
-  this.root.addPanel(this.status);
+  // this.root.addPanel(this.image);
+  // this.root.addPanel(this.progress);
+  // this.root.addPanel(this.status);
 
   // force redraw
-  this.root.invalidate();
+  // this.root.invalidate();
 
   // add event listeners
-  game.load.on('loadstart', this.loadingStart, this);
-  game.load.on('loadcomplete', this.loadingComplete, this);
-  game.load.on('filecomplete', this.loadingProgressBar, this);
+  // game.load.on('loadstart', this.loadingStart, this);
+  // game.load.on('loadcomplete', this.loadingComplete, this);
+  // game.load.on('filecomplete', this.loadingProgressBar, this);
 };
 
 LoadingState.prototype.loadingStart = function() {
@@ -105,7 +109,7 @@ LoadingState.prototype.loadingComplete = function() {
 
 LoadingState.prototype.resize = function(width, height) {
   if(this.root !== undefined) {
-    this.root.setSize(width, height);
+    this.root.resize(width, height);
     this.root.invalidate();
   }
 };
