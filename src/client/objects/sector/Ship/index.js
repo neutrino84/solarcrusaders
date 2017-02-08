@@ -197,7 +197,7 @@ Ship.prototype.destroy = function() {
 
 Object.defineProperty(Ship.prototype, 'isPlayer', {
   get: function() {
-    return this.user && this.game.auth.user.uuid === this.user;
+    return this.user !== undefined && this.game.auth.user.uuid === this.user;
   }
 });
 
