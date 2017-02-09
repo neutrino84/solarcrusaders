@@ -4,9 +4,14 @@ var pixi = require('pixi'),
 function Destroy() {};
 
 Destroy.prototype = {
-  destroy: function(destroyChildren) {
+  destroy: function(options) {
     if(this.game === undefined) { return; }
-    if(destroyChildren === undefined) { destroyChildren = true; }
+    if(options === undefined) {
+      options = {
+        children: true,
+        texture: true
+      }
+    }
 
     if(this.parent) {
       this.parent.removeChild(this);
@@ -22,27 +27,27 @@ Destroy.prototype = {
 
     this.game.tweens.removeFrom(this);
 
-    var i = this.children.length;
-    if(destroyChildren) {
-      while(i--) {
-        this.children[i].destroy(destroyChildren);
-      }
-    } else {
-      while(i--) {
-        this.removeChild(this.children[i]);
-      }
-    }
+    // var i = this.children.length;
+    // if(options) {
+    //   while(i--) {
+    //     this.children[i].destroy(options);
+    //   }
+    // } else {
+    //   while(i--) {
+    //     this.removeChild(this.children[i]);
+    //   }
+    // }
 
     switch(this.type) {
       case Const.PARTICLE:
       case Const.SPRITE:
-        pixi.Sprite.prototype.destroy.call(this, false);
+        pixi.Sprite.prototype.destroy.call(this, options);
         break;
       case Const.GRAPHICS:
-        pixi.Graphics.prototype.destroy.call(this, false);
+        pixi.Graphics.prototype.destroy.call(this, options);
         break;
       case Const.STRIP:
-        pixi.mesh.Rope.prototype.destroy.call(this, false);
+        pixi.mesh.Rope.prototype.destroy.call(this, options);
         break;
     }
 
