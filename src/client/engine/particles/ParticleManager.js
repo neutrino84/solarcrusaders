@@ -18,7 +18,7 @@ ParticleManager.prototype = {
 
   update: function() {
     for(var key in this.emitters) {
-      if(this.emitters[key].exists) {
+      if(this.emitters[key].visible) {
         this.emitters[key].update();
       }
     }
