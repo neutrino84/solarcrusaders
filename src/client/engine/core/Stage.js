@@ -4,7 +4,6 @@ function Stage(game) {
   pixi.Container.call(this);
 
   this.game = game;
-  this.exists = true;
   this.disableVisibilityChange = false;
   this.currentRenderOrderID = 0;
 
