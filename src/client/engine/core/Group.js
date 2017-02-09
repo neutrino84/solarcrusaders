@@ -38,11 +38,11 @@ Group.prototype.addAt = function(child, index) {
   return child;
 };
 
-Group.prototype.getFirstExists = function(exists) {
-  if(typeof exists !== 'boolean') {
-    exists = true;
+Group.prototype.getFirstVisible = function(value) {
+  if(typeof value !== 'boolean') {
+    value = true;
   }
-  return this.iterate('exists', exists, Group.RETURN_CHILD);
+  return this.iterate('visible', value, Group.RETURN_CHILD);
 };
 
 Group.prototype.iterate = function(key, value, returnType, callback, callbackContext, args) {
@@ -76,14 +76,14 @@ Group.prototype.iterate = function(key, value, returnType, callback, callbackCon
   return null;
 };
 
-Group.prototype.filter = function(predicate, checkExists) {
+Group.prototype.filter = function(predicate, checkVisible) {
   var child, index = -1,
       length = this.children.length,
       results = [];
   while(++index<length) {
     child = this.children[index];
 
-    if(!checkExists || (checkExists && child.exists)) {
+    if(!checkVisible || (checkVisible && child.visible)) {
       if(predicate(child, index, this.children)) {
         results.push(child);
       }
@@ -92,11 +92,11 @@ Group.prototype.filter = function(predicate, checkExists) {
   return new ArraySet(results);
 };
 
-Group.prototype.forEach = function(callback, callbackContext, checkExists) {
-  if(checkExists === undefined) { checkExists = false; }
+Group.prototype.forEach = function(callback, callbackContext, checkVisible) {
+  if(checkVisible === undefined) { checkVisible = false; }
   if(arguments.length <= 3) {
     for(var i=0; i<this.children.length; i++) {
-      if(!checkExists || (checkExists && this.children[i].exists)) {
+      if(!checkVisible || (checkVisible && this.children[i].visible)) {
         callback.call(callbackContext, this.children[i]);
       }
     }
@@ -108,7 +108,7 @@ Group.prototype.forEach = function(callback, callbackContext, checkExists) {
       args.push(arguments[i]);
     }
     for(var i=0; i<this.children.length; i++) {
-      if(!checkExists || (checkExists && this.children[i].exists)) {
+      if(!checkVisible || (checkVisible && this.children[i].visible)) {
         args[0] = this.children[i];
         callback.apply(callbackContext, args);
       }
@@ -121,23 +121,21 @@ Group.prototype.swap = function(child1, child2) {
 };
 
 Group.prototype.remove = function(child, destroy) {
-  if(destroy === undefined) { destroy = false; }
-  var removed = this.removeChild(child);
+  var destroy = destroy || false
+      removed = this.removeChild(child);
   if(destroy && removed) {
-    removed.destroy(true);
+    removed.destroy(destroy);
   }
   return true;
 };
 
 Group.prototype.removeAll = function(destroy) {
-  if(destroy === undefined) { destroy = false; }
-  var removed;
+  var removed,
+      destroy = destroy || false,
+      children = this.children;
   do {
-    removed = this.removeChild(this.children[0]);
-    if(destroy && removed) {
-      removed.destroy(true);
-    }
-  } while(this.children.length > 0);
+    this.remove(children[0], destroy);
+  } while(children.length > 0);
 };
 
 Group.prototype.update = function() {
@@ -147,23 +145,16 @@ Group.prototype.update = function() {
   }
 };
 
-Group.prototype.destroy = function(destroyChildren, soft) {
-  if(this.game === null || this.ignoreDestroy) { return; }
-  if(destroyChildren === undefined) { destroyChildren = true; }
-  if(soft === undefined) { soft = false; }
+Group.prototype.destroy = function() {
+  if(this.game === null) { return; }
 
-  this.removeAll(destroyChildren);
-  this.removeAllListeners();
+  this.removeAll();
 
-  this.filters = null;
+  if(this.parent) {
+    this.parent.removeChild(this);
+  }
 
-  if(!soft) {
-    if(this.parent) {
-      this.parent.removeChild(this);
-    }
-    this.game = null;
-    this.exists = false;
-  }  
+  this.game = null;
 };
 
 module.exports = Group;
