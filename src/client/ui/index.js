@@ -1,5 +1,6 @@
 
 var Panel = require('../ui/Panel'),
+    Pane = require('../ui/components/Pane'),
     Layout = require('../ui/Layout'),
     // Focus = require('../ui/Focus'),
 
@@ -61,20 +62,26 @@ UI.prototype.create = function() {
   // this.leaderBoardPanel = new Panel(game, new FlowLayout(Layout.RIGHT, Layout.TOP, Layout.HORIZONTAL, 6));
   // this.leaderBoardPanel.addPanel(Layout.NONE, this.leaderBoardPane);
 
-  this.root = new Panel(this.game, new BorderLayout(0, 0));
-  this.root.setSize(this.game.width, this.game.height);
+  this.root = new Pane(this.game, {
+    width: this.game.width,
+    height: this.game.height,
+    layout: {
+      type: 'border',
+      gap: [0, 0]
+    },
+    bg: false
+  });
   
   this.root.addPanel(this.bottom);
-  
 
   // this.root.addPanel(Layout.STRETCH, this.centerPanel);
   // this.root.addPanel(Layout.STRETCH, this.leaderBoardPanel);
   // this.root.addPanel(Layout.STRETCH, this.modalComponent);
 
+  this.root.invalidate();
+
   // add root to stage
   this.game.stage.addChild(this.root);
-
-  this.root.invalidate();
 
   // this.auth.on('sync', this.login, this);
   // this.auth.on('data', this.data, this);
@@ -151,8 +158,7 @@ UI.prototype.toggle = function(force) {
 
 UI.prototype.resize = function(width, height) {
   if(this.root !== undefined) {
-    // this.root.resize(width, height);
-    this.root.setSize(width, height);
+    this.root.resize(width, height);
     this.root.invalidate();
   }
 };

@@ -11,23 +11,24 @@ var engine = require('engine'),
     Class = engine.Class;
 
 function Pane(game, settings) {
-  Panel.call(this, game, true);
+  Panel.call(this, game, true, settings.constraint || Layout.CENTER);
 
   this.settings = Class.mixin(settings, {
     padding: [0],
     margin: [0],
     layout: {
-      ax: Layout.LEFT,
-      ay: Layout.TOP,
-      direction: Layout.VERTICAL,
-      gap: 0,
-      columns: 3,
-      stretch: true
+      type: 'stack'
     },
-    bg: {
-      fillAlpha: 1.0,
-      color: 0x000000
-    }
+    bg: false
+    // layout: {
+    //   type: 'flow',
+    //   ax: Layout.LEFT,
+    //   ay: Layout.TOP,
+    //   direction: Layout.VERTICAL,
+    //   gap: 0,
+    //   columns: 3,
+    //   stretch: true
+    // },
   });
 
   // layout
@@ -52,18 +53,20 @@ function Pane(game, settings) {
         this.settings.layout.gap[0],
         this.settings.layout.gap[1]);
       break;
-    default:
+    case 'flow':
       this.layout = new FlowLayout(
         this.settings.layout.ax, this.settings.layout.ay,
         this.settings.layout.direction, this.settings.layout.gap);
       break;
+    default:
+      throw Error('Pane requres a layout type');
+      break;
   }
 
-  // set constraint
-  if(this.settings.constraint) {
-    this.constraint = this.settings.constraint;
-  }
-  
+  // set padding and margin
+  this.setPadding.apply(this, this.settings.padding);
+  this.setMargin.apply(this, this.settings.margin);
+
   // set size
   if(this.settings.width || this.settings.height) {
     this.setPreferredSize(
@@ -71,12 +74,9 @@ function Pane(game, settings) {
       this.settings.height);
   }
 
-  this.setPadding.apply(this, this.settings.padding);
-  this.setMargin.apply(this, this.settings.margin);
-
   // bg
   if(this.settings.bg) {
-    this.bg = new BackgroundView(game, this.settings.bg);
+    this.bg = new BackgroundView(this.game, this.settings.bg);
     this.addView(this.bg);
   }
 };

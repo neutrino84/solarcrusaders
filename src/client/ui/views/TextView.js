@@ -1,12 +1,10 @@
 
 var engine = require('engine'),
-    View = require('../View'),
     Sprite = engine.Sprite,
     Class = engine.Class;
 
 function TextView(game, text, settings) {
   Sprite.call(this, game);
-  View.call(this);
 
   this.defaultFont = settings && settings.fontName ? settings.fontName : 'medium';
   this.fonts = {
@@ -58,7 +56,17 @@ function TextView(game, text, settings) {
 
 // multiple inheritence
 TextView.prototype = Object.create(engine.Sprite.prototype);
-TextView.prototype.mixinPrototype(View.prototype);
 TextView.prototype.constructor = TextView;
+
+TextView.prototype.paint = function() {
+  var parent = this.parent,
+      settings = this.settings,
+      padding = parent.padding,
+      margin = parent.margin,
+      left = margin.left,
+      top = margin.top;
+  
+  this.position.set(margin.left + padding.left, margin.top + padding.top);
+};
 
 module.exports = TextView;

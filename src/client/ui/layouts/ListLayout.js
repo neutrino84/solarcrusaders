@@ -71,8 +71,8 @@ ListLayout.prototype.doLayout = function(target) {
         py += d.height + gy;
       }
 
-      a.setLocation(px, py);
-      a.setSize(d.width, d.height);
+      a.location(px, py);
+      a.resize(d.width, d.height);
 
       px += d.width + gx;
     }

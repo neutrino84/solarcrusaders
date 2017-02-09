@@ -1,6 +1,6 @@
 
 var engine = require('engine'),
-    Panel = require('../Panel'),
+    Pane = require('./Pane'),
     Label = require('./Label'),
     StackLayout = require('../layouts/StackLayout'),
     BackgroundView = require('../views/BackgroundView'),
@@ -8,18 +8,15 @@ var engine = require('engine'),
     Class = engine.Class;
 
 function Button(game, settings) {
-  Panel.call(this, game, new StackLayout());
-
-  // default styles
-  this.settings = Class.mixin(settings, {
-    padding: [0],
-    margin: [0],
-    bg: false,
+  Pane.call(this, game, Class.mixin(settings, {
     label: {
       text: '',
       bg: false
+    },
+    bg: {
+      alpha: 0.5,
     }
-  });
+  }));
 
   if(this.settings.alert) {
     this._alert = true;
@@ -33,49 +30,26 @@ function Button(game, settings) {
     this._selected = true;
   }
 
-  // set constraint
-  if(this.settings.constraint) {
-    this.constraint = this.settings.constraint;
-  }
-  
-  // set size
-  if(this.settings.width || this.settings.height) {
-    this.setPreferredSize(
-      this.settings.width,
-      this.settings.height);
-  }
-
-  this.setPadding.apply(this, this.settings.padding);
-  this.setMargin.apply(this, this.settings.margin);
-
   // bg
-  if(this.settings.bg) {
-    this.bg = new BackgroundView(game, this.settings.bg);
-    this.bg.alpha = Button.REGULAR_ALPHA;
+  this.bg.alpha = this.settings.alpha;
 
-    // input handler
-    this.input = new engine.InputHandler(this.bg);
+  // input handler
+  this.input = new engine.InputHandler(this.bg);
 
-    // event handling
-    this.bg.on('inputOver', this._inputOver, this);
-    this.bg.on('inputOut', this._inputOut, this);
-    this.bg.on('inputDown', this._inputDown, this);
-    this.bg.on('inputUp', this._inputUp, this);
-
-    // build button
-    this.addView(this.bg);
-  }
+  // event handling
+  this.bg.on('inputOver', this._inputOver, this);
+  this.bg.on('inputOut', this._inputOut, this);
+  this.bg.on('inputDown', this._inputDown, this);
+  this.bg.on('inputUp', this._inputUp, this);
 
   if(this.settings.label) {
     this.label = new Label(game, this.settings.label);
-    this.addPanel(Layout.STRETCH, this.label);
+    this.addPanel(this.label);
   }
 };
 
-Button.prototype = Object.create(Panel.prototype);
+Button.prototype = Object.create(Pane.prototype);
 Button.prototype.constructor = Button;
-
-Button.REGULAR_ALPHA = 0.9;
 
 Button.prototype.start = function() {
   this.bg.inputEnabled = true;
@@ -91,7 +65,7 @@ Button.prototype.alert = function(value) {
 };
 
 Button.prototype.tint = function(value) {
-  this._tint = value;
+  this.bg.tint = value;
 };
 
 Button.prototype.disabled = function(value) {
@@ -101,7 +75,7 @@ Button.prototype.disabled = function(value) {
     this.bg.alpha = 0.8;
   } else {
     this.start();
-    this.bg.alpha = Button.REGULAR_ALPHA;
+    this.bg.alpha = this.settings.alpha;
   }
 };
 
@@ -126,7 +100,7 @@ Button.prototype._inputOver = function() {
 Button.prototype._inputOut = function() {
   if(this._disabled) { return false; }
   if(this.settings.bg) {
-    this.bg.alpha = Button.REGULAR_ALPHA;
+    this.bg.alpha = this.settings.alpha;
   }
   return true;
 };

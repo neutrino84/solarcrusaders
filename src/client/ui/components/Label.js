@@ -1,83 +1,57 @@
 
 var engine = require('engine'),
-    Panel = require('../Panel'),
+    Pane = require('./Pane'),
     TextView = require('../views/TextView'),
-    BackgroundView = require('../views/BackgroundView'),
     Class = engine.Class;
 
 function Label(game, settings) {
-  Panel.call(this, game, this, settings.constraint);
-
-  this.settings = Class.mixin(settings, {
-    padding: [0],
-    margin: [0],
+  Pane.call(this, game, Class.mixin(settings, {
     color: 0xFFFFFF,
-    text: {},
-    align: 'left'
-  });
-
-  this.setPadding.apply(this, this.settings.padding);
-  this.setMargin.apply(this, this.settings.margin);
-
-  if(this.settings.bg) {
-    this.bg = new BackgroundView(game, this.settings.bg);
-    this.addView(this.bg);
-  }
+    align: 'left',
+    string: '',
+    bg: false,
+    text: {}
+  }));
   
-  this.textView = new TextView(game, this.settings.string, this.settings.text);
-  this.textView.tint = this.settings.color;
+  this.label = new TextView(game, this.settings.string, this.settings.text);
+  this.label.tint = this.settings.color;
+
+  this.setPreferredSize(this.label.width, this.label.height);
   
-  this.addView(this.textView);
+  this.addView(this.label);
 };
 
-Label.prototype = Object.create(Panel.prototype);
+Label.prototype = Object.create(Pane.prototype);
 Label.prototype.constructor = Label;
-
-Label.prototype.calcPreferredSize = function(target) {
-  return {
-    width: this.textView.width,
-    height: this.textView.height
-  };
-};
-
-Label.prototype.doLayout = function(target) {
-  var left = this.left,
-      settings = this.settings;
-  if(settings.align === 'right') {
-    left = this.size.width-this.textView.width-this.right;
-  } else if(settings.align === 'center') {
-    left = global.Math.floor(this.size.width/2-(this.textView.width/2));
-  }
-  this.textView.position.set(left, this.top);
-};
 
 Object.defineProperty(Label.prototype, 'blendMode', {
   get: function() {
-    return this.textView.blendMode;
+    return this.label.blendMode;
   },
 
   set: function(value) {
-    this.textView.blendMode = value;
+    this.label.blendMode = value;
   }
 });
 
 Object.defineProperty(Label.prototype, 'tint', {
   get: function() {
-    return this.textView.tint;
+    return this.label.tint;
   },
 
   set: function(value) {
-    this.textView.tint = value;
+    this.label.tint = value;
   }
 });
 
 Object.defineProperty(Label.prototype, 'text', {
   get: function() {
-    return this.textView.font.text;
+    return this.label.font.text;
   },
 
   set: function(value) {
-    this.textView.font.text = value.toString();
+    this.label.font.text = value.toString();
+    this.setPreferredSize(this.label.width, this.label.height);
   }
 });
 

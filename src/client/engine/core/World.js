@@ -23,6 +23,8 @@ World.prototype.boot = function() {
   this.static = new Group(this.game, this.game.stage);
   this.background = new Group(this.game, this.game.stage);
   this.foreground = new Group(this.game, this.game.stage);
+  this.front = new Group(this.game, this.game.stage);
+  this.ui = new Group(this.game, this.game.stage);
   
   // create camera
   this.camera = new Camera(this.game, 0, 0, this.game.width, this.game.height);
@@ -76,7 +78,7 @@ World.prototype.stateChange = function() {
 };
 
 World.prototype.shutdown = function() {
-  this.destroy(true, true);
+  //..
 };
 
 module.exports = World;

@@ -81,7 +81,7 @@ Panel.prototype.validate = function() {
 };
 
 Panel.prototype.repaint = function() {
-  this.paint();
+  this.paint(this);
 
   if(this.visible === true) {
     for(var i=0; i<this.panels.length; i++) {
@@ -148,7 +148,7 @@ Panel.prototype.setPadding = function(top, left, bottom, right) {
   return this;
 };
 
-Panel.prototype.setSize = function(width, height) {
+Panel.prototype.resize = function(width, height) {
   if(width != this.size.width || height != this.size.height) {
     this.size.width = width;
     this.size.height = height;
@@ -159,7 +159,7 @@ Panel.prototype.setSize = function(width, height) {
   return this;
 };
 
-Panel.prototype.setLocation = function(xx, yy) {
+Panel.prototype.location = function(xx, yy) {
   if(xx != this.x || this.y != yy) {
     this.position.x = xx;
     this.position.y = yy;
@@ -170,22 +170,13 @@ Panel.prototype.setLocation = function(xx, yy) {
   }
 };
 
-// Panel.prototype.getAbsoluteLocation = function () {
-//   var absLocation;
-//   if (this.parent instanceof Panel)
-//   {
-//     absLocation = this.parent.getAbsoluteLocation();
-//     absLocation.x += this.position.x;
-//     absLocation.y += this.position.y;
-//   } else
-//     absLocation = this.position.clone();
-//   return absLocation;
-// };
-
 Panel.prototype.setPreferredSize = function(width, height) {
   if(width != this.psWidth || height != this.psHeight) {
     this.psWidth = width;
     this.psHeight = height;
+
+    this.size.width = width;
+    this.size.height = height;
   }
 };
 
@@ -193,15 +184,14 @@ Panel.prototype.getPreferredSize = function() {
   if(this.cachedWidth < 0) {
     var ps = (this.psWidth < 0 || this.psHeight < 0) ? this.layout.calcPreferredSize(this) : { width: 0, height: 0 };
 
-    ps.width = this.psWidth >= 0 ? this.psWidth : ps.width + this.left + this.right;
-    ps.height = this.psHeight >= 0 ? this.psHeight : ps.height + this.top + this.bottom;
+        ps.width = this.psWidth >= 0 ? this.psWidth + this.left + this.right : ps.width + this.left + this.right;
+        ps.height = this.psHeight >= 0 ? this.psHeight + this.top + this.bottom : ps.height + this.top + this.bottom;
     
-    this.cachedWidth  = ps.width;
+    this.cachedWidth = ps.width;
     this.cachedHeight = ps.height;
 
     return ps;
   }
-
   return {
     width: this.cachedWidth,
     height: this.cachedHeight
@@ -211,7 +201,8 @@ Panel.prototype.getPreferredSize = function() {
 Panel.prototype.destroy = function() {
   engine.Group.prototype.destroy.call(this);
 
-  this.layout = this.margin = this.padding = undefined;
+  this.layout = this.margin =
+    this.padding = undefined;
   
   this.views = [];
   this.panels = [];

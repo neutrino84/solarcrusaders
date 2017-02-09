@@ -66,7 +66,7 @@ FlowLayout.prototype.doLayout = function(target) {
             offset = psSize.height - d.height;
           }
 
-          a.setLocation(px, py + offset);
+          a.location(px, py + offset);
           px += (d.width + this.gap);
         } else {
           if(constraint === Layout.STRETCH) {
@@ -77,20 +77,20 @@ FlowLayout.prototype.doLayout = function(target) {
             offset = psSize.width - d.width;
           }
 
-          a.setLocation(px + offset, py);
+          a.location(px + offset, py);
           py += d.height + this.gap;
         }
 
-        a.setSize(d.width, d.height);
+        a.resize(d.width, d.height);
         lastOne = a;
     }
   }
 
   if(lastOne !== null && this.stretchLast === true) {
     if(this.direction === Layout.HORIZONTAL) {
-      lastOne.setSize(target.size.width - lastOne.x - target.right, lastOne.size.height);
+      lastOne.resize(target.size.width - lastOne.x - target.right, lastOne.size.height);
     } else {
-      lastOne.setSize(lastOne.width, target.size.height - lastOne.y - target.bottom);
+      lastOne.resize(lastOne.width, target.size.height - lastOne.y - target.bottom);
     }
   }
 };

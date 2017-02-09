@@ -75,7 +75,8 @@ function Hud(ship, settings) {
     this.settings.layout.ax, this.settings.layout.ay,
     this.settings.layout.direction, this.settings.layout.gap);
 
-  this.setSize(this.settings.width, this.settings.height);
+  this.resize(this.settings.width, this.settings.height);
+  
   this.setPadding.apply(this, this.settings.padding);
   this.setBorder.apply(this, this.settings.border);
 };

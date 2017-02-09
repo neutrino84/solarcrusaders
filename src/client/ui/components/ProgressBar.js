@@ -6,47 +6,64 @@ var engine = require('engine'),
 
 function ProgressBar(game, settings) {
   Pane.call(this, game, Class.mixin(settings, {
-    width: 256,
-    height: 16,
-    padding: [0],
-    margin: [0],
-    layout: {
-      type: 'stack'
+    bg: {
+      color: 0x000000
     },
     label: {
-      padding: [0],
-      margin: [0],
       text: {
         fontName: 'small'
       },
-      align: 'center'
-    },
-    bg: {
-      color: 0x3f6fbf
+      bg: false
     },
     progress: {
-      fillAlpha: 1.0,
       color: 0xffffff,
-      borderSize: 0.0
+      modifier: {
+        left: 1.0,
+        top: 1.0,
+        width: 1.0,
+        height: 1.0
+      }
     }
   }));
 
-  this.progress = new BackgroundView(game, Class.mixin(
-    this.settings.progress, {
-      size: { width: 0, height: this.settings.height }
-    }
-  ));
+  // progress modifer
+  this.modifier = this.settings.progress.modifier;
 
-  // build button
+  // create progress bar
+  this.progress = new BackgroundView(game, this.settings.progress);
+  this.progress.modifier = this.modifier;
+
+  this.progressTween = this.game.tweens.create(this.progress.modifier);
+  this.progressTween.onUpdateCallback(this.progress.paint, this.progress);
+
+  if(this.settings.change) {
+    this.change = new BackgroundView(game, this.settings.change);
+    this.addView(this.change);
+  }
+
+  // add progress bar
   this.addView(this.progress);
 };
 
 ProgressBar.prototype = Object.create(Pane.prototype);
 ProgressBar.prototype.constructor = ProgressBar;
 
-ProgressBar.prototype.amount = function(value) {
-  this.progress.settings.size.width = (this.settings.width - this.left - this.right) * value;
+ProgressBar.prototype.change = function(key, value) {
+  // var change = {};
+  //     change[key] = value;
+
+  this.modifier[key] = value;
   this.progress.paint();
+
+  // if(!this.progressTween.isRunning) {
+  //   console.log('from', this.modifier.width);
+  //   this.progressTween.to(change, 50);
+  //   this.progressTween.start();
+  // }
+};
+
+ProgressBar.prototype.paint = function() {
+  this.bg.paint();
 };
 
 module.exports = ProgressBar;

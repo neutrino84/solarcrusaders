@@ -18,9 +18,9 @@ function EnhancementPane(game, settings) {
     layout: {
       type: 'flow',
       ax: Layout.CENTER, 
-      ay: Layout.CENTER,
+      ay: Layout.BOTTOM,
       direction: Layout.HORIZONTAL, 
-      gap: 3
+      gap: 4
     },
     bg: false
   });
@@ -51,9 +51,6 @@ EnhancementPane.prototype.constructor = EnhancementPane;
 EnhancementPane.prototype.create = function(enhancement, key) {
   var game = this.game,
       label = new Label(game, {
-        constraint: Layout.USE_PS_SIZE,
-        string: '1',
-        align: 'center',
         text: {
           fontName: 'medium'
         },
@@ -61,17 +58,10 @@ EnhancementPane.prototype.create = function(enhancement, key) {
       }),
       button = new ButtonIcon(game, {
         constraint: Layout.CENTER,
-        width: 38,
-        height: 38,
+        width: 34,
+        height: 34,
         padding: [0],
         margin: [0],
-        layout: {
-          type: 'flow',
-          ax: Layout.CENTER, 
-          ay: Layout.CENTER,
-          direction: Layout.VERTICAL,
-          gap: 0
-        },
         bg: {
           fillAlpha: 0.10,
           color: 0xFFFFFF
@@ -113,16 +103,14 @@ EnhancementPane.prototype._started = function(data) {
     button.count = global.parseInt(config['basic'].cooldown);
     button.label.text = button.count;
     button.label.visible = true;
-    button.layout.doLayout(button);
-    button.label.doLayout();
+    // button.parent.invalidate(button);
 
     // timer
     this.timer && this.game.clock.events.remove(this.timer);
     this.timer = this.game.clock.events.repeat(1000, button.count,
       function() {
         button.label.text = (--button.count).toString();
-        button.layout.doLayout(button);
-        button.label.doLayout();
+        // button.parent.invalidate(button);
       });
   }
 };
@@ -160,14 +148,14 @@ EnhancementPane.prototype._player = function(player) {
 
     container = new Pane(this.game, {
       constraint: Layout.CENTER,
-      width: 38,
-      height: 38,
+      width: 34,
+      height: 34,
       layout: {
         type: 'stack'
       },
       bg: {
-        fillAlpha: 0.10,
-        color: 0xFFFFFF
+        fillAlpha: 0.5,
+        color: 0x000000
       },
     });
 
@@ -181,7 +169,6 @@ EnhancementPane.prototype._player = function(player) {
 
       container.addPanel(button);
     }
-    
 
     this.addPanel(container);
     
@@ -199,7 +186,7 @@ EnhancementPane.prototype._player = function(player) {
   //   button && this._select(button);
   // }, this);
 
-  this.parent.parent.parent.invalidate();
+  this.parent.parent.invalidate();
 };
 
 module.exports = EnhancementPane;

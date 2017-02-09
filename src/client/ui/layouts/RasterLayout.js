@@ -58,7 +58,7 @@ RasterLayout.prototype.doLayout = function(target) {
         }
       }
 
-      child.setSize(ww, hh);
+      child.resize(ww, hh);
 
       if(child.constraint) {
         x = child.x;
@@ -81,7 +81,7 @@ RasterLayout.prototype.doLayout = function(target) {
           }
         }
 
-        child.setLocation(x, y);
+        child.location(x, y);
       }
     }
   }

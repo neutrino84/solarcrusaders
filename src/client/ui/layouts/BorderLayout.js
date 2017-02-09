@@ -73,14 +73,14 @@ BorderLayout.prototype.doLayout = function(target) {
         case Layout.CENTER: center = child; break;
         case Layout.TOP :
           var ps = child.getPreferredSize();
-          child.setLocation(left, top);
-          child.setSize(right - left, ps.height);
+          child.location(left, top);
+          child.resize(right - left, ps.height);
           top += ps.height + this.vgap;
           break;
         case Layout.BOTTOM:
           var ps = child.getPreferredSize();
-          child.setLocation(left, bottom - ps.height);
-          child.setSize(right - left, ps.height);
+          child.location(left, bottom - ps.height);
+          child.resize(right - left, ps.height);
           bottom -= ps.height + this.vgap;
           break;
         case Layout.LEFT: west = child; break;
@@ -92,21 +92,21 @@ BorderLayout.prototype.doLayout = function(target) {
 
   if(east != undefined) {
     d = east.getPreferredSize();
-    east.setLocation(right - d.width, top);
-    east.setSize(d.width, bottom - top);
+    east.location(right - d.width, top);
+    east.resize(d.width, bottom - top);
     right -= d.width + this.hgap;
   }
 
   if(west != undefined) {
     d = west.getPreferredSize();
-    west.setLocation(left, top);
-    west.setSize(d.width, bottom - top);
+    west.location(left, top);
+    west.resize(d.width, bottom - top);
     left += d.width + this.hgap;
   }
 
   if(center != undefined) {
-    center.setLocation(left, top);
-    center.setSize(right - left, bottom - top);
+    center.location(left, top);
+    center.resize(right - left, bottom - top);
   }
 };
 

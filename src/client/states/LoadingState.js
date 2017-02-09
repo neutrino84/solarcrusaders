@@ -25,57 +25,59 @@ LoadingState.prototype.create = function() {
   game.states.add('sector', sectorState);
   game.states.start('sector');
 
-  // this.image = new Image(game, {
-  //   margin: [10],
-  //   padding: [10],
-  //   key: 'loading',
-  //   bg: {
-  //     color: 0xFFFFFF
-  //   }
-  // });
+  this.image = new Image(game, {
+    margin: [10],
+    key: 'loading'
+  });
 
-  // this.progress = new ProgressBar(game, {
-  //   constraint: Layout.CENTER,
-  //   width: 162,
-  //   height: 8
-  // });
+  this.progress = new ProgressBar(game, {
+    width: 162,
+    height: 8,
+    margin: [10],
+    bg: {
+      color: 0x333333
+    },
+    progress: {
+      color: 0xffffff,
+      modifier: {
+        left: 1.0,
+        top: 1.0,
+        width: 0.0,
+        height: 1.0
+      }
+    }
+  });
 
-  // this.status = new Label(game, {
-  //   constraint: Layout.CENTER,
-  //   margin: [5],
-  //   string: 'Loading',
-  //   bg: {
-  //     fillAlpha: 0.0,
-  //     borderSize: 0.0
-  //   },
-  //   text: { fontName: 'small' }
-  // });
+  this.status = new Label(game, {
+    margin: [0],
+    string: 'preparing to load game',
+    text: { fontName: 'small' }
+  });
 
-  // this.root = new Pane(game, {
-  //   layout: {
-  //     type: 'flow',
-  //     ax: Layout.CENTER,
-  //     ay: Layout.CENTER,
-  //     direction: Layout.VERTICAL
-  //   },
-  //   bg: { color: 0x000000 }
-  // });
-
-  // set base size
-  // this.root.resize(game.width, game.height);
+  this.root = new Pane(game, {
+    width: game.width,
+    height: game.height,
+    layout: {
+      type: 'flow',
+      ax: Layout.CENTER,
+      ay: Layout.CENTER,
+      direction: Layout.VERTICAL
+    },
+    bg: { color: 0x000000 }
+  });
 
   // add ui elements
-  // this.root.addPanel(this.image);
-  // this.root.addPanel(this.progress);
-  // this.root.addPanel(this.status);
+  this.root.addPanel(this.image);
+  this.root.addPanel(this.progress);
+  this.root.addPanel(this.status);
 
-  // force redraw
-  // this.root.invalidate();
+  // invalidate
+  this.root.invalidate();
 
   // add event listeners
-  // game.load.on('loadstart', this.loadingStart, this);
-  // game.load.on('loadcomplete', this.loadingComplete, this);
-  // game.load.on('filecomplete', this.loadingProgressBar, this);
+  game.load.on('loadstart', this.loadingStart, this);
+  game.load.on('loadcomplete', this.loadingComplete, this);
+  game.load.on('filecomplete', this.loadingProgressBar, this);
 };
 
 LoadingState.prototype.loadingStart = function() {
@@ -87,19 +89,19 @@ LoadingState.prototype.loadingProgressBar = function() {
   var loaded = arguments[3],
       total = arguments[4],
       file = arguments[1];
-  this.progress.amount(loaded/total);
+  this.progress.change('width', loaded/total);
   this.status.text = file;
   this.root.invalidate();
 };
 
 LoadingState.prototype.loadingComplete = function() {
   // fade out animation
-  this.image.visible = false;
-  this.progress.visible = false;
-  this.status.visible = false;
+  // this.image.visible = false;
+  // this.progress.visible = false;
+  // this.status.visible = false;
 
   this.tween = this.game.tweens.create(this.root);
-  this.tween.to({ alpha: 0.0 }, 3000);
+  this.tween.to({ alpha: 0.0 }, 250);
   this.tween.delay(0);
   this.tween.start();
   this.tween.once('complete', function() {
@@ -116,6 +118,7 @@ LoadingState.prototype.resize = function(width, height) {
 
 LoadingState.prototype.shutdown = function() {
   //.. properly destroy
+  console.log('shutdown');
 };
 
 module.exports = LoadingState;

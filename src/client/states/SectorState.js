@@ -26,7 +26,7 @@ SectorState.prototype.init = function(args) {
   this.shipNetManager.init();
 
   // instanciate ui
-  // this.ui = new UI(this.game);
+  this.ui = new UI(this.game);
 
   // this.scrollLock = false;
   this.game.stage.disableVisibilityChange = true;
@@ -34,7 +34,7 @@ SectorState.prototype.init = function(args) {
 
 SectorState.prototype.preload = function() {
   // preload ui
-  // this.ui.preload();
+  this.ui.preload();
 
   // load background
   this.game.load.image('space', 'imgs/game/space/sector-a.jpg');
@@ -109,7 +109,7 @@ SectorState.prototype.create = function() {
   // }
 
   // create ui
-  // this.ui.create();
+  this.ui.create();
 
   // notify
   // this.game.emit('gui/focus/retain', this);
@@ -146,11 +146,11 @@ SectorState.prototype.createManagers = function() {
 
 SectorState.prototype.createSnow = function() {
   this.snow = new Snow(this.game, this.game.width, this.game.height);
-  this.game.stage.addChild(this.snow);
+  this.game.world.front.add(this.snow);
 };
 
 SectorState.prototype.createAsteroids = function() {
-  var asteroid, amount = 80;
+  var asteroid, amount = 30;
   for(var i=0; i<amount; i++) {
     asteroid = new Asteroid(this.game);
     asteroid.position.set(2048 / 4, 2048 / 4);
@@ -204,7 +204,7 @@ SectorState.prototype.preRender = function() {
 SectorState.prototype.resize = function(width, height) {
   this.space && this.space.resize(width, height);
   this.snow && this.snow.resize(width, height);
-  // this.ui && this.ui.resize(width, height);
+  this.ui && this.ui.resize(width, height);
 };
 
 // paused = function() {};

@@ -1,49 +1,30 @@
 
 var engine = require('engine'),
-    Panel = require('../Panel'),
+    Pane = require('./Pane'),
+    Layout = require('../Layout'),
     ImageView = require('../views/ImageView'),
     BackgroundView = require('../views/BackgroundView'),
     Class = engine.Class;
 
-function Image(game, key, settings) {
-  Panel.call(this, game, this, settings.constraint);
+function Image(game, settings) {
+  Pane.call(this, game, Class.mixin(settings, {
+    key: 'texture-atlas'
+  }));
 
-  this.settings = Class.mixin(settings, {
-    padding: [0],
-    margin: [0]
-  });
+  this.image = new ImageView(game, this.settings.key, this.settings.frame);
 
-  this.setPadding.apply(this, this.settings.padding);
-  this.setMargin.apply(this, this.settings.margin);
-
-  this.image = new ImageView(game, key, settings.frame);
-
-  if(settings.width || settings.height) {
-    this.image.width = settings.width;
-    this.image.height = settings.height;
+  if(this.settings.width || this.settings.height) {
+    this.image.width = this.settings.width;
+    this.image.height = this.settings.height;
   }
-  
-  if(settings.bg) {
-    this.bg = new BackgroundView(game, settings.bg);
-    this.addView(this.bg);
-  }
+
+  this.setPreferredSize(this.image.width, this.image.height);
 
   this.addView(this.image);
 };
 
-Image.prototype = Object.create(Panel.prototype);
+Image.prototype = Object.create(Pane.prototype);
 Image.prototype.constructor = Image;
-
-Image.prototype.calcPreferredSize = function(target) {
-  return {
-    width: this.image.width,
-    height: this.image.height
-  };
-};
-
-Image.prototype.doLayout = function() {
-  this.image.position.set(this.left, this.top);
-};
 
 Object.defineProperty(Image.prototype, 'blendMode', {
   set: function(value) {
