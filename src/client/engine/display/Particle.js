@@ -97,7 +97,6 @@ Particle.prototype.update = function() {
   // check if dead
   if(this.elapsed >= this.lifespan) {
     this.visible = false;
-    this.exists = false;
     this.renderable = false;
   }
 };
@@ -133,7 +132,6 @@ Particle.prototype.reset = function(x, y) {
   this.started = this.clock.time;
 
   this.visible = true;
-  this.exists = true;
   this.renderable = true;
 
   this.alpha = 1.0;
