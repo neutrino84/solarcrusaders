@@ -8,7 +8,6 @@ function Pointer(game, id, mode) {
   this.id = id;
   
   this.type = Const.POINTER;
-  this.exists = true;
   this.identifier = 0;
 
   this.pointerId = null;
