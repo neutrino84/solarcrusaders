@@ -122,14 +122,14 @@ Open a web browser and navigate to http://play.localhost.dev:4567/
 
     sudo vim /etc/pf.conf
 
-    dummynet-anchor "mop"
-    anchor "mop"
+        dummynet-anchor "mop"
+        anchor "mop"
 
     echo "dummynet in quick proto tcp from any to any port 4567 pipe 1" | sudo pfctl -a mop -f -
     echo "dummynet out quick proto tcp from any to any port 4567 pipe 2" | sudo pfctl -a mop -f -
 
-    sudo dnctl pipe 1 config delay 25ms bw 50Mbit/s plr 0.01
-    sudo dnctl pipe 2 config delay 25ms bw 50Mbit/s plr 0.01
+    sudo dnctl pipe 1 config delay 80ms bw 10Mbit/s plr 0.01
+    sudo dnctl pipe 2 config delay 80ms bw 10Mbit/s plr 0.01
 
 ## Start
 
