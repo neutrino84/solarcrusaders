@@ -181,9 +181,9 @@ Energy.prototype.update = function() {
 Energy.prototype.destroy = function() {
   this.isRunning && this.stop();
 
-  this.strip.destroy();
-  this.glow.destroy();
-  this.energy.destroy();
+  this.strip.destroy({ children: true, texture: true });
+  this.glow.destroy({ children: true, texture: true });
+  this.energy.destroy({ children: true, texture: true });
 
   this.hardpoint = this.game = 
     this.data = this.clock = this._start =
