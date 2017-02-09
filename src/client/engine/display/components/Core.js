@@ -67,14 +67,4 @@ Core.prototype = {
   update: function() {},
 };
 
-Object.defineProperty(Core.prototype, 'exists', {
-  get: function() {
-    return this.visible;
-  },
-
-  set: function(value) {
-    this.visible = value;
-  }
-});
-
 module.exports = Core;
