@@ -115,7 +115,7 @@ Emitter.prototype.update = function() {
 
   var i = this.children.length;
   while(i--) {
-    if(this.children[i].exists) {
+    if(this.children[i].visible) {
       this.children[i].update();
     }
   }
@@ -148,8 +148,6 @@ Emitter.prototype.makeParticles = function(keys, frames, quantity, collide, coll
     }
 
     particle = new this.particleClass(this.game, rndKey, rndFrame);
-
-    particle.exists = false;
     particle.visible = false;
 
     // delete this eventually
@@ -170,11 +168,11 @@ Emitter.prototype.makeParticles = function(keys, frames, quantity, collide, coll
 
 Emitter.prototype.kill = function() {
   this.on = false;
-  this.exists = false;
+  this.visible = false;
 };
 
 Emitter.prototype.revive = function() {
-  this.exists = true;
+  this.visible = true;
 };
 
 Emitter.prototype.explode = function(quantity) {
@@ -235,7 +233,7 @@ Emitter.prototype.start = function(explode, lifespan, frequency, quantity) {
 
 Emitter.prototype.emitParticle = function() {
   var frame,
-      particle = this.getFirstExists(false);
+      particle = this.getFirstVisible(false);
 
   if(particle === null) {
     return false;
