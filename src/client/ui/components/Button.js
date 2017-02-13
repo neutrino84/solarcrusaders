@@ -3,35 +3,25 @@ var engine = require('engine'),
     Pane = require('./Pane'),
     Label = require('./Label'),
     StackLayout = require('../layouts/StackLayout'),
-    BackgroundView = require('../views/BackgroundView'),
     ColorBlend = require('../helpers/ColorBlend'),
     Class = engine.Class;
 
 function Button(game, settings) {
   Pane.call(this, game, Class.mixin(settings, {
-    label: {
-      text: '',
-      bg: false
-    },
+    label: false,
     bg: {
-      alpha: 0.5,
+      alpha: {
+        enabled: 1.0,
+        disabled: 1.0,
+        over: 1.0,
+        down: 1.0,
+        up: 1.0
+      }
     }
   }));
 
-  if(this.settings.alert) {
-    this._alert = true;
-  }
-
-  if(this.settings.disabled) {
-    this._disabled = true;
-  }
-
-  if(this.settings.selected) {
-    this._selected = true;
-  }
-
-  // bg
-  this.bg.alpha = this.settings.alpha;
+  this._alert = false;
+  this._disabled = false;
 
   // input handler
   this.input = new engine.InputHandler(this.bg);
@@ -41,6 +31,10 @@ function Button(game, settings) {
   this.bg.on('inputOut', this._inputOut, this);
   this.bg.on('inputDown', this._inputDown, this);
   this.bg.on('inputUp', this._inputUp, this);
+
+  this.bg.alpha = this._disabled ? 
+    this.settings.bg.alpha.disabled :
+    this.settings.bg.alpha.enabled;
 
   if(this.settings.label) {
     this.label = new Label(game, this.settings.label);
@@ -53,7 +47,6 @@ Button.prototype.constructor = Button;
 
 Button.prototype.start = function() {
   this.bg.inputEnabled = true;
-  this.bg.input.priorityID = 200;
 };
 
 Button.prototype.stop = function() {
@@ -64,45 +57,34 @@ Button.prototype.alert = function(value) {
   this._alert = value;
 };
 
-Button.prototype.tint = function(value) {
-  this.bg.tint = value;
-};
-
 Button.prototype.disabled = function(value) {
   this._disabled = value;
   if(this._disabled) {
     this.stop();
-    this.bg.alpha = 0.8;
   } else {
     this.start();
-    this.bg.alpha = this.settings.alpha;
   }
+  this._inputOut();
 };
 
 Button.prototype._inputUp = function() {
-  if(this._disabled) { return false; }
-  return true;
+  this.bg.alpha = this.settings.bg.alpha.up;
 };
 
 Button.prototype._inputDown = function() {
-  if(this._disabled) { return false; }
-  return true;
+  this.bg.alpha = this.settings.bg.alpha.down;
 };
 
 Button.prototype._inputOver = function() {
-  if(this._disabled) { return false; }
-  if(this.settings.bg) {
-    this.bg.alpha = 1.0;
-  }
-  return true;
+  this.bg.alpha = this.settings.bg.alpha.over;
 };
 
 Button.prototype._inputOut = function() {
-  if(this._disabled) { return false; }
-  if(this.settings.bg) {
-    this.bg.alpha = this.settings.alpha;
+  if(this._disabled) {
+    this.bg.alpha = this.settings.bg.alpha.disabled;
+  } else {
+    this.bg.alpha = this.settings.bg.alpha.enabled;
   }
-  return true;
 };
 
 module.exports = Button;

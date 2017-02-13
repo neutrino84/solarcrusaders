@@ -5,15 +5,11 @@ function Selection(game) {
   this.game = game;
   this.world = game.world;
 
-  this.input = new engine.InputHandler(this.world);
-  this.input.start(1);
-  this.input.checkPointerOver =
-    this.input.checkPointerDown = function(pointer, fastTest) {
-      return true;
-    };
+  this.input = new engine.InputHandler(this.world.static);
+  this.input.start();
 
-  this.world.on('inputUp', this._onInput, this);
-  this.world.on('inputDown', this._onInput, this);
+  this.world.static.on('inputUp', this._onInput, this);
+  this.world.static.on('inputDown', this._onInput, this);
 };
 
 Selection.prototype.constructor = Selection;
@@ -37,8 +33,8 @@ Selection.prototype._onInput = function(world, pointer) {
 Selection.prototype.destroy = function() {
   this.input.destroy();
 
-  this.world.removeListener('onDown', this._onInput);
-  this.world.removeListener('onUp', this._onInput);
+  this.world.static.removeListener('onDown', this._onInput);
+  this.world.static.removeListener('onUp', this._onInput);
 
   this.game =
     this.input = undefined;

@@ -51,24 +51,47 @@ EnhancementPane.prototype.constructor = EnhancementPane;
 EnhancementPane.prototype.create = function(enhancement, key) {
   var game = this.game,
       label = new Label(game, {
+        constraint: Layout.USE_PS_SIZE,
         text: {
           fontName: 'medium'
         },
         bg: false
       }),
       button = new ButtonIcon(game, {
-        constraint: Layout.CENTER,
-        width: 34,
-        height: 34,
-        padding: [0],
-        margin: [0],
+        padding: [0, 0, 2, 0],
         bg: {
-          fillAlpha: 0.10,
-          color: 0xFFFFFF
+          color: 0x009999,
+          alpha: {
+            enabled: 0.5,
+            disabled: 1.0,
+            over: 0.85,
+            down: 0.85,
+            up: 0.85
+          }
         },
         icon: {
           key: 'texture-atlas',
-          frame: 'enhancement-' + enhancement + '.png'
+          frame: 'enhancement-' + enhancement + '.png',
+          width: 34,
+          height: 34,
+          bg: {
+            fillAlpha: 1.0,
+            color: 0x000000
+          },
+          alpha: {
+            enabled: 1.0,
+            disabled: 0.5,
+            over: 1.0,
+            down: 1.0,
+            up: 0.9
+          },
+          tint: {
+            enabled: 0xFFFFFF,
+            disabled: 0xFF0000,
+            over: 0xFFFFFF,
+            down: 0xFFFFFF,
+            up: 0xFFFFFF
+          }
         }
       });
 
@@ -103,14 +126,14 @@ EnhancementPane.prototype._started = function(data) {
     button.count = global.parseInt(config['basic'].cooldown);
     button.label.text = button.count;
     button.label.visible = true;
-    // button.parent.invalidate(button);
+    button.invalidate(false, true);
 
     // timer
     this.timer && this.game.clock.events.remove(this.timer);
     this.timer = this.game.clock.events.repeat(1000, button.count,
       function() {
         button.label.text = (--button.count).toString();
-        // button.parent.invalidate(button);
+        button.invalidate(false, true);
       });
   }
 };
@@ -149,14 +172,14 @@ EnhancementPane.prototype._player = function(player) {
     container = new Pane(this.game, {
       constraint: Layout.CENTER,
       width: 34,
-      height: 34,
+      height: 36,
       layout: {
         type: 'stack'
       },
       bg: {
-        fillAlpha: 0.5,
+        fillAlpha: 0.4,
         color: 0x000000
-      },
+      }
     });
 
     if(enhancement) {

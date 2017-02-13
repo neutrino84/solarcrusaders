@@ -30,7 +30,7 @@ function BottomPane(game) {
         }
       },
       bg: {
-        fillAlpha: 0.5,
+        fillAlpha: 0.4,
         color: 0x000000
       }
     },
@@ -48,7 +48,7 @@ function BottomPane(game) {
         }
       },
       bg: {
-        fillAlpha: 0.5,
+        fillAlpha: 0.4,
         color: 0x000000
       }
     }
@@ -59,8 +59,8 @@ function BottomPane(game) {
   this.energyBar = new ProgressBar(game, this.settings.energyBar);
   
   this.addPanel(this.enhancementPane);
-  this.addPanel(this.healthBar);
   this.addPanel(this.energyBar);
+  this.addPanel(this.healthBar);
 
   this.game.on('ship/player', this._player, this);
 };
