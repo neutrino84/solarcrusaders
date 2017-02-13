@@ -21,11 +21,11 @@ function ShipData(game, data) {
   engine.Class.mixin(data, this);
 
   this.game = game;
-
   this.config = {
     units: ShipData.STAT_UNITS,
     ship: game.cache.getJSON('ship-configuration', false)[data.chassis],
-    enhancement: game.cache.getJSON('item-configuration')['enhancement']
+    enhancement: game.cache.getJSON('item-configuration', false)['enhancement'],
+    hardpoint: game.cache.getJSON('item-configuration', false)['hardpoint']
   };
 
   EventEmitter.call(this);
