@@ -120,41 +120,46 @@ Group.prototype.swap = function(child1, child2) {
   this.swapChildren(child1, child2);
 };
 
-Group.prototype.remove = function(child, destroy) {
-  var destroy = destroy || false
+Group.prototype.remove = function(child, options) {
+  var options = options || false
       removed = this.removeChild(child);
-  if(destroy && removed) {
-    removed.destroy(destroy);
+  if(options && removed) {
+    removed.destroy(options);
   }
   return true;
 };
 
-Group.prototype.removeAll = function(destroy) {
+Group.prototype.removeAll = function(options) {
   var removed,
-      destroy = destroy || false,
+      options = options || false,
       children = this.children;
   do {
-    this.remove(children[0], destroy);
+    this.remove(children[0], options);
   } while(children.length > 0);
 };
 
 Group.prototype.update = function() {
+  if(this.visible) {
+    this.renderOrderID = this.game.stage.currentRenderOrderID++;
+  } else {
+    this.renderOrderID = -1;
+  }
   var i = this.children.length;
   while (i--) {
     this.children[i].update();
   }
 };
 
-Group.prototype.destroy = function() {
-  if(this.game === null) { return; }
-
-  this.removeAll();
+Group.prototype.destroy = function(options) {
+  this.removeAll(options);
 
   if(this.parent) {
     this.parent.removeChild(this);
   }
 
   this.game = null;
+
+  pixi.Container.destroy.call(this, options);
 };
 
 module.exports = Group;
