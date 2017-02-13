@@ -125,9 +125,9 @@ Open a web browser and navigate to http://play.localhost.dev:4567/
     brew install ffmpeg --enable-libmp3lame
 
 
-#### Traffic Shaping on Mac OSX
+## Traffic Shaping on Mac OSX
 
-## You may need to enable firewall in your security configuration settings
+#### You may need to enable firewall in your security configuration settings
 
     sudo vim /etc/pf.conf
 
@@ -140,16 +140,16 @@ Open a web browser and navigate to http://play.localhost.dev:4567/
     sudo dnctl pipe 1 config delay 80ms bw 10Mbit/s plr 0.02
     sudo dnctl pipe 2 config delay 40ms bw 20Mbit/s plr 0.01
 
-## Start
+#### Start
 
     sudo pfctl -E
 
-## Reset
+#### Reset
 
     sudo dnctl flush
     sudo pfctl -f /etc/pf.conf
 
-## Disable
+#### Disable
 
     sudo pfctl -d
 
