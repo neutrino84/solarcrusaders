@@ -17,9 +17,6 @@ function StationManager(game) {
 
   // stations
   this.stations = {};
-
-  this.game.on('game/pause', this._pause, this);
-  this.game.on('game/resume', this._resume, this);
 }
 
 StationManager.prototype = Object.create(EventEmitter.prototype);
@@ -60,9 +57,5 @@ StationManager.prototype.destroy = function() {
 
   this.game = this.net = this.socket = undefined;
 };
-
-StationManager.prototype._resume = function() {};
-
-StationManager.prototype._pause = function() {};
 
 module.exports = StationManager;
