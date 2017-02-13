@@ -31,9 +31,9 @@ Panel.prototype.addPanel = function(panel) {
   this.add(panel);
 };
 
-Panel.prototype.removePanel = function(panel, destroy) {
+Panel.prototype.removePanel = function(panel, options) {
   this.panels.splice(this.panels.indexOf(panel), 1);
-  this.remove(panel, destroy || false);
+  this.remove(panel, options || false);
 };
 
 Panel.prototype.removeAll = function() {
