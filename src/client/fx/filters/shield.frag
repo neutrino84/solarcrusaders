@@ -86,7 +86,7 @@ float snoise(vec3 v) {
 
 void main(void) {
   vec4 tex = texture2D(uSampler, vTextureCoord);
-  vec2 p = vFilterCoord * 40.0;
+  vec2 p = vFilterCoord * 20.0;
 
   float n = 0.0;
   n += 1.0 * abs(snoise(vec3(p, time * 0.5)));
