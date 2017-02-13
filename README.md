@@ -116,6 +116,15 @@ Every time you make changes to ./solarcrusaders/src/* you will need to re-run:
 
 Open a web browser and navigate to http://play.localhost.dev:4567/
 
+#### Information on audio sprites
+
+    https://github.com/tonistiigi/audiosprite
+
+    npm install -g audiosprite
+
+    brew install ffmpeg --enable-libmp3lame
+
+
 #### Traffic Shaping on Mac OSX
 
 ## You may need to enable firewall in your security configuration settings
@@ -128,8 +137,8 @@ Open a web browser and navigate to http://play.localhost.dev:4567/
     echo "dummynet in quick proto tcp from any to any port 4567 pipe 1" | sudo pfctl -a mop -f -
     echo "dummynet out quick proto tcp from any to any port 4567 pipe 2" | sudo pfctl -a mop -f -
 
-    sudo dnctl pipe 1 config delay 80ms bw 10Mbit/s plr 0.01
-    sudo dnctl pipe 2 config delay 80ms bw 10Mbit/s plr 0.01
+    sudo dnctl pipe 1 config delay 80ms bw 10Mbit/s plr 0.02
+    sudo dnctl pipe 2 config delay 40ms bw 20Mbit/s plr 0.01
 
 ## Start
 
