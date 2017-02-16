@@ -119,7 +119,7 @@ EnhancementPane.prototype._select = function(button) {
 EnhancementPane.prototype._started = function(data) {
   var config = this.config[data.enhancement],
       button = this.buttons[data.enhancement];
-  if(data.uuid === this.player.details.uuid) {
+  if(this.player && data.uuid === this.player.details.uuid) {
     
     // disable
     button.disabled(true);
@@ -139,11 +139,11 @@ EnhancementPane.prototype._started = function(data) {
 };
 
 EnhancementPane.prototype._stopped = function(data) {
-  if(data.uuid !== this.player.details.uuid) { return; }
+  if(this.player && data.uuid !== this.player.details.uuid) { return; }
 };
 
 EnhancementPane.prototype._cancelled = function(data) {
-  if(data.uuid !== this.player.details.uuid) { return; }
+  if(this.player && data.uuid !== this.player.details.uuid) { return; }
 
   var button = this.buttons[data.enhancement];
       button.disabled(false);
