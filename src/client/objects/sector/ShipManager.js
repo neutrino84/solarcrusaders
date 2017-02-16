@@ -61,7 +61,7 @@ function ShipManager(game) {
   this.trajectoryGroup.addChild(this.trajectoryGraphics);
 
   // authentication
-  this.game.auth.on('disconnected', this._pause, this);
+  this.game.auth.on('disconnected', this._disconnectd, this);
 
   // networking
   // TODO: move to ShipNetManager... maybe not?
@@ -76,8 +76,6 @@ function ShipManager(game) {
   this.game.on('ship/player', this._player, this);
   this.game.on('ship/primary', this._primary, this);
   this.game.on('ship/secondary', this._secondary, this);
-  this.game.on('ship/follow', this._follow, this);
-  this.game.on('ship/unfollow', this._unfollow, this);
   this.game.on('ship/removed', this._removed, this);
   this.game.on('ship/disabled', this._disabled, this);
   this.game.on('ship/enabled', this._enabled, this);
@@ -96,12 +94,11 @@ ShipManager.prototype.constructor = ShipManager;
 ShipManager.prototype.create = function(data, details) {
   var game = this.game,
       container = this.shipsGroup,
-      ship = new Ship(this, details.chassis);
+      ship = new Ship(this, details);
 
   ship.uuid = data.uuid;
   ship.user = details.user;
   ship.username = details.username;
-  ship.details = details;
   ship.position.set(data.pos.x, data.pos.y);
 
   // display
@@ -139,7 +136,7 @@ ShipManager.prototype.destroy = function() {
       auth = this.game.auth,
       socket = this.socket;
 
-  auth.removeListener('disconnected', this._pause);
+  auth.removeListener('disconnected', this._disconnectd);
 
   socket.removeListener('ship/sync', this._syncBind);
   socket.removeListener('ship/attack', this._attackBind);
@@ -147,7 +144,6 @@ ShipManager.prototype.destroy = function() {
   game.removeListener('ship/player', this._player);
   game.removeListener('ship/primary', this._primary);
   game.removeListener('ship/secondary', this._secondary);
-  game.removeListener('ship/follow', this._follow);
   game.removeListener('ship/removed', this._removed);
   game.removeListener('ship/disabled', this._disabled);
   game.removeListener('ship/enabled', this._enabled);
@@ -202,6 +198,7 @@ ShipManager.prototype._sync = function(data) {
 
 ShipManager.prototype._player = function(ship) {
   this.player = ship;
+  this.game.camera.follow(ship);
 };
 
 ShipManager.prototype._attack = function(data) {
@@ -271,16 +268,6 @@ ShipManager.prototype._secondary = function(data) {
   }
 };
 
-ShipManager.prototype._follow = function(ship) {
-  if(ship.position) {
-    this.game.camera.follow(ship);
-  }
-};
-
-ShipManager.prototype._unfollow = function() {
-  this.game.camera.unfollow();
-};
-
 ShipManager.prototype._disabled = function(data) {
   var ship = this.ships[data.uuid],
       clock = this.clock;
@@ -315,6 +302,10 @@ ShipManager.prototype._resume = function() {
 };
 
 ShipManager.prototype._pause = function() {
+  //..
+};
+
+ShipManager.prototype._disconnectd = function() {
   this.removeAll();
 };
 
