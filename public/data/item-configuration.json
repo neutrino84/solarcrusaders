@@ -63,11 +63,11 @@
         "glow": "0xFF0000",
         "emitter": "red",
         "icon": "item-laser-a",
-        "range": 4096,
+        "range": 3072,
         "projection": 0.025,
         "delay": 16,
         "spread": 64,
-        "damage": 20.0,
+        "damage": 10.0,
         "length": 512,
         "spawn": 1,
         "durability": 1000.0
@@ -85,7 +85,7 @@
         "icon": "item-laser-a",
         "range": 2304,
         "projection": 0.2,
-        "delay": 16,
+        "delay": 32,
         "spread": 64,
         "damage": 2.0,
         "length": 32,
@@ -103,11 +103,11 @@
         "icon": "item-laser-a",
         "range": 2304,
         "projection": 0.2,
-        "delay": 16,
+        "delay": 32,
         "spread": 64,
         "damage": 2.0,
-        "length": 32,
-        "spawn": 3,
+        "length": 10,
+        "spawn": 2,
         "durability": 1000.0
       }
     },
@@ -120,12 +120,12 @@
         "texture": "turret-rocket-a.png",
         "icon": "item-rocket-a",
         "range": 3072,
-        "projection": 1.0,
-        "delay": 64,
-        "spread": 128,
-        "damage": 4.0,
-        "length": 64,
-        "spawn": 1,
+        "projection": 0.4,
+        "delay": 8,
+        "spread": 64,
+        "damage": 1.0,
+        "length": 8,
+        "spawn": 2,
         "durability": 1000.0
       }
     },
@@ -161,8 +161,8 @@
     "shield": {
       "basic": {
         "cost": -30,
-        "cooldown": 10,
-        "active": 5,
+        "cooldown": 20,
+        "active": 10,
         "stats": {
           "armor": {
             "value": 4
