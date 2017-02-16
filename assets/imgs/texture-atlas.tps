@@ -172,7 +172,7 @@
             <key>extrude</key>
             <uint>2</uint>
             <key>trimThreshold</key>
-            <uint>1</uint>
+            <uint>4</uint>
             <key>trimMargin</key>
             <uint>0</uint>
             <key>trimMode</key>
