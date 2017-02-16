@@ -198,8 +198,8 @@ Panel.prototype.getPreferredSize = function() {
   };
 };
 
-Panel.prototype.destroy = function() {
-  engine.Group.prototype.destroy.call(this);
+Panel.prototype.destroy = function(options) {
+  engine.Group.prototype.destroy.call(this, options);
 
   this.layout = this.margin =
     this.padding = undefined;
