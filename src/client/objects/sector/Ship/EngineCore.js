@@ -9,6 +9,7 @@ function EngineCore(parent, config) {
   this.glows = [];
   this.highlights = [];
 
+  this.clamp = 1.0;
   this.brightness = 0.0;
   this.isBoosting = false;
 
@@ -17,9 +18,9 @@ function EngineCore(parent, config) {
 
 // random flicker
 EngineCore.flicker = [
-  0.01, 0.02,
-  0.07, 0.03,
-  0.012, 0.06
+  0.095, 0.04,
+  0.07, 0.075,
+  0.015, 0.087
 ];
 
 EngineCore.prototype.constructor = EngineCore;
@@ -31,7 +32,8 @@ EngineCore.prototype.create = function() {
       parent = this.parent,
       config = this.config.glows,
       length = config.length;
-  
+
+  // highlights
   for(var g=0; g<length; g++) {
     conf = config[g];
 
@@ -39,7 +41,7 @@ EngineCore.prototype.create = function() {
     highlight = new engine.Sprite(parent.game, 'texture-atlas', 'engine-highlight.png');
     highlight.pivot.set(32, 32);
     highlight.position.set(conf.position.x, conf.position.y);
-    highlight.scale.set(1.0, 1.0);
+    highlight.scale.set(0, 0);
     highlight.tint = conf.tint;
     highlight.blendMode = engine.BlendMode.ADD;
     highlight.alpha = 0;
@@ -49,7 +51,7 @@ EngineCore.prototype.create = function() {
     glow.pivot.set(128, 64);
     glow.rotation = global.Math.PI + engine.Math.degToRad(conf.rotation);
     glow.position.set(conf.position.x, conf.position.y);
-    glow.scale.set(conf.scale.startX * 0.1, conf.scale.startY * 0.1);
+    glow.scale.set(0, 0);
     glow.tint = conf.tint;
     glow.blendMode = engine.BlendMode.ADD;
 
@@ -63,10 +65,12 @@ EngineCore.prototype.create = function() {
 
 EngineCore.prototype.start = function() {
   this.isBoosting = true;
+  this.clamp = 2.0;
 };
 
 EngineCore.prototype.stop = function() {
   this.isBoosting = false;
+  this.clamp = 1.0;
 };
 
 EngineCore.prototype.show = function(show) {
@@ -92,26 +96,29 @@ EngineCore.prototype.update = function(multiplier) {
       scale, center, highlight, relative;
 
   // set brightness
-  this.brightness += (multiplier - this.brightness) * 0.1;
+  this.brightness += multiplier * 0.1 - 0.05;
+  this.brightness = engine.Math.clamp(this.brightness, 0.1, this.clamp);
   
   for(var g=0; g<length; g++) {
     scale = config[g].scale;
     
     // update glow
     glows[g].scale.set(
-      this.brightness * scale.endX + flicker,
-      this.brightness * scale.endY + flicker);
+      this.brightness * scale.endX + scale.startX + flicker,
+      this.brightness * scale.endY + scale.startY + flicker);
 
     // update highlight
     highlight = highlights[g];
     highlight.alpha = this.brightness;
+    highlight.scale.set(this.brightness, this.brightness);
     
     if(this.isBoosting && game.clock.frames % 2 === 0) {
       highlight.worldTransform.apply(highlight.pivot, position);
       game.world.worldTransform.applyInverse(position, position);
       
-      parent.manager.flashEmitter.at({ center: position });
-      parent.manager.flashEmitter.explode(1);
+      parent.manager.fireEmitter.color('engine');
+      parent.manager.fireEmitter.at({ center: position });
+      parent.manager.fireEmitter.explode(1);
     }
   }
 };
