@@ -8,7 +8,6 @@ var Device = require('./system/Device'),
     Graphics = require('./display/Graphics'),
     Font = require('./display/Font'),
     Strip = require('./display/Strip'),
-    Pinned = require('./display/transforms/Pinned'),
     Math = require('./utils/Math'),
     Color = require('./utils/Color'),
     Keyboard = require('./controls/Keyboard'),
@@ -42,7 +41,6 @@ var core = module.exports =
 
     // display
     Group: Group,
-    Pinned: Pinned,
     Sprite: Sprite,
     Shader: Shader,
     Particle: Particle,
