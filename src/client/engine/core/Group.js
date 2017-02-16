@@ -159,7 +159,7 @@ Group.prototype.destroy = function(options) {
 
   this.game = null;
 
-  pixi.Container.destroy.call(this, options);
+  pixi.Container.prototype.destroy.call(this, options);
 };
 
 module.exports = Group;
