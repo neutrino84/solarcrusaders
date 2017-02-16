@@ -25,5 +25,5 @@ void main(void) {
     c21 * matrix[3] + c22 * matrix[4] + c23 * matrix[5] +
     c31 * matrix[6] + c32 * matrix[7] + c33 * matrix[8];
 
-  gl_FragColor = vec4(c, c, c, 0.0);
+  gl_FragColor = vec4(c, c, c, c);
 }

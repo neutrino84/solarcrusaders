@@ -11,7 +11,11 @@ function ShieldFilter(game, sprite) {
   this.game = game;
   this.sprite = sprite;
   this.matrix = new pixi.Matrix();
-  this.padding = 0;
+  this.padding = 4;
+
+  this.uniforms.scale = sprite.texture.width/320.0;
+  this.uniforms.mapSampler = sprite.texture;
+  this.uniforms.filterMatrix = this.matrix.toArray(true);
 };
 
 ShieldFilter.prototype = Object.create(pixi.Filter.prototype);

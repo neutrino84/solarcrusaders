@@ -1,8 +1,6 @@
-
-precision lowp float;
-
 uniform sampler2D uSampler;
 uniform float time;
+uniform float scale;
 
 varying vec2 vTextureCoord;
 varying vec2 vFilterCoord;
@@ -80,22 +78,22 @@ float snoise(vec3 v) {
 
   vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
        m = m * m;
-  return 42.0 * dot( m*m, vec4( dot(p0,x0), dot(p1,x1), 
-                                dot(p2,x2), dot(p3,x3)));
+
+  return 42.0 * dot(m*m, vec4(dot(p0,x0), dot(p1,x1), 
+                              dot(p2,x2), dot(p3,x3)));
 }
 
 void main(void) {
   vec4 tex = texture2D(uSampler, vTextureCoord);
-  vec2 p = vFilterCoord * 20.0;
+  vec2 p = vFilterCoord * 3.0 * scale;
 
   float n = 0.0;
-  n += 1.0 * abs(snoise(vec3(p, time * 0.5)));
+        n += 1.0 * abs(snoise(vec3(p, time)));
   
   float rn = 1.0 - n;
-  rn *= pow(rn, 10.0);
-  rn *= 0.5;
-  rn *= tex.a;
-  rn += (0.1 * sin(time * 5.0) + 0.2) * tex.a;
+        rn *= pow(rn, 10.0);
+        rn += (0.15 * sin(time * 5.0) + 0.3);
+        rn *= tex.a;
 
-  gl_FragColor = vec4(rn, rn, rn, rn*rn*rn*rn);
+  gl_FragColor = vec4(rn, rn, rn, rn);
 }

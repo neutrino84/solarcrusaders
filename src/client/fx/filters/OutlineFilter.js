@@ -9,9 +9,9 @@ function OutlineFilter(width, height) {
   );
 
   this.matrix = [-1, -1, -1, -1, 8,-1, -1, -1, -1];
-  this.width = width * 2;
-  this.height = height * 2;
-  this.padding = 0;
+  this.width = width;
+  this.height = height;
+  this.padding = 4;
 };
 
 OutlineFilter.prototype = Object.create(pixi.Filter.prototype);

@@ -1,57 +1,45 @@
 
 var pixi = require('pixi'),
     engine = require('engine'),
-    ShieldFilter = require('../../../fx/filters/ShieldFilter'),
-    OutlineFilter = require('../../../fx/filters/OutlineFilter');
+    ShieldFilter = require('../../../fx/filters/ShieldFilter');
 
 function ShieldGenerator(parent) {
   this.parent = parent;
   this.game = parent.game;
-  this.renderer = this.game.renderer;
-
-  this.shieldSprite = new engine.Sprite(this.game, 'texture-atlas', this.parent.name + '.png');
-  this.outlineSprite = new engine.Sprite(this.game, 'texture-atlas', this.parent.name + '.png');
-
-  this.width = this.shieldSprite.width
-  this.height = this.shieldSprite.height;
 };
 
 ShieldGenerator.prototype.constructor = ShieldGenerator;
 
 ShieldGenerator.prototype.create = function() {
-  this.shieldSprite.blendMode = engine.BlendMode.ADD;
+  this.shieldSprite = new engine.Sprite(this.game, 'texture-atlas', this.parent.details.chassis + '.png');
+  this.shieldSprite.filters = [new pixi.filters.BlurFilter(10, 4)];
+  this.shieldSprite.cache();
   this.shieldSprite.filters = [new ShieldFilter(this.game, this.shieldSprite)];
-  this.outlineSprite.filters = [new OutlineFilter(this.width, this.height)];
 };
 
 ShieldGenerator.prototype.start = function() {
-  this.parent.addChild(this.shieldSprite);
-  this.parent.addChild(this.outlineSprite);
+  this.tween && this.tween.stop(true);
+  this.tween = this.game.tweens.create(this.shieldSprite);
+  this.tween.to({ alpha: 0.0 }, 500, engine.Easing.Quadratic.InOut);
+  this.tween.on('complete', this.remove, this);
 
-  this.outlineSprite.alpha = 0.5;
-  this.fadeTween = this.game.tweens.create(this.outlineSprite);
-  this.fadeTween.to({ alpha: 0.25 }, 100, engine.Easing.Quadratic.InOut);
-  this.fadeTween.repeat();
-  this.fadeTween.yoyo(true, 0);
-  this.fadeTween.start();
+  this.parent.addChild(this.shieldSprite);
 };
 
 ShieldGenerator.prototype.stop = function() {
-  this.fadeTween && this.fadeTween.stop();
-  
-  this.parent.removeChild(this.shieldSprite);
-  this.parent.removeChild(this.outlineSprite);
+  this.tween && this.tween.start();
 };
 
-ShieldGenerator.prototype.update = function() {
-  //..
+ShieldGenerator.prototype.remove = function() {
+  this.shieldSprite.alpha = 1.0;
+  this.parent.removeChild(this.shieldSprite);
 };
 
 ShieldGenerator.prototype.destroy = function() {
   this.stop();
   this.parent = this.game =
     this.shieldSprite = this.shieldShader = 
-    this.renderTexture = this.fadeTween = undefined;
+    this.renderTexture = this.tween = undefined;
 };
 
 module.exports = ShieldGenerator;
