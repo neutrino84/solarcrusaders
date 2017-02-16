@@ -2,6 +2,7 @@
 var engine = require('engine'),
     Panel = require('../Panel'),
     Layout = require('../Layout'),
+    RasterLayout = require('../layouts/RasterLayout'),
     StackLayout = require('../layouts/StackLayout'),
     BorderLayout = require('../layouts/BorderLayout'),
     FlowLayout = require('../layouts/FlowLayout'),
@@ -35,6 +36,10 @@ function Pane(game, settings) {
   switch(this.settings.layout.type) {
     case 'stack':
       this.layout = new StackLayout();
+      break;
+    case 'raster':
+      this.layout = new RasterLayout(
+        this.settings.layout.flat);
       break;
     case 'border':
       this.layout = new BorderLayout(
