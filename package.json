@@ -37,7 +37,6 @@
     "socket.io-express-session": "0.1.x",
     "socket.io-events": "0.4.x",
 
-    "ws": "1.1.x",
     "stripe": "4.5.x",
 
     "xhr": "2.2.x",
