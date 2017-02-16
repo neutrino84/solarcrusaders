@@ -119,21 +119,14 @@ Ship.prototype.createHardpoints = function() {
   for(var i=0; i<length; i++) {
     stats = hardpoints[i];
 
-    if(stats.default) {
+    if(stats.default && stats.default.subtype) {
       type = stats.default.type;
       subtype = stats.default.subtype;
+    } else if(stats.type && stats.type.indexOf('projectile') > -1) {
+      type = 'rocket';
     } else {
       type = 'pulse';
     }
-
-    // else {  
-    //   type = 'energy';
-    //   subtype = 'basic';
-    // }
-    // if(hardpoints[i].type === 'sub') {
-    //   type = 'rocket';
-    //   subtype = 'basic';
-    // }
 
     // hardpoint = new this.model.Hardpoint();
     // hardpoint.toStreamObject();
@@ -304,7 +297,7 @@ Ship.prototype.activate = function(name) {
   if(enhancement) {
     cost = this.energy + enhancement.cost;
 
-    if(!enhancement.activated && cost >= 0) {      
+    if(!enhancement.activated && cost >= 0) {
       enhancement.start();
       enhancement.once('deactivated', this.deactivate, this);
       enhancement.once('cooled', this.cooled, this);
