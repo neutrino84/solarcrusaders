@@ -20,8 +20,6 @@ SectorState.prototype = Object.create(engine.State.prototype);
 SectorState.prototype.constructor = engine.State;
 
 SectorState.prototype.init = function(args) {
-  global.state = this;
-
   // initialize
   this.shipNetManager.init();
 
@@ -70,7 +68,7 @@ SectorState.prototype.create = function() {
       mouse.capture = true;
       mouse.mouseWheelCallback = function(event) {
         var delta = event.deltaY / sensitivity,
-            scale = engine.Math.clamp(this.world.scale.x - delta, 0.2, 1.0);
+            scale = engine.Math.clamp(this.world.scale.x - delta, 0.25, 1.0);
         if(self.game.paused) { return; }
         if(self.zoom && self.zoom.isRunning) {
           self.zoom.stop();
@@ -79,7 +77,7 @@ SectorState.prototype.create = function() {
       };
 
   this.game.world.setBounds(0, 0, 4096, 4096);
-  this.game.world.scale.set(0.2, 0.2);
+  this.game.world.scale.set(0.25, 0.25);
 
   this.game.camera.bounds = null;
   this.game.camera.focusOnXY(2048, 2048);
