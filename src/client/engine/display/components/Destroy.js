@@ -27,17 +27,6 @@ Destroy.prototype = {
 
     this.game.tweens.removeFrom(this);
 
-    // var i = this.children.length;
-    // if(options) {
-    //   while(i--) {
-    //     this.children[i].destroy(options);
-    //   }
-    // } else {
-    //   while(i--) {
-    //     this.removeChild(this.children[i]);
-    //   }
-    // }
-
     switch(this.type) {
       case Const.PARTICLE:
       case Const.SPRITE:
