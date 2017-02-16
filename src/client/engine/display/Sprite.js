@@ -31,4 +31,19 @@ Sprite.prototype.update = function() {
   this.updateCore();
 };
 
+Sprite.prototype.cache = function(clear) {
+  var renderer = this.game.renderer,
+      renderTexture = pixi.RenderTexture.create(this.width, this.height);
+  
+  // renderer.currentRenderer.flush();
+  renderer.render(this, renderTexture, clear || false);
+
+  this.texture = renderTexture;
+  this._cached = true;
+};
+
+Sprite.prototype.uncache = function() {
+  this._cached = false;
+};
+
 module.exports = Sprite;
