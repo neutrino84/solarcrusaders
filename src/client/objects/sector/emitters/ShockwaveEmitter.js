@@ -4,17 +4,17 @@ var engine = require('engine');
 function ShockwaveEmitter(game) {
   engine.Emitter.call(this, game, 0, 0, 500);
 
-  this.lifespan = 500;
+  this.lifespan = 350;
 
   this.blendMode = engine.BlendMode.ADD;
 
-  this.setScale(0.1, 2.0, 0.1, 2.0, 500);
+  this.setScale(0.0, 4.0, 0.0, 4.0, 350);
 
-  this.minRotation = -45;
-  this.maxRotation = 45;
+  this.minRotation = 0;
+  this.maxRotation = 0;
 
-  this.setAlpha(1.0, 0.0, 500);
-  this.setTint('default', 0xFFFFFF, 0x000000, 250);
+  this.setAlpha(1.0, 0.0, 250);
+  this.setTint('default', 0xFF0000, 0xFFFFFF, 250);
 
   this.makeParticles('texture-atlas', 'explosion-c.png');
 };
