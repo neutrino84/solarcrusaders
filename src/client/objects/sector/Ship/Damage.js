@@ -11,11 +11,6 @@ function Damage(ship) {
   this.glow.blendMode = engine.BlendMode.ADD;
   this.glow.tint  = 0xffffff;
   this.glow.alpha = 0.0;
-
-  this.glowTween = this.game.tweens.create(this.glow);
-  this.glowTween.to({ alpha: 0.8 }, 250, engine.Easing.Quadratic.InOut);
-  this.glowTween.to({ alpha: 0.6 }, 2000, engine.Easing.Quadratic.InOut);
-  this.glowTween.to({ alpha: 0.0 }, 3000, engine.Easing.Quadratic.InOut);
   
   this.explosionEmitter = ship.manager.explosionEmitter;
   this.flashEmitter = ship.manager.flashEmitter;
@@ -77,8 +72,8 @@ Damage.prototype.update = function(multiplier) {
   glow.position.set(ship.x, ship.y);
 
   if(multiplier < 0.2) {
-    if(global.Math.random() < 0.1) {
-      point = game.world.worldTransform.applyInverse(ship.worldTransform.apply(ship.circle.random()));
+    if(global.Math.random() < 0.05) {
+      point = game.world.worldTransform.applyInverse(ship.worldTransform.apply(ship.hit.random()));
 
       this.explosionEmitter.at({ center: point });
       this.explosionEmitter.explode(1);
@@ -94,6 +89,10 @@ Damage.prototype.destroyed = function() {
   // this.shockwave();
 
   // explosion glow
+  this.glowTween = this.game.tweens.create(this.glow);
+  this.glowTween.to({ alpha: 0.8 }, 250, engine.Easing.Quadratic.InOut);
+  this.glowTween.to({ alpha: 0.6 }, 2000, engine.Easing.Quadratic.InOut);
+  this.glowTween.to({ alpha: 0.0 }, 3000, engine.Easing.Quadratic.InOut);
   this.glowTween.start();
   this.glowTween.once('complete', function() {
     this.game.world.remove(this.glow);
@@ -102,32 +101,30 @@ Damage.prototype.destroyed = function() {
 
   // explosions 1
   this.timer1 = game.clock.events.repeat(200, 20, function() {
-    var point = game.world.worldTransform.applyInverse(ship.worldTransform.apply(ship.circle.random()));
+    var point = game.world.worldTransform.applyInverse(ship.worldTransform.apply(ship.hit.random()));
     
     this.explosionEmitter.at({ center: point });
-    this.explosionEmitter.explode(2);
-    
-    // this.glowEmitter.color(null);
+    this.explosionEmitter.explode(1);
+
     this.glowEmitter.at({ center: point });
-    this.glowEmitter.explode(2);
+    this.glowEmitter.explode(1);
   }, this);
 
   // explosions 2
-  this.timer2 = this.game.clock.events.repeat(150, 30, function() {
-    if(global.Math.random() > 0.5) {
-      var point = this.game.world.worldTransform.applyInverse(ship.worldTransform.apply(ship.circle.random()));
-      
-      this.explosionEmitter.at({ center: point });
-      this.explosionEmitter.explode(2);
-      
-      // this.glowEmitter.color(null);
-      this.glowEmitter.at({ center: point });
-      this.glowEmitter.explode(2);
-    }
+  this.timer2 = this.game.clock.events.repeat(150, 50, function() {
+    var point = this.game.world.worldTransform.applyInverse(ship.worldTransform.apply(ship.hit.random()));
+    
+    this.explosionEmitter.at({ center: point });
+    this.explosionEmitter.explode(1);
+
+    this.glowEmitter.at({ center: point });
+    this.glowEmitter.explode(1);
   }, this);
 };
 
 Damage.prototype.destroy = function() {
+  this.glowTween && this.glowTween.stop(true);
+  
   this.timer1 && this.game.clock.events.remove(this.timer1);
   this.timer2 && this.game.clock.events.remove(this.timer2);
 
