@@ -15,6 +15,7 @@ function FireEmitter(game) {
   this.setAlpha(1.0, 0.0, 500);
   this.setTint('red', 0xFFFFFF, 0xFF0000, 250);
   this.setTint('blue', 0xFFFFFF, 0x12def9, 250);
+  this.setTint('engine', 0xFF0000, 0xFFFFFF, 500);
   
   this.makeParticles('texture-atlas', ['explosion-d.png']);
 };
