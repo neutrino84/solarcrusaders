@@ -122,8 +122,8 @@ Pulse.prototype.update = function() {
       // fade out strip
       this.strip.alpha = 1-f2;
 
-      // create beam
-      this.hardpoint.fireEmitter.color('blue');
+      // create hole
+      this.hardpoint.fireEmitter.color(this.data.emitter);
       this.hardpoint.fireEmitter.at({ center: this.destination });
       this.hardpoint.fireEmitter.explode(1);
     }
@@ -145,8 +145,8 @@ Pulse.prototype.destroy = function() {
   this.glow.destroy();
 
   this.hardpoint = this.game = 
-    this.data = this.clock = this._start =
-    this._end = this.destination = this.origin =
+    this.data = this.clock = 
+    this.destination = this.origin =
     this.target = this.offset = undefined;
 };
 

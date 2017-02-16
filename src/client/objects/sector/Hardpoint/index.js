@@ -118,24 +118,6 @@ Hardpoint.prototype.update = function() {
   }
 };
 
-Hardpoint.prototype.explode = function(target) {
-  var game = this.game,
-      parent = this.ship,
-      manager = this.ship.manager;
-  manager.shipsGroup.iterate('renderable', true, engine.Group.NONE, function(ship) {
-    if(parent == ship) { return };
-    if(ship.contains(target.x, target.y)) {
-      manager.explosionEmitter.at({ center: target });
-      manager.explosionEmitter.explode(1);
-
-      if(ship.isPlayer) {
-        game.camera.shake();
-        parent.highlight();
-      }
-    }
-  }, this);
-};
-
 Hardpoint.prototype.updateTransform = function(target) {
   var game = this.game,
       ship = this.ship,
@@ -153,6 +135,12 @@ Hardpoint.prototype.updateTransform = function(target) {
 };
 
 Hardpoint.prototype.destroy = function() {
+  var launcher,
+      actives = this.actives;
+  for(var i=0; i<this.actives.length; i++) {
+    launcher = actives[i];
+    launcher.destroy();
+  }
   this.parent = this.game = this.ship =
     this.config = this.target = this.cap =
     this.position = this.sprite = this.launcher =
