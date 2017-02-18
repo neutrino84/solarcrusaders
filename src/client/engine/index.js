@@ -22,12 +22,7 @@ var Device = require('./system/Device'),
     Ellipse = require('./geometry/Ellipse'),
     Emitter = require('./particles/Emitter'),
     Easing = require('./tween/Easing'),
-    // Tilemap = require('./tilemap/Tilemap'),
-    // TilemapLayer = require('./tilemap/TilemapLayer'),
-    // TilemapSprite = require('./tilemap/TilemapSprite'),
-    // TilemapPathing = require('./tilemap/TilemapPathing'),
-    // Tileset = require('./tilemap/Tileset'),
-    // Tile = require('./tilemap/Tile'),
+    Timer = require('./time/Timer'),
 
     // plugins
     WireframeRenderer = require('./renderers/WireframeRenderer');
@@ -67,13 +62,8 @@ var core = module.exports =
     // tweens
     Easing: Easing,
 
-    // tilemap
-    // Tilemap: Tilemap,
-    // TilemapLayer: TilemapLayer,
-    // TilemapSprite: TilemapSprite,
-    // TilemapPathing: TilemapPathing,
-    // Tileset: Tileset,
-    // Tile: Tile,
+    // time
+    Timer: Timer,
 
     // utils
     Math: Math,
