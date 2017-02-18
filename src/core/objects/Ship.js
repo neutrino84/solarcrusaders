@@ -213,7 +213,9 @@ Ship.prototype.hit = function(attacker, target, slot) {
       data.health = health;
       updates.push({
         uuid: this.uuid,
-        health: data.health
+        attacker: attacker.uuid,
+        health: data.health,
+        damage: damage
       });
 
       // update attacker

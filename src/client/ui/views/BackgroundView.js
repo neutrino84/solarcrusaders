@@ -17,7 +17,7 @@ function BackgroundView(game, settings) {
   });
 
   // modify values
-  this.modifier = { left: 1.0, top: 1.0, width: 1.0, height: 1.0 };
+  this.modifier = settings.modifier || { left: 0.0, top: 0.0, width: 1.0, height: 1.0 };
 
   // fill and blend mode
   this.fillAlpha = this.settings.fillAlpha;
@@ -35,8 +35,8 @@ BackgroundView.prototype.paint = function() {
       padding = parent.padding,
       size = parent.size,
       margin = parent.margin,
-      left = margin.left * modifier.left,
-      top = margin.top * modifier.top,
+      left = margin.left + modifier.left,
+      top = margin.top + modifier.top,
       width = (size.width - margin.right - margin.left) * modifier.width,
       height = (size.height - margin.top - margin.bottom) * modifier.height,
       drawMethod = settings.radius > 0 ? 'drawRoundedRect' : 'drawRect';

@@ -38,8 +38,8 @@ function ButtonIcon(game, settings) {
       alpha: {
         enabled: 0.0,
         disabled: 0.0,
-        over: 0.025,
-        down: 0.0,
+        over: 0.1,
+        down: 0.1,
         up: 0.0
       }
     }

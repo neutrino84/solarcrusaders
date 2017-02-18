@@ -18,11 +18,14 @@ function ProgressBar(game, settings) {
     progress: {
       color: 0xffffff,
       modifier: {
-        left: 1.0,
-        top: 1.0,
+        left: 0.0,
+        top: 0.0,
         width: 1.0,
         height: 1.0
       }
+    },
+    difference: {
+      color: 0xff0000
     }
   }));
 
@@ -33,12 +36,10 @@ function ProgressBar(game, settings) {
   this.progress = new BackgroundView(game, this.settings.progress);
   this.progress.modifier = this.modifier;
 
-  this.progressTween = this.game.tweens.create(this.progress.modifier);
-  this.progressTween.onUpdateCallback(this.progress.paint, this.progress);
+  if(this.settings.difference) {
+    this.difference = new BackgroundView(game, this.settings.difference);
 
-  if(this.settings.change) {
-    this.change = new BackgroundView(game, this.settings.change);
-    this.addView(this.change);
+    this.addView(this.difference);
   }
 
   // add progress bar
@@ -49,17 +50,30 @@ ProgressBar.prototype = Object.create(Pane.prototype);
 ProgressBar.prototype.constructor = ProgressBar;
 
 ProgressBar.prototype.change = function(key, value) {
-  // var change = {};
-  //     change[key] = value;
+  var width = this.settings[key],
+      current = this.modifier[key],
+      difference = this.difference,
+      delta;
+
+  if(this.difference) {
+    delta = current - value;
+
+    if(delta > 0) {
+      difference.modifier.left = current * width;
+      difference.modifier.width = (delta-current);
+
+      difference.paint();
+      difference.alpha = 1.0;
+
+      this.tween && this.tween.stop(false);
+      this.tween = this.game.tweens.create(this.difference);
+      this.tween.to({ alpha: 0.0 }, 1000);
+      this.tween.start();
+    }
+  }
 
   this.modifier[key] = value;
   this.progress.paint();
-
-  // if(!this.progressTween.isRunning) {
-  //   console.log('from', this.modifier.width);
-  //   this.progressTween.to(change, 50);
-  //   this.progressTween.start();
-  // }
 };
 
 ProgressBar.prototype.paint = function() {

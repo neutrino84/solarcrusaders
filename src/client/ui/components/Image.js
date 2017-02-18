@@ -19,6 +19,10 @@ function Image(game, settings) {
     this.view.height = this.settings.height;
   }
 
+  if(this.settings.blendMode) {
+    this.view.blendMode = this.settings.blendMode;
+  }
+
   this.setPreferredSize(this.view.width, this.view.height);
 
   this.addView(this.view);
@@ -27,24 +31,24 @@ function Image(game, settings) {
 Image.prototype = Object.create(Pane.prototype);
 Image.prototype.constructor = Image;
 
-Object.defineProperty(Image.prototype, 'blendMode', {
-  set: function(value) {
-    this.view.blendMode = value;
-  },
+// Object.defineProperty(Image.prototype, 'blendMode', {
+//   set: function(value) {
+//     this.view.blendMode = value;
+//   },
 
-  get: function() {
-    return this.view.blendMode;
-  }
-});
+//   get: function() {
+//     return this.view.blendMode;
+//   }
+// });
 
-Object.defineProperty(Image.prototype, 'tint', {
-  set: function(value) {
-    this.view.tint = value;
-  },
+// Object.defineProperty(Image.prototype, 'tint', {
+//   set: function(value) {
+//     this.view.tint = value;
+//   },
 
-  get: function() {
-    return this.view.tint;
-  }
-});
+//   get: function() {
+//     return this.view.tint;
+//   }
+// });
 
 module.exports = Image;

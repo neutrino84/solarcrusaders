@@ -40,8 +40,8 @@ LoadingState.prototype.create = function() {
     progress: {
       color: 0xffffff,
       modifier: {
-        left: 1.0,
-        top: 1.0,
+        left: 0.0,
+        top: 0.0,
         width: 0.0,
         height: 1.0
       }
