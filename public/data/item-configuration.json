@@ -84,7 +84,7 @@
         "emitter": "blue",
         "icon": "item-laser-a",
         "range": 2304,
-        "projection": 0.2,
+        "projection": 0.15,
         "delay": 32,
         "spread": 64,
         "damage": 2.0,
@@ -154,6 +154,9 @@
         "stats": {
           "speed": {
             "value": 30.0
+          },
+          "evasion": {
+            "value": 0.1
           }
         }
       }

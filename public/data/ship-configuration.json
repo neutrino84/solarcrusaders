@@ -584,7 +584,7 @@
     "class": "mining",
     "stats": {
       "capacity": 1000,
-      "health": 100,
+      "health": 50,
       "heal": 0.2,
       "armor": 0.0,
       "speed": 64.0,
@@ -667,7 +667,7 @@
     "class": "transport",
     "stats": {
       "capacity": 800,
-      "health": 80,
+      "health": 40,
       "heal": 0.2,
       "armor": 0.0,
       "speed": 44.0,
@@ -750,7 +750,7 @@
     "class": "battleship",
     "stats": {
       "capacity": 3000,
-      "health": 200,
+      "health": 100,
       "heal": 0.25,
       "armor": 0.0,
       "speed": 18.0,
