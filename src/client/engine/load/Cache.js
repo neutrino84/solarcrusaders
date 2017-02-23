@@ -8,8 +8,6 @@ var pixi = require('pixi'),
 function Cache(game) {
   this.game = game;
 
-  this.autoResolveURL = false;
-
   this._cache = {
     canvas: {},
     image: {},
@@ -27,12 +25,6 @@ function Cache(game) {
     shader: {},
     renderTexture: {}
   };
-
-  // this._urlMap = {};
-  // this._urlResolver = new Image();
-  // this._urlTemp = null;
-
-  // this.onSoundUnlock = new Phaser.Signal();
 
   this._cacheMap = [];
   this._cacheMap[Cache.CANVAS] = this._cache.canvas;
@@ -83,20 +75,16 @@ Cache.prototype = {
       this.removeImage(key);
     }
 
-    var baseTexture = new pixi.BaseTexture(data),
-        img = {
-          key: key,
-          url: url,
-          data: data,
-          base: baseTexture,
-          frame: new Frame(0, 0, 0, data.width, data.height, key),
-          frameData: new FrameData()
-        };
+    var baseTexture = new pixi.BaseTexture(data);
 
-    // img.frameData.addFrame(new Frame(0, 0, 0, data.width, data.height, url));
-
-    this._cache.image[key] = img;
-    // this._resolveURL(url, img);
+    this._cache.image[key] = {
+      key: key,
+      url: url,
+      data: data,
+      base: baseTexture,
+      frame: new Frame(0, 0, 0, data.width, data.height, key),
+      frameData: new FrameData()
+    };
 
     // add to PIXI cache
     pixi.utils.BaseTextureCache[key] = baseTexture;
@@ -143,18 +131,14 @@ Cache.prototype = {
       audioTag: audioTag,
       locked: this.game.sound.touchLocked
     };
-
-    // this._resolveURL(url, this._cache.sound[key]);
   },
 
   addText: function(key, url, data) {
     this._cache.text[key] = { url: url, data: data };
-    // this._resolveURL(url, this._cache.text[key]);
   },
 
   addTilemap: function(key, url, mapData) {
     this._cache.tilemap[key] = { url: url, data: mapData };
-    // this._resolveURL(url, this._cache.tilemap[key]);
   },
 
   addBinary: function(key, binaryData) {
@@ -173,17 +157,14 @@ Cache.prototype = {
 
   addJSON: function(key, url, data) {
     this._cache.json[key] = { url: url, data: data };
-    // this._resolveURL(url, this._cache.json[key]);
   },
 
   addXML: function(key, url, data) {
     this._cache.xml[key] = { url: url, data: data };
-    // this._resolveURL(url, this._cache.xml[key]);
   },
 
   addShader: function(key, url, data) {
     this._cache.shader[key] = { url: url, data: data };
-    // this._resolveURL(url, this._cache.shader[key]);
   },
 
   addRenderTexture: function(key, texture) {
@@ -231,7 +212,6 @@ Cache.prototype = {
     }
 
     this._cache.image[key] = atlas;
-    // this._resolveURL(url, obj);
   },
 
   reloadSound: function(key) {
@@ -290,13 +270,6 @@ Cache.prototype = {
     }
     return false;
   },
-
-  // checkURL: function(url) {
-  //   if(this._urlMap[this._resolveURL(url)]) {
-  //     return true;
-  //   }
-  //   return false;
-  // },
 
   checkCanvasKey: function(key) {
     return this.checkKey(Cache.CANVAS, key);
@@ -474,16 +447,6 @@ Cache.prototype = {
     }
   },
 
-  // getURL: function(url) {
-  //   var url = this._resolveURL(url);
-  //   if(url) {
-  //     return this._urlMap[url];
-  //   } else {
-  //       console.warn('Cache.getUrl: Invalid url: "' + url  + '" or Cache.autoResolveURL was false');
-  //     return null;
-  //   }
-  // },
-
   getKeys: function(cache) {
     if(cache === undefined) { cache = Cache.IMAGE; }
     var out = [];
@@ -552,25 +515,6 @@ Cache.prototype = {
     delete this._cache.atlas[key];
   },
 
-  // _resolveURL: function(url, data) {
-  //   if(!this.autoResolveURL) {
-  //     return null;
-  //   }
-
-  //   this._urlResolver.src = this.game.load.baseURL + url;
-  //   this._urlTemp = this._urlResolver.src;
-
-  //   //  Ensure no request is actually made
-  //   this._urlResolver.src = '';
-
-  //   //  Record the URL to the map
-  //   if(data) {
-  //     this._urlMap[this._urlTemp] = data;
-  //   }
-
-  //   return this._urlTemp;
-  // },
-
   destroy: function() {
     for(var i = 0; i < this._cacheMap.length; i++) {
       var cache = this._cacheMap[i];
@@ -584,10 +528,6 @@ Cache.prototype = {
         }
       }
     }
-
-    // this._urlMap = null;
-    // this._urlResolver = null;
-    // this._urlTemp = null;
   }
 
 };
