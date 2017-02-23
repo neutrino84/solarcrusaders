@@ -54,14 +54,13 @@ Projectile.prototype.stop = function() {
 };
 
 Projectile.prototype.explode = function() {
+  var parent = this.parent,
+      rnd = this.game.rnd;
   if(!this.hasExploded) {
-    this.parent.glowEmitter.at({ center: this.projectile.position });
-    this.parent.glowEmitter.explode(1);
-
-    this.parent.shockwaveEmitter.at({ center: this.projectile.position });
-    this.parent.shockwaveEmitter.explode(1);
+    this.parent.explosionEmitter.small({ x: rnd.frac(), y: rnd.frac() }, rnd.realInRange(-5, 5));
+    this.parent.explosionEmitter.at({ center: this.projectile.position });
+    this.parent.explosionEmitter.explode(4);
   }
-
   this.hasExploded = true;
 };
 

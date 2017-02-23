@@ -47,12 +47,12 @@ function ShipManager(game) {
 
   // add ships to world
   this.game.world.add(this.trajectoryGroup);
-  this.game.world.add(this.flashEmitter);
   this.game.world.add(this.subGroup);
   this.game.world.add(this.shipsGroup);
   this.game.world.add(this.fxGroup);
   this.game.world.add(this.fireEmitter);
   this.game.world.add(this.explosionEmitter);
+  this.game.world.add(this.flashEmitter);
   this.game.world.add(this.shockwaveEmitter);
   this.game.world.add(this.glowEmitter);
   this.game.world.add(this.indicator);
@@ -206,7 +206,7 @@ ShipManager.prototype._attack = function(data) {
   if(ship != this.player) {
     ship.targetingComputer.attack(data);
   }
-};
+}
 
 ShipManager.prototype._test = function(data) {
   var ship = this.ships[data.uuid],

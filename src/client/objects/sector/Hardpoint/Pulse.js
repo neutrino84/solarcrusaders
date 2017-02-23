@@ -123,7 +123,7 @@ Pulse.prototype.update = function() {
       this.strip.alpha = 1-f2;
 
       // create hole
-      this.hardpoint.fireEmitter.color(this.data.emitter);
+      this.hardpoint.fireEmitter.pulse(this.data.emitter);
       this.hardpoint.fireEmitter.at({ center: this.destination });
       this.hardpoint.fireEmitter.explode(1);
     }

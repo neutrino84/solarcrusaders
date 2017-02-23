@@ -54,10 +54,9 @@ TargetingComputer.prototype.attack = function(data) {
   }
 };
 
-TargetingComputer.prototype.hit = function(hardpoint) {
-  var ship = this.manager.ships[hardpoint.ship],
-      hardpoint = this.hardpoints[hardpoint.slot];
-      ship && hardpoint.hit(ship, hardpoint.target);
+TargetingComputer.prototype.hit = function(ship, data) {
+  var hardpoint = this.hardpoints[data.hardpoint.slot];
+      ship && hardpoint && hardpoint.hit(ship, data.hardpoint.target);
 };
 
 TargetingComputer.prototype.fired = function(target) {

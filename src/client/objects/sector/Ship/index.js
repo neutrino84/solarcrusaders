@@ -5,7 +5,7 @@ var engine = require('engine'),
     EngineCore = require('./EngineCore'),
     TargetingComputer = require('./TargetingComputer'),
     ShieldGenerator = require('./ShieldGenerator'),
-    Damage = require('./Damage'),
+    // Damage = require('./Damage'),
     Hud = require('../../../ui/components/Hud');
 
 function Ship(manager, details) {
@@ -27,7 +27,7 @@ function Ship(manager, details) {
 
   // core ship classes
   this.hud = new Hud(this);
-  this.damage = new Damage(this);
+  // this.damage = new Damage(this);
   this.movement = new Movement(this);
   this.engineCore = new EngineCore(this, this.config.engine);
   this.targetingComputer = new TargetingComputer(this, this.config.targeting);
@@ -42,14 +42,13 @@ Ship.prototype.boot = function() {
   // create hit area
   this.hit = new engine.Circle(this.width / 2, this.width / 2, this.details.size);
   this.hitGraphics = new engine.Graphics();
-  this.hitGraphics.lineStyle(4, this.details.ai && this.details.ai === 'pirate' ? 0xcc3333 : 0x3366cc, 0.25);
-  // this.hitGraphics.drawCircle(this.hit.x, this.hit.y, this.hit.radius);
-  this.hitGraphics.drawRect(0, 0, this.width, this.height);
+  this.hitGraphics.lineStyle(4, this.details.ai && this.details.ai === 'pirate' ? 0xcc3333 : 0x3366cc, 0.75);
+  this.hitGraphics.drawCircle(this.hit.x, this.hit.y, this.hit.radius);
+  // this.hitGraphics.drawRect(0, 0, this.width, this.height);
   this.hitGraphics.pivot.set(this.width/2, this.height/2);
   this.hitGraphics.position.set(this.width/2 + 4, this.width/2 + 4);
-  this.hitGraphics.scale.set(2.0, 2.0);
+  // this.hitGraphics.scale.set(2.0, 2.0);
   this.hitGraphics.blendMode = engine.BlendMode.ADD;
-  this.hitGraphics.alpha = 0;
 
   // add hit circle
   this.addChild(this.hitGraphics);
@@ -57,14 +56,17 @@ Ship.prototype.boot = function() {
   // add chassis
   this.addChild(this.chassis);
 
+  // create main systems
   this.engineCore.create();
   this.targetingComputer.create();
   this.shieldGenerator.create();
   this.repair.create();
   this.hud.create();
 
+  // subscribe to updates
   this.details.on('data', this.data, this);
 
+  // start events
   this.events.start();
 
   // set player
@@ -75,28 +77,28 @@ Ship.prototype.boot = function() {
 };
 
 Ship.prototype.data = function(data) {
+  var ship, attacker, defender,
+      ships = this.manager.ships;
   if(data.hardpoint) {
-    // update targeting computer
-    this.targetingComputer.hit(data.hardpoint);
-  }
-  if(data.health) {
-    if(data.damage > 0) {
-      if(!this.isPlayer) { this.hud.show(); }
+    attacker = ships[data.uuid];
+    defender = ships[data.hardpoint.ship];
 
-      this.hitGraphics.alpha = 1.0;
+    // send hit to targeting computer
+    this.targetingComputer.hit(defender, data);
 
-      this.hitTimer && this.events.remove(this.hitTimer);
-      this.hitTimer = this.events.add(5000, function() {
-        if(!this.isPlayer) { this.hud.hide(); }
-
-        this.hitGraphicsTween && this.hitGraphicsTween.stop(false);
-        this.hitGraphics.alpha = 1.0;
-        this.hitGraphicsTween = this.game.tweens.create(this.hitGraphics);
-        this.hitGraphicsTween.to({ alpha: 0.0 }, 1000);
-        this.hitGraphicsTween.start();
-      }, this);
+    // show hud screen
+    if(attacker.isPlayer || defender.isPlayer) {
+      ship = attacker.isPlayer ? defender : attacker;
+      ship.hud.show();
+      ship.timer && ship.events.remove(ship.timer);
+      ship.timer = ship.events.add(10000, function() {
+        ship.hud.hide();
+      }, ship);
     }
   }
+
+  // update hud
+  this.hud.data(data);
 };
 
 Ship.prototype.update = function() {
@@ -106,14 +108,15 @@ Ship.prototype.update = function() {
   
   // update disabled state
   if(this.disabled){
-    this.damage.update(this.movement.velocity / this.details.speed);
+    // this.damage.update(this.movement.velocity / this.details.speed);
     this.engineCore.update(0);
   } else {
     this.engineCore.update(this.movement.velocity / this.details.speed);
   }
 
   // update hit graphics
-  this.hitGraphics.rotation = -this.rotation + 0.785398;// + (this.game.clock.frames * 10);
+  // this.hitGraphics.rotation = -this.rotation + 0.785398;// + (this.game.clock.frames * 10);
+  this.hitGraphics.alpha = this.game.world.scale.x;
   
   // update ui
   this.hud.update();
@@ -135,17 +138,16 @@ Ship.prototype.disable = function() {
   this.tint = 0x333333;
   this.chassis.visible = false;
   this.hud.disable();
-  this.damage.destroyed();
+  // this.damage.destroyed();
   this.engineCore.show(false);
   this.shieldGenerator.stop();
   this.repair.stop();
 }
 
-Ship.prototype.destroy = function() {
-  this.events.destroy();
+Ship.prototype.destroy = function(options) {
 
   this.hud.destroy();
-  this.damage.destroy();
+  // this.damage.destroy();
   this.movement.destroy();
   this.engineCore.destroy();
   this.targetingComputer.destroy();
@@ -153,8 +155,10 @@ Ship.prototype.destroy = function() {
 
   this.details.removeListener('data', this.data);
 
+  this.events.destroy();
+
   // children destroy themselves
-  engine.Sprite.prototype.destroy.call(this);
+  engine.Sprite.prototype.destroy.call(this, options);
 
   this.manager = this.config =
     this.movement = this.circle = this.hud =

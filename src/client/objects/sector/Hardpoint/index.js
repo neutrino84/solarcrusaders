@@ -76,16 +76,24 @@ Hardpoint.prototype.fire = function(targ) {
 
 Hardpoint.prototype.hit = function(ship, target) {
   var launcher,
+      rnd = this.game.rnd,
       actives = this.actives,
       length = actives.length;
+      vector = ship.movement._vector,
+      speed = ship.movement._speed
+
   for(var i=0; i<length; i++) {
     launcher = actives[i];
     launcher.hit && launcher.hit(ship, target);
   }
+
+  this.explosionEmitter.small(vector, speed);
   this.explosionEmitter.at({ center: target });
-  this.explosionEmitter.explode(3);
+  this.explosionEmitter.explode(rnd.integerInRange(1,2));
+  
+  this.flashEmitter.attack(vector, speed);
   this.flashEmitter.at({ center: target });
-  this.flashEmitter.explode(1);
+  this.flashEmitter.explode(rnd.integerInRange(1,2));
 };
 
 Hardpoint.prototype.update = function() {
