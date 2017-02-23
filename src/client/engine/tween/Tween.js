@@ -391,7 +391,7 @@ Tween.prototype.generateData = function(frameRate, data) {
   }
 
   for(var i = 0; i < this.timeline.length; i++) {
-    data = data.concat(this.timeline[i].generateData(frameRate));
+    data = data.concat(this.timeline[i].generateData(frameRate, this._onUpdateCallback, this._onUpdateCallbackContext));
   }
 
   return data;
