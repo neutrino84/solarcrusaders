@@ -224,9 +224,10 @@ Ship.prototype.hit = function(attacker, target, slot) {
         uuid: attacker.uuid,
         credits: attacker.credits,
         hardpoint: {
-          slot: hardpoint.slot,
           ship: this.uuid,
-          target: target
+          slot: hardpoint.slot,
+          target: target,
+          damage: damage
         }
       });
 
