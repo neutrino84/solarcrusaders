@@ -16,16 +16,13 @@ function Particle(game, key, frame) {
   this.angularVelocity = 0;
   this.angularDrag = 0;
 
-  this.autoScale = false;
-  this.autoAlpha = false;
-
   this.scaleData = null;
   this.alphaData = null;
   this.tintData = null;
 
-  this._s = 0;
-  this._a = 0;
-  this._t = 0;
+  this._s = null;
+  this._a = null;
+  this._t = null;
 
   this.rotation = global.Math.random() * global.Math.PI;
 
@@ -44,60 +41,46 @@ Core.install.call(
 );
 
 Particle.prototype.update = function() {
-  var timeStep = this.clock.elapsedMS / 1000;
-
+  this.step = this.clock.elapsedMS / 1000
   this.elapsed = this.clock.time - this.started;
 
   // spin
-  this.rotation += this.angularVelocity * timeStep;
-  // this.angularVelocity -= this.angularDrag * timeStep;
+  this.rotation += this.angularVelocity * this.step;
+  this.angularVelocity -= this.angularDrag * this.step;
 
   // momentum
   this.position.set(
-    this.position.x + this.velocity.x * this.vector.x * timeStep,
-    this.position.y + this.velocity.y * this.vector.y * timeStep
+    this.position.x + this.velocity.x * this.vector.x * this.step,
+    this.position.y + this.velocity.y * this.vector.y * this.step
   );
 
   // friction
-  // this.velocity.subtract(
-  //   this.drag.x * timeStep,
-  //   this.drag.y * timeStep
-  // );
+  this.velocity.subtract(
+    this.drag.x * this.step,
+    this.drag.y * this.step
+  );
 
-  if(this.autoScale) {
+  // auto scale
+  if(this._s) {
     this._s--;
-
-    if(this._s) {
-      this.scale.set(this.scaleData[this._s].x, this.scaleData[this._s].y);
-    } else {
-      this.autoScale = false;
-    }
+    this.scale.set(this.scaleData[this._s].x, this.scaleData[this._s].y);
   }
 
-  if(this.autoAlpha) {
+  // auto alpha
+  if(this._a) {
     this._a--;
-
-    if(this._a) {
-      this.alpha = this.alphaData[this._a].v;
-    } else {
-      this.autoAlpha = false;
-    }
+    this.alpha = this.alphaData[this._a].v;
   }
 
-  if(this.autoTint) {
+  // auto tint
+  if(this._t) {
     this._t--;
-
-    if(this._t) {
-      this.tint = this.tintData[this._t].color;
-    } else {
-      this.autoTint = false;
-    }
+    this.tint = this.tintData[this._t].t;
   }
 
   // check if dead
   if(this.elapsed >= this.lifespan) {
     this.visible = false;
-    this.renderable = false;
   }
 };
 
@@ -108,40 +91,25 @@ Particle.prototype.setAlphaData = function(data) {
   this.alphaData = data;
   this._a = data.length - 1;
   this.alpha = this.alphaData[this._a].v;
-  this.autoAlpha = true;
 };
 
 Particle.prototype.setScaleData = function(data) {
   this.scaleData = data;
   this._s = data.length - 1;
   this.scale.set(this.scaleData[this._s].x, this.scaleData[this._s].y);
-  this.autoScale = true;
 };
 
 Particle.prototype.setTintData = function(data) {
   this.tintData = data;
   this._t = data.length - 1;
-  this.tint = this.tintData[this._t].color;
-  this.autoTint = true;
+  this.tint = this.tintData[this._t].t;
 }
 
 Particle.prototype.reset = function(x, y) {
   this.position.set(x, y);
-
   this.elapsed = 0;
   this.started = this.clock.time;
-
   this.visible = true;
-  this.renderable = true;
-
-  this.alpha = 1.0;
-  this.scale.set(1.0, 1.0);
-
-  this.autoScale = false;
-  this.autoAlpha = false;
-  this.autoTint = false;
-
-  return this;
 };
 
 module.exports = Particle;

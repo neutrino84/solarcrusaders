@@ -14,37 +14,28 @@ function Emitter(game, x, y, maxParticles) {
   
   this.name = 'emitter' + this.game.particles.ID++;
   this.type = Const.EMITTER;
-  this.area = new Rectangle(x, y, 1, 1);
 
-  this.gravity = 0;
   this.vector = new Point(0, 0);
-
-  this.minParticleSpeed = new Point(15, 15);
-  this.maxParticleSpeed = new Point(25, 25);
+  this.velocity = new Point(0, 0);
 
   this.minParticleScale = 1;
   this.maxParticleScale = 1;
-  this.scaleData = null;
 
   this.startTint = 0xFFFFFF;
   this.endTint = 0xFFFFFF;
-  this.tintData = null;
-  this.tintCache = {};
 
-  this.minRotation = -6;
-  this.maxRotation = 6;
+  this.minRotation = 0;
+  this.maxRotation = 0;
 
   this.minParticleAlpha = 1;
   this.maxParticleAlpha = 1;
-  this.alphaData = null;
 
   this.particleClass = Particle;
 
-  this.angularDrag = 1;
+  this.angularDrag = 0;
   this.frequency = 100;
   this.lifespan = 2000;
 
-  this.bounce = new Point();
   this.particleAnchor = new Point(0.5, 0.5);
   this.particleDrag = new Point(0, 0);
 
@@ -54,15 +45,9 @@ function Emitter(game, x, y, maxParticles) {
   this.emitY = y;
 
   this.on = false;
-  this.autoScale = false;
-  this.autoAlpha = false;
-  this.autoTint = false;
 
-  this.particleBringToTop = false;
-  this.particleSendToBack = false;
-
-  this._minParticleScale = new Point(1, 1);
-  this._maxParticleScale = new Point(1, 1);
+  // this.particleBringToTop = false;
+  // this.particleSendToBack = false;
 
   this._quantity = 0;
   this._timer = 0;
@@ -121,16 +106,14 @@ Emitter.prototype.update = function() {
   }
 };
 
-Emitter.prototype.makeParticles = function(keys, frames, quantity, collide, collideWorldBounds) {
+Emitter.prototype.makeParticles = function(keys, frames, quantity) {
   if(frames === undefined) { frames = 0; }
   if(quantity === undefined) { quantity = this.maxParticles; }
-  if(collide === undefined) { collide = false; }
-  if(collideWorldBounds === undefined) { collideWorldBounds = false; }
 
-  var particle;
-  var i = 0;
-  var rndKey = keys;
-  var rndFrame = frames;
+  var particle,
+      i = 0,
+      rndKey = keys,
+      rndFrame = frames;
 
   this._frames = frames;
 
@@ -149,21 +132,12 @@ Emitter.prototype.makeParticles = function(keys, frames, quantity, collide, coll
 
     particle = new this.particleClass(this.game, rndKey, rndFrame);
     particle.visible = false;
-
-    // delete this eventually
-    // but in pixi.js
-    if(!particle.anchor.cb) {
-      particle.anchor.cb = function() {};
-    }
-    
     particle.anchor.copy(this.particleAnchor);
 
     this.add(particle);
 
     i++;
   }
-
-  return this;
 };
 
 Emitter.prototype.kill = function() {
@@ -215,7 +189,6 @@ Emitter.prototype.start = function(explode, lifespan, frequency, quantity) {
   }
 
   this.revive();
-  this.visible = true;
   this.lifespan = lifespan;
   this.frequency = frequency;
 
@@ -232,63 +205,58 @@ Emitter.prototype.start = function(explode, lifespan, frequency, quantity) {
 };
 
 Emitter.prototype.emitParticle = function() {
-  var frame,
+  var frame, rnd = this.game.rnd,
       particle = this.getFirstVisible(false);
 
   if(particle === null) {
     return false;
   }
 
-  if(this.width > 1 || this.height > 1) {
-    particle.reset(this.game.rnd.integerInRange(this.left, this.right), this.game.rnd.integerInRange(this.top, this.bottom));
-  } else {
-    particle.reset(this.emitX, this.emitY);
-  }
-
+  particle.reset(this.emitX, this.emitY);
   particle.lifespan = this.lifespan;
 
-  if(this.particleBringToTop) {
-    this.bringToTop(particle);
-  } else if(this.particleSendToBack) {
-    this.sendToBack(particle);
-  }
-
-  if(this.autoScale) {
-    particle.setScaleData(this.scaleData);
-  } else if(this.minParticleScale !== 1 || this.maxParticleScale !== 1) {
-    particle.scale.set(this.game.rnd.realInRange(this.minParticleScale, this.maxParticleScale));
-  } else if((this._minParticleScale.x !== this._maxParticleScale.x) || (this._minParticleScale.y !== this._maxParticleScale.y)) {
-    particle.scale.set(this.game.rnd.realInRange(this._minParticleScale.x, this._maxParticleScale.x), this.game.rnd.realInRange(this._minParticleScale.y, this._maxParticleScale.y));
-  }
+  // if(this.particleBringToTop) {
+  //   this.bringToTop(particle);
+  // } else if(this.particleSendToBack) {
+  //   this.sendToBack(particle);
+  // }
 
   if(Array.isArray(this._frames)) {
-    frame = this.game.rnd.pick(this._frames);
+    frame = rnd.pick(this._frames);
   } else {
     frame = this._frames;
   }
-
   particle.setFrameByName(frame);
 
-  if(this.autoAlpha) {
-    particle.setAlphaData(this.alphaData);
-  } else {
-    particle.alpha = this.game.rnd.realInRange(this.minParticleAlpha, this.maxParticleAlpha);
+  if(this.scaleData) {
+    particle.setScaleData(this.scaleData);
+  } else if(this.minParticleScale !== 1 || this.maxParticleScale !== 1) {
+    particle.scale.set(
+      rnd.realInRange(this.minParticleScale, this.maxParticleScale));
   }
 
-  if(this.autoTint) {
+  if(this.alphaData) {
+    particle.setAlphaData(this.alphaData);
+  } else {
+    particle.alpha = rnd.realInRange(this.minParticleAlpha, this.maxParticleAlpha);
+  }
+
+  if(this.tintData) {
     particle.setTintData(this.tintData);
   }
 
-  particle.vector = this.vector;
   particle.blendMode = this.blendMode;
 
-  particle.velocity.x = this.game.rnd.between(this.minParticleSpeed.x, this.maxParticleSpeed.x);
-  particle.velocity.y = this.game.rnd.between(this.minParticleSpeed.y, this.maxParticleSpeed.y);
+  particle.vector.x = this.vector.x;
+  particle.vector.y = this.vector.y;
+
+  particle.velocity.x = this.velocity.x;
+  particle.velocity.y = this.velocity.y
   
   particle.drag.x = this.particleDrag.x;
   particle.drag.y = this.particleDrag.y;
 
-  particle.angularVelocity = Math.degToRad(this.game.rnd.between(this.minRotation, this.maxRotation));
+  particle.angularVelocity = Math.degToRad(rnd.between(this.minRotation, this.maxRotation));
   particle.angularDrag = Math.degToRad(this.angularDrag);
 
   particle.onEmit();
@@ -296,35 +264,23 @@ Emitter.prototype.emitParticle = function() {
   return true;
 };
 
-Emitter.prototype.destroy = function() {
-  this.game.particles.remove(this);
-  Group.prototype.destroy.call(this, true, false);
+Emitter.prototype.setVector = function(x, y) {
+  var x = x || 0,
+      y = y || 0;
+
+  this.vector.set(x, y);
 };
 
-Emitter.prototype.setSize = function(width, height) {
-  this.area.width = width;
-  this.area.height = height;
-};
+Emitter.prototype.setVelocity = function(x, y) {
+  var x = x || 0,
+      y = y || 0;
 
-Emitter.prototype.setXSpeed = function(min, max) {
-  min = min || 0;
-  max = max || 0;
-
-  this.minParticleSpeed.x = min;
-  this.maxParticleSpeed.x = max;
-};
-
-Emitter.prototype.setYSpeed = function(min, max) {
-  min = min || 0;
-  max = max || 0;
-
-  this.minParticleSpeed.y = min;
-  this.maxParticleSpeed.y = max;
+  this.velocity.set(x, y);
 };
 
 Emitter.prototype.setRotation = function(min, max) {
-  min = min || 0;
-  max = max || 0;
+  var min = min || 0,
+      max = max || 0;
 
   this.minRotation = min;
   this.maxRotation = max;
@@ -333,88 +289,93 @@ Emitter.prototype.setRotation = function(min, max) {
 Emitter.prototype.setAlpha = function(min, max, rate, ease, yoyo) {
   if(min === undefined) { min = 1; }
   if(max === undefined) { max = 1; }
-  if(rate === undefined) { rate = 0; }
+  if(rate === undefined) { rate = 100; }
   if(ease === undefined) { ease = Easing.Linear.None; }
   if(yoyo === undefined) { yoyo = false; }
+
+  var game = this.game,
+      easing = Easing.getNameFromValue(ease),
+      key = 'alpha:' + min + ':' + max + ':' + rate + ':' + easing + ':' + yoyo;
 
   this.minParticleAlpha = min;
   this.maxParticleAlpha = max;
-  this.autoAlpha = false;
 
-  if(rate > 0 && min !== max) {
-    var tweenData = { v: min },
+  if(game.cache.checkBinaryKey(key)) {
+    this.alphaData = game.cache.getBinary(key);
+  } else if(rate > 0 && min !== max) {
+    var data,
+        tweenData = { v: min },
         tween = this.game.tweens.create(tweenData).to({ v: max }, rate, ease);
         tween.yoyo(yoyo);
 
-    this.alphaData = tween.generateData(60);
+    data = tween.generateData(60);
+    data.reverse();
 
-    //  Inverse it so we don't have to do array length look-ups in Particle update loops
-    this.alphaData.reverse();
-    this.autoAlpha = true;
+    game.cache.addBinary(key, data);
+
+    this.alphaData = data;
   }
 };
 
-Emitter.prototype.setScale = function(minX, maxX, minY, maxY, rate, ease, yoyo) {
-  if(minX === undefined) { minX = 1; }
-  if(maxX === undefined) { maxX = 1; }
-  if(minY === undefined) { minY = 1; }
-  if(maxY === undefined) { maxY = 1; }
-  if(rate === undefined) { rate = 0; }
+Emitter.prototype.setScale = function(min, max, rate, ease, yoyo) {
+  if(min === undefined) { min = 1; }
+  if(max === undefined) { max = 1; }
+  if(rate === undefined) { rate = 100; }
   if(ease === undefined) { ease = Easing.Linear.None; }
   if(yoyo === undefined) { yoyo = false; }
 
-  //  Reset these
-  this.minParticleScale = 1;
-  this.maxParticleScale = 1;
+  var game = this.game,
+      easing = Easing.getNameFromValue(ease),
+      key = 'scale:' + min + ':' + max + ':' + rate + ':' + easing + ':' + yoyo
 
-  this._minParticleScale.set(minX, minY);
-  this._maxParticleScale.set(maxX, maxY);
+  this.minParticleScale = min;
+  this.maxParticleScale = max;
 
-  this.autoScale = false;
-
-  if(rate > 0 && ((minX !== maxX) || (minY !== maxY))) {
-    var tweenData = { x: minX, y: minY },
-        tween = this.game.tweens.create(tweenData).to( { x: maxX, y: maxY }, rate, ease);
+  if(game.cache.checkBinaryKey(key)) {
+    this.scaleData = game.cache.getBinary(key);
+  } else if(rate > 0 && (min !== max)) {
+    var data,
+        tweenData = { x: min, y: min },
+        tween = this.game.tweens.create(tweenData).to( { x: max, y: max }, rate, ease);
         tween.yoyo(yoyo);
 
-    this.scaleData = tween.generateData(60);
+    data = tween.generateData(60);
+    data.reverse();
 
-    //  Inverse it so we don't have to do array length look-ups in Particle update loops
-    this.scaleData.reverse();
-    this.autoScale = true;
+    this.scaleData = game.cache.addBinary(key, data);
   }
 };
 
-Emitter.prototype.setTint = function(key, startTint, endTint, rate, ease, yoyo) {
-  if(startTint === undefined) { minX = 0xFFFFFF; }
-  if(endTint === undefined) { maxX = 0xFFFFFF; }
-  if(rate === undefined) { rate = 0; }
+Emitter.prototype.setTint = function(startTint, endTint, rate, ease, yoyo) {
+  if(startTint === undefined) { startTint = 0xFFFFFF; }
+  if(endTint === undefined) { endTint = 0xFFFFFF; }
+  if(rate === undefined) { rate = 100; }
   if(ease === undefined) { ease = Easing.Linear.None; }
-  if(yoyo === undefined) { yoyo = false; }
+
+  var game = this.game,
+      easing = Easing.getNameFromValue(ease),
+      key = 'tint:' + startTint + ':' + endTint + ':' + rate + ':' + easing + ':' + yoyo;
 
   this.startTint = startTint;
   this.endTint = endTint;
-  this.autoTint = false;
 
-  var key = key;
-  if(this.tintCache[key]) {
-    this.tintData = this.tintCache[key];
-    this.autoTint = true;
+  if(game.cache.checkBinaryKey(key)) {
+    this.tintData = game.cache.getBinary(key);
   } else if(rate > 0 && (startTint !== endTint)) {
-    var tweenData = { step: 0 },
-        tween = this.game.tweens.create(tweenData).to({ step: 100 }, rate, ease);
+    var data, tints = [],
+        tweenData = { step: 0 },
+        tween = game.tweens.create(tweenData).to({ step: 100 }, rate, ease);
         tween.yoyo(yoyo);
 
-    this.tintCache[key] = this.tintData = tween.generateData(60);
-
-    for(var i=0; i<this.tintData.length; i++) {
-      this.tintData[i].color = Color.interpolateColor(startTint, endTint, 100, this.tintData[i].step);
+    // generate cached
+    data = tween.generateData(60);
+    for(var i=0; i<data.length; i++) {
+      tints.push({ t: Color.interpolateColor(startTint, endTint, 100, data[i].step)});
     }
+    tints.reverse();
 
-    // inverse it so we don't have to do array
-    // length look-ups in Particle update loops
-    this.tintData.reverse();
-    this.autoTint = true;
+    // store
+    this.tintData = game.cache.addBinary(key, tints);
   }
 };
 
@@ -428,68 +389,10 @@ Emitter.prototype.at = function(object) {
   }
 };
 
-Object.defineProperty(Emitter.prototype, 'width', {
-  get: function() {
-    return this.area.width;
-  },
+Emitter.prototype.destroy = function(options) {
+  this.game.particles.remove(this);
 
-  set: function(value) {
-    this.area.width = value;
-  }
-});
-
-Object.defineProperty(Emitter.prototype, 'height', {
-  get: function() {
-    return this.area.height;
-  },
-
-  set: function(value) {
-    this.area.height = value;
-  }
-});
-
-Object.defineProperty(Emitter.prototype, 'x', {
-  get: function() {
-    return this.emitX;
-  },
-
-  set: function(value) {
-    this.emitX = value;
-  }
-});
-
-Object.defineProperty(Emitter.prototype, 'y', {
-  get: function() {
-    return this.emitY;
-  },
-
-  set: function(value) {
-    this.emitY = value;
-  }
-});
-
-Object.defineProperty(Emitter.prototype, 'left', {
-  get: function() {
-    return global.Math.floor(this.x - (this.area.width / 2));
-  }
-});
-
-Object.defineProperty(Emitter.prototype, 'right', {
-  get: function() {
-    return global.Math.floor(this.x + (this.area.width / 2));
-  }
-});
-
-Object.defineProperty(Emitter.prototype, 'top', {
-  get: function() {
-    return global.Math.floor(this.y - (this.area.height / 2));
-  }
-});
-
-Object.defineProperty(Emitter.prototype, 'bottom', {
-  get: function() {
-    return global.Math.floor(this.y + (this.area.height / 2));
-  }
-});
+  Group.prototype.destroy.call(this, options);
+};
 
 module.exports = Emitter;
