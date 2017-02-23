@@ -4,21 +4,24 @@ var engine = require('engine');
 function FlashEmitter(game) {
   engine.Emitter.call(this, game, 0, 0, 500);
 
-  this.lifespan = 250;
-
-  this.minRotation = -20;
-  this.maxRotation = 20;
-
   this.blendMode = engine.BlendMode.ADD;
-
-  this.setScale(0.25, 0.5, 0.25, 0.5, 250);
-  this.setAlpha(1.0, 0.0, 250);
-  this.setTint('default', 0xFFFFFF, 0x666666, 125);
   
   this.makeParticles('texture-atlas', 'explosion-d.png');
 };
 
 FlashEmitter.prototype = Object.create(engine.Emitter.prototype);
 FlashEmitter.prototype.constructor = FlashEmitter;
+
+FlashEmitter.prototype.attack = function(vector, speed, color) {
+  color = color || [0x333333, 0x000000];
+
+  this.lifespan = 400;
+
+  this.setVelocity(speed, speed);
+  this.setVector(vector.x, vector.y);
+
+  this.setScale(2.5, 0.0, 400);
+  this.setTint(color[0], color[1], 400);
+};
 
 module.exports = FlashEmitter;
