@@ -7,10 +7,6 @@ function Energy(hardpoint) {
   this.game = hardpoint.game;
   this.data = hardpoint.data;
   this.clock  = this.game.clock;
-  this.spread = {
-    x: global.Math.random() * this.data.spread - this.data.spread / 2,
-    y: global.Math.random() * this.data.spread - this.data.spread / 2
-  };
 
   this.started = 0;
   this.elapsed = 0;
@@ -59,13 +55,12 @@ Energy.prototype.start = function(destination, distance, spawn, index) {
   this.started = this.clock.time + this.delay;
 
   this.isDone = false;
-  this.isContinue = false;
   this.isRunning = true;
   this.hasExploded = false;
 
   this.destination.copyFrom(destination);
   this.offset.copyFrom(destination);
-  this.offset.add(this.spread.x, this.spread.y);
+  this.offset.add(this.spread(), this.spread());
 
   this.origin.copyFrom(this.hardpoint.updateTransform());
   this._start.copyFrom(this.origin);
@@ -75,6 +70,12 @@ Energy.prototype.start = function(destination, distance, spawn, index) {
   this.hardpoint.sprite.addChild(this.glow);
 };
 
+Energy.prototype.spread = function(spread) {
+  var rnd = this.game.rnd,
+      spread = spread || this.data.spread;
+  return rnd.realInRange(-spread, spread);
+};
+
 Energy.prototype.stop = function() {
   this.isRunning = false;
   this.hardpoint.fxGroup.removeChild(this.strip);
@@ -82,31 +83,33 @@ Energy.prototype.stop = function() {
 };
 
 Energy.prototype.continue = function(target) {
-  if(this.isContinue) {
-    this.runtime = this.length * 2;
-    this.started = this.clock.time - this.length;
-    
-    this._end.copyFrom(this.hardpoint.updateTransform(target));
-    this.isContinue = false;
-  }
+  if(this.hasExploded) { return; }
+
+  this.started = this.clock.time - this.duration - this.delay;
+  this.runtime = this.duration + this.length;
+
+  this.offset.copyFrom(target);
+  this.offset.add(this.spread(), this.spread());
 },
 
 Energy.prototype.hit = function(ship, target) {
-  if(this.isContinue) {
-    this.runtime = this.length * 4;
-    this.started = this.clock.time - this.length;
+  if(this.hasExploded) { return; }
 
-    this.ship = ship;
-    this.offset.copyFrom(ship.position);
-    // this.offset.add(this.spread.x, this.spread.y);
+  this.length = this.length/4;
 
-    this._end.copyFrom(this.hardpoint.updateTransform(target));
-    this.isContinue = false;
-  }
+  this.started = this.clock.time - this.duration - this.delay;
+  this.runtime = this.duration + this.length;
+
+  this.ship = ship;
+  this.offset.copyFrom(ship.position);
+  this.offset.add(this.spread(ship.details.size), this.spread(ship.details.size));
+
+  this.hasExploded = true;
 };
 
 Energy.prototype.update = function() {
-  var f1, f2, f3, sin, cos;
+  var f1, f2, f3, sin, cos,
+      rnd = this.game.rnd;
 
   if(this.isRunning === true) {
     this.elapsed = this.clock.time - this.started;
@@ -138,6 +141,9 @@ Energy.prototype.update = function() {
 
     if(this.ship) {
       this.offset.copyFrom(this.ship.position);
+      this.hardpoint.flashEmitter.attack(this.ship.movement._vector, this.ship.movement._speed, [0xFF3333, 0x000000]);
+      this.hardpoint.flashEmitter.at({ center: this.ship.position });
+      this.hardpoint.flashEmitter.explode(rnd.integerInRange(0,2));
     }
 
     f3 = this.elapsed/this.runtime;
@@ -148,33 +154,24 @@ Energy.prototype.update = function() {
     // update orig / dest
     this.origin.copyFrom(this.hardpoint.updateTransform(this.destination));
 
-    if(this.elapsed <= this.duration) {
+    if(this.elapsed < this.duration) {
       f1 = this.elapsed/this.duration;
       
       this.origin.interpolate(this.destination, f1, this._start);
     } else {
       this._start.copyFrom(this.destination);
 
-      // create beam
-      this.hardpoint.fireEmitter.color(this.data.emitter);
+      this.hardpoint.fireEmitter.laser(this.data.emitter);
       this.hardpoint.fireEmitter.at({ center: this.destination });
-      this.hardpoint.fireEmitter.explode(1);
-
-      if(global.Math.random() > 0.5) {
-        this.hardpoint.glowEmitter.at({ center: this.destination });
-        this.hardpoint.glowEmitter.explode(1);
-      }
-
-      this.isContinue = true;
+      this.hardpoint.fireEmitter.explode(rnd.integerInRange(0,1));
     }
 
-    // if(this.elapsed >= this.length) {
-    //   f2 = (this.elapsed-this.length)/this.duration;
-    //   this.origin.interpolate(this.destination, f2, this._end);
-      
-    // } else {
-    this._end.copyFrom(this.hardpoint.updateTransform(this.offset));
-    // }
+    if(this.elapsed >= this.length) {
+      f2 = (this.elapsed-this.length)/this.duration;
+      this.origin.interpolate(this.offset, f2, this._end);
+    } else {
+      this._end.copyFrom(this.hardpoint.updateTransform(this.offset));
+    }
   }
 };
 
