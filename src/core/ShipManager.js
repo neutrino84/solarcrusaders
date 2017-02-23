@@ -305,7 +305,6 @@ ShipManager.prototype._updateShips = function() {
       delta = ship.heal;
       ship.health = global.Math.min(stats.health, ship.health + delta);
       update.health = engine.Math.roundTo(ship.health, 1);
-      update.damage = 0;
     }
 
     // update energy
