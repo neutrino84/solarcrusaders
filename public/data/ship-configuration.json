@@ -12,7 +12,7 @@
       "evasion": 0.1,
       "energy": 200,
       "recharge": 1,
-      "size": 160,
+      "size": 136,
       "durability": 1000,
       "critical": 0.01
     },
@@ -246,7 +246,7 @@
       "evasion": 0.15,
       "energy": 100,
       "recharge": 1.5,
-      "size": 160,
+      "size": 96,
       "durability": 1000,
       "critical": 0.01
     },
@@ -321,7 +321,7 @@
       "evasion": 0.3,
       "energy": 50,
       "recharge": 3,
-      "size": 128,
+      "size": 96,
       "durability": 1000,
       "critical": 0.01
     },
@@ -592,7 +592,7 @@
       "evasion": 0.1,
       "energy": 100,
       "recharge": 1,
-      "size": 128,
+      "size": 96,
       "durability": 500,
       "critical": 0.01
     },
@@ -667,7 +667,7 @@
     "class": "transport",
     "stats": {
       "capacity": 800,
-      "health": 40,
+      "health": 80,
       "heal": 0.2,
       "armor": 0.0,
       "speed": 44.0,
@@ -675,7 +675,7 @@
       "evasion": 0.1,
       "energy": 80,
       "recharge": 1,
-      "size": 128,
+      "size": 96,
       "durability": 1000,
       "critical": 0.01
     },
@@ -750,7 +750,7 @@
     "class": "battleship",
     "stats": {
       "capacity": 3000,
-      "health": 100,
+      "health": 200,
       "heal": 0.25,
       "armor": 0.0,
       "speed": 18.0,
