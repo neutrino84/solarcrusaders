@@ -9,12 +9,12 @@ function ProgressBar(game, settings) {
     bg: {
       color: 0x000000
     },
-    label: {
-      text: {
-        fontName: 'small'
-      },
-      bg: false
-    },
+    // label: {
+    //   text: {
+    //     fontName: 'small'
+    //   },
+    //   bg: false
+    // },
     progress: {
       color: 0xffffff,
       modifier: {
@@ -49,31 +49,32 @@ function ProgressBar(game, settings) {
 ProgressBar.prototype = Object.create(Pane.prototype);
 ProgressBar.prototype.constructor = ProgressBar;
 
+ProgressBar.prototype.percentage = function(key, value) {
+  this.modifier[key] = value;
+  this.progress.paint();
+};
+
 ProgressBar.prototype.change = function(key, value) {
   var width = this.settings[key],
       current = this.modifier[key],
       difference = this.difference,
       delta;
 
+  // update change
   if(this.difference) {
     delta = current - value;
 
-    if(delta > 0) {
-      difference.modifier.left = current * width;
-      difference.modifier.width = (delta-current);
+    difference.modifier.left = value * width;
+    difference.modifier.width = delta;
 
-      difference.paint();
-      difference.alpha = 1.0;
-
-      this.tween && this.tween.stop(false);
-      this.tween = this.game.tweens.create(this.difference);
-      this.tween.to({ alpha: 0.0 }, 1000);
-      this.tween.start();
-    }
+    difference.visible = true;
+    difference.paint();
+  } else {
+    difference.visible = false;
   }
 
-  this.modifier[key] = value;
-  this.progress.paint();
+  // update percentage
+  this.percentage(key, value);
 };
 
 ProgressBar.prototype.paint = function() {

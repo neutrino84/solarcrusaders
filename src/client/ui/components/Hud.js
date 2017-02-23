@@ -29,7 +29,7 @@ function Hud(ship, settings) {
         }
       },
       bg: {
-        fillAlpha: 0.5,
+        fillAlpha: 0.68,
         color: 0x000000
       }
     },
@@ -48,7 +48,7 @@ function Hud(ship, settings) {
         }
       },
       bg: {
-        fillAlpha: 0.5,
+        fillAlpha: 0.68,
         color: 0x000000
       }
     },
@@ -73,6 +73,7 @@ function Hud(ship, settings) {
 
   this.container.addPanel(this.healthBar);
   this.container.addPanel(this.energyBar);
+
   this.addPanel(this.container);
 };
 
@@ -87,31 +88,16 @@ Hud.prototype.create = function() {
 
   this.ship = ship;
 
-  this.data && this.data.removeListener('data', this.refresh, this);
-  this.data = ship.details;
-  this.data.on('data', this.refresh, this);
-
-  this.healthBar.change(global.Math.min(1.0, details.health / stats.health));
-  this.energyBar.change(global.Math.min(1.0, details.energy / stats.energy));
+  this.healthBar.percentage(details.health / stats.health);
+  this.energyBar.percentage(details.energy / stats.energy);
 
   this.invalidate();
-  this.refresh(this.data);
 
   this.pivot.set(this.cachedWidth/2, this.cachedHeight/2);
-  this.position.set(ship.width/2, ship.height/2);
+  this.position.set(this.ship.width/2, this.ship.height/2);
 
-  // ate hit area
-  // this.targetGraphics = new engine.Graphics();
-  // this.targetGraphics.lineStyle(2, 0x994433, 1.0);
-  // this.targetGraphics.drawRect(-64, -64, 64, 64);
-  // this.targetGraphics.pivot.set(-32, -32);
-  // this.targetGraphics.position.set(0, 0);
-  // this.targetGraphics.rotation = 0.785398;
-  // this.targetGraphics.blendMode = engine.BlendMode.ADD;
-  // this.addChild(this.targetGraphics);
-
-  this.alpha = 0;
   this.visible = false;
+  this.alpha = 0.0;
 
   this.ship.addChild(this);
 };
@@ -135,6 +121,7 @@ Hud.prototype.hide = function() {
     this.animating.on('complete', function() {
       if(!this.isPlayer) {
         this.visible = false;
+        this.alpha = 0.0;
       }
     }, this);
     this.animating.start();
@@ -142,33 +129,38 @@ Hud.prototype.hide = function() {
 };
 
 Hud.prototype.update = function() {
-  var scale = this.game.world.scale.x,
-      inverse = 1/scale;
+  var scale, inverse;
+  
   if(this.visible) {
+    scale = this.game.world.scale.x
+    inverse = 1/scale;
+
     this.container.y = -this.ship.details.size/4;
     this.scale.set(inverse + scale, inverse + scale);
     this.rotation = -this.parent.rotation;
   }
 };
 
-Hud.prototype.refresh = function(data) {
+Hud.prototype.data = function(data) {
   var stats = this.ship.config.stats,
       healthBar = this.healthBar,
       energyBar = this.energyBar;
   if(this.visible) {
-    data.health && healthBar.change('width', global.Math.min(1.0, data.health / stats.health));
-    data.energy && energyBar.change('width', global.Math.min(1.0, data.energy / stats.energy));
+    data.health && healthBar.change('width', data.health / stats.health);
+    data.energy && energyBar.change('width', data.energy / stats.energy);
   }
 };
 
 Hud.prototype.enable = function() {
-  this.healthBar.change('width', 1);
-  this.energyBar.change('width', 1);
+  this.healthBar.percentage('width', 1);
+  this.energyBar.percentage('width', 1);
+  this.show();
 };
 
 Hud.prototype.disable = function() {
-  this.healthBar.change('width', 0);
-  this.energyBar.change('width', 0);
+  this.healthBar.percentage('width', 0);
+  this.energyBar.percentage('width', 0);
+  this.hide();
 };
 
 Hud.prototype.destroy = function(options) {
