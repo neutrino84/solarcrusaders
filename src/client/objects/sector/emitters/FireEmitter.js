@@ -75,6 +75,20 @@ FireEmitter.prototype.rocket = function(colors) {
   this.setTint(global.parseInt(colors[0]), global.parseInt(colors[1]), 300);
 };
 
+FireEmitter.prototype.missile = function(colors) {
+  colors = colors || [0xFF8888, 0x996666];
+
+  this.frequency = 100;
+  this.lifespan = 800;
+
+  this.setVelocity(0, 0);
+  this.setVector(0, 0);
+
+  this.setScale(0.10, 0.20, 200);
+  this.setAlpha(1.0, 0.0, 800);
+  this.setTint(global.parseInt(colors[0]), global.parseInt(colors[1]), 100);
+};
+
 FireEmitter.prototype.plasma = function(colors, position) {
   colors = colors || [0xFFAAAA, 0xFF6666];
 

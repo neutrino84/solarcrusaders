@@ -21,9 +21,16 @@ function Missile(parent) {
     length: 0
   };
 
+  this.spread = {
+    x: this.game.rnd.realInRange(-this.data.spread, this.data.spread),
+    y: this.game.rnd.realInRange(-this.data.spread, this.data.spread),
+    sin: this.game.rnd.integer(),
+    cos: this.game.rnd.integer(),
+    t: this.game.rnd.realInRange(0.001, 0.0025)
+  }
+
   this.origin = new engine.Point();
   this.destination = new engine.Point();
-  this.pointAtDistance = new engine.Point();
 
   this.isDone = false;
   this.isRunning = false;
@@ -35,26 +42,20 @@ function Missile(parent) {
 
 Missile.prototype.start = function(destination, distance, spawn, index) {
   this.elapsed = 0;
-  this.length = this.data.length;
-  this.duration = distance * this.data.projection;
+  this.length = 0;
   this.runtime = this.duration + this.length;
   this.delay = this.data.delay;
-  this.started = this.clock.time + this.delay;
+  this.started = this.clock.time;
+  this.offset = this.clock.time;
 
   this.isDone = false;
   this.isRunning = true;
   this.hasExploded = false;
 
-  this.add(this.parent.updateTransform());
-  this.destination.copyFrom(destination);
+  this.continue(this.parent.updateTransform());
+  // this.continue(destination);
 
   this.parent.fxGroup.addChild(this.missile);
-};
-
-Missile.prototype.add = function(target) {
-  this.points.length += 1;
-  this.points.x.push(target.x);
-  this.points.y.push(target.y);
 };
 
 Missile.prototype.stop = function() {
@@ -63,56 +64,51 @@ Missile.prototype.stop = function() {
 };
 
 Missile.prototype.continue = function(target) {
-  var speed = 50,
-      points = this.points,
-      i = points.length-1,
-      start = { x: points.x[i], y: points.y[i] };
-  this.destination.copyFrom(target);
-  this.pointAtDistance = engine.Line.pointAtDistance(start, this.destination, speed, this.pointAtDistance);
-  this.add(this.pointAtDistance);
+  // this.destination.copyFrom(target);
+  this.points.x.push(target.x);
+  this.points.y.push(target.y);
+  this.points.length += 1;
 };
 
 Missile.prototype.explode = function() {
   if(!this.hasExploded) {
-    // this.isDone = true;
+    this.isDone = true;
     this.hasExploded = true;
 
     this.parent.explosionEmitter.rocket();
     this.parent.explosionEmitter.at({ center: this.missile.position });
-    this.parent.explosionEmitter.explode(1);
+    this.parent.explosionEmitter.explode(3);
   }
 };
 
 Missile.prototype.update = function() {
-  var speed = 50,
-      start, i, x, y, position,
-      points = this.points;
+  var start, length, percentage,
+      points = this.points,
+      missile = this.missile;
 
   if(this.isRunning === true) {
     this.elapsed = this.clock.time - this.started;
 
-    i = points.length-1,
-    start = { x: points.x[i], y: points.y[i] };
+    length = (points.length+1)*1000;
+    percentage = this.elapsed/length;
 
-    if(this.destination.distance(this.missile.position) <= speed * 2) {
-      this.pointAtDistance = engine.Line.pointAtDistance(start, this.destination, speed, this.pointAtDistance);
-      this.add(this.pointAtDistance);
+    if(this.elapsed < length) {
+      x = engine.Math.bezierInterpolation(points.x, percentage);
+      y = engine.Math.bezierInterpolation(points.y, percentage);
+
+      x += global.Math.sin((this.elapsed + this.spread.sin) * this.spread.t) * this.spread.x;
+      y -= global.Math.cos((this.elapsed + this.spread.cos) * this.spread.t) * this.spread.y;
+
+      missile.rotation = global.Math.atan2(y - missile.position.y, x - missile.position.x)
+      missile.position.set(x, y);
+      
+      this.parent.fireEmitter.missile();
+      this.parent.fireEmitter.at({ center: missile.position });
+      this.parent.fireEmitter.explode(1);
+    } else {
+      this.explode();
+      this.stop();
     }
-
-    position = points.current/points.length;
-
-    x = engine.Math.bezierInterpolation(points.x, position);
-    y = engine.Math.bezierInterpolation(points.y, position);
-
-    if(x && y) {
-      this.missile.position.set(x, y);
-      this.missile.rotation = this.destination.angle({ x: x, y: y });
-    }
-
-    // if(this.elapsed > this.runtime) {
-    //   this.explode();
-    //   this.stop();
-    // }
   }
 };
 
