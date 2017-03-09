@@ -5,7 +5,8 @@ var engine = require('engine'),
     EngineCore = require('./EngineCore'),
     TargetingComputer = require('./TargetingComputer'),
     ShieldGenerator = require('./ShieldGenerator'),
-    // Damage = require('./Damage'),
+    Explosion = require('./Explosion'),
+    Selector = require('./Selector'),
     Hud = require('../../../ui/components/Hud');
 
 function Ship(manager, details) {
@@ -15,53 +16,43 @@ function Ship(manager, details) {
   this.manager = manager;
   this.details = details;
   
+  // config data
   this.config = details.config.ship;
 
   // layer chassis
-  this.rotation = 0; //details.rotation;
+  this.rotation = -details.rotation;
   this.chassis = new engine.Sprite(manager.game, 'texture-atlas', details.chassis + '.png');
-  this.pivot.set(this.width / 2, this.width / 2);
+  this.pivot.set(this.width/2, this.height/2);
 
   // timer events
   this.events = new engine.Timer(this.game, false);
 
   // core ship classes
   this.hud = new Hud(this);
-  // this.damage = new Damage(this);
+  this.selector = new Selector(this);
   this.movement = new Movement(this);
   this.engineCore = new EngineCore(this, this.config.engine);
   this.targetingComputer = new TargetingComputer(this, this.config.targeting);
   this.shieldGenerator = new ShieldGenerator(this, this.config.shields);
   this.repair = new Repair(this);
+  this.explosion = new Explosion(this);
 }
 
 Ship.prototype = Object.create(engine.Sprite.prototype);
 Ship.prototype.constructor = Ship;
 
 Ship.prototype.boot = function() {
-  // create hit area
-  this.hit = new engine.Circle(this.width / 2, this.width / 2, this.details.size);
-  this.hitGraphics = new engine.Graphics();
-  this.hitGraphics.lineStyle(4, this.details.ai && this.details.ai === 'pirate' ? 0xcc3333 : 0x3366cc, 0.75);
-  this.hitGraphics.drawCircle(this.hit.x, this.hit.y, this.hit.radius);
-  // this.hitGraphics.drawRect(0, 0, this.width, this.height);
-  this.hitGraphics.pivot.set(this.width/2, this.height/2);
-  this.hitGraphics.position.set(this.width/2 + 4, this.width/2 + 4);
-  // this.hitGraphics.scale.set(2.0, 2.0);
-  this.hitGraphics.blendMode = engine.BlendMode.ADD;
-
-  // add hit circle
-  this.addChild(this.hitGraphics);
-
   // add chassis
   this.addChild(this.chassis);
 
   // create main systems
+  this.selector.create();
   this.engineCore.create();
   this.targetingComputer.create();
   this.shieldGenerator.create();
   this.repair.create();
   this.hud.create();
+  this.explosion.create();
 
   // subscribe to updates
   this.details.on('data', this.data, this);
@@ -71,29 +62,37 @@ Ship.prototype.boot = function() {
 
   // set player
   if(this.isPlayer) {
-    this.game.emit('ship/player', this);
     this.hud.show();
+    this.game.emit('ship/player', this);
   }
 };
 
 Ship.prototype.data = function(data) {
   var ship, attacker, defender,
-      ships = this.manager.ships;
+      ships = this.manager.ships,
+      targetingComputer = this.targetingComputer;
   if(data.hardpoint) {
     attacker = ships[data.uuid];
     defender = ships[data.hardpoint.ship];
 
     // send hit to targeting computer
-    this.targetingComputer.hit(defender, data);
+    targetingComputer.hit(defender, data);
 
     // show hud screen
     if(attacker.isPlayer || defender.isPlayer) {
+      attacker.selector.highlight();
+      defender.selector.highlight();
+
       ship = attacker.isPlayer ? defender : attacker;
       ship.hud.show();
       ship.timer && ship.events.remove(ship.timer);
       ship.timer = ship.events.add(10000, function() {
-        ship.hud.hide();
+        this.hud.hide();
       }, ship);
+
+      if(defender.isPlayer) {
+        this.game.camera.shake();
+      }
     }
   }
 
@@ -102,56 +101,56 @@ Ship.prototype.data = function(data) {
 };
 
 Ship.prototype.update = function() {
-  this.events.update(this.game.clock.time);
+  var time = this.game.time,
+      velocity = this.movement.velocity,
+      speed = this.details.speed,
+      multiplier = velocity/speed;
+
   this.movement.update();
+  this.events.update(this.game.clock.time);
   this.targetingComputer.update();
+  this.hud.update();
   
   // update disabled state
   if(this.disabled){
-    // this.damage.update(this.movement.velocity / this.details.speed);
+    this.selector.update(multiplier);
     this.engineCore.update(0);
+    this.explosion.update();
   } else {
-    this.engineCore.update(this.movement.velocity / this.details.speed);
+    this.engineCore.update(multiplier);
   }
-
-  // update hit graphics
-  // this.hitGraphics.rotation = -this.rotation + 0.785398;// + (this.game.clock.frames * 10);
-  this.hitGraphics.alpha = this.game.world.scale.x;
-  
-  // update ui
-  this.hud.update();
 
   engine.Sprite.prototype.update.call(this);
 };
 
 Ship.prototype.enable = function(data) {
   this.disabled = false;
-  this.tint = 0xFFFFFF;
-  this.chassis.visible = true;
+  this.chassis.tint = 0xFFFFFF;
   this.hud.enable();
+  this.selector.enable();
   this.engineCore.show(true);
   this.position.set(data.pos.x, data.pos.y);
 };
 
 Ship.prototype.disable = function() {
   this.disabled = true;
-  this.tint = 0x333333;
-  this.chassis.visible = false;
+  this.chassis.tint = 0x333333;
   this.hud.disable();
-  // this.damage.destroyed();
+  this.selector.disable();
   this.engineCore.show(false);
   this.shieldGenerator.stop();
   this.repair.stop();
+  this.explosion.start();
 }
 
 Ship.prototype.destroy = function(options) {
-
   this.hud.destroy();
-  // this.damage.destroy();
+  this.selector.destroy();
   this.movement.destroy();
   this.engineCore.destroy();
   this.targetingComputer.destroy();
   this.repair.destroy();
+  this.explosion.destroy();
 
   this.details.removeListener('data', this.data);
 
@@ -162,7 +161,7 @@ Ship.prototype.destroy = function(options) {
 
   this.manager = this.config =
     this.movement = this.circle = this.hud =
-    this.damage = this.details = this.targetingComputer =
+    this.selector = this.details = this.targetingComputer =
     this.repair = this.engineCore = undefined;
 };
 

@@ -10,31 +10,36 @@ function Shockwave(game, width, height) {
   this.tween = game.tweens.create(this);
   this.texture = pixi.RenderTexture.create(width, height, pixi.SCALE_MODES.LINEAR);
 
-  this.matrix = new pixi.Matrix();
+  this.pivot.set(width/2, height/2);
 
-  this._width = width;
-  this._height = height;
-  this._strength = 0.05;
+  this.width = width;
+  this.height = height;
 };
 
 Shockwave.prototype = Object.create(engine.Shader.prototype);
 Shockwave.prototype.constructor = Shockwave;
 
-Shockwave.prototype.preRender = function(space) {
+Shockwave.prototype.preRender = function() {
   var renderer = this.game.renderer,
       transform = this.transform,
-      spaceTransform = this.transform.worldTransform.clone(),
-      planetTransform = this.transform.worldTransform.clone();
-  renderer.render(space, this.texture, true, spaceTransform.invert());
+      position = this.position,
+      worldTransform;
+
+  position.set(this.properties.position.x, this.properties.position.y);
+      
+  worldTransform = this.transform.worldTransform.clone();
+
+  renderer.render(this.game.world.static, this.texture, true, worldTransform.invert());
   renderer.render(this.game.world.background, this.texture, false);
   renderer.render(this.game.world.foreground, this.texture, false);
 };
 
 Shockwave.prototype.start = function(properties) {
-  var easing = properties.easing || engine.Easing.Quadratic.InOut,
-      animation = { _strength: 0.0 };
-  this._strength = properties.strength || this._strength;
-  this.tween.to(animation, properties.duration || 4000, easing, true, 0, 0, false);
+  this.properties = properties;
+
+  var easing = properties.easing || engine.Easing.Quadratic.Out,
+      animation = { strength: 0.0 };
+  this.tween.to(animation, properties.duration || 1024, easing, true, 0, 0, false);
   this.tween.once('complete', function() {
     this.parent.remove(this);
     this.destroy(true);
@@ -42,12 +47,10 @@ Shockwave.prototype.start = function(properties) {
 };
 
 Shockwave.prototype.apply = function(renderer, shader) {
-  shader.uniforms.strength = this._strength;
-
   shader.uniforms.time = this.tween.timeline[0].percent;
   shader.uniforms.translationMatrix = this.worldTransform.toArray(true);
 
-  renderer.bindTexture(this._texture, 0);
+  shader.uniforms.uSampler = renderer.bindTexture(this.texture, 0);
 };
 
 Shockwave.prototype.getShader = function(gl) {

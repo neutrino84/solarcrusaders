@@ -84,8 +84,8 @@ Camera.prototype.update = function() {
   this.roundPx && view.floor();
 
   if(this._shaking) {
-    view.x += (math.random() * 20 - 10) * this._shaking;
-    view.y += (math.random() * 20 - 10) * this._shaking;
+    view.x += (math.random() * 40 - 20) * this._shaking;
+    view.y += (math.random() * 40 - 20) * this._shaking;
   }
 
   display.pivot.x = view.x + view.halfWidth;

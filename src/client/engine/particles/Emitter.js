@@ -170,8 +170,8 @@ Emitter.prototype.flow = function(lifespan, frequency, quantity, total, immediat
   if(immediate) {
     this.start(true, lifespan, frequency, quantity);
 
-    this._counter += quantity;
     this.on = true;
+    this._counter += quantity;
     this._timer = this.game.clock.time + frequency * this.game.clock.slowMotion;
   } else {
     this.start(false, lifespan, frequency, quantity);

@@ -125,7 +125,7 @@ Pulse.prototype.update = function() {
       // create hole
       this.hardpoint.fireEmitter.pulse(this.data.emitter);
       this.hardpoint.fireEmitter.at({ center: this.destination });
-      this.hardpoint.fireEmitter.explode(1);
+      this.hardpoint.fireEmitter.explode(2);
     }
 
     if(this.elapsed >= this.length) {

@@ -8,7 +8,7 @@ function Movement(parent) {
   this.throttle = 0.0;
   this.magnitude = 0.0;
   this.speed = 0.0;
-  this.rotation = global.Math.PI;
+  this.rotation = global.Math.PI * global.Math.random();
   this.time = this.game.clock.time;
   
   this.start = {
@@ -22,10 +22,6 @@ function Movement(parent) {
   this.vector = new engine.Point();
   this.direction = new engine.Point();
   this.relative = new engine.Point();
-
-  // this.test = this.game.clock.throttle(function(cross) {
-  //   console.log(cross);
-  // }, 500, this);
 };
 
 Movement.CLOCK_RATE = 100;

@@ -2,7 +2,9 @@
 var engine = require('engine'),
     Energy = require('./Energy'),
     Projectile = require('./Projectile'),
-    Pulse = require('./Pulse');
+    Pulse = require('./Pulse'),
+    Plasma = require('./Plasma'),
+    Missile = require('./Missile');
 
 function Hardpoint(parent, data, config) {
   this.parent = parent;
@@ -16,23 +18,33 @@ function Hardpoint(parent, data, config) {
   this.types = {
     rocket: Projectile,
     energy: Energy,
-    pulse: Pulse
+    pulse: Pulse,
+    plasma: Plasma,
+    missile: Missile
   }
 
   this.target = new engine.Point();
   this.origin = new engine.Point();
 
   this.cap = new engine.Sprite(this.game, 'texture-atlas', 'turret-cap-' + this.ship.config.race + '.png');
-  
+  // this.cap.anchor.set(0.5, 0.5);
+  // this.cap.pivot.set(config.pivot.x, config.pivot.y);
+
   this.sprite = new engine.Sprite(this.game, 'texture-atlas', data.sprite + '.png');
   this.sprite.position.set(config.position.x, config.position.y);
+  // this.sprite.anchor.set(0.5, 0.5)
   this.sprite.pivot.set(config.pivot.x, config.pivot.y);
+  this.sprite.scale.set(0.5, 0.5)
   
   this.ship.addChild(this.sprite);
   this.sprite.addChild(this.cap);
 
   if(config.type && config.type.indexOf('projectile') >= 0) {
     this.sprite.visible = false;
+  }
+
+  if(config.type && config.type.indexOf('plasma') >= 0) {
+    
   }
 };
 
@@ -87,13 +99,17 @@ Hardpoint.prototype.hit = function(ship, target) {
     launcher.hit && launcher.hit(ship, target);
   }
 
-  this.explosionEmitter.small(vector, speed);
+  this.explosionEmitter.medium(ship);
   this.explosionEmitter.at({ center: target });
-  this.explosionEmitter.explode(rnd.integerInRange(1,2));
+  this.explosionEmitter.explode(1);
+
+  this.explosionEmitter.small(ship);
+  this.explosionEmitter.at({ center: target });
+  this.explosionEmitter.explode(1);
   
-  this.flashEmitter.attack(vector, speed);
+  this.flashEmitter.attack(ship);
   this.flashEmitter.at({ center: target });
-  this.flashEmitter.explode(rnd.integerInRange(1,2));
+  this.flashEmitter.explode(1);
 };
 
 Hardpoint.prototype.update = function() {
@@ -126,17 +142,18 @@ Hardpoint.prototype.update = function() {
   }
 };
 
-Hardpoint.prototype.updateTransform = function(target) {
+Hardpoint.prototype.updateTransform = function(target, distance) {
   var game = this.game,
       ship = this.ship,
       sprite = this.sprite,
       origin = this.origin,
-      target = target || this.target;
+      target = target || this.target,
+      distance = distance || 18;
 
   // absolute origin
   ship.updateTransform();
   game.world.worldTransform.applyInverse(ship.worldTransform.apply(sprite), origin);
-  engine.Line.pointAtDistance({ x: origin.x, y: origin.y }, target, 18, origin);
+  distance && engine.Line.pointAtDistance({ x: origin.x, y: origin.y }, target, distance, origin);
   sprite.rotation = engine.Point.angle(origin, target)-ship.rotation;
 
   return origin;

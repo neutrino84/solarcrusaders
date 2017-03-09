@@ -107,11 +107,6 @@ Movement.prototype.plot = function(data) {
 
   // set velocity
   this.velocity = this._velocity * 6;
-
-  // update position
-  // if(this._position.distance(this._destination) > 128) {
-  //   ship.position.set(this._destination.x, this._destination.y);
-  // }
 };
 
 Movement.prototype.destroy = function() {

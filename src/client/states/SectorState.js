@@ -5,7 +5,7 @@ var engine = require('engine'),
     Space = require('../fx/Space'),
     Planet = require('../fx/Planet'),
     NebulaCluster = require('../fx/NebulaCluster'),
-    // ShockwaveManager = require('../fx/ShockwaveManager'),
+    ShockwaveManager = require('../fx/ShockwaveManager'),
     Snow = require('../fx/Snow'),
     InputManager = require('../objects/sector/InputManager'),
     ShipManager = require('../objects/sector/ShipManager'),
@@ -49,6 +49,9 @@ SectorState.prototype.preload = function() {
   // load strip graphics
   this.game.load.image('laser-blue', 'imgs/game/fx/laser-blue.png');
   this.game.load.image('laser-red', 'imgs/game/fx/laser-red.png');
+  this.game.load.image('laser-vulcan', 'imgs/game/fx/laser-vulcan.png');
+  this.game.load.image('laser-heavy', 'imgs/game/fx/laser-heavy.png');
+  this.game.load.image('laser-gaus', 'imgs/game/fx/laser-gaus.png');
 
   // load texture atlas
   this.game.load.atlasJSONHash('texture-atlas', 'imgs/game/texture-atlas.png', 'data/texture-atlas.json');
@@ -68,7 +71,7 @@ SectorState.prototype.create = function() {
       mouse.capture = true;
       mouse.mouseWheelCallback = function(event) {
         var delta = event.deltaY / sensitivity,
-            scale = engine.Math.clamp(this.world.scale.x - delta, 0.25, 1.0);
+            scale = engine.Math.clamp(this.world.scale.x - delta, 0.16, 1.0);
         if(self.game.paused) { return; }
         if(self.zoom && self.zoom.isRunning) {
           self.zoom.stop();
@@ -77,12 +80,12 @@ SectorState.prototype.create = function() {
       };
 
   this.game.world.setBounds(0, 0, 4096, 4096);
-  this.game.world.scale.set(0.25, 0.25);
+  this.game.world.scale.set(0.16, 0.16);
 
   this.game.camera.bounds = null;
   this.game.camera.focusOnXY(2048, 2048);
 
-  // create sector (SectorManager)
+  // create sector
   this.createManagers();
   this.createAsteroids();
   this.createSpace();
@@ -134,7 +137,7 @@ SectorState.prototype.createSpace = function() {
 SectorState.prototype.createManagers = function() {
   this.inputManager = new InputManager(this.game);
 
-  // this.shockwaveManager = new ShockwaveManager(this.game, this);
+  // this.shockwaveManager = new ShockwaveManager(this.game);
 
   this.stationManager = new StationManager(this.game);
   this.stationManager.boot();
@@ -191,7 +194,7 @@ SectorState.prototype.update = function() {
   //   x = y = 0;
   // }
 
-  // // apply velocity
+  // apply velocity
   // camera.offset.setTo(x, y);
 };
 

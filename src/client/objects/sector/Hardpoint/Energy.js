@@ -28,29 +28,20 @@ function Energy(hardpoint) {
   this.strip = new engine.Strip(this.game, this.texture, [this._start, this._end]);
   this.strip.blendMode = engine.BlendMode.ADD;
 
-  this.scale = global.Math.random() * 1 + 1;
-  this.glow = new engine.Sprite(this.game, 'texture-atlas', 'turret-glow.png');
-  this.glow.scale.set(0.0, 0.0);
+  this.glow = new engine.Sprite(this.game, 'texture-atlas', this.data.glow.sprite);
+  this.glow.scale.set(this.data.glow.size, this.data.glow.size);
   this.glow.pivot.set(32, 32);
   this.glow.position.set(0, 16);
   this.glow.rotation = global.Math.PI * global.Math.random();
-  this.glow.tint = global.parseInt(this.data.glow);
+  this.glow.tint = global.parseInt(this.data.glow.tint);
   this.glow.blendMode = engine.BlendMode.ADD;
-
-  this.energy = new engine.Sprite(this.game, 'texture-atlas', 'explosion-d.png');
-  this.energy.scale.set(1, 1);
-  this.energy.pivot.set(32, 32);
-  this.energy.position.set(0, 16);
-  this.energy.rotation = global.Math.PI * global.Math.random();
-  this.energy.tint = global.parseInt(this.data.glow);
-  this.energy.blendMode = engine.BlendMode.ADD;
 };
 
 Energy.prototype.start = function(destination, distance, spawn, index) {
   this.elapsed = 0;
   this.length = this.data.length;
   this.duration = distance * this.data.projection;
-  this.runtime = this.duration + this.length;
+  this.runtime = this.duration + this.length/3;
   this.delay = this.data.delay;
   this.started = this.clock.time + this.delay;
 
@@ -90,19 +81,17 @@ Energy.prototype.continue = function(target) {
 
   this.offset.copyFrom(target);
   this.offset.add(this.spread(), this.spread());
-},
+};
 
 Energy.prototype.hit = function(ship, target) {
   if(this.hasExploded) { return; }
 
-  this.length = this.length/4;
+  this.length = this.length;
 
   this.started = this.clock.time - this.duration - this.delay;
-  this.runtime = this.duration + this.length;
+  this.runtime = this.duration + this.length/2;
 
   this.ship = ship;
-  this.offset.copyFrom(ship.position);
-  this.offset.add(this.spread(ship.details.size), this.spread(ship.details.size));
 
   this.hasExploded = true;
 };
@@ -125,11 +114,11 @@ Energy.prototype.update = function() {
 
       f1 = 1-(-this.elapsed/this.delay);
 
-      this.glow.scale.set(this.scale * f1, this.scale * f1);
+      this.glow.scale.set(this.data.glow.size * f1, this.data.glow.size * f1);
       this.glow.alpha = f1 * 1.0;
       return;
     } else {
-      this.glow.scale.set(this.scale, this.scale);
+      this.glow.scale.set(this.data.glow.size, this.data.glow.size);
       this.glow.alpha = 1.0;
     }
 
@@ -139,20 +128,14 @@ Energy.prototype.update = function() {
       this.stop();
     }
 
+    f3 = this.elapsed/this.runtime;
+
     if(this.ship) {
       this.offset.copyFrom(this.ship.position);
-      this.hardpoint.flashEmitter.attack(this.ship.movement._vector, this.ship.movement._speed, [0xFF3333, 0x000000]);
-      this.hardpoint.flashEmitter.at({ center: this.ship.position });
-      this.hardpoint.flashEmitter.explode(rnd.integerInRange(0,2));
     }
-
-    f3 = this.elapsed/this.runtime;
 
     // move target
     this.destination.interpolate(this.offset, f3, this.destination);
-
-    // update orig / dest
-    this.origin.copyFrom(this.hardpoint.updateTransform(this.destination));
 
     if(this.elapsed < this.duration) {
       f1 = this.elapsed/this.duration;
@@ -161,16 +144,17 @@ Energy.prototype.update = function() {
     } else {
       this._start.copyFrom(this.destination);
 
-      this.hardpoint.fireEmitter.laser(this.data.emitter);
+      this.hardpoint.fireEmitter.energy(this.data.emitter);
       this.hardpoint.fireEmitter.at({ center: this.destination });
-      this.hardpoint.fireEmitter.explode(rnd.integerInRange(0,1));
+      this.hardpoint.fireEmitter.explode(3);
     }
 
     if(this.elapsed >= this.length) {
       f2 = (this.elapsed-this.length)/this.duration;
-      this.origin.interpolate(this.offset, f2, this._end);
+      this.origin.copyFrom(this.hardpoint.updateTransform());
+      this.origin.interpolate(this.destination, f2, this._end);
     } else {
-      this._end.copyFrom(this.hardpoint.updateTransform(this.offset));
+      this._end.copyFrom(this.hardpoint.updateTransform(this.destination));
     }
   }
 };
@@ -180,7 +164,6 @@ Energy.prototype.destroy = function() {
 
   this.strip.destroy();
   this.glow.destroy();
-  this.energy.destroy();
 
   this.hardpoint = this.game = 
     this.data = this.clock =

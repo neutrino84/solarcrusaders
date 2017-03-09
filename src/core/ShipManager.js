@@ -2,6 +2,7 @@
 var uuid = require('uuid'),
     engine = require('engine'),
     Ship = require('./objects/Ship'),
+    AI = require('./AI')
     Utils = require('../utils'),
     Generator = require('../utils/Generator');
 
@@ -20,13 +21,13 @@ function ShipManager(game) {
 
   // activate ai
   this.game.clock.events.loop(1000, this._updateShips, this);
-  this.game.clock.events.loop(2000, this._updateAI, this);
 };
 
 ShipManager.prototype.constructor = ShipManager;
 
 ShipManager.prototype.init = function() {
-  var self = this;
+  // ai manager
+  this.ai = new AI(this);
 
   // io router
   this.sockets.iorouter.on('ship/data', this.data.bind(this));
@@ -36,7 +37,7 @@ ShipManager.prototype.init = function() {
 
   // generate npcs
   this.generateRandomShips();
-  this.generatePirateShips();
+  // this.generatePirateShips();
 };
 
 ShipManager.prototype.add = function(ship) {
@@ -123,32 +124,28 @@ ShipManager.prototype.enhancement = function(sock, args, next) {
 };
 
 ShipManager.prototype.data = function(sock, args, next) {
-  var self = this, ship, enhancements, ai,
-      cargo, uuid, username,
-      user = sock.sock.handshake.session.user,
+  var ship,
+      uuid, enhancements,
       uuids = args[1].uuids,
+      user = sock.sock.handshake.session.user,
       ships = [];
   for(var u in uuids) {
     ship = this.ships[uuids[u]];
     if(ship) {
       ship.ignoreEnhancements = true;
-      username = ship.user ? ship.user.data.username : ship.data.name;
       enhancements = Object.keys(ship.enhancements.available);
-      uuid = ship.user ? ship.user.uuid : null;
-      ai = ship.ai ? ship.ai.type : null;
       ships.push({
         id: ship.id,
-        uuid: ship.uuid,
-        user: uuid,
-        ai: ai,
-        name: ship.data.name,
-        username: username,
-        chassis: ship.chassis,
-        sector: ship.sector,
         x: ship.x,
         y: ship.y,
-        throttle: ship.throttle,
-        rotation: ship.rottion,
+        uuid: ship.uuid,
+        name: ship.data.name,
+        user: ship.user ? ship.user.uuid : null,
+        ai: ship.ai ? ship.ai.type : null,
+        username: ship.user ? ship.user.data.username : null,
+        chassis: ship.chassis,
+        sector: ship.data.sector,
+        rotation: ship.movement.rotation,
         credits: ship.data.credits,
         reputation: ship.data.reputation,
         kills: ship.data.kills,
@@ -201,13 +198,16 @@ ShipManager.prototype.update = function() {
 ShipManager.prototype.generateRandomShips = function() {
   var iterator = {
         'ubaidian-x01': { race: 'ubaidian', count: 0 },
-        'ubaidian-x02': { race: 'ubaidian', count: 0 },
+        'ubaidian-x02': { race: 'ubaidian', count: 2 },
         'ubaidian-x03': { race: 'ubaidian', count: 4 },
         'ubaidian-x04': { race: 'ubaidian', count: 4 },
         'hederaa-x01': { race: 'hederaa', count: 0 },
         'mechan-x01': { race: 'mechan', count: 0 },
+        'mechan-x02': { race: 'mechan', count: 0 },
+        'mechan-x03': { race: 'mechan', count: 0 },
         'general-x01': { race: 'ubaidian', count: 0 },
-        'general-x02': { race: 'ubaidian', count: 0 }
+        'general-x02': { race: 'ubaidian', count: 0 },
+        'general-x03': { race: 'ubaidian', count: 0 }
       };
   for(var chassis in iterator) {
     for(var i=0; i<iterator[chassis].count; i++) {
@@ -222,35 +222,33 @@ ShipManager.prototype.generatePirateShips = function() {
         location: { x: -2048, y: 2048 },
         ships: [
           { name: 'xinli', chassis: 'general-x01', credits: 1500, reputation: -100 },
-          { name: 'mavero', chassis: 'general-x01', credits: 1500, reputation: -100 },
-          { name: 'ardelle', chassis: 'general-x01', credits: 1500, reputation: -100 },
-          { name: 'vega', chassis: 'general-x02', credits: 3000, reputation: -200 },
-          { name: 'thak', chassis: 'general-x02', credits: 3000, reputation: -200 },
-          { name: 'zeus', chassis: 'general-x03', credits: 8500, reputation: -250 }
+          { name: 'mocolo', chassis: 'general-x01', credits: 1500, reputation: -100 },
+          { name: 'mavero', chassis: 'general-x02', credits: 1500, reputation: -100 },
+          { name: 'saag', chassis: 'general-x02', credits: 1500, reputation: -100 }
         ]
       }, {
         location: { x: 6144, y: 2048 },
         ships: [
           { name: 'satel', chassis: 'general-x01', credits: 1500, reputation: -100 },
-          { name: 'thath', chassis: 'general-x01', credits: 1500, reputation: -100 },
-          { name: 'sai', chassis: 'general-x02', credits: 3000, reputation: -200 },
-          { name: 'ramir', chassis: 'general-x02', credits: 3000, reputation: -200 }
+          { name: 'oeem', chassis: 'general-x01', credits: 1500, reputation: -100 },
+          { name: 'thath', chassis: 'general-x02', credits: 1500, reputation: -100 },
+          { name: 'zeus', chassis: 'general-x03', credits: 1500, reputation: -100 }
         ]
       }, {
         location: { x: 2048, y: -2048 },
         ships: [
           { name: 'manduk', chassis: 'general-x01', credits: 1500, reputation: -100 },
-          { name: 'talai', chassis: 'general-x01', credits: 1500, reputation: -100 },
-          { name: 'prelloc', chassis: 'general-x01', credits: 1500, reputation: -100 },
-          { name: 'kresthaa', chassis: 'general-x01', credits: 1500, reputation: -100 }
+          { name: 'deuh', chassis: 'general-x01', credits: 1500, reputation: -100 },
+          { name: 'talai', chassis: 'general-x02', credits: 1500, reputation: -100 },
+          { name: 'kaan', chassis: 'general-x03', credits: 1500, reputation: -100 }
         ]
       }, {
         location: { x: 2048, y: 6144 },
         ships: [
-          { name: 'theni', chassis: 'general-x02', credits: 3000, reputation: -200 },
-          { name: 'saroc', chassis: 'general-x02', credits: 3000, reputation: -200 },
-          { name: 'gahl', chassis: 'general-x02', credits: 3000, reputation: -200 },
-          { name: 'amira', chassis: 'general-x02', credits: 3000, reputation: -200 }
+          { name: 'theni', chassis: 'general-x01', credits: 1500, reputation: -100 },
+          { name: 'zulu', chassis: 'general-x01', credits: 1500, reputation: -100 },
+          { name: 'saroc', chassis: 'general-x02', credits: 1500, reputation: -100 },
+          { name: 'malvo', chassis: 'general-x02', credits: 1500, reputation: -100 }
         ]
       }],
       len = iterator.length;
@@ -322,15 +320,6 @@ ShipManager.prototype._updateShips = function() {
     this.sockets.io.sockets.emit('ship/data', {
       type: 'update', ships: updates
     });
-  }
-};
-
-ShipManager.prototype._updateAI = function() {
-  var ship,
-      ships = this.ships;
-  for(var s in ships) {
-    ship = ships[s];
-    ship.ai && ship.ai.update();
   }
 };
 

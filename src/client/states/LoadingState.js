@@ -118,7 +118,6 @@ LoadingState.prototype.resize = function(width, height) {
 
 LoadingState.prototype.shutdown = function() {
   //.. properly destroy
-  console.log('shutdown');
 };
 
 module.exports = LoadingState;

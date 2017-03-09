@@ -1,4 +1,5 @@
-var Timer = require('../client/engine/time/Timer');
+
+var engine = require('engine');
 
 function Clock(game) {
   this.game = game;
@@ -9,7 +10,7 @@ function Clock(game) {
   this.started = 0;
   this.desiredFps = Clock.DESIRED_FPS;
   this.stepSize = 1000 / Clock.DESIRED_FPS;
-  this.events = new Timer(this.game, false);
+  this.events = new engine.Timer(this.game, false);
 
   this.timers = [];
 };

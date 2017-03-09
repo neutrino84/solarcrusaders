@@ -6,7 +6,6 @@ var async = require('async'),
     Hardpoint = require('./Hardpoint'),
     Enhancement = require('./Enhancement'),
     Movement = require('./Movement'),
-    AI = require('../AI'),
     Utils = require('../../utils');
 
 function Ship(manager, data) {
@@ -25,10 +24,13 @@ function Ship(manager, data) {
   this.disabled = false;
   this.ignoreEnhancements = false;
 
+  // create timers and movement system
   this.movement = new Movement(this);
-  this.ai = data.ai ? AI.create(data.ai, this) : null; // reformat this
 
-  this.timers = [];
+  // generate ai
+  this.ai = manager.ai.create(data.ai, this);
+
+  // create metadata
   this.systems = {};
   this.hardpoints = {};
   this.enhancements = {
@@ -40,7 +42,6 @@ function Ship(manager, data) {
       evasion: {},
       armor: {},
       critical: {},
-      rate: {},
       speed: {}
     },
     available: {}
@@ -171,13 +172,15 @@ Ship.prototype.attack = function(data, rtt) {
 };
 
 Ship.prototype.attacked = function(target, slot) {
-  var ship,
-      ships = this.manager.ships;
-  if(this.game == undefined) { return; }
-  for(var s in ships) {
-    ship = ships[s];
-    if(ship.game && ship != this) {
-      ship.hit(this, target, slot);
+  var ship, ships,
+      manager = this.manager;
+  if(manager != undefined) {
+    ships = manager.ships;
+    for(var s in ships) {
+      ship = ships[s];
+      if(ship.game && ship != this) {
+        ship.hit(this, target, slot);
+      }
     }
   }
 };
@@ -191,7 +194,7 @@ Ship.prototype.hit = function(attacker, target, slot) {
       hardpoint = attacker.hardpoints[slot],
       compensated = movement.compensated(),
       distance = compensated.distance(target),
-      ratio = distance / this.size,
+      ratio = distance / (this.size * hardpoint.aoe),
       damage, health;
   if(ratio < 1.0) {
     // test data
@@ -262,7 +265,7 @@ Ship.prototype.hit = function(attacker, target, slot) {
 Ship.prototype.disable = function() {
   this.disabled = true;
   this.ai && this.ai.disengage();
-  this.timer = this.game.clock.events.add(this.ai ? this.ai.respawnTime : 10000, this.enable, this);
+  this.timer = this.game.clock.events.add(this.ai ? this.ai.settings.respawn : 10000, this.enable, this);
   this.sockets.io.sockets.emit('ship/disabled', {
     uuid: this.uuid
   });
@@ -502,7 +505,7 @@ Object.defineProperty(Ship.prototype, 'evasion', {
     var total = this.data.evasion,
         evasion = this.ignoreEnhancements ? [] : this.enhancements.active.evasion;
     for(var a in evasion) {
-      total += evasion[a].stat('evasion', 'value');
+      total *= evasion[a].stat('evasion', 'value');
     }
     return total;
   }
@@ -510,12 +513,12 @@ Object.defineProperty(Ship.prototype, 'evasion', {
 
 Object.defineProperty(Ship.prototype, 'speed', {
   get: function() {
-    var bonus = 0,
+    var total = this.data.speed,
         speed = this.ignoreEnhancements ? [] : this.enhancements.active.speed;
     for(var a in speed) {
-      bonus += speed[a].stat('speed', 'value');
+      total *= speed[a].stat('speed', 'value');
     }
-    return this.data.speed + bonus;
+    return total;
   }
 });
 

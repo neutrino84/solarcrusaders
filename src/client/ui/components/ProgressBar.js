@@ -49,6 +49,12 @@ function ProgressBar(game, settings) {
 ProgressBar.prototype = Object.create(Pane.prototype);
 ProgressBar.prototype.constructor = ProgressBar;
 
+ProgressBar.prototype.reset = function() {
+  if(this.difference) {
+    this.difference.visible = false;
+  }
+};
+
 ProgressBar.prototype.percentage = function(key, value) {
   this.modifier[key] = value;
   this.progress.paint();
@@ -68,6 +74,7 @@ ProgressBar.prototype.change = function(key, value) {
     difference.modifier.width = delta;
 
     difference.visible = true;
+    difference.alpha = 1.0;
     difference.paint();
   } else {
     difference.visible = false;

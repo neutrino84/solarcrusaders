@@ -92,8 +92,8 @@ void main(void) {
   
   float rn = 1.0 - n;
         rn *= pow(rn, 10.0);
-        rn += (0.15 * sin(time * 5.0) + 0.3);
+        rn += (0.1 * sin(time * 2.5) + 0.2);
         rn *= tex.a;
 
-  gl_FragColor = vec4(rn, rn, rn, rn);
+  gl_FragColor = vec4(rn/2.0, rn/1.5, rn, rn);
 }

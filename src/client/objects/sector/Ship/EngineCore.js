@@ -65,7 +65,7 @@ EngineCore.prototype.create = function() {
 
 EngineCore.prototype.start = function() {
   this.isBoosting = true;
-  this.clamp = 2.0;
+  this.clamp = 1.25;
 };
 
 EngineCore.prototype.stop = function() {
@@ -96,29 +96,28 @@ EngineCore.prototype.update = function(multiplier) {
       scale, highlight;
 
   // set brightness
-  this.brightness += multiplier * 0.1 - 0.05;
-  this.brightness = engine.Math.clamp(this.brightness, 0.1, this.clamp);
+  multiplier = engine.Math.clamp(multiplier, 0.25, this.clamp);
   
   for(var g=0; g<length; g++) {
     scale = config[g].scale;
     
     // update glow
     glows[g].scale.set(
-      this.brightness * scale.endX + scale.startX + flicker,
-      this.brightness * scale.endY + scale.startY + flicker);
+      multiplier * scale.endX + scale.startX + flicker,
+      multiplier * scale.endY + scale.startY + flicker);
 
     // update highlight
     highlight = highlights[g];
-    highlight.alpha = this.brightness;
-    highlight.scale.set(this.brightness, this.brightness);
+    highlight.alpha = multiplier;
+    highlight.scale.set(multiplier, multiplier);
     
     if(this.isBoosting) {
-      highlight.worldTransform.apply(highlight.pivot, position);
-      game.world.worldTransform.applyInverse(position, position);
+      // highlight.worldTransform.apply(highlight.pivot, position);
+      // game.world.worldTransform.applyInverse(position, position);
       
-      ship.manager.fireEmitter.boost([config[g], 0x666666], ship.movement);
-      ship.manager.fireEmitter.at({ center: position });
-      ship.manager.fireEmitter.explode(1);
+      // ship.manager.fireEmitter.boost([config[g], 0x666666], ship.movement);
+      // ship.manager.fireEmitter.at({ center: position });
+      // ship.manager.fireEmitter.explode(1);
     }
   }
 };

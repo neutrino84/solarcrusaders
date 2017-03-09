@@ -49,7 +49,7 @@ User.prototype.create = function(ships) {
     User.count++
     this.game.emit('ship/create', {
       name: Generator.getName('ubaidian'),
-      chassis: 'ubaidian-x01' //this.data.role === 'user' ? 'ubaidian-x03' : 'ubaidian-x0' + (User.count % 4 + 1)
+      chassis: 'unknown-x01' //this.data.role === 'user' ? 'ubaidian-x03' : 'ubaidian-x0' + (User.count % 4 + 1)
     }, this);
   }
 };

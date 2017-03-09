@@ -17,7 +17,7 @@ function Projectile(parent) {
   this.length = 0;
   this.duration = 0;
 
-  this.isDone = true;
+  this.isDone = false;
   this.isRunning = false;
 
   this.target = new engine.Point();
@@ -26,7 +26,7 @@ function Projectile(parent) {
   this.offset = new engine.Point(global.Math.random() * 256 - 256 / 2, global.Math.random() * 256 - 256 / 2);
 
   this.projectile = new engine.Sprite(this.game, 'texture-atlas', this.data.texture);
-  this.projectile.scale.set(0.5, 0.5);
+  this.projectile.scale.set(0.75, 0.75);
   this.projectile.pivot.set(32, 32);
 };
 
@@ -54,14 +54,13 @@ Projectile.prototype.stop = function() {
 };
 
 Projectile.prototype.explode = function() {
-  var parent = this.parent,
-      rnd = this.game.rnd;
   if(!this.hasExploded) {
-    this.parent.explosionEmitter.small({ x: rnd.frac(), y: rnd.frac() }, rnd.realInRange(-5, 5));
+    this.isDone = true;
+    this.hasExploded = true;
+    this.parent.explosionEmitter.rocket();
     this.parent.explosionEmitter.at({ center: this.projectile.position });
-    this.parent.explosionEmitter.explode(4);
+    this.parent.explosionEmitter.explode(6);
   }
-  this.hasExploded = true;
 };
 
 Projectile.prototype.update = function() {
@@ -69,10 +68,13 @@ Projectile.prototype.update = function() {
 
   if(this.isRunning === true) {
     this.elapsed = this.clock.time - this.started;
-
-    if(this.elapsed < 0) { return; }
-
     this.origin.copyFrom(this.parent.updateTransform());
+
+    if(this.elapsed < 0) {
+      this.projectile.position.x = this.origin.x;
+      this.projectile.position.y = this.origin.y;
+      return;
+    }
 
     f1 = this.elapsed/this.runtime;
 
@@ -81,6 +83,12 @@ Projectile.prototype.update = function() {
     this.projectile.position.x = this.target.x;
     this.projectile.position.y = this.target.y;
     this.projectile.rotation = this.target.angle(this.destination);
+
+    if(this.elapsed >= this.length) {
+      this.parent.fireEmitter.rocket();
+      this.parent.fireEmitter.at({ center: this.projectile.position });
+      this.parent.fireEmitter.explode(1);
+    }
 
     if(this.elapsed > this.runtime) {
       this.explode();
