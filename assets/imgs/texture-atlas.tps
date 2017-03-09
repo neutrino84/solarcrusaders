@@ -197,7 +197,10 @@
             <key type="filename">fx/explosion-d.png</key>
             <key type="filename">fx/turret-glow.png</key>
             <key type="filename">icons/enhancement-booster.png</key>
+            <key type="filename">icons/enhancement-drill.png</key>
             <key type="filename">icons/enhancement-heal.png</key>
+            <key type="filename">icons/enhancement-missiles.png</key>
+            <key type="filename">icons/enhancement-overload.png</key>
             <key type="filename">icons/enhancement-piercing.png</key>
             <key type="filename">icons/enhancement-shield.png</key>
             <key type="filename">icons/icon-close.png</key>
@@ -225,13 +228,17 @@
             <key type="filename">ships/ubaidian/ubaidian-x02.png</key>
             <key type="filename">ships/ubaidian/ubaidian-x03.png</key>
             <key type="filename">ships/ubaidian/ubaidian-x04.png</key>
+            <key type="filename">ships/unknown/unknown-x01.png</key>
             <key type="filename">turrets/turret-a.png</key>
             <key type="filename">turrets/turret-b.png</key>
+            <key type="filename">turrets/turret-c.png</key>
             <key type="filename">turrets/turret-cap-general.png</key>
             <key type="filename">turrets/turret-cap-hederaa.png</key>
             <key type="filename">turrets/turret-cap-mechan.png</key>
             <key type="filename">turrets/turret-cap-ubaidian.png</key>
+            <key type="filename">turrets/turret-cap-unknown.png</key>
             <key type="filename">turrets/turret-rocket-a.png</key>
+            <key type="filename">turrets/turret-rocket-b.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -283,6 +290,13 @@
             <filename>turrets/turret-rocket-a.png</filename>
             <filename>icons/enhancement-heal.png</filename>
             <filename>fx/turret-glow.png</filename>
+            <filename>icons/enhancement-drill.png</filename>
+            <filename>icons/enhancement-missiles.png</filename>
+            <filename>icons/enhancement-overload.png</filename>
+            <filename>ships/unknown/unknown-x01.png</filename>
+            <filename>turrets/turret-cap-unknown.png</filename>
+            <filename>turrets/turret-rocket-b.png</filename>
+            <filename>turrets/turret-c.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
