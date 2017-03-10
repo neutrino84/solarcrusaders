@@ -3,12 +3,12 @@
 import './polyfill';
 
 // export lib
-import * as extras from '../libs/pixi.js/src/extras';
-import * as mesh from '../libs/pixi.js/src/mesh';
-import * as particles from '../libs/pixi.js/src/particles';
-import * as filters from '../libs/pixi.js/src/filters';
+import * as extras from '../../node_modules/pixi.js/lib/extras';
+import * as mesh from '../../node_modules/pixi.js/lib/mesh';
+import * as particles from '../../node_modules/pixi.js/lib/particles';
+import * as filters from '../../node_modules/pixi.js/lib/filters';
 
-export * from '../libs/pixi.js/src/core';
+export * from '../../node_modules/pixi.js/lib/core';
 export {
   extras,
   mesh,

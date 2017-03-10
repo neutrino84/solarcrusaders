@@ -22,10 +22,7 @@ var Device = require('./system/Device'),
     Ellipse = require('./geometry/Ellipse'),
     Emitter = require('./particles/Emitter'),
     Easing = require('./tween/Easing'),
-    Timer = require('./time/Timer'),
-
-    // plugins
-    WireframeRenderer = require('./renderers/WireframeRenderer');
+    Timer = require('./time/Timer');
 
 var core = module.exports =
   Object.assign(require('./const'), {
