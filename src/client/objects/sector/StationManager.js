@@ -10,25 +10,13 @@ function StationManager(game) {
 
   this.game.world.foreground.add(this.stationsGroup);
 
-  this.game.once('ship/player', this.start, this);
   this.game.on('station/create', this.create, this);
-
-  // can add
-  this.ready = false;
 
   // stations
   this.stations = {};
 }
 
 StationManager.prototype.constructor = StationManager;
-
-StationManager.prototype.start = function() {
-  var stations = this.stations;
-  for(var s in stations) {
-    this.stationsGroup.add(stations[s]);
-  }
-  this.ready = true;
-};
 
 StationManager.prototype.create = function(data) {
   var game = this.game,
@@ -39,9 +27,7 @@ StationManager.prototype.create = function(data) {
   this.stations[station.uuid] = station;
 
   // wait
-  if(this.ready) {
-    this.stationsGroup.add(this.stations[station.uuid]);
-  }
+  this.stationsGroup.add(this.stations[station.uuid]);
 };
 
 StationManager.prototype.sync = function(data) {
