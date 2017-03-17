@@ -19,11 +19,6 @@ StationNetManager.prototype.init = function() {
   this.socket.on('station/enabled', this._enabled.bind(this));
 };
 
-StationNetManager.prototype.create = function(station) {
-  this.stations[station.uuid] = new StationData(this.game, station);
-  this.game.emit('station/create', this.stations[station.uuid]);
-};
-
 StationNetManager.prototype._data = function(data) {
   var station,
       stations = data.stations;
@@ -32,7 +27,7 @@ StationNetManager.prototype._data = function(data) {
       station = stations[s];
       
       if(data.type === 'sync' && this.stations[station.uuid] === undefined) {
-        this.create(station);
+        this.stations[station.uuid] = new StationData(this.game, station);
       } else if(this.stations[station.uuid]) {
         this.stations[station.uuid].update(station);
       }
