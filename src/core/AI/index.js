@@ -5,25 +5,34 @@ var Basic = require('./Basic'),
 function AI(manager) {
   this.manager = manager;
   this.game = manager.game;
-  this.game.clock.events.loop(250, this.update, this);
+  this.game.clock.events.loop(500, this.update, this);
+  this.ships = {};
 };
 
 AI.prototype.constructor = AI;
 
 AI.prototype.create = function(type, ship) {
+  var ai = null;
   switch(type) {
     case 'basic':
-      return new Basic(ship);
+      ai = new Basic(ship);
+      break
     case 'pirate':
-      return new Pirate(ship);
+      ai = new Pirate(ship);
+      break;
     default:
-      return null;
+      ai = null;
+      break;
   }
+  if(ai != null) {
+    this.ships[ship.uuid] = ship;
+  }
+  return ai;
 };
 
 AI.prototype.update = function() {
   var ship,
-      ships = this.manager.ships;
+      ships = this.ships;
   for(var s in ships) {
     ship = ships[s];
 
