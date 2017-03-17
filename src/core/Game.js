@@ -1,5 +1,6 @@
 
-var EventEmitter = require('eventemitter3'),
+var engine = require('engine'),
+    EventEmitter = require('eventemitter3'),
     Timeout = require('./Timeout'),
     Clock = require('./Clock'),
     SectorManager = require('./SectorManager');
@@ -13,6 +14,8 @@ function Game(app) {
 
   this.delta = 0;
   this.isBooted = false;
+
+  this.rnd = new engine.RandomGenerator();
 
   this.timeout = new Timeout(this);
   this.clock = new Clock(this);
