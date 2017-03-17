@@ -11,7 +11,7 @@ function ShieldGenerator(parent) {
 ShieldGenerator.prototype.constructor = ShieldGenerator;
 
 ShieldGenerator.prototype.create = function() {
-  this.shieldSprite = new engine.Sprite(this.game, 'texture-atlas', this.parent.details.chassis + '.png');
+  this.shieldSprite = new engine.Sprite(this.game, 'texture-atlas', this.parent.data.chassis + '.png');
   this.shieldSprite.filters = [new pixi.filters.BlurFilter(10, 4)];
   this.shieldSprite.cache();
   this.shieldSprite.filters = [new ShieldFilter(this.game, this.shieldSprite)];

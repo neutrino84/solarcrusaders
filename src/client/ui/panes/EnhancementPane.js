@@ -111,7 +111,7 @@ EnhancementPane.prototype._select = function(button) {
   
   // send event
   game.emit('ship/enhancement/start', {
-    uuid: player.details.uuid,
+    uuid: player.data.uuid,
     enhancement: button.parent.id
   });
 };
@@ -119,7 +119,7 @@ EnhancementPane.prototype._select = function(button) {
 EnhancementPane.prototype._started = function(data) {
   var config = this.config[data.enhancement],
       button = this.buttons[data.enhancement];
-  if(this.player && data.uuid === this.player.details.uuid) {
+  if(this.player && data.uuid === this.player.data.uuid) {
     
     // disable
     button.disabled(true);
@@ -139,11 +139,11 @@ EnhancementPane.prototype._started = function(data) {
 };
 
 EnhancementPane.prototype._stopped = function(data) {
-  if(this.player && data.uuid !== this.player.details.uuid) { return; }
+  if(this.player && data.uuid !== this.player.data.uuid) { return; }
 };
 
 EnhancementPane.prototype._cancelled = function(data) {
-  if(this.player && data.uuid !== this.player.details.uuid) { return; }
+  if(this.player && data.uuid !== this.player.data.uuid) { return; }
 
   var button = this.buttons[data.enhancement];
       button.disabled(false);
@@ -157,7 +157,7 @@ EnhancementPane.prototype._player = function(player) {
   var enhancement, button, container,
       enhancementData, enhancementStats,
       tooltipText, tooltip,
-      enhancements = player.details.enhancements,
+      enhancements = player.data.enhancements,
       buttons = this.buttons;
 
   if(this.player) { return; }

@@ -169,11 +169,11 @@ ShipManager.prototype._sync = function(data) {
       details, created, distance;
   for(var s=0; s<length; s++) {
     ship = ships[s];
-    details = this.shipNetManager.getShipData(ship.uuid);
+    shipData = this.shipNetManager.getShipData(ship.uuid);
 
-    if(details) {
+    if(shipData) {
       created = !this.ships[ship.uuid];
-      cached = created ? this.ships[ship.uuid] = this.create(ship, details) : this.ships[ship.uuid];
+      cached = created ? this.ships[ship.uuid] = this.create(ship, shipData) : this.ships[ship.uuid];
       cached.movement.plot(ship);
 
       // if(cached.movement._speed > 0) {

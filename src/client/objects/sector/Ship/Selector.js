@@ -5,7 +5,7 @@ function Selector(ship) {
   this.ship = ship;
   this.game = ship.game;
   this.manager = ship.manager;
-  this.details = ship.details;
+  this.data = ship.data;
 };
 
 Selector.prototype.constructor = Selector;
@@ -13,10 +13,10 @@ Selector.prototype.constructor = Selector;
 Selector.prototype.create = function() {
   var ship = this.ship,
       size = ship.isPlayer ? 10 : 6,
-      radius = ship.details.size,
+      radius = ship.data.size,
       halfWidth = ship.width/2,
       halfHeight = ship.height/2,
-      color = ship.details.ai && ship.details.ai === 'pirate' ? 0xcc3333 : 0x3366cc;
+      color = ship.data.ai && ship.data.ai === 'pirate' ? 0xcc3333 : 0x3366cc;
 
   // add selector highlight
   this.alpha = ship.isPlayer ? 0.6 : 0.2;
@@ -44,7 +44,7 @@ Selector.prototype.highlight = function() {
     this.animating.on('complete', function() {
       this.graphics.alpha = this.alpha;
     }, this);
-    this.animating.yoyo(true, 8000);
+    this.animating.yoyo(true, 9500);
     this.animating.start();
   }
 };
@@ -67,7 +67,7 @@ Selector.prototype.destroyed = function() {
 
 Selector.prototype.destroy = function() {
   this.ship = this.game = this.manager =
-    this.details = undefined;
+    this.data = undefined;
 };
 
 module.exports = Selector;

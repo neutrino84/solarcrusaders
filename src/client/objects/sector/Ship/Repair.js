@@ -10,7 +10,7 @@ function Repair(parent) {
 Repair.prototype.constructor = Repair;
 
 Repair.prototype.create = function() {
-  this.sprite = new engine.Sprite(this.game, 'texture-atlas', this.parent.details.chassis + '.png');
+  this.sprite = new engine.Sprite(this.game, 'texture-atlas', this.parent.data.chassis + '.png');
   this.sprite.filters = [new OutlineFilter(this.sprite.width/1.5, this.sprite.height/1.5)];
   this.sprite.cache();
   this.sprite.filters = [];

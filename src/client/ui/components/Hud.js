@@ -84,12 +84,12 @@ Hud.prototype.create = function() {
   var game = this.game,
       ship = this.ship,
       stats = ship.config.stats,
-      details = ship.details;
+      data = ship.data;
 
   this.ship = ship;
 
-  this.healthBar.percentage(details.health / stats.health);
-  this.energyBar.percentage(details.energy / stats.energy);
+  this.healthBar.percentage(data.health / stats.health);
+  this.energyBar.percentage(data.energy / stats.energy);
 
   this.invalidate();
 
@@ -133,7 +133,7 @@ Hud.prototype.update = function() {
 
     this.scale.set(inverse, inverse);
     this.rotation = -ship.rotation;
-    this.container.y = -(ship.details.size/inverse+8);
+    this.container.y = -(ship.data.size/inverse+8);
   }
 };
 

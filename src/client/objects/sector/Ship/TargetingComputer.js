@@ -20,9 +20,9 @@ function TargetingComputer(ship, config) {
 TargetingComputer.prototype.constructor = TargetingComputer;
 
 TargetingComputer.prototype.create = function() {
-  var hardpoint, config, data, slot,
+  var hardpoint, config, slot,
       ship = this.ship,
-      hardpoints = ship.details.hardpoints;
+      hardpoints = ship.data.hardpoints;
   for(var h in hardpoints) {
     slot = hardpoints[h].slot;
 

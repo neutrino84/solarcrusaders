@@ -70,17 +70,17 @@ TopPane.prototype.constructor = TopPane;
 
 TopPane.prototype._player = function(ship) {
   var stats = ship.config.stats,
-      details = ship.details,
+      data = ship.data,
       game = this.game;
 
   this.ship = ship;
 
   this.data && this.data.removeListener('data', this._update, this);
-  this.data = ship.details;
+  this.data = ship.data;
   this.data.on('data', this._update, this);
 
-  this.healthBar.change(global.Math.min(1.0, details.health / stats.health));
-  this.energyBar.change(global.Math.min(1.0, details.energy / stats.energy));
+  this.healthBar.change(global.Math.min(1.0, data.health / stats.health));
+  this.energyBar.change(global.Math.min(1.0, data.energy / stats.energy));
 
   this._update(this.data);
 };

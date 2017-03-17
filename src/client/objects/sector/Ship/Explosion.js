@@ -9,7 +9,7 @@ function Explosion(ship) {
   this.temp = new engine.Point();
 
   // create hit area
-  this.hit = new engine.Circle(this.ship.width/2, this.ship.height/2, this.ship.details.size/2);
+  this.hit = new engine.Circle(this.ship.width/2, this.ship.height/2, this.ship.data.size/2);
 };
 
 Explosion.prototype.constructor = Explosion;
@@ -73,8 +73,8 @@ Explosion.prototype.start = function() {
 
   this.game.emit('fx/shockwave', {
     position: ship.position,
-    width: ship.details.size * 14,
-    height: ship.details.size * 14
+    width: ship.data.size * 14,
+    height: ship.data.size * 14
   });
 };
 

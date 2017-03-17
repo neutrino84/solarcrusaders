@@ -9,21 +9,21 @@ var engine = require('engine'),
     Selector = require('./Selector'),
     Hud = require('../../../ui/components/Hud');
 
-function Ship(manager, details) {
-  engine.Sprite.call(this, manager.game, 'texture-atlas', details.chassis + '.png');
+function Ship(manager, data) {
+  engine.Sprite.call(this, manager.game, 'texture-atlas', data.chassis + '.png');
 
-  this.name = details.name;
+  this.name = data.name;
   this.manager = manager;
-  this.details = details;
+  this.data = data;
   
   // config data
-  this.config = details.config.ship;
+  this.config = data.config.ship;
 
   // layer chassis
-  this.chassis = new engine.Sprite(manager.game, 'texture-atlas', details.chassis + '.png');
+  this.chassis = new engine.Sprite(manager.game, 'texture-atlas', data.chassis + '.png');
 
   // defaults
-  this.rotation = details.rotation;
+  this.rotation = data.rotation;
   this.pivot.set(this.width/2, this.height/2);
 
   // timer events
@@ -57,7 +57,7 @@ Ship.prototype.boot = function() {
   this.explosion.create();
 
   // subscribe to updates
-  this.details.on('data', this.data, this);
+  this.data.on('data', this.delta, this);
 
   // start events
   this.events.start();
@@ -69,7 +69,7 @@ Ship.prototype.boot = function() {
   }
 };
 
-Ship.prototype.data = function(data) {
+Ship.prototype.delta = function(data) {
   var ship, attacker, defender,
       ships = this.manager.ships,
       targetingComputer = this.targetingComputer;
@@ -114,7 +114,7 @@ Ship.prototype.data = function(data) {
 Ship.prototype.update = function() {
   var time = this.game.time,
       velocity = this.movement.velocity,
-      speed = this.details.speed,
+      speed = this.data.speed,
       multiplier = velocity/speed;
 
   this.movement.update();
@@ -163,7 +163,7 @@ Ship.prototype.destroy = function(options) {
   this.repair.destroy();
   this.explosion.destroy();
 
-  this.details.removeListener('data', this.data);
+  this.data.removeListener('data', this.data);
 
   this.events.destroy();
 
@@ -172,7 +172,7 @@ Ship.prototype.destroy = function(options) {
 
   this.manager = this.config =
     this.movement = this.circle = this.hud =
-    this.selector = this.details = this.targetingComputer =
+    this.selector = this.data = this.targetingComputer =
     this.repair = this.engineCore = undefined;
 };
 
