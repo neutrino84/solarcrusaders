@@ -157,13 +157,13 @@
         "glow": "0x12def9",
         "emitter": ["0xFFFFFF", "0x12def9"],
         "icon": "item-laser-a",
-        "range": 2304,
-        "projection": 0.16,
-        "delay": 64,
-        "spread": 64,
-        "damage": 2.0,
+        "range": 2048,
+        "projection": 0.06,
+        "delay": 8,
+        "spread": 32,
+        "damage": 1.0,
         "length": 32,
-        "aoe": 1.0,
+        "aoe": 2.0,
         "spawn": 1,
         "durability": 1000.0
       },
@@ -176,14 +176,14 @@
         "glow": "0x12def9",
         "emitter": ["0xFFFFFF", "0x12def9"],
         "icon": "item-laser-a",
-        "range": 2304,
-        "projection": 0.12,
-        "delay": 32,
+        "range": 3072,
+        "projection": 0.16,
+        "delay": 8,
         "spread": 64,
         "damage": 2.0,
         "length": 32,
         "aoe": 1.0,
-        "spawn": 2,
+        "spawn": 1,
         "durability": 1000.0
       },
       "nucleon": {
@@ -195,9 +195,9 @@
         "glow": "0xff6666",
         "emitter": ["0xFFFFFF", "0xFF3333"],
         "icon": "item-laser-a",
-        "range": 2304,
+        "range": 3072,
         "projection": 0.16,
-        "delay": 64,
+        "delay": 8,
         "spread": 64,
         "damage": 2.0,
         "length": 32,
@@ -214,11 +214,11 @@
         "glow": "0xF9D4D4",
         "emitter": ["0xF9D41C", "0xFFFFFF"],
         "icon": "item-laser-a",
-        "range": 2304,
-        "projection": 0.16,
+        "range": 3072,
+        "projection": 0.24,
         "delay": 16,
-        "spread": 64,
-        "damage": 4.0,
+        "spread": 32,
+        "damage": 2.0,
         "length": 32,
         "aoe": 1.0,
         "spawn": 2,
@@ -233,11 +233,11 @@
         "sprite": "turret-b",
         "texture": "turret-rocket-a.png",
         "icon": "item-rocket-a",
-        "range": 4096,
-        "projection": 0.24,
+        "range": 3072,
+        "projection": 0.18,
         "delay": 8,
         "spread": 128,
-        "damage": 4.0,
+        "damage": 1.0,
         "length": 512,
         "aoe": 2.0,
         "spawn": 2,
@@ -249,18 +249,18 @@
         "name": "Advanced Launcher",
         "type": "plasma",
         "subtype": "basic",
-        "sprite": "turret-c",
+        "sprite": "turret-b",
         "texture": "turret-rocket-b.png",
         "icon": "item-rocket-b",
-        "glow": "0x00d2ff",
-        "range": 4096,
-        "projection": 0.42,
-        "delay": 1024,
-        "spread": 32,
-        "damage": 8.0,
-        "length": 1024,
-        "aoe": 2.0,
-        "spawn": 4,
+        "glow": "0xff0056",
+        "range": 3072,
+        "projection": 0.22,
+        "delay": 64,
+        "spread": 128,
+        "damage": 1.0,
+        "length": 256,
+        "aoe": 4.0,
+        "spawn": 1,
         "durability": 1000.0
       }
     },
@@ -269,18 +269,18 @@
         "name": "Advanced Launcher",
         "type": "missile",
         "subtype": "basic",
-        "sprite": "turret-b",
-        "texture": "turret-rocket-b.png",
+        "sprite": "turret-a",
+        "texture": "turret-rocket-a.png",
         "icon": "item-rocket-a",
         "glow": "0x00d2ff",
         "range": 4096,
         "projection": 0.34,
-        "delay": 756,
-        "spread": 18,
-        "damage": 8.0,
+        "delay": 16,
+        "spread": 128,
+        "damage": 2.0,
         "length": 1024,
-        "aoe": 2.0,
-        "spawn": 4,
+        "aoe": 4.0,
+        "spawn": 2,
         "durability": 1000.0
       }
     }
@@ -305,10 +305,7 @@
         "active": 6,
         "stats": {
           "speed": {
-            "value": 2.5
-          },
-          "evasion": {
-            "value": 0.5
+            "value": 2.0
           }
         }
       }
@@ -320,7 +317,7 @@
         "active": 10,
         "stats": {
           "armor": {
-            "value": 2
+            "value": 0.75
           }
         }
       }
@@ -332,7 +329,7 @@
         "active": 10,
         "stats": {
           "armor": {
-            "value": 2
+            "value": 0.05
           }
         }
       }
@@ -344,7 +341,7 @@
         "active": 10,
         "stats": {
           "armor": {
-            "value": 2
+            "value": 0.05
           }
         }
       }
@@ -352,11 +349,14 @@
     "piercing": {
       "basic": {
         "cost": -30,
-        "cooldown": 20,
-        "active": 6,
+        "cooldown": 60,
+        "active": 10,
         "stats": {
-          "damage": {
-            "value": 5
+          "rate": {
+            "value": 4
+          },
+          "evasion": {
+            "value": 1.5
           }
         }
       }

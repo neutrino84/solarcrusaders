@@ -16,7 +16,7 @@
       "durability": 1000,
       "critical": 0.01
     },
-    "enhancements": ["heal", "booster", "shield", "piercing", "drill", "missiles"],
+    "enhancements": ["heal", "booster", "shield", "piercing"],
     "engine": {
       "glows": [
         {
@@ -91,7 +91,7 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "quantum"
+            "subtype": "vulcan"
           }
         },
         {
@@ -106,7 +106,7 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "quantum"
+            "subtype": "vulcan"
           }
         },
         {
@@ -121,7 +121,7 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "quantum"
+            "subtype": "vulcan"
           }
         },
         {
@@ -165,7 +165,7 @@
       "health": 200,
       "heal": 0.25,
       "armor": 0.0,
-      "speed": 16.0,
+      "speed": 32.0,
       "rate": 256,
       "evasion": 0.06,
       "energy": 200,
@@ -174,7 +174,7 @@
       "durability": 1000,
       "critical": 0.01
     },
-    "enhancements": ["heal", "booster", "shield"],
+    "enhancements": ["heal", "booster", "shield", "piercing"],
     "engine": {
       "glows": [
         {
@@ -220,8 +220,8 @@
             "y": 87
           },
           "default": {
-            "type": "energy",
-            "subtype": "basic"
+            "type": "pulse",
+            "subtype": "quantum"
           }
         },
         {
@@ -235,8 +235,8 @@
             "y": 116
           },
           "default": {
-            "type": "pulse",
-            "subtype": "vulcan"
+            "type": "energy",
+            "subtype": "basic"
           }
         },
         {
@@ -250,8 +250,8 @@
             "y": 201
           },
           "default": {
-            "type": "pulse",
-            "subtype": "vulcan"
+            "type": "energy",
+            "subtype": "basic"
           }
         },
         {
@@ -265,8 +265,8 @@
             "y": 231
           },
           "default": {
-            "type": "energy",
-            "subtype": "basic"
+            "type": "pulse",
+            "subtype": "quantum"
           }
         }
       ]
@@ -325,6 +325,7 @@
     "targeting": {
       "hardpoints": [
         {
+          "type": ["energy", "pulse"],
           "pivot": {
             "x": 20,
             "y": 16
@@ -332,9 +333,14 @@
           "position": {
             "x": 58,
             "y": 31
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "quantum"
           }
         },
         {
+          "type": ["energy", "pulse"],
           "pivot": {
             "x": 20,
             "y": 16
@@ -342,6 +348,10 @@
           "position": {
             "x": 58,
             "y": 96
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "quantum"
           }
         }
       ]
@@ -1075,71 +1085,15 @@
             "type": "rocket",
             "subtype": "basic"
           }
-        }
-      ]
-    }
-  },
-  "unknown-x01": {
-    "race": "unknown",
-    "class": "unknown",
-    "stats": {
-      "capacity": 3000,
-      "health": 500,
-      "heal": 0.1,
-      "armor": 0.0,
-      "speed": 12.0,
-      "rate": 256,
-      "evasion": 0.01,
-      "energy": 200,
-      "recharge": 2,
-      "size": 256,
-      "durability": 1000,
-      "critical": 0.1
-    },
-    "enhancements": ["heal", "booster", "shield", "piercing", "drill", "missiles"],
-    "engine": {
-      "glows": [
-        {
-          "tint": "0x66f0ff",
-          "scale": {
-            "startX": 0.44,
-            "endX": 0.76,
-            "startY": 1.0,
-            "endY": 1.6
-          },
-          "position": {
-            "x": 346,
-            "y": 170
-          },
-          "rotation": 0
         },
         {
-          "tint": "0x66f0ff",
-          "scale": {
-            "startX": 0.44,
-            "endX": 0.76,
-            "startY": 1.0,
-            "endY": 1.6
-          },
-          "position": {
-            "x": 342,
-            "y": 344
-          },
-          "rotation": 0
-        }
-      ]
-    },
-    "targeting": {
-      "hardpoints": [
-        {
-          "type": ["plasma"],
           "pivot": {
-            "x": 112,
-            "y": 112
+            "x": 17,
+            "y": 16
           },
           "position": {
-            "x": 340,
-            "y": 254
+            "x": 128,
+            "y": 128
           },
           "default": {
             "type": "plasma",

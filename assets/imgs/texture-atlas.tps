@@ -70,7 +70,7 @@
             </struct>
         </struct>
         <key>shapePadding</key>
-        <uint>0</uint>
+        <uint>4</uint>
         <key>jpgQuality</key>
         <uint>80</uint>
         <key>pngOptimizationLevel</key>
@@ -170,7 +170,7 @@
             <key>scaleMode</key>
             <enum type="ScaleMode">Smooth</enum>
             <key>extrude</key>
-            <uint>2</uint>
+            <uint>0</uint>
             <key>trimThreshold</key>
             <uint>2</uint>
             <key>trimMargin</key>
@@ -231,12 +231,10 @@
             <key type="filename">ships/unknown/unknown-x01.png</key>
             <key type="filename">turrets/turret-a.png</key>
             <key type="filename">turrets/turret-b.png</key>
-            <key type="filename">turrets/turret-c.png</key>
             <key type="filename">turrets/turret-cap-general.png</key>
             <key type="filename">turrets/turret-cap-hederaa.png</key>
             <key type="filename">turrets/turret-cap-mechan.png</key>
             <key type="filename">turrets/turret-cap-ubaidian.png</key>
-            <key type="filename">turrets/turret-cap-unknown.png</key>
             <key type="filename">turrets/turret-rocket-a.png</key>
             <key type="filename">turrets/turret-rocket-b.png</key>
             <struct type="IndividualSpriteSettings">
@@ -294,9 +292,7 @@
             <filename>icons/enhancement-missiles.png</filename>
             <filename>icons/enhancement-overload.png</filename>
             <filename>ships/unknown/unknown-x01.png</filename>
-            <filename>turrets/turret-cap-unknown.png</filename>
             <filename>turrets/turret-rocket-b.png</filename>
-            <filename>turrets/turret-c.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
