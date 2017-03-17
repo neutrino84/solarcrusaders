@@ -26,8 +26,8 @@ function Missile(parent) {
     y: this.game.rnd.realInRange(-this.data.spread, this.data.spread),
     sin: this.game.rnd.integer(),
     cos: this.game.rnd.integer(),
-    t: this.game.rnd.realInRange(0.001, 0.0025)
-  }
+    t: this.game.rnd.realInRange(0.001, 0.002)
+  };
 
   this.origin = new engine.Point();
   this.destination = new engine.Point();
