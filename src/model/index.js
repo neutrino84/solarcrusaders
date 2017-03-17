@@ -4,7 +4,8 @@ var Sector = require('./Sector'),
     Stripe = require('./Stripe'),
     Ship = require('./Ship'),
     System = require('./System'),
-    Hardpoint = require('./Hardpoint');
+    Hardpoint = require('./Hardpoint'),
+    Station = require('./Station');
 
 function Model(app) {
   this.database = app.database;
@@ -15,6 +16,7 @@ function Model(app) {
   this.Sector = Sector;
   this.System = System;
   this.Hardpoint = Hardpoint;
+  this.Station = Station;
 };
 
 Model.prototype.init = function(next) {

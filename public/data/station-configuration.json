@@ -1,0 +1,12 @@
+{
+  "ubadian-station-x01": {
+    "race": "ubaidian",
+    "stats": {
+      "health": 1000,
+      "heal": 2.0,
+      "speed": 20.0,
+      "size": 212,
+      "radius": 32
+    }
+  }
+}
