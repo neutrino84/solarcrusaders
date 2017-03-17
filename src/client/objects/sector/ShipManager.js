@@ -67,7 +67,7 @@ function ShipManager(game) {
   // TODO: move to ShipNetManager... maybe not?
   this.socket.on('ship/sync', this._syncBind = this._sync.bind(this));
   this.socket.on('ship/attack', this.attackBind = this._attack.bind(this));
-  this.socket.on('ship/test', this._test.bind(this));
+  // this.socket.on('ship/test', this._test.bind(this));
 
   // subscribe to messages
   this.game.on('game/pause', this._pause, this);
@@ -82,14 +82,6 @@ function ShipManager(game) {
 };
 
 ShipManager.prototype.constructor = ShipManager;
-
-// ShipManager.prototype.focus = function() {
-//   this.game.input.on('keydown', this._unfollow, this);
-// };
-
-// ShipManager.prototype.blur = function() {
-//   this.game.input.removeListener('keydown', this._unfollow);
-// };
 
 ShipManager.prototype.create = function(data, details) {
   var game = this.game,
@@ -208,26 +200,26 @@ ShipManager.prototype._attack = function(data) {
   }
 }
 
-ShipManager.prototype._test = function(data) {
-  var ship = this.ships[data.uuid],
-      position = new engine.Point(ship.position.x, ship.position.y),
-      compensated = new engine.Point(data.compensated.x, data.compensated.y);
+// ShipManager.prototype._test = function(data) {
+//   var ship = this.ships[data.uuid],
+//       position = new engine.Point(ship.position.x, ship.position.y),
+//       compensated = new engine.Point(data.compensated.x, data.compensated.y);
 
-  this.trajectoryGraphics.lineStyle(0);
-  this.trajectoryGraphics.beginFill(0x336699, 1.0);
-  this.trajectoryGraphics.drawCircle(position.x, position.y, 24);
-  this.trajectoryGraphics.endFill();
+//   this.trajectoryGraphics.lineStyle(0);
+//   this.trajectoryGraphics.beginFill(0x336699, 1.0);
+//   this.trajectoryGraphics.drawCircle(position.x, position.y, 24);
+//   this.trajectoryGraphics.endFill();
 
-  this.trajectoryGraphics.lineStyle(0);
-  this.trajectoryGraphics.beginFill(0x669933, 1.0);
-  this.trajectoryGraphics.drawCircle(data.targ.x, data.targ.y, 14);
-  this.trajectoryGraphics.endFill();
+//   this.trajectoryGraphics.lineStyle(0);
+//   this.trajectoryGraphics.beginFill(0x669933, 1.0);
+//   this.trajectoryGraphics.drawCircle(data.targ.x, data.targ.y, 14);
+//   this.trajectoryGraphics.endFill();
 
-  this.trajectoryGraphics.lineStyle(0);
-  this.trajectoryGraphics.beginFill(0x996633, 1.0);
-  this.trajectoryGraphics.drawCircle(compensated.x, compensated.y, 6);
-  this.trajectoryGraphics.endFill();
-};
+//   this.trajectoryGraphics.lineStyle(0);
+//   this.trajectoryGraphics.beginFill(0x996633, 1.0);
+//   this.trajectoryGraphics.drawCircle(compensated.x, compensated.y, 6);
+//   this.trajectoryGraphics.endFill();
+// };
 
 ShipManager.prototype._primary = function(data) {
   var clock = this.clock,

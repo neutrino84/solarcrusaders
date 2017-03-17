@@ -3,14 +3,8 @@ var engine = require('engine');
 
 function Movement(parent) {
   this.parent = parent;
-
   this.game = parent.game;
-  this.config = parent.config;
 
-  this.velocity = 0;
-  
-  this._last = 0;
-  this._delay = 0;
   this._speed = 0;
   this._velocity = 0;
 
@@ -18,7 +12,8 @@ function Movement(parent) {
   this._position = new engine.Point();
   this._vector = new engine.Point();
   this._direction = new engine.Point();
-  this._temp = new engine.Point();
+
+  this.velocity = 0;
 
   // this._move = this.game.clock.throttle(this.move, 100, this);
   // this._test = this.game.clock.throttle(function() {
@@ -95,24 +90,25 @@ Movement.prototype.update = function() {
 };
 
 Movement.prototype.plot = function(data) {
-  var time = this.game.clock.time,
-      a1, a2, ship = this.parent,
+  var ship = this.parent,
+      clock = this.game.clock,
+      time = clock.time,
+      fps = ship.isPlayer ? clock.fps : 60,
+      a1, a2,
       distance;
 
-  this._delay = time - this._last;
-  this._last = time;
   this._destination.copyFrom(data.pos);
   this._speed = data.spd;
-  this._velocity = (data.spd / (1/10)) * (1/60);
+  this._velocity = (data.spd / (1/10)) * (1/fps);
 
   // set velocity
   this.velocity = this._velocity * 6;
 };
 
 Movement.prototype.destroy = function() {
-  this.parent = this.game = this.config =
+  this.parent = this.game =
     this._destination = this._origin = this._position =
-    this._vector = this._direction = this._temp = undefined;
+    this._vector = this._direction = undefined;
 };
 
 module.exports = Movement;

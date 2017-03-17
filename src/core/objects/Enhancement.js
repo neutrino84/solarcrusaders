@@ -36,6 +36,7 @@ Enhancement.prototype.start = function() {
 
 Enhancement.prototype.stop = function() {
   if(this.activated) {
+    this.activated = false;
     this.activeTimer && this.game.clock.events.remove(this.activeTimer);
     this.cooldownTimer && this.game.clock.events.remove(this.cooldownTimer);
   }

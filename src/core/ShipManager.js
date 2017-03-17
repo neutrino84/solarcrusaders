@@ -20,7 +20,7 @@ function ShipManager(game) {
   this.game.on('ship/create', this.create, this);
 
   // activate ai
-  this.game.clock.events.loop(1000, this._updateShips, this);
+  this.game.clock.events.loop(1000, this.stats, this);
 };
 
 ShipManager.prototype.constructor = ShipManager;
@@ -37,7 +37,7 @@ ShipManager.prototype.init = function() {
 
   // generate npcs
   this.generateRandomShips();
-  // this.generatePirateShips();
+  this.generatePirateShips();
 };
 
 ShipManager.prototype.add = function(ship) {
@@ -195,12 +195,51 @@ ShipManager.prototype.update = function() {
   });
 };
 
+ShipManager.prototype.stats = function() {
+  var ship, delta,
+      ships = this.ships,
+      update, updates = [],
+      stats;
+  for(var s in ships) {
+    ship = ships[s];
+    
+    if(!ship.disabled) {
+      stats = ship.config.stats;
+      update = { uuid: ship.uuid };
+
+      // update health
+      if(ship.health < stats.health) {
+        delta = ship.heal;
+        ship.health = global.Math.min(stats.health, ship.health + delta);
+        update.health = engine.Math.roundTo(ship.health, 1);
+      }
+
+      // update energy
+      if(ship.energy < stats.energy) {
+        delta = ship.recharge;
+        ship.energy = global.Math.min(stats.energy, ship.energy + delta);
+        update.energy = engine.Math.roundTo(ship.energy, 1);
+      }
+
+      // push deltas
+      if(delta !== undefined) {
+        updates.push(update);
+      }
+    }
+  }
+  if(updates.length > 0) {
+    this.sockets.io.sockets.emit('ship/data', {
+      type: 'update', ships: updates
+    });
+  }
+};
+
 ShipManager.prototype.generateRandomShips = function() {
   var iterator = {
         'ubaidian-x01': { race: 'ubaidian', count: 0 },
-        'ubaidian-x02': { race: 'ubaidian', count: 2 },
-        'ubaidian-x03': { race: 'ubaidian', count: 4 },
-        'ubaidian-x04': { race: 'ubaidian', count: 4 },
+        'ubaidian-x02': { race: 'ubaidian', count: 0 },
+        'ubaidian-x03': { race: 'ubaidian', count: 0 },
+        'ubaidian-x04': { race: 'ubaidian', count: 0 },
         'hederaa-x01': { race: 'hederaa', count: 0 },
         'mechan-x01': { race: 'mechan', count: 0 },
         'mechan-x02': { race: 'mechan', count: 0 },
@@ -222,33 +261,33 @@ ShipManager.prototype.generatePirateShips = function() {
         location: { x: -2048, y: 2048 },
         ships: [
           { name: 'xinli', chassis: 'general-x01', credits: 1500, reputation: -100 },
-          { name: 'mocolo', chassis: 'general-x01', credits: 1500, reputation: -100 },
-          { name: 'mavero', chassis: 'general-x02', credits: 1500, reputation: -100 },
-          { name: 'saag', chassis: 'general-x02', credits: 1500, reputation: -100 }
+          // { name: 'mocolo', chassis: 'general-x01', credits: 1500, reputation: -100 },
+          // { name: 'mavero', chassis: 'general-x02', credits: 1500, reputation: -100 },
+          // { name: 'saag', chassis: 'general-x02', credits: 1500, reputation: -100 }
         ]
       }, {
         location: { x: 6144, y: 2048 },
         ships: [
           { name: 'satel', chassis: 'general-x01', credits: 1500, reputation: -100 },
-          { name: 'oeem', chassis: 'general-x01', credits: 1500, reputation: -100 },
-          { name: 'thath', chassis: 'general-x02', credits: 1500, reputation: -100 },
-          { name: 'zeus', chassis: 'general-x03', credits: 1500, reputation: -100 }
+          // { name: 'oeem', chassis: 'general-x01', credits: 1500, reputation: -100 },
+          // { name: 'thath', chassis: 'general-x02', credits: 1500, reputation: -100 },
+          // { name: 'zeus', chassis: 'general-x03', credits: 1500, reputation: -100 }
         ]
       }, {
         location: { x: 2048, y: -2048 },
         ships: [
           { name: 'manduk', chassis: 'general-x01', credits: 1500, reputation: -100 },
-          { name: 'deuh', chassis: 'general-x01', credits: 1500, reputation: -100 },
-          { name: 'talai', chassis: 'general-x02', credits: 1500, reputation: -100 },
-          { name: 'kaan', chassis: 'general-x03', credits: 1500, reputation: -100 }
+          // { name: 'deuh', chassis: 'general-x01', credits: 1500, reputation: -100 },
+          // { name: 'talai', chassis: 'general-x02', credits: 1500, reputation: -100 },
+          // { name: 'kaan', chassis: 'general-x03', credits: 1500, reputation: -100 }
         ]
       }, {
         location: { x: 2048, y: 6144 },
         ships: [
           { name: 'theni', chassis: 'general-x01', credits: 1500, reputation: -100 },
-          { name: 'zulu', chassis: 'general-x01', credits: 1500, reputation: -100 },
-          { name: 'saroc', chassis: 'general-x02', credits: 1500, reputation: -100 },
-          { name: 'malvo', chassis: 'general-x02', credits: 1500, reputation: -100 }
+          // { name: 'zulu', chassis: 'general-x01', credits: 1500, reputation: -100 },
+          // { name: 'saroc', chassis: 'general-x02', credits: 1500, reputation: -100 },
+          // { name: 'malvo', chassis: 'general-x02', credits: 1500, reputation: -100 }
         ]
       }],
       len = iterator.length;
@@ -286,58 +325,13 @@ ShipManager.prototype.generateRandomShip = function(chassis, race, ai) {
       });
 };
 
-ShipManager.prototype._updateShips = function() {
-  var ship, delta,
-      ships = this.ships,
-      update, updates = [],
-      stats;
-  for(var s in ships) {
-    if(ships[s].disabled) { continue; }
-
-    ship = ships[s];
-    stats = ship.config.stats;
-    update = { uuid: ship.uuid };
-
-    // update health
-    if(ship.health < stats.health) {
-      delta = ship.heal;
-      ship.health = global.Math.min(stats.health, ship.health + delta);
-      update.health = engine.Math.roundTo(ship.health, 1);
-    }
-
-    // update energy
-    if(ship.energy < stats.energy) {
-      delta = ship.recharge;
-      ship.energy = global.Math.min(stats.energy, ship.energy + delta);
-      update.energy = engine.Math.roundTo(ship.energy, 1);
-    }
-
-    if(delta !== undefined) {
-      updates.push(update);
-    }
-  }
-  if(updates.length > 0) {
-    this.sockets.io.sockets.emit('ship/data', {
-      type: 'update', ships: updates
-    });
-  }
-};
-
-ShipManager.prototype.getRandomShip = function() {
-  var ships = this.ships,
-      keys = Object.keys(ships),
-      random = keys[Math.floor(keys.length * Math.random())];
-  return ships[random];
-};
-
 ShipManager.prototype.generateRandomPosition = function(size) {
-  var size = size || (global.Math.random() > 0.5 ? 2048 : 1024),
-      halfSize = size/2,
-      center = 2048,
-      start = center - halfSize
-      randX = global.Math.random() * size,
-      randY = global.Math.random() * size;
-  return new engine.Point(start + randX, start + randY);
+  var game = this.game,
+      size = size || game.rnd.between(1024, 2048),
+      start = 2048 - (size/2),
+      x = game.rnd.frac() * size,
+      y = game.rnd.frac() * size;
+  return new engine.Point(start + x, start + y);
 };
 
 module.exports = ShipManager;

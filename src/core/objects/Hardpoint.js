@@ -7,7 +7,7 @@ function Hardpoint(slot, type, subtype) {
   this.type = type;
   this.subtype = subtype || 'basic';
 
-  this.config = client.ItemConfiguration['hardpoint'][type][this.subtype];
+  this.config = client.ItemConfiguration['hardpoint'][this.type][this.subtype];
 };
 
 Hardpoint.prototype.constructor = Hardpoint;

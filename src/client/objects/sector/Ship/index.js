@@ -20,8 +20,10 @@ function Ship(manager, details) {
   this.config = details.config.ship;
 
   // layer chassis
-  this.rotation = -details.rotation;
   this.chassis = new engine.Sprite(manager.game, 'texture-atlas', details.chassis + '.png');
+
+  // defaults
+  this.rotation = details.rotation;
   this.pivot.set(this.width/2, this.height/2);
 
   // timer events
@@ -71,6 +73,15 @@ Ship.prototype.data = function(data) {
   var ship, attacker, defender,
       ships = this.manager.ships,
       targetingComputer = this.targetingComputer;
+  
+  // if(data.critical) {
+  //   this.explosion.critical();
+    
+  //   if(this.isPlayer) {
+  //     this.game.camera.shake(500);
+  //   }
+  // }
+
   if(data.hardpoint) {
     attacker = ships[data.uuid];
     defender = ships[data.hardpoint.ship];

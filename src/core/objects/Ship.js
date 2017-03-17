@@ -35,14 +35,13 @@ function Ship(manager, data) {
   this.hardpoints = {};
   this.enhancements = {
     active: {
-      energy: {},
       recharge: {},
       heal: {},
-      health: {},
-      evasion: {},
       armor: {},
-      critical: {},
-      speed: {}
+      rate: {},
+      evasion: {},
+      speed: {},
+      critical: {}
     },
     available: {}
   };
@@ -97,40 +96,30 @@ Ship.prototype.save = function(callback) {
   }
 };
 
-/*
- * System Factory
- */
 Ship.prototype.createSystems = function() {
   var enhancement,
-      enhancements = this.config.enhancements;
+      enhancements = this.config.enhancements,
+      available = this.enhancements.available;
   for(var e in enhancements) {
-    this.enhancements.available[enhancements[e]] = new Enhancement(this, enhancements[e]);
+    available[enhancements[e]] = new Enhancement(this, enhancements[e]);
   }
 };
 
-/*
- * Hardpoint Factory
- */
 Ship.prototype.createHardpoints = function() {
   var hardpoint, type, subtype, stats,
-      hardpoints = this.config.targeting.hardpoints,
-      length = hardpoints.length;
+      hardpoints = this.config.targeting.hardpoints;
 
   // create turrets
-  for(var i=0; i<length; i++) {
+  for(var i=0; i<hardpoints.length; i++) {
     stats = hardpoints[i];
 
     if(stats.default && stats.default.subtype) {
       type = stats.default.type;
       subtype = stats.default.subtype;
-    } else if(stats.type && stats.type.indexOf('projectile') > -1) {
-      type = 'rocket';
     } else {
       type = 'pulse';
+      subtype = 'basic';
     }
-
-    // hardpoint = new this.model.Hardpoint();
-    // hardpoint.toStreamObject();
     
     // cache to local object
     this.hardpoints[i] = new Hardpoint(i, type, subtype).toObject(); 
@@ -195,7 +184,7 @@ Ship.prototype.hit = function(attacker, target, slot) {
       compensated = movement.compensated(),
       distance = compensated.distance(target),
       ratio = distance / (this.size * hardpoint.aoe),
-      damage, health;
+      damage, health, critical;
   if(ratio < 1.0) {
     // test data
     // if(!attacker.ai && this.ai) {
@@ -207,7 +196,9 @@ Ship.prototype.hit = function(attacker, target, slot) {
     // }
 
     // calc damage
-    damage = global.Math.max(0, hardpoint.damage * (1-ratio) - this.armor);
+    critical = this.game.rnd.rnd() <= attacker.critical;
+    damage = global.Math.max(0, hardpoint.damage * (1-ratio) * (1-this.armor));
+    damage += critical ? damage : 0;
     health = data.health-damage;
 
     // update damage
@@ -218,7 +209,8 @@ Ship.prototype.hit = function(attacker, target, slot) {
         uuid: this.uuid,
         attacker: attacker.uuid,
         health: data.health,
-        damage: damage
+        damage: damage,
+        critical: critical
       });
 
       // update attacker
@@ -263,9 +255,16 @@ Ship.prototype.hit = function(attacker, target, slot) {
 };
 
 Ship.prototype.disable = function() {
+  // disable
   this.disabled = true;
+
+  // disengage ai
   this.ai && this.ai.disengage();
-  this.timer = this.game.clock.events.add(this.ai ? this.ai.settings.respawn : 10000, this.enable, this);
+  
+  // respawn time
+  this.respawn = this.game.clock.events.add(this.ai ? this.ai.settings.respawn : 10000, this.enable, this);
+  
+  // broadcast
   this.sockets.io.sockets.emit('ship/disabled', {
     uuid: this.uuid
   });
@@ -275,13 +274,16 @@ Ship.prototype.enable = function() {
   // re-enable
   this.disabled = false;
 
-  // respawn
-  this.movement.magnitude = 0;
-  this.movement.position.copyFrom(this.ai ? this.ai.getHomePosition() : this.manager.generateRandomPosition(1024));
+  // activate ui
+  this.ai && this.ai.reengage();
 
   // update health / energy
   this.data.health = this.config.stats.health;
   this.data.energy = this.config.stats.energy;
+
+  // reset location
+  this.movement.magnitude = 0;
+  this.movement.position.copyFrom(this.ai ? this.ai.getHomePosition() : this.manager.generateRandomPosition(1024));
 
   // broadcast
   this.sockets.io.sockets.emit('ship/enabled', {
@@ -294,7 +296,8 @@ Ship.prototype.enable = function() {
 };
 
 Ship.prototype.activate = function(name) {
-  var enhancements = this.enhancements,
+  var sockets = this.sockets,
+      enhancements = this.enhancements,
       active = enhancements.active,
       available = enhancements.available,
       enhancement = available[name],
@@ -316,11 +319,11 @@ Ship.prototype.activate = function(name) {
       update = { uuid: this.uuid };
       update.energy = this.energy = global.Math.max(0.0, cost);
 
-      this.sockets.io.sockets.emit('ship/data', {
+      sockets.io.sockets.emit('ship/data', {
         type: 'update', ships: [update]
       });
 
-      this.sockets.io.sockets.emit('ship/enhancement/started', {
+      sockets.io.sockets.emit('ship/enhancement/started', {
         uuid: this.uuid,
         enhancement: name
       });
@@ -361,7 +364,7 @@ Ship.prototype.destroy = function() {
     available[e].destroy();
   }
   this.ai && this.ai.destroy();
-  this.timer && this.game.clock.events.remove(this.timer);
+  this.respawn && this.game.clock.events.remove(this.respawn);
   this.manager = this.game =
     this.data = this.user = this.sockets =
     this.config = this.systems = this.timers =
@@ -441,40 +444,34 @@ Object.defineProperty(Ship.prototype, 'health', {
 
 Object.defineProperty(Ship.prototype, 'heal', {
   get: function() {
-    var bonus = 0,
-        heal = this.ignoreEnhancements ? [] : this.enhancements.active.heal,
-        repair = this.systems['repair'],
-        modifier = repair ? repair.modifier : 1.0;
+    var total = this.data.heal,
+        heal = this.ignoreEnhancements ? [] : this.enhancements.active.heal;
     for(var h in heal) {
-      bonus += heal[h].stat('heal', 'value');
+      total += heal[h].stat('heal', 'value');
     }
-    return this.data.heal * modifier + bonus;
+    return total;
   }
 });
 
 Object.defineProperty(Ship.prototype, 'recharge', {
   get: function() {
-    var bonus = 0,
-        recharge = this.ignoreEnhancements ? [] : this.enhancements.active.recharge,
-        reactor = this.systems['reactor'],
-        modifier = reactor ? reactor.modifier : 1.0;
+    var total = this.data.recharge,
+        recharge = this.ignoreEnhancements ? [] : this.enhancements.active.recharge;
     for(var r in recharge) {
-      bonus += recharge[r].stat('recharge', 'value');
+      total += recharge[r].stat('recharge', 'value');
     }
-    return this.data.recharge * modifier + bonus;
+    return total;
   }
 });
 
 Object.defineProperty(Ship.prototype, 'armor', {
   get: function() {
-    var bonus = 0,
-        armor = this.ignoreEnhancements ? [] : this.enhancements.active.armor,
-        shield = this.systems['shield'],
-        modifier = shield ? shield.modifier : 1.0;
+    var total = this.data.armor,
+        armor = this.ignoreEnhancements ? [] : this.enhancements.active.armor
     for(var a in armor) {
-      bonus += armor[a].stat('armor', 'value');
+      total += armor[a].stat('armor', 'value');
     }
-    return this.data.armor * modifier + bonus;
+    return total;
   }
 });
 
@@ -483,7 +480,7 @@ Object.defineProperty(Ship.prototype, 'critical', {
     var total = this.data.critical,
         critical = this.ignoreEnhancements ? [] : this.enhancements.active.critical;
     for(var a in critical) {
-      total += critical[a].stat('critical', 'value');
+      total *= critical[a].stat('critical', 'value');
     }
     return total;
   }
@@ -494,7 +491,7 @@ Object.defineProperty(Ship.prototype, 'rate', {
     var total = this.data.rate,
         rate = this.ignoreEnhancements ? [] : this.enhancements.active.rate;
     for(var d in rate) {
-      total += rate[d].stat('rate', 'value');
+      total *= rate[d].stat('rate', 'value');
     }
     return total;
   }

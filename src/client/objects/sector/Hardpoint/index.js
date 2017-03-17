@@ -27,25 +27,12 @@ function Hardpoint(parent, data, config) {
   this.origin = new engine.Point();
 
   this.cap = new engine.Sprite(this.game, 'texture-atlas', 'turret-cap-' + this.ship.config.race + '.png');
-  // this.cap.anchor.set(0.5, 0.5);
-  // this.cap.pivot.set(config.pivot.x, config.pivot.y);
-
   this.sprite = new engine.Sprite(this.game, 'texture-atlas', data.sprite + '.png');
   this.sprite.position.set(config.position.x, config.position.y);
-  // this.sprite.anchor.set(0.5, 0.5)
   this.sprite.pivot.set(config.pivot.x, config.pivot.y);
-  this.sprite.scale.set(0.5, 0.5)
   
   this.ship.addChild(this.sprite);
   this.sprite.addChild(this.cap);
-
-  if(config.type && config.type.indexOf('projectile') >= 0) {
-    this.sprite.visible = false;
-  }
-
-  if(config.type && config.type.indexOf('plasma') >= 0) {
-    
-  }
 };
 
 Hardpoint.prototype.constructor = Hardpoint;
@@ -57,6 +44,7 @@ Hardpoint.prototype.fire = function(targ) {
       types = this.types,
       target = this.target,
       actives = this.actives,
+      data = this.data,
       length = actives.length,
       spawn = data.spawn,
       distance = engine.Point.distance(ship.position, targ);
@@ -77,7 +65,7 @@ Hardpoint.prototype.fire = function(targ) {
 
     for(var i=0; i<spawn; i++) {
       launcher = new types[data.type](this);
-      launcher.start(target, distance, spawn, i);
+      launcher.start(target, distance, spawn, i, data.slot);
 
       actives.push(launcher);
     }

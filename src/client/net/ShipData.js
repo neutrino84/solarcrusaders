@@ -10,9 +10,8 @@ ShipData.STAT_UNITS = {
   'speed':      'm',
   'energy':     'gj',
   'recharge':   'gj',
-  'armor':      'hp',
-  'range':      'm',
-  'rate':       's',
+  'rate':       'ms',
+  'armor':      '%',
   'evasion':    '%',
   'critical':   '%'
 };
@@ -27,6 +26,7 @@ function ShipData(game, data) {
     enhancement: game.cache.getJSON('item-configuration', false)['enhancement'],
     hardpoint: game.cache.getJSON('item-configuration', false)['hardpoint']
   };
+
 
   EventEmitter.call(this);
 };

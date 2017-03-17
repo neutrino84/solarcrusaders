@@ -10,6 +10,11 @@ function Plasma(parent) {
   this.sprite = parent.sprite;
   this.clock  = parent.game.clock;
 
+  this.spread = {
+    x: this.game.rnd.realInRange(-this.data.spread, this.data.spread),
+    y: this.game.rnd.realInRange(-this.data.spread, this.data.spread)
+  }
+
   this.started = 0;
   this.elapsed = 0;
   this.length = 0;
@@ -21,97 +26,89 @@ function Plasma(parent) {
   this.target = new engine.Point();
   this.origin = new engine.Point();
   this.destination = new engine.Point();
-  this.homing = new engine.Point();
+  this.emitter = new engine.Point();
 
   this.plasma = new engine.Sprite(this.game, 'texture-atlas', this.data.texture);
   this.plasma.scale.set(0.5, 0.5);
-  this.plasma.anchor.set(0.5, 0.5);
+  this.plasma.pivot.set(64, 64);
 
-  this.glow = new engine.Sprite(this.game, 'texture-atlas', 'explosion-d.png');
-  this.glow.scale.set(1, 1);
-  this.glow.pivot.set(64, 64);
-  this.glow.position.set(340, 254);
+  this.glow = new engine.Sprite(this.game, 'texture-atlas', 'damage-a.png');
+  this.glow.pivot.set(32, 32);
+  this.glow.position.set(16, 16);
   this.glow.tint = global.parseInt(this.data.glow);
   this.glow.blendMode = engine.BlendMode.ADD;
   this.glow.alpha = 0.0;
+
+  this.parent.cap.tint = 0xFF9999;
 };
 
 Plasma.prototype.start = function(destination, distance, spawn, index) {
   this.elapsed = 0;
   this.length = this.data.length;
-  this.duration = distance * this.data.projection;
+  this.duration = distance * this.data.projection + (index * this.length);
+  this.delay = this.data.delay;
   this.runtime = this.duration + this.length;
-  this.delay = ((this.data.delay/spawn) * index);
   this.started = this.clock.time + this.delay;
 
-  this.isDone = false;
+  this.isDone = true;
   this.isRunning = true;
   this.hasExploded = false;
 
-  this.destination.copyFrom(destination);
   this.origin.copyFrom(this.parent.updateTransform());
-  this.origin.add(this.game.rnd.realInRange(-this.data.spread, this.data.spread),
-    this.game.rnd.realInRange(-this.data.spread, this.data.spread))
+  this.destination.copyFrom(destination);
+  this.destination.add(this.spread.x, this.spread.y);
 
-  this.ship.addChildAt(this.glow, 4);
+  this.parent.sprite.addChildAt(this.glow);
   this.parent.fxGroup.addChild(this.plasma);
+
+  this.parent.shockwaveEmitter.plasma(this.ship);
+  this.parent.shockwaveEmitter.at({ center: this.origin });
+  this.parent.shockwaveEmitter.explode(1);
 };
 
 Plasma.prototype.stop = function() {
   this.isRunning = false;
 
-  this.ship.removeChild(this.glow);
+  this.parent.sprite.removeChild(this.glow);
   this.parent.fxGroup.removeChild(this.plasma);
 };
 
 Plasma.prototype.explode = function() {
   if(!this.hasExploded) {
-    this.isDone = true;
     this.hasExploded = true;
-
-    this.parent.shockwaveEmitter.shockwave();
-    this.parent.shockwaveEmitter.at({ center: this.plasma.position });
-    this.parent.shockwaveEmitter.explode(1);
 
     this.parent.explosionEmitter.rocket();
     this.parent.explosionEmitter.at({ center: this.plasma.position });
-    this.parent.explosionEmitter.explode(2);
+    this.parent.explosionEmitter.explode(4);
   }
 };
 
 Plasma.prototype.update = function() {
-  var f0, f1, f2;
+  var f0 = f1 = 0.001;
 
   if(this.isRunning === true) {
     this.elapsed = this.clock.time - this.started;
 
+
+    if(this.elapsed > this.delay) {
+      
+    }
+
+    this.origin.copyFrom(this.parent.updateTransform());
+
     f1 = this.elapsed/this.runtime;
     f0 = 1-f1;
 
-    if(this.elapsed < 256) {
-      this.origin.copyFrom(this.parent.updateTransform());
-
-      this.plasma.position.x = this.origin.x;
-      this.plasma.position.y = this.origin.y;
-      this.plasma.rotation = this.origin.angle(this.destination);
-
-      this.parent.fireEmitter.plasma(null, this.destination);
-      this.parent.fireEmitter.at({ center: this.plasma.position });
-      this.parent.fireEmitter.explode(1);
-      return;
-    }
-
-    this.glow.scale.set(f0*5.0, f0*5.0);
-    this.glow.alpha = f1;
+    this.glow.scale.set(f0*2, f0*2);
+    this.glow.alpha = f0;
 
     this.origin.interpolate(this.destination, engine.Easing.Quadratic.In(f1), this.target);
-    
-    this.plasma.alpha = f1*2;
+
     this.plasma.position.x = this.target.x;
     this.plasma.position.y = this.target.y;
     this.plasma.rotation = this.destination.angle(this.target);
 
-    this.parent.fireEmitter.plasma(null, this.target);
+    this.parent.fireEmitter.plasma(null, engine.Point.subtract(this.target, this.destination, this.emitter));
     this.parent.fireEmitter.at({ center: this.plasma.position });
     this.parent.fireEmitter.explode(1);
 

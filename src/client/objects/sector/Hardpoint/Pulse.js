@@ -8,8 +8,8 @@ function Pulse(hardpoint) {
   this.data = hardpoint.data;
   this.clock  = this.game.clock;
   this.spread = {
-    x: global.Math.random() * this.data.spread - this.data.spread / 2,
-    y: global.Math.random() * this.data.spread - this.data.spread / 2
+    x: this.game.rnd.realInRange(-this.data.spread, this.data.spread),
+    y: this.game.rnd.realInRange(-this.data.spread, this.data.spread)
   };
 
   this.started = 0;
@@ -25,7 +25,6 @@ function Pulse(hardpoint) {
 
   this.origin = new engine.Point();
   this.destination = new engine.Point();
-  this.offset = new engine.Point();
   
   this.texture = new pixi.Texture(this.game.cache.getBaseTexture(this.data.texture));
   
@@ -42,12 +41,12 @@ function Pulse(hardpoint) {
   this.glow.blendMode = engine.BlendMode.ADD;
 };
 
-Pulse.prototype.start = function(destination, distance, spawn, index) {
+Pulse.prototype.start = function(destination, distance, spawn, index, slot) {
   this.elapsed = 0;
   this.length = this.data.length;
   this.duration = distance * this.data.projection;
   this.runtime = this.duration + this.length;
-  this.delay = ((this.runtime / spawn) * index) + (this.data.delay * (global.parseInt(this.data.slot) + 1));
+  this.delay = this.data.delay + (this.runtime * slot);
   this.started = this.clock.time + this.delay;
 
   this.isDone = false;
@@ -55,8 +54,7 @@ Pulse.prototype.start = function(destination, distance, spawn, index) {
   this.hasExploded = false;
 
   this.destination.copyFrom(destination);
-  this.offset.copyFrom(destination);
-  this.offset.add(this.spread.x, this.spread.y);
+  this.destination.add(this.spread.x, this.spread.y)
 
   this.origin.copyFrom(this.hardpoint.updateTransform());
   this._start.copyFrom(this.origin);
@@ -68,6 +66,7 @@ Pulse.prototype.start = function(destination, distance, spawn, index) {
 
 Pulse.prototype.stop = function() {
   this.isRunning = false;
+  this.isDone = true;
   this.hardpoint.fxGroup.removeChild(this.strip);
   this.hardpoint.sprite.removeChild(this.glow);
 };
@@ -88,6 +87,7 @@ Pulse.prototype.update = function() {
       this._end.copyFrom(this.origin);
 
       f1 = 1-(-this.elapsed/this.delay);
+
       this.glow.scale.set(this.scale * f1, this.scale * f1);
       this.glow.alpha = f1 * 1.0;
       return;
@@ -96,16 +96,10 @@ Pulse.prototype.update = function() {
       this.glow.alpha = 1.0;
     }
 
-    // stop once done
-    if(this.elapsed >= this.runtime) { this.stop(); }
-
     f3 = this.elapsed/this.runtime;
 
     // update glow
     this.glow.alpha = 1-f3;
-
-    // move target
-    this.destination.interpolate(this.offset, f3, this.destination);
 
     // update orig / dest
     this.origin.copyFrom(this.hardpoint.updateTransform());
@@ -125,15 +119,19 @@ Pulse.prototype.update = function() {
       // create hole
       this.hardpoint.fireEmitter.pulse(this.data.emitter);
       this.hardpoint.fireEmitter.at({ center: this.destination });
-      this.hardpoint.fireEmitter.explode(2);
+      this.hardpoint.fireEmitter.explode(1);
     }
 
     if(this.elapsed >= this.length) {
       f2 = (this.elapsed-this.length)/this.duration;
       this.origin.interpolate(this.destination, f2, this._end);
-      this.isDone = true;
     } else {
       this._end.copyFrom(this.origin);
+    }
+
+     // stop once done
+    if(this.elapsed >= this.runtime) {
+      this.stop();
     }
   }
 };
@@ -147,7 +145,7 @@ Pulse.prototype.destroy = function() {
   this.hardpoint = this.game = 
     this.data = this.clock = 
     this.destination = this.origin =
-    this.target = this.offset = undefined;
+    this.target = undefined;
 };
 
 module.exports = Pulse;

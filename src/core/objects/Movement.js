@@ -25,9 +25,10 @@ function Movement(parent) {
 };
 
 Movement.CLOCK_RATE = 100;
-Movement.FRICTION = 1.04;
-Movement.STOP_THRESHOLD = 64.0;
-Movement.THROTTLE_THRESHOLD = 140.0;
+Movement.FRICTION = 1.1;
+Movement.STOP_THRESHOLD = 16.0;
+Movement.THROTTLE_THRESHOLD = 256.0;
+Movement.THROTTLE_MANEUVER = 1.5;
 
 Movement.prototype.constructor = Movement;
 
@@ -38,7 +39,8 @@ Movement.prototype.update = function() {
       position = this.position,
       vector = this.vector,
       direction = this.direction,
-      cross, dot;
+      evasion = parent.evasion,
+      maneuver, cross, dot;
 
   // time compensation
   this.time = this.game.clock.time;
@@ -49,34 +51,39 @@ Movement.prototype.update = function() {
   }
 
   if(this.magnitude > Movement.STOP_THRESHOLD) {
-    this.throttle = global.Math.min(this.magnitude / Movement.THROTTLE_THRESHOLD, 1.0);
+    this.throttle = global.Math.min(this.magnitude/Movement.THROTTLE_THRESHOLD, 1.0);
     this.speed = parent.speed * this.throttle;
 
     vector.set(destination.x, destination.y);
     vector.normalize();
 
-    direction.set(
-      global.Math.cos(this.rotation),
-      global.Math.sin(this.rotation));
+    if(!vector.isZero()) {
+      // maneuverability
+      maneuver = evasion/(this.throttle*Movement.THROTTLE_MANEUVER);
 
-    // linear rotate
-    dot = vector.dot(direction);
-    cross = vector.cross(direction);
-    if(cross > parent.evasion) {
-      this.rotation -= parent.evasion;
-    } else if(cross < -parent.evasion) {
-      this.rotation += parent.evasion;
-    } else if(dot < 0) {
-      this.rotation -= parent.evasion
+      direction.set(
+        global.Math.cos(this.rotation),
+        global.Math.sin(this.rotation));
+
+      // linear rotate
+      dot = vector.dot(direction);
+      cross = vector.cross(direction);
+      if(cross > maneuver) {
+        this.rotation -= maneuver;
+      } else if(cross < -maneuver) {
+        this.rotation += maneuver;
+      } else if(dot < 0) {
+        this.rotation -= maneuver
+      }
+
+      // last position
+      last.set(position.x, position.y);
+
+      // linear speed
+      position.add(
+        this.speed * direction.x,
+        this.speed * direction.y);
     }
-
-    // last position
-    last.set(position.x, position.y);
-
-    // linear speed
-    position.add(
-      this.speed * direction.x,
-      this.speed * direction.y);
   } else {
     this.magnitude = 0.0;
     this.throttle = 0.0;

@@ -35,7 +35,6 @@ ShipNetManager.prototype._data = function(data) {
       ship = ships[s];
       if(data.type === 'sync' && this.ships[ship.uuid] === undefined) {
         this.ships[ship.uuid] = new ShipData(this.game, ship);
-        this.game.emit('ship/added', this.ships[ship.uuid]);
       } else if(this.ships[ship.uuid]) {
         this.ships[ship.uuid].update(ship);
       }
