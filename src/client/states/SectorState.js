@@ -2,6 +2,7 @@ var engine = require('engine'),
     pixi = require('pixi'),
     UI = require('../ui'),
     ShipNetManager = require('../net/ShipNetManager'),
+    StationNetManager = require('../net/StationNetManager'),
     Space = require('../fx/Space'),
     Planet = require('../fx/Planet'),
     NebulaCluster = require('../fx/NebulaCluster'),
@@ -14,6 +15,7 @@ var engine = require('engine'),
     
 function SectorState(game) {
   this.shipNetManager = new ShipNetManager(game);
+  this.stationNetManager = new StationNetManager(game);
 };
 
 SectorState.prototype = Object.create(engine.State.prototype);
@@ -22,6 +24,7 @@ SectorState.prototype.constructor = engine.State;
 SectorState.prototype.init = function(args) {
   // initialize
   this.shipNetManager.init();
+  this.stationNetManager.init();
 
   // instanciate ui
   this.ui = new UI(this.game);
@@ -43,8 +46,8 @@ SectorState.prototype.preload = function() {
   this.game.load.image('clouds', 'imgs/game/planets/clouds.jpg');
 
   // load stations
-  this.game.load.image('station', 'imgs/game/stations/ubaidian-x01.png');
-  this.game.load.image('station-cap', 'imgs/game/stations/ubaidian-cap-x01.png');
+  this.game.load.image('ubadian-station-x01', 'imgs/game/stations/ubaidian-x01.png');
+  this.game.load.image('ubadian-station-x01-cap', 'imgs/game/stations/ubaidian-cap-x01.png');
 
   // load strip graphics
   this.game.load.image('laser-blue', 'imgs/game/fx/laser-blue.png');
@@ -59,6 +62,7 @@ SectorState.prototype.preload = function() {
   // load ship configuration
   this.game.load.json('ship-configuration', 'data/ship-configuration.json');
   this.game.load.json('item-configuration', 'data/item-configuration.json');
+  this.game.load.json('station-configuration', 'data/station-configuration.json');
 };
 
 // loadUpdate = function() {};
@@ -71,7 +75,7 @@ SectorState.prototype.create = function() {
       mouse.capture = true;
       mouse.mouseWheelCallback = function(event) {
         var delta = event.deltaY / sensitivity,
-            scale = engine.Math.clamp(this.world.scale.x - delta, 0.16, 1.0);
+            scale = engine.Math.clamp(this.world.scale.x - delta, 0.18, 1.0);
         if(self.game.paused) { return; }
         if(self.zoom && self.zoom.isRunning) {
           self.zoom.stop();
@@ -80,7 +84,7 @@ SectorState.prototype.create = function() {
       };
 
   this.game.world.setBounds(0, 0, 4096, 4096);
-  this.game.world.scale.set(0.16, 0.16);
+  this.game.world.scale.set(0.18, 0.18);
 
   this.game.camera.bounds = null;
   this.game.camera.focusOnXY(2048, 2048);
@@ -111,18 +115,12 @@ SectorState.prototype.create = function() {
 
   // create ui
   this.ui.create();
-
-  // notify
-  // this.game.emit('gui/focus/retain', this);
-
-  // subscribe
-  // this.game.on('gui/selected', function() {
-  //   this.game.emit('gui/focus/retain', this);
-  // }, this);
 };
 
 SectorState.prototype.createSpace = function() {
   this.space = new Space(this.game);
+  this.space.cache();
+  
   this.planet = new Planet(this.game);
 
   this.nebula = new NebulaCluster(this.game);
@@ -135,14 +133,12 @@ SectorState.prototype.createSpace = function() {
 };
 
 SectorState.prototype.createManagers = function() {
-  this.inputManager = new InputManager(this.game);
+  var game = this.game;
 
-  // this.shockwaveManager = new ShockwaveManager(this.game);
-
-  this.stationManager = new StationManager(this.game);
-  this.stationManager.boot();
-  
-  this.shipManager = new ShipManager(this.game, this.shipNetManager);
+  this.inputManager = new InputManager(game, this);
+  this.stationManager = new StationManager(game, this);
+  this.shipManager = new ShipManager(game, this);
+  // this.shockwaveManager = new ShockwaveManager(game, this);
 };
 
 SectorState.prototype.createSnow = function() {
