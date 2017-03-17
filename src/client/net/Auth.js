@@ -14,9 +14,6 @@ function Auth(game) {
   this.socket.on('user/sync', this._sync.bind(this));
   this.socket.on('user/data', this._data.bind(this));
 
-  this.game.on('gui/login', this._login, this);
-  this.game.on('gui/logout', this._logout, this);
-
   EventEmitter.call(this);
 };
 
@@ -42,14 +39,6 @@ Auth.prototype._data = function(user) {
     this.user[key] = user[key];
   }
   this.emit('data', this.user);
-};
-
-Auth.prototype._login = function(user) {
-  //..
-};
-
-Auth.prototype._logout = function() {
-  //..
 };
 
 Auth.prototype._connect = function() {
