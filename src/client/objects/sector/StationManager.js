@@ -1,37 +1,33 @@
 
 var engine = require('engine'),
-    EventEmitter = require('eventemitter3'),
     Station = require('./Station');
 
 function StationManager(game) {
-  EventEmitter.call(this);
-
-  // initialize
   this.game = game;
-  this.net = game.net;
   this.socket = game.net.socket;
-
+  this.stationNetManager = game.states.current.stationNetManager;
   this.stationsGroup = new engine.Group(game);
 
   this.game.world.foreground.add(this.stationsGroup);
+
+  this.game.once('ship/player', this.start, this);
+  this.game.on('station/create', this.create, this);
+
+  // can add
+  this.ready = false;
 
   // stations
   this.stations = {};
 }
 
-StationManager.prototype = Object.create(EventEmitter.prototype);
 StationManager.prototype.constructor = StationManager;
 
-StationManager.prototype.boot = function() {
-  for(var i=0; i<1; i++) {
-    this.create({
-      uuid: i.toString(),
-      center: { x: 2048, y: 2048 },
-      index: i,
-      orbit: 512,
-      chassis: 'station'
-    });
+StationManager.prototype.start = function() {
+  var stations = this.stations;
+  for(var s in stations) {
+    this.stationsGroup.add(stations[s]);
   }
+  this.ready = true;
 };
 
 StationManager.prototype.create = function(data) {
@@ -39,23 +35,34 @@ StationManager.prototype.create = function(data) {
       station = new Station(this, data);
       station.boot();
 
-  this.stationsGroup.add(station);
+  // add to group
+  this.stations[station.uuid] = station;
 
-  return station;
+  // wait
+  if(this.ready) {
+    this.stationsGroup.add(this.stations[station.uuid]);
+  }
 };
 
-StationManager.prototype.remove = function(ship) {
+StationManager.prototype.sync = function(data) {
+  var station, cached,
+      game = this.game,
+      stations = data.stations;
+  for(var s=0; s<stations.length; s++) {
+    station = this.stations[stations[s].uuid];
+    
+    if(station) {
+      // sync station
+    }
+  }
+};
+
+StationManager.prototype.remove = function(station) {
   //..
 };
 
 StationManager.prototype.destroy = function() {
-  var game = this.game,
-      socket = this.socket;
 
-  game.removeListener('game/pause', this._reset);
-  game.removeListener('game/resume', this._resume);
-
-  this.game = this.net = this.socket = undefined;
 };
 
 module.exports = StationManager;

@@ -1,19 +1,26 @@
 
-var engine = require('engine');
+var engine = require('engine'),
+    Hud = require('../../../ui/components/HudStation');
 
 function Station(manager, data) {
   engine.Sprite.call(this, manager.game, data.chassis);
 
-  this.name = data.chassis;
+  this.name = data.name;
   this.manager = manager;
-  this.game = manager.game;
-
   this.data = data;
 
-  this.period = data.index * global.Math.PI;
-  this.orbit = new engine.Circle(2048/4, 2048/4, data.orbit);
+  // config data
+  this.config = data.config.station;
+
+  // layer chassis
+  // this.chassis = new engine.Sprite(manager.game, data.chassis + '.png');
+  
+  // core ship classes
+  this.hud = new Hud(this);
+  this.period = this.data.period;
+  this.orbit = new engine.Circle(this.data.x/4, this.data.y/4, this.data.radius);
   this.pivot.set(this.width/2, this.height/2);
-  this.rotation = global.Math.random() * global.Math.PI;
+  this.rotation = this.data.rotation;
 };
 
 Station.prototype = Object.create(engine.Sprite.prototype);
@@ -24,16 +31,32 @@ Station.prototype.boot = function() {
   this.cap.pivot.set(this.cap.width/2, this.cap.height/2);
   this.cap.position.set(this.width/2, this.height/2);
   this.cap.rotation = global.Math.random() * global.Math.PI;
+
+  // add cap
   this.addChild(this.cap);
+
+  // create hud
+  this.hud.create();
+  this.hud.show();
+
+  // subscribe to updates
+  this.data.on('data', this.data, this);
+};
+
+Station.prototype.data = function(data) {
+  this.hud.data(data);
 };
 
 Station.prototype.update = function() {
-  engine.Sprite.prototype.update.call(this);
+  var delta = this.data.speed * (1/60) * (1/100),
+      rotation = delta/6;
 
   this.orbit.circumferencePoint(this.period, false, false, this.position);
-  this.period += 0.00002 * this.game.clock.elapsed;
-  this.rotation -= 0.00001 * this.game.clock.elapsed;
-  this.cap.rotation += 0.0008 * this.game.clock.elapsed;
+  this.period += delta;
+  // this.rotation += rotation;
+  this.cap.rotation -= 0.01;
+
+  engine.Sprite.prototype.update.call(this);
 };
 
 Station.prototype.destroy = function(options) {
