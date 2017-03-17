@@ -2,7 +2,7 @@
 var engine = require('engine');
 
 function FireEmitter(game) {
-  engine.Emitter.call(this, game, 0, 0, 1000);
+  engine.Emitter.call(this, game, 0, 0, 2000);
 
   this.blendMode = engine.BlendMode.ADD;
 
@@ -35,13 +35,13 @@ FireEmitter.prototype.pulse = function(colors) {
       rnd = this.game.rnd;
   
   this.frequency = 100;
-  this.lifespan = 300;
+  this.lifespan = 500;
 
-  this.setVelocity(rnd.integerInRange(-100, 100), rnd.integerInRange(-100, 100));
-  this.setVector(rnd.frac(), rnd.frac());
+  this.setVelocity(0, 0);
+  this.setVector(0, 0);
   
-  this.setScale(0.0, 0.5, 150);
-  this.setAlpha(1.0, 0.0, 300);
+  this.setScale(0.22, 0.28, 250);
+  this.setAlpha(1.0, 0.0, 500);
 
   this.setTint(global.parseInt(colors[0]), global.parseInt(colors[1]), 150);
 };
@@ -55,7 +55,7 @@ FireEmitter.prototype.laser = function(colors) {
   this.setVelocity(0, 0);
   this.setVector(0, 0);
   
-  this.setScale(0.1, 2.0, 300);
+  this.setScale(0.25, 0.5, 300);
   this.setAlpha(1.0, 0.0, 300);
 
   this.setTint(global.parseInt(colors[0]), global.parseInt(colors[1]), 250);
@@ -64,7 +64,7 @@ FireEmitter.prototype.laser = function(colors) {
 FireEmitter.prototype.rocket = function(colors) {
   colors = colors || [0xFF8888, 0x333333];
 
-  this.frequency = 100;
+  this.frequency = 200;
   this.lifespan = 300;
 
   this.setVelocity(0, 0);
@@ -72,7 +72,7 @@ FireEmitter.prototype.rocket = function(colors) {
 
   this.setScale(0.25, 1.0, 300);
   this.setAlpha(1.0, 0.0, 300);
-  this.setTint(global.parseInt(colors[0]), global.parseInt(colors[1]), 300);
+  this.setTint(global.parseInt(colors[0]), global.parseInt(colors[1]), 200);
 };
 
 FireEmitter.prototype.missile = function(colors) {
@@ -89,35 +89,34 @@ FireEmitter.prototype.missile = function(colors) {
   this.setTint(global.parseInt(colors[0]), global.parseInt(colors[1]), 100);
 };
 
-FireEmitter.prototype.plasma = function(colors, position) {
-  colors = colors || [0xFFAAAA, 0xFF6666];
-
-  this.frequency = 150;
-  this.lifespan = 350;
-
-  this.vector.set(this.emitX - position.x, this.emitY - position.y);
-  this.vector.normalize();
-
-  this.setVelocity(120, 120);
-  this.setVector(this.vector.x, this.vector.y);
-
-  this.setScale(0.15, 0.20, 150);
-  this.setAlpha(1.0, 0.0, 350);
-  this.setTint(global.parseInt(colors[0]), global.parseInt(colors[1]), 350);
-};
-
-FireEmitter.prototype.boost = function(colors, movement) {
-  colors = colors || [0xFFFFFF, 0xFF0000];
+FireEmitter.prototype.plasma = function(colors, vector) {
+  colors = colors || [0xFFFFFF, 0xFF3333];
 
   this.frequency = 100;
-  this.lifespan = 500;
+  this.lifespan = 100;
 
-  this.setVelocity(-movement._speed, -movement._speed);
-  this.setVector(movement._vector.x, movement._vector.y);
+  vector.normalize();
 
-  this.setScale(0.4, 0.6, 250);
-  this.setAlpha(1.0, 0.0, 500);
-  this.setTint(global.parseInt(colors[0]), global.parseInt(colors[1]), 250);
+  this.setVelocity(12, 12);
+  this.setVector(vector.x, vector.y);
+
+  this.setScale(0.12, 0.18, 100);
+  this.setAlpha(1.0, 0.0, 100);
+  this.setTint(global.parseInt(colors[0]), global.parseInt(colors[1]), 100);
+};
+
+FireEmitter.prototype.boost = function(colors) {
+  colors = colors || [0xFFFFFF, 0xF4F4F4];
+
+  this.frequency = 100;
+  this.lifespan = 400;
+
+  this.setVelocity(0, 0);
+  this.setVector(0, 0);
+
+  this.setScale(0.4, 0.6, 100);
+  this.setAlpha(1.0, 0.0, 400);
+  this.setTint(global.parseInt(colors[0]), global.parseInt(colors[1]), 150);
 };
 
 module.exports = FireEmitter;

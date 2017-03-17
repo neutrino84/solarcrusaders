@@ -70,7 +70,6 @@ ExplosionEmitter.prototype.explosion = function(ship) {
   this.setTint(0xFF3333, 0x333333, 256);
 };
 
-
 ExplosionEmitter.prototype.smulder = function(ship) {
   var movement = ship.movement,
       speed = movement._speed,
