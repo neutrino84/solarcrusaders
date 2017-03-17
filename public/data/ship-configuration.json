@@ -165,14 +165,14 @@
       "health": 200,
       "heal": 0.25,
       "armor": 0.0,
-      "speed": 32.0,
+      "speed": 44.0,
       "rate": 256,
-      "evasion": 0.06,
+      "evasion": 0.04,
       "energy": 200,
       "recharge": 1,
       "size": 192,
       "durability": 1000,
-      "critical": 0.01
+      "critical": 0.02
     },
     "enhancements": ["heal", "booster", "shield", "piercing"],
     "engine": {
