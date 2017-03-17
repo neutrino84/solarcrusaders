@@ -36,7 +36,7 @@ Camera.FOLLOW_TOPDOWN_TIGHT = 3;
 Camera.prototype.constructor = Camera;
 
 Camera.prototype.shake = function(duration) {
-  duration = duration || 500;
+  duration = duration || 250;
 
   this._shaking = 0.0;
 

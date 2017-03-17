@@ -9,35 +9,24 @@ function Clock(game) {
   this.now = 0;
   this.previousDateNow = 0;
 
+  this.started = 0;
   this.elapsed = 0;
   this.elapsedMS = 0;
 
   this.slowMotion = 1.0;
   this.desiredFpsMult = 1.0 / Clock.DESIRED_FPS;
 
-  this.advancedTiming = true;
-  this.suggestedFps = null;
   this.frames = 0;
   this.fps = 0;
-  this.fpsMin = 1000;
-  this.fpsMax = 0;
-  this.msMin = 1000;
-  this.msMax = 0;
 
   this.pauseDuration = 0;
-
-  this.timeToCall = 0;
-  this.timeExpected = 0;
 
   this.events = new Timer(this.game, false);
 
   this._desiredFps = Clock.DESIRED_FPS;
   this._frameCount = 0;
-  this._elapsedAccumulator = 0;
-  this._started = 0;
   this._timeLastSecond = 0;
   this._pauseStarted = 0;
-  this._justResumed = false;
 
   this._timers = [];
 };
@@ -47,8 +36,9 @@ Clock.DESIRED_FPS = 60;
 Clock.prototype.constructor = Clock;
 
 Clock.prototype.boot = function() {
-  this._started = global.Date.now();
-  this.time = global.Date.now();
+  var now = global.Date.now();
+  this.started = now;
+  this.time = now;
   this.events.start();
 };
 
@@ -104,24 +94,11 @@ Clock.prototype.update = function(time) {
   this.now = time;
   this.elapsed = this.now - this.prevTime;
 
-  if(this.game.raf && this.game.raf._isSetTimeOut) {
-    // time to call this function again in ms in case we're using timers 
-    // instead of RequestAnimationFrame to update the game
-    this.timeToCall = global.Math.floor(global.Math.max(0, (1000.0 / this._desiredFps) - (this.timeExpected - time)));
-
-    // time when the next call is expected if using timers
-    this.timeExpected = time + this.timeToCall;
-  }
-
-  if(this.advancedTiming) {
-    this.updateAdvancedTiming();
-  } else {
-    this.frames++;
-    if(this.now > this._timeLastSecond + 1000) {
-      this.fps = global.Math.round((this.frames * 1000) / (this.now - this._timeLastSecond));
-      this._timeLastSecond = this.now;
-      this.frames = 0;
-    }
+  this.frames++;
+  if(this.now > this._timeLastSecond + 1000) {
+    this.fps = (this.frames * 1000) / (this.now - this._timeLastSecond);
+    this._timeLastSecond = this.now;
+    this.frames = 0;
   }
 
   // Paused but still running?
@@ -157,33 +134,6 @@ Clock.prototype.updateTimers = function() {
   }
 };
 
-Clock.prototype.updateAdvancedTiming = function() {
-  // count the number of time.update calls
-  this._frameCount++;
-  this._elapsedAccumulator += this.elapsed;
-
-  // occasionally recalculate the suggestedFps based on the accumulated elapsed time
-  if(this._frameCount >= this._desiredFps * 2) {
-    // this formula calculates suggestedFps in multiples of 5 fps
-    this.suggestedFps = global.Math.floor(400 / (this._elapsedAccumulator / this._frameCount)) * 2.5;
-    this._frameCount = 0;
-    this._elapsedAccumulator = 0;
-  }
-
-  this.msMin = global.Math.min(this.msMin, this.elapsed);
-  this.msMax = global.Math.max(this.msMax, this.elapsed);
-
-  this.frames++;
-
-  if(this.now > this._timeLastSecond + 1000) {
-    this.fps = global.Math.round((this.frames * 1000) / (this.now - this._timeLastSecond));
-    this.fpsMin = global.Math.min(this.fpsMin, this.fps);
-    this.fpsMax = global.Math.max(this.fpsMax, this.fps);
-    this._timeLastSecond = this.now;
-    this.frames = 0;
-  }
-};
-
 Clock.prototype.gamePaused = function() {
   this._pauseStarted = global.Date.now();
   this.events.pause();
@@ -206,7 +156,7 @@ Clock.prototype.gameResumed = function() {
 };
 
 Clock.prototype.totalElapsedSeconds = function() {
-  return (this.time - this._started) * 0.001;
+  return (this.time - this.started) * 0.001;
 };
 
 Clock.prototype.elapsedSince = function(since) {
@@ -218,7 +168,7 @@ Clock.prototype.elapsedSecondsSince = function(since) {
 };
 
 Clock.prototype.reset = function() {
-  this._started = this.time;
+  this.started = this.time;
   this.removeAll();
 };
 

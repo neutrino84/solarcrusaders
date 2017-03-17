@@ -11,8 +11,6 @@ function World(game) {
   
   this.bounds = new Rectangle(0, 0, game.width, game.height);
 
-  this._definedSize = false;
-
   this.game.on('state/change', this.stateChange, this);
 };
 
@@ -35,18 +33,20 @@ World.prototype.boot = function() {
 };
 
 World.prototype.setBounds = function(x, y, width, height) {
-  this._definedSize = true;
-
   this._width = width;
   this._height = height;
 
-  this.bounds.setTo(x, y, width, height);
+  this._bounds.addFrame(this.transform, this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
 
   if(this.camera.bounds) {
     this.camera.bounds.setTo(x, y,
       global.Math.max(width, this.game.width),
       global.Math.max(height, this.game.height));
   }
+};
+
+World.prototype_calculateBounds = function() {
+  this._bounds.addFrame(this.transform, this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
 };
 
 World.prototype.update = function() {

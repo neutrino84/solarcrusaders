@@ -116,7 +116,6 @@ Circle.prototype = {
   toString: function() {
     return '[{Circle (x=' + this.x + ' y=' + this.y + ' diameter=' + this.diameter + ' radius=' + this.radius + ')}]';
   }
-
 };
 
 Circle.prototype.constructor = Circle;
