@@ -8,13 +8,15 @@ function Energy(hardpoint) {
   this.data = hardpoint.data;
   this.clock  = this.game.clock;
 
-  this.started = 0;
-  this.elapsed = 0;
   this.length = 0;
   this.duration = 0;
+  this.elapsed = 0;
+  this.length = 0;
+  this.started = 0;
 
   this.isDone = false;
   this.isRunning = false;
+  this.hasExploded = false;
 
   this._start = new engine.Point();
   this._end = new engine.Point();
