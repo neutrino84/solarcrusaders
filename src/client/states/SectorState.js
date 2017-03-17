@@ -75,7 +75,7 @@ SectorState.prototype.create = function() {
       mouse.capture = true;
       mouse.mouseWheelCallback = function(event) {
         var delta = event.deltaY / sensitivity,
-            scale = engine.Math.clamp(this.world.scale.x - delta, 0.18, 1.0);
+            scale = engine.Math.clamp(this.world.scale.x - delta, 0.16, 1.0);
         if(self.game.paused) { return; }
         if(self.zoom && self.zoom.isRunning) {
           self.zoom.stop();
@@ -84,7 +84,7 @@ SectorState.prototype.create = function() {
       };
 
   this.game.world.setBounds(0, 0, 4096, 4096);
-  this.game.world.scale.set(0.18, 0.18);
+  this.game.world.scale.set(0.16, 0.16);
 
   this.game.camera.bounds = null;
   this.game.camera.focusOnXY(2048, 2048);
@@ -102,12 +102,6 @@ SectorState.prototype.create = function() {
   //   this.fadeTo(12000, 0.01);
   // });
 
-  // start zoom in
-  // this.game.once('ship/follow', function() {
-  //   this.zoom = this.game.tweens.create(this.game.world.scale);
-  //   this.zoom.to({ x: 0.2, y: 0.2 }, 3000, engine.Easing.Quadratic.InOut, true);
-  // }, this);
-
   // login
   // if(game.auth.ready) {
   //   this.game.gui.login(game.auth.user);
@@ -119,8 +113,6 @@ SectorState.prototype.create = function() {
 
 SectorState.prototype.createSpace = function() {
   this.space = new Space(this.game);
-  this.space.cache();
-  
   this.planet = new Planet(this.game);
 
   this.nebula = new NebulaCluster(this.game);
