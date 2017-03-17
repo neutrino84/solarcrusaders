@@ -6,7 +6,7 @@
       "heal": 2.0,
       "speed": 20.0,
       "size": 212,
-      "radius": 32
+      "radius": 256
     }
   }
 }
