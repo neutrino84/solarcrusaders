@@ -5,7 +5,7 @@ var Basic = require('./Basic'),
 function AI(manager) {
   this.manager = manager;
   this.game = manager.game;
-  this.game.clock.events.loop(1000, this.update, this);
+  this.game.clock.events.loop(250, this.update, this);
 };
 
 AI.prototype.constructor = AI;

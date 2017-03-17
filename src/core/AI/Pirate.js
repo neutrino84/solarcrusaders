@@ -11,17 +11,16 @@ function Pirate(ship, home) {
     respawn: 60000,
     disengage: 9216,
     friendly: ['pirate'],
+    position: {
+      radius: 512,
+      x: ship.x,
+      y: ship.y
+    },
     escape: {
       health: 0.1,
-      position: {
-        radius: 256,
-        x: ship.movement.position.x,
-        y: ship.movement.position.y
-      }
     },
     sensor: {
-      range: 4096,
-      pursuit: 512
+      range: 4096
     }
   };
 };
@@ -30,8 +29,9 @@ Pirate.prototype = Object.create(Basic.prototype);
 Pirate.prototype.constructor = Pirate;
 
 Pirate.prototype.getHomePosition = function() {
-  var escape = this.settings.escape;
-  this.sensor.setTo(escape.position.x, escape.position.y, escape.position.radius);
+  var position = this.settings.position,
+      sensor = this.sensor;
+      sensor.setTo(position.x, position.y, position.radius);
   return this.sensor.random();
 };
 

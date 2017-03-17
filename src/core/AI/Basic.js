@@ -11,24 +11,22 @@ function Basic(ship) {
   this.timer = null;
   this.target = null;
   this.sensor = new engine.Circle();
-  this.rnd = new engine.RandomGenerator();
 
   this.settings = {
     aim: 1.5,
     respawn: 10000,
     disengage: 7680,
     friendly: ['user', 'basic'],
+    position: {
+      radius: 1024,
+      x: 2048,
+      y: 2048
+    },
     escape: {
       health: 0.2,
-      position: {
-        radius: 256,
-        x: 2048,
-        y: 2048
-      }
     },
     sensor: {
-      range: 4096,
-      pursuit: 512
+      range: 4096
     }
   };
 };
@@ -52,7 +50,7 @@ Basic.prototype.update = function() {
   // disengage due to damage
   if(ship.data.health / ship.config.stats.health < settings.escape.health) {
     this.disengage();
-  } else if(this.rnd.frac() > 0.5) {
+  } else if(this.game.rnd.frac() > 0.5) {
     // scan nearby ships
     for(var s in ships) {
       scan = ships[s];
@@ -103,6 +101,10 @@ Basic.prototype.engage = function(target) {
 
     this.disengager && this.game.clock.events.remove(this.disengager);
     this.disengager = this.game.clock.events.add(settings.disengage, this.disengage, this);
+
+    if(this.game.rnd.frac() > 0.75) {
+      ship.activate('peircing');
+    }
   }
 
   // engage countermeasures
@@ -112,9 +114,13 @@ Basic.prototype.engage = function(target) {
   if(ship.data.health < 0.25) {
     ship.activate('heal');
   }
-  if(this.rnd.frac() > 0.8) {
+  if(this.game.rnd.frac() > 0.8) {
     ship.activate('booster');
   }
+};
+
+Basic.prototype.reengage = function() {
+
 };
 
 Basic.prototype.disengage = function() {
@@ -127,12 +133,13 @@ Basic.prototype.attack = function() {
       ship = this.ship,
       target, movement,
       point = {};
+
+  // attack sequence
   if(this.target && this.target.data) {
     target = this.target;
-    position = target.movement.position;
 
     // aim
-    sensor.setTo(position.x, position.y, target.data.size * this.settings.aim);
+    sensor.setTo(target.movement.position.x, target.movement.position.y, target.data.size * this.settings.aim);
     sensor.random(false, point);
 
     // attack
