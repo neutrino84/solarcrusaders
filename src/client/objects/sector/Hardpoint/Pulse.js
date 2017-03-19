@@ -7,18 +7,17 @@ function Pulse(hardpoint) {
   this.game = hardpoint.game;
   this.data = hardpoint.data;
   this.clock  = this.game.clock;
-  this.spread = {
-    x: this.game.rnd.realInRange(-this.data.spread, this.data.spread),
-    y: this.game.rnd.realInRange(-this.data.spread, this.data.spread)
-  };
 
   this.started = 0;
   this.elapsed = 0;
   this.length = 0;
   this.duration = 0;
 
+  this.spread = null;
+
   this.isDone = false;
   this.isRunning = false;
+  this.hasExploded = false;
 
   this._start = new engine.Point();
   this._end = new engine.Point();
@@ -31,12 +30,9 @@ function Pulse(hardpoint) {
   this.strip = new engine.Strip(this.game, this.texture, [this._start, this._end]);
   this.strip.blendMode = engine.BlendMode.ADD;
 
-  this.scale = global.Math.random() * 1 + 1;
   this.glow = new engine.Sprite(this.game, 'texture-atlas', 'turret-glow.png');
-  this.glow.scale.set(0.0, 0.0);
   this.glow.pivot.set(32, 32);
   this.glow.position.set(0, 16);
-  this.glow.rotation = global.Math.PI * global.Math.random();
   this.glow.tint = global.parseInt(this.data.glow);
   this.glow.blendMode = engine.BlendMode.ADD;
 };
@@ -46,12 +42,22 @@ Pulse.prototype.start = function(destination, distance, spawn, index, slot) {
   this.length = this.data.length;
   this.duration = distance * this.data.projection;
   this.runtime = this.duration + this.length;
-  this.delay = this.data.delay + (this.runtime * slot);
+  this.delay = (this.data.delay + (this.runtime * this.game.rnd.frac() * ((index+1) / (spawn+1))));
   this.started = this.clock.time + this.delay;
 
   this.isDone = false;
   this.isRunning = true;
   this.hasExploded = false;
+
+  // create randomness
+  this.strip.alpha = 1;
+  this.glow.rotation = this.game.rnd.realInRange(0, global.Math.PI);
+  this.scale = this.game.rnd.realInRange(1, 2);
+  this.glow.scale.set(this.scale, this.scale);
+  this.spread = {
+    x: this.game.rnd.realInRange(-this.data.spread, this.data.spread),
+    y: this.game.rnd.realInRange(-this.data.spread, this.data.spread)
+  };
 
   this.destination.copyFrom(destination);
   this.destination.add(this.spread.x, this.spread.y)

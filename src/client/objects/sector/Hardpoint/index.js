@@ -13,15 +13,18 @@ function Hardpoint(parent, data, config) {
   this.config = config;
   this.data = data;
 
+  this.cache = [];
   this.actives = [];
+  this.cooled = true;
   this.isRunning = false;
+
   this.types = {
     rocket: Projectile,
     energy: Energy,
     pulse: Pulse,
     plasma: Plasma,
     missile: Missile
-  }
+  };
 
   this.target = new engine.Point();
   this.origin = new engine.Point();
@@ -44,12 +47,18 @@ Hardpoint.prototype.fire = function(targ) {
       types = this.types,
       target = this.target,
       actives = this.actives,
+      cache = this.cache,
       data = this.data,
       length = actives.length,
       spawn = data.spawn,
       distance = engine.Point.distance(ship.position, targ);
 
   if(distance <= data.range) {
+
+    // cooldown
+    this.cooled = this.data.cooldown > 0 ? false : true;
+
+    // intialize target
     target.copyFrom(targ);
 
     for(var i=0; i<length; i++) {
@@ -64,9 +73,12 @@ Hardpoint.prototype.fire = function(targ) {
     }
 
     for(var i=0; i<spawn; i++) {
-      launcher = new types[data.type](this);
+      if(cache.length) {
+        launcher = cache.pop();
+      } else {
+        launcher = new types[data.type](this);
+      }
       launcher.start(target, distance, spawn, i, data.slot);
-
       actives.push(launcher);
     }
   }
@@ -103,25 +115,27 @@ Hardpoint.prototype.hit = function(ship, target) {
 Hardpoint.prototype.update = function() {
   if(!this.isRunning) { return; }
 
-  var launcher,
+  var launcher, key,
       remove = [],
+      cache = this.cache,
       actives = this.actives,
       length = actives.length;
 
   for(var i=0; i<length; i++) {
     launcher = actives[i];
-    
-    if(launcher.isRunning) {
+
+    if(launcher.isRunning || !launcher.isDone) {
       launcher.update();
     } else {
-      launcher.destroy();
       remove.push(launcher);
     }
   }
 
   while(remove.length > 0) {
     launcher = remove.pop();
-    actives.splice(actives.indexOf(launcher), 1);
+    // actives.splice(actives.indexOf(launcher), 1);
+    engine.Utility.splice(actives, actives.indexOf(launcher));
+    cache.push(launcher);
   }
 
   // stop
@@ -154,6 +168,7 @@ Hardpoint.prototype.destroy = function() {
     launcher = actives[i];
     launcher.destroy();
   }
+  // destroy launchers in cache
   this.parent = this.game = this.ship =
     this.config = this.target = this.cap =
     this.position = this.sprite = this.launcher =
