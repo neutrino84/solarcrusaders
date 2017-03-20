@@ -36,6 +36,8 @@ UserManager.prototype.connect = function(socket) {
   if(data) {
     if(this.exists(data)) {
       winston.info('[UserManager] User already exists in game');
+      user = this.users[data.uuid];
+      user.reconnected(socket);
     } else if(data && socket && session) {
       winston.info('[UserManager] Creating user in game');
       user = new User(this, data, socket);
@@ -43,20 +45,19 @@ UserManager.prototype.connect = function(socket) {
         this.add(user);
       }, this);
     } else {
-      winston.info('[UserManager] User session data error');
+      winston.info('[UserManager] User data error');
       socket.disconnect(true);
     }
   } else {
-    winston.info('[UserManager] User session data error');
+    winston.info('[UserManager] User data error');
     socket.disconnect(true);
   }
 };
 
 UserManager.prototype.disconnect = function(socket) {
   var session = socket.request.session,
-      user = session.user;
-      session && user && 
-        user.destroy && user.destroy();
+      user = this.users[session.user.uuid];
+      user.disconnected();
 };
 
 UserManager.prototype.data = function() {

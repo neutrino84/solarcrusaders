@@ -25,9 +25,6 @@ Socket.prototype.init = function(next) {
 
     // emit global socket messages
     socket.use(this.emit.bind(this, socket));
-
-    // connect socket
-    this.app.game.emit('auth/connect', socket);
   }.bind(this));
 
   next();
@@ -40,7 +37,7 @@ Socket.prototype.configure = function(socket, next) {
 };
 
 Socket.prototype.emit = function(socket, args, err) {
-  this.app.game.emit(args[0], socket, args);
+  this.app.game.emit(args[0], socket, args, err);
 };
 
 Socket.prototype.disconnecting = function(socket) {

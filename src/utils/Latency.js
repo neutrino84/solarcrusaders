@@ -27,6 +27,7 @@ Latency.prototype.stop = function() {
 };
 
 Latency.prototype.destroy = function() {
+  this.game.removeListener('drip', this.stop, this);
   this.timer && this.game.clock.events.remove(this.timer);
   this.user = this.socket = this.game = undefined;
 };

@@ -19,7 +19,7 @@ function User(manager, data, socket) {
 
 User.prototype.constructor = User;
 
-User.DEFAULT_SHIP = [{
+User.DEFAULT_SHIPS = [{
   name: Generator.getName('ubaidian'),
   chassis: 'ubaidian-x03'
 }];
@@ -27,12 +27,13 @@ User.DEFAULT_SHIP = [{
 User.prototype.init = function(callback, context) {
   var self = this, 
       data = this.data,
+      json = data.toStreamObject(),
       err;
 
   if(data.isNewRecord()) {
     // default
-    this.create(User.DEFAULT_SHIP);
-    this.socket.emit('auth/sync', data.toStreamObject());
+    this.create(User.DEFAULT_SHIPS, json);
+    this.socket.emit('auth/sync', json);
 
     callback.call(context, err, data);
   } else {
@@ -44,24 +45,26 @@ User.prototype.init = function(callback, context) {
           ships = results[1];
 
       self.data = data;
-      self.create(ships);
-      self.socket.emit('auth/sync', data.toStreamObject());
+      self.create(ships, json);
+      self.socket.emit('auth/sync', json);
 
       callback.call(context, err, data);
     });
   }
 };
 
-User.prototype.create = function(ships) {
-  var game = this.game,
-      ship, data;
+User.prototype.create = function(ships, json) {
+  var ship, data;
   if(ships && ships.length) {
     for(var s=0; s<ships.length; s++) {
       ship = ships[s]
-      data = ship.toStreamObject ? ship.toStreamObject() : ship;
+      data = ship.toStreamObject ? json : ship;
+
+      // add to ships
+      this.ships.push(data);
       
       // create user ship
-      game.emit('ship/create', data, this);
+      this.game.emit('ship/create', data, this);
     }
   }
 };
@@ -90,26 +93,33 @@ User.prototype.save = function(callback) {
   async.series(series, callback);
 };
 
-User.prototype.toStreamObject = function() {
-  return this.data.toStreamObject();
+User.prototype.reconnected = function(socket) {
+  this.socket = socket;
+  this.socket.emit('auth/sync', this.data.toStreamObject());
+  this.timeout && this.game.clock.events.remove(this.timeout);
+};
+
+User.prototype.disconnected = function(socket) {
+  this.timeout = this.game.clock.events.add(10000, this.destroy, this);
 };
 
 User.prototype.destroy = function() {
   var ship,
       ships = this.ships,
-      game = this.game;
-  
-  // remove player ships
+      game = this.game,
+      latency = this.latency;
+
+  // remove ships
   for(var i=0; i<ships.length; i++) {
-    ship = ship[i];
-    game.emit('ship/remove', ship, this);
+    ship = ships[i];
+    game.emit('ship/remove', ship);
   }
 
   // destroy objects
-  this.latency.destroy();
-  this.socket.request.session.destroy();
-  this.socket.disconnect(true);
-  this.game.emit('auth/removed', this);
+  latency.destroy();
+
+  this.manager = this.game = 
+    this.model = this.socket = undefined;
 };
 
 module.exports = User;
