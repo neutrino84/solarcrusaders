@@ -30,14 +30,15 @@ UserManager.prototype.remove = function(user) {
 };
 
 UserManager.prototype.connect = function(socket) {
-  var session = socket.request.session,
-      user = session ? session.user : false;
-  if(user) {
-    if(this.exists(user)) {
+  var user,
+      session = socket.request.session,
+      data = session ? session.user : false;
+  if(data) {
+    if(this.exists(data)) {
       winston.info('[UserManager] User already exists in game');
-    } else if(user && socket && session) {
+    } else if(data && socket && session) {
       winston.info('[UserManager] Creating user in game');
-      user = new User(this, user, socket);
+      user = new User(this, data, socket);
       user.init(function(err, data) {
         this.add(user);
       }, this);
