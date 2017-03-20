@@ -23,7 +23,7 @@ function Ship(manager, data) {
   this.chassis = new engine.Sprite(manager.game, 'texture-atlas', data.chassis + '.png');
 
   // defaults
-  this.rotation = data.rotation;
+  this.rotation = data.rotation + global.Math.PI;
   this.pivot.set(this.width/2, this.height/2);
 
   // timer events
@@ -57,7 +57,7 @@ Ship.prototype.boot = function() {
   this.explosion.create();
 
   // subscribe to updates
-  this.data.on('data', this.delta, this);
+  this.data.on('data', this.refresh, this);
 
   // start events
   this.events.start();
@@ -69,18 +69,10 @@ Ship.prototype.boot = function() {
   }
 };
 
-Ship.prototype.delta = function(data) {
+Ship.prototype.refresh = function(data) {
   var ship, attacker, defender,
       ships = this.manager.ships,
       targetingComputer = this.targetingComputer;
-  
-  // if(data.critical) {
-  //   this.explosion.critical();
-    
-  //   if(this.isPlayer) {
-  //     this.game.camera.shake(500);
-  //   }
-  // }
 
   if(data.hardpoint) {
     attacker = ships[data.uuid];
@@ -155,6 +147,10 @@ Ship.prototype.disable = function() {
 }
 
 Ship.prototype.destroy = function(options) {
+  // remove timers
+  this.events.destroy();
+  this.data.removeListener('data', this.data);
+
   this.hud.destroy();
   this.selector.destroy();
   this.movement.destroy();
@@ -162,10 +158,6 @@ Ship.prototype.destroy = function(options) {
   this.targetingComputer.destroy();
   this.repair.destroy();
   this.explosion.destroy();
-
-  this.data.removeListener('data', this.data);
-
-  this.events.destroy();
 
   // children destroy themselves
   engine.Sprite.prototype.destroy.call(this, options);
