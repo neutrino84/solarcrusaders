@@ -38,7 +38,6 @@ Loader.prototype.init = function() {
 };
 
 Loader.prototype.displayStartupMessages = function() {
-  console.log('');
   console.log('Solar Crusaders v' + pkg.version + ' Copyright (C) 2015-2016 Puremana Studios LLC');
 };
 
