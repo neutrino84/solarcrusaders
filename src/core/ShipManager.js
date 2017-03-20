@@ -37,13 +37,21 @@ ShipManager.prototype.constructor = ShipManager;
 
 ShipManager.prototype.init = function() {
   // generate npcs
-  this.generateRandomShips();
+  // this.generateRandomShips();
   // this.generatePirateShips();
 };
 
 ShipManager.prototype.add = function(ship) {
   if(this.ships[ship.uuid] === undefined) {
     this.ships[ship.uuid] = ship;
+  }
+};
+
+ShipManager.prototype.remove = function(ship) {
+  var index,
+      ship = this.ships[ship.uuid];
+  if(ship !== undefined) {
+    delete this.ships[ship.uuid] && ship.destroy();
   }
 };
 
@@ -61,14 +69,6 @@ ShipManager.prototype.create = function(data, user, position) {
   ship.init(function(err) {
     self.game.emit('ship/add', ship);
   });
-};
-
-ShipManager.prototype.remove = function(ship) {
-  var index,
-      ship = this.ships[ship.uuid];
-  if(ship !== undefined) {
-    delete this.ships[ship.uuid] && ship.destroy();
-  }
 };
 
 ShipManager.prototype.plot = function(socket, args) {
