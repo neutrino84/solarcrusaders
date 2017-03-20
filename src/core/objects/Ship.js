@@ -140,7 +140,8 @@ Ship.prototype.attack = function(data, rtt) {
       hardpoints = this.hardpoints,
       runtime, hardpoint, compensated,
       target = data.targ,
-      distance;
+      distance,
+      rtt = rtt || 0;
 
   // get updated data
   compensated = movement.compensated(rtt);
