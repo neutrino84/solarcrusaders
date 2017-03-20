@@ -26,9 +26,9 @@ function Movement(parent) {
 
 Movement.CLOCK_RATE = 100;
 Movement.FRICTION = 1.1;
-Movement.STOP_THRESHOLD = 16.0;
-Movement.THROTTLE_THRESHOLD = 256.0;
-Movement.THROTTLE_MANEUVER = 1.5;
+Movement.STOP_THRESHOLD = 32.0;
+Movement.THROTTLE_THRESHOLD = 192.0;
+Movement.THROTTLE_MANEUVER = 1.25;
 
 Movement.prototype.constructor = Movement;
 
