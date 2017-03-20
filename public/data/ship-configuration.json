@@ -80,7 +80,6 @@
     "targeting": {
       "hardpoints": [
         {
-          "type": ["energy", "pulse"],
           "pivot": {
             "x": 20,
             "y": 16
@@ -91,11 +90,10 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "vulcan"
+            "subtype": "quantum"
           }
         },
         {
-          "type": ["energy", "pulse"],
           "pivot": {
             "x": 20,
             "y": 16
@@ -106,11 +104,10 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "vulcan"
+            "subtype": "quantum"
           }
         },
         {
-          "type": ["energy", "pulse"],
           "pivot": {
             "x": 20,
             "y": 16
@@ -121,37 +118,7 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "vulcan"
-          }
-        },
-        {
-          "type": ["projectile"],
-          "pivot": {
-            "x": 16,
-            "y": 16
-          },
-          "position": {
-            "x": 128,
-            "y": 156
-          },
-          "default": {
-            "type": "rocket",
-            "subtype": "basic"
-          }
-        },
-        {
-          "type": ["projectile"],
-          "pivot": {
-            "x": 16,
-            "y": 16
-          },
-          "position": {
-            "x": 128,
-            "y": 100
-          },
-          "default": {
-            "type": "rocket",
-            "subtype": "basic"
+            "subtype": "quantum"
           }
         }
       ]
@@ -210,7 +177,6 @@
     "targeting": {
       "hardpoints": [
         {
-          "type": ["energy", "pulse"],
           "pivot": {
             "x": 20,
             "y": 16
@@ -225,7 +191,6 @@
           }
         },
         {
-          "type": ["energy", "pulse"],
           "pivot": {
             "x": 20,
             "y": 16
@@ -240,7 +205,6 @@
           }
         },
         {
-          "type": ["energy", "pulse"],
           "pivot": {
             "x": 20,
             "y": 16
@@ -255,7 +219,6 @@
           }
         },
         {
-          "type": ["energy", "pulse"],
           "pivot": {
             "x": 20,
             "y": 16
@@ -325,7 +288,6 @@
     "targeting": {
       "hardpoints": [
         {
-          "type": ["energy", "pulse"],
           "pivot": {
             "x": 20,
             "y": 16
@@ -340,7 +302,6 @@
           }
         },
         {
-          "type": ["energy", "pulse"],
           "pivot": {
             "x": 20,
             "y": 16
@@ -929,10 +890,10 @@
     "engine": {
       "glows": [
         {
-          "tint": "0xFFFFFF",
+          "tint": "0x999999",
           "scale": {
-            "startX": 0.02,
-            "endX": 0.05,
+            "startX": 0.01,
+            "endX": 0.03,
             "startY": 0.08,
             "endY": 0.12
           },
@@ -943,10 +904,10 @@
           "rotation": 0
         },
         {
-          "tint": "0xFFFFFF",
+          "tint": "0x999999",
           "scale": {
-            "startX": 0.02,
-            "endX": 0.05,
+            "startX": 0.01,
+            "endX": 0.03,
             "startY": 0.08,
             "endY": 0.12
           },
@@ -957,58 +918,16 @@
           "rotation": 0
         },
         {
-          "tint": "0xFFFFFF",
+          "tint": "0x999999",
           "scale": {
-            "startX": 0.06,
-            "endX": 0.12,
-            "startY": 0.24,
-            "endY": 0.34
+            "startX": 0.04,
+            "endX": 0.08,
+            "startY": 0.22,
+            "endY": 0.28
           },
           "position": {
-            "x": 152,
-            "y": 81
-          },
-          "rotation": 0
-        },
-        {
-          "tint": "0xFFFFFF",
-          "scale": {
-            "startX": 0.06,
-            "endX": 0.12,
-            "startY": 0.24,
-            "endY": 0.34
-          },
-          "position": {
-            "x": 152,
-            "y": 124
-          },
-          "rotation": 0
-        },
-        {
-          "tint": "0xFFFFFF",
-          "scale": {
-            "startX": 0.02,
-            "endX": 0.06,
-            "startY": 0.04,
-            "endY": 0.12
-          },
-          "position": {
-            "x": 63,
-            "y": 71
-          },
-          "rotation": 0
-        },
-        {
-          "tint": "0xFFFFFF",
-          "scale": {
-            "startX": 0.02,
-            "endX": 0.06,
-            "startY": 0.04,
-            "endY": 0.12
-          },
-          "position": {
-            "x": 63,
-            "y": 135
+            "x": 154,
+            "y": 104
           },
           "rotation": 0
         }
@@ -1054,8 +973,8 @@
             "y": 80
           },
           "default": {
-            "type": "pulse",
-            "subtype": "vulcan"
+            "type": "plasma",
+            "subtype": "basic"
           }
         },
         {
@@ -1066,34 +985,6 @@
           "position": {
             "x": 116,
             "y": 127
-          },
-          "default": {
-            "type": "pulse",
-            "subtype": "vulcan"
-          }
-        },
-        {
-          "pivot": {
-            "x": 17,
-            "y": 16
-          },
-          "position": {
-            "x": 128,
-            "y": 128
-          },
-          "default": {
-            "type": "rocket",
-            "subtype": "basic"
-          }
-        },
-        {
-          "pivot": {
-            "x": 17,
-            "y": 16
-          },
-          "position": {
-            "x": 128,
-            "y": 128
           },
           "default": {
             "type": "plasma",
