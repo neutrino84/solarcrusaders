@@ -1,37 +1,17 @@
 
-function Latency(game) {
-  this.game = game;
-  this.socket = game.net.socket;
-  this.timer = undefined;
-  this.startTime = 0;
-  this.endTime = 0;
+function Latency(manager) {
+  this.manager = manager,
+  this.game = manager.game;
+  this.socket = manager.socket;
   this.rtt = 0;
 
-  this._history = [];
-
-  this.socket.on('drip', this.ping.bind(this));
+  this.socket.on('drop', this.pong.bind(this));
 };
-
-Latency.HISTORY_SIZE = 10;
 
 Latency.prototype.constructor = Latency;
 
-Latency.prototype.ping = function(data) {
-  this.socket.emit('drop');
-  this._compute(data);
-};
-
-Latency.prototype._compute = function(data) {
-  var average = 0,
-      history = this._history;
-      history.push(data.rtt);
-  if(history.length > Latency.HISTORY_SIZE) {
-    history.shift();
-  }
-  for(var rtt in history) {
-    average += history[rtt];
-  }
-  this.rtt = global.Math.round(average / history.length);
+Latency.prototype.pong = function(data) {
+  this.socket.emit('drip');
 };
 
 module.exports = Latency;

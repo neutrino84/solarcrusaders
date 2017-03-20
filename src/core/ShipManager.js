@@ -9,54 +9,52 @@ var uuid = require('uuid'),
 function ShipManager(game) {
   this.game = game;
   this.model = game.model;
-  this.sockets = game.sockets;
-  this.iorouter = game.sockets.iorouter;
+  this.sockets = game.sockets.ioserver;
 
   this.ships = {};
-  this.count = {};
 
+  // ai manager
+  this.ai = new AI(this);
+
+  // internal
   this.game.on('ship/add', this.add, this);
   this.game.on('ship/remove', this.remove, this);
   this.game.on('ship/create', this.create, this);
 
+  // networking
+  this.game.on('ship/data', this.data, this);
+  this.game.on('ship/plot', this.plot, this);
+  this.game.on('ship/attack', this.attack, this);
+  this.game.on('ship/enhancement/start', this.enhancement.bind(this));
+  this.game.on('ship/enhancement/started', this.enhancement.bind(this));
+  this.game.on('ship/enhancement/stopped', this.enhancement.bind(this));
+
   // activate ai
-  this.game.clock.events.loop(1000, this.stats, this);
+  this.game.clock.events.loop(1000, this.refresh, this);
 };
 
 ShipManager.prototype.constructor = ShipManager;
 
 ShipManager.prototype.init = function() {
-  // ai manager
-  this.ai = new AI(this);
-
-  // io router
-  this.sockets.iorouter.on('ship/data', this.data.bind(this));
-  this.sockets.iorouter.on('ship/plot', this.plot.bind(this));
-  this.sockets.iorouter.on('ship/attack', this.attack.bind(this));
-  this.sockets.iorouter.on('ship/enhancement/*', this.enhancement.bind(this));
-
   // generate npcs
   this.generateRandomShips();
-  this.generatePirateShips();
+  // this.generatePirateShips();
 };
 
 ShipManager.prototype.add = function(ship) {
   if(this.ships[ship.uuid] === undefined) {
     this.ships[ship.uuid] = ship;
-    if(this.count[ship.chassis]) {
-      this.count[ship.chassis]++;
-    } else {
-      this.count[ship.chassis] = 1;
-    }
   }
 };
 
 ShipManager.prototype.create = function(data, user, position) {
   var self = this, ship,
+      rnd = this.game.rnd,
       position = position || this.generateRandomPosition(user ? 512 : 2048),
       data = Utils.extend({
         x: data.x || position.x,
-        y: data.y || position.y
+        y: data.y || position.y,
+        rotation: rnd.frac() * engine.Math.PI
       }, data);
   ship = new Ship(this, data);
   ship.user = user;
@@ -70,16 +68,11 @@ ShipManager.prototype.remove = function(ship) {
       ship = this.ships[ship.uuid];
   if(ship !== undefined) {
     delete this.ships[ship.uuid] && ship.destroy();
-
-    this.count[ship.chassis] && this.count[ship.chassis]--;
-    this.sockets.io.sockets.emit('ship/removed', {
-      uuid: ship.uuid
-    });
   }
 };
 
-ShipManager.prototype.plot = function(sock, args, next) {
-  var user = sock.sock.handshake.session.user,
+ShipManager.prototype.plot = function(socket, args) {
+  var user = socket.request.session.user,
       data = args[1],
       ship = this.ships[data.uuid];
   if(ship && ship.user && ship.user.uuid === user.uuid) {
@@ -87,23 +80,21 @@ ShipManager.prototype.plot = function(sock, args, next) {
   }
 };
 
-ShipManager.prototype.attack = function(sock, args, next) {
+ShipManager.prototype.attack = function(socket, args) {
   var ships = this.ships,
       sockets = this.sockets,
-      session = sock.sock.handshake.session,
-      user = session.user,
+      user = socket.request.session.user,
       data = args[1],
       ship = ships[data.uuid];
   if(ship && ship.user && ship.user.uuid === user.uuid) {
-    ship.attack(data, session.rtt);
+    ship.attack(data, ship.user.rtt);
   }
 };
 
-ShipManager.prototype.enhancement = function(sock, args, next) {
+ShipManager.prototype.enhancement = function(socket, args) {
   var ships = this.ships,
       sockets = this.sockets,
-      session = sock.sock.handshake.session,
-      user = session.user,
+      user = socket.request.session.user,
       path = args[0],
       data = args[1],
       ship = ships[data.uuid];
@@ -111,7 +102,7 @@ ShipManager.prototype.enhancement = function(sock, args, next) {
     case 'ship/enhancement/start':
       if(ship && ship.user && ship.user.uuid === user.uuid) {
         if(!ship.activate(data.enhancement)) {
-          this.sockets.io.sockets.emit('ship/enhancement/cancelled', {
+          this.sockets.emit('ship/enhancement/cancelled', {
             uuid: ship.uuid,
             enhancement: data.enhancement
           });
@@ -123,25 +114,25 @@ ShipManager.prototype.enhancement = function(sock, args, next) {
   }
 };
 
-ShipManager.prototype.data = function(sock, args, next) {
+ShipManager.prototype.data = function(socket, args) {
   var ship,
-      uuid, enhancements,
+      uuid, enhancements, hardpoints,
       uuids = args[1].uuids,
-      user = sock.sock.handshake.session.user,
+      user = socket.request.session.user,
       ships = [];
   for(var u in uuids) {
     ship = this.ships[uuids[u]];
     if(ship) {
-      ship.ignoreEnhancements = true;
       enhancements = Object.keys(ship.enhancements.available);
+      hardpoints = ship.transferable.hardpoints,
       ships.push({
-        id: ship.id,
         x: ship.x,
         y: ship.y,
         uuid: ship.uuid,
         name: ship.data.name,
         user: ship.user ? ship.user.uuid : null,
         ai: ship.ai ? ship.ai.type : null,
+        disabled: ship.disabled,
         username: ship.user ? ship.user.data.username : null,
         chassis: ship.chassis,
         sector: ship.data.sector,
@@ -163,13 +154,12 @@ ShipManager.prototype.data = function(sock, args, next) {
         speed: ship.speed,
         critical: ship.critical,
         evasion: ship.evasion,
-        hardpoints: ship.hardpoints,
+        hardpoints: hardpoints,
         enhancements: enhancements
       });
-      ship.ignoreEnhancements = false;
     }
   }
-  sock.emit('ship/data', {
+  socket.emit('ship/data', {
     type: 'sync', ships: ships
   });
 };
@@ -190,12 +180,12 @@ ShipManager.prototype.update = function() {
     };
     arr.push(data);
   }
-  this.sockets.io.sockets.emit('ship/sync', {
+  this.sockets.emit('ship/sync', {
     ships: arr
   });
 };
 
-ShipManager.prototype.stats = function() {
+ShipManager.prototype.refresh = function() {
   var ship, delta,
       ships = this.ships,
       update, updates = [],
@@ -228,7 +218,7 @@ ShipManager.prototype.stats = function() {
     }
   }
   if(updates.length > 0) {
-    this.sockets.io.sockets.emit('ship/data', {
+    this.sockets.emit('ship/data', {
       type: 'update', ships: updates
     });
   }
@@ -236,10 +226,10 @@ ShipManager.prototype.stats = function() {
 
 ShipManager.prototype.generateRandomShips = function() {
   var iterator = {
-        'ubaidian-x01': { race: 'ubaidian', count: 0 },
-        'ubaidian-x02': { race: 'ubaidian', count: 0 },
-        'ubaidian-x03': { race: 'ubaidian', count: 0 },
-        'ubaidian-x04': { race: 'ubaidian', count: 0 },
+        'ubaidian-x01': { race: 'ubaidian', count: 1 },
+        'ubaidian-x02': { race: 'ubaidian', count: 1 },
+        'ubaidian-x03': { race: 'ubaidian', count: 1 },
+        'ubaidian-x04': { race: 'ubaidian', count: 1 },
         'hederaa-x01': { race: 'hederaa', count: 0 },
         'mechan-x01': { race: 'mechan', count: 0 },
         'mechan-x02': { race: 'mechan', count: 0 },
@@ -268,10 +258,10 @@ ShipManager.prototype.generatePirateShips = function() {
       }, {
         location: { x: 6144, y: 2048 },
         ships: [
-          { name: 'satel', chassis: 'general-x01', credits: 1500, reputation: -100 },
+          // { name: 'satel', chassis: 'general-x01', credits: 1500, reputation: -100 },
           // { name: 'oeem', chassis: 'general-x01', credits: 1500, reputation: -100 },
-          // { name: 'thath', chassis: 'general-x02', credits: 1500, reputation: -100 },
-          // { name: 'zeus', chassis: 'general-x03', credits: 1500, reputation: -100 }
+          { name: 'thath', chassis: 'general-x02', credits: 1500, reputation: -100 },
+          { name: 'zeus', chassis: 'general-x03', credits: 1500, reputation: -100 }
         ]
       }, {
         location: { x: 2048, y: -2048 },
@@ -287,7 +277,7 @@ ShipManager.prototype.generatePirateShips = function() {
           { name: 'theni', chassis: 'general-x01', credits: 1500, reputation: -100 },
           // { name: 'zulu', chassis: 'general-x01', credits: 1500, reputation: -100 },
           // { name: 'saroc', chassis: 'general-x02', credits: 1500, reputation: -100 },
-          // { name: 'malvo', chassis: 'general-x02', credits: 1500, reputation: -100 }
+          { name: 'malvo', chassis: 'general-x02', credits: 1500, reputation: -100 }
         ]
       }],
       len = iterator.length;

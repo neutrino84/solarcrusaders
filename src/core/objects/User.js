@@ -1,56 +1,68 @@
 
 var async = require('async'),
     Generator = require('../../utils/Generator'),
+    Latency = require('../../utils/Latency'),
     EventEmitter = require('eventemitter3');
 
-function User(manager, data) {
+function User(manager, data, socket) {
   this.manager = manager;
   this.game = manager.game;
   this.model = manager.model;
+  this.socket = socket;
 
   this.ships = [];
-  
   this.data = new this.model.User(data);
-
   this.uuid = this.data.uuid;
-};
 
-// temp remove this
-User.count = 0;
+  this.latency = new Latency(this);
+};
 
 User.prototype.constructor = User;
 
-User.prototype.init = function(callback) {
-  var self = this;
-  if(this.data.isNewRecord()) {
-    this.create();
-    callback();
+User.DEFAULT_SHIP = [{
+  name: Generator.getName('ubaidian'),
+  chassis: 'ubaidian-x03'
+}];
+
+User.prototype.init = function(callback, context) {
+  var self = this, 
+      data = this.data,
+      err;
+
+  if(data.isNewRecord()) {
+    // default
+    this.create(User.DEFAULT_SHIP);
+    this.socket.emit('auth/sync', data.toStreamObject());
+
+    callback.call(context, err, data);
   } else {
     async.series([
-      this.data.reload.bind(this.data),
-      this.data.ships.bind(this.data)
+      data.reload.bind(data),
+      data.ships.bind(data)
     ], function(err, results) {
       var data = results[0],
           ships = results[1];
+
       self.data = data;
       self.create(ships);
-      callback(err);
+      self.socket.emit('auth/sync', data.toStreamObject());
+
+      callback.call(context, err, data);
     });
   }
 };
 
 User.prototype.create = function(ships) {
+  var game = this.game,
+      ship, data;
   if(ships && ships.length) {
     for(var s=0; s<ships.length; s++) {
-      this.game.emit('ship/create', ships[s].toStreamObject(), this);
+      ship = ships[s]
+      data = ship.toStreamObject ? ship.toStreamObject() : ship;
+      
+      // create user ship
+      game.emit('ship/create', data, this);
     }
-  } else {
-    // create default ship
-    User.count++
-    this.game.emit('ship/create', {
-      name: Generator.getName('ubaidian'),
-      chassis: 'unknown-x01' //this.data.role === 'user' ? 'ubaidian-x03' : 'ubaidian-x0' + (User.count % 4 + 1)
-    }, this);
   }
 };
 
@@ -76,6 +88,28 @@ User.prototype.save = function(callback) {
 
   // persist
   async.series(series, callback);
+};
+
+User.prototype.toStreamObject = function() {
+  return this.data.toStreamObject();
+};
+
+User.prototype.destroy = function() {
+  var ship,
+      ships = this.ships,
+      game = this.game;
+  
+  // remove player ships
+  for(var i=0; i<ships.length; i++) {
+    ship = ship[i];
+    game.emit('ship/remove', ship, this);
+  }
+
+  // destroy objects
+  this.latency.destroy();
+  this.socket.request.session.destroy();
+  this.socket.disconnect(true);
+  this.game.emit('auth/removed', this);
 };
 
 module.exports = User;

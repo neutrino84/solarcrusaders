@@ -10,38 +10,29 @@ NetManager.prototype = {
   boot: function() {
     this.connected = false;
 
-    this.socket = Socket({
+    this.socket = Socket('/', {
       reconnection: true,
-      reconnectionAttempts: 5,
+      reconnectionAttempts: 3,
       reconnectionDelay: 1000,
       reconnectionDelayMax: 5000,
+      randomizationFactor: 0.5,
       timeout: 10000,
-      transports: ['websocket'],
-      upgrade: false
+      transports: ['websocket']
     });
 
-    // calc latency
-    this.latency = new Latency(this.game);
+    this.latency = new Latency(this);
 
     // socket events
     this.socket.on('connect', this._connect.bind(this));
+    this.socket.on('reconnect', this._reconnect.bind(this));
     this.socket.on('reconnecting', this._reconnecting.bind(this));
+    this.socket.on('connect_timeout', this._reconnectingFailed.bind(this));
+    this.socket.on('reconnect_error', this._reconnectingFailed.bind(this));
     this.socket.on('reconnect_failed', this._reconnectingFailed.bind(this));
     this.socket.on('event', this._event.bind(this));
     this.socket.on('error', this._error.bind(this));
     this.socket.on('disconnect', this._disconnect.bind(this));
-
-    // pause/resume
-    this.game.on('game/pause', this.pause, this);
-    this.game.on('game/resume', this.resume, this);
-  },
-
-  pause: function() {
-    this.disconnect();
-  },
-
-  resume: function() {
-    this.connect();
+    this.socket.on('disconnecting', this._disconnecting.bind(this));
   },
 
   connect: function() {
@@ -52,26 +43,22 @@ NetManager.prototype = {
     this.socket.disconnect();
   },
 
-  reconnect: function() {
-    this.disconnect();
-    this.connect();
-  },
-
   _connect: function() {
     this.connected = true;
-    console.log('connected');
+    console.log('initial socket connection');
+  },
+
+  _reconnect: function() {
+    this.connected = true;
+    console.log('socket successfully reconnected')
   },
 
   _reconnecting: function(number) {
     console.log('trying to reconnect (attempt ' + number + ')');
   },
 
-  _reconnectingFailed: function() {
+  _reconnectingFailed: function(data) {
     console.log('socket could not reconnect, try again later');
-  },
-
-  _reconnect: function() {
-    console.log('socket successfully reconnected');
   },
 
   _event: function(data) {
@@ -84,7 +71,10 @@ NetManager.prototype = {
 
   _disconnect: function() {
     this.connected = false;
-    console.log('socket closed');
+  },
+
+  _disconnecting: function() {
+    console.log('disconnecting socket');
   }
 };
 

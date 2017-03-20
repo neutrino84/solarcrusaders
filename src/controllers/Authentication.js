@@ -15,13 +15,13 @@ function Authentication(routes) {
   this.model = app.model;
   this.server = app.server;
   this.sockets = app.sockets;
-  this.io = app.sockets.io;
 
   // queue must be used to
   // prevent duplication
-  this.queue = async.queue(function(model, callback) {
-    model.save(callback);
-  }, 1);
+  this.queue =
+    async.queue(function(model, callback) {
+      model.save(callback);
+    }, 1);
  
   this.password = new Password();
   this.passport = new LocalStrategy({ passReqToCallback: true }, this.localLogin.bind(this));
@@ -50,17 +50,6 @@ Authentication.prototype.init = function() {
     } else {
       next();
     }
-  });
-
-  // monitor socket disconnect
-  this.io.on('connection', function(socket) {
-    self.game.emit('auth/connection', socket);
-    socket.on('disconnect', function() {
-      var session = this.handshake.session,
-          socket = session.socket;
-      winston.info('[Authentication] Socket ' + socket + ' closed');
-      self.game.emit('auth/disconnect', this);
-    });
   });
 };
 
@@ -111,35 +100,18 @@ Authentication.prototype.register = function(req, res, next) {
 };
 
 Authentication.prototype.login = function(req, res, next) {
-  var self = this,
-      session = req.session,
-      socket = this.sockets.getSocketById(session.socket),
-      handshake;
-  if(socket) {
-    passport.authenticate('local', function(err, userData, info) {
-      if(err) { return next(err); }
-      if(!userData) { return next(new Error('[[error:no-credentials]]')); }
-
-      // notify game
-      self.game.emit('auth/logout', session);
-
-      // store new session
-      session.user = userData;
-      handshake = socket.handshake.session;
-      async.series([
-        session.save.bind(session),
-        handshake.reload.bind(handshake)
-      ], function(err, results) {
-        self.game.emit('auth/login', session);
-        res.json({
-          info: info,
-          user: userData
+  var session = req.session;
+      passport.authenticate('local', function(err, userData, info) {
+        if(err) { return next(err); }
+        if(!userData) { return next(new Error('[[error:no-credentials]]')); }
+        session.user = userData;
+        session.save(function() {
+          res.json({
+            info: info,
+            user: userData
+          });
         });
       });
-    })(req, res, next);
-  } else {
-    return next(new Error('[[error:no-socket]]'));
-  }
 };
 
 Authentication.prototype.localLogin = function(req, username, password, next) {
@@ -177,25 +149,6 @@ Authentication.prototype.localLogin = function(req, username, password, next) {
       });
     }
   ], next);
-};
-
-Authentication.prototype.logout = function(req, res, next) {
-  var uid, self = this,
-      session = req.session;
-  if(session.user && session.user.role !== 'guest') {
-    this.server.sessionStore.destroy(req.sessionID, function(err) {
-      if(err) { return next(err); }    
-
-      // notify game
-      self.game.emit('auth/logout', session);    
-      
-      // logout
-      req.logout();
-      res.json({ info: 'success' });
-    });
-  } else {
-    return next(new Error('[[error:not-logged-in]]'));
-  }
 };
 
 module.exports = Authentication;

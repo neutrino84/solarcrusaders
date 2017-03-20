@@ -5,128 +5,63 @@ var winston = require('winston'),
 function UserManager(game) {
   this.game = game;
   this.model = game.model;
-  
-  this.sockets = {};
-  this.sessions = {};
+
   this.users = {};
 
-  this.game.on('auth/connection', this.connection, this);
+  this.game.on('auth/connect', this.connect, this);
   this.game.on('auth/disconnect', this.disconnect, this);
-
   this.game.on('auth/login', this.login, this);
-  this.game.on('auth/logout', this.logout, this);
-
-  this.game.on('user/data', this.data, this);
-
-  this.game.on('ship/add', this.addShip, this);
-  this.game.on('ship/remove', this.removeShip, this);
+  this.game.on('auth/data', this.data, this);
 };
 
 UserManager.prototype.constructor = UserManager;
 
 UserManager.prototype.init = function() {};
 
-UserManager.prototype.connection = function(socket) {
-  var session = socket.handshake.session,
+UserManager.prototype.connect = function(socket) {
+  var session = socket.request.session,
       user = session.user;
   if(user) {
-    this.sockets[socket.id] = socket;
-    this.game.emit('auth/login', session);
+    if(this.users[user.uuid]) {
+      // accessing current user
+      winston.info('[UserManager] User already exists in game');
+      this.users[user.uuid].socket = socket;
+      this.game.emit('auth/login', this.users[user.uuid]);
+    } else if(socket) {
+      // create a new user
+      winston.info('[UserManager] Creating new user in game');
+      user = this.users[user.uuid] = new User(this, user, socket);
+      user.init(function(err) {
+        this.game.emit('auth/login', user);
+      }, this);
+    }
   } else {
+    winston.info('[UserManager] User session data was never created');
     socket.disconnect();
   }
 };
 
 UserManager.prototype.disconnect = function(socket) {
   var game = this.game,
-      session = socket.handshake.session;
-  game.emit('auth/logout', session);
-  delete this.sockets[socket.id];
+      session = socket.request.session,
+      user = this.users[session.user.uuid];
+      user && user.destroy();
 };
 
-UserManager.prototype.exists = function(u) {
-  var socket,
-      session = this.sessions[u.uuid];
-  if(session) {
-    winston.info('[UserManager] User session exists');
-    socket = this.sockets[session.socket];
-    socket && socket.disconnect();
-  }
-  return session ? true : false;
+UserManager.prototype.login = function(user) {
+  user.socket.emit('auth/sync', user.toStreamObject());
 };
 
-UserManager.prototype.data = function(user, update) {
-  var socket,
-      session = this.sessions[user.uuid];
-  if(session && update) {
-    socket = this.sockets[session.socket];
-    socket.emit('user/data', update);
-  }
+UserManager.prototype.logout = function(user) {
+  user.socket.disconnect();
 };
 
-UserManager.prototype.login = function(session) {
-  var self = this,
-      u = session.user,
-      socket = this.sockets[session.socket],
-      user = this.users[u.uuid];
-  if(this.exists(u)) {
-    socket && socket.disconnect();
-  } else if(socket) {
-    this.sessions[u.uuid] = session;
-    user = this.users[u.uuid] = new User(this, u);
-    user.init(function(err) {
-      socket.emit('user/sync', user.data.toStreamObject());
-    });
-  } else {
-    winston.info('[UserManager] Could not not find socket');
-  }
-};
-
-UserManager.prototype.logout = function(session) {
-  var self = this,
-      u = session.user || {},
-      user = this.users[u.uuid],
-      session = this.sessions[u.uuid],
-      ships, len;
-  if(user && session) {
-    if(!user.data.isNewRecord()) {
-      // don't release until
-      // user is saved
-      user.save(destroy);
-    } else {
-      destroy();
-    }
-
-    function destroy() {
-      ships = user.ships;
-      for(var s=0; s<ships.length; s++) {
-        self.game.emit('ship/remove', ships[s]);
-      }
-      delete self.sessions[u.uuid];
-      delete self.users[u.uuid];
-    }
-  }
-};
-
-UserManager.prototype.addShip = function(ship) {
-  if(ship.user) {
-    ship.user.ships.push(ship);
-  }
-};
-
-UserManager.prototype.removeShip = function(ship) {
-  var index, user;
-  if(ship.user) {
-    user = ship.user;
-    index = user.ships.indexOf(ship);
-    if(index > -1) {
-      user.ships.splice(index, 1);
-    }
-  }
+UserManager.prototype.data = function() {
+  //..
 };
 
 UserManager.prototype.update = function() {
-
+  //..
 };
 
 module.exports = UserManager;

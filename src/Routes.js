@@ -2,20 +2,16 @@
 var url = require('url'),
     Authentication = require('./controllers/Authentication'),
     Stripe = require('./controllers/Stripe'),
-    Latency = require('./controllers/Latency'),
     Utils = require('./utils');
 
 function Routes(app) {
   this.app = app;
   this.express = app.server.express;
   this.play = app.server.play;
-  this.iorouter = app.sockets.iorouter;
-  this.io = app.sockets.io;
   this.game = app.game;
   
   this.authentication = new Authentication(this);
   this.stripe = new Stripe(this);
-  this.latency = new Latency(this);
 };
 
 Routes.DESCRIPTION =
@@ -37,7 +33,6 @@ Routes.prototype.init = function(next) {
    */
   this.authentication.init();
   this.stripe.init();
-  this.latency.init();
 
   /*
    * API Calls
@@ -91,22 +86,6 @@ Routes.prototype.init = function(next) {
   this.express.use(function(err, req, res, next) {
     self.app.winston.error('[Routes] ' + err.message + ' --- ' + err.stack);
     res.json({ error: err.message, data: err.data });
-  });
-
-  /*
-   * Core IO Routes
-   */
-  this.iorouter.on(function(sock, args) {
-    self.app.winston.info('[Server] Uncaught socket message: ' + args[0]);
-  });
-
-  this.iorouter.on(function(err, sock, args, next) {
-    self.app.winston.info('[Server] Uncaught socket message: ' + err);
-    
-    sock.emit(args[0], {
-      error: error.message
-    });
-    next();
   });
 
   next();

@@ -8,7 +8,6 @@ var path = require('path'),
     compression = require('compression'),
     favicon = require('serve-favicon'),
     bodyParser = require('body-parser'),
-    cookieParser = require('cookie-parser'),
 
     publicDir = path.resolve('public'),
     viewsDir = path.resolve('views');
@@ -19,6 +18,7 @@ function Server(app) {
   this.nconf = global.app.nconf;
 
   this.express = express();
+
   this.play = new express.Router();
 };
 
@@ -41,15 +41,16 @@ Server.prototype.init = function(next) {
     cookie: {
       path: '/',
       domain : '.' + href.hostname,
-      httpOnly: true,
+      httpOnly: false,
       secure: false,
-      maxAge: 86400000
+      maxAge: 86400000,
+      sameSite: 'strict'
     },
-    saveUninitialized: false,
     proxy: true,
     resave: false,
-    unset: 'destroy',
-    rolling: false
+    rolling: false,
+    saveUninitialized: false,
+    unset: 'destroy'
   });
 
   this.http = http.createServer(this.express);
@@ -60,7 +61,6 @@ Server.prototype.init = function(next) {
 
   this.express.use(favicon(publicDir + '/favicon.ico', { maxAge: 0 }));
   this.express.use(bodyParser.json());
-  this.express.use(cookieParser());
   this.express.use(compression());
   this.express.use(express.static(publicDir));
   this.express.use(this.session);

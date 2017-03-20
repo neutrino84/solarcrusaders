@@ -9,6 +9,7 @@ var Device = require('./system/Device'),
     Font = require('./display/Font'),
     Strip = require('./display/Strip'),
     Math = require('./utils/Math'),
+    Utility = require('./utils/Utility'),
     Color = require('./utils/Color'),
     Keyboard = require('./controls/Keyboard'),
     Mouse = require('./controls/Mouse'),
@@ -64,6 +65,7 @@ var core = module.exports =
 
     // utils
     Math: Math,
+    Utility: Utility,
     Class: Class,
     Color: Color
   });

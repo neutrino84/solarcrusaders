@@ -18,7 +18,7 @@ StationManager.prototype.constructor = StationManager;
 
 StationManager.prototype.init = function() {
   // io router
-  this.sockets.iorouter.on('station/data', this.data.bind(this));
+  this.game.on('station/data', this.data.bind(this));
 
   // generate station
   this.generateStation();
@@ -89,7 +89,7 @@ StationManager.prototype.update = function() {
 
     synced.push(data);
   }
-  sockets.io.sockets.emit('station/sync', {
+  sockets.emit('station/sync', {
     stations: synced
   });
 };

@@ -37,7 +37,7 @@ Station.prototype.disable = function() {
   this.disabled = true;
 
   // broadcast
-  this.sockets.io.sockets.emit('station/disabled', {
+  this.sockets.emit('station/disabled', {
     uuid: this.uuid
   });
 };
@@ -50,7 +50,7 @@ Station.prototype.enable = function() {
   this.data.health = this.config.stats.health;
 
   // broadcast
-  this.sockets.io.sockets.emit('station/enabled', {
+  this.sockets.emit('station/enabled', {
     uuid: this.uuid
   });
 };
