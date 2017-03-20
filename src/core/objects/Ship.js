@@ -22,9 +22,8 @@ function Ship(manager, data) {
   this.config = client.ShipConfiguration[this.data.chassis];
 
   this.disabled = false;
-  this.ignoreEnhancements = false;
 
-  // create timers and movement system
+  // create system
   this.movement = new Movement(this);
 
   // generate ai
@@ -44,6 +43,9 @@ function Ship(manager, data) {
       critical: {}
     },
     available: {}
+  };
+  this.transferable = {
+    hardpoints: {}
   };
 };
 
@@ -122,7 +124,8 @@ Ship.prototype.createHardpoints = function() {
     }
     
     // cache to local object
-    this.hardpoints[i] = new Hardpoint(i, type, subtype).toObject(); 
+    this.hardpoints[i] = new Hardpoint(this, i, type, subtype);
+    this.transferable.hardpoints[i] = this.hardpoints[i].toObject();
   }
 };
 
@@ -135,7 +138,7 @@ Ship.prototype.attack = function(data, rtt) {
       ships = this.manager.ships,
       movement = this.movement,
       hardpoints = this.hardpoints,
-      time, hardpoint, compensated,
+      runtime, hardpoint, compensated,
       target = data.targ,
       distance;
 
@@ -147,15 +150,20 @@ Ship.prototype.attack = function(data, rtt) {
   for(var slot in hardpoints) {
     hardpoint = hardpoints[slot];
 
-    if(distance <= hardpoint.range) {
+    if(!hardpoint.cooling && distance <= hardpoint.data.range) {
       // compute travel time
-      time = distance * hardpoint.projection + hardpoint.delay;
+      runtime = distance * hardpoint.data.projection + hardpoint.data.delay;
 
       // time collisions
-      game.clock.events.add(time, this.attacked, this, target, slot);
+      game.clock.events.add(runtime, this.attacked, this, target, slot);
 
       // broadcast ataack
-      sockets.io.sockets.emit('ship/attack', data);
+      sockets.emit('ship/attack', data);
+
+      // cooldown
+      if(hardpoint.data.cooldown > 0) {
+        hardpoint.cooldown(runtime-rtt);
+      }
     }
   }
 };
@@ -183,12 +191,12 @@ Ship.prototype.hit = function(attacker, target, slot) {
       hardpoint = attacker.hardpoints[slot],
       compensated = movement.compensated(),
       distance = compensated.distance(target),
-      ratio = distance / (this.size * hardpoint.aoe),
+      ratio = distance / (this.size * hardpoint.data.aoe),
       damage, health, critical;
   if(ratio < 1.0) {
     // test data
     // if(!attacker.ai && this.ai) {
-    //   sockets.io.sockets.emit('ship/test', {
+    //   sockets.emit('ship/test', {
     //     uuid: this.uuid,
     //     compensated: compensated,
     //     targ: target
@@ -197,7 +205,7 @@ Ship.prototype.hit = function(attacker, target, slot) {
 
     // calc damage
     critical = this.game.rnd.rnd() <= attacker.critical;
-    damage = global.Math.max(0, hardpoint.damage * (1-ratio) * (1-this.armor));
+    damage = global.Math.max(0, hardpoint.data.damage * (1-ratio) * (1-this.armor));
     damage += critical ? damage : 0;
     health = data.health-damage;
 
@@ -247,7 +255,7 @@ Ship.prototype.hit = function(attacker, target, slot) {
 
     // broadcast
     if(updates.length) {
-      sockets.io.sockets.emit('ship/data', {
+      sockets.emit('ship/data', {
         type: 'update', ships: updates
       });
     }
@@ -265,7 +273,7 @@ Ship.prototype.disable = function() {
   this.respawn = this.game.clock.events.add(this.ai ? this.ai.settings.respawn : 10000, this.enable, this);
   
   // broadcast
-  this.sockets.io.sockets.emit('ship/disabled', {
+  this.sockets.emit('ship/disabled', {
     uuid: this.uuid
   });
 };
@@ -286,7 +294,7 @@ Ship.prototype.enable = function() {
   this.movement.position.copyFrom(this.ai ? this.ai.getHomePosition() : this.manager.generateRandomPosition(1024));
 
   // broadcast
-  this.sockets.io.sockets.emit('ship/enabled', {
+  this.sockets.emit('ship/enabled', {
     uuid: this.uuid,
     pos: {
       x: this.movement.position.x,
@@ -319,11 +327,11 @@ Ship.prototype.activate = function(name) {
       update = { uuid: this.uuid };
       update.energy = this.energy = global.Math.max(0.0, cost);
 
-      sockets.io.sockets.emit('ship/data', {
+      sockets.emit('ship/data', {
         type: 'update', ships: [update]
       });
 
-      sockets.io.sockets.emit('ship/enhancement/started', {
+      sockets.emit('ship/enhancement/started', {
         uuid: this.uuid,
         enhancement: name
       });
@@ -344,14 +352,14 @@ Ship.prototype.deactivate = function(enhancement) {
     delete active[s][enhancement.type];
   }
 
-  this.sockets.io.sockets.emit('ship/enhancement/stopped', {
+  this.sockets.emit('ship/enhancement/stopped', {
     uuid: this.uuid,
     enhancement: enhancement.type
   });
 };
 
 Ship.prototype.cooled = function(enhancement) {
-  this.sockets.io.sockets.emit('ship/enhancement/cancelled', {
+  this.sockets.emit('ship/enhancement/cancelled', {
     uuid: this.uuid,
     enhancement: enhancement.type
   });
@@ -445,7 +453,7 @@ Object.defineProperty(Ship.prototype, 'health', {
 Object.defineProperty(Ship.prototype, 'heal', {
   get: function() {
     var total = this.data.heal,
-        heal = this.ignoreEnhancements ? [] : this.enhancements.active.heal;
+        heal = this.enhancements.active.heal;
     for(var h in heal) {
       total += heal[h].stat('heal', 'value');
     }
@@ -456,7 +464,7 @@ Object.defineProperty(Ship.prototype, 'heal', {
 Object.defineProperty(Ship.prototype, 'recharge', {
   get: function() {
     var total = this.data.recharge,
-        recharge = this.ignoreEnhancements ? [] : this.enhancements.active.recharge;
+        recharge = this.enhancements.active.recharge;
     for(var r in recharge) {
       total += recharge[r].stat('recharge', 'value');
     }
@@ -467,7 +475,7 @@ Object.defineProperty(Ship.prototype, 'recharge', {
 Object.defineProperty(Ship.prototype, 'armor', {
   get: function() {
     var total = this.data.armor,
-        armor = this.ignoreEnhancements ? [] : this.enhancements.active.armor
+        armor = this.enhancements.active.armor
     for(var a in armor) {
       total += armor[a].stat('armor', 'value');
     }
@@ -478,7 +486,7 @@ Object.defineProperty(Ship.prototype, 'armor', {
 Object.defineProperty(Ship.prototype, 'critical', {
   get: function() {
     var total = this.data.critical,
-        critical = this.ignoreEnhancements ? [] : this.enhancements.active.critical;
+        critical = this.enhancements.active.critical;
     for(var a in critical) {
       total *= critical[a].stat('critical', 'value');
     }
@@ -489,7 +497,7 @@ Object.defineProperty(Ship.prototype, 'critical', {
 Object.defineProperty(Ship.prototype, 'rate', {
   get: function() {
     var total = this.data.rate,
-        rate = this.ignoreEnhancements ? [] : this.enhancements.active.rate;
+        rate = this.enhancements.active.rate;
     for(var d in rate) {
       total *= rate[d].stat('rate', 'value');
     }
@@ -500,7 +508,7 @@ Object.defineProperty(Ship.prototype, 'rate', {
 Object.defineProperty(Ship.prototype, 'evasion', {
   get: function() {
     var total = this.data.evasion,
-        evasion = this.ignoreEnhancements ? [] : this.enhancements.active.evasion;
+        evasion = this.enhancements.active.evasion;
     for(var a in evasion) {
       total *= evasion[a].stat('evasion', 'value');
     }
@@ -511,11 +519,11 @@ Object.defineProperty(Ship.prototype, 'evasion', {
 Object.defineProperty(Ship.prototype, 'speed', {
   get: function() {
     var total = this.data.speed,
-        speed = this.ignoreEnhancements ? [] : this.enhancements.active.speed;
+        speed = this.enhancements.active.speed;
     for(var a in speed) {
       total *= speed[a].stat('speed', 'value');
     }
-    return total;
+    return total
   }
 });
 

@@ -22,6 +22,7 @@ function Plasma(parent) {
 
   this.isDone = false;
   this.isRunning = false;
+  this.hasExploded = false;
 
   this.target = new engine.Point();
   this.origin = new engine.Point();
@@ -50,7 +51,6 @@ Plasma.prototype.start = function(destination, distance, spawn, index) {
   this.runtime = this.duration + this.length;
   this.started = this.clock.time + this.delay;
 
-  this.isDone = true;
   this.isRunning = true;
   this.hasExploded = false;
 
@@ -63,10 +63,11 @@ Plasma.prototype.start = function(destination, distance, spawn, index) {
 
   this.parent.shockwaveEmitter.plasma(this.ship);
   this.parent.shockwaveEmitter.at({ center: this.origin });
-  this.parent.shockwaveEmitter.explode(1);
+  this.parent.shockwaveEmitter.explode(2);
 };
 
 Plasma.prototype.stop = function() {
+  this.isDone = true;
   this.isRunning = false;
 
   this.parent.sprite.removeChild(this.glow);
@@ -79,7 +80,11 @@ Plasma.prototype.explode = function() {
 
     this.parent.explosionEmitter.rocket();
     this.parent.explosionEmitter.at({ center: this.plasma.position });
-    this.parent.explosionEmitter.explode(4);
+    this.parent.explosionEmitter.explode(2);
+
+    this.parent.explosionEmitter.plasma();
+    this.parent.explosionEmitter.at({ center: this.plasma.position });
+    this.parent.explosionEmitter.explode(2);
   }
 };
 
@@ -88,11 +93,6 @@ Plasma.prototype.update = function() {
 
   if(this.isRunning === true) {
     this.elapsed = this.clock.time - this.started;
-
-
-    if(this.elapsed > this.delay) {
-      
-    }
 
     this.origin.copyFrom(this.parent.updateTransform());
 

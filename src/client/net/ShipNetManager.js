@@ -17,6 +17,7 @@ ShipNetManager.prototype.init = function() {
   this.socket.on('ship/removed', this._removed.bind(this));
   this.socket.on('ship/disabled', this._disabled.bind(this));
   this.socket.on('ship/enabled', this._enabled.bind(this));
+  this.socket.on('ship/hardpoint/cooled', this._cooled.bind(this));
   this.socket.on('ship/enhancement/started',this._started.bind(this));
   this.socket.on('ship/enhancement/stopped', this._stopped.bind(this));
   this.socket.on('ship/enhancement/cancelled', this._cancelled.bind(this));
@@ -73,6 +74,10 @@ ShipNetManager.prototype._disabled = function(data) {
 
 ShipNetManager.prototype._enabled = function(data) {
   this.game.emit('ship/enabled', data);
+};
+
+ShipNetManager.prototype._cooled = function(data) {
+  this.game.emit('ship/hardpoint/cooled', data);
 };
 
 ShipNetManager.prototype._started = function(data) {

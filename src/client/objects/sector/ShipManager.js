@@ -61,7 +61,7 @@ function ShipManager(game) {
   this.trajectoryGroup.addChild(this.trajectoryGraphics);
 
   // authentication
-  this.game.auth.on('disconnected', this._disconnectd, this);
+  this.game.on('disconnected', this._disconnectd, this);
 
   // networking
   // TODO: move to ShipNetManager... maybe not?
@@ -79,6 +79,7 @@ function ShipManager(game) {
   this.game.on('ship/removed', this._removed, this);
   this.game.on('ship/disabled', this._disabled, this);
   this.game.on('ship/enabled', this._enabled, this);
+  this.game.on('ship/hardpoint/cooled', this._cooled, this);
 };
 
 ShipManager.prototype.constructor = ShipManager;
@@ -117,9 +118,11 @@ ShipManager.prototype.remove = function(data) {
 };
 
 ShipManager.prototype.removeAll = function() {
-  var ships = this.ships;
-  for(var s in ships) {
-    this.remove(ships[s]);
+  var ship,
+      ships = this.ships;
+  for(var i=0; i<ships.length; i++) {
+    ship = ships[s];
+    this.remove(ship);
   }
 };
 
@@ -193,6 +196,10 @@ ShipManager.prototype._player = function(ship) {
   this.game.camera.follow(ship);
 };
 
+ShipManager.prototype._cooled = function(data) {
+  this.player.targetingComputer.cooled(data);
+};
+
 ShipManager.prototype._attack = function(data) {
   var ship = this.ships[data.uuid];
   if(ship != this.player) {
@@ -223,16 +230,12 @@ ShipManager.prototype._attack = function(data) {
 
 ShipManager.prototype._primary = function(data) {
   var clock = this.clock,
-      ship = this.player,
-      input = this.game.input;
+      ship = this.player;
   if(ship) {
     if(!ship.disabled && data.type === 'start') {
       this.autofire && clock.events.remove(this.autofire);
-      this.autofire = clock.events.loop(50, function() {
-        ship.targetingComputer.fire({
-          x: input.mousePointer.x,
-          y: input.mousePointer.y
-        });
+      this.autofire = clock.events.loop(25, function() {
+        ship.targetingComputer.fire();
       });
     } else {
       this.autofire && clock.events.remove(this.autofire);

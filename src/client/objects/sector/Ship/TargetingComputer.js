@@ -14,6 +14,7 @@ function TargetingComputer(ship, config) {
 
   this.target = new engine.Point();
 
+  // throttle firing rate
   this.fire = this.game.clock.throttle(this.fired, this.stats.rate, this, true);
 };
 
@@ -58,24 +59,31 @@ TargetingComputer.prototype.hit = function(ship, data) {
   var hardpoints = this.hardpoints,
       hardpoint = hardpoints[data.hardpoint.slot];
   if(ship && hardpoint) {
-     hardpoint.hit(ship, data.hardpoint.target);
-   }
+    hardpoint.hit(ship, data.hardpoint.target);
+  }
 };
 
-TargetingComputer.prototype.fired = function(target) {
+TargetingComputer.prototype.fired = function() {
   var game = this.game,
       ship = this.ship,
       hardpoints = this.hardpoints,
+      input = this.game.input,
       socket = ship.manager.socket,
-      hardpoint,
-      distance;
+      hardpoint, distance,
+      target = {
+        x: input.mousePointer.x,
+        y: input.mousePointer.y
+      };
   if(hardpoints.length > 0) {
     game.world.worldTransform.applyInverse(target, this.target);
 
     // display
     for(var i=0; i<hardpoints.length; i++) {
       hardpoint = hardpoints[i];
-      hardpoint.fire(this.target);
+
+      if(hardpoint.cooled) {
+        hardpoint.fire(this.target);
+      }
     }
 
     // server
@@ -87,6 +95,10 @@ TargetingComputer.prototype.fired = function(target) {
       }
     });
   }
+};
+
+TargetingComputer.prototype.cooled = function(data) {
+  this.hardpoints[data.slot].cooled = true;
 };
 
 TargetingComputer.prototype.enhance = function(name, state) {
