@@ -9,7 +9,6 @@ var path = require('path'),
 
     Database = require('./database'),
     Model = require('./model'),
-    // Configuration = require('./Configuration'),
     Server = require('./Server'),
     Sockets = require('./Sockets'),
     Game = require('./core/Game'),
@@ -70,12 +69,6 @@ Application.prototype.start = function() {
 
       winston.info('[Application] Models loaded...');
     },
-    // function(next) {
-    //   self.configuration = new Configuration(self);
-    //   self.configuration.init(next);
-
-    //   winston.info('[Application] Loaded configuration...');
-    // },
     function(next) {
       self.server = new Server(self);
       self.server.init(next);
