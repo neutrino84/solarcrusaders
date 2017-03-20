@@ -94,7 +94,7 @@ Authentication.prototype.register = function(req, res, next) {
     if(err) { return next(err); }
     res.json({
       info: null,
-      user: user.toStreamObject()
+      user: user.data.toStreamObject()
     });
   });
 };
