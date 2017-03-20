@@ -4,7 +4,7 @@ var engine = require('engine');
 function Indicator(game) {
   engine.Group.call(this, game);
 
-  this.renderable = false;
+  this.visible = false;
 
   this.sprite1 = new engine.Sprite(game, 'texture-atlas', 'icon-target.png');
   this.sprite1.tint = 0x55aaff;
@@ -23,7 +23,7 @@ function Indicator(game) {
   this.tween2 = this.game.tweens.create(this.sprite2);
   this.tween2.to({ alpha: 0.0, rotation: -2 * global.Math.PI / 6 }, 500, engine.Easing.Quadratic.Out);
   this.tween2.on('complete', function(tween) {
-    this.renderable = false;
+    this.visible = false;
   }, this);
 
   this.add(this.sprite1);
@@ -41,7 +41,7 @@ Indicator.prototype.show = function(destination) {
 
   this.position.copy(destination);
   this.scale.set(1/scale, 1/scale);
-  this.renderable = true;
+  this.visible = true;
   
   this.sprite1.alpha = 1.0;
   this.sprite1.rotation = 0;
