@@ -13,11 +13,11 @@ function Pirate(ship, home) {
     friendly: ['pirate'],
     position: {
       radius: 512,
-      x: ship.x,
-      y: ship.y
+      x: ship.movement.position.x,
+      y: ship.movement.position.y
     },
     escape: {
-      health: 0.1,
+      health: 0.4,
     },
     sensor: {
       range: 4096

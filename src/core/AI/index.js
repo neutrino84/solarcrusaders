@@ -5,7 +5,7 @@ var Basic = require('./Basic'),
 function AI(manager) {
   this.manager = manager;
   this.game = manager.game;
-  this.game.clock.events.loop(500, this.update, this);
+  this.timer = this.game.clock.events.loop(500, this.update, this);
   this.ships = {};
 };
 
@@ -40,6 +40,11 @@ AI.prototype.update = function() {
       ship.ai.update();
   	}
   }
+};
+
+AI.prototype.destroy = function() {
+  this.timer && this.game.clock.events.remove(this.timer);
+  this.manager = this.game = undefined;
 };
 
 module.exports = AI;

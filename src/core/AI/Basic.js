@@ -11,6 +11,7 @@ function Basic(ship) {
   this.timer = null;
   this.target = null;
   this.sensor = new engine.Circle();
+  this.offset = new engine.Point();
 
   this.settings = {
     aim: 1.5,
@@ -23,7 +24,7 @@ function Basic(ship) {
       y: 2048
     },
     escape: {
-      health: 0.2,
+      health: 0.25,
     },
     sensor: {
       range: 4096
@@ -38,8 +39,9 @@ Basic.prototype.update = function() {
       ships = this.manager.ships,
       sensor = this.sensor,
       settings = this.settings,
+      rnd = this.game.rnd,
       p1, p2, destination, scan,
-      targets, course,
+      targets, course, size,
       priority = {
         enemy: {}
       };
@@ -73,8 +75,10 @@ Basic.prototype.update = function() {
   
   // plot destination
   if(this.target) {
-    p2 = this.target.movement.position;
-    ship.movement.plot({ x: p2.x-p1.x, y: p2.y-p1.y });
+    size = this.target.data.size;
+    this.offset.copyFrom(this.target.movement.position);
+    this.offset.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
+    ship.movement.plot({ x: this.offset.x-p1.x, y: this.offset.y-p1.y });
   } else {
     p2 = this.getHomePosition();
     ship.movement.plot({ x: p2.x-p1.x, y: p2.y-p1.y });
@@ -155,7 +159,8 @@ Basic.prototype.getHomePosition = function() {
 };
 
 Basic.prototype.destroy = function() {
-  this.timer && this.game.clock.events.remove(this.timer);
+  this.disengager && this.game.clock.events.remove(this.disengager);
+  this.attacker && this.game.clock.events.remove(this.attacker);
   this.ship = this.game = this.manager =
     this.timer = this.target = this.aim = undefined;
 };
