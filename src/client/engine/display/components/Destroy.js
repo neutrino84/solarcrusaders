@@ -9,7 +9,8 @@ Destroy.prototype = {
     if(options === undefined) {
       options = {
         children: true,
-        texture: true
+        texture: true,
+        baseTexture: false
       }
     }
 
