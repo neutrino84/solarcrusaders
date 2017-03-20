@@ -117,6 +117,10 @@ RandomGenerator.prototype = {
 
   angle: function() {
     return this.integerInRange(-180, 180);
+  },
+
+  angleRadians: function() {
+    return this.integerInRange(-global.Math.PI, global.Math.PI);
   }
 };
 
