@@ -54,7 +54,8 @@ UserManager.prototype.connect = function(socket) {
 UserManager.prototype.disconnect = function(socket) {
   var session = socket.request.session,
       user = session.user;
-      session && user && user.destroy();
+      session && user && 
+        user.destroy && user.destroy();
 };
 
 UserManager.prototype.data = function() {
