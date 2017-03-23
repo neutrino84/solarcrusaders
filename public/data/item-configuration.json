@@ -76,7 +76,8 @@
         "length": 768,
         "aoe": 2.0,
         "spawn": 1,
-        "durability": 1000.0
+        "durability": 1000.0,
+        "sound": "capitalBeam"
       },
       "small": {
         "name": "Mini Cannon Laser",
@@ -100,7 +101,8 @@
         "length": 512,
         "aoe": 1.0,
         "spawn": 1,
-        "durability": 1000.0
+        "durability": 1000.0,
+        "sound": "capitalBeam"
       },
       "gauss": {
         "name": "Gaus Laser Cannon",
@@ -124,7 +126,8 @@
         "length": 512,
         "aoe": 1.0,
         "spawn": 1,
-        "durability": 1000.0
+        "durability": 1000.0,
+        "sound": "capitalBeam"
       }
     },
     "pulse": {
@@ -146,7 +149,8 @@
         "length": 32,
         "aoe": 1.0,
         "spawn": 1,
-        "durability": 1000.0
+        "durability": 1000.0,
+        "sound": "basicPulse"
       },
       "quantum": {
         "name": "Type 2 Pulse",
@@ -166,7 +170,8 @@
         "length": 32,
         "aoe": 1.0,
         "spawn": 2,
-        "durability": 1000.0
+        "durability": 1000.0,
+        "sound": "tarkin_pulse"
       },
       "nucleon": {
         "name": "Nucleon Pulse Cannon",
@@ -186,7 +191,8 @@
         "length": 32,
         "aoe": 1.0,
         "spawn": 1,
-        "durability": 1000
+        "durability": 1000,
+        "sound": "basicPulse"
       },
       "vulcan": {
         "name": "Vulcan Pulse Cannon",
@@ -206,7 +212,8 @@
         "length": 32,
         "aoe": 1.0,
         "spawn": 2,
-        "durability": 1000
+        "durability": 1000,
+        "sound": "basicPulse"
       }
     },
     "rocket": {
@@ -282,7 +289,13 @@
           "heal": {
             "value": 2.0
           }
+        },
+        "sound": {
+          "name": "heal",
+          "volume": 0.6,
+          "loop": false
         }
+
       }
     },
     "booster": {
@@ -294,6 +307,11 @@
           "speed": {
             "value": 2.0
           }
+        },
+        "sound": {
+          "name": "booster",
+          "volume": 0.7,
+          "loop": false
         }
       }
     },
@@ -306,6 +324,11 @@
           "armor": {
             "value": 0.75
           }
+        },
+        "sound": {
+          "name": "shield",
+          "volume": 1,
+          "loop": false
         }
       }
     },
@@ -345,6 +368,11 @@
           "evasion": {
             "value": 1.5
           }
+        },
+        "sound": {
+          "name": "piercing",
+          "volume": 1,
+          "loop": false
         }
       }
     }
