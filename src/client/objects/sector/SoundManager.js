@@ -41,6 +41,7 @@ function SoundManager(game) {
 SoundManager.prototype.constructor = SoundManager;
 
 SoundManager.prototype.init = function() { 
+  console.log('in SoundManager init()')
 };
 
 
@@ -116,7 +117,7 @@ SoundManager.prototype.create = function(manager) {
 };
 
 SoundManager.prototype.generateBackgroundMusic = function(){
-  // this.generateSound('background', 0.23, true);
+  this.generateSound('background', 0.23, true);
 };
 
 SoundManager.prototype.generateThrusterSound = function(){
@@ -171,8 +172,8 @@ SoundManager.prototype.generateFireSound = function(data) {
       loop = false,
       player = this.player,
       manager = this.shipManager, ship = data.ship, 
-      volume;
-
+      key, volume;
+      console.log('in fire sound. data is ', data)
   for(var i = 0; i<actives.length; i++){
     if(actives[i].data.sound){
       var key = actives[i].data.sound;
