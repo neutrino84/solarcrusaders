@@ -53,20 +53,36 @@ User.prototype.init = function(callback, context) {
   }
 };
 
-User.prototype.create = function(ships, json) {
-  var ship, data;
-  if(ships && ships.length) {
-    for(var s=0; s<ships.length; s++) {
-      ship = ships[s]
-      data = ship.toStreamObject ? json : ship;
+User.prototype.create = function(ships) {
+  var chassisAvailable = ['a','b','c','d','e','f'],
+  randomChassis = 'ubaidian-x01' + chassisAvailable[Math.floor(Math.random() * chassisAvailable.length)];
 
-      // add to ships
-      this.ships.push(data);
+  // if(ships && ships.length) {
+  //   for(var s=0; s<ships.length; s++) {
+  //     ship = ships[s]
+  //     data = ship.toStreamObject ? json : ship;
+
+  //     // add to ships
+  //     this.ships.push(data);
       
-      // create user ship
-      this.game.emit('ship/create', data, this);
-    }
-  }
+  //     // create user ship
+  //     this.game.emit('ship/create', data, this);
+  //   }
+  // } else {
+    // create default ship
+    User.count++
+    this.game.emit('ship/create', {
+      name: Generator.getName('ubaidian'),
+      chassis: 
+      // randomChassis
+      'ricardo-x01' 
+      // 'scavengers-x01d'
+      
+      // 'enforcers-x01'
+      // 'ubaidian-x01b'
+      //this.data.role === 'user' ? 'ubaidian-x03' : 'ubaidian-x0' + (User.count % 4 + 1)
+    }, this);
+  
 };
 
 User.prototype.save = function(callback) {
