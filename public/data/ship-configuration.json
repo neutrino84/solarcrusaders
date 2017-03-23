@@ -1,7 +1,8 @@
 {
-  "ubaidian-x01": {
+  "ubaidian-x01a": {
     "race": "ubaidian",
     "class": "destroyer",
+    "moniker": "grey-wolf",
     "stats": {
       "capacity": 1000,
       "health": 100,
@@ -80,6 +81,7 @@
     "targeting": {
       "hardpoints": [
         {
+          "type": ["energy", "pulse"],
           "pivot": {
             "x": 20,
             "y": 16
@@ -90,10 +92,11 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "quantum"
+            "subtype": "tarkin"
           }
         },
         {
+          "type": ["energy", "pulse"],
           "pivot": {
             "x": 20,
             "y": 16
@@ -104,10 +107,11 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "quantum"
+            "subtype": "tarkin"
           }
         },
         {
+          "type": ["energy", "pulse"],
           "pivot": {
             "x": 20,
             "y": 16
@@ -118,10 +122,633 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "quantum"
+            "subtype": "tarkin"
+          }
+        },
+        {
+          "type": ["projectile"],
+          "pivot": {
+            "x": 16,
+            "y": 16
+          },
+          "position": {
+            "x": 128,
+            "y": 128
+          },
+          "default": {
+            "type": "rocket",
+            "subtype": "basic"
           }
         }
+              ]
+    }
+  },
+  "ubaidian-x01b": {
+    "race": "ubaidian",
+    "class": "destroyer",
+    "moniker": "hammer-head",
+    "stats": {
+      "capacity": 3000,
+      "health": 200,
+      "heal": 0.25,
+      "armor": 0.0,
+      "speed": 33.0,
+      "rate": 256,
+      "evasion": 0.06,
+      "energy": 200,
+      "recharge": 1,
+      "size": 136,
+      "durability": 1000,
+      "critical": 0.01
+    },
+    "enhancements": ["heal", "booster", "shield", "piercing"],
+    "engine": {
+      "glows": [
+        {
+          "tint": "0x0e7f0e",
+          "scale": {
+            "startX": 0.1,
+            "endX": 0.25,
+            "startY": 0.2,
+            "endY": 0.4
+          },
+          "position": {
+            "x": 181,
+            "y": 94
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "0x0e7f0e",
+          "scale": {
+            "startX": 0.1,
+            "endX": 0.25,
+            "startY": 0.2,
+            "endY": 0.4
+          },
+          "position": {
+            "x": 181,
+            "y": 164
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "0x0e7f0e",
+          "scale": {
+            "startX": 0.1,
+            "endX": 0.25,
+            "startY": 0.2,
+            "endY": 0.8
+          },
+          "position": {
+            "x": 203,
+            "y": 128
+          },
+          "rotation": 0
+        }
       ]
+    },
+    "targeting": {
+      "hardpoints": [
+        {
+          "type": ["projectile"],
+          "pivot": {
+            "x": 20,
+            "y": 16
+          },
+          "position": {
+            "x": 104,
+            "y": 76
+          },
+          "default": {
+            "type": "rocket",
+            "subtype": "basic"
+          }
+        },
+        {
+          "type": ["projectile"],
+          "pivot": {
+            "x": 20,
+            "y": 16
+          },
+          "position": {
+            "x": 104,
+            "y": 178
+          },
+          "default": {
+            "type": "rocket",
+            "subtype": "basic"
+          }
+        },
+        {
+          "type": ["projectile"],
+          "pivot": {
+            "x": 20,
+            "y": 16
+          },
+          "position": {
+            "x": 169,
+            "y": 128
+          },
+          "default": {
+            "type": "rocket",
+            "subtype": "basic"
+          }
+        },
+        {
+          "type": ["projectile"],
+          "pivot": {
+            "x": 20,
+            "y": 16
+          },
+          "position": {
+            "x": 73,
+            "y": 125
+          },
+          "default": {
+            "type": "rocket",
+            "subtype": "basic"
+          }
+        }
+              ]
+    }
+  },
+  "ubaidian-x01c": {
+    "race": "ubaidian",
+    "class": "destroyer",
+    "moniker": "star-fire",
+    "stats": {
+      "capacity": 1000,
+      "health": 100,
+      "heal": 0.5,
+      "armor": 0.0,
+      "speed": 60.0,
+      "rate": 256,
+      "evasion": 0.14,
+      "energy": 100,
+      "recharge": 1.5,
+      "size": 96,
+      "durability": 1000,
+      "critical": 0.01
+    },
+    "enhancements": ["heal", "booster", "shield", "piercing"],
+    "engine": {
+      "glows": [
+        {
+          "tint": "0xad01a7",
+          "scale": {
+            "startX": 0.1,
+            "endX": 0.55,
+            "startY": 0.1,
+            "endY": 3.9
+          },
+          "position": {
+            "x": 206,
+            "y": 129
+          },
+          "rotation": 0
+        }
+      ]
+    },
+    "targeting": {
+      "hardpoints": [
+        {
+          "type": ["energy", "pulse"],
+          "pivot": {
+            "x": 20,
+            "y": 16
+          },
+          "position": {
+            "x": 152,
+            "y": 128
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "nucleon"
+          }
+        },
+        {
+          "type": ["energy", "pulse"],
+          "pivot": {
+            "x": 20,
+            "y": 16
+          },
+          "position": {
+            "x": 193,
+            "y": 125
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "nucleon"
+          }
+        },
+        {
+          "type": ["energy", "pulse"],
+          "pivot": {
+            "x": 20,
+            "y": 16
+          },
+          "position": {
+            "x": 193,
+            "y": 150
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "nucleon"
+          }
+        },
+        {
+          "type": ["projectile"],
+          "pivot": {
+            "x": 20,
+            "y": 16
+          },
+          "position": {
+            "x": 54,
+            "y": 127
+          },
+          "default": {
+            "type": "rocket",
+            "subtype": "basic"
+          }
+        }
+              ]
+    }
+  },
+  "ubaidian-x01d": {
+    "race": "ubaidian",
+    "class": "destroyer",
+    "moniker": "pig-nose",
+    "stats": {
+      "capacity": 1000,
+      "health": 150,
+      "heal": 0.5,
+      "armor": 0.1,
+      "speed": 62.0,
+      "rate": 256,
+      "evasion": 0.1,
+      "energy": 200,
+      "recharge": 0.9,
+      "size": 136,
+      "durability": 1000,
+      "critical": 0.01
+    },
+    "enhancements": ["heal", "booster", "shield", "piercing"],
+    "engine": {
+      "glows": [
+        {
+          "tint": "0x0ddd9f",
+          "scale": {
+            "startX": 0.1,
+            "endX": 0.25,
+            "startY": 0.2,
+            "endY": 0.6
+          },
+          "position": {
+            "x": 209,
+            "y": 82
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "0x0ddd9f",
+          "scale": {
+            "startX": 0.1,
+            "endX": 0.25,
+            "startY": 0.2,
+            "endY": 0.6
+          },
+          "position": {
+            "x": 210,
+            "y": 177
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "0x0ddd9f",
+          "scale": {
+            "startX": 0.1,
+            "endX": 0.4,
+            "startY": 0.1,
+            "endY": 1.5
+          },
+          "position": {
+            "x": 198,
+            "y": 127
+          },
+          "rotation": 0
+        }
+      ]
+    },
+    "targeting": {
+      "hardpoints": [
+        {
+          "type": ["energy", "pulse"],
+          "pivot": {
+            "x": 20,
+            "y": 16
+          },
+          "position": {
+            "x": 106,
+            "y": 127
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "bazuko"
+          }
+        },
+        {
+          "type": ["energy", "pulse"],
+          "pivot": {
+            "x": 20,
+            "y": 16
+          },
+          "position": {
+            "x": 186,
+            "y": 77
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "tarkin"
+          }
+        },
+        {
+          "type": ["energy", "pulse"],
+          "pivot": {
+            "x": 20,
+            "y": 16
+          },
+          "position": {
+            "x": 186,
+            "y": 177
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "tarkin"
+          }
+        },
+        {
+          "type": ["projectile"],
+          "pivot": {
+            "x": 20,
+            "y": 16
+          },
+          "position": {
+            "x": 55,
+            "y": 126
+          },
+          "default": {
+            "type": "rocket",
+            "subtype": "basic"
+          }
+        }
+              ]
+    }
+  },
+  "ubaidian-x01e": {
+    "race": "ubaidian",
+    "class": "destroyer",
+    "moniker": "old-lady",
+    "stats": {
+      "capacity": 1000,
+      "health": 100,
+      "heal": 0.5,
+      "armor": 0.0,
+      "speed": 60.0,
+      "rate": 256,
+      "evasion": 0.1,
+      "energy": 200,
+      "recharge": 1,
+      "size": 136,
+      "durability": 1000,
+      "critical": 0.01
+    },
+    "enhancements": ["heal", "booster", "shield", "piercing"],
+    "engine": {
+      "glows": [
+        {
+          "tint": "0xea045c",
+          "scale": {
+            "startX": 0.1,
+            "endX": 0.35,
+            "startY": 0.1,
+            "endY": 3.8
+          },
+          "position": {
+            "x": 211,
+            "y": 129
+          },
+          "rotation": 0
+        }
+      ]
+    },
+    "targeting": {
+      "hardpoints": [
+        {
+          "type": ["energy", "pulse"],
+          "pivot": {
+            "x": 20,
+            "y": 16
+          },
+          "position": {
+            "x": 160,
+            "y": 98
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "quantum"
+          }
+        },
+        {
+          "type": ["energy", "pulse"],
+          "pivot": {
+            "x": 20,
+            "y": 16
+          },
+          "position": {
+            "x": 160,
+            "y": 158
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "quantum"
+          }
+        },
+        {
+          "type": ["energy", "pulse"],
+          "pivot": {
+            "x": 20,
+            "y": 16
+          },
+          "position": {
+            "x": 196,
+            "y": 127
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "quantum"
+          }
+        },
+        {
+          "type": ["projectile"],
+          "pivot": {
+            "x": 20,
+            "y": 16
+          },
+          "position": {
+            "x": 115,
+            "y": 127
+          },
+          "default": {
+            "type": "rocket",
+            "subtype": "basic"
+          }
+        }
+              ]
+    }
+  },
+  "ubaidian-x01f": {
+    "race": "ubaidian",
+    "class": "destroyer",
+    "moniker": "blue-hawk",
+    "stats": {
+      "capacity": 1000,
+      "health": 100,
+      "heal": 0.5,
+      "armor": 0.0,
+      "speed": 60.0,
+      "rate": 256,
+      "evasion": 0.1,
+      "energy": 200,
+      "recharge": 1,
+      "size": 136,
+      "durability": 1000,
+      "critical": 0.01
+    },
+    "enhancements": ["heal", "booster", "shield", "piercing"],
+    "engine": {
+      "glows": [
+        {
+          "tint": "0x3399FF",
+          "scale": {
+            "startX": 0.1,
+            "endX": 0.25,
+            "startY": 0.2,
+            "endY": 0.4
+          },
+          "position": {
+            "x": 153,
+            "y": 70
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "0x3399FF",
+          "scale": {
+            "startX": 0.1,
+            "endX": 0.25,
+            "startY": 0.2,
+            "endY": 0.4
+          },
+          "position": {
+            "x": 189,
+            "y": 91
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "0x3399FF",
+          "scale": {
+            "startX": 0.1,
+            "endX": 0.22,
+            "startY": 0.2,
+            "endY": 0.4
+          },
+          "position": {
+            "x": 189,
+            "y": 165
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "0x3399FF",
+          "scale": {
+            "startX": 0.1,
+            "endX": 0.22,
+            "startY": 0.2,
+            "endY": 0.4
+          },
+          "position": {
+            "x": 160,
+            "y": 190
+          },
+          "rotation": 0
+        }
+      ]
+    },
+    "targeting": {
+      "hardpoints": [
+        {
+          "type": ["energy", "pulse"],
+          "pivot": {
+            "x": 20,
+            "y": 16
+          },
+          "position": {
+            "x": 65,
+            "y": 126
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "tarkin"
+          }
+        },
+        {
+          "type": ["energy", "pulse"],
+          "pivot": {
+            "x": 20,
+            "y": 16
+          },
+          "position": {
+            "x": 118,
+            "y": 79
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "grenlin"
+          }
+        },
+        {
+          "type": ["energy", "pulse"],
+          "pivot": {
+            "x": 20,
+            "y": 16
+          },
+          "position": {
+            "x": 118,
+            "y": 76
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "quantum"
+          }
+        },
+        {
+          "type": ["projectile"],
+          "pivot": {
+            "x": 20,
+            "y": 16
+          },
+          "position": {
+            "x": 90,
+            "y": 128
+          },
+          "default": {
+            "type": "rocket",
+            "subtype": "basic"
+          }
+        }
+              ]
     }
   },
   "ubaidian-x02": {
@@ -132,16 +759,16 @@
       "health": 200,
       "heal": 0.25,
       "armor": 0.0,
-      "speed": 44.0,
+      "speed": 32.0,
       "rate": 256,
-      "evasion": 0.04,
+      "evasion": 0.02,
       "energy": 200,
       "recharge": 1,
       "size": 192,
       "durability": 1000,
-      "critical": 0.02
+      "critical": 0.01
     },
-    "enhancements": ["heal", "booster", "shield", "piercing"],
+    "enhancements": ["heal", "booster", "shield"],
     "engine": {
       "glows": [
         {
@@ -177,6 +804,7 @@
     "targeting": {
       "hardpoints": [
         {
+          "type": ["energy", "pulse"],
           "pivot": {
             "x": 20,
             "y": 16
@@ -186,11 +814,12 @@
             "y": 87
           },
           "default": {
-            "type": "pulse",
-            "subtype": "quantum"
+            "type": "energy",
+            "subtype": "basic"
           }
         },
         {
+          "type": ["energy", "pulse"],
           "pivot": {
             "x": 20,
             "y": 16
@@ -198,13 +827,10 @@
           "position": {
             "x": 198,
             "y": 116
-          },
-          "default": {
-            "type": "energy",
-            "subtype": "basic"
           }
         },
         {
+          "type": ["energy", "pulse"],
           "pivot": {
             "x": 20,
             "y": 16
@@ -212,13 +838,10 @@
           "position": {
             "x": 198,
             "y": 201
-          },
-          "default": {
-            "type": "energy",
-            "subtype": "basic"
           }
         },
         {
+          "type": ["energy", "pulse"],
           "pivot": {
             "x": 20,
             "y": 16
@@ -228,8 +851,8 @@
             "y": 231
           },
           "default": {
-            "type": "pulse",
-            "subtype": "quantum"
+            "type": "energy",
+            "subtype": "basic"
           }
         }
       ]
@@ -245,7 +868,7 @@
       "armor": 0.0,
       "speed": 64.0,
       "rate": 256,
-      "evasion": 0.14,
+      "evasion": 0.15,
       "energy": 100,
       "recharge": 1.5,
       "size": 96,
@@ -298,7 +921,7 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "quantum"
+            "subtype": "tarkin"
           }
         },
         {
@@ -312,7 +935,7 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "quantum"
+            "subtype": "tarkin"
           }
         }
       ]
@@ -364,6 +987,10 @@
           "position": {
             "x": 29,
             "y": 39
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "tarkin"
           }
         }
       ]
@@ -504,10 +1131,10 @@
       "health": 30,
       "heal": 0.2,
       "armor": 0.0,
-      "speed": 88.0,
+      "speed": 64.0,
       "rate": 256,
-      "evasion": 0.2,
-      "energy": 60,
+      "evasion": 0.15,
+      "energy": 30,
       "recharge": 1,
       "size": 64,
       "durability": 500,
@@ -517,16 +1144,58 @@
     "engine": {
       "glows": [
         {
-          "tint": "0xFF6666",
+          "tint": "0xFF0000",
           "scale": {
             "startX": 0.1,
-            "endX": 0.32,
-            "startY": 0.52,
+            "endX": 0.12,
+            "startY": 0.54,
+            "endY": 0.66
+          },
+          "position": {
+            "x": 82,
+            "y": 63
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "0xFF0000",
+          "scale": {
+            "startX": 0.1,
+            "endX": 0.12,
+            "startY": 0.54,
             "endY": 0.88
           },
           "position": {
             "x": 82,
-            "y": 64
+            "y": 63
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "0xFF0000",
+          "scale": {
+            "startX": 0.1,
+            "endX": 0.12,
+            "startY": 0.54,
+            "endY": 0.66
+          },
+          "position": {
+            "x": 79,
+            "y": 40
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "0xFF0000",
+          "scale": {
+            "startX": 0.1,
+            "endX": 0.12,
+            "startY": 0.54,
+            "endY": 0.66
+          },
+          "position": {
+            "x": 79,
+            "y": 87
           },
           "rotation": 0
         }
@@ -546,158 +1215,6 @@
           "default": {
             "type": "energy",
             "subtype": "small"
-          }
-        }
-      ]
-    }
-  },
-  "mechan-x02": {
-    "race": "mechan",
-    "class": "stealth",
-    "stats": {
-      "capacity": 300,
-      "health": 60,
-      "heal": 0.2,
-      "armor": 0.0,
-      "speed": 66.0,
-      "rate": 256,
-      "evasion": 0.14,
-      "energy": 120,
-      "recharge": 1,
-      "size": 64,
-      "durability": 500,
-      "critical": 0.01
-    },
-    "enhancements": ["heal", "booster", "shield"],
-    "engine": {
-      "glows": [
-        {
-          "tint": "0xFF6666",
-          "scale": {
-            "startX": 0.1,
-            "endX": 0.32,
-            "startY": 0.52,
-            "endY": 0.88
-          },
-          "position": {
-            "x": 82,
-            "y": 64
-          },
-          "rotation": 0
-        }
-      ]
-    },
-    "targeting": {
-      "hardpoints": [
-        {
-          "pivot": {
-            "x": 17,
-            "y": 16
-          },
-          "position": {
-            "x": 60,
-            "y": 64
-          },
-          "default": {
-            "type": "energy",
-            "subtype": "small"
-          }
-        }
-      ]
-    }
-  },
-  "mechan-x03": {
-    "race": "mechan",
-    "class": "stealth",
-    "stats": {
-      "capacity": 800,
-      "health": 60,
-      "heal": 2.0,
-      "armor": 0.0,
-      "speed": 66.0,
-      "rate": 256,
-      "evasion": 0.08,
-      "energy": 200,
-      "recharge": 1.0,
-      "size": 96,
-      "durability": 1000,
-      "critical": 0.01
-    },
-    "enhancements": ["heal", "booster", "shield"],
-    "engine": {
-      "glows": [
-        {
-          "tint": "0xFF4444",
-          "scale": {
-            "startX": 0.12,
-            "endX": 0.22,
-            "startY": 0.52,
-            "endY": 1.0
-          },
-          "position": {
-            "x": 106,
-            "y": 64
-          },
-          "rotation": 0
-        },
-        {
-          "tint": "0xFF4444",
-          "scale": {
-            "startX": 0.12,
-            "endX": 0.22,
-            "startY": 0.2,
-            "endY": 0.5
-          },
-          "position": {
-            "x": 96,
-            "y": 30
-          },
-          "rotation": 0
-        },
-        {
-          "tint": "0xFF4444",
-          "scale": {
-            "startX": 0.12,
-            "endX": 0.22,
-            "startY": 0.2,
-            "endY": 0.5
-          },
-          "position": {
-            "x": 96,
-            "y": 98
-          },
-          "rotation": 0
-        }
-      ]
-    },
-    "targeting": {
-      "hardpoints": [
-        {
-          "pivot": {
-            "x": 17,
-            "y": 16
-          },
-          "position": {
-            "x": 89,
-            "y": 46
-          },
-          "default": {
-            "type": "energy",
-            "subtype": "gauss"
-          }
-        },
-        {
-          "pivot": {
-            "x": 17,
-            "y": 16
-          },
-          "position": {
-            "x": 90,
-            "y": 80
-          },
-          "default": {
-            "type": "energy",
-            "subtype": "gauss"
           }
         }
       ]
@@ -890,10 +1407,10 @@
     "engine": {
       "glows": [
         {
-          "tint": "0x999999",
+          "tint": "0xFFFFFF",
           "scale": {
-            "startX": 0.01,
-            "endX": 0.03,
+            "startX": 0.02,
+            "endX": 0.05,
             "startY": 0.08,
             "endY": 0.12
           },
@@ -904,10 +1421,10 @@
           "rotation": 0
         },
         {
-          "tint": "0x999999",
+          "tint": "0xFFFFFF",
           "scale": {
-            "startX": 0.01,
-            "endX": 0.03,
+            "startX": 0.02,
+            "endX": 0.05,
             "startY": 0.08,
             "endY": 0.12
           },
@@ -918,16 +1435,58 @@
           "rotation": 0
         },
         {
-          "tint": "0x999999",
+          "tint": "0xFFFFFF",
           "scale": {
-            "startX": 0.04,
-            "endX": 0.08,
-            "startY": 0.22,
-            "endY": 0.28
+            "startX": 0.06,
+            "endX": 0.12,
+            "startY": 0.24,
+            "endY": 0.34
           },
           "position": {
-            "x": 154,
-            "y": 104
+            "x": 152,
+            "y": 81
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "0xFFFFFF",
+          "scale": {
+            "startX": 0.06,
+            "endX": 0.12,
+            "startY": 0.24,
+            "endY": 0.34
+          },
+          "position": {
+            "x": 152,
+            "y": 124
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "0xFFFFFF",
+          "scale": {
+            "startX": 0.02,
+            "endX": 0.06,
+            "startY": 0.04,
+            "endY": 0.12
+          },
+          "position": {
+            "x": 63,
+            "y": 71
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "0xFFFFFF",
+          "scale": {
+            "startX": 0.02,
+            "endX": 0.06,
+            "startY": 0.04,
+            "endY": 0.12
+          },
+          "position": {
+            "x": 63,
+            "y": 135
           },
           "rotation": 0
         }
@@ -946,7 +1505,7 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "vulcan"
+            "subtype": "nucleon"
           }
         },
         {
@@ -960,7 +1519,7 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "vulcan"
+            "subtype": "nucleon"
           }
         },
         {
@@ -973,8 +1532,8 @@
             "y": 80
           },
           "default": {
-            "type": "plasma",
-            "subtype": "basic"
+            "type": "pulse",
+            "subtype": "nucleon"
           }
         },
         {
@@ -987,7 +1546,1024 @@
             "y": 127
           },
           "default": {
-            "type": "plasma",
+            "type": "pulse",
+            "subtype": "nucleon"
+          }
+        }
+      ]
+    }
+  },
+  "pirate-x01": {
+    "race": "general",
+    "class": "mining",
+    "stats": {
+      "capacity": 1000,
+      "health": 50,
+      "heal": 0.2,
+      "armor": 0.0,
+      "speed": 64.0,
+      "rate": 256,
+      "evasion": 0.1,
+      "energy": 100,
+      "recharge": 1,
+      "size": 96,
+      "durability": 500,
+      "critical": 0.01
+    },
+    "enhancements": ["heal", "booster", "shield"],
+    "engine": {
+      "glows": [
+        {
+          "tint": "0xFFFFFF",
+          "scale": {
+            "startX": 0.02,
+            "endX": 0.08,
+            "startY": 0.30,
+            "endY": 0.34
+          },
+          "position": {
+            "x": 108,
+            "y": 64
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "0xFFFFFF",
+          "scale": {
+            "startX": 0.02,
+            "endX": 0.04,
+            "startY": 0.08,
+            "endY": 0.12
+          },
+          "position": {
+            "x": 77,
+            "y": 95
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "0xFFFFFF",
+          "scale": {
+            "startX": 0.02,
+            "endX": 0.04,
+            "startY": 0.08,
+            "endY": 0.12
+          },
+          "position": {
+            "x": 77,
+            "y": 32
+          },
+          "rotation": 0
+        }
+      ]
+    },
+    "targeting": {
+      "hardpoints": [
+        {
+          "pivot": {
+            "x": 17,
+            "y": 16
+          },
+          "position": {
+            "x": 28,
+            "y": 63
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "nucleon"
+          }
+        }
+      ]
+    }
+  },
+  "pirate-x02": {
+    "race": "general",
+    "class": "transport",
+    "stats": {
+      "capacity": 800,
+      "health": 80,
+      "heal": 0.2,
+      "armor": 0.0,
+      "speed": 44.0,
+      "rate": 256,
+      "evasion": 0.1,
+      "energy": 80,
+      "recharge": 1,
+      "size": 96,
+      "durability": 1000,
+      "critical": 0.01
+    },
+    "enhancements": ["heal", "booster", "shield"],
+    "engine": {
+      "glows": [
+        {
+          "tint": "0xFFFFFF",
+          "scale": {
+            "startX": 0.06,
+            "endX": 0.08,
+            "startY": 0.2,
+            "endY": 0.22
+          },
+          "position": {
+            "x": 82,
+            "y": 42
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "0xFFFFFF",
+          "scale": {
+            "startX": 0.06,
+            "endX": 0.08,
+            "startY": 0.2,
+            "endY": 0.22
+          },
+          "position": {
+            "x": 82,
+            "y": 86
+          },
+          "rotation": 0
+        }
+      ]
+    },
+    "targeting": {
+      "hardpoints": [
+        {
+          "pivot": {
+            "x": 17,
+            "y": 16
+          },
+          "position": {
+            "x": 45,
+            "y": 40
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "nucleon"
+          }
+        },
+        {
+          "pivot": {
+            "x": 17,
+            "y": 16
+          },
+          "position": {
+            "x": 45,
+            "y": 87
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "nucleon"
+          }
+        }
+      ]
+    }
+  },
+  "pirate-x03b": {
+    "race": "general",
+    "class": "battleship",
+    "stats": {
+      "capacity": 3000,
+      "health": 200,
+      "heal": 0.25,
+      "armor": 0.0,
+      "speed": 18.0,
+      "rate": 256,
+      "evasion": 0.02,
+      "energy": 200,
+      "recharge": 1,
+      "size": 135,
+      "durability": 1000,
+      "critical": 0.01
+    },
+    "enhancements": ["heal", "booster", "shield"],
+    "engine": {
+      "glows": [
+        {
+          "tint": "0xFFFFFF",
+          "scale": {
+            "startX": 0.02,
+            "endX": 0.05,
+            "startY": 0.08,
+            "endY": 0.12
+          },
+          "position": {
+            "x": 190,
+            "y": 86
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "0xFFFFFF",
+          "scale": {
+            "startX": 0.02,
+            "endX": 0.05,
+            "startY": 0.08,
+            "endY": 0.12
+          },
+          "position": {
+            "x": 188,
+            "y": 191
+          },
+          "rotation": 0
+        }
+      ]
+    },
+    "targeting": {
+      "hardpoints": [
+        {
+          "pivot": {
+            "x": 17,
+            "y": 16
+          },
+          "position": {
+            "x": 15,
+            "y": 103
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "nucleon"
+          }
+        },
+        {
+          "pivot": {
+            "x": 17,
+            "y": 16
+          },
+          "position": {
+            "x": 50,
+            "y": 103
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "nucleon"
+          }
+        },
+        {
+          "pivot": {
+            "x": 17,
+            "y": 16
+          },
+          "position": {
+            "x": 116,
+            "y": 80
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "nucleon"
+          }
+        },
+        {
+          "pivot": {
+            "x": 17,
+            "y": 16
+          },
+          "position": {
+            "x": 116,
+            "y": 127
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "nucleon"
+          }
+        }
+      ]
+    }
+  },
+  "scavengers-x01d": {
+    "race": "scavengers",
+    "class": "bug",
+    "stats": {
+      "capacity": 1000,
+      "health": 30,
+      "heal": 0.2,
+      "armor": 0.0,
+      "speed": 88.0,
+      "rate": 256,
+      "evasion": 0.2,
+      "energy": 60,
+      "recharge": 1,
+      "size": 96,
+      "durability": 500,
+      "critical": 0.01
+    },
+    "enhancements": ["heal", "booster", "shield"],
+    "engine": {
+      "glows": [
+        {
+          "tint": "",
+          "scale": {
+            "startX": 0.00,
+            "endX": 0.00,
+            "startY": 0.0,
+            "endY": 0.0
+          },
+          "position": {
+            "x": 108,
+            "y": 64
+          },
+          "rotation": 0
+        }
+      ]
+    },
+    "targeting": {
+      "hardpoints": [
+        {
+          "tint": "",
+          "scale": {
+            "startX": 0,
+            "endX": 0,
+            "startY": 0,
+            "endY": 0
+          },
+          "position": {
+            "x": 77,
+            "y": 95
+          },
+          "pivot": {
+            "x": 17,
+            "y": 16
+          },
+          "default": {
+            "type": "energy",
+            "subtype": "small"
+          }
+        }
+      ]
+    }
+  },
+  "mechan-x02": {
+    "race": "mechan",
+    "class": "stealth",
+    "stats": {
+      "capacity": 300,
+      "health": 60,
+      "heal": 0.2,
+      "armor": 0.0,
+      "speed": 66.0,
+      "rate": 256,
+      "evasion": 0.14,
+      "energy": 120,
+      "recharge": 1,
+      "size": 64,
+      "durability": 500,
+      "critical": 0.01
+    },
+    "enhancements": ["heal", "booster", "shield"],
+    "engine": {
+      "glows": [
+        {
+          "tint": "0xFF6666",
+          "scale": {
+            "startX": 0.1,
+            "endX": 0.32,
+            "startY": 0.52,
+            "endY": 0.88
+          },
+          "position": {
+            "x": 82,
+            "y": 64
+          },
+          "rotation": 0
+        }
+      ]
+    },
+    "targeting": {
+      "hardpoints": [
+        {
+          "pivot": {
+            "x": 17,
+            "y": 16
+          },
+          "position": {
+            "x": 60,
+            "y": 64
+          },
+          "default": {
+            "type": "energy",
+            "subtype": "small"
+          }
+        }
+      ]
+    }
+  },
+  "mechan-x03": {
+    "race": "mechan",
+    "class": "stealth",
+    "stats": {
+      "capacity": 800,
+      "health": 60,
+      "heal": 2.0,
+      "armor": 0.0,
+      "speed": 66.0,
+      "rate": 256,
+      "evasion": 0.08,
+      "energy": 200,
+      "recharge": 1.0,
+      "size": 96,
+      "durability": 1000,
+      "critical": 0.01
+    },
+    "enhancements": ["heal", "booster", "shield"],
+    "engine": {
+      "glows": [
+        {
+          "tint": "0xFF4444",
+          "scale": {
+            "startX": 0.12,
+            "endX": 0.22,
+            "startY": 0.52,
+            "endY": 1.0
+          },
+          "position": {
+            "x": 106,
+            "y": 64
+          },
+          "default": {
+            "type": "energy",
+            "subtype": "basic"
+          }
+        }
+      ]
+    },
+    "targeting": {
+      "hardpoints": [
+        {
+          "pivot": {
+            "x": 17,
+            "y": 16
+          },
+          "position": {
+            "x": 60,
+            "y": 64
+          },
+          "default": {
+            "type": "energy",
+            "subtype": "small"
+          }
+        }
+      ]
+    }
+  },
+  "scavengers-x02c": {
+    "race": "scavengers",
+    "class": "sentinel",
+    "stats": {
+      "capacity": 1000,
+      "health": 80,
+      "heal": 0.2,
+      "armor": 0.0,
+      "speed": 64.0,
+      "rate": 256,
+      "evasion": 0.1,
+      "energy": 100,
+      "recharge": 1,
+      "size": 96,
+      "durability": 500,
+      "critical": 0.01
+    },
+    "enhancements": ["heal", "booster", "shield"],
+    "engine": {
+      "glows": [
+        {
+          "tint": "",
+          "scale": {
+            "startX": 0.02,
+            "endX": 0.08,
+            "startY": 0.30,
+            "endY": 0.34
+          },
+          "position": {
+            "x": 108,
+            "y": 64
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "",
+          "scale": {
+            "startX": 0.02,
+            "endX": 0.04,
+            "startY": 0.08,
+            "endY": 0.12
+          },
+          "position": {
+            "x": 77,
+            "y": 95
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "",
+          "scale": {
+            "startX": 0.02,
+            "endX": 0.04,
+            "startY": 0.08,
+            "endY": 0.12
+          },
+          "position": {
+            "x": 77,
+            "y": 32
+          },
+          "rotation": 0
+        }
+      ]
+    },
+    "targeting": {
+      "hardpoints": [
+        {
+          "pivot": {
+            "x": 17,
+            "y": 16
+          },
+          "position": {
+            "x": 28,
+            "y": 63
+          },
+          "default": {
+            "type": "energy",
+            "subtype": "basic"
+          }
+        }
+      ]
+    }
+  },
+  "scavengers-x03c": {
+    "race": "scavengers",
+    "class": "overseer",
+    "stats": {
+      "capacity": 1000,
+      "health": 300,
+      "heal": 0.2,
+      "armor": 0.0,
+      "speed": 64.0,
+      "rate": 256,
+      "evasion": 0.1,
+      "energy": 100,
+      "recharge": 1,
+      "size": 120,
+      "durability": 500,
+      "critical": 0.01
+    },
+    "enhancements": ["heal", "booster", "shield"],
+    "engine": {
+      "glows": [
+        {
+          "tint": "",
+          "scale": {
+            "startX": 0,
+            "endX": 0,
+            "startY": 0,
+            "endY": 0
+          },
+          "position": {
+            "x": 108,
+            "y": 64
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "",
+          "scale": {
+            "startX": 0,
+            "endX": 0,
+            "startY": 0,
+            "endY": 0
+          },
+          "position": {
+            "x": 77,
+            "y": 95
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "",
+          "scale": {
+            "startX": 0,
+            "endX": 0,
+            "startY": 0,
+            "endY": 0
+          },
+          "position": {
+            "x": 77,
+            "y": 32
+          },
+          "rotation": 0
+        }
+      ]
+    },
+    "targeting": {
+      "hardpoints": [
+        {
+          "pivot": {
+            "x": 17,
+            "y": 16
+          },
+          "position": {
+            "x": 28,
+            "y": 63
+          },
+          "default": {
+            "type": "energy",
+            "subtype": "basic"
+          }
+        }
+      ]
+    }
+  },
+  "scavengers-x04d": {
+    "race": "scavengers",
+    "class": "motherling",
+    "stats": {
+      "capacity": 1000,
+      "health": 800,
+      "heal": 0.2,
+      "armor": 0.0,
+      "speed": 64.0,
+      "rate": 256,
+      "evasion": 0.1,
+      "energy": 100,
+      "recharge": 1,
+      "size": 300,
+      "durability": 500,
+      "critical": 0.01
+    },
+    "enhancements": ["heal", "booster", "shield"],
+    "engine": {
+      "glows": [
+        {
+          "tint": "",
+          "scale": {
+            "startX": 0.02,
+            "endX": 0.08,
+            "startY": 0.30,
+            "endY": 0.34
+          },
+          "position": {
+            "x": 108,
+            "y": 64
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "",
+          "scale": {
+            "startX": 0.02,
+            "endX": 0.04,
+            "startY": 0.08,
+            "endY": 0.12
+          },
+          "position": {
+            "x": 77,
+            "y": 95
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "",
+          "scale": {
+            "startX": 0.02,
+            "endX": 0.04,
+            "startY": 0.08,
+            "endY": 0.12
+          },
+          "position": {
+            "x": 77,
+            "y": 32
+          },
+          "rotation": 0
+        }
+      ]
+    },
+    "targeting": {
+      "hardpoints": [
+        {
+          "pivot": {
+            "x": 17,
+            "y": 16
+          },
+          "position": {
+            "x": 306,
+            "y": 170
+          },
+          "default": {
+            "type": "energy",
+            "subtype": "basic"
+          }
+        },
+        {
+          "pivot": {
+            "x": 17,
+            "y": 16
+          },
+          "position": {
+            "x": 348,
+            "y": 284
+          },
+          "default": {
+            "type": "energy",
+            "subtype": "basic"
+          }
+        },
+        {
+          "pivot": {
+            "x": 17,
+            "y": 16
+          },
+          "position": {
+            "x": 180,
+            "y": 234
+          },
+          "default": {
+            "type": "energy",
+            "subtype": "basic"
+          }
+        }
+      ]
+    }
+  },
+  "enforcers-x01": {
+    "race": "ubaidian",
+    "class": "fighter",
+    "stats": {
+      "capacity": 3000,
+      "health": 100,
+      "heal": 0.25,
+      "armor": 0.0,
+      "speed": 40.0,
+      "range": 2048,
+      "accuracy": 0.88,
+      "evasion": 0.3,
+      "size": 127,
+      "energy": 200,
+      "recharge": 1,
+      "size": 128,
+      "durability": 1000,
+      "critical": 0.01
+    },
+    "enhancements": ["heal", "booster", "shield"],
+    "engine": {
+      "glows": [
+        {
+          "tint": "0xFFFFAA",
+          "scale": {
+            "startX": 0.1,
+            "endX": 0.2,
+            "startY": 0.5,
+            "endY": 1.5
+          },
+          "position": {
+            "x": 80,
+            "y": 65
+          },
+          "rotation": 0
+        }
+        ]
+    },
+    "targeting": {
+      "hardpoints": [
+        {
+          "type": ["energy", "pulse"],
+          "pivot": {
+            "x": 20,
+            "y": 16
+          },
+          "position": {
+            "x": 54,
+            "y": 37
+          },
+          "default": {
+            "type": "energy",
+            "subtype": "basic"
+          }
+        }
+        ]
+    }
+  },
+  "enforcers-x99": {
+    "race": "ubaidian",
+    "class": "battleship",
+    "stats": {
+      "capacity": 3000,
+      "health": 250,
+      "heal": 0.25,
+      "armor": 0.0,
+      "speed": 40.0,
+      "range": 2048,
+      "accuracy": 0.88,
+      "evasion": 0.3,
+      "size": 127,
+      "energy": 200,
+      "recharge": 1,
+      "size": 128,
+      "durability": 1000,
+      "critical": 0.01
+    },
+    "enhancements": ["heal", "booster", "shield"],
+    "engine": {
+      "glows": [
+        {
+          "tint": "0xFFFFAA",
+          "scale": {
+            "startX": 0.1,
+            "endX": 0.2,
+            "startY": 0.5,
+            "endY": 1.5
+          },
+          "position": {
+            "x": 230,
+            "y": 128
+          },
+          "rotation": 0
+        }
+        ]
+    },
+    "targeting": {
+      "hardpoints": [
+        {
+          "type": ["energy"],
+          "pivot": {
+            "x": 20,
+            "y": 16
+          },
+          "position": {
+            "x": 7,
+            "y": 37
+          },
+          "default": {
+            "type": "energy",
+            "subtype": "basic"
+          }
+        },
+        {
+          "type": ["energy"],
+          "pivot": {
+            "x": 6,
+            "y": 39
+          },
+          "position": {
+            "x": 7,
+            "y": 216
+          },
+          "default": {
+            "type": "energy",
+            "subtype": "basic"
+          }
+        }
+        ]
+    }
+  },
+  "ricardo-x01": {
+    "race": "ubaidian",
+    "class": "destroyer",
+    "stats": {
+      "capacity": 1000,
+      "health": 2000,
+      "heal": 0.5,
+      "armor": 0.0,
+      "speed": 60.0,
+      "rate": 256,
+      "evasion": 0.1,
+      "energy": 200,
+      "recharge": 1,
+      "size": 160,
+      "durability": 1000,
+      "critical": 0.01
+    },
+    "enhancements": ["heal", "booster", "shield", "piercing"],
+    "engine": {
+      "glows": [
+        {
+          "tint": "0x3399FF",
+          "scale": {
+            "startX": 0.1,
+            "endX": 0.25,
+            "startY": 0.2,
+            "endY": 0.4
+          },
+          "position": {
+            "x": 142,
+            "y": 92
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "0x3399FF",
+          "scale": {
+            "startX": 0.1,
+            "endX": 0.25,
+            "startY": 0.2,
+            "endY": 0.4
+          },
+          "position": {
+            "x": 142,
+            "y": 164
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "0x3399FF",
+          "scale": {
+            "startX": 0.1,
+            "endX": 0.22,
+            "startY": 0.2,
+            "endY": 0.4
+          },
+          "position": {
+            "x": 152,
+            "y": 102
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "0x3399FF",
+          "scale": {
+            "startX": 0.1,
+            "endX": 0.22,
+            "startY": 0.2,
+            "endY": 0.4
+          },
+          "position": {
+            "x": 152,
+            "y": 154
+          },
+          "rotation": 0
+        }
+      ]
+    },
+    "targeting": {
+      "hardpoints": [
+        {
+          "type": ["energy", "pulse"],
+          "pivot": {
+            "x": 20,
+            "y": 16
+          },
+          "position": {
+            "x": 91,
+            "y": 70
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "bazuko"
+          }
+        },
+        {
+          "type": ["energy", "pulse"],
+          "pivot": {
+            "x": 20,
+            "y": 16
+          },
+          "position": {
+            "x": 59,
+            "y": 128
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "bazuko"
+          }
+        },
+        {
+          "type": ["energy", "pulse"],
+          "pivot": {
+            "x": 20,
+            "y": 16
+          },
+          "position": {
+            "x": 91,
+            "y": 187
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "bazuko"
+          }
+        },
+        {
+          "type": ["energy"],
+          "pivot": {
+            "x": 20,
+            "y": 16
+          },
+          "position": {
+            "x": 128,
+            "y": 128
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "bazuko"
+          }
+        },
+        {
+          "pivot": {
+            "x": 17,
+            "y": 16
+          },
+          "position": {
+            "x": 128,
+            "y": 128
+          },
+          "default": {
+            "type": "energy",
             "subtype": "basic"
           }
         }

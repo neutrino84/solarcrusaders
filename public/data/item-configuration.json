@@ -67,17 +67,18 @@
         },
         "emitter": ["0x000000", "0xDB691D"],
         "icon": "item-laser-a",
+        "cooldown": 0,
         "range": 2560,
         "projection": 0.1,
-        "delay": 32,
-        "cooldown": 1024,
-        "spread": 48,
-        "damage": 4.0,
-        "length": 768,
-        "aoe": 2.0,
+        "delay": 16,
+        "spread": 32,
+        "damage": 8.0,
+        "length": 1024,
+        "aoe": 1.0,
         "spawn": 1,
         "durability": 1000.0,
-        "sound": "capitalBeam"
+        "sound": "capitalBeam",
+        "default_volume": 0.3
       },
       "small": {
         "name": "Mini Cannon Laser",
@@ -92,20 +93,21 @@
         },
         "emitter": ["0xFFFFFF", "0xFF0000"],
         "icon": "item-laser-a",
+        "cooldown": 0,
         "range": 1536,
-        "projection": 0.025,
-        "delay": 32,
-        "cooldown": 256,
-        "spread": 48,
-        "damage": 1.0,
-        "length": 512,
+        "projection": 0.1,
+        "delay": 16,
+        "spread": 32,
+        "damage": 2.0,
+        "length": 1024,
         "aoe": 1.0,
         "spawn": 1,
         "durability": 1000.0,
-        "sound": "capitalBeam"
+        "sound": "beam7",
+        "default_volume": 0.4
       },
       "gauss": {
-        "name": "Gaus Laser Cannon",
+        "name": "Gauss Laser Cannon",
         "type": "energy",
         "subtype": "gauss",
         "sprite": "turret-a",
@@ -117,17 +119,37 @@
         },
         "emitter": ["0x333333", "0xFF0000"],
         "icon": "item-laser-a",
+        "cooldown": 0,
         "range": 1536,
-        "projection": 0.025,
+        "projection": 0.05,
         "delay": 32,
-        "cooldown": 256,
-        "spread": 48,
-        "damage": 1.0,
-        "length": 512,
+        "spread": 64,
+        "damage": 2.0,
+        "length": 1024,
         "aoe": 1.0,
         "spawn": 1,
+        "durability": 1000.0
+      },
+      "scavenger": {
+        "name": "Type 1 Laser",
+        "type": "energy",
+        "subtype": "basic",
+        "sprite": "turret-a",
+        "texture": "laser-red",
+        "glow": "0xFF3333",
+        "emitter": ["0xFFFFFF", "0x330000"],
+        "icon": "item-laser-a",
+        "cooldown": 0,
+        "range": 2560,
+        "projection": 0.1,
+        "delay": 128,
+        "spread": 32,
+        "damage": 1.0,
+        "length": 4096,
+        "spawn": 1,
         "durability": 1000.0,
-        "sound": "capitalBeam"
+        "sound": "capitalBeam",
+        "default_volume": 0.1
       }
     },
     "pulse": {
@@ -140,17 +162,18 @@
         "glow": "0x12def9",
         "emitter": ["0xFFFFFF", "0x12def9"],
         "icon": "item-laser-a",
+        "cooldown": 0,
         "range": 4096,
         "projection": 0.06,
         "delay": 32,
-        "cooldown": 0,
         "spread": 32,
         "damage": 1.0,
         "length": 32,
         "aoe": 1.0,
         "spawn": 1,
         "durability": 1000.0,
-        "sound": "basicPulse"
+        "sound": "nucleon_pulse",
+        "default_volume": 0.5
       },
       "quantum": {
         "name": "Type 2 Pulse",
@@ -161,17 +184,80 @@
         "glow": "0x12def9",
         "emitter": ["0xFFFFFF", "0x12def9"],
         "icon": "item-laser-a",
+        "cooldown": 0,
         "range": 4096,
         "projection": 0.06,
         "delay": 32,
-        "cooldown": 0,
         "spread": 32,
-        "damage": 2.0,
+        "damage": 2.5,
         "length": 32,
-        "aoe": 1.0,
+        "spawn": 1,        
+        "durability": 1000.0,
+        "sound": "quantum_pulse",
+        "default_volume": 0.5
+      },
+      "tarkin": {
+        "name": "Type 1 Pulse",
+        "type": "pulse",
+        "subtype": "basic",
+        "sprite": "turret-a",
+        "texture": "laser-green",
+        "glow": "0x12def9",
+        "emitter": "blue",
+        "icon": "item-laser-a",
+        "cooldown": 0,
+        "range": 2304,
+        "projection": 0.15,
+        "delay": 32,
+        "spread": 64,
+        "damage": 6.0,
+        "length": 32,
         "spawn": 2,
         "durability": 1000.0,
-        "sound": "tarkin_pulse"
+        "sound": "tarkin_pulse",
+        "default_volume": 0.5
+      },
+      "grenlin": {
+        "name": "Type 1 Pulse",
+        "type": "pulse",
+        "subtype": "basic",
+        "sprite": "turret-a",
+        "texture": "laser-green",
+        "glow": "0x12def9",
+        "emitter": "blue",
+        "icon": "item-laser-a",
+        "cooldown": 0,
+        "range": 2304,
+        "projection": 0.15,
+        "delay": 32,
+        "spread": 64,
+        "damage": 4.5,
+        "length": 32,
+        "spawn": 2,
+        "durability": 1000.0,
+        "sound": "grenlin_pulse",
+        "default_volume": 0.1
+      },
+      "bazuko": {
+        "name": "Type 1 Pulse",
+        "type": "pulse",
+        "subtype": "basic",
+        "sprite": "turret-a",
+        "texture": "laser-green",
+        "glow": "0x12def9",
+        "emitter": "blue",
+        "icon": "item-laser-a",
+        "cooldown": 0,
+        "range": 3000,
+        "projection": 0.15,
+        "delay": 60,
+        "spread": 64,
+        "damage": 183.0,
+        "length": 32,
+        "spawn": 1,
+        "durability": 1000.0,
+        "sound": "bazuko_pulse",
+        "default_volume": 0.25
       },
       "nucleon": {
         "name": "Nucleon Pulse Cannon",
@@ -182,17 +268,18 @@
         "glow": "0xff6666",
         "emitter": ["0xFFFFFF", "0xFF3333"],
         "icon": "item-laser-a",
+        "cooldown": 0,
         "range": 4096,
         "projection": 0.06,
         "delay": 32,
-        "cooldown": 0,
         "spread": 32,
         "damage": 3.0,
         "length": 32,
         "aoe": 1.0,
         "spawn": 1,
         "durability": 1000,
-        "sound": "basicPulse"
+        "sound": "nucleon_pulse",
+        "default_volume": 0.5 
       },
       "vulcan": {
         "name": "Vulcan Pulse Cannon",
@@ -203,17 +290,18 @@
         "glow": "0xF9D4D4",
         "emitter": ["0xF9D41C", "0xFFFFFF"],
         "icon": "item-laser-a",
+        "cooldown": 0,
         "range": 4096,
         "projection": 0.24,
         "delay": 32,
-        "cooldown": 0,
         "spread": 32,
         "damage": 2.0,
         "length": 32,
         "aoe": 1.0,
         "spawn": 2,
+        "sound": "vulcan_pulse",
         "durability": 1000,
-        "sound": "basicPulse"
+        "default_volume": 0.18
       }
     },
     "rocket": {
@@ -224,16 +312,18 @@
         "sprite": "turret-b",
         "texture": "turret-rocket-a.png",
         "icon": "item-rocket-a",
+        "cooldown": 0,
         "range": 4096,
         "projection": 0.18,
         "delay": 32,
-        "cooldown": 0,
         "spread": 128,
         "damage": 1.0,
         "length": 256,
         "aoe": 4.0,
         "spawn": 1,
-        "durability": 1000.0
+        "durability": 1000.0,
+        "sound": "rocket1",
+        "default_volume": 0.06
       }
     },
     "plasma": {
@@ -241,20 +331,21 @@
         "name": "Advanced Launcher",
         "type": "plasma",
         "subtype": "basic",
-        "sprite": "turret-b",
+        "sprite": "turret-c",
         "texture": "turret-rocket-b.png",
         "icon": "item-rocket-b",
+        "cooldown": 0,
         "glow": "0xff6666",
         "range": 3072,
         "projection": 0.24,
-        "delay": 32,
-        "cooldown": 2048,
+        "delay": 2048,
         "spread": 128,
         "damage": 2.0,
-        "length": 256,
-        "aoe": 4.0,
-        "spawn": 1,
-        "durability": 1000.0
+        "length": 1024,
+        "aoe": 2.0,
+        "spawn": 4,
+        "durability": 1000.0,
+        "default_volume": 0.3
       }
     },
     "missile": {
@@ -262,20 +353,21 @@
         "name": "Advanced Launcher",
         "type": "missile",
         "subtype": "basic",
-        "sprite": "turret-a",
-        "texture": "turret-rocket-a.png",
+        "sprite": "turret-b",
+        "texture": "turret-rocket-b.png",
         "icon": "item-rocket-a",
+        "cooldown": 0,
         "glow": "0x00d2ff",
         "range": 4096,
         "projection": 0.34,
-        "delay": 32,
-        "cooldown": 0,
-        "spread": 128,
-        "damage": 2.0,
+        "delay": 756,
+        "spread": 18,
+        "damage": 8.0,
         "length": 1024,
-        "aoe": 4.0,
-        "spawn": 2,
-        "durability": 1000.0
+        "aoe": 2.0,
+        "spawn": 4,
+        "durability": 1000.0,
+        "default_volume": 0.3
       }
     }
   },
@@ -292,7 +384,7 @@
         },
         "sound": {
           "name": "heal",
-          "volume": 0.6,
+          "volume": 0.08,
           "loop": false
         }
 
@@ -305,12 +397,15 @@
         "active": 6,
         "stats": {
           "speed": {
-            "value": 2.0
+            "value": 2.5
+          },
+          "evasion": {
+            "value": 0.5
           }
         },
         "sound": {
           "name": "booster",
-          "volume": 0.7,
+          "volume": 0.4,
           "loop": false
         }
       }
@@ -322,12 +417,12 @@
         "active": 10,
         "stats": {
           "armor": {
-            "value": 0.75
+            "value": 2
           }
         },
         "sound": {
           "name": "shield",
-          "volume": 1,
+          "volume": 0.6,
           "loop": false
         }
       }
@@ -339,7 +434,7 @@
         "active": 10,
         "stats": {
           "armor": {
-            "value": 0.05
+            "value": 2
           }
         }
       }
@@ -351,27 +446,28 @@
         "active": 10,
         "stats": {
           "armor": {
-            "value": 0.05
+            "value": 2
           }
+        },
+        "sound": {
+          "name": "shield",
+          "volume": 1,
+          "loop": false
         }
       }
     },
     "piercing": {
       "basic": {
         "cost": -30,
-        "cooldown": 60,
-        "active": 10,
+        "cooldown": 20,
+        "active": 6,
         "stats": {
-          "rate": {
-            "value": 4
-          },
-          "evasion": {
-            "value": 1.5
-          }
+         
         },
+        "damage": 50,
         "sound": {
           "name": "piercing",
-          "volume": 1,
+          "volume": 1.5,
           "loop": false
         }
       }
