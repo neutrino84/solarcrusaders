@@ -11,11 +11,13 @@ var engine = require('engine'),
     InputManager = require('../objects/sector/InputManager'),
     ShipManager = require('../objects/sector/ShipManager'),
     StationManager = require('../objects/sector/StationManager'),
+    SoundManager = require('../objects/sector/SoundManager'),
     Asteroid = require('../objects/sector/misc/Asteroid');
     
 function SectorState(game) {
   this.shipNetManager = new ShipNetManager(game);
   this.stationNetManager = new StationNetManager(game);
+  this.soundManager = new SoundManager(game);
 };
 
 SectorState.prototype = Object.create(engine.State.prototype);
@@ -25,6 +27,9 @@ SectorState.prototype.init = function(args) {
   // initialize
   this.shipNetManager.init();
   this.stationNetManager.init();
+
+  //initialize sound manager
+  this.soundManager.init();
 
   // instanciate ui
   this.ui = new UI(this.game);
@@ -36,6 +41,9 @@ SectorState.prototype.init = function(args) {
 SectorState.prototype.preload = function() {
   // preload ui
   this.ui.preload();
+
+  //preload soundManager
+  this.soundManager.preload(this.game);
 
   // load background
   this.game.load.image('space', 'imgs/game/space/sector-a.jpg');
@@ -109,6 +117,11 @@ SectorState.prototype.create = function() {
 
   // create ui
   this.ui.create();
+
+  //create SoundManager
+  this.soundManager.create(this);
+
+  this.game.emit('game/backgroundmusic')
 };
 
 SectorState.prototype.createSpace = function() {
@@ -122,6 +135,10 @@ SectorState.prototype.createSpace = function() {
   this.game.world.static.add(this.space);
   this.game.world.background.add(this.planet);
   this.game.world.foreground.add(this.nebula);
+};
+
+SectorState.prototype.createHotkeys = function() {
+  //keypress event listeners
 };
 
 SectorState.prototype.createManagers = function() {

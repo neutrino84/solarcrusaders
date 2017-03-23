@@ -15,6 +15,7 @@ function Hardpoint(parent, data, config) {
 
   this.cache = [];
   this.actives = [];
+  this.enhancements = {};
   this.cooled = true;
   this.isRunning = false;
 
@@ -36,6 +37,14 @@ function Hardpoint(parent, data, config) {
   
   this.ship.addChild(this.sprite);
   this.sprite.addChild(this.cap);
+
+  if(config.type && config.type.indexOf('projectile') >= 0){
+    this.sprite.visible = false;
+  };
+
+  if(config.type && config.type.indexOf('plasma') >= 0){
+
+  };
 };
 
 Hardpoint.prototype.constructor = Hardpoint;
@@ -70,7 +79,7 @@ Hardpoint.prototype.fire = function(targ) {
       if(launcher.continue) {
         launcher.continue(target);
       }
-    }
+    };
 
     for(var i=0; i<spawn; i++) {
       if(cache.length) {
@@ -80,10 +89,20 @@ Hardpoint.prototype.fire = function(targ) {
       }
       launcher.start(target, distance, spawn, i, data.slot);
       actives.push(launcher);
-    }
-  }
+    };
+
+    this.game.emit('ship/hardpoint/fire', {
+      actives: actives,
+      spawn: spawn,
+      ship: ship
+    });
+  };
 
   this.isRunning = true;
+};
+
+Hardpoint.prototype.enhance = function(name, state) {
+  this.enhancements[name] = state;
 };
 
 Hardpoint.prototype.hit = function(ship, target) {
