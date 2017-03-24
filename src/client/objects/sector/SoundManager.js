@@ -129,7 +129,7 @@ SoundManager.prototype.generateEnhancementSound = function(data){
   if(!this.config){
     return
   };
-
+  
   var enhancements = this.config.enhancement,
       enhancement = data.enhancement,
       subtype = data.subtype,

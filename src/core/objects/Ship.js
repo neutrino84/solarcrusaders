@@ -13,7 +13,6 @@ function Ship(manager, data) {
   this.game = manager.game;
   this.sockets = manager.sockets;
   this.model = manager.model;
-  
   this.data = new this.model.Ship(data);
   this.data.init();
 
@@ -105,6 +104,7 @@ Ship.prototype.createSystems = function() {
   for(var e in enhancements) {
     available[enhancements[e]] = new Enhancement(this, enhancements[e]);
   }
+
 };
 
 Ship.prototype.createHardpoints = function() {
@@ -334,7 +334,8 @@ Ship.prototype.activate = function(name) {
 
       sockets.emit('ship/enhancement/started', {
         uuid: this.uuid,
-        enhancement: name
+        enhancement: name,
+        subtype: enhancement.subtype
       });
 
       return true;

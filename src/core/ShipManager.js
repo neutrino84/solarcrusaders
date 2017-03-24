@@ -37,8 +37,8 @@ ShipManager.prototype.constructor = ShipManager;
 
 ShipManager.prototype.init = function() {
   // generate npcs
-  // this.generateRandomShips();
-  // this.generatePirateShips();
+  this.generateRandomShips();
+  this.generatePirateShips();
 };
 
 ShipManager.prototype.add = function(ship) {
@@ -104,7 +104,8 @@ ShipManager.prototype.enhancement = function(socket, args) {
         if(!ship.activate(data.enhancement)) {
           this.sockets.emit('ship/enhancement/cancelled', {
             uuid: ship.uuid,
-            enhancement: data.enhancement
+            enhancement: data.enhancement,
+            subtype: 'basic'
           });
         }
       }
@@ -226,16 +227,16 @@ ShipManager.prototype.refresh = function() {
 
 ShipManager.prototype.generateRandomShips = function() {
   var iterator = {
-        'ubaidian-x01': { race: 'ubaidian', count: 1 },
+        'ubaidian-x01a': { race: 'ubaidian', count: 2 },
         'ubaidian-x02': { race: 'ubaidian', count: 1 },
-        'ubaidian-x03': { race: 'ubaidian', count: 1 },
-        'ubaidian-x04': { race: 'ubaidian', count: 1 },
+        'ubaidian-x03': { race: 'ubaidian', count: 4 },
+        'ubaidian-x04': { race: 'ubaidian', count: 2 },
         'hederaa-x01': { race: 'hederaa', count: 0 },
-        'mechan-x01': { race: 'mechan', count: 0 },
-        'mechan-x02': { race: 'mechan', count: 0 },
-        'mechan-x03': { race: 'mechan', count: 0 },
+        'mechan-x01': { race: 'mechan', count: 2 },
+        'mechan-x02': { race: 'mechan', count: 2 },
+        'mechan-x03': { race: 'mechan', count: 2 },
         'general-x01': { race: 'ubaidian', count: 0 },
-        'general-x02': { race: 'ubaidian', count: 0 },
+        'general-x02': { race: 'ubaidian', count: 1 },
         'general-x03': { race: 'ubaidian', count: 0 }
       };
   for(var chassis in iterator) {
@@ -250,7 +251,7 @@ ShipManager.prototype.generatePirateShips = function() {
       iterator = [{
         location: { x: -2048, y: 2048 },
         ships: [
-          { name: 'xinli', chassis: 'general-x01', credits: 1500, reputation: -100 },
+          { name: 'xinli', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
           // { name: 'mocolo', chassis: 'general-x01', credits: 1500, reputation: -100 },
           // { name: 'mavero', chassis: 'general-x02', credits: 1500, reputation: -100 },
           // { name: 'saag', chassis: 'general-x02', credits: 1500, reputation: -100 }
@@ -260,13 +261,13 @@ ShipManager.prototype.generatePirateShips = function() {
         ships: [
           // { name: 'satel', chassis: 'general-x01', credits: 1500, reputation: -100 },
           // { name: 'oeem', chassis: 'general-x01', credits: 1500, reputation: -100 },
-          { name: 'thath', chassis: 'general-x02', credits: 1500, reputation: -100 },
-          { name: 'zeus', chassis: 'general-x03', credits: 1500, reputation: -100 }
+          { name: 'thath', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
+          { name: 'zeus', chassis: 'pirate-x03b', credits: 1500, reputation: -100 }
         ]
       }, {
         location: { x: 2048, y: -2048 },
         ships: [
-          { name: 'manduk', chassis: 'general-x01', credits: 1500, reputation: -100 },
+          { name: 'manduk', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
           // { name: 'deuh', chassis: 'general-x01', credits: 1500, reputation: -100 },
           // { name: 'talai', chassis: 'general-x02', credits: 1500, reputation: -100 },
           // { name: 'kaan', chassis: 'general-x03', credits: 1500, reputation: -100 }
@@ -274,10 +275,10 @@ ShipManager.prototype.generatePirateShips = function() {
       }, {
         location: { x: 2048, y: 6144 },
         ships: [
-          { name: 'theni', chassis: 'general-x01', credits: 1500, reputation: -100 },
+          { name: 'theni', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
           // { name: 'zulu', chassis: 'general-x01', credits: 1500, reputation: -100 },
           // { name: 'saroc', chassis: 'general-x02', credits: 1500, reputation: -100 },
-          { name: 'malvo', chassis: 'general-x02', credits: 1500, reputation: -100 }
+          { name: 'malvo', chassis: 'pirate-x02', credits: 1500, reputation: -100 }
         ]
       }],
       len = iterator.length;

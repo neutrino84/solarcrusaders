@@ -74,8 +74,8 @@ User.prototype.create = function(ships) {
     this.game.emit('ship/create', {
       name: Generator.getName('ubaidian'),
       chassis: 
-      // randomChassis
-      'ricardo-x01' 
+      randomChassis
+      // 'ricardo-x01' 
       // 'scavengers-x01d'
       
       // 'enforcers-x01'
