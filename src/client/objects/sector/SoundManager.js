@@ -101,10 +101,8 @@ SoundManager.prototype.preload = function(game) {
   load.audio('explosion6','sounds/explosions/explosion_new_3.rerepitched.mp3');
 
   load.audio('capitalShipExplosion','sounds/explosions/deathExplosion.mp3');
-
-
-  // load.audio('piercingDamageActivate','imgs/game/imgs/game/sounds/piercingDamage/piercingDamageActivate.mp3');
-  // load.audio('deathExplosion','imgs/game/sounds/deathExplosion/deathExplosion.mp3')
+  load.audio('capitalShipExplosion2','sounds/explosions/actionExplosion.mp3');
+  load.audio('capitalShipExplosion3','sounds/explosions/explosionBig100.mp3');
 
   load.audio('dangerAlert','sounds/misc/lowHealthDangerSFX.mp3');
 };
@@ -148,22 +146,46 @@ SoundManager.prototype.generateEnhancementSound = function(data){
   this.generateSound(sound.name, volume, sound.loop);
 };
 
+// SoundManager.prototype.generateExplosionSound = function(data){
+//   var explosionArray = ['explosion2','explosion3','explosion4','explosion5','explosion6'],
+//       player = this.player,
+//       ship = data,
+//       volume = 0.3,
+//       shipIsPlayer = true,
+//       randomNum = Math.floor(Math.random() * explosionArray.length),
+//       sound, distance;
+//   if(player && player !== ship) {   
+//     distance = engine.Point.distance(ship, player);    
+//     volume = global.Math.max(1 - (distance / 3000), 0);
+//     shipIsPlayer = false;
+//   };
+//   if(data.details.size > 127) {sound = 'capitalShipExplosion'} 
+//     else {sound = explosionArray[randomNum]};
+//     if(shipIsPlayer){console.log('PLAYER')}
+//     this.generateSound(sound, volume, false);
+// };
+
 SoundManager.prototype.generateExplosionSound = function(data){
-  var explosionArray = ['explosion2','explosion3','explosion4','explosion5','explosion6'],
+  var explosionsArray = ['explosion2','explosion3','explosion4','explosion5','explosion6'],
+      bigExplosionsArray = ['capitalShipExplosion','capitalShipExplosion2','capitalShipExplosion3'],
       player = this.player,
       ship = data,
       volume = 0.3,
-      shipIsPlayer = true,
-      randomNum = Math.floor(Math.random() * explosionArray.length),
+      bigExplosion = bigExplosionsArray[Math.floor(Math.random() * bigExplosionsArray.length)],
+      smallExplosion = explosionsArray[Math.floor(Math.random() * explosionArray.length)],
       sound, distance;
+      
+  if(player && player === ship){
+    sound = bigExplosionsArray[bigRandom];
+  }
   if(player && player !== ship) {   
     distance = engine.Point.distance(ship, player);    
     volume = global.Math.max(1 - (distance / 3000), 0);
-    shipIsPlayer = false;
-  };
-  if(data.details.size > 127) {sound = 'capitalShipExplosion'} 
-    else {sound = explosionArray[randomNum]};
-    if(shipIsPlayer){console.log('PLAYER')}
+    if(data.details.size > 127) {
+    sound = bigExplosion; 
+    } else {sound = smallExplosion};
+  } 
+    // console.log(sound, volume)
     this.generateSound(sound, volume, false);
 };
 
