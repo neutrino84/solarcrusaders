@@ -104,7 +104,8 @@ ShipManager.prototype.enhancement = function(socket, args) {
         if(!ship.activate(data.enhancement)) {
           this.sockets.emit('ship/enhancement/cancelled', {
             uuid: ship.uuid,
-            enhancement: data.enhancement
+            enhancement: data.enhancement,
+            subtype: 'basic'
           });
         }
       }
@@ -226,7 +227,7 @@ ShipManager.prototype.refresh = function() {
 
 ShipManager.prototype.generateRandomShips = function() {
   var iterator = {
-        'ubaidian-x01': { race: 'ubaidian', count: 1 },
+        'ubaidian-x01a': { race: 'ubaidian', count: 2 },
         'ubaidian-x02': { race: 'ubaidian', count: 1 },
         'ubaidian-x03': { race: 'ubaidian', count: 3 },
         'ubaidian-x04': { race: 'ubaidian', count: 3 },
