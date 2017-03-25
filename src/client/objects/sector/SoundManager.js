@@ -77,7 +77,7 @@ SoundManager.prototype.preload = function(game) {
   load.audio('mediumThrusters3','sounds/thrusters/mediumThrusters3.mp3');
 
   load.audio('basicBeam','sounds/beamWeapons/basicBeam.mp3');
-  load.audio('smallBeam','sounds/beamWeapons/capitalBeam.mp3');
+  load.audio('smallBeam','sounds/beamWeapons/green_beam.mp3');
   load.audio('capitalBeam','sounds/beamWeapons/capitalBeam.mp3');
   load.audio('beam7','sounds/beamWeapons/beam7.mp3');
   load.audio('beam9','sounds/beamWeapons/beam9.mp3');
@@ -115,7 +115,7 @@ SoundManager.prototype.create = function(manager) {
 };
 
 SoundManager.prototype.generateBackgroundMusic = function(){
-  this.generateSound('background', 0.23, true);
+  this.generateSound('background', 0.1, true);
 };
 
 SoundManager.prototype.generateThrusterSound = function(){
@@ -172,20 +172,21 @@ SoundManager.prototype.generateExplosionSound = function(data){
       ship = data,
       volume = 0.3,
       bigExplosion = bigExplosionsArray[Math.floor(Math.random() * bigExplosionsArray.length)],
-      smallExplosion = explosionsArray[Math.floor(Math.random() * explosionArray.length)],
+      smallExplosion = explosionsArray[Math.floor(Math.random() * explosionsArray.length)],
       sound, distance;
       
   if(player && player === ship){
-    sound = bigExplosionsArray[bigRandom];
+    sound = bigExplosion;
   }
   if(player && player !== ship) {   
     distance = engine.Point.distance(ship, player);    
-    volume = global.Math.max(1 - (distance / 3000), 0);
-    if(data.details.size > 127) {
+    volume = global.Math.max(1 - (distance / 5000), 0);
+    if(data.data.size > 127) {
     sound = bigExplosion; 
     } else {sound = smallExplosion};
   } 
-    // console.log(sound, volume)
+    console.log(sound, volume)
+    // debugger
     this.generateSound(sound, volume, false);
 };
 
@@ -211,9 +212,9 @@ SoundManager.prototype.generateFireSound = function(data) {
       var sound = this.generateSound(key, volume, loop);
     }, this, [key, volume, loop])
   };
-  if(key === 'beam7'){
-    console.log(volume)
-  };
+  // if(key === 'beam7'){
+  //   console.log(volume)
+  // };
 };
 
 SoundManager.prototype.stopFireSound = function(launcher){
@@ -286,7 +287,6 @@ SoundManager.prototype.generateDamageCriticalSound = function() {
 };
 
 SoundManager.prototype._player = function(ship){
-
   this.player = ship,
   hotkeySounds = {
     1 : 'heal',

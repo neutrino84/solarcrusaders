@@ -259,6 +259,8 @@ ShipManager.prototype._secondary = function(data) {
         uuid: ship.uuid,
         destination: destination
       });
+
+      game.emit('ship/sound/thrusters');
     }
   }
 };
@@ -268,7 +270,8 @@ ShipManager.prototype._disabled = function(data) {
       clock = this.clock;
   if(ship !== undefined) {
     ship.disable();
-
+    this.game.emit('ship/sound/death', ship);
+    this.game.emit('ship/death', ship);
     // cancel autofire
     if(ship.isPlayer) {
       this.autofire && clock.events.remove(this.autofire);
