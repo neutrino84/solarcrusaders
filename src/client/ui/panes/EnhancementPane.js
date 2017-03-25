@@ -119,6 +119,7 @@ EnhancementPane.prototype._select = function(button) {
 EnhancementPane.prototype._started = function(data) {
   var config = this.config[data.enhancement],
       button = this.buttons[data.enhancement];
+  if(!button){return}
   if(this.player || data.uuid === this.player.uuid) {
     // disable
     button.disabled(true);

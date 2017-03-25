@@ -45,6 +45,8 @@ ShipManager.prototype.add = function(ship) {
   if(this.ships[ship.uuid] === undefined) {
     this.ships[ship.uuid] = ship;
   }
+  // console.log(ship)
+  // console.log(this.ships)
 };
 
 ShipManager.prototype.remove = function(ship) {
@@ -56,6 +58,7 @@ ShipManager.prototype.remove = function(ship) {
 };
 
 ShipManager.prototype.create = function(data, user, position) {
+
   var self = this, ship,
       rnd = this.game.rnd,
       position = position || this.generateRandomPosition(user ? 512 : 2048),
@@ -66,6 +69,12 @@ ShipManager.prototype.create = function(data, user, position) {
       }, data);
   ship = new Ship(this, data);
   ship.user = user;
+  // if(data.chassis === 'enforcers-x01'){
+  //   console.log('ENFORCER data is', data, 'user is ', user)
+  // }
+  // if(data.chassis === 'general-x02'){
+  //   console.log('GENERAL data is', data, 'user is ', user)
+  // }
   ship.init(function(err) {
     self.game.emit('ship/add', ship);
   });
@@ -227,7 +236,7 @@ ShipManager.prototype.refresh = function() {
 
 ShipManager.prototype.generateRandomShips = function() {
   var iterator = {
-        'ubaidian-x01a': { race: 'ubaidian', count: 2 },
+        'ubaidian-x01a': { race: 'ubaidian', count: 1 },
         'ubaidian-x02': { race: 'ubaidian', count: 1 },
         'ubaidian-x03': { race: 'ubaidian', count: 3 },
         'ubaidian-x04': { race: 'ubaidian', count: 3 },
@@ -306,6 +315,7 @@ ShipManager.prototype.generateRandomShip = function(chassis, race, ai) {
   var name = Generator.getName(race).toUpperCase(),
       throttle = global.Math.random() * 0.5 + 0.5,
       ai = ai || 'basic';
+
       this.create({
         name: name,
         chassis: chassis,

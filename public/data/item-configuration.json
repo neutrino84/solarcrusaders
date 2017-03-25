@@ -78,7 +78,7 @@
         "spawn": 1,
         "durability": 1000.0,
         "sound": "capitalBeam",
-        "default_volume": 0.3
+        "default_volume": 0.55
       },
       "small": {
         "name": "Mini Cannon Laser",
@@ -103,8 +103,8 @@
         "aoe": 1.0,
         "spawn": 1,
         "durability": 1000.0,
-        "sound": "beam7",
-        "default_volume": 0.4
+        "sound": "smallBeam",
+        "default_volume": 0.55
       },
       "gauss": {
         "name": "Gauss Laser Cannon",
@@ -194,7 +194,7 @@
         "spawn": 1,        
         "durability": 1000.0,
         "sound": "quantum_pulse",
-        "default_volume": 0.5
+        "default_volume": 0.35
       },
       "tarkin": {
         "name": "Type 1 Pulse",
@@ -323,7 +323,7 @@
         "spawn": 1,
         "durability": 1000.0,
         "sound": "rocket1",
-        "default_volume": 0.06
+        "default_volume": 0.009
       }
     },
     "plasma": {
