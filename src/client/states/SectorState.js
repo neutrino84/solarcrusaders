@@ -12,12 +12,14 @@ var engine = require('engine'),
     ShipManager = require('../objects/sector/ShipManager'),
     StationManager = require('../objects/sector/StationManager'),
     SoundManager = require('../objects/sector/SoundManager'),
+    HotkeyManager = require('../objects/sector/HotkeyManager'),
     Asteroid = require('../objects/sector/misc/Asteroid');
     
 function SectorState(game) {
   this.shipNetManager = new ShipNetManager(game);
   this.stationNetManager = new StationNetManager(game);
   this.soundManager = new SoundManager(game);
+  this.hotkeyManager = new HotkeyManager(game);
 };
 
 SectorState.prototype = Object.create(engine.State.prototype);
@@ -33,6 +35,9 @@ SectorState.prototype.init = function(args) {
 
   // instanciate ui
   this.ui = new UI(this.game);
+
+  //initialize hotkey manager
+  this.hotkeyManager.init();
 
   // this.scrollLock = false;
   this.game.stage.disableVisibilityChange = true;
@@ -140,7 +145,8 @@ SectorState.prototype.createSpace = function() {
 };
 
 SectorState.prototype.createHotkeys = function() {
-  //keypress event listeners
+  //create HotkeyManager
+  this.hotkeyManager.create(this);
 };
 
 SectorState.prototype.createManagers = function() {
