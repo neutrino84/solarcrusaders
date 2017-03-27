@@ -102,7 +102,7 @@
         "spawn": 1,
         "durability": 1000.0,
         "sound": "smallBeam",
-        "default_volume": 0.55
+        "default_volume": 0.35
       },
       "gauss": {
         "name": "Gauss Laser Cannon",

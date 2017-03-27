@@ -1777,8 +1777,8 @@
             "y": 16
           },
           "position": {
-            "x": 15,
-            "y": 103
+            "x": 67,
+            "y": 139
           },
           "default": {
             "type": "pulse",
@@ -1791,8 +1791,8 @@
             "y": 16
           },
           "position": {
-            "x": 50,
-            "y": 103
+            "x": 120,
+            "y": 140
           },
           "default": {
             "type": "pulse",
@@ -1805,8 +1805,8 @@
             "y": 16
           },
           "position": {
-            "x": 116,
-            "y": 80
+            "x": 156,
+            "y": 107
           },
           "default": {
             "type": "pulse",
@@ -1819,8 +1819,8 @@
             "y": 16
           },
           "position": {
-            "x": 116,
-            "y": 127
+            "x": 156,
+            "y": 172
           },
           "default": {
             "type": "pulse",
@@ -2332,13 +2332,13 @@
           },
           "default": {
             "type": "energy",
-            "subtype": "basic"
+            "subtype": "small"
           }
         }
         ]
     }
   },
-  "enforcers-x99": {
+  "enforcers-x02": {
     "race": "ubaidian",
     "class": "battleship",
     "stats": {
@@ -2346,7 +2346,7 @@
       "health": 250,
       "heal": 0.25,
       "armor": 0.0,
-      "speed": 40.0,
+      "speed": 15.0,
       "rate": 256,
       "evasion": 0.3,
       "energy": 200,
@@ -2367,8 +2367,8 @@
             "endY": 0.6
           },
           "position": {
-            "x": 230,
-            "y": 128
+            "x": 278,
+            "y": 149
           },
           "rotation": 0
         }
