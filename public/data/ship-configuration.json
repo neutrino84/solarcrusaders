@@ -715,11 +715,11 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "grenlin"
+            "subtype": "tarkin"
           }
         },
         {
-          "type": ["energy", "pulse"],
+          "type": ["pulse"],
           "pivot": {
             "x": 20,
             "y": 16
@@ -730,11 +730,11 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "quantum"
+            "subtype": "grenlin"
           }
         },
         {
-          "type": ["projectile"],
+          "type": ["pulse"],
           "pivot": {
             "x": 20,
             "y": 16
@@ -744,8 +744,8 @@
             "y": 128
           },
           "default": {
-            "type": "rocket",
-            "subtype": "basic"
+            "type": "pulse",
+            "subtype": "grenlin"
           }
         }
               ]
