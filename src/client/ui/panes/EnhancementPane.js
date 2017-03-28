@@ -119,8 +119,9 @@ EnhancementPane.prototype._select = function(button) {
 EnhancementPane.prototype._started = function(data) {
   var config = this.config[data.enhancement],
       button = this.buttons[data.enhancement];
+      
   if(!button){return}
-  if(this.player || data.uuid === this.player.uuid) {
+  if(this.player && data.uuid === this.player.uuid) {
     
     // disable
     button.disabled(true);
@@ -161,7 +162,7 @@ EnhancementPane.prototype._player = function(player) {
       enhancements = player.data.enhancements,
       buttons = this.buttons;
 
-  if(this.player) { return; }
+  if(this.player) { return;}
 
   // set player object
   this.player = player;

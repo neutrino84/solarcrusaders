@@ -149,25 +149,6 @@ SoundManager.prototype.generateEnhancementSound = function(data){
   };
 };
 
-// SoundManager.prototype.generateExplosionSound = function(data){
-//   var explosionArray = ['explosion2','explosion3','explosion4','explosion5','explosion6'],
-//       player = this.player,
-//       ship = data,
-//       volume = 0.3,
-//       shipIsPlayer = true,
-//       randomNum = Math.floor(Math.random() * explosionArray.length),
-//       sound, distance;
-//   if(player && player !== ship) {   
-//     distance = engine.Point.distance(ship, player);    
-//     volume = global.Math.max(1 - (distance / 3000), 0);
-//     shipIsPlayer = false;
-//   };
-//   if(data.details.size > 127) {sound = 'capitalShipExplosion'} 
-//     else {sound = explosionArray[randomNum]};
-//     if(shipIsPlayer){console.log('PLAYER')}
-//     this.generateSound(sound, volume, false);
-// };
-
 SoundManager.prototype.generateExplosionSound = function(data){
   var explosionsArray = ['explosion2','explosion3','explosion4','explosion5','explosion6'],
       bigExplosionsArray = ['capitalShipExplosion','capitalShipExplosion2','capitalShipExplosion3'],
@@ -192,7 +173,9 @@ SoundManager.prototype.generateExplosionSound = function(data){
     } else {sound = smallExplosion};
   }; 
   if(volume > 0){
-    console.log(sound, volume)
+    if(sound === bigExplosion){
+      console.log(sound, volume)
+    }
     this.generateSound(sound, volume, false);
   };
 };
@@ -219,47 +202,44 @@ SoundManager.prototype.generateFireSound = function(data) {
       var sound = this.generateSound(key, volume, loop);
     }, this, [key, volume, loop])
   };
-  // if(key === 'beam7'){
-  //   console.log(volume)
-  // };
 };
 
 SoundManager.prototype.stopFireSound = function(launcher){
 };
 
-SoundManager.prototype.generateAttackSound = function(data){
-  var manager = this.game.sound,
-      player = this.player,
-      camera = this.game.camera,
-      cache = this.game.cache,
-      ship = data.ship,
-      hardpoints = ship.details.hardpoints,
-      hardpoint = hardpoints[data.slot],
-      distance, loop,volume, sound;
+// SoundManager.prototype.generateAttackSound = function(data){
+//   var manager = this.game.sound,
+//       player = this.player,
+//       camera = this.game.camera,
+//       cache = this.game.cache,
+//       ship = data.ship,
+//       hardpoints = ship.details.hardpoints,
+//       hardpoint = hardpoints[data.slot],
+//       distance, loop,volume, sound;
 
-      hardpoint.sound === 'capitalBeam' ? loop = false : loop = false;
+//       hardpoint.sound === 'capitalBeam' ? loop = false : loop = false;
 
-  if(player && player !== ship) {   
-    distance = engine.Point.distance(ship, player);    
-    volume = global.Math.max(1 - (distance / 3000), 0);
-  } else {
-    volume = 0.3;
-    if(hardpoint.sound === 'grenlin_pulse'){
-      volume = 0.2;
-    }
-    if(hardpoint.sound === 'bazuko_pulse'){
-      volume = 0.2;
-    }
-  };
-  this.game.clock.events.create(data.sound.runtime*global.Math.random(), false, hardpoint.spawn, function(key,volume,loop){
-    var sound = this.generateSound(key, volume, loop);
-    if(sound && hardpoint.sound === 'capitalBeam'){
-      this.sounds[data.ship.uuid] = sound
-    }
-  }, this, [hardpoint.sound, volume, loop])
+//   if(player && player !== ship) {   
+//     distance = engine.Point.distance(ship, player);    
+//     volume = global.Math.max(1 - (distance / 3000), 0);
+//   } else {
+//     volume = 0.3;
+//     if(hardpoint.sound === 'grenlin_pulse'){
+//       volume = 0.2;
+//     }
+//     if(hardpoint.sound === 'bazuko_pulse'){
+//       volume = 0.2;
+//     }
+//   };
+//   this.game.clock.events.create(data.sound.runtime*global.Math.random(), false, hardpoint.spawn, function(key,volume,loop){
+//     var sound = this.generateSound(key, volume, loop);
+//     if(sound && hardpoint.sound === 'capitalBeam'){
+//       this.sounds[data.ship.uuid] = sound
+//     }
+//   }, this, [hardpoint.sound, volume, loop])
 
 
-};
+// };
 
 SoundManager.prototype.generateSpawnSound = function(data){
   console.log('Playing ', data, 'spawn sound')

@@ -37,13 +37,14 @@ HotkeyManager.prototype.create = function(manager) {
 };
 
 HotkeyManager.prototype.listener = function() {
-	console.log('got to listener function')
   var player = this.player,
   	  hotkeys = this.hotkeys;
   if(player){
   	this.game.input.on('keypress', function(event, key){
 	   if(hotkeys['enhancements'][key]){
-
+	   	
+	   	// console.log('isBoosting: ', this.player.engineCore.isBoosting, 'shields events count: ', player.shieldGenerator.shieldSprite._eventsCount, 'repair events count: ', this.player.repair.sprite._eventsCount);
+		// console.log(this.player)
 	    this.game.emit('ship/enhancement/started', {
 	      uuid: player.uuid,
 	      enhancement: hotkeys['enhancements'][key],
@@ -57,6 +58,8 @@ HotkeyManager.prototype.listener = function() {
 	    });
 	   } 
     }, this);
+    	   	// console.log('isBoosting: ', this.player.engineCore.isBoosting, 'shields events count: ', player.shieldGenerator.shieldSprite._eventsCount, 'repair events count: ', this.player.repair.sprite._eventsCount);
+
   };
 };
 
