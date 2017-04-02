@@ -55,6 +55,7 @@ SoundManager.prototype.preload = function(game) {
   console.log('loading sounds')
 
   load.audio('background', 'sounds/mood.mp3');
+  load.audio('background2', 'sounds/background_music/eerie1.mp3');
 
  
   load.audio('capitalLaser','sounds/lasers/capitalShipLaser.mp3');
@@ -117,7 +118,8 @@ SoundManager.prototype.create = function(manager) {
 };
 
 SoundManager.prototype.generateBackgroundMusic = function(){
-  this.generateSound('background', 0.1, true);
+  // this.generateSound('background', 0.1, true);
+  this.generateSound('background2', 0.30, true);
 };
 
 SoundManager.prototype.generateThrusterSound = function(){
@@ -166,16 +168,16 @@ SoundManager.prototype.generateExplosionSound = function(data){
     distance = engine.Point.distance(ship, player);    
     volume = global.Math.max(1 - (distance / 5000), 0);
     if(data.data.size > 127) {
-    sound = bigExplosion; 
-      if(sound === 'capitalShipExplosion'){
-        volume = global.Math.max(0.9 - (distance / 5000), 0);
+    sound = bigExplosion
+      if(sound === 'capitalShipExplosion2'){
+        volume = global.Math.max(2.5 - (distance / 5000), 0);
       };
     } else {sound = smallExplosion};
   }; 
   if(volume > 0){
-    if(sound === bigExplosion){
-      console.log(sound, volume)
-    }
+    // if(sound === bigExplosion){
+    // console.log(sound, volume)
+    // }
     this.generateSound(sound, volume, false);
   };
 };
@@ -243,7 +245,7 @@ SoundManager.prototype.stopFireSound = function(launcher){
 
 SoundManager.prototype.generateSpawnSound = function(data){
   console.log('Playing ', data, 'spawn sound')
-}
+};
 
 SoundManager.prototype.generateSound = function(key, volume, loop = false){
   return this.game.sound.play(key, volume, loop);

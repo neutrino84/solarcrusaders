@@ -276,18 +276,18 @@ ShipManager.prototype.generatePirateShips = function() {
       }, {
         location: { x: 2048, y: -6144 },
         ships: [
-          { name: 'manduk', chassis: 'general-x01', credits: 1500, reputation: -100 },
-          { name: 'deuh', chassis: 'general-x01', credits: 1500, reputation: -100 },
-          { name: 'talai', chassis: 'general-x02', credits: 1500, reputation: -100 },
-          { name: 'kaan', chassis: 'general-x03', credits: 1500, reputation: -100 },
+          { name: 'manduk', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
+          { name: 'deuh', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
+          { name: 'talai', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
+          { name: 'kaan', chassis: 'pirate-x03b', credits: 1500, reputation: -100 }
         ]
       }, {
         location: { x: 2048, y: 8192 },
         ships: [
-          { name: 'theni', chassis: 'general-x01', credits: 1500, reputation: -100 },
+          { name: 'theni', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
           { name: 'zulu', chassis: 'general-x01', credits: 1500, reputation: -100 },
           { name: 'saroc', chassis: 'general-x02', credits: 1500, reputation: -100 },
-          { name: 'malvo', chassis: 'general-x02', credits: 1500, reputation: -100 },
+          { name: 'malvo', chassis: 'enforcers-x02', credits: 1500, reputation: -100 }
         ]
       }],
       len = iterator.length;

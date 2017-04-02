@@ -130,7 +130,7 @@ EnhancementPane.prototype._started = function(data) {
     button.invalidate(false, true);
 
     // timer
-    button.timer && this.game.clock.events.remove(button.timer);
+    button.timer && this.game.clock.events.remove(this.timer);
     button.timer = this.game.clock.events.repeat(1000, button.count,
       function() {
         button.label.text = (--button.count).toString();

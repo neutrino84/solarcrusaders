@@ -20,6 +20,11 @@ function HotkeyManager(game) {
   	'squadron' : {}
   };
 
+  this.isBoosting = false;
+  this.isShielded = false;
+  this.isHealing = false;
+  this.isPiercing = false;
+
   this.game.on('ship/player', this._player, this);
 };
 
@@ -38,35 +43,69 @@ HotkeyManager.prototype.create = function(manager) {
 
 HotkeyManager.prototype.listener = function() {
   var player = this.player,
-  	  hotkeys = this.hotkeys;
+  	  hotkeys = this.hotkeys,
+      key;
   if(player){
   	this.game.input.on('keypress', function(event, key){
+  	//enhancements
 	   if(hotkeys['enhancements'][key]){
-	   	
-	   	// console.log('isBoosting: ', this.player.engineCore.isBoosting, 'shields events count: ', player.shieldGenerator.shieldSprite._eventsCount, 'repair events count: ', this.player.repair.sprite._eventsCount);
-		// console.log(this.player)
-	    this.game.emit('ship/enhancement/started', {
-	      uuid: player.uuid,
-	      enhancement: hotkeys['enhancements'][key],
-	      subtype: 'basic'
-	    });
+
+  		if(hotkeys['enhancements'][key] === 'booster' && this.isBoosting){return};
+  		if(hotkeys['enhancements'][key] === 'heal' && this.isHealing){return};
+  		if(hotkeys['enhancements'][key] === 'shield' && this.isShielded){return};
+      if(hotkeys['enhancements'][key] === 'piercing' && this.isPiercing){return};
 
 	    this.game.emit('ship/enhancement/start', {
 	      uuid: player.uuid,
 	      enhancement: hotkeys['enhancements'][key],
 	      subtype: 'basic'
 	    });
+
+      switch(hotkeys['enhancements'][key]) {
+        case 'heal':
+          this.isHealing = true;
+          break;
+        case 'booster':
+          this.isBoosting = true;
+          break;
+        case 'shield':
+          this.isShielded = true;
+          break;
+        case 'piercing':
+          this.isPiercing = true;
+          break;
+      }
+
 	   } 
     }, this);
-    	   	// console.log('isBoosting: ', this.player.engineCore.isBoosting, 'shields events count: ', player.shieldGenerator.shieldSprite._eventsCount, 'repair events count: ', this.player.repair.sprite._eventsCount);
 
+    this.game.on('ship/enhancement/cancelled', this._cooled, this);
   };
+};
+
+HotkeyManager.prototype._cooled = function(data){
+  if(data.uuid === this.player.uuid){
+    switch(data.enhancement) {
+      case 'heal':
+        this.isHealing = false;
+        break;
+      case 'booster':
+        this.isBoosting = false;
+        break;
+      case 'shield':
+        this.isShielded = false;
+        break;
+      case 'piercing':
+        this.isPiercing = false;
+        break;
+    }
+  }
 };
 
 HotkeyManager.prototype._player = function(ship){
   this.player = ship,
   this.enhancements = ship.config.enhancements;
-
+  console.log(this.enhancements)
   for(var e in this.enhancements){
   	var key = parseInt(e)+1;
   	// console.log(key)

@@ -144,11 +144,6 @@ SectorState.prototype.createSpace = function() {
   this.game.world.foreground.add(this.nebula);
 };
 
-SectorState.prototype.createHotkeys = function() {
-  //create HotkeyManager
-  this.hotkeyManager.create(this);
-};
-
 SectorState.prototype.createManagers = function() {
   var game = this.game;
 

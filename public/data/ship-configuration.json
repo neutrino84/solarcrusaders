@@ -7,7 +7,7 @@
       "capacity": 1000,
       "health": 100,
       "heal": 0.5,
-      "armor": 0.0,
+      "armor": 0.25,
       "speed": 66.0,
       "rate": 256,
       "evasion": 0.1,
@@ -151,7 +151,7 @@
       "capacity": 3000,
       "health": 200,
       "heal": 0.25,
-      "armor": 0.0,
+      "armor": 0.45,
       "speed": 45.0,
       "rate": 256,
       "evasion": 0.06,
@@ -281,7 +281,7 @@
       "capacity": 1000,
       "health": 100,
       "heal": 0.5,
-      "armor": 0.0,
+      "armor": 0.15,
       "speed": 60.0,
       "rate": 256,
       "evasion": 0.14,
@@ -383,7 +383,7 @@
       "capacity": 1000,
       "health": 150,
       "heal": 0.5,
-      "armor": 0.1,
+      "armor": 0.4,
       "speed": 62.0,
       "rate": 256,
       "evasion": 0.1,
@@ -513,7 +513,7 @@
       "capacity": 1000,
       "health": 100,
       "heal": 0.5,
-      "armor": 0.0,
+      "armor": 0.35,
       "speed": 60.0,
       "rate": 256,
       "evasion": 0.1,
@@ -615,10 +615,10 @@
       "capacity": 1000,
       "health": 100,
       "heal": 0.5,
-      "armor": 0.0,
+      "armor": 0.1,
       "speed": 60.0,
       "rate": 256,
-      "evasion": 0.1,
+      "evasion": 0.2,
       "energy": 200,
       "recharge": 1,
       "size": 136,
@@ -679,8 +679,8 @@
             "endY": 0.4
           },
           "position": {
-            "x": 160,
-            "y": 190
+            "x": 147,
+            "y": 185
           },
           "rotation": 0
         }
@@ -695,8 +695,8 @@
             "y": 16
           },
           "position": {
-            "x": 65,
-            "y": 126
+            "x": 67,
+            "y": 127
           },
           "default": {
             "type": "pulse",
@@ -710,8 +710,8 @@
             "y": 16
           },
           "position": {
-            "x": 118,
-            "y": 79
+            "x": 67,
+            "y": 127
           },
           "default": {
             "type": "pulse",
@@ -726,7 +726,7 @@
           },
           "position": {
             "x": 118,
-            "y": 76
+            "y": 80
           },
           "default": {
             "type": "pulse",
@@ -740,8 +740,8 @@
             "y": 16
           },
           "position": {
-            "x": 90,
-            "y": 128
+            "x": 118,
+            "y": 175
           },
           "default": {
             "type": "pulse",
