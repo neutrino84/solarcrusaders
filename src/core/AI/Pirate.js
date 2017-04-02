@@ -17,7 +17,7 @@ function Pirate(ship, home) {
       y: ship.movement.position.y
     },
     escape: {
-      health: 0.4,
+      health: 0.2,
     },
     sensor: {
       range: 4096

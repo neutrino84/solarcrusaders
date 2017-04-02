@@ -262,14 +262,14 @@ ShipManager.prototype.generatePirateShips = function() {
         location: { x: -2048, y: 2048 },
         ships: [
           { name: 'xinli', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
-          // { name: 'mocolo', chassis: 'general-x01', credits: 1500, reputation: -100 },
-          // { name: 'mavero', chassis: 'general-x02', credits: 1500, reputation: -100 },
+          { name: 'mocolo', chassis: 'general-x01', credits: 1500, reputation: -100 },
+          { name: 'mavero', chassis: 'general-x02', credits: 1500, reputation: -100 },
           { name: 'saag', chassis: 'pirate-x02', credits: 1500, reputation: -100 }
         ]
       }, {
         location: { x: 6144, y: 2048 },
         ships: [
-          // { name: 'satel', chassis: 'general-x01', credits: 1500, reputation: -100 },
+          { name: 'satel', chassis: 'general-x01', credits: 1500, reputation: -100 },
           { name: 'oeem', chassis: 'general-x01', credits: 1500, reputation: -100 },
           { name: 'thath', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
           { name: 'zeus', chassis: 'pirate-x03b', credits: 1500, reputation: -100 }
@@ -278,17 +278,17 @@ ShipManager.prototype.generatePirateShips = function() {
         location: { x: 2048, y: -2048 },
         ships: [
           { name: 'manduk', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
-          // { name: 'deuh', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
+          { name: 'deuh', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
           { name: 'talai', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
           { name: 'kaan', chassis: 'pirate-x03b', credits: 1500, reputation: -100 }
         ]
       }, {
         location: { x: 2048, y: 6144 },
         ships: [
-          { name: 'theni', chassis: 'pirate-x02', credits: 1500, reputation: -100 }
-          // { name: 'zulu', chassis: 'general-x01', credits: 1500, reputation: -100 },
-          // { name: 'saroc', chassis: 'general-x02', credits: 1500, reputation: -100 },
-          // { name: 'malvo', chassis: 'pirate-x03b', credits: 1500, reputation: -100 }
+          { name: 'theni', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
+          { name: 'zulu', chassis: 'general-x01', credits: 1500, reputation: -100 },
+          { name: 'saroc', chassis: 'general-x02', credits: 1500, reputation: -100 },
+          { name: 'malvo', chassis: 'enforcers-x02', credits: 1500, reputation: -100 }
         ]
       }],
       len = iterator.length;
