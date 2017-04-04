@@ -82,7 +82,7 @@ Basic.prototype.update = function() {
   } else if(this.game.rnd.frac() > 0.84) {
     p2 = this.getHomePosition();
     ship.movement.plot({ x: p2.x-p1.x, y: p2.y-p1.y });
-  }
+  };
 };
 
 Basic.prototype.friendly = function(target) {

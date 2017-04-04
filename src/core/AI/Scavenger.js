@@ -4,9 +4,9 @@ var engine = require('engine'),
 function Scavenger(ship, home) {
   Basic.call(this, ship);
 
-  console.log(ship.ship)
   this.type = 'scavenger';
   this.harvestTime = 16000;
+  this.target = ship.target;
 
     this.settings = {
     aim: 1.25,
@@ -31,16 +31,16 @@ Scavenger.prototype = Object.create(Basic.prototype);
 Scavenger.prototype.constructor = Scavenger;
 
 Scavenger.prototype.harvest = function(target) {
-  var aim = this.aim,
-      // target = this.target,
-      position;
-  if(target && target.movement) {
-    aim.setTo(position.x, position.y, 256); // 256 is the radius of flying around
-    aim.random(false, aim);
-  }
+  console.log('got to harvest')
+  // var aim = this.aim,
+  //     position;
+  // if(target && target.movement) {
+  //   aim.setTo(position.x, position.y, 256); // 256 is the radius of flying around
+  //   aim.random(false, aim);
+  // }
 
  
-  this.enabled = this.enabled ? false : true;
+  // this.enabled = this.enabled ? false : true;
 };
 
 // Scavenger.prototype.engage = function(target) {
@@ -90,25 +90,25 @@ module.exports = Scavenger;
 // };
 
 
-// Scavenger.prototype.update = function() {
+Scavenger.prototype.update = function() {
 
-//   var ship = this.ship,
-//       target = this.target,
-//       offset = this.offset,
-//       patrol = this.patrol,
-//       distance;
+  var ship = this.ship,
+      target = this.target,
+      offset = this.offset,
+      patrol = this.patrol,
+      distance;
 
 
-//   if(target && target.movement) {
-//     // console.log('in update function, target is: ',target)
-//     patrol.setTo(target.movement.position.x, target.movement.position.y, 96);
-//     patrol.random(false, offset);
+  if(target && target.movement) {
+    // console.log('in update function, target is: ',target)
+    patrol.setTo(target.movement.position.x, target.movement.position.y, 96);
+    patrol.random(false, offset);
 
-//     distance = global.Math.max(engine.Point.distance(target.movement.position, ship.movement.position)/2, 68);
+    distance = global.Math.max(engine.Point.distance(target.movement.position, ship.movement.position)/2, 68);
 
-//     ship.movement.plot({ x: offset.x-ship.movement.position.x, y: offset.y-ship.movement.position.y }, distance);
-//   }
-// };
+    ship.movement.plot({ x: offset.x-ship.movement.position.x, y: offset.y-ship.movement.position.y }, distance);
+  }
+};
 
 // S
 // };
