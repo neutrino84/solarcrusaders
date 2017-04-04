@@ -16,7 +16,10 @@ function Ship(manager, data) {
   
   this.data = new this.model.Ship(data);
   this.data.init();
-  this.target = data.target;
+  this.target = manager.ships[data.target] || null;
+  if(this.target){
+    this.target.disabled = true;
+  }
 
   this.uuid = this.data.uuid;
   this.chassis = this.data.chassis;
@@ -277,7 +280,7 @@ Ship.prototype.disable = function() {
   this.ai && this.ai.disengage();
   
   // respawn time
-  this.respawn = this.game.clock.events.add(this.ai ? this.ai.settings.respawn : 10000, this.enable, this);
+  this.respawn = this.game.clock.events.add(this.ai ? this.ai.settings.respawn : 50000, this.enable, this);
   
   // broadcast
   this.sockets.emit('ship/disabled', {
