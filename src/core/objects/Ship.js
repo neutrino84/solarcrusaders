@@ -52,6 +52,7 @@ Ship.prototype.constructor = Ship;
 
 Ship.prototype.init = function(callback) {
   var self = this;
+  console.log('in init')
   if(this.data.isNewRecord()) {
     this.createSystems();
     this.createHardpoints();
