@@ -75,14 +75,12 @@ Basic.prototype.update = function() {
   
   // plot destination
   if(this.target) {
-    size = this.target.data.size;
-    this.offset.copyFrom(this.target.movement.position);
-    this.offset.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
-    ship.movement.plot({ x: this.offset.x-p1.x, y: this.offset.y-p1.y });
+    p2 = this.target.movement.position;
+    ship.movement.plot({ x: p2.x-p1.x, y: p2.y-p1.y });
   } else {
     p2 = this.getHomePosition();
     ship.movement.plot({ x: p2.x-p1.x, y: p2.y-p1.y });
-  }
+  };
 };
 
 Basic.prototype.friendly = function(target) {

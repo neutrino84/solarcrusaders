@@ -48,7 +48,7 @@ ShipManager.prototype.add = function(ship) {
   if(this.ships[ship.uuid] === undefined) {
     this.ships[ship.uuid] = ship;
   }
-  // console.log(ship)
+  
   // console.log(this.ships)
 };
 
@@ -85,6 +85,7 @@ ShipManager.prototype.create = function(data, user, position) {
   ship.init(function(err) {
     self.game.emit('ship/add', ship);
   });
+  return ship;
 };
 
 ShipManager.prototype.plot = function(socket, args) {

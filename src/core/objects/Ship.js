@@ -13,8 +13,10 @@ function Ship(manager, data) {
   this.game = manager.game;
   this.sockets = manager.sockets;
   this.model = manager.model;
+  
   this.data = new this.model.Ship(data);
   this.data.init();
+  this.target = data.target;
 
   this.uuid = this.data.uuid;
   this.chassis = this.data.chassis;
@@ -66,6 +68,10 @@ Ship.prototype.init = function(callback) {
       self.createHardpoints();
       callback(err);
     });
+  }
+  if(this.chassis === 'scavengers-x01d' || this.chassis === 'scavengers-x02c'){
+    console.log(this.target)  
+    this.ai.harvest(this.target)
   }
 };
 
