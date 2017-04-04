@@ -267,11 +267,12 @@ ShipManager.prototype._secondary = function(data) {
 
 ShipManager.prototype._disabled = function(data) {
   var ship = this.ships[data.uuid],
+      socket = this.socket,
       clock = this.clock;
   if(ship !== undefined) {
     ship.disable();
     this.game.emit('ship/sound/death', ship);
-    this.game.emit('ship/death', ship);
+    // socket.emit('ship/death', ship);
     // cancel autofire
     if(ship.isPlayer) {
       this.autofire && clock.events.remove(this.autofire);

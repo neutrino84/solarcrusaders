@@ -946,7 +946,7 @@
     "class": "frigate",
     "stats": {
       "capacity": 500,
-      "health": 50,
+      "health": 1,
       "heal": 0.2,
       "armor": 0.0,
       "speed": 48.0,

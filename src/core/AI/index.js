@@ -1,6 +1,7 @@
 
 var Basic = require('./Basic'),
-    Pirate = require('./Pirate');
+    Pirate = require('./Pirate'),
+    Scavenger = require('./Scavenger');
 
 function AI(manager) {
   this.manager = manager;
@@ -19,6 +20,9 @@ AI.prototype.create = function(type, ship) {
       break
     case 'pirate':
       ai = new Pirate(ship);
+      break;
+    case 'scavenger':
+      ai = new Scavenger(ship);
       break;
     default:
       ai = null;
