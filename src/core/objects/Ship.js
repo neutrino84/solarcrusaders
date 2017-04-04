@@ -52,7 +52,6 @@ Ship.prototype.constructor = Ship;
 
 Ship.prototype.init = function(callback) {
   var self = this;
-  console.log('in init')
   if(this.data.isNewRecord()) {
     this.createSystems();
     this.createHardpoints();
@@ -278,6 +277,7 @@ Ship.prototype.disable = function() {
   this.sockets.emit('ship/disabled', {
     uuid: this.uuid
   });
+  this.game.emit('ship/disabled', this.uuid)
 };
 
 Ship.prototype.enable = function() {

@@ -4,29 +4,76 @@ var engine = require('engine'),
 function Scavenger(ship, home) {
   Basic.call(this, ship);
 
+  console.log(ship.ship)
   this.type = 'scavenger';
   this.harvestTime = 16000;
 
-  this.settings = {
-  aim: 1.25,
-  respawn: 60000,
-  disengage: 9216,
-  friendly: ['scavenger'],
-  position: {
-    radius: 112,
-    x: ship.movement.position.x,
-    y: ship.movement.position.y
-  },
-  escape: {
-    health: 0.2,
-  },
-  sensor: {
-    range: 4096
+    this.settings = {
+    aim: 1.25,
+    respawn: 60000,
+    disengage: 9216,
+    friendly: ['scavenger','pirate','basic'],
+    position: {
+      radius: 112,
+      x: ship.movement.position.x,
+      y: ship.movement.position.y
+    },
+    escape: {
+      health: 0.2,
+    },
+    sensor: {
+      range: 4096
+    }
   }
 };
 
 Scavenger.prototype = Object.create(Basic.prototype);
 Scavenger.prototype.constructor = Scavenger;
+
+Scavenger.prototype.harvest = function(target) {
+  var aim = this.aim,
+      // target = this.target,
+      position;
+  if(target && target.movement) {
+    aim.setTo(position.x, position.y, 256); // 256 is the radius of flying around
+    aim.random(false, aim);
+  }
+
+ 
+  this.enabled = this.enabled ? false : true;
+};
+
+// Scavenger.prototype.engage = function(target) {
+//   var settings = this.settings,
+//       ship = this.ship;
+
+  // finish attack
+  // if(this.target == null && !this.friendly(target)) {
+  //   this.target = target;
+
+  //   this.attacker && this.game.clock.events.remove(this.attacker);
+  //   this.attacker = this.game.clock.events.loop(ship.data.rate, this.attack, this);
+
+  //   this.disengager && this.game.clock.events.remove(this.disengager);
+  //   this.disengager = this.game.clock.events.add(settings.disengage, this.disengage, this);
+
+  //   if(this.game.rnd.frac() > 0.75) {
+  //     ship.activate('peircing');
+  //   }
+  // }
+
+  // engage countermeasures
+//   if(ship.data.health < 0.5) {
+//     ship.activate('shield');
+//   }
+//   if(ship.data.health < 0.25) {
+//     ship.activate('heal');
+//   }
+//   if(this.game.rnd.frac() > 0.8) {
+//     ship.activate('booster');
+//   }
+// };
+
 
 Scavenger.prototype.getHomePosition = function() {
   var position = this.settings.position,
@@ -66,18 +113,6 @@ module.exports = Scavenger;
 // S
 // };
 
-// Scavenger.prototype.harvest = function() {
-  // var aim = this.aim,
-  //     target = this.target,
-  //     position;
-  // if(target && target.movement) {
-  //   aim.setTo(position.x, position.y, 256); // 256 is the radius of flying around
-  //   aim.random(false, aim);
-  // }
-
- 
-  // this.enabled = this.enabled ? false : true;
-// };
 
 // Scavenger.prototype.getHomePosition = function() {
 //   return this.patrol.random();
