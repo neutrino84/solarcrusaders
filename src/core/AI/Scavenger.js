@@ -31,7 +31,7 @@ Scavenger.prototype = Object.create(Basic.prototype);
 Scavenger.prototype.constructor = Scavenger;
 
 Scavenger.prototype.harvest = function(target) {
-  console.log('got to harvest')
+  console.log('got to harvest. target is ', target)
   // var aim = this.aim,
   //     position;
   // if(target && target.movement) {
@@ -74,12 +74,35 @@ Scavenger.prototype.harvest = function(target) {
 //   }
 // };
 
-
 Scavenger.prototype.getHomePosition = function() {
   var position = this.settings.position,
       sensor = this.sensor;
       sensor.setTo(position.x, position.y, position.radius);
   return this.sensor.random();
+};
+
+Scavenger.prototype.update = function() {
+  var ship = this.ship,
+      ships = this.manager.ships,
+      sensor = this.sensor,
+      settings = this.settings,
+      target = this.target,
+      magnitude, distance;
+
+  p1 = this.ship.movement.position;
+
+  // plot destination
+  if(target && target.disabled) {
+    p2 = this.sensor.setTo(target.movement.position.x, target.movement.position.y, target.data.size*2);
+    p2 = p2.circumferencePoint(global.Math.random() * global.Math.PI);
+    distance = p1.distance(p2);
+    magnitude = distance/4;
+  } else {
+    p2 = this.sensor.setTo(this.settings.position.x, this.settings.position.y, this.settings.position.radius).random(false);
+  }
+
+  // head to destination
+  ship.movement.plot({ x: p2.x-p1.x, y: p2.y-p1.y }, magnitude);
 };
 
 module.exports = Scavenger;
@@ -90,25 +113,6 @@ module.exports = Scavenger;
 // };
 
 
-Scavenger.prototype.update = function() {
-
-  var ship = this.ship,
-      target = this.target,
-      offset = this.offset,
-      patrol = this.patrol,
-      distance;
-
-
-  if(target && target.movement) {
-    // console.log('in update function, target is: ',target)
-    patrol.setTo(target.movement.position.x, target.movement.position.y, 96);
-    patrol.random(false, offset);
-
-    distance = global.Math.max(engine.Point.distance(target.movement.position, ship.movement.position)/2, 68);
-
-    ship.movement.plot({ x: offset.x-ship.movement.position.x, y: offset.y-ship.movement.position.y }, distance);
-  }
-};
 
 // S
 // };
