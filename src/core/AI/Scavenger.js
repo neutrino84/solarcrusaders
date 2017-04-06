@@ -12,7 +12,7 @@ function Scavenger(ship, home) {
     aim: 1.25,
     respawn: 60000,
     disengage: 9216,
-    friendly: ['scavenger','pirate','basic'],
+    friendly: ['scavenger','pirate','basic','user'],
     position: {
       radius: 112,
       x: ship.movement.position.x,
@@ -30,18 +30,6 @@ function Scavenger(ship, home) {
 Scavenger.prototype = Object.create(Basic.prototype);
 Scavenger.prototype.constructor = Scavenger;
 
-Scavenger.prototype.harvest = function(target) {
-  console.log('got to harvest. target is ', target)
-  // var aim = this.aim,
-  //     position;
-  // if(target && target.movement) {
-  //   aim.setTo(position.x, position.y, 256); // 256 is the radius of flying around
-  //   aim.random(false, aim);
-  // }
-
- 
-  // this.enabled = this.enabled ? false : true;
-};
 
 // Scavenger.prototype.engage = function(target) {
 //   var settings = this.settings,
@@ -87,6 +75,7 @@ Scavenger.prototype.update = function() {
       sensor = this.sensor,
       settings = this.settings,
       target = this.target,
+      point = {},
       magnitude, distance;
 
   p1 = this.ship.movement.position;
@@ -97,12 +86,84 @@ Scavenger.prototype.update = function() {
     p2 = p2.circumferencePoint(global.Math.random() * global.Math.PI);
     distance = p1.distance(p2);
     magnitude = distance/4;
-  } else {
-    p2 = this.sensor.setTo(this.settings.position.x, this.settings.position.y, this.settings.position.radius).random(false);
-  }
+  } 
+  // else {
+  //   p2 = this.sensor.setTo(this.settings.position.x, this.settings.position.y, this.settings.position.radius).random(false);
+  // }
 
   // head to destination
   ship.movement.plot({ x: p2.x-p1.x, y: p2.y-p1.y }, magnitude);
+
+  // attack sequence
+  // console.log('pre', target.data)
+  if(this.target && this.target.data) {
+    target = this.target;
+
+    // aim
+    sensor.setTo(target.movement.position.x, target.movement.position.y, target.data.size * this.settings.aim);
+    sensor.random(false, point);
+
+    // attack
+    console.log('in attack sequence, point is', point)
+    ship.attack({
+      uuid: ship.uuid,
+      targ: point
+    });
+  };
+};
+
+Scavenger.prototype.harvest = function() {
+  var ship = this.ship,
+      ships = this.manager.ships,
+      sensor = this.sensor,
+      settings = this.settings,
+      target = this.target,
+      point = {},
+      magnitude, distance;
+
+  // attack sequence
+  if(this.target && this.target.data) {
+    target = this.target;
+
+    // aim
+    sensor.setTo(target.movement.position.x, target.movement.position.y, target.data.size * this.settings.aim);
+    sensor.random(false, point);
+
+    // attack
+    ship.attack({
+      uuid: ship.uuid,
+      targ: point
+    });
+  };
+  // var ship = this.ship,
+  //     ships = this.manager.ships,
+  //     sensor = this.sensor,
+  //     settings = this.settings,
+  //     target = this.target,
+  //     magnitude, distance;
+
+  // p1 = this.ship.movement.position;  
+
+  // if(target && target.disabled) {
+  //   p2 = this.sensor.setTo(target.movement.position.x, target.movement.position.y, target.data.size*2);
+  //   p2 = p2.circumferencePoint(global.Math.random() * global.Math.PI);
+  //   distance = p1.distance(p2);
+  //   magnitude = distance/4;
+  // } 
+
+  // head to destination
+  // ship.movement.plot({ x: p2.x-p1.x, y: p2.y-p1.y }, magnitude);
+
+
+  // var aim = this.aim,
+  //     position;
+  // if(target && target.movement) {
+  //   aim.setTo(position.x, position.y, 256); // 256 is the radius of flying around
+  //   aim.random(false, aim);
+  // }
+
+ 
+  // this.enabled = this.enabled ? false : true;
 };
 
 module.exports = Scavenger;

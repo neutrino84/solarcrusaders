@@ -15,7 +15,7 @@ function Basic(ship) {
 
   this.settings = {
     aim: 1.5,
-    respawn: 10000,
+    respawn: 50000,
     disengage: 7680,
     friendly: ['user', 'basic'],
     position: {

@@ -16,7 +16,7 @@ function Ship(manager, data) {
   
   this.data = new this.model.Ship(data);
   this.data.init();
-  this.target = manager.ships[data.target] || null;
+  this.target = manager.ships[data.target];
   if(this.target){
     this.target.disabled = true;
   }
@@ -73,10 +73,14 @@ Ship.prototype.init = function(callback) {
     });
   }
   if(this.chassis === 'scavengers-x01d' || this.chassis === 'scavengers-x02c'){
-    console.log(this.target)  
-    this.ai.harvest(this.target)
+    // console.log('hey!')  
+    // this.ai.harvest(this.target)
   }
 };
+
+Ship.prototype.harvest = function(){
+
+}
 
 Ship.prototype.save = function(callback) {
   var self = this,
@@ -151,6 +155,9 @@ Ship.prototype.attack = function(data, rtt) {
       target = data.targ,
       distance,
       rtt = rtt || 0;
+  if(this.chassis === 'scavengers-x02c' || this.chassis === 'scavengers-x01d'){
+    // console.log('in ship.js attack()')
+  }
 
   // get updated data
   compensated = movement.compensated(rtt);
@@ -167,7 +174,7 @@ Ship.prototype.attack = function(data, rtt) {
       // time collisions
       game.clock.events.add(runtime, this.attacked, this, target, slot);
 
-      // broadcast ataack
+      // broadcast atack
       sockets.emit('ship/attack', data);
 
       // cooldown
