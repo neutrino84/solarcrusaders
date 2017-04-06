@@ -104,12 +104,16 @@ Scavenger.prototype.update = function() {
     sensor.random(false, point);
 
     // attack
-    console.log('in attack sequence, point is', point)
     ship.attack({
       uuid: ship.uuid,
-      targ: point
+      targ: target.movement.position
     });
   };
+};
+
+Scavenger.prototype.disengage = function() {
+  // this.target = null;
+  // this.attacker && this.game.clock.events.remove(this.attacker);
 };
 
 Scavenger.prototype.harvest = function() {
