@@ -1886,7 +1886,7 @@
           },
           "default": {
             "type": "energy",
-            "subtype": "small"
+            "subtype": "harvester"
           }
         }
       ]
@@ -2082,7 +2082,7 @@
           },
           "default": {
             "type": "energy",
-            "subtype": "basic"
+            "subtype": "harvester"
           }
         }
       ]

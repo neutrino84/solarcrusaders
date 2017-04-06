@@ -104,6 +104,31 @@
         "sound": "smallBeam",
         "default_volume": 0.35
       },
+      "harvester": {
+        "name": "Harvester",
+        "type": "energy",
+        "subtype": "harvester",
+        "sprite": "turret-a",
+        "texture": "laser-green",
+        "glow": {
+          "tint": "0xFFAAAA",
+          "size": 4.0,
+          "sprite": "turret-glow.png"
+        },
+        "emitter": ["0xFFFFFF", "0xFF0000"],
+        "icon": "item-laser-a",
+        "range": 1536,
+        "projection": 0.1,
+        "delay": 16,
+        "spread": 32,
+        "damage": 2.0,
+        "length": 1024,
+        "aoe": 1.0,
+        "spawn": 1,
+        "durability": 1000.0,
+        "sound": "smallBeam",
+        "default_volume": 0.35
+      },
       "gauss": {
         "name": "Gauss Laser Cannon",
         "type": "energy",
