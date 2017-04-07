@@ -62,7 +62,7 @@ Movement.prototype.update = function() {
   distance = position.distance(destination);
 
   if(speed * 2.0 < distance) {
-    velocity *= 1.1;
+    velocity *= 2.0;
   }
   
   // calculate vector
@@ -72,7 +72,7 @@ Movement.prototype.update = function() {
   // update direction
   direction.interpolate({
     x: vector.x * velocity,
-    y: vector.y * velocity }, 0.15, direction);
+    y: vector.y * velocity }, 0.20, direction);
 
   // update ship position
   ship.position.set(position.x + direction.x, position.y + direction.y);
@@ -93,7 +93,8 @@ Movement.prototype.plot = function(data) {
   var ship = this.parent,
       clock = this.game.clock,
       time = clock.time,
-      fps = ship.isPlayer ? clock.fps : 60,
+      frames = clock.frames,
+      fps = ship.isPlayer && frames > 180 ? clock.fps : 60,
       a1, a2,
       distance;
 
