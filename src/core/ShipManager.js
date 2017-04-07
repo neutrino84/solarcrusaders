@@ -37,8 +37,8 @@ ShipManager.prototype.constructor = ShipManager;
 
 ShipManager.prototype.init = function() {
   // generate npcs
-  // this.generateRandomShips();
-  // this.generatePirateShips();
+  this.generateRandomShips();
+  this.generatePirateShips();
 };
 
 ShipManager.prototype.add = function(ship) {
