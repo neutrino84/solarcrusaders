@@ -28,7 +28,6 @@ Movement.CLOCK_RATE = 100;
 Movement.FRICTION = 1.1;
 Movement.STOP_THRESHOLD = 32.0;
 Movement.THROTTLE_THRESHOLD = 192.0;
-Movement.THROTTLE_MANEUVER = 1.25;
 
 Movement.prototype.constructor = Movement;
 
@@ -40,7 +39,8 @@ Movement.prototype.update = function() {
       vector = this.vector,
       direction = this.direction,
       evasion = parent.evasion,
-      maneuver, cross, dot;
+      maneuver, cross, dot,
+      ev;
 
   // time compensation
   this.time = this.game.clock.time;
@@ -59,7 +59,8 @@ Movement.prototype.update = function() {
 
     if(!vector.isZero()) {
       // maneuverability
-      maneuver = evasion/(this.throttle*Movement.THROTTLE_MANEUVER);
+      ev = evasion/2;
+      maneuver = (ev/this.throttle)+ev;
 
       direction.set(
         global.Math.cos(this.rotation),

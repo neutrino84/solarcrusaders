@@ -19,6 +19,10 @@ StationNetManager.prototype.init = function() {
   this.socket.on('station/enabled', this._enabled.bind(this));
 };
 
+StationNetManager.prototype.getStationData = function(uuid) {
+  return this.stations[uuid];
+};
+
 StationNetManager.prototype._data = function(data) {
   var station,
       stations = data.stations;
@@ -46,8 +50,6 @@ StationNetManager.prototype._sync = function(data) {
 
     if(this.stations[station.uuid] === undefined) {
       uuids.push(station.uuid);
-    } else {
-      this.stations[station.uuid].update(data);
     }
   }
 

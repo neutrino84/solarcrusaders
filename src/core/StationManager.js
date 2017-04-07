@@ -6,8 +6,7 @@ var uuid = require('uuid'),
 function StationManager(game) {
   this.game = game;
   this.model = game.model;
-  this.sockets = game.sockets;
-  this.iorouter = game.sockets.iorouter;
+  this.sockets = game.sockets.ioserver;
 
   this.game.on('station/add', this.add, this);
 
@@ -39,11 +38,12 @@ StationManager.prototype.create = function(data) {
   });
 };
 
-StationManager.prototype.data = function(sock, args, next) {
+StationManager.prototype.data = function(socket, args, next) {
   var station,
       uuid,
       uuids = args[1].uuids,
-      user = sock.sock.handshake.session.user,
+      user = socket.request.session.user,
+      sockets = this.sockets,
       stations = [];
   for(var u in uuids) {
     station = this.stations[uuids[u]];
@@ -65,7 +65,7 @@ StationManager.prototype.data = function(sock, args, next) {
       });
     }
   }
-  sock.emit('station/data', {
+  sockets.emit('station/data', {
     type: 'sync', stations: stations
   });
 };

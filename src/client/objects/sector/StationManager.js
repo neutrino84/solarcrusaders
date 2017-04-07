@@ -10,6 +10,8 @@ function StationManager(game) {
 
   this.game.world.foreground.add(this.stationsGroup);
 
+  this.socket.on('station/sync', this.sync.bind(this));
+
   this.game.on('station/create', this.create, this);
 
   // stations
@@ -24,21 +26,29 @@ StationManager.prototype.create = function(data) {
       station.boot();
 
   // add to group
-  this.stations[station.uuid] = station;
+  this.stations[data.uuid] = station;
 
   // wait
-  this.stationsGroup.add(this.stations[station.uuid]);
+  this.stationsGroup.add(this.stations[data.uuid]);
 };
 
 StationManager.prototype.sync = function(data) {
   var station, cached,
       game = this.game,
-      stations = data.stations;
+      stations = data.stations,
+      stationNetManager = this.stationNetManager;
   for(var s=0; s<stations.length; s++) {
     station = this.stations[stations[s].uuid];
     
     if(station) {
       // sync station
+
+    } else {
+      data = stationNetManager.getStationData(stations[s].uuid);
+
+      if(data) {
+        this.game.emit('station/create', data);
+      }
     }
   }
 };

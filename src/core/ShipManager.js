@@ -266,7 +266,7 @@ ShipManager.prototype.generateRandomShips = function() {
 ShipManager.prototype.generatePirateShips = function() {
   var base, ship,
       iterator = [{
-        location: { x: -2048, y: 2048 },
+        location: { x: -4096, y: 2048 },
         ships: [
           { name: 'xinli', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
           { name: 'mocolo', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
@@ -274,7 +274,7 @@ ShipManager.prototype.generatePirateShips = function() {
           { name: 'saag', chassis: 'pirate-x02', credits: 1500, reputation: -100 }
         ]
       }, {
-        location: { x: 6144, y: 2048 },
+        location: { x: 8192, y: 2048 },
         ships: [
           { name: 'satel', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
           { name: 'oeem', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
@@ -282,7 +282,7 @@ ShipManager.prototype.generatePirateShips = function() {
           { name: 'zeus', chassis: 'pirate-x03b', credits: 1500, reputation: -100 }
         ]
       }, {
-        location: { x: 2048, y: -2048 },
+        location: { x: 2048, y: -6144 },
         ships: [
           { name: 'manduk', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
           { name: 'deuh', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
@@ -290,7 +290,7 @@ ShipManager.prototype.generatePirateShips = function() {
           { name: 'kaan', chassis: 'pirate-x03b', credits: 1500, reputation: -100 }
         ]
       }, {
-        location: { x: 2048, y: 6144 },
+        location: { x: 2048, y: 8192 },
         ships: [
           { name: 'theni', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
           { name: 'zulu', chassis: 'pirate-x01', credits: 1500, reputation: -100 },

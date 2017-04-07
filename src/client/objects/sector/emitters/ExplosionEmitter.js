@@ -15,7 +15,7 @@ ExplosionEmitter.prototype.small = function(ship) {
       speed = movement._speed,
       vector = movement._vector;
 
-  this.lifespan = 1000;
+  this.lifespan = 500;
 
   this.blendMode = engine.BlendMode.ADD;
 
@@ -26,7 +26,7 @@ ExplosionEmitter.prototype.small = function(ship) {
   this.setVector(vector.x, vector.y);
 
   this.setScale(this.game.rnd.realInRange(0.1, 0.25), this.game.rnd.realInRange(0.5, 0.75), 250);
-  this.setAlpha(1.0, 0.0, 1000);
+  this.setAlpha(1.0, 0.0, 500);
   this.setTint(0xFF8888, 0xFF6666, 250);
 };
 
@@ -35,7 +35,7 @@ ExplosionEmitter.prototype.medium = function(ship) {
       speed = movement._speed,
       vector = movement._vector;
 
-  this.lifespan = 2000;
+  this.lifespan = 1000;
 
   this.blendMode = engine.BlendMode.NORMAL;
 
@@ -46,7 +46,7 @@ ExplosionEmitter.prototype.medium = function(ship) {
   this.setVector(vector.x, vector.y);
 
   this.setScale(this.game.rnd.realInRange(0.25, 0.75), this.game.rnd.realInRange(1.25, 2.25), 1000);
-  this.setAlpha(1.0, 0.0, 2000);
+  this.setAlpha(1.0, 0.0, 1000);
   this.setTint(0xFF8888, 0x666666, 750);
 };
 
@@ -55,7 +55,7 @@ ExplosionEmitter.prototype.explosion = function(ship) {
       speed = movement._speed,
       vector = movement._vector;
 
-  this.lifespan = 2000;
+  this.lifespan = 1000;
 
   this.blendMode = engine.BlendMode.NORMAL;
 
@@ -65,8 +65,8 @@ ExplosionEmitter.prototype.explosion = function(ship) {
   this.setVelocity(speed * 2, speed * 2);
   this.setVector(vector.x, vector.y);
 
-  this.setScale(1.0, ship.data.size / 48, 2000);
-  this.setAlpha(1.0, 0.0, 2000);
+  this.setScale(1.0, ship.data.size / 48, 1000);
+  this.setAlpha(1.0, 0.0, 1000);
   this.setTint(0xFF3333, 0x333333, 256);
 };
 
@@ -75,7 +75,7 @@ ExplosionEmitter.prototype.smulder = function(ship) {
       speed = movement._speed,
       vector = movement._vector;
 
-  this.lifespan = 2000;
+  this.lifespan = 1000;
 
   this.blendMode = engine.BlendMode.NORMAL;
 
@@ -85,29 +85,29 @@ ExplosionEmitter.prototype.smulder = function(ship) {
   this.setVelocity(speed * 2, speed * 2);
   this.setVector(vector.x, vector.y);
 
-  this.setScale(this.game.rnd.realInRange(0.25, 1), this.game.rnd.realInRange(1.25, 2), 2000);
-  this.setAlpha(0.5, 0.0, 2000);
-  this.setTint(0x333333, 0x666666, 2000);
+  this.setScale(this.game.rnd.realInRange(0.25, 1), this.game.rnd.realInRange(1.25, 2), 1000);
+  this.setAlpha(0.5, 0.0, 1000);
+  this.setTint(0x333333, 0x666666, 1000);
 };
 
 ExplosionEmitter.prototype.rocket = function() {
-  this.lifespan = 2000;
+  this.lifespan = 750;
 
   this.blendMode = engine.BlendMode.ADD;
 
-  this.minRotation = -24;
-  this.maxRotation = 24;
+  this.minRotation = -32;
+  this.maxRotation = 32;
 
-  this.setVelocity(this.game.rnd.realInRange(-64, 64), this.game.rnd.realInRange(-64, 64));
+  this.setVelocity(this.game.rnd.realInRange(-32, 32), this.game.rnd.realInRange(-32, 32));
   this.setVector(this.game.rnd.frac(), this.game.rnd.frac());
 
   this.setScale(0.5, this.game.rnd.realInRange(1, 3), 500);
-  this.setAlpha(1.0, 0.0, 2000);
-  this.setTint(0xFF3333, 0x333333, 500);
+  this.setAlpha(1.0, 0.0, 750);
+  this.setTint(0xFF3333, 0x333333, 300);
 };
 
 ExplosionEmitter.prototype.plasma = function() {
-  this.lifespan = 3000;
+  this.lifespan = 1500;
 
   this.blendMode = engine.BlendMode.ADD;
 
@@ -117,8 +117,8 @@ ExplosionEmitter.prototype.plasma = function() {
   this.setVelocity(this.game.rnd.realInRange(-32, 32), this.game.rnd.realInRange(-32, 32));
   this.setVector(this.game.rnd.frac(), this.game.rnd.frac());
 
-  this.setScale(1.0, this.game.rnd.realInRange(1.5, 3), 500);
-  this.setAlpha(1.0, 0.0, 3000);
+  this.setScale(1.0, this.game.rnd.realInRange(1.5, 3), 1000);
+  this.setAlpha(1.0, 0.0, 1500);
   this.setTint(0xFF8888, 0x484848, 800);
 };
 
