@@ -19,7 +19,7 @@ function Basic(ship) {
     disengage: 7680,
     friendly: ['user', 'basic'],
     position: {
-      radius: 1024,
+      radius: 4096,
       x: 2048,
       y: 2048
     },
@@ -79,7 +79,7 @@ Basic.prototype.update = function() {
     this.offset.copyFrom(this.target.movement.position);
     this.offset.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
     ship.movement.plot({ x: this.offset.x-p1.x, y: this.offset.y-p1.y });
-  } else {
+  } else if(this.game.rnd.frac() > 0.84) {
     p2 = this.getHomePosition();
     ship.movement.plot({ x: p2.x-p1.x, y: p2.y-p1.y });
   }
@@ -106,9 +106,9 @@ Basic.prototype.engage = function(target) {
     this.disengager && this.game.clock.events.remove(this.disengager);
     this.disengager = this.game.clock.events.add(settings.disengage, this.disengage, this);
 
-    if(this.game.rnd.frac() > 0.75) {
-      ship.activate('peircing');
-    }
+    // if(this.game.rnd.frac() > 0.75) {
+    //   ship.activate('peircing');
+    // }
   }
 
   // engage countermeasures
@@ -118,7 +118,7 @@ Basic.prototype.engage = function(target) {
   if(ship.data.health < 0.25) {
     ship.activate('heal');
   }
-  if(this.game.rnd.frac() > 0.8) {
+  if(this.game.rnd.frac() > 0.90) {
     ship.activate('booster');
   }
 };
