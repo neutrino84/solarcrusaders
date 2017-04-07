@@ -26,7 +26,7 @@ function Projectile(parent) {
   this.offset = new engine.Point(global.Math.random() * 256 - 256 / 2, global.Math.random() * 256 - 256 / 2);
 
   this.projectile = new engine.Sprite(this.game, 'texture-atlas', this.data.texture);
-  this.projectile.scale.set(0.75, 0.75);
+  this.projectile.scale.set(0.5, 0.5);
   this.projectile.pivot.set(32, 32);
 };
 
@@ -59,7 +59,7 @@ Projectile.prototype.explode = function() {
     this.hasExploded = true;
     this.parent.explosionEmitter.rocket();
     this.parent.explosionEmitter.at({ center: this.projectile.position });
-    this.parent.explosionEmitter.explode(6);
+    this.parent.explosionEmitter.explode(4);
   }
 };
 
