@@ -120,7 +120,6 @@ EnhancementPane.prototype._started = function(data) {
   var config = this.config[data.enhancement],
       button = this.buttons[data.enhancement];
   if(!this.player || data.uuid === this.player.uuid) {
-    
     // disable
     button.disabled(true);
     button.count = global.parseInt(config['basic'].cooldown);
@@ -129,8 +128,8 @@ EnhancementPane.prototype._started = function(data) {
     button.invalidate(false, true);
 
     // timer
-    this.timer && this.game.clock.events.remove(this.timer);
-    this.timer = this.game.clock.events.repeat(1000, button.count,
+    button.timer && this.game.clock.events.remove(button.timer);
+    button.timer = this.game.clock.events.repeat(1000, button.count,
       function() {
         button.label.text = (--button.count).toString();
         button.invalidate(false, true);
