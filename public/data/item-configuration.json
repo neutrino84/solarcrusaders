@@ -155,7 +155,8 @@
         "durability": 1000.0,
         "sound": "smallBeam",
         "default_volume": 0.35
-      },
+      }
+    },
     "pulse": {
       "basic": {
         "name": "Type 1 Pulse",
@@ -199,27 +200,6 @@
         "durability": 1000.0,
         "sound": "quantum_pulse",
         "default_volume": 0.45
-      },
-      "tarkin": {
-        "name": "Type 1 Pulse",
-        "type": "pulse",
-        "subtype": "basic",
-        "sprite": "turret-a",
-        "texture": "laser-blue",
-        "glow": "0x12def9",
-        "emitter": "blue",
-        "icon": "item-laser-a",
-        "range": 2104,
-        "projection": 0.20,
-        "delay": 32,
-        "spread": 64,
-        "damage": 3.5,
-        "aoe": 1.0,
-        "length": 32,
-        "spawn": 2,
-        "durability": 1000.0,
-        "sound": "tarkin_pulse",
-        "default_volume": 0.52
       },
       "grenlin": {
         "name": "Type 1 Pulse",
