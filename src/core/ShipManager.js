@@ -41,7 +41,7 @@ ShipManager.prototype.constructor = ShipManager;
 ShipManager.prototype.init = function() {
   // generate npcs
   this.generateRandomShips();
-  this.generatePirateShips();
+  // this.generatePirateShips();
 };
 
 ShipManager.prototype.add = function(ship) {
@@ -233,17 +233,17 @@ ShipManager.prototype.refresh = function() {
 
 ShipManager.prototype.generateRandomShips = function() {
   var iterator = {
-        'ubaidian-x01a': { race: 'ubaidian', count: 1 },
-        'ubaidian-x02': { race: 'ubaidian', count: 1 },
-        'ubaidian-x03': { race: 'ubaidian', count: 3 },
-        'ubaidian-x04': { race: 'ubaidian', count: 1 },
-        'mechan-x01': { race: 'mechan', count: 2 },
-        'mechan-x02': { race: 'mechan', count: 1 },
-        'mechan-x03': { race: 'mechan', count: 2 },
-        'general-x01': { race: 'ubaidian', count: 2 },
-        'general-x02': { race: 'ubaidian', count: 2 },
-        'enforcers-x01': { race: 'ubaidian', count: 3 },
-        'enforcers-x02': { race: 'ubaidian', count: 1 }
+        'ubaidian-x01a': { race: 'ubaidian', count: 0 },
+        'ubaidian-x02': { race: 'ubaidian', count: 0 },
+        'ubaidian-x03': { race: 'ubaidian', count: 2 },
+        'ubaidian-x04': { race: 'ubaidian', count: 2 },
+        'mechan-x01': { race: 'mechan', count: 0 },
+        'mechan-x02': { race: 'mechan', count: 0 },
+        'mechan-x03': { race: 'mechan', count: 0 },
+        'general-x01': { race: 'ubaidian', count: 0 },
+        'general-x00': { race: 'ubaidian', count: 0 },
+        'enforcers-x01': { race: 'ubaidian', count: 0 },
+        'enforcers-x02': { race: 'ubaidian', count: 0 }
       };
   for(var chassis in iterator) {
     for(var i=0; i<iterator[chassis].count; i++) {

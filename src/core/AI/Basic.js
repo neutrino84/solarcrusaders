@@ -17,7 +17,7 @@ function Basic(ship) {
     aim: 1.5,
     respawn: 50000,
     disengage: 7680,
-    friendly: ['user', 'basic'],
+    friendly: ['user', 'basic', 'scavenger'],
     position: {
       radius: 4096,
       x: 2048,

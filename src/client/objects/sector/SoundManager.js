@@ -54,8 +54,9 @@ SoundManager.prototype.preload = function(game) {
   // load sound
   console.log('loading sounds')
 
-  load.audio('background', 'sounds/mood.mp3');
+  load.audio('background1', 'sounds/mood.mp3');
   load.audio('background2', 'sounds/background_music/eerie1.mp3');
+  load.audio('background3', 'sounds/background_music/eerie2.mp3');
 
  
   load.audio('capitalLaser','sounds/lasers/capitalShipLaser.mp3');
@@ -119,7 +120,11 @@ SoundManager.prototype.create = function(manager) {
 
 SoundManager.prototype.generateBackgroundMusic = function(){
   // this.generateSound('background', 0.1, true);
-  this.generateSound('background2', 0.30, true);
+  var num = Math.floor((Math.random() * 3)+1);
+  this.generateSound('background'+num, 0.30, true);
+
+  var num = Math.floor((Math.random() * 3)+1);
+  this.generateSound('mediumThrusters'+num, 1, false);
 };
 
 SoundManager.prototype.generateThrusterSound = function(){

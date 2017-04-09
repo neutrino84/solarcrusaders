@@ -155,9 +155,6 @@ Ship.prototype.attack = function(data, rtt) {
       target = data.targ,
       distance,
       rtt = rtt || 0;
-  if(this.chassis === 'scavengers-x02c' || this.chassis === 'scavengers-x01d'){
-    // console.log('in ship.js attack()')
-  }
 
   // get updated data
   compensated = movement.compensated(rtt);
@@ -287,7 +284,7 @@ Ship.prototype.disable = function() {
   this.ai && this.ai.disengage();
   
   // respawn time
-  this.respawn = this.game.clock.events.add(this.ai ? this.ai.settings.respawn : 50000, this.enable, this);
+  this.respawn = this.game.clock.events.add(this.ai ? this.ai.settings.respawn : 10000, this.enable, this);
   
   // broadcast
   this.sockets.emit('ship/disabled', {
