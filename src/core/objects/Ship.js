@@ -174,6 +174,11 @@ Ship.prototype.attack = function(data, rtt) {
       // broadcast atack
       sockets.emit('ship/attack', data);
 
+      if(this.data.race === 'scavengers' && this.manager.scavengerHarvest > 0){
+        this.manager.scavengerHarvest--
+      }
+      // if(this.data.race)
+
       // cooldown
       if(hardpoint.data.cooldown > 0) {
         hardpoint.cooldown(runtime-rtt);

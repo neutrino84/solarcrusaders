@@ -958,7 +958,7 @@
       "durability": 1000,
       "critical": 0.01
     },
-    "enhancements": ["heal", "booster", "shield"],
+    "enhancements": [],
     "engine": {
       "glows": [
         {

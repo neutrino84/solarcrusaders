@@ -5,7 +5,6 @@ function Scavenger(ship, home) {
   Basic.call(this, ship);
 
   this.type = 'scavenger';
-  this.harvestTime = 16000;
   this.target = ship.target;
 
     this.settings = {
@@ -96,7 +95,7 @@ Scavenger.prototype.update = function() {
 
   // attack sequence
   // console.log('pre', target.data)
-  if(this.target && this.target.data) {
+  if(this.target && this.target.data && this.manager.scavengerHarvest > 0) {
     target = this.target;
 
     // aim
@@ -104,6 +103,7 @@ Scavenger.prototype.update = function() {
     sensor.random(false, point);
 
     // attack
+
     ship.attack({
       uuid: ship.uuid,
       targ: target.movement.position
@@ -116,7 +116,7 @@ Scavenger.prototype.disengage = function() {
   // this.attacker && this.game.clock.events.remove(this.attacker);
 };
 
-Scavenger.prototype.harvest = function() {
+Scavenger.prototype.harvest = function(manager, data) {
   var ship = this.ship,
       ships = this.manager.ships,
       sensor = this.sensor,
@@ -124,21 +124,22 @@ Scavenger.prototype.harvest = function() {
       target = this.target,
       point = {},
       magnitude, distance;
+  this.target = manager.ships[data];
 
   // attack sequence
-  if(this.target && this.target.data) {
-    target = this.target;
+  // if(this.target && this.target.data) {
+  //   target = this.target;
 
-    // aim
-    sensor.setTo(target.movement.position.x, target.movement.position.y, target.data.size * this.settings.aim);
-    sensor.random(false, point);
+  //   // aim
+  //   sensor.setTo(target.movement.position.x, target.movement.position.y, target.data.size * this.settings.aim);
+  //   sensor.random(false, point);
 
-    // attack
-    ship.attack({
-      uuid: ship.uuid,
-      targ: point
-    });
-  };
+  //   // attack
+  //   ship.attack({
+  //     uuid: ship.uuid,
+  //     targ: point
+  //   });
+  // };
   // var ship = this.ship,
   //     ships = this.manager.ships,
   //     sensor = this.sensor,

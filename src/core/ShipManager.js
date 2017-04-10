@@ -14,6 +14,7 @@ function ShipManager(game) {
   this.ships = {};
   this.deadCount = 0;
   this.scavengersGenerated = false;
+  this.scavengerHarvest = null;
 
   // ai manager
   this.ai = new AI(this);
@@ -235,8 +236,8 @@ ShipManager.prototype.generateRandomShips = function() {
   var iterator = {
         'ubaidian-x01a': { race: 'ubaidian', count: 0 },
         'ubaidian-x02': { race: 'ubaidian', count: 0 },
-        'ubaidian-x03': { race: 'ubaidian', count: 2 },
-        'ubaidian-x04': { race: 'ubaidian', count: 2 },
+        'ubaidian-x03': { race: 'ubaidian', count: 0 },
+        'ubaidian-x04': { race: 'ubaidian', count: 4 },
         'mechan-x01': { race: 'mechan', count: 0 },
         'mechan-x02': { race: 'mechan', count: 0 },
         'mechan-x03': { race: 'mechan', count: 0 },
@@ -307,7 +308,7 @@ ShipManager.prototype.generatePirateShips = function() {
     }
   }
 };
-ShipManager.prototype.generateScavengerShips = function(data) {
+ShipManager.prototype.generateScavengerShips = function(data, size) {
   var base, ship,
       iterator = [
       {
@@ -391,23 +392,22 @@ ShipManager.prototype.generateRandomPosition = function(size) {
 ShipManager.prototype.scavengerCheck = function(data) {
   var game = this.game,
       ships = this.ships,
+      size = ships[data].data.size,
       deadCount = this.deadCount;
 
-  deadCount++;
-  // console.log('deadcount is ', deadCount)
-  if(deadCount>0 && this.scavengersGenerated === false){
+  this.deadCount++;
+  console.log(ships[data].data.size)
+  if(deadCount>1 && !this.scavengersGenerated){
     this.generateScavengerShips(data);
     this.scavengersGenerated = true;
-    // console.log('scavengers gen- ')
+    this.scavengerHarvest = size;
   } 
-  else if (deadCount>0 && this.scavengersGenerated === true){
-    // console.log('HERE. ships is ', ships)
+  else if (deadCount>1 && this.scavengersGenerated && this.scavengerHarvest < 1){
     for (var ship in ships){
-        // console.log(ship.data)
-      // if (ship.data.chassis === 'scavengers-x02c' || ship.data.chassis === 'scavengers-x01d'){
-        // console.log(ship.chassis, data)
-        // ship.ai.harvest(data)
-      // }
+      if (ships[ship].data.race === 'scavengers' && ships[data].data.race !== 'scavengers'){
+        ships[ship].ai.harvest(this, data, size);
+        this.scavengerHarvest = size;
+      }
     };
   };
 };
