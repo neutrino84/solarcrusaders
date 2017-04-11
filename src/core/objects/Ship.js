@@ -16,6 +16,7 @@ function Ship(manager, data) {
   
   this.data = new this.model.Ship(data);
   this.data.init();
+
   this.target = manager.ships[data.target];
   if(this.target){
     this.target.disabled = true;
@@ -55,6 +56,8 @@ function Ship(manager, data) {
 
 Ship.prototype.constructor = Ship;
 
+Ship.RESPAWN_TIME = 5000;
+
 Ship.prototype.init = function(callback) {
   var self = this;
   if(this.data.isNewRecord()) {
@@ -72,14 +75,6 @@ Ship.prototype.init = function(callback) {
       callback(err);
     });
   }
-  if(this.chassis === 'scavengers-x01d' || this.chassis === 'scavengers-x02c'){
-    // console.log('hey!')  
-    // this.ai.harvest(this.target)
-  }
-};
-
-Ship.prototype.harvest = function(){
-
 }
 
 Ship.prototype.save = function(callback) {
@@ -117,7 +112,6 @@ Ship.prototype.createSystems = function() {
   for(var e in enhancements) {
     available[enhancements[e]] = new Enhancement(this, enhancements[e]);
   }
-
 };
 
 Ship.prototype.createHardpoints = function() {
@@ -174,11 +168,6 @@ Ship.prototype.attack = function(data, rtt) {
       // broadcast atack
       sockets.emit('ship/attack', data);
 
-      if(this.data.race === 'scavengers' && this.manager.scavengerHarvest > 0){
-        this.manager.scavengerHarvest--
-      }
-      // if(this.data.race)
-
       // cooldown
       if(hardpoint.data.cooldown > 0) {
         hardpoint.cooldown(runtime-rtt);
@@ -213,7 +202,7 @@ Ship.prototype.hit = function(attacker, target, slot) {
       ratio = distance / (this.size * hardpoint.data.aoe),
       damage, health, critical;
   if(ratio < 1.0) {
-    // test data
+    // // test data
     // if(!attacker.ai && this.ai) {
     //   sockets.emit('ship/test', {
     //     uuid: this.uuid,
@@ -289,13 +278,12 @@ Ship.prototype.disable = function() {
   this.ai && this.ai.disengage();
   
   // respawn time
-  this.respawn = this.game.clock.events.add(this.ai ? this.ai.settings.respawn : 10000, this.enable, this);
+  this.respawn = this.game.clock.events.add(this.ai ? this.ai.settings.respawn : Ship.RESPAWN_TIME, this.enable, this);
   
   // broadcast
-  this.sockets.emit('ship/disabled', {
+  this.game.emit('ship/disabled', {
     uuid: this.uuid
   });
-  this.game.emit('ship/disabled', this.uuid)
 };
 
 Ship.prototype.enable = function() {
@@ -356,12 +344,14 @@ Ship.prototype.activate = function(name) {
         enhancement: name,
         subtype: enhancement.subtype
       });
-
-      return true;
     }
-  }
-  
-  return false;
+  } //else {
+    // sockets.emit('ship/enhancement/cancelled', {
+    //   uuid: this.uuid,
+    //   enhancement: name,
+    //   subtype: enhancement.subtype
+    // });
+  // }
 };
 
 Ship.prototype.deactivate = function(enhancement) {

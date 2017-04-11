@@ -7,7 +7,6 @@ function Pirate(ship, home) {
   this.type = 'pirate';
 
   this.settings = {
-    aim: 1.25,
     respawn: 60000,
     disengage: 9216,
     friendly: ['pirate'],
@@ -20,6 +19,7 @@ function Pirate(ship, home) {
       health: 0.2,
     },
     sensor: {
+      aim: 1.25,
       range: 4096
     }
   };
