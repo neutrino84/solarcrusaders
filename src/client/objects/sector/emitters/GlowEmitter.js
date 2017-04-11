@@ -35,13 +35,14 @@ GlowEmitter.prototype.explosion = function(ship) {
       vector = movement._vector;
 
   this.frequency = 100;
-  this.lifespan = 2000;
+  this.lifespan = 6000;
 
-  this.setVelocity(speed, speed);
+  this.setVelocity(speed * 2, speed * 2);
   this.setVector(vector.x, vector.y);
 
-  this.setScale(0.0, ship.data.size / 4, 500);
-  this.setTint(0xFFFFFF, 0x000000, 2000);
+  this.setScale(1.0, ship.data.size, 500);
+  this.setAlpha(1.0, 0.0, 6000);
+  this.setTint(0xFFFFFF, 0x999999, 6000);
 };
 
 module.exports = GlowEmitter;

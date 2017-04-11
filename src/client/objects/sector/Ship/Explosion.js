@@ -39,13 +39,13 @@ Explosion.prototype.start = function() {
       hit = this.hit,
       manager = ship.manager;
 
+  manager.shockwaveEmitter.explosion(ship);
+  manager.shockwaveEmitter.at({ center: ship.position });
+  manager.shockwaveEmitter.explode(1);
+
   manager.glowEmitter.explosion(ship);
   manager.glowEmitter.at({ center: ship.position });
   manager.glowEmitter.explode(1);
-
-  manager.glowEmitter.mini(ship);
-  manager.glowEmitter.at({ center: ship.position });
-  manager.glowEmitter.explode(3);
 
   this.events.repeat(50, 200, function() {
     manager.explosionEmitter.smulder(ship);

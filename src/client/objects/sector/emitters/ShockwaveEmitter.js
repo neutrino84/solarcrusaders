@@ -45,6 +45,22 @@ ShockwaveEmitter.prototype.plasma = function(ship) {
   this.setScale(0.2, 0.4, 600);
   this.setAlpha(1.0, 0.0, 600);
   this.setTint(global.parseInt(colors[0]), global.parseInt(colors[1]), 600);
-}
+};
+
+ShockwaveEmitter.prototype.explosion = function(ship) {
+  var movement = ship.movement,
+      speed = movement._speed * 2,
+      vector = movement._vector;
+
+  this.frequency = 250;
+  this.lifespan = 1000;
+
+  this.setVelocity(speed * 2, speed * 2);
+  this.setVector(vector.x, vector.y);
+
+  this.setScale(0.0, ship.data.size / 4, 1000);
+  this.setAlpha(1.0, 0.0, 1000);
+  this.setTint(0xFFFFFF, 0x999999, 500);
+};
 
 module.exports = ShockwaveEmitter;
