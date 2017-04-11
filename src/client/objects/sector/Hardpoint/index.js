@@ -38,7 +38,7 @@ function Hardpoint(parent, data, config) {
   this.ship.addChild(this.sprite);
   this.sprite.addChild(this.cap);
 
-  if(config.type && config.type.indexOf('projectile') >= 0){
+  if(config.type && config.type.indexOf('rocket') >= 0){
     this.sprite.visible = false;
   };
 
@@ -152,7 +152,6 @@ Hardpoint.prototype.update = function() {
 
   while(remove.length > 0) {
     launcher = remove.pop();
-    // actives.splice(actives.indexOf(launcher), 1);
     engine.Utility.splice(actives, actives.indexOf(launcher));
     cache.push(launcher);
   }
