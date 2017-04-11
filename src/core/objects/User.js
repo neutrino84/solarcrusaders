@@ -10,30 +10,26 @@ function User(manager, data, socket) {
   this.model = manager.model;
   this.socket = socket;
 
-  this.ships = [];
-  this.data = new this.model.User(data);
-  this.uuid = this.data.uuid;
-
   this.latency = new Latency(this);
+  this.data = new this.model.User(data);
+  
+  this.uuid = this.data.uuid;
 };
 
 User.prototype.constructor = User;
 
 User.DEFAULT_SHIPS = [{
-  name: Generator.getName('ubaidian'),
-  chassis: 'ubaidian-x03'
+  name: Generator.getName('ubaidian')
 }];
 
 User.prototype.init = function(callback, context) {
-  var self = this, 
+  var self = this, err,
       data = this.data,
-      json = data.toStreamObject(),
-      err;
+      json = data.toStreamObject();
 
   if(data.isNewRecord()) {
-    // default
-    this.create(User.DEFAULT_SHIPS, json);
-    this.socket.emit('auth/sync', json);
+    self.create(User.DEFAULT_SHIPS, json);
+    self.socket.emit('auth/sync', json);
 
     callback.call(context, err, data);
   } else {
@@ -54,35 +50,25 @@ User.prototype.init = function(callback, context) {
 };
 
 User.prototype.create = function(ships) {
-  var chassisAvailable = ['a','b','c','d','e','f'],
-  randomChassis = 'ubaidian-x01' + chassisAvailable[Math.floor(Math.random() * chassisAvailable.length)];
+  var data,
+      game = this.game,
+      rnd = game.rnd,
+      variations = ['a','b','c','d','e','f'];
 
-  // if(ships && ships.length) {
-  //   for(var s=0; s<ships.length; s++) {
-  //     ship = ships[s]
-  //     data = ship.toStreamObject ? json : ship;
+  if(ships && ships.length) {
+    for(var s=0; s<ships.length; s++) {
+      ship = ships[s];
+      data = ship.toStreamObject ? json : ship;
 
-  //     // add to ships
-  //     this.ships.push(data);
+      // set chassis
+      if(!data.chassis) {
+        data.chassis = 'ubaidian-x01a';// + rnd.pick(variations);
+      }
       
-  //     // create user ship
-  //     this.game.emit('ship/create', data, this);
-  //   }
-  // } else {
-    // create default ship
-    User.count++
-    this.game.emit('ship/create', {
-      name: Generator.getName('ubaidian'),
-      chassis: 
-      randomChassis
-      // 'ricardo-x01' 
-      // 'scavengers-x01d'
-      
-      // 'enforcers-x01'
-      // 'ubaidian-x01c'
-      //this.data.role === 'user' ? 'ubaidian-x03' : 'ubaidian-x0' + (User.count % 4 + 1)
-    }, this);
-  
+      // create user ship
+      this.game.emit('ship/create', data, this);
+    }
+  }
 };
 
 User.prototype.save = function(callback) {
@@ -126,10 +112,9 @@ User.prototype.destroy = function() {
       latency = this.latency;
 
   // remove ships
-  for(var i=0; i<ships.length; i++) {
-    ship = ships[i];
+
     game.emit('ship/remove', ship);
-  }
+
 
   // destroy objects
   latency.destroy();
