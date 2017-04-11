@@ -10,6 +10,7 @@ function Basic(ship) {
 
   this.timer = null;
   this.target = null;
+  this.throttle = null;
 
   this.retreat = false;
 
@@ -58,7 +59,7 @@ Basic.prototype.update = function() {
   }
 
   // target ships
-  if(rnd.frac() < 0.5) {
+  if(rnd.frac() < 0.75) {
     this.scanner();
   }
   
@@ -67,7 +68,7 @@ Basic.prototype.update = function() {
     size = this.target.data.size * 4;
     offset.copyFrom(this.target.movement.position);
     offset.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
-    ship.movement.plot({ x: this.offset.x-p1.x, y: this.offset.y-p1.y });
+    ship.movement.plot({ x: this.offset.x-p1.x, y: this.offset.y-p1.y }, this.throttle);
   } else if(rnd.frac() < 0.1) {
     p2 = this.getHomePosition();
     ship.movement.plot({ x: p2.x-p1.x, y: p2.y-p1.y });
@@ -75,12 +76,15 @@ Basic.prototype.update = function() {
 };
 
 Basic.prototype.scanner = function() {
-  var targets, scan,
+  var targets, scan, target,
       sensor = this.sensor,
       ships = this.manager.ships,
       priority = {
         enemy: {},
         friendly: {}
+      },
+      ascending = function(a, b) {
+        return a-b;
       };
 
   // scan nearby ships
@@ -100,7 +104,7 @@ Basic.prototype.scanner = function() {
 
   // find weakest
   targets = Object.keys(priority.enemy);
-  targets.length && this.engage(priority.enemy[targets.sort()[0]]);
+  targets.length && this.engage(priority.enemy[targets.sort(ascending)[0]]);
 };
 
 Basic.prototype.friendly = function(target) {

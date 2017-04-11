@@ -16,10 +16,10 @@ function Scavenger(ship, home) {
       y: ship.movement.position.y
     },
     escape: {
-      health: 0.2,
+      health: 0.5,
     },
     sensor: {
-      aim: 1.0,
+      aim: 0.8,
       range: 16384
     }
   }
@@ -30,13 +30,17 @@ Scavenger.prototype.constructor = Scavenger;
 
 Scavenger.prototype.scanner = function() {
   //.. dead ships
-  var targets, scan,
+  var target, targets, scan, distance,
       sensor = this.sensor,
       ships = this.manager.ships,
+      ship = this.ship,
       priority = {
         harvest: {},
         enemy: {},
         friendly: {}
+      },
+      ascending = function(a, b) {
+        return a-b;
       };
 
   // scan nearby ships
@@ -45,18 +49,33 @@ Scavenger.prototype.scanner = function() {
     p2 = scan.movement.position;
 
     if(scan.disabled && sensor.contains(p2.x, p2.y)) {
-      priority.harvest[scan.data.health] = scan;
+      distance = p2.distance(ship.movement.position);
+      priority.harvest[distance] = scan;
+
+      this.throttle = distance/2;
     }
   }
 
-  // find weakest
+  // find harvestable
   targets = Object.keys(priority.harvest);
-  targets.length && this.engage(priority.harvest[targets.sort()[0]]);
+  targets.length && this.engage(priority.harvest[targets.sort(ascending)[0]]);
 };
 
 Scavenger.prototype.engage = function(target) {
-  var ship = this.ship,
+  var settings = this.settings,
+      ship = this.ship,
       health = ship.data.health / ship.config.stats.health;
+
+  // finish attack
+  if(this.target == null && target.disabled) {
+    this.target = target;
+
+    this.attacker && this.game.clock.events.remove(this.attacker);
+    this.attacker = this.game.clock.events.loop(ship.data.rate, this.attack, this);
+
+    this.disengager && this.game.clock.events.remove(this.disengager);
+    this.disengager = this.game.clock.events.add(settings.disengage, this.disengage, this);
+  }
 
   // engage countermeasures
   if(this.game.rnd.frac() < 0.10) {
