@@ -56,7 +56,7 @@ function Ship(manager, data) {
 
 Ship.prototype.constructor = Ship;
 
-Ship.RESPAWN_TIME = 5000;
+Ship.RESPAWN_TIME = 10000;
 
 Ship.prototype.init = function(callback) {
   var self = this;
@@ -165,15 +165,15 @@ Ship.prototype.attack = function(data, rtt) {
       // time collisions
       game.clock.events.add(runtime, this.attacked, this, target, slot);
 
-      // broadcast atack
-      sockets.emit('ship/attack', data);
-
       // cooldown
       if(hardpoint.data.cooldown > 0) {
         hardpoint.cooldown(runtime-rtt);
       }
     }
   }
+
+  // broadcast atack
+  sockets.emit('ship/attack', data);
 };
 
 Ship.prototype.attacked = function(target, slot) {
@@ -183,6 +183,7 @@ Ship.prototype.attacked = function(target, slot) {
     ships = manager.ships;
     for(var s in ships) {
       ship = ships[s];
+
       if(ship.game && ship != this) {
         ship.hit(this, target, slot);
       }
