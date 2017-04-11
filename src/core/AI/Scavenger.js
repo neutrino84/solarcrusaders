@@ -54,6 +54,23 @@ Scavenger.prototype.scanner = function() {
   targets.length && this.engage(priority.harvest[targets.sort()[0]]);
 };
 
+Scavenger.prototype.engage = function(target) {
+  var ship = this.ship,
+      health = ship.data.health / ship.config.stats.health;
+
+  // engage countermeasures
+  if(this.game.rnd.frac() < 0.10) {
+    ship.activate('booster');
+
+    if(health < 0.5) {
+      ship.activate('shield');
+    }
+    if(health < 0.5) {
+      ship.activate('heal');
+    }
+  }
+};
+
 Scavenger.prototype.disengage = function() {
   if(this.target && !this.target.disabled) {
     this.target = null;
