@@ -59,7 +59,7 @@ Basic.prototype.update = function() {
   }
 
   // target ships
-  if(rnd.frac() < 0.75) {
+  if(rnd.frac() < 0.8) {
     this.scanner();
   }
   
