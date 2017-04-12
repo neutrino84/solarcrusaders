@@ -280,11 +280,37 @@ Ship.prototype.disable = function() {
   
   // respawn time
   this.respawn = this.game.clock.events.add(this.ai ? this.ai.settings.respawn : Ship.RESPAWN_TIME, this.enable, this);
-  
+
+  // blast close
+  this.blast();
+
   // broadcast
   this.game.emit('ship/disabled', {
     uuid: this.uuid
   });
+};
+
+Ship.prototype.blast = function() {
+  var ship, ships, distance, end, start,
+      manager = this.manager
+      size = this.config.stats.size * 8,
+      rnd = this.game.rnd;
+  if(manager != undefined) {
+    ships = manager.ships;
+    for(var s in ships) {
+      ship = ships[s];
+
+      if(ship.game && !ship.disabled && ship != this) {
+        end = ship.movement.position;
+        start = this.movement.position;
+        distance = start.distance(end);
+
+        if(distance < size) {
+          ship.movement.destabalize.set(end.x - start.x, end.y - start.y);
+        }
+      }
+    }
+  }
 };
 
 Ship.prototype.enable = function() {

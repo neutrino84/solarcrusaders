@@ -61,8 +61,10 @@ Movement.prototype.update = function() {
   // calculate distance
   distance = position.distance(destination);
 
-  if(speed * 2.0 < distance) {
+  if(speed > 0 && speed * 2.0 < distance) {
     velocity *= 2.0;
+  } else if(speed == 0 && distance > 1.0) {
+    velocity = distance/4;
   }
   
   // calculate vector
@@ -72,13 +74,13 @@ Movement.prototype.update = function() {
   // update direction
   direction.interpolate({
     x: vector.x * velocity,
-    y: vector.y * velocity }, 0.20, direction);
+    y: vector.y * velocity }, 0.25, direction);
 
   // update ship position
   ship.position.set(position.x + direction.x, position.y + direction.y);
 
   // update rotation
-  if(velocity > 0) {
+  if(velocity > 0 && speed > 0) {
     a1 = position.y - ship.position.y;
     a2 = position.x - ship.position.x;
     if(a1 !== 0 && a2 !== 0) {

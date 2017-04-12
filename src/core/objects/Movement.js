@@ -10,7 +10,7 @@ function Movement(parent) {
   this.speed = 0.0;
   this.rotation = global.Math.PI * global.Math.random();
   this.time = this.game.clock.time;
-  
+
   this.start = {
     x: global.parseFloat(parent.data.x),
     y: global.parseFloat(parent.data.y)
@@ -21,7 +21,8 @@ function Movement(parent) {
   this.destination = new engine.Point();
   this.vector = new engine.Point();
   this.direction = new engine.Point();
-  this.relative = new engine.Point();
+  this.relative = new engine.Point()
+  this.destabalize = new engine.Point();
 };
 
 Movement.CLOCK_RATE = 100;
@@ -38,6 +39,7 @@ Movement.prototype.update = function() {
       position = this.position,
       vector = this.vector,
       direction = this.direction,
+      destabalize = this.destabalize,
       evasion = parent.evasion,
       maneuver, cross, dot,
       ev;
@@ -50,7 +52,15 @@ Movement.prototype.update = function() {
     this.magnitude /= Movement.FRICTION;
   }
 
-  if(this.magnitude > Movement.STOP_THRESHOLD) {
+  if(destabalize.distance({ x: 0, y: 0 }) > 1.0) {
+    destabalize.multiply(0.5, 0.5);
+    last.set(position.x, position.y);
+    position.add(destabalize.x, destabalize.y);
+  } else {
+    destabalize.set(0, 0);
+  }
+
+  if(this.magnitude > Movement.STOP_THRESHOLD && destabalize.isZero()) {
     this.throttle = global.Math.min(this.magnitude/Movement.THROTTLE_THRESHOLD, 1.0);
     this.speed = parent.speed * this.throttle;
 
@@ -82,7 +92,7 @@ Movement.prototype.update = function() {
 
       // linear speed
       position.add(
-        this.speed * direction.x,
+        this.speed * direction.x, 
         this.speed * direction.y);
     }
   } else {
