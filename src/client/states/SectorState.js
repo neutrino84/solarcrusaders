@@ -90,7 +90,7 @@ SectorState.prototype.create = function() {
       mouse.capture = true;
       mouse.mouseWheelCallback = function(event) {
         var delta = event.deltaY / sensitivity,
-            scale = engine.Math.clamp(this.world.scale.x - delta, 0.12, 1.0);
+            scale = engine.Math.clamp(this.world.scale.x - delta, 0.14, 1.0);
         if(self.game.paused) { return; }
         if(self.zoom && self.zoom.isRunning) {
           self.zoom.stop();
@@ -99,7 +99,7 @@ SectorState.prototype.create = function() {
       };
 
   this.game.world.setBounds(0, 0, 4096, 4096);
-  this.game.world.scale.set(0.12, 0.12);
+  this.game.world.scale.set(0.14, 0.14);
 
   this.game.camera.bounds = null;
   this.game.camera.focusOnXY(2048, 2048);
