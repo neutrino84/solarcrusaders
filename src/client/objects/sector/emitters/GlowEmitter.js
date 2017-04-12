@@ -25,7 +25,7 @@ GlowEmitter.prototype.mini = function(ship) {
   this.setVelocity(speed, speed);
   this.setVector(vector.x, vector.y);
 
-  this.setScale(0.0, ship.data.size / 14, 250);
+  this.setScale(0.0, ship.data.size / 16, 250);
   this.setTint(0xFFFFFF, 0x000000, 1000);
 };
 
@@ -40,7 +40,7 @@ GlowEmitter.prototype.explosion = function(ship) {
   this.setVelocity(speed * 2, speed * 2);
   this.setVector(vector.x, vector.y);
 
-  this.setScale(1.0, ship.data.size, 500);
+  this.setScale(1.0, ship.data.size / 2, 500);
   this.setAlpha(1.0, 0.0, 6000);
   this.setTint(0xFFFFFF, 0x999999, 6000);
 };
