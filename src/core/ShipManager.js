@@ -37,7 +37,7 @@ ShipManager.prototype.constructor = ShipManager;
 ShipManager.prototype.init = function() {
   // generate npcs
   this.generateRandomShips();
-  this.generatePirateShips();
+  // this.generatePirateShips();
   this.generateScavengerShips();
 };
 
@@ -233,9 +233,9 @@ ShipManager.prototype.generateRandomShips = function() {
         'ubaidian-x01a': { race: 'ubaidian', count: 0 },
         'ubaidian-x02': { race: 'ubaidian', count: 0 },
         'ubaidian-x03': { race: 'ubaidian', count: 0 },
-        'ubaidian-x01a': { race: 'ubaidian', count: 1 },
-        'ubaidian-x02': { race: 'ubaidian', count: 1 },
-        'ubaidian-x03': { race: 'ubaidian', count: 4 },
+        'ubaidian-x01a': { race: 'ubaidian', count: 0 },
+        'ubaidian-x02': { race: 'ubaidian', count: 0 },
+        'ubaidian-x03': { race: 'ubaidian', count: 0 },
         'ubaidian-x04': { race: 'ubaidian', count: 4 },
         'mechan-x01': { race: 'mechan', count: 0 },
         'mechan-x02': { race: 'mechan', count: 0 },

@@ -31,7 +31,6 @@ function HotkeyManager(game) {
 HotkeyManager.prototype.constructor = HotkeyManager;
 
 HotkeyManager.prototype.init = function() { 
-  console.log('in HotkeyManager init()')
 };
 
 HotkeyManager.prototype.create = function(manager) {
@@ -105,7 +104,6 @@ HotkeyManager.prototype._cooled = function(data){
 HotkeyManager.prototype._player = function(ship){
   this.player = ship,
   this.enhancements = ship.config.enhancements;
-  console.log(this.enhancements)
   for(var e in this.enhancements){
   	var key = parseInt(e)+1;
   	// console.log(key)

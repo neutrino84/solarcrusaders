@@ -80,7 +80,6 @@ Ship.prototype.refresh = function(data) {
 
     // send hit to targeting computer
     targetingComputer.hit(defender, data);
-
     // show hud screen
     if(attacker.isPlayer || defender.isPlayer) {
       attacker.selector.highlight();
@@ -96,9 +95,9 @@ Ship.prototype.refresh = function(data) {
       if(defender.isPlayer) {
         this.game.camera.shake();
       }
-    }
-  }
+    };
 
+  };
   // update hud
   this.hud.data(data);
 };
@@ -114,6 +113,11 @@ Ship.prototype.update = function() {
   this.targetingComputer.update();
   this.hud.update();
   
+  if(this.data.durability < 1 && this.alpha > 0){
+   console.log(this.alpha)
+   this.alpha = this.alpha - 0.1
+   // debugger
+  }
   // update disabled state
   if(this.disabled){
     this.selector.update(multiplier);
@@ -144,7 +148,12 @@ Ship.prototype.disable = function() {
   this.shieldGenerator.stop();
   this.repair.stop();
   this.explosion.start();
-}
+};
+
+Ship.prototype.deprecate = function(ship) {
+  // console.log('in deprecate', ship)
+  // debugger
+};
 
 Ship.prototype.destroy = function(options) {
   // remove timers

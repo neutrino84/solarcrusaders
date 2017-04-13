@@ -201,7 +201,7 @@ Ship.prototype.hit = function(attacker, target, slot) {
       compensated = movement.compensated(),
       distance = compensated.distance(target),
       ratio = distance / (this.size * hardpoint.data.aoe),
-      damage, health, critical;
+      damage, health, critical, durability;
   if(ratio < 1.0) {
     // // test data
     // if(!attacker.ai && this.ai) {
@@ -211,12 +211,12 @@ Ship.prototype.hit = function(attacker, target, slot) {
     //     targ: target
     //   });
     // }
-
     // calc damage
     critical = this.game.rnd.rnd() <= attacker.critical;
     damage = global.Math.max(0, hardpoint.data.damage * (1-ratio) * (1-this.armor));
     damage += critical ? damage : 0;
     health = data.health-damage;
+    durability = this.durability
 
     // update damage
     if(!this.disabled && health > 0) {
@@ -246,21 +246,41 @@ Ship.prototype.hit = function(attacker, target, slot) {
       // defend
       ai && ai.engage(attacker);
     } else {
-      // disengage attacker
-      attacker.ai && attacker.ai.disengage();
+        // disengage attacker
+        attacker.ai && attacker.ai.disengage();
 
-      // disable ship
-      if(!this.disabled) {
-        this.disable();
-        
-        // update attacker reputation
-        attacker.reputation = global.Math.floor(attacker.reputation + (this.reputation * -0.05));
-        updates.push({
-          uuid: attacker.uuid,
-          reputation: attacker.reputation
-        });
+        // disable ship
+        if(!this.disabled) {
+          this.disable();
+          
+          // update attacker reputation
+          attacker.reputation = global.Math.floor(attacker.reputation + (this.reputation * -0.05));
+          updates.push({
+            uuid: attacker.uuid,
+            reputation: attacker.reputation
+          });
+        }
+        if(this.disabled){
+          // for(var i =0; i < attacker.hardpoints.length; i++){
+            if(attacker.hardpoints[0].subtype === 'harvester'){
+              // console.log('yo')
+              if(this.durability > 0){
+                this.durability = this.durability - 2
+                    console.log('durability is ', durability)
+
+              }
+              if(this.durability < 1){
+                // console.log(this.data.chassis, ' consumed')
+              }
+              updates.push({
+                uuid: this.uuid,
+                durability: this.durability
+              })   
+              // console.log(updates)    
+            };
+          // }     
+        }
       }
-    }
 
     // broadcast
     if(updates.length) {

@@ -13,8 +13,8 @@
       "evasion": 0.1,
       "energy": 200,
       "recharge": 1,
-      "size": 164,
-      "durability": 1000,
+      "size": 136,
+      "durability": 136,
       "critical": 0.01
     },
     "enhancements": ["heal", "booster", "shield", "piercing"],
@@ -158,7 +158,7 @@
       "energy": 200,
       "recharge": 1,
       "size": 136,
-      "durability": 1000,
+      "durability": 136,
       "critical": 0.01
     },
     "enhancements": ["heal", "booster", "shield", "piercing"],
@@ -287,8 +287,8 @@
       "evasion": 0.14,
       "energy": 100,
       "recharge": 1.5,
-      "size": 96,
-      "durability": 1000,
+      "size": 136,
+      "durability": 136,
       "critical": 0.01
     },
     "enhancements": ["heal", "booster", "shield", "piercing"],
@@ -390,7 +390,7 @@
       "energy": 200,
       "recharge": 0.9,
       "size": 136,
-      "durability": 1000,
+      "durability": 136,
       "critical": 0.01
     },
     "enhancements": ["heal", "booster", "shield", "piercing"],
@@ -520,7 +520,7 @@
       "energy": 200,
       "recharge": 1,
       "size": 136,
-      "durability": 1000,
+      "durability": 136,
       "critical": 0.01
     },
     "enhancements": ["heal", "booster", "shield", "piercing"],
@@ -622,7 +622,7 @@
       "energy": 200,
       "recharge": 1,
       "size": 136,
-      "durability": 1000,
+      "durability": 136,
       "critical": 0.01
     },
     "enhancements": ["heal", "booster", "shield", "piercing"],
@@ -765,7 +765,7 @@
       "energy": 200,
       "recharge": 1,
       "size": 192,
-      "durability": 1000,
+      "durability": 192,
       "critical": 0.01
     },
     "enhancements": ["heal", "booster", "shield"],
@@ -872,7 +872,7 @@
       "energy": 100,
       "recharge": 1.5,
       "size": 96,
-      "durability": 1000,
+      "durability": 96,
       "critical": 0.01
     },
     "enhancements": ["heal", "booster", "shield"],
@@ -955,7 +955,7 @@
       "energy": 50,
       "recharge": 3,
       "size": 96,
-      "durability": 1000,
+      "durability": 96,
       "critical": 0.01
     },
     "enhancements": [],
@@ -1010,7 +1010,7 @@
       "energy": 200,
       "recharge": 1,
       "size": 128,
-      "durability": 1000,
+      "durability": 128,
       "critical": 0.01
     },
     "enhancements": ["heal", "booster", "shield"],
@@ -1137,7 +1137,7 @@
       "energy": 30,
       "recharge": 1,
       "size": 64,
-      "durability": 500,
+      "durability": 64,
       "critical": 0.01
     },
     "enhancements": ["heal", "booster", "shield"],
@@ -1234,7 +1234,7 @@
       "energy": 100,
       "recharge": 1,
       "size": 96,
-      "durability": 500,
+      "durability": 96,
       "critical": 0.01
     },
     "enhancements": ["heal", "booster", "shield"],
@@ -1317,7 +1317,7 @@
       "energy": 80,
       "recharge": 1,
       "size": 96,
-      "durability": 1000,
+      "durability": 96,
       "critical": 0.01
     },
     "enhancements": ["heal", "booster", "shield"],
@@ -1399,8 +1399,8 @@
       "evasion": 0.02,
       "energy": 200,
       "recharge": 1,
-      "size": 128,
-      "durability": 1000,
+      "size": 136,
+      "durability": 136,
       "critical": 0.01
     },
     "enhancements": ["heal", "booster", "shield"],
@@ -1567,7 +1567,7 @@
       "energy": 100,
       "recharge": 1,
       "size": 96,
-      "durability": 500,
+      "durability": 96,
       "critical": 0.01
     },
     "enhancements": ["heal", "booster", "shield"],
@@ -1650,7 +1650,7 @@
       "energy": 80,
       "recharge": 1,
       "size": 96,
-      "durability": 1000,
+      "durability": 96,
       "critical": 0.01
     },
     "enhancements": ["heal", "booster", "shield"],
@@ -1733,7 +1733,7 @@
       "energy": 200,
       "recharge": 1,
       "size": 135,
-      "durability": 1000,
+      "durability": 135,
       "critical": 0.01
     },
     "enhancements": ["heal", "booster", "shield"],
@@ -1844,7 +1844,7 @@
       "energy": 60,
       "recharge": 1,
       "size": 96,
-      "durability": 500,
+      "durability": 96,
       "critical": 0.01
     },
     "enhancements": ["heal", "booster", "shield"],
@@ -1906,7 +1906,7 @@
       "energy": 120,
       "recharge": 1,
       "size": 64,
-      "durability": 500,
+      "durability": 64,
       "critical": 0.01
     },
     "enhancements": ["heal", "booster", "shield"],
@@ -1961,7 +1961,7 @@
       "energy": 200,
       "recharge": 1.0,
       "size": 96,
-      "durability": 1000,
+      "durability": 96,
       "critical": 0.01
     },
     "enhancements": ["heal", "booster", "shield"],
@@ -2019,7 +2019,7 @@
       "energy": 100,
       "recharge": 1,
       "size": 96,
-      "durability": 500,
+      "durability": 96,
       "critical": 0.01
     },
     "enhancements": ["heal", "booster", "shield"],
@@ -2102,7 +2102,7 @@
       "energy": 100,
       "recharge": 1,
       "size": 120,
-      "durability": 500,
+      "durability": 120,
       "critical": 0.01
     },
     "enhancements": ["heal", "booster", "shield"],
@@ -2185,7 +2185,7 @@
       "energy": 100,
       "recharge": 1,
       "size": 300,
-      "durability": 500,
+      "durability": 300,
       "critical": 0.01
     },
     "enhancements": ["heal", "booster", "shield"],
@@ -2296,7 +2296,7 @@
       "energy": 200,
       "recharge": 1,
       "size": 128,
-      "durability": 1000,
+      "durability": 128,
       "critical": 0.01
     },
     "enhancements": ["heal", "booster", "shield"],
@@ -2352,7 +2352,7 @@
       "energy": 200,
       "recharge": 1,
       "size": 178,
-      "durability": 1000,
+      "durability": 178,
       "critical": 0.01
     },
     "enhancements": ["heal", "booster", "shield"],
@@ -2423,7 +2423,7 @@
       "energy": 200,
       "recharge": 1,
       "size": 160,
-      "durability": 1000,
+      "durability": 160,
       "critical": 0.01
     },
     "enhancements": ["heal", "booster", "shield", "piercing"],

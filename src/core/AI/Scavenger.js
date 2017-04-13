@@ -69,12 +69,12 @@ Scavenger.prototype.engage = function(target) {
   // finish attack
   if(this.target == null && target.disabled) {
     this.target = target;
-
     this.attacker && this.game.clock.events.remove(this.attacker);
     this.attacker = this.game.clock.events.loop(ship.data.rate, this.attack, this);
 
     this.disengager && this.game.clock.events.remove(this.disengager);
     this.disengager = this.game.clock.events.add(settings.disengage, this.disengage, this);
+    if(target.durability < 1){this.disengage()}
   }
 
   // engage countermeasures
@@ -91,7 +91,7 @@ Scavenger.prototype.engage = function(target) {
 };
 
 Scavenger.prototype.disengage = function() {
-  if(this.target && !this.target.disabled) {
+  if(this.target && !this.target.disabled || this.target && this.target.durability < 1) {
     this.target = null;
     this.attacker && this.game.clock.events.remove(this.attacker);
   }

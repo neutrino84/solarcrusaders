@@ -30,6 +30,7 @@ ShipNetManager.prototype.getShipData = function(uuid) {
 ShipNetManager.prototype._data = function(data) {
   var ship,
       ships = data.ships;
+  // console.log('in shipNetManager! data is ', data)
   if(this.game.cache.checkJSONKey('ship-configuration') &&
       this.game.cache.checkJSONKey('item-configuration')) {
     for(var s in ships) {
