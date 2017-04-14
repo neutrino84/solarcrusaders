@@ -18,9 +18,9 @@ function Basic(ship) {
   this.offset = new engine.Point();
 
   this.settings = {
-    respawn: 50000,
+    respawn: 30000,
     disengage: 7680,
-    friendly: ['user', 'basic', 'scavenger'],
+    friendly: ['basic'],
     position: {
       radius: 4096,
       x: 2048,

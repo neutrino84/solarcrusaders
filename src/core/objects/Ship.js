@@ -265,13 +265,10 @@ Ship.prototype.hit = function(attacker, target, slot) {
             if(attacker.hardpoints[0].subtype === 'harvester'){
               // console.log('yo')
               if(this.durability > 0){
-                this.durability = this.durability - 2
-                    console.log('durability is ', durability)
-
+                this.durability = this.durability - 2;
               }
-              if(this.durability < 1){
-                // console.log(this.data.chassis, ' consumed')
-              }
+              // if(this.durability < 1){
+              // }
               updates.push({
                 uuid: this.uuid,
                 durability: this.durability
@@ -337,6 +334,10 @@ Ship.prototype.enable = function() {
   // re-enable
   this.disabled = false;
 
+  // reset alpha/durability
+  this.durability = 100;
+  this.alpha = 1.0;
+
   // activate ui
   this.ai && this.ai.reengage();
 
@@ -347,6 +348,7 @@ Ship.prototype.enable = function() {
   // reset location
   this.movement.magnitude = 0;
   this.movement.position.copyFrom(this.ai ? this.ai.getHomePosition() : this.manager.generateRandomPosition(1024));
+
 
   // broadcast
   this.sockets.emit('ship/enabled', {

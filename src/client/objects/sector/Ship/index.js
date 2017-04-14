@@ -114,9 +114,7 @@ Ship.prototype.update = function() {
   this.hud.update();
   
   if(this.data.durability < 1 && this.alpha > 0){
-   console.log(this.alpha)
-   this.alpha = this.alpha - 0.1
-   // debugger
+   this.alpha = 0
   }
   // update disabled state
   if(this.disabled){
@@ -148,11 +146,6 @@ Ship.prototype.disable = function() {
   this.shieldGenerator.stop();
   this.repair.stop();
   this.explosion.start();
-};
-
-Ship.prototype.deprecate = function(ship) {
-  // console.log('in deprecate', ship)
-  // debugger
 };
 
 Ship.prototype.destroy = function(options) {
