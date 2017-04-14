@@ -36,7 +36,7 @@ ShipData.prototype.constructor = ShipData;
 
 ShipData.prototype.update = function(data) {
   engine.Class.mixin(data, this);
-
+  
   this.emit('data', data);
 };
 

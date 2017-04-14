@@ -265,7 +265,7 @@ Ship.prototype.hit = function(attacker, target, slot) {
             if(attacker.hardpoints[0].subtype === 'harvester'){
               // console.log('yo')
               if(this.durability > 0){
-                this.durability = this.durability - 2;
+                this.durability = this.durability - 1;
               }
               // if(this.durability < 1){
               // }
@@ -335,8 +335,7 @@ Ship.prototype.enable = function() {
   this.disabled = false;
 
   // reset alpha/durability
-  this.durability = 100;
-  this.alpha = 1.0;
+  this.durability = this.config.stats.durability;
 
   // activate ui
   this.ai && this.ai.reengage();

@@ -20,7 +20,7 @@ function Basic(ship) {
   this.settings = {
     respawn: 30000,
     disengage: 7680,
-    friendly: ['basic'],
+    friendly: ['basic','user','scavenger'],
     position: {
       radius: 4096,
       x: 2048,
@@ -63,16 +63,8 @@ Basic.prototype.update = function() {
     this.scanner();
   }
   
-  // plot destination
-  if(!this.retreat && this.target) {
-    size = this.target.data.size * 4;
-    offset.copyFrom(this.target.movement.position);
-    offset.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
-    ship.movement.plot({ x: this.offset.x-p1.x, y: this.offset.y-p1.y }, this.throttle);
-  } else if(rnd.frac() < 0.1) {
-    p2 = this.getHomePosition();
-    ship.movement.plot({ x: p2.x-p1.x, y: p2.y-p1.y });
-  };
+  //plot course
+  this.plot();
 };
 
 Basic.prototype.scanner = function() {
@@ -177,6 +169,29 @@ Basic.prototype.attack = function() {
       }
     });
   }
+};
+
+Basic.prototype.plot = function(){
+  var rnd = this.game.rnd,
+      ship = this.ship,
+      p1 = ship.movement.position,
+      sensor = this.sensor,
+      settings = this.settings,
+      offset = this.offset,
+      size;
+
+  sensor.setTo(p1.x, p1.y, settings.sensor.range);
+      
+  // plot destination
+  if(!this.retreat && this.target) {
+    size = this.target.data.size * 4;
+    offset.copyFrom(this.target.movement.position);
+    offset.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
+    ship.movement.plot({ x: this.offset.x-p1.x, y: this.offset.y-p1.y }, this.throttle);
+  } else if(rnd.frac() < 0.1) {
+    p2 = this.getHomePosition();
+    ship.movement.plot({ x: p2.x-p1.x, y: p2.y-p1.y });
+  };
 };
 
 Basic.prototype.getHomePosition = function() {

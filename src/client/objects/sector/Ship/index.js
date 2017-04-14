@@ -96,8 +96,10 @@ Ship.prototype.refresh = function(data) {
         this.game.camera.shake();
       }
     };
-
   };
+  if(data.durability < this.config.stats.durability){
+   this.alpha = (data.durability / this.config.stats.durability);
+  }
   // update hud
   this.hud.data(data);
 };
@@ -113,9 +115,9 @@ Ship.prototype.update = function() {
   this.targetingComputer.update();
   this.hud.update();
   
-  if(this.data.durability < 1 && this.alpha > 0){
-   this.alpha = 0
-  }
+  // if(this.data.durability < this.config.stats.durability){
+  //  this.alpha = (this.data.durability / this.config.stats.durability * 0.5)  + .5;
+  // }
   // update disabled state
   if(this.disabled){
     this.selector.update(multiplier);
@@ -129,6 +131,7 @@ Ship.prototype.update = function() {
 };
 
 Ship.prototype.enable = function(data) {
+  this.alpha = 1;
   this.disabled = false;
   this.chassis.tint = 0xFFFFFF;
   this.hud.enable();
