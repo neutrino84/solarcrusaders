@@ -5,6 +5,12 @@ function Scavenger(ship, home) {
   Basic.call(this, ship);
 
   this.type = 'scavenger';
+  this.spawnQueenThreshold = 500;
+  this.nextSpawnQueenThreshold = 500;
+  this.spawnQueenCooldown = false;
+
+  // timer events
+  this.events = new engine.Timer(this.game, false);
 
   this.settings = {
     respawn: 60000,
@@ -23,6 +29,8 @@ function Scavenger(ship, home) {
       range: 16384
     }
   }
+
+
 };
 
 Scavenger.prototype = Object.create(Basic.prototype);
@@ -126,12 +134,34 @@ Scavenger.prototype.plot = function(){
   };
 };
 
+Scavenger.prototype.spawnQueenCheck = function(){
+  console.log('spawn queen check. threshold is ', this.spawnQueenThreshold);
+  this.spawnQueenThreshold -= this.target.config.stats.durability/3
+  console.log(this.spawnQueenThreshold);
+  if(this.spawnQueenThreshold <= 0){
+    this.spawnQueenThreshold = this.nextSpawnQueenThreshold;
+    this.nextSpawnQueenThreshold = this.nextSpawnQueenThreshold + 500;
+    console.log('SPAWN ', this.spawnQueenThreshold)
+  }
+};
+
 Scavenger.prototype.disengage = function() {
+    if(!this.spawnQueenCooldown){
+      this.spawnQueenCooldown = true;
+      this.timer && this.events.remove(this.timer);
+      this.timer = this.events.add(10000, function() {
+        this.spawnQueenCheck();
+        this.spawnQueenCooldown = false;
+      }, this);
+    }
+ 
+
   if(this.target && !this.target.disabled) {
     this.target = null;
     this.attacker && this.game.clock.events.remove(this.attacker);
   }
 };
+
 
 Scavenger.prototype.getHomePosition = function() {
   var position = this.settings.position,
