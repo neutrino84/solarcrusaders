@@ -6,7 +6,7 @@ function Scavenger(ship, home) {
 
   this.type = 'scavenger';
   this.spawnQueenThreshold = 500;
-  this.nextSpawnQueenThreshold = 500;
+  this.nextSpawnQueenThreshold = 1000;
   this.spawnQueenCooldown = false;
 
   // timer events
@@ -134,25 +134,52 @@ Scavenger.prototype.plot = function(){
   };
 };
 
-Scavenger.prototype.spawnQueenCheck = function(){
-  console.log('spawn queen check. threshold is ', this.spawnQueenThreshold);
-  this.spawnQueenThreshold -= this.target.config.stats.durability/3
-  console.log(this.spawnQueenThreshold);
+Scavenger.prototype.spawnQueenCheck = function(durability){
+  // console.log('threshold is ', this.spawnQueenThreshold, 'durability is', durability);
+  // console.log('TIMER FINISHED')
+  var game = this.manager.game;
+  // console.log('ummm')
+  game.clock.events.add(15000, function(){
+    this.spawnQueenCooldown = false;
+    // console.log('spawn reset')
+  })
+
+  this.spawnQueenThreshold -= durability
+  // console.log('new threshold is ', this.spawnQueenThreshold);
   if(this.spawnQueenThreshold <= 0){
     this.spawnQueenThreshold = this.nextSpawnQueenThreshold;
     this.nextSpawnQueenThreshold = this.nextSpawnQueenThreshold + 500;
-    console.log('SPAWN ', this.spawnQueenThreshold)
+    // console.log('SPAWN ', this.spawnQueenThreshold)
+    
+    if(!this.spawnQueenCooldown){
+      this.manager.create({
+        name: 'Queen',
+        chassis: 'scavengers-x04d',
+        credits: global.Math.floor(5000 * global.Math.random() + 100),
+        reputation: global.Math.floor(-100 * (1 + global.Math.random())),
+        throttle: 1.0,
+        ai: 'pirate',
+        x: -8192,
+        y: 8192
+      });
+    };
   }
 };
 
 Scavenger.prototype.disengage = function() {
-    if(!this.spawnQueenCooldown){
+  // console.log('in disengage. queen cooldown is ', this.spawnQueenCooldown)
+  var game = this.manager.game,
+  durability;
+
+    if(!this.spawnQueenCooldown && this.target){
+      durability = this.target.config.stats.durability;
+      // console.log('BEGIN 10 SECOND TIMER', this.spawnQueenCooldown)
       this.spawnQueenCooldown = true;
-      this.timer && this.events.remove(this.timer);
-      this.timer = this.events.add(10000, function() {
-        this.spawnQueenCheck();
-        this.spawnQueenCooldown = false;
+      game.clock.events.add(10000, function() {
+        this.spawnQueenCheck(durability);
+        // this.spawnQueenCooldown = false;
       }, this);
+
     }
  
 

@@ -2173,7 +2173,7 @@
   },
   "scavengers-x04d": {
     "race": "scavengers",
-    "class": "motherling",
+    "class": "queen",
     "stats": {
       "capacity": 1000,
       "health": 800,
