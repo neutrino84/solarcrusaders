@@ -68,6 +68,7 @@ Movement.prototype.update = function() {
     vector.normalize();
 
     if(!vector.isZero()) {
+
       // maneuverability
       ev = evasion/2;
       maneuver = (ev/this.throttle)+ev;

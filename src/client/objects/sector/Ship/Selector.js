@@ -33,9 +33,16 @@ Selector.prototype.create = function() {
   this.graphics.blendMode = engine.BlendMode.ADD;
   this.graphics.alpha = this.alpha;
 
+  //create reticle
+  this.reticle = new engine.Graphics();
+  this.reticle.lineStyle(size, 0xcc1111, 1.0);
+  this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius, this.hit.radius);
+  this.reticle.position.set(halfWidth + (size/2), halfHeight + (size/2));
+
   // add selector
   this.ship.addChildAt(this.graphics, 0);
-}
+  this.ship.addChildAt(this.reticle, 0);
+};
 
 Selector.prototype.highlight = function() {
   if(!this.animating || (this.animating && !this.animating.isRunning)) {
@@ -47,6 +54,10 @@ Selector.prototype.highlight = function() {
     this.animating.yoyo(true, 9500);
     this.animating.start();
   }
+};
+
+Selector.prototype.selected = function(){
+  //code for being targetted by player ship
 };
 
 Selector.prototype.disable = function() {

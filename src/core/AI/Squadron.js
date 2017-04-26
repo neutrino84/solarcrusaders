@@ -30,50 +30,48 @@ Squadron.prototype = Object.create(Basic.prototype);
 
 Squadron.prototype.constructor = Squadron;
 
-// Squadron.prototype.scanner = function() {
-//   //.. scan for user/target
-//   var target, targets, scan, distance,
-//       sensor = this.sensor,
-//       settings = this.settings,
-//       ships = this.manager.ships,
-//       ship = this.ship,
-//       player = 
-//       priority = {
-//         harvest: {},
-//         enemy: {},
-//         friendly: {}
-//       },
-//       ascending = function(a, b) {
-//         return a-b;
-//       };
+Squadron.prototype.scanner = function() {
+  //.. scan for user/target
+  var target, targets, scan, distance,
+      sensor = this.sensor,
+      settings = this.settings,
+      ships = this.manager.ships,
+      ship = this.ship,
+      master = ships[this.master],
+      position = master.movement.position;
 
-//   if(this.target == null) {
-//     // scan nearby ships
-//     for(var s in ships) {
-//       scan = ships[s];
-//       p2 = scan.movement.position;
+  ship.movement.plot({ x: position.x - ship.movement.position.x, y: position.y - ship.movement.position.y })
+  // console.log('master xy is: ', position.x, position.y)
+  // if(this.target == null) {
+  //   // scan nearby ships
+  //   for(var s in ships) {
+  //      = ships[s];
+  //     p2 = scan.movement.position;
 
-//       if(scan.disabled && sensor.contains(p2.x, p2.y)) {
-//         distance = p2.distance(ship.movement.position);
-//         priority.harvest[distance] = scan;
+  //     if(scan.disabled && sensor.contains(p2.x, p2.y)) {
+  //       distance = p2.distance(ship.movement.position);
+  //       priority.harvest[distance] = scan;
 
-//         this.ship.movement.throttle = distance/2;
-//       }
-//     }
-//     // if(target.durability < 1){this.disengage()}
+  //       this.ship.movement.throttle = distance/2;
+  //     }
+  //   }
+  //   // if(target.durability < 1){this.disengage()}
 
-//     // find harvestable
-//     targets = Object.keys(priority.harvest);
-//     // targets.length && this.engage();
-//     this.target = priority.harvest[targets.sort(ascending)[0]];
-//     this.attacker && this.game.clock.events.remove(this.attacker);
-//     this.attacker = this.game.clock.events.loop(ship.data.rate, this.attack, this);
+  //   // find harvestable
+  //   targets = Object.keys(priority.harvest);
+  //   // targets.length && this.engage();
+  //   this.target = priority.harvest[targets.sort(ascending)[0]];
+  //   this.attacker && this.game.clock.events.remove(this.attacker);
+  //   this.attacker = this.game.clock.events.loop(ship.data.rate, this.attack, this);
 
-//     this.disengager && this.game.clock.events.remove(this.disengager);
-//     this.disengager = this.game.clock.events.add(settings.disengage, this.disengage, this);
-//   }
+  //   this.disengager && this.game.clock.events.remove(this.disengager);
+  //   this.disengager = this.game.clock.events.add(settings.disengage, this.disengage, this);
+  // };
+};
 
-// };
+Squadron.prototype.plot = function(){
+  //blank
+};
 
 Squadron.prototype.getHomePosition = function() {
   var position = this.settings.position,

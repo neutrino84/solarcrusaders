@@ -122,7 +122,10 @@ ShipManager.prototype.data = function(socket, args) {
       user = socket.request.session.user,
       ships = [];
 
-  // debugger
+  if(args[1].type === 'spawn'){
+  console.log('GOT HERE')  
+  debugger
+  }
   for(var u in uuids) {
     ship = this.ships[uuids[u]];
     if(ship) {
@@ -243,14 +246,14 @@ ShipManager.prototype.generateRandomShips = function() {
         'ubaidian-x01a': { race: 'ubaidian', count: 0 },
         'ubaidian-x02': { race: 'ubaidian', count: 0 },
         'ubaidian-x03': { race: 'ubaidian', count: 0 },
-        'ubaidian-x04': { race: 'ubaidian', count: 4 },
-        'mechan-x01': { race: 'mechan', count: 1 },
-        'mechan-x02': { race: 'mechan', count: 1 },
-        'mechan-x03': { race: 'mechan', count: 2 },
+        'ubaidian-x04': { race: 'ubaidian', count: 8 },
+        'mechan-x01': { race: 'mechan', count: 0 },
+        'mechan-x02': { race: 'mechan', count: 0 },
+        'mechan-x03': { race: 'mechan', count: 0 },
         'general-x01': { race: 'ubaidian', count: 0 },
         'general-x00': { race: 'ubaidian', count: 0 },
         'general-x02': { race: 'ubaidian', count: 0 },
-        'enforcers-x01': { race: 'ubaidian', count: 4 },
+        'enforcers-x01': { race: 'ubaidian', count: 0 },
         'enforcers-x02': { race: 'ubaidian', count: 0 }
       };
   for(var chassis in iterator) {
@@ -324,9 +327,9 @@ ShipManager.prototype.generateScavengerShips = function() {
         ships: [
           { name: 'saaghath', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
           { name: 'mocolo', chassis: 'scavengers-x01d', credits: 1500, reputation: -100 },
-          // { name: 'fenris', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
-          // { name: 'zozu', chassis: 'scavengers-x01d', credits: 1500, reputation: -100 },
-          // { name: 'thovu', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
+          { name: 'fenris', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
+          { name: 'zozu', chassis: 'scavengers-x01d', credits: 1500, reputation: -100 },
+          { name: 'thovu', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
           // { name: 'mocolo', chassis: 'scavengers-x01d', credits: 1500, reputation: -100 },
           { name: 'wivero', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 }
         ]
@@ -366,7 +369,7 @@ ShipManager.prototype.generateSquadronShips = function(uuid) {
         ]
       }],
       len = iterator.length;
-  console.log('making squad. UUID is ', uuid)
+  console.log('making squad. master UUID is ', uuid)
 
   // create ships
   for(var i=0; i<len; i++) {

@@ -21,12 +21,15 @@ SelectionState.prototype.preload = function() {
 SelectionState.prototype.create = function() {
   var game = this.game;
 
+
+  //CHECKOUT LAYOUT BORDER
+  
   this.root = new Pane(game, {
     width: game.width,
     height: game.height,
     layout: {
       type: 'flow',
-      ax: Layout.CENTER,
+      ax: Layout.LEFT,
       ay: Layout.CENTER,
       direction: Layout.VERTICAL
     },
@@ -34,18 +37,33 @@ SelectionState.prototype.create = function() {
   });
 
   this.pane1 = new Pane(game, {
-    width: game.width - 500,
-    height: game.height - 500,
+    width: 128,
+    height: 128,
+    // constraint: Layout.STRETCH,
     layout: {
       type: 'flow',
       ax: Layout.CENTER,
       ay: Layout.CENTER,
       direction: Layout.VERTICAL
     },
-    bg: { color: 0x0ddd9f }
+    bg: { color: 0xffffff }
   });
 
-  this.root.add(this.pane1)
+  this.pane2 = new Pane(game, {
+    width: 128,
+    height: 128,
+    constraint: Layout.STRETCH,
+    layout: {
+      type: 'flow',
+      ax: Layout.LEFT,
+      ay: Layout.CENTER,
+      direction: Layout.VERTICAL
+    },
+    bg: { color: 0x333333 }
+  });
+
+  this.root.addPanel(this.pane1)
+  this.root.addPanel(this.pane2)
   // invalidate
   this.root.invalidate();
 };

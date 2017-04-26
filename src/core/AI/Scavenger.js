@@ -10,7 +10,7 @@ function Scavenger(ship, home) {
   this.nextSpawnQueenThreshold = 1000;
   this.spawnQueenCooldown = false;
   // timer events
-  this.events = new engine.Timer(this.game, false);
+  // this.events = new engine.Timer(this.game, false);
 
   this.settings = {
     respawn: 60000,

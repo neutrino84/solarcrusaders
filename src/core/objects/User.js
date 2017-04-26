@@ -14,6 +14,7 @@ function User(manager, data, socket) {
   this.data = new this.model.User(data);
   
   this.uuid = this.data.uuid;
+  this.socket.on('ship/select', this.select.bind(this));
 };
 
 User.prototype.constructor = User;
@@ -28,8 +29,8 @@ User.prototype.init = function(callback, context) {
       json = data.toStreamObject();
 
   if(data.isNewRecord()) {
-    self.create(User.DEFAULT_SHIPS, json);
-    self.socket.emit('auth/sync', json);
+    this.create(User.DEFAULT_SHIPS, json);
+    this.socket.emit('auth/sync', json);
 
     callback.call(context, err, data);
   } else {
@@ -69,6 +70,10 @@ User.prototype.create = function(ships) {
       this.game.emit('ship/create', data, this);
     }
   }
+};
+
+User.prototype.select = function(){
+  this.create(User.DEFAULT_SHIPS, json);
 };
 
 User.prototype.save = function(callback) {
