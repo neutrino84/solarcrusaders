@@ -149,15 +149,15 @@
     "moniker": "hammer-head",
     "stats": {
       "capacity": 3000,
-      "health": 200,
-      "heal": 0.25,
-      "armor": 0.45,
-      "speed": 45.0,
+      "health": 210,
+      "heal": 0.21,
+      "armor": 0.42,
+      "speed": 38.0,
       "rate": 256,
-      "evasion": 0.06,
+      "evasion": 0.05,
       "energy": 200,
       "recharge": 1,
-      "size": 136,
+      "size": 145,
       "durability": 136,
       "critical": 0.01
     },
@@ -222,7 +222,7 @@
           },
           "default": {
             "type": "rocket",
-            "subtype": "basic"
+            "subtype": "medium"
           }
         },
         {
@@ -237,7 +237,7 @@
           },
           "default": {
             "type": "rocket",
-            "subtype": "basic"
+            "subtype": "medium"
           }
         },
         {
@@ -252,7 +252,7 @@
           },
           "default": {
             "type": "rocket",
-            "subtype": "basic"
+            "subtype": "medium"
           }
         },
         {
@@ -267,7 +267,7 @@
           },
           "default": {
             "type": "rocket",
-            "subtype": "basic"
+            "subtype": "medium"
           }
         }
               ]
@@ -1830,68 +1830,6 @@
       ]
     }
   },
-  "scavengers-x01d": {
-    "race": "scavengers",
-    "class": "bug",
-    "stats": {
-      "capacity": 1000,
-      "health": 30,
-      "heal": 0.2,
-      "armor": 0.0,
-      "speed": 88.0,
-      "rate": 256,
-      "evasion": 0.2,
-      "energy": 60,
-      "recharge": 1,
-      "size": 96,
-      "durability": 96,
-      "critical": 0.01
-    },
-    "enhancements": ["heal", "booster", "shield"],
-    "engine": {
-      "glows": [
-        {
-          "tint": "",
-          "scale": {
-            "startX": 0.00,
-            "endX": 0.00,
-            "startY": 0.0,
-            "endY": 0.0
-          },
-          "position": {
-            "x": 108,
-            "y": 64
-          },
-          "rotation": 0
-        }
-      ]
-    },
-    "targeting": {
-      "hardpoints": [
-        {
-          "tint": "",
-          "scale": {
-            "startX": 0,
-            "endX": 0,
-            "startY": 0,
-            "endY": 0
-          },
-          "position": {
-            "x": 77,
-            "y": 95
-          },
-          "pivot": {
-            "x": 17,
-            "y": 16
-          },
-          "default": {
-            "type": "energy",
-            "subtype": "harvester"
-          }
-        }
-      ]
-    }
-  },
   "mechan-x02": {
     "race": "mechan",
     "class": "stealth",
@@ -2005,13 +1943,75 @@
       ]
     }
   },
+  "scavengers-x01d": {
+    "race": "scavengers",
+    "class": "bug",
+    "stats": {
+      "capacity": 1000,
+      "health": 30,
+      "heal": 0.05,
+      "armor": 0.0,
+      "speed": 88.0,
+      "rate": 256,
+      "evasion": 0.2,
+      "energy": 60,
+      "recharge": 1,
+      "size": 96,
+      "durability": 96,
+      "critical": 0.01
+    },
+    "enhancements": ["heal", "booster", "shield"],
+    "engine": {
+      "glows": [
+        {
+          "tint": "",
+          "scale": {
+            "startX": 0.00,
+            "endX": 0.00,
+            "startY": 0.0,
+            "endY": 0.0
+          },
+          "position": {
+            "x": 108,
+            "y": 64
+          },
+          "rotation": 0
+        }
+      ]
+    },
+    "targeting": {
+      "hardpoints": [
+        {
+          "tint": "",
+          "scale": {
+            "startX": 0,
+            "endX": 0,
+            "startY": 0,
+            "endY": 0
+          },
+          "position": {
+            "x": 77,
+            "y": 95
+          },
+          "pivot": {
+            "x": 17,
+            "y": 16
+          },
+          "default": {
+            "type": "energy",
+            "subtype": "harvester"
+          }
+        }
+      ]
+    }
+  },
   "scavengers-x02c": {
     "race": "scavengers",
     "class": "sentinel",
     "stats": {
       "capacity": 1000,
       "health": 80,
-      "heal": 0.2,
+      "heal": 0.05,
       "armor": 0.0,
       "speed": 64.0,
       "rate": 256,
@@ -2094,7 +2094,7 @@
     "stats": {
       "capacity": 1000,
       "health": 300,
-      "heal": 0.2,
+      "heal": 0.1,
       "armor": 0.0,
       "speed": 64.0,
       "rate": 256,
@@ -2404,6 +2404,62 @@
           "default": {
             "type": "energy",
             "subtype": "basic"
+          }
+        }
+        ]
+    }
+  },
+  "squad-attack": {
+    "race": "ubaidian",
+    "class": "fighter",
+    "stats": {
+      "capacity": 3000,
+      "health": 100,
+      "heal": 0.25,
+      "armor": 0.0,
+      "speed": 40.0,
+      "rate": 256,
+      "evasion": 0.3,
+      "energy": 200,
+      "recharge": 1,
+      "size": 128,
+      "durability": 128,
+      "critical": 0.01
+    },
+    "enhancements": ["booster", "shield"],
+    "engine": {
+      "glows": [
+        {
+          "tint": "0xFFFFAA",
+          "scale": {
+            "startX": 0.1,
+            "endX": 0.2,
+            "startY": 0.5,
+            "endY": 1.5
+          },
+          "position": {
+            "x": 80,
+            "y": 65
+          },
+          "rotation": 0
+        }
+        ]
+    },
+    "targeting": {
+      "hardpoints": [
+        {
+          "type": ["pulse"],
+          "pivot": {
+            "x": 20,
+            "y": 16
+          },
+          "position": {
+            "x": 49,
+            "y": 64
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "bazuko"
           }
         }
         ]

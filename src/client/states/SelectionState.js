@@ -33,6 +33,19 @@ SelectionState.prototype.create = function() {
     bg: { color: 0x000000 }
   });
 
+  this.pane1 = new Pane(game, {
+    width: game.width - 500,
+    height: game.height - 500,
+    layout: {
+      type: 'flow',
+      ax: Layout.CENTER,
+      ay: Layout.CENTER,
+      direction: Layout.VERTICAL
+    },
+    bg: { color: 0x0ddd9f }
+  });
+
+  this.root.add(this.pane1)
   // invalidate
   this.root.invalidate();
 };
@@ -41,6 +54,8 @@ SelectionState.prototype.show = function() {
 
   // add to stage
   this.game.stage.addChild(this.root);
+
+  // this.game.stage.addChild(this.pane1);
 };
 
 SelectionState.prototype.ready = function() {

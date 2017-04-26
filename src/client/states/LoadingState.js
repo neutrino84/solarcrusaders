@@ -33,7 +33,7 @@ LoadingState.prototype.create = function() {
   // game.states.add('selection', selectionState);
   // game.states.start('selection');
 
-  //-----
+  // -----
 
   this.image = new Image(game, {
     margin: [10],

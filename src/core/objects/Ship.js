@@ -17,6 +17,11 @@ function Ship(manager, data) {
   this.data = new this.model.Ship(data);
   this.data.init();
 
+  if(data.master){
+    this.master = data.master
+    // this.master = this.manager.ships[data.master];
+    console.log('master uuid is ', this.master)
+  }
   this.target = manager.ships[data.target];
   if(this.target){
     this.target.disabled = true;
@@ -60,6 +65,7 @@ Ship.RESPAWN_TIME = 10000;
 
 Ship.prototype.init = function(callback) {
   var self = this;
+  
   if(this.data.isNewRecord()) {
     this.createSystems();
     this.createHardpoints();
@@ -267,8 +273,6 @@ Ship.prototype.hit = function(attacker, target, slot) {
               if(this.durability > 0){
                 this.durability = this.durability - 1;
               }
-              // if(this.durability < 1){
-              // }
               updates.push({
                 uuid: this.uuid,
                 durability: this.durability
@@ -277,6 +281,10 @@ Ship.prototype.hit = function(attacker, target, slot) {
             };
           // }     
         }
+      }
+      
+      if(this.durability === 0){
+        console.log('SPAWN QUEEN')
       }
 
     // broadcast
@@ -332,6 +340,7 @@ Ship.prototype.blast = function() {
 
 Ship.prototype.enable = function() {
   // re-enable
+
   this.disabled = false;
 
   // reset alpha/durability

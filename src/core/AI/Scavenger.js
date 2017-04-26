@@ -1,5 +1,6 @@
 var engine = require('engine'),
     Basic = require('./Basic');
+    // Generator = require('../utils/Generator');
 
 function Scavenger(ship, home) {
   Basic.call(this, ship);
@@ -8,7 +9,6 @@ function Scavenger(ship, home) {
   this.spawnQueenThreshold = 500;
   this.nextSpawnQueenThreshold = 1000;
   this.spawnQueenCooldown = false;
-
   // timer events
   this.events = new engine.Timer(this.game, false);
 
@@ -31,6 +31,7 @@ function Scavenger(ship, home) {
   }
 
 
+  // this.generateShips();
 };
 
 Scavenger.prototype = Object.create(Basic.prototype);
@@ -78,6 +79,36 @@ Scavenger.prototype.scanner = function() {
     this.disengager = this.game.clock.events.add(settings.disengage, this.disengage, this);
   }
 
+};
+
+Scavenger.prototype.generateShips = function() {
+  var iterator = {
+        'scavengers-x01d': 2,
+        'scavengers-x02c': 2,
+        'scavengers-x03c': 0,
+        'scavengers-x04d': 0
+      };
+  for(var chassis in iterator) {
+    for(var i=0; i<iterator[chassis]; i++) {
+      this.generateShip(chassis);
+    }
+  }
+};
+
+Scavenger.prototype.generateShip = function(chassis) {
+  // var name = Generator.getName('hederaa').toUpperCase(),
+  var throttle = global.Math.random() * 0.5 + 0.5;
+
+  this.manager.create({
+    name: 'steve',
+    chassis: chassis,
+    throttle: throttle,
+    ai: 'scavenger',
+    credits: global.Math.floor(global.Math.random() * 250 + 50),
+    reputation: global.Math.floor(100 * (1 + global.Math.random())),
+    x: -8192,
+    y: 8192 
+  });
 };
 
 Scavenger.prototype.engage = function(target) {
@@ -130,7 +161,7 @@ Scavenger.prototype.plot = function(){
   } else if(rnd.frac() < 0.5) {
     p2 = this.getHomePosition();
     distance = p2.distance(p1);
-    ship.movement.plot({ x: p2.x-p1.x, y: p2.y-p1.y }, distance/3 );
+    ship.movement.plot({ x: p2.x-p1.x, y: p2.y-p1.y }, distance/7 );
   };
 };
 
@@ -150,19 +181,19 @@ Scavenger.prototype.spawnQueenCheck = function(durability){
     this.spawnQueenThreshold = this.nextSpawnQueenThreshold;
     this.nextSpawnQueenThreshold = this.nextSpawnQueenThreshold + 500;
     // console.log('SPAWN ', this.spawnQueenThreshold)
-    
-    if(!this.spawnQueenCooldown){
-      this.manager.create({
-        name: 'Queen',
-        chassis: 'scavengers-x04d',
-        credits: global.Math.floor(5000 * global.Math.random() + 100),
-        reputation: global.Math.floor(-100 * (1 + global.Math.random())),
-        throttle: 1.0,
-        ai: 'pirate',
-        x: -8192,
-        y: 8192
-      });
-    };
+    this.manager.spawnQueen()
+    // if(!this.spawnQueenCooldown){
+    //   this.manager.create({
+    //     name: 'Queen',
+    //     chassis: 'scavengers-x04d',
+    //     credits: global.Math.floor(5000 * global.Math.random() + 100),
+    //     reputation: global.Math.floor(-100 * (1 + global.Math.random())),
+    //     throttle: 1.0,
+    //     ai: 'pirate',
+    //     x: -8192,
+    //     y: 8192
+    //   });
+    // };
   }
 };
 
