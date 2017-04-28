@@ -34,14 +34,18 @@ Selector.prototype.create = function() {
   this.graphics.alpha = this.alpha;
 
   //create reticle
-  this.reticle = new engine.Graphics();
-  this.reticle.lineStyle(size, 0xcc1111, 1.0);
-  this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius, this.hit.radius);
-  this.reticle.position.set(halfWidth + (size/2), halfHeight + (size/2));
+  // this.reticle = new engine.Graphics();
+  // this.reticle.lineStyle(10, 0x336699, 1.0);
+  // this.reticle.drawRect(0, 0, ship.width, ship.height);
+  // this.reticle.pivot.set(halfWidth, halfHeight);
+  // this.reticle.position.set(halfWidth + 5, halfHeight + 5);
+  // this.reticle.blendMode = engine.BlendMode.ADD;
+  // this.reticle.rotation = global.Math.PI / 4;
+  // this.reticle.alpha = 0.0;
 
   // add selector
   this.ship.addChildAt(this.graphics, 0);
-  this.ship.addChildAt(this.reticle, 0);
+  // this.ship.addChildAt(this.reticle, 0);
 };
 
 Selector.prototype.highlight = function() {
@@ -69,7 +73,7 @@ Selector.prototype.enable = function() {
 };
 
 Selector.prototype.update = function() {
-
+  // this.reticle.rotation += 0.01;
 };
 
 Selector.prototype.destroyed = function() {
