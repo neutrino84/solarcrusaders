@@ -21,8 +21,8 @@ function Movement(parent) {
   this.destination = new engine.Point();
   this.vector = new engine.Point();
   this.direction = new engine.Point();
-  this.relative = new engine.Point()
-  this.destabalize = new engine.Point();
+  this.relative = new engine.Point();
+  this.stabalization = new engine.Point();
 };
 
 Movement.CLOCK_RATE = 100;
@@ -39,10 +39,8 @@ Movement.prototype.update = function() {
       position = this.position,
       vector = this.vector,
       direction = this.direction,
-      destabalize = this.destabalize,
       evasion = parent.evasion,
-      maneuver, cross, dot,
-      ev;
+      maneuver, cross, dot, ev;
 
   // time compensation
   this.time = this.game.clock.time;
@@ -52,32 +50,26 @@ Movement.prototype.update = function() {
     this.magnitude /= Movement.FRICTION;
   }
 
-  if(destabalize.distance({ x: 0, y: 0 }) > 1.0) {
-    destabalize.multiply(0.5, 0.5);
-    last.set(position.x, position.y);
-    position.add(destabalize.x, destabalize.y);
-  } else {
-    destabalize.set(0, 0);
-  }
-
-  if(this.magnitude > Movement.STOP_THRESHOLD && destabalize.isZero()) {
+  if(this.magnitude > Movement.STOP_THRESHOLD) {
     this.throttle = global.Math.min(this.magnitude/Movement.THROTTLE_THRESHOLD, 1.0);
     this.speed = parent.speed * this.throttle;
 
     vector.set(destination.x, destination.y);
     vector.normalize();
 
+    // linear rotate
     if(!vector.isZero()) {
 
       // maneuverability
       ev = evasion/2;
       maneuver = (ev/this.throttle)+ev;
 
+      // head towards direction
       direction.set(
         global.Math.cos(this.rotation),
         global.Math.sin(this.rotation));
 
-      // linear rotate
+      // calculate new rotation
       dot = vector.dot(direction);
       cross = vector.cross(direction);
       if(cross > maneuver) {
@@ -87,7 +79,7 @@ Movement.prototype.update = function() {
       } else if(dot < 0) {
         this.rotation -= maneuver
       }
-
+      
       // last position
       last.set(position.x, position.y);
 
@@ -120,6 +112,19 @@ Movement.prototype.compensated = function(rtt) {
   }
 
   return relative;
+};
+
+Movement.prototype.destabalize = function(ship) {
+  var stabalization = this.stabalization,
+      end = this.position,
+      start = ship.movement.position,
+      size = ship.config.stats.size * 8,
+      distance = start.distance(end);
+  if(distance <= size) {
+    stabalization.set(end.x - start.x, end.y - start.y);
+    stabalization.divide(distance, distance);
+    stabalization.multiply(size, size);
+  }
 };
 
 Movement.prototype.plot = function(destination, magnitude) {
