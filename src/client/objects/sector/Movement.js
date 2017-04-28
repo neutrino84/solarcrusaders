@@ -61,11 +61,13 @@ Movement.prototype.update = function() {
   // calculate distance
   distance = position.distance(destination);
 
-  if(speed > 0 && speed * 2.0 < distance) {
+  if(speed * 2.0 < distance) {
     velocity *= 2.0;
-  } else if(speed == 0 && distance > 1.0) {
-    velocity = distance/4;
   }
+
+  // if(distance > 0.0 && speed === 0) {
+  //   velocity = distance/2.0;
+  // }
   
   // calculate vector
   vector.set(destination.x - position.x, destination.y - position.y);
@@ -83,6 +85,7 @@ Movement.prototype.update = function() {
   if(velocity > 0 && speed > 0) {
     a1 = position.y - ship.position.y;
     a2 = position.x - ship.position.x;
+
     if(a1 !== 0 && a2 !== 0) {
       ship.rotation = global.Math.atan2(a1, a2);
     } else {

@@ -33,15 +33,13 @@ function Projectile(parent) {
 Projectile.prototype.start = function(destination, distance, spawn, index) {
   this.elapsed = 0;
   this.duration = distance * this.data.projection;
-  this.runtime = this.duration + this.length;
+  this.length = this.data.length;
+  this.runtime = this.duration;
   this.delay = ((this.runtime / spawn) * index) + (this.data.delay/spawn * (global.parseInt(this.data.slot) + 1));
   this.started = this.clock.time + this.delay;
 
   this.isRunning = true;
   this.hasExploded = false;
-
-  this.length = this.data.length;
-  this.runtime = this.duration + this.length;
 
   this.destination.set(destination.x + this.spread.x, destination.y + this.spread.y);
 
@@ -59,7 +57,7 @@ Projectile.prototype.explode = function() {
     this.hasExploded = true;
     this.parent.explosionEmitter.rocket();
     this.parent.explosionEmitter.at({ center: this.projectile.position });
-    this.parent.explosionEmitter.explode(4);
+    this.parent.explosionEmitter.explode(2);
   }
 };
 

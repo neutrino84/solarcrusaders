@@ -204,6 +204,7 @@ Ship.prototype.hit = function(attacker, target, slot) {
       data = this.data,
       ai = this.ai,
       hardpoint = attacker.hardpoints[slot],
+      piercing = attacker.enhancements.active.piercing,
       compensated = movement.compensated(),
       distance = compensated.distance(target),
       ratio = distance / (this.size * hardpoint.data.aoe),
@@ -221,6 +222,7 @@ Ship.prototype.hit = function(attacker, target, slot) {
     critical = this.game.rnd.rnd() <= attacker.critical;
     damage = global.Math.max(0, hardpoint.data.damage * (1-ratio) * (1-this.armor));
     damage += critical ? damage : 0;
+    damage *= piercing ? piercing.damage : 1;
     health = data.health-damage;
     durability = this.durability
 
@@ -322,22 +324,15 @@ Ship.prototype.disable = function() {
 
 Ship.prototype.blast = function() {
   var ship, ships, distance, end, start,
-      manager = this.manager
-      size = this.config.stats.size * 8,
-      rnd = this.game.rnd;
+      manager = this.manager;
   if(manager != undefined) {
     ships = manager.ships;
+
     for(var s in ships) {
       ship = ships[s];
 
       if(ship.game && !ship.disabled && ship != this) {
-        end = ship.movement.position;
-        start = this.movement.position;
-        distance = start.distance(end);
-
-        if(distance < size) {
-          ship.movement.destabalize.set(end.x - start.x, end.y - start.y);
-        }
+        ship.movement.destabalize(this);
       }
     }
   }
@@ -407,13 +402,7 @@ Ship.prototype.activate = function(name) {
         subtype: enhancement.subtype
       });
     }
-  } //else {
-    // sockets.emit('ship/enhancement/cancelled', {
-    //   uuid: this.uuid,
-    //   enhancement: name,
-    //   subtype: enhancement.subtype
-    // });
-  // }
+  }
 };
 
 Ship.prototype.deactivate = function(enhancement) {
@@ -548,7 +537,7 @@ Object.defineProperty(Ship.prototype, 'recharge', {
 Object.defineProperty(Ship.prototype, 'armor', {
   get: function() {
     var total = this.data.armor,
-        armor = this.enhancements.active.armor
+        armor = this.enhancements.active.armor;
     for(var a in armor) {
       total += armor[a].stat('armor', 'value');
     }
