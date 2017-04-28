@@ -3,28 +3,25 @@ var pixi = require('pixi'),
     engine = require('engine'),
     ShockwaveFilter = require('./filters/ShockwaveFilter');
 
-function Shockwave(manager, data) {
+function Shockwave(manager) {
   engine.Sprite.call(this, manager.game, 'texture-atlas', 'asteroid-x01.png');
 
   this.manager = manager;
   this.game = manager.game;
-  this.data = data;
 
   this.elapsed = 0;
   this.length = 0;
   this.duration = 0;
   this.started = 0;
 
+  this.data = null;
   this.isRunning = false;
 
   // render texture
-  this.texture = pixi.RenderTexture.create(data.width, data.height, pixi.SCALE_MODES.LINEAR, 1.0);
+  this.texture = pixi.RenderTexture.create();//data.width, data.height, pixi.SCALE_MODES.LINEAR, 1.0);
 
   // matrix
   this.mat = new pixi.Matrix();
-
-  // center
-  this.pivot.set(data.width/2, data.height/2);
 
   // filter
   this.filter = new ShockwaveFilter(this);
@@ -34,11 +31,18 @@ function Shockwave(manager, data) {
 Shockwave.prototype = Object.create(engine.Sprite.prototype);
 Shockwave.prototype.constructor = Shockwave;
 
-Shockwave.prototype.start = function() {
+Shockwave.prototype.start = function(data) {
+  this.data = data;
   this.elapsed = 0;
   this.duration = this.data.duration;
   this.started = this.game.clock.time;
   this.isRunning = true;
+
+  // resize texture
+  this.texture.resize(data.width, data.height);
+
+  // center
+  this.pivot.set(data.width/2, data.height/2);
 };
 
 Shockwave.prototype.update = function() {

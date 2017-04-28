@@ -21,11 +21,11 @@ ShockwaveManager.prototype.create = function(data) {
   var game = this.game,
       cache = this.cache,
       actives = this.actives,
-      shockwave = new Shockwave(this, data);
+      shockwave = this.cache.pop() || new Shockwave(this);
 
   // add to actives
   actives.push(shockwave);
-  shockwave.start();
+  shockwave.start(data);
   
   // add to world
   game.world.front.add(shockwave);
