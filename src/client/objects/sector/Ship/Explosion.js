@@ -56,12 +56,12 @@ Explosion.prototype.start = function() {
     }
   });
 
-  // this.game.emit('fx/shockwave', {
-  //   object: ship,
-  //   width: ship.data.size * 24,
-  //   height: ship.data.size * 24,
-  //   duration: 1024
-  // });
+  this.game.emit('fx/shockwave', {
+    object: ship,
+    width: ship.data.size * 18,
+    height: ship.data.size * 18,
+    duration: 1024
+  });
 };
 
 Explosion.prototype.update = function() {
