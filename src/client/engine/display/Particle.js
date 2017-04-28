@@ -85,6 +85,7 @@ Particle.prototype.update = function() {
 };
 
 Particle.prototype.onEmit = function() {
+  this.visible = true;
 };
 
 Particle.prototype.setAlphaData = function(data) {
@@ -109,7 +110,6 @@ Particle.prototype.reset = function(x, y) {
   this.position.set(x, y);
   this.elapsed = 0;
   this.started = this.clock.time;
-  this.visible = true;
 };
 
 module.exports = Particle;
