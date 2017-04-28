@@ -29,6 +29,25 @@ function Scavenger(ship, home) {
       range: 16384
     }
   }
+  if(ship.chassis === 'scavengers-x04d'){
+    this.settings = {
+      respawn: 600000,
+      disengage: 8216,
+      friendly: ['scavenger'],
+      position: {
+        radius: 128,
+        x: ship.movement.position.x,
+        y: ship.movement.position.y
+      },
+      escape: {
+        health: 0.5,
+      },
+      sensor: {
+        aim: 0.8,
+        range: 16384
+      }
+    }
+  }
 
 
   // this.generateShips();
@@ -202,7 +221,7 @@ Scavenger.prototype.disengage = function() {
   var game = this.manager.game,
   durability;
 
-    if(!this.spawnQueenCooldown && this.target){
+    if(!this.spawnQueenCooldown && this.target.config.stats.durability){
       durability = this.target.config.stats.durability;
       // console.log('BEGIN 10 SECOND TIMER', this.spawnQueenCooldown)
       this.spawnQueenCooldown = true;

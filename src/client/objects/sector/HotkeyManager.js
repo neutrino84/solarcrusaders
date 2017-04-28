@@ -106,7 +106,6 @@ HotkeyManager.prototype._cooled = function(data){
 
 HotkeyManager.prototype._player = function(ship){
   this.player = ship,
-  console.log(ship)
   this.enhancements = ship.config.enhancements;
   for(var e in this.enhancements){
   	var key = parseInt(e)+1;

@@ -36,9 +36,9 @@ ShipManager.prototype.constructor = ShipManager;
 
 ShipManager.prototype.init = function() {
   // generate npcs
-  // this.generateRandomShips();
+  this.generateRandomShips();
   // this.generatePirateShips();
-  // this.generateScavengerShips();
+  this.generateScavengerShips();
   // this.generateSquadronShips();
 };
 
@@ -69,7 +69,7 @@ ShipManager.prototype.create = function(data, user, position) {
   ship = new Ship(this, data);
   ship.user = user;
   if(ship.user){
-    this.generateSquadronShips(ship.uuid)
+    // this.generateSquadronShips(ship.uuid)
   }
   ship.init(function(err) {
     self.game.emit('ship/add', ship);
@@ -408,7 +408,15 @@ ShipManager.prototype.generateRandomShip = function(chassis, race, ai) {
 };
 
 ShipManager.prototype.spawnQueen = function(){
-  console.log('SPAWN QUEEN')
+  console.log(' SHIP  manager SPAWN QUEEN')
+  this.create({
+    name: 'ScavengerQueen',
+    chassis: 'scavengers-x04d',
+    throttle: 1.0,
+    ai: ai,
+    credits: global.Math.floor(global.Math.random() * 250 + 50),
+    reputation: global.Math.floor(100 * (1 + global.Math.random()))
+  });
 };
 
 ShipManager.prototype.generateRandomPosition = function(size) {

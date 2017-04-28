@@ -266,31 +266,25 @@ Ship.prototype.hit = function(attacker, target, slot) {
             reputation: attacker.reputation
           });
         }
-        // if(this.disabled){
-        //   // for(var i =0; i < attacker.hardpoints.length; i++){
-        //     if(attacker.hardpoints[0].subtype === 'harvester'){
-        //       // console.log('yo')
-        //       if(this.durability > 0){
-        //         this.durability = this.durability - 1;
-        //       }
-        //       updates.push({
-        //         uuid: this.uuid,
-        //         durability: this.durability
-        //       })
 
-              // sockets.emit('ship/data', {
-              //   type: 'spawn', ships: updates
-              // });
-        //       return   
-        //       // console.log(updates)    
-        //     };
-        //   // }     
-        // }
+        if(attacker.hardpoints[0].subtype === 'harvester'){
+          if(this.durability > 0){
+            this.durability = this.durability - 1;
+          }
+          updates.push({
+            uuid: this.uuid,
+            durability: this.durability
+          })
+
+          if(this.durability < 1){
+            this.manager.ai.queenCheck(this.config.stats.durability, this.uuid)
+          };
+          // return   
+          // console.log(updates)    
+        };
       }
 
-    if(this.durability < 1){
-      this.game.emit('ship/consumed', this)
-    }
+   
 
     // broadcast
     if(updates.length) {
@@ -361,6 +355,11 @@ Ship.prototype.enable = function() {
   // reset location
   this.movement.magnitude = 0;
   this.movement.position.copyFrom(this.ai ? this.ai.getHomePosition() : this.manager.generateRandomPosition(1024));
+
+  //remove from ai consumed list
+  if(this.manager.ai.consumed[this.uuid]){
+    this.manager.ai.consumed[this.uuid] = null;
+  }
 
 
   // broadcast

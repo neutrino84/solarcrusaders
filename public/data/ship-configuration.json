@@ -2178,7 +2178,7 @@
       "capacity": 1000,
       "health": 800,
       "heal": 0.2,
-      "armor": 0.0,
+      "armor": 1.0,
       "speed": 64.0,
       "rate": 256,
       "evasion": 0.1,

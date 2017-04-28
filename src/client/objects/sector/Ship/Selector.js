@@ -21,6 +21,8 @@ Selector.prototype.create = function() {
   // add selector highlight
   this.alpha = ship.isPlayer ? 0.6 : 0.2;
 
+  console.log('width is ', ship.width, 'height is ', ship.height)
+
   // create hit area
   this.hit = new engine.Circle(halfWidth, halfHeight, radius);
   
@@ -36,12 +38,13 @@ Selector.prototype.create = function() {
   //create reticle
   this.reticle = new engine.Graphics();
   this.reticle.lineStyle(size, 0xcc1111, 1.0);
-  this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius, this.hit.radius);
-  this.reticle.position.set(halfWidth + (size/2), halfHeight + (size/2));
+  ship.isPlayer ? this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius*2, this.hit.radius*2) : this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius, this.hit.radius);
+  ship.isPlayer ? this.reticle.position.set(-ship.width/1.85, -ship.height/1.85) : this.reticle.position.set(-ship.width/2, -ship.height/2);
+
 
   // add selector
   this.ship.addChildAt(this.graphics, 0);
-  this.ship.addChildAt(this.reticle, 0);
+  // this.ship.addChildAt(this.reticle, 0);
 };
 
 Selector.prototype.highlight = function() {

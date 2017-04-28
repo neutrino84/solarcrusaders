@@ -66,6 +66,7 @@ Ship.prototype.boot = function() {
   if(this.isPlayer) {
     this.hud.show();
     this.game.emit('ship/player', this);
+    console.log(this.selector)
   }
 };
 
@@ -109,7 +110,7 @@ Ship.prototype.update = function() {
       velocity = this.movement.velocity,
       speed = this.data.speed,
       multiplier = velocity/speed;
-
+      
   this.movement.update();
   this.events.update(this.game.clock.time);
   this.targetingComputer.update();

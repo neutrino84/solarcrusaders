@@ -9,6 +9,9 @@ function AI(manager) {
   this.game = manager.game;
   this.timer = this.game.clock.events.loop(500, this.update, this);
   this.ships = {};
+  this.consumed = {};
+  this.queenThreshold = 500;
+  this.next = 1000;
 };
 
 AI.prototype.constructor = AI;
@@ -49,6 +52,21 @@ AI.prototype.update = function() {
   	}
   }
 };
+
+AI.prototype.queenCheck = function(durability, uuid){
+  if(!this.consumed[uuid]){
+    this.consumed[uuid] = uuid  
+    this.queenThreshold = this.queenThreshold - durability;
+    console.log(this.queenThreshold)
+  }
+  
+  if(this.queenThreshold < 1){
+    console.log('SPAWN')
+    this.manager.spawnQueen();
+    this.queenThreshold = this.next;
+    this.next = this.next + 500;
+  };
+}
 
 AI.prototype.destroy = function() {
   this.timer && this.game.clock.events.remove(this.timer);
