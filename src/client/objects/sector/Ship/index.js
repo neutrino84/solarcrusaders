@@ -114,13 +114,13 @@ Ship.prototype.update = function() {
   this.events.update(this.game.clock.time);
   this.targetingComputer.update();
   this.hud.update();
+  this.selector.update();
   
   // if(this.data.durability < this.config.stats.durability){
   //  this.alpha = (this.data.durability / this.config.stats.durability * 0.5)  + .5;
   // }
   // update disabled state
   if(this.disabled){
-    this.selector.update(multiplier);
     this.engineCore.update(0);
     this.explosion.update();
   } else {
