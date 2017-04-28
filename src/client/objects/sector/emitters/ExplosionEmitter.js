@@ -2,7 +2,7 @@
 var engine = require('engine');
 
 function ExplosionEmitter(game) {
-  engine.Emitter.call(this, game, 0, 0, 500);
+  engine.Emitter.call(this, game, 0, 0, 1000);
 
   this.makeParticles('texture-atlas', ['explosion-a.png', 'explosion-b.png']);
 };

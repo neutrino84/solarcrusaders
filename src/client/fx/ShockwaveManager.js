@@ -1,13 +1,14 @@
 
 var engine = require('engine'),
+    pixi = require('pixi'),
     Shockwave = require('./Shockwave');
 
 function ShockwaveManager(game) {
   this.game = game;
   this.shockwavesGroup = new engine.Group(game);
-
-  // add to display
-  this.game.world.add(this.shockwavesGroup);
+  
+  this.actives = [];
+  this.cache = [];
 
   // listen to messaging
   this.game.on('fx/shockwave', this.create, this);
@@ -15,18 +16,37 @@ function ShockwaveManager(game) {
 
 ShockwaveManager.prototype.constructor = ShockwaveManager;
 
-ShockwaveManager.prototype.create = function(properties) {
+ShockwaveManager.prototype.create = function(data) {
+  // create shockwave
   var game = this.game,
-      shockwave = new Shockwave(game, properties.width || 2048, properties.height || 2048);
-      shockwave.start(properties);
-  this.shockwavesGroup.add(shockwave);
+      cache = this.cache,
+      actives = this.actives,
+      shockwave = new Shockwave(this, data);
+
+  // add to actives
+  actives.push(shockwave);
+  shockwave.start();
+  
+  // add to world
+  game.world.front.add(shockwave);
+};
+
+ShockwaveManager.prototype.remove = function(shockwave) {
+  var game = this.game,
+      cache = this.cache,
+      actives = this.actives;
+
+  engine.Utility.splice(actives, actives.indexOf(shockwave));
+  cache.push(shockwave);
+  
+  game.world.front.remove(shockwave);
 };
 
 ShockwaveManager.prototype.preRender = function() {
-  var group = this.shockwavesGroup,
-      i = group.children.length;
+  var actives = this.actives,
+      i = actives.length;
   while(i--) {
-    group.children[i].preRender();
+    actives[i].preRender();
   }
 };
 
