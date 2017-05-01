@@ -37,7 +37,7 @@ ShipManager.prototype.constructor = ShipManager;
 ShipManager.prototype.init = function() {
   // generate npcs
   this.generateRandomShips();
-  // this.generatePirateShips();
+  this.generatePirateShips();
   this.generateScavengerShips();
   // this.generateSquadronShips();
 };
@@ -122,10 +122,6 @@ ShipManager.prototype.data = function(socket, args) {
       user = socket.request.session.user,
       ships = [];
 
-  if(args[1].type === 'spawn'){
-  console.log('GOT HERE')  
-  debugger
-  }
   for(var u in uuids) {
     ship = this.ships[uuids[u]];
     if(ship) {
@@ -243,17 +239,17 @@ ShipManager.prototype.disabled = function(data) {
 
 ShipManager.prototype.generateRandomShips = function() {
   var iterator = {
-        'ubaidian-x01a': { race: 'ubaidian', count: 0 },
-        'ubaidian-x02': { race: 'ubaidian', count: 0 },
-        'ubaidian-x03': { race: 'ubaidian', count: 0 },
-        'ubaidian-x04': { race: 'ubaidian', count: 8 },
-        'mechan-x01': { race: 'mechan', count: 0 },
-        'mechan-x02': { race: 'mechan', count: 0 },
-        'mechan-x03': { race: 'mechan', count: 0 },
+        'ubaidian-x01a': { race: 'ubaidian', count: 2 },
+        'ubaidian-x02': { race: 'ubaidian', count: 1 },
+        'ubaidian-x03': { race: 'ubaidian', count: 3 },
+        'ubaidian-x04': { race: 'ubaidian', count: 3 },
+        'mechan-x01': { race: 'mechan', count: 1 },
+        'mechan-x02': { race: 'mechan', count: 1 },
+        'mechan-x03': { race: 'mechan', count: 1 },
         'general-x01': { race: 'ubaidian', count: 0 },
         'general-x00': { race: 'ubaidian', count: 0 },
         'general-x02': { race: 'ubaidian', count: 0 },
-        'enforcers-x01': { race: 'ubaidian', count: 0 },
+        'enforcers-x01': { race: 'ubaidian', count: 3 },
         'enforcers-x02': { race: 'ubaidian', count: 0 }
       };
   for(var chassis in iterator) {
@@ -269,15 +265,15 @@ ShipManager.prototype.generatePirateShips = function() {
         location: { x: -4096, y: 2048 },
         ships: [
           // { name: 'xinli', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
-          // { name: 'mocolo', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
-          // { name: 'mavero', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
+          { name: 'mocolo', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
+          { name: 'mavero', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
           { name: 'saag', chassis: 'pirate-x02', credits: 1500, reputation: -100 }
         ]
       }, {
         location: { x: 8192, y: 2048 },
         ships: [
           // { name: 'satel', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
-          // { name: 'oeem', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
+          { name: 'oeem', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
           // { name: 'thath', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
           { name: 'zeus', chassis: 'pirate-x03b', credits: 1500, reputation: -100 }
         ]
@@ -286,7 +282,7 @@ ShipManager.prototype.generatePirateShips = function() {
         ships: [
           // { name: 'manduk', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
           { name: 'deuh', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
-          // { name: 'talai', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
+          { name: 'talai', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
           { name: 'kaan', chassis: 'pirate-x03b', credits: 1500, reputation: -100 }
         ]
       }, {
@@ -356,6 +352,18 @@ ShipManager.prototype.generateScavengerShips = function() {
   }
 };
 
+ShipManager.prototype.spawnQueen = function(){
+  console.log(' SHIP  manager SPAWN QUEEN')
+  this.create({
+    name: 'ScavengerQueen',
+    chassis: 'scavengers-x04d',
+    throttle: 1.0,
+    ai: 'scavenger',
+    credits: global.Math.floor(global.Math.random() * 250 + 50),
+    reputation: global.Math.floor(100 * (1 + global.Math.random()))
+  });
+};
+
 ShipManager.prototype.generateSquadronShips = function(uuid) {
   var base, ship,
       iterator = [{
@@ -363,9 +371,9 @@ ShipManager.prototype.generateSquadronShips = function(uuid) {
         ships: [
           { name: 'redOne', chassis: 'squad-attack', credits: 1500, reputation: -100 },
           { name: 'redTwo', chassis: 'squad-attack', credits: 1500, reputation: -100 },
-          { name: 'redThree', chassis: 'squad-attack', credits: 1500, reputation: -100 },
-          { name: 'redFour', chassis: 'squad-attack', credits: 1500, reputation: -100 },
-          { name: 'redFive', chassis: 'squad-attack', credits: 1500, reputation: -100 }
+          { name: 'redThree', chassis: 'squad-attack', credits: 1500, reputation: -100 }
+          // { name: 'redFour', chassis: 'squad-attack', credits: 1500, reputation: -100 },
+          // { name: 'redFive', chassis: 'squad-attack', credits: 1500, reputation: -100 }
         ]
       }],
       len = iterator.length;
@@ -401,18 +409,6 @@ ShipManager.prototype.generateRandomShip = function(chassis, race, ai) {
     name: name,
     chassis: chassis,
     throttle: throttle,
-    ai: ai,
-    credits: global.Math.floor(global.Math.random() * 250 + 50),
-    reputation: global.Math.floor(100 * (1 + global.Math.random()))
-  });
-};
-
-ShipManager.prototype.spawnQueen = function(){
-  console.log(' SHIP  manager SPAWN QUEEN')
-  this.create({
-    name: 'ScavengerQueen',
-    chassis: 'scavengers-x04d',
-    throttle: 1.0,
     ai: ai,
     credits: global.Math.floor(global.Math.random() * 250 + 50),
     reputation: global.Math.floor(100 * (1 + global.Math.random()))

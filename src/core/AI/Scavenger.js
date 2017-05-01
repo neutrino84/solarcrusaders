@@ -71,33 +71,70 @@ Scavenger.prototype.scanner = function() {
       ascending = function(a, b) {
         return a-b;
       };
+  if(ship.chassis === 'scavengers-x01d' || ship.chassis === 'scavengers-x02c'){
+    if(this.target == null) {
+      // scan nearby ships
+      for(var s in ships) {
+        scan = ships[s];
+        p2 = scan.movement.position;
 
-  if(this.target == null) {
-    // scan nearby ships
-    for(var s in ships) {
-      scan = ships[s];
-      p2 = scan.movement.position;
+        if(scan.disabled && sensor.contains(p2.x, p2.y)) {
+          distance = p2.distance(ship.movement.position);
+          priority.harvest[distance] = scan;
 
-      if(scan.disabled && sensor.contains(p2.x, p2.y)) {
-        distance = p2.distance(ship.movement.position);
-        priority.harvest[distance] = scan;
-
-        this.ship.movement.throttle = distance/2;
+          this.ship.movement.throttle = distance/2;
+        }
       }
+      // find harvestable
+      targets = Object.keys(priority.harvest);
+      // targets.length && this.engage();
+      this.target = priority.harvest[targets.sort(ascending)[0]];
+      this.attacker && this.game.clock.events.remove(this.attacker);
+      this.attacker = this.game.clock.events.loop(ship.data.rate, this.attack, this);
+
+      this.disengager && this.game.clock.events.remove(this.disengager);
+      this.disengager = this.game.clock.events.add(settings.disengage, this.disengage, this);
     }
-    // if(target.durability < 1){this.disengage()}
+  };
+  if(ship.chassis === 'scavengers-x03c' || ship.chassis === 'scavengers-x04d'){
+    // Basic.prototype.scanner.call(this);
 
-    // find harvestable
-    targets = Object.keys(priority.harvest);
-    // targets.length && this.engage();
-    this.target = priority.harvest[targets.sort(ascending)[0]];
-    this.attacker && this.game.clock.events.remove(this.attacker);
-    this.attacker = this.game.clock.events.loop(ship.data.rate, this.attack, this);
+    if(this.target == null) {
+      // scan nearby ships
+      for(var s in ships) {
+        scan = ships[s];
+        p2 = scan.movement.position;
+        // if(scan.chassis === 'ubaidian-x01d'){console.log(scan)}
+        if(scan.disabled) { continue; }
+        if(sensor.contains(p2.x, p2.y)) {
+          if (scan.ai === null){
+          }
+          if(!this.friendly(scan)) {
+            priority.enemy[scan.data.health] = scan;
+            if(scan.ai === null){
 
-    this.disengager && this.game.clock.events.remove(this.disengager);
-    this.disengager = this.game.clock.events.add(settings.disengage, this.disengage, this);
-  }
+            // console.log('scan is ', scan)
+            }
+          } else {
+            priority.friendly[scan.data.health] = scan;
+              // console.log(priority.friendly)
+          }
+        }
+      }
 
+      // find enemies
+      targets = Object.keys(priority.enemy);
+      targets.length && this.engage(priority.enemy[targets.sort(ascending)[0]]);
+
+      // targets.length && this.engage();
+      this.target = priority.enemy[targets.sort(ascending)[0]];
+      this.attacker && this.game.clock.events.remove(this.attacker);
+      this.attacker = this.game.clock.events.loop(ship.data.rate, this.attack, this);
+
+      this.disengager && this.game.clock.events.remove(this.disengager);
+      this.disengager = this.game.clock.events.add(settings.disengage, this.disengage, this);
+    }
+  };
 };
 
 Scavenger.prototype.generateShips = function() {
@@ -136,7 +173,7 @@ Scavenger.prototype.engage = function(target) {
       health = ship.data.health / ship.config.stats.health;
 
   // finish attack
-  
+  // console.log('queen engages target: ', target)
 
   // engage countermeasures
   if(this.game.rnd.frac() < 0.10) {
@@ -152,11 +189,18 @@ Scavenger.prototype.engage = function(target) {
 };
 
 Scavenger.prototype.attack = function(){
-    if(this.target && this.target.disabled && this.target.durability > 0){
+    if(this.ship.chassis === 'scavengers-x03c' || this.ship.chassis === 'scavengers-x04d'){
+      if(this.target && !this.target.disabled){
+      Basic.prototype.attack.call(this)
+      } else if(this.target && this.target.disabled) {
+        this.disengage();
+      }
+    } else if(this.target && this.target.disabled && this.target.durability > 0){
     Basic.prototype.attack.call(this)
     } else if(this.target) {
       this.disengage();
     }
+
   
 };
 
