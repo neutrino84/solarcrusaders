@@ -215,12 +215,6 @@ Emitter.prototype.emitParticle = function() {
   particle.reset(this.emitX, this.emitY);
   particle.lifespan = this.lifespan;
 
-  // if(this.particleBringToTop) {
-  //   this.bringToTop(particle);
-  // } else if(this.particleSendToBack) {
-  //   this.sendToBack(particle);
-  // }
-
   if(Array.isArray(this._frames)) {
     frame = rnd.pick(this._frames);
   } else {

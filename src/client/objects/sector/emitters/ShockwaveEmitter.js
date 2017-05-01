@@ -52,15 +52,17 @@ ShockwaveEmitter.prototype.explosion = function(ship) {
       speed = movement._speed * 2,
       vector = movement._vector;
 
+  this.blendMode = engine.BlendMode.NORMAL;
+
   this.frequency = 250;
-  this.lifespan = 1000;
+  this.lifespan = 1500;
 
   this.setVelocity(speed * 2, speed * 2);
   this.setVector(vector.x, vector.y);
 
-  this.setScale(0.0, ship.data.size / 3, 1000);
-  this.setAlpha(1.0, 0.0, 1000);
-  this.setTint(0xFFFFFF, 0x999999, 500);
+  this.setScale(0.0, ship.data.size / 3, 1500);
+  this.setAlpha(1.0, 0.0, 1500);
+  this.setTint(0xFFFFFF, 0x6699CC, 1000);
 };
 
 module.exports = ShockwaveEmitter;

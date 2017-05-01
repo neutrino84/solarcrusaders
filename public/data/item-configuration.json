@@ -168,9 +168,9 @@
         "emitter": ["0xFFFFFF", "0x12def9"],
         "icon": "item-laser-a",
         "range": 2304,
-        "projection": 0.16,
-        "delay": 64,
-        "spread": 64,
+        "projection": 0.06,
+        "delay": 32,
+        "spread": 32,
         "damage": 2.0,
         "cooldown": 0,
         "length": 32,
@@ -190,9 +190,9 @@
         "emitter": ["0xFFFFFF", "0x12def9"],
         "icon": "item-laser-a",
         "range": 2604,
-        "projection": 0.12,
-        "delay": 30,
-        "spread": 37,
+        "projection": 0.06,
+        "delay": 32,
+        "spread": 32,
         "damage": 3,
         "length": 32,
         "aoe": 1.0,
@@ -214,7 +214,7 @@
         "projection": 0.06,
         "delay": 32,
         "spread": 32,
-        "damage": 2.5,
+        "damage": 2.2,
         "cooldown": 0,
         "length": 32,
         "aoe": 1.0,
@@ -230,17 +230,17 @@
         "sprite": "turret-a",
         "texture": "laser-blue",
         "glow": "0x12def9",
-        "emitter": ["0xFFFFFF", "0x12def9"],
+        "emitter": ["0x99AAFF", "0x336699"],
         "icon": "item-laser-a",
         "cooldown": 0,
-        "range": 2304,
-        "projection": 0.20,
-        "delay": 32,
-        "spread": 64,
+        "range": 3072,
+        "projection": 0.06,
+        "delay": 16,
+        "spread": 32,
         "damage": 3.5,
         "aoe": 1.0,
-        "length": 32,
-        "spawn": 2,
+        "length": 22,
+        "spawn": 1,
         "durability": 1000.0,
         "sound": "tarkin_pulse",
         "default_volume": 0.52
@@ -252,13 +252,13 @@
         "sprite": "turret-a",
         "texture": "laser-green",
         "glow": "0x12def9",
-        "emitter": ["0xFFFFFF", "0x12def9"],
+        "emitter": ["0xFFFFFF", "0x99FF99"],
         "icon": "item-laser-a",
         "cooldown": 0,
-        "range": 3000,
-        "projection": 0.15,
-        "delay": 60,
-        "spread": 64,
+        "range": 3072,
+        "projection": 0.06,
+        "delay": 32,
+        "spread": 32,
         "damage": 7.0,
         "length": 32,
         "aoe": 1.0,
@@ -306,7 +306,7 @@
         "damage": 2.0,
         "length": 32,
         "aoe": 1.0,
-        "spawn": 2,
+        "spawn": 1,
         "sound": "vulcan_pulse",
         "durability": 1000,
         "default_volume": 0.18
@@ -322,12 +322,12 @@
         "icon": "item-rocket-a",
         "cooldown": 0,
         "range": 4096,
-        "projection": 0.18,
+        "projection": 0.32,
         "delay": 32,
-        "spread": 128,
-        "damage": 1.0,
-        "length": 256,
-        "aoe": 4.0,
+        "spread": 64,
+        "damage": 2.0,
+        "length": 128,
+        "aoe": 1.0,
         "spawn": 1,
         "durability": 1000.0,
         "sound": "rocket1",
@@ -342,12 +342,12 @@
         "icon": "item-rocket-a",
         "cooldown": 0,
         "range": 4096,
-        "projection": 0.18,
+        "projection": 0.32,
         "delay": 32,
-        "spread": 128,
+        "spread": 64,
         "damage": 3.0,
-        "length": 256,
-        "aoe": 5.0,
+        "length": 128,
+        "aoe": 2.0,
         "spawn": 1,
         "durability": 1000.0,
         "sound": "rocket1",
@@ -362,11 +362,11 @@
         "icon": "item-rocket-a",
         "cooldown": 0,
         "range": 4096,
-        "projection": 0.18,
+        "projection": 0.32,
         "delay": 32,
         "spread": 128,
-        "damage": 1.0,
-        "length": 256,
+        "damage": 5.0,
+        "length": 128,
         "aoe": 4.0,
         "spawn": 1,
         "durability": 1000.0,
@@ -391,7 +391,7 @@
         "damage": 2.0,
         "length": 1024,
         "aoe": 2.0,
-        "spawn": 4,
+        "spawn": 1,
         "durability": 1000.0,
         "default_volume": 0.3
       }
@@ -436,7 +436,6 @@
           "volume": 0.08,
           "loop": false
         }
-
       }
     },
     "booster": {
@@ -466,7 +465,7 @@
         "active": 10,
         "stats": {
           "armor": {
-            "value": 2
+            "value": 0.5
           }
         },
         "sound": {
@@ -483,7 +482,7 @@
         "active": 10,
         "stats": {
           "armor": {
-            "value": 2
+            "value": 0.5
           }
         }
       }
@@ -495,7 +494,7 @@
         "active": 10,
         "stats": {
           "armor": {
-            "value": 2
+            "value": 0.5
           }
         },
         "sound": {
@@ -507,13 +506,13 @@
     },
     "piercing": {
       "basic": {
-        "cost": -30,
-        "cooldown": 20,
-        "active": 6,
+        "cost": -3,
+        "cooldown": 6,
+        "active": 3,
         "stats": {
          
         },
-        "damage": 50,
+        "damage": 5.0,
         "sound": {
           "name": "piercing",
           "volume": 1.5,

@@ -1,63 +1,82 @@
 
 var pixi = require('pixi'),
     engine = require('engine'),
-    glslify = require('glslify'),
-    Shader = require('pixi-gl-core').GLShader;
+    ShockwaveFilter = require('./filters/ShockwaveFilter');
 
-function Shockwave(game, width, height) {
-  engine.Shader.call(this, game);
+function Shockwave(manager) {
+  engine.Sprite.call(this, manager.game, 'texture-atlas', 'asteroid-x01.png');
 
-  this.tween = game.tweens.create(this);
-  this.texture = pixi.RenderTexture.create(width, height, pixi.SCALE_MODES.LINEAR);
+  this.manager = manager;
+  this.game = manager.game;
 
-  this.pivot.set(width/2, height/2);
+  this.elapsed = 0;
+  this.length = 0;
+  this.duration = 0;
+  this.started = 0;
 
-  this.width = width;
-  this.height = height;
+  this.data = null;
+  this.isRunning = false;
+
+  // render texture
+  this.texture = pixi.RenderTexture.create();//data.width, data.height, pixi.SCALE_MODES.LINEAR, 1.0);
+
+  // matrix
+  this.mat = new pixi.Matrix();
+
+  // filter
+  this.filter = new ShockwaveFilter(this);
+  this.filters = [this.filter];
 };
 
-Shockwave.prototype = Object.create(engine.Shader.prototype);
+Shockwave.prototype = Object.create(engine.Sprite.prototype);
 Shockwave.prototype.constructor = Shockwave;
 
-Shockwave.prototype.preRender = function() {
-  var renderer = this.game.renderer,
-      transform = this.transform,
+Shockwave.prototype.start = function(data) {
+  this.data = data;
+  this.elapsed = 0;
+  this.duration = this.data.duration;
+  this.started = this.game.clock.time;
+  this.isRunning = true;
+
+  // resize texture
+  this.texture.resize(data.width, data.height);
+
+  // center
+  this.pivot.set(data.width/2, data.height/2);
+};
+
+Shockwave.prototype.update = function() {
+  var game = this.game,
+      data = this.data,
+      filter = this.filter,
       position = this.position,
-      worldTransform;
+      scale = this.scale,
+      time = game.clock.time,
+      zoom = game.world.scale.x;
 
-  position.set(this.properties.position.x, this.properties.position.y);
-      
-  worldTransform = this.transform.worldTransform.clone();
+  if(this.isRunning === true) {
+    this.elapsed = time - this.started;
+    this.percent = this.elapsed / this.duration;
+    this.alpha = 1 - this.percent;
 
-  renderer.render(this.game.world.static, this.texture, true, worldTransform.invert());
-  renderer.render(this.game.world.background, this.texture, false);
-  renderer.render(this.game.world.foreground, this.texture, false);
+    // compute update
+    scale.set(zoom, zoom);  
+    game.world.front.toLocal({ x: data.object.width/2,  y: data.object.height/2  }, data.object, this.position);
+
+    if(this.elapsed > this.duration) {
+      this.isRunning = false;
+      this.manager.remove(this);
+    }
+  }
+
+  engine.Sprite.prototype.update.call(this);
 };
 
-Shockwave.prototype.start = function(properties) {
-  this.properties = properties;
-
-  var easing = properties.easing || engine.Easing.Quadratic.Out,
-      animation = { strength: 0.0 };
-  this.tween.to(animation, properties.duration || 1024, easing, true, 0, 0, false);
-  this.tween.once('complete', function() {
-    this.parent.remove(this);
-    this.destroy(true);
-  }, this);
-};
-
-Shockwave.prototype.apply = function(renderer, shader) {
-  shader.uniforms.time = this.tween.timeline[0].percent;
-  shader.uniforms.translationMatrix = this.worldTransform.toArray(true);
-
-  shader.uniforms.uSampler = renderer.bindTexture(this.texture, 0);
-};
-
-Shockwave.prototype.getShader = function(gl) {
-  return new Shader(gl,
-    glslify(__dirname + '/shaders/planet.vert', 'utf8'),
-    glslify(__dirname + '/shaders/shockwave.frag', 'utf8')
-  );
+Shockwave.prototype.preRender = function() {
+  if(this.isRunning === true) {
+    this.transform.worldTransform.copy(this.mat);
+    this.game.renderer.render(this.game.world.main, this.texture, false, this.mat.invert());
+  }
 };
 
 module.exports = Shockwave;

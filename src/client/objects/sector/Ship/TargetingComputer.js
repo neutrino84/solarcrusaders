@@ -110,9 +110,11 @@ TargetingComputer.prototype.enhanced = function(name) {
 };
 
 TargetingComputer.prototype.update = function() {
-  var hardpoints = this.hardpoints,
+  var ship = this.ship,
+      hardpoints = this.hardpoints,
       length = hardpoints.length;
   if(length > 0) {
+    ship.updateTransform();
     for(var h in hardpoints) {
       hardpoints[h].update();
     }

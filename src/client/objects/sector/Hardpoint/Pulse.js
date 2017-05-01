@@ -42,7 +42,7 @@ Pulse.prototype.start = function(destination, distance, spawn, index, slot) {
   this.length = this.data.length;
   this.duration = distance * this.data.projection;
   this.runtime = this.duration + this.length;
-  this.delay = (this.data.delay + (this.runtime * this.game.rnd.frac() * ((index+1) / (spawn+1))));
+  this.delay = this.data.delay + (this.runtime * ((index+1) / (spawn+1))) + (slot * 64 * this.game.rnd.frac());
   this.started = this.clock.time + this.delay;
 
   this.isDone = false;

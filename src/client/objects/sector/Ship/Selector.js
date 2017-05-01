@@ -41,7 +41,6 @@ Selector.prototype.create = function() {
   ship.isPlayer ? this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius*2, this.hit.radius*2) : this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius, this.hit.radius);
   ship.isPlayer ? this.reticle.position.set(-ship.width/1.85, -ship.height/1.85) : this.reticle.position.set(-ship.width/2, -ship.height/2);
 
-
   // add selector
   this.ship.addChildAt(this.graphics, 0);
   // this.ship.addChildAt(this.reticle, 0);
@@ -72,7 +71,7 @@ Selector.prototype.enable = function() {
 };
 
 Selector.prototype.update = function() {
-
+  // this.reticle.rotation += 0.01;
 };
 
 Selector.prototype.destroyed = function() {

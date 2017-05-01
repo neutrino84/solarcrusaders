@@ -35,15 +35,15 @@ FireEmitter.prototype.pulse = function(colors) {
       rnd = this.game.rnd;
   
   this.frequency = 100;
-  this.lifespan = 250;
+  this.lifespan = 200;
 
   this.setVelocity(0, 0);
   this.setVector(0, 0);
   
-  this.setScale(0.22, 0.28, 100);
-  this.setAlpha(1.0, 0.0, 250);
+  this.setScale(0.25, 1.5, 100);
+  this.setAlpha(1.0, 0.0, 200);
 
-  this.setTint(global.parseInt(colors[0]), global.parseInt(colors[1]), 150);
+  this.setTint(global.parseInt(colors[0]), global.parseInt(colors[1]), 100);
 };
 
 FireEmitter.prototype.laser = function(colors) {
@@ -64,15 +64,15 @@ FireEmitter.prototype.laser = function(colors) {
 FireEmitter.prototype.rocket = function(colors) {
   colors = colors || [0xFF8888, 0x333333];
 
-  this.frequency = 200;
+  this.frequency = 100;
   this.lifespan = 150;
 
   this.setVelocity(0, 0);
   this.setVector(0, 0);
 
-  this.setScale(0.25, 1.0, 150);
+  this.setScale(0.25, 1.0, 50);
   this.setAlpha(1.0, 0.0, 150);
-  this.setTint(global.parseInt(colors[0]), global.parseInt(colors[1]), 200);
+  this.setTint(global.parseInt(colors[0]), global.parseInt(colors[1]), 150);
 };
 
 FireEmitter.prototype.missile = function(colors) {
@@ -117,6 +117,28 @@ FireEmitter.prototype.boost = function(colors) {
   this.setScale(0.4, 0.6, 100);
   this.setAlpha(1.0, 0.0, 200);
   this.setTint(global.parseInt(colors[0]), global.parseInt(colors[1]), 150);
+};
+
+FireEmitter.prototype.piercing = function(colors, ship) {
+  var movement = ship.movement,
+      speed = movement._speed,
+      vector = movement._vector,
+      rnd = this.game.rnd,
+      speed = rnd.realInRange(speed * 4.4, speed * 5.0);
+
+  this.blendMode = engine.BlendMode.ADD;
+
+  colors = colors || [0xFFDDDD, 0xFF9999];
+
+  this.frequency = 100;
+  this.lifespan = 1000;
+
+  this.setVelocity(speed, speed);
+  this.setVector(vector.x, vector.y);
+
+  this.setScale(0.25, rnd.realInRange(0.75, 2.4), 1000);
+  this.setAlpha(1.0, 0.0, 1000);
+  this.setTint(global.parseInt(colors[0]), global.parseInt(colors[1]), 1000);
 };
 
 module.exports = FireEmitter;

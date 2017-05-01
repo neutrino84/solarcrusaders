@@ -37,6 +37,7 @@ Explosion.prototype.start = function() {
       events = this.events,
       ship = this.ship,
       hit = this.hit,
+      rnd = this.game.rnd,
       manager = ship.manager;
 
   manager.shockwaveEmitter.explosion(ship);
@@ -47,29 +48,20 @@ Explosion.prototype.start = function() {
   manager.glowEmitter.at({ center: ship.position });
   manager.glowEmitter.explode(2);
 
-  this.events.repeat(50, 10, function() {
-    manager.explosionEmitter.explosion(ship);
-    manager.explosionEmitter.at({ center: hit.random(false, temp) });
-    manager.explosionEmitter.explode(1);
+  this.events.repeat(50, 50, function() {
+    if(rnd.frac() > 0.5) {
+      manager.explosionEmitter.medium(ship);
+      manager.explosionEmitter.at({ center: hit.random(false, temp) });
+      manager.explosionEmitter.explode(1);
+    }
   });
 
-  this.events.repeat(50, 20, function() {
-    manager.explosionEmitter.medium(ship);
-    manager.explosionEmitter.at({ center: hit.random(false, temp) });
-    manager.explosionEmitter.explode(1);
+  this.game.emit('fx/shockwave', {
+    object: ship,
+    width: ship.data.size * 18,
+    height: ship.data.size * 18,
+    duration: 1024
   });
-
-  this.events.repeat(50, 20, function() {
-    manager.explosionEmitter.small(ship);
-    manager.explosionEmitter.at({ center: hit.random(false, temp) });
-    manager.explosionEmitter.explode(1);
-  });
-
-  // this.game.emit('fx/shockwave', {
-  //   position: ship.position,
-  //   width: ship.data.size * 14,
-  //   height: ship.data.size * 14
-  // });
 };
 
 Explosion.prototype.update = function() {
