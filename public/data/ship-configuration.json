@@ -2248,7 +2248,7 @@
           },
           "default": {
             "type": "energy",
-            "subtype": "basic"
+            "subtype": "disintegrator"
           }
         },
         {
@@ -2262,7 +2262,7 @@
           },
           "default": {
             "type": "energy",
-            "subtype": "basic"
+            "subtype": "disintegrator"
           }
         },
         {
@@ -2276,7 +2276,7 @@
           },
           "default": {
             "type": "energy",
-            "subtype": "basic"
+            "subtype": "disintegrator"
           }
         }
       ]

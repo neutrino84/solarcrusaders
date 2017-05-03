@@ -12,6 +12,7 @@ function ShipNetManager(game) {
 ShipNetManager.prototype.constructor = ShipNetManager;
 
 ShipNetManager.prototype.init = function() {
+  this.socket.on('target/hostile', this._hostile.bind(this));
   this.socket.on('ship/sync', this._sync.bind(this));
   this.socket.on('ship/data', this._data.bind(this));
   this.socket.on('ship/removed', this._removed.bind(this));
@@ -63,6 +64,10 @@ ShipNetManager.prototype._sync = function(data) {
       uuids: uuids
     });
   }
+};
+
+ShipNetManager.prototype._hostile = function(data) {
+  this.game.emit('target/hostile', data);
 };
 
 ShipNetManager.prototype._removed = function(data) {

@@ -73,12 +73,15 @@ function ShipManager(game) {
   this.game.on('game/pause', this._pause, this);
   this.game.on('game/resume', this._resume, this);
 
+  this.game.on('target/hostile', this._hostile, this)
+
   this.game.on('ship/player', this._player, this);
   this.game.on('ship/primary', this._primary, this);
   this.game.on('ship/secondary', this._secondary, this);
   this.game.on('ship/removed', this._removed, this);
   this.game.on('ship/disabled', this._disabled, this);
   this.game.on('ship/enabled', this._enabled, this);
+  this.game.on('ship/hostile', this._hostile, this);
   this.game.on('ship/hardpoint/cooled', this._cooled, this);
 };
 
@@ -115,6 +118,22 @@ ShipManager.prototype.remove = function(data) {
     ship.destroy();
     delete ships[ship.uuid];
   }
+};
+
+ShipManager.prototype.closestHostile = function(uuid){
+  // console.log('OK IM HERE. uuid is ', uuid)
+  this.socket.emit('targetClosestHostile', uuid);
+};
+
+ShipManager.prototype._hostile = function(uuid){
+  var hostile = this.ships[uuid];
+  // hostile.selector.graphics.alpha = 0;
+  // hostile.selector.reticle.alpha = 1;
+  hostile.selector.hostileHighlight();
+  // console.log('closest hostile is ', hostile)
+  this.player.hostileTarget = hostile;
+  // console.log(this.player.hostileTarget)
+  // debugger
 };
 
 ShipManager.prototype.removeAll = function() {
@@ -201,10 +220,15 @@ ShipManager.prototype._cooled = function(data) {
 };
 
 ShipManager.prototype._attack = function(data) {
-  var ship = this.ships[data.uuid];
+  var ship = this.ships[data.uuid],
+      target = this.ships[data.target];
+
   if(ship != this.player) {
     ship.targetingComputer.attack(data);
   }
+  // if(target){
+  //   target.selector.something
+  // }
 }
 
 // ShipManager.prototype._test = function(data) {

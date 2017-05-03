@@ -46,6 +46,7 @@ HotkeyManager.prototype.listener = function() {
       key;
   if(player){
   	this.game.input.on('keypress', function(event, key){
+      console.log(key)
   	//enhancements
 	   if(hotkeys['enhancements'][key]){
 
@@ -74,10 +75,13 @@ HotkeyManager.prototype.listener = function() {
           this.isPiercing = true;
           break;
       }
+	   };
 
-	   } 
-     if(hotkeys['squadron'][key]){
+     if(key === 'c'){
         //squadron hotkeys
+        this.socket.emit('ship/hostile', this.player.uuid)
+          // this.game.on('target/hostile', this._hostile, this)
+
      }
     }, this);
 
@@ -112,6 +116,7 @@ HotkeyManager.prototype._player = function(ship){
   	// console.log(key)
   	this.hotkeys['enhancements'][key] = this.enhancements[e];
   }
+  this.hotkeys['squadron']['c']
 
   //turn on listener
   this.listener();

@@ -19,9 +19,7 @@ Selector.prototype.create = function() {
       color = ship.data.ai && ship.data.ai === 'pirate' ? 0xcc3333 : 0x3366cc;
 
   // add selector highlight
-  this.alpha = ship.isPlayer ? 0.6 : 0.2;
-
-  console.log('width is ', ship.width, 'height is ', ship.height)
+  this.alpha = ship.isPlayer ? 0.6 : 0.9;
 
   // create hit area
   this.hit = new engine.Circle(halfWidth, halfHeight, radius);
@@ -37,25 +35,46 @@ Selector.prototype.create = function() {
 
   //create reticle
   this.reticle = new engine.Graphics();
-  this.reticle.lineStyle(size, 0xcc1111, 1.0);
+  this.reticle.lineStyle(size, 0xcc1111, 0.3);
   ship.isPlayer ? this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius*2, this.hit.radius*2) : this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius, this.hit.radius);
   ship.isPlayer ? this.reticle.position.set(-ship.width/1.85, -ship.height/1.85) : this.reticle.position.set(-ship.width/2, -ship.height/2);
 
   // add selector
   this.ship.addChildAt(this.graphics, 0);
-  // this.ship.addChildAt(this.reticle, 0);
+  this.ship.addChildAt(this.reticle, 0);
 };
 
-Selector.prototype.highlight = function() {
-  if(!this.animating || (this.animating && !this.animating.isRunning)) {
-    this.animating = this.game.tweens.create(this.graphics);
-    this.animating.to({ alpha: 1.0 }, 250);
-    this.animating.on('complete', function() {
+Selector.prototype.highlight = function(type) {
+  if(!this.highlightAnimating || (this.highlightAnimating && !this.highlightAnimating.isRunning)){
+    if(this.reticleAnimating && this.reticleAnimating.isRunning){return}
+    this.highlightAnimating = this.game.tweens.create(this.graphics);
+    this.highlightAnimating.to({ alpha: 1.0 }, 250);
+    this.highlightAnimating.on('complete', function() {
       this.graphics.alpha = this.alpha;
     }, this);
-    this.animating.yoyo(true, 9500);
-    this.animating.start();
+    this.highlightAnimating.yoyo(true, 9500);
+    this.highlightAnimating.start();
   }
+};
+
+Selector.prototype.hostileHighlight = function() {
+  console.log('hostileHIGHLIGHT')
+  if(!this.reticleAnimating || (this.reticleAnimating && !this.reticleAnimating.isRunning)) {
+    this.reticleAnimating = this.game.tweens.create(this.reticle);
+    this.reticleAnimating.to({ alpha: 1.0 }, 250);
+    this.reticleAnimating.loop(true)
+    this.reticleAnimating.yoyo(true, 9500);
+    this.reticleAnimating.start();
+  console.log(this.reticle)
+    this.highlightAnimating && this.highlightAnimating.stop();
+  }
+};
+
+Selector.prototype.hostileHighlightStop = function() {
+    if(this.reticleAnimating){
+      this.reticleAnimating.stop();
+    };
+    this.reticle.alpha = 0;
 };
 
 Selector.prototype.selected = function(){

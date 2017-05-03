@@ -13,9 +13,9 @@ function Scavenger(ship, home) {
   // this.events = new engine.Timer(this.game, false);
 
   this.settings = {
-    respawn: 60000,
+    respawn: 20000,
     disengage: 9216,
-    friendly: ['scavenger'],
+    friendly: ['scavenger', 'squadron'],
     position: {
       radius: 128,
       x: ship.movement.position.x,
@@ -26,21 +26,21 @@ function Scavenger(ship, home) {
     },
     sensor: {
       aim: 0.8,
-      range: 16384
+      range: 56384
     }
   }
-  if(ship.chassis === 'scavengers-x04d'){
+  if(ship.chassis === 'scavengers-x04d' || ship.chassis === 'scavengers-x03c'){
     this.settings = {
       respawn: 600000,
-      disengage: 8216,
+      disengage: 7216,
       friendly: ['scavenger'],
       position: {
-        radius: 128,
+        radius: 700,
         x: ship.movement.position.x,
         y: ship.movement.position.y
       },
       escape: {
-        health: 0.5,
+        health: 0.01,
       },
       sensor: {
         aim: 0.8,
@@ -107,17 +107,11 @@ Scavenger.prototype.scanner = function() {
         // if(scan.chassis === 'ubaidian-x01d'){console.log(scan)}
         if(scan.disabled) { continue; }
         if(sensor.contains(p2.x, p2.y)) {
-          if (scan.ai === null){
-          }
+          distance = p2.distance(ship.movement.position);
           if(!this.friendly(scan)) {
-            priority.enemy[scan.data.health] = scan;
-            if(scan.ai === null){
-
-            // console.log('scan is ', scan)
-            }
+            priority.enemy[distance] = scan;
           } else {
-            priority.friendly[scan.data.health] = scan;
-              // console.log(priority.friendly)
+            priority.friendly[distance] = scan;
           }
         }
       }
@@ -173,7 +167,6 @@ Scavenger.prototype.engage = function(target) {
       health = ship.data.health / ship.config.stats.health;
 
   // finish attack
-  // console.log('queen engages target: ', target)
 
   // engage countermeasures
   if(this.game.rnd.frac() < 0.10) {
@@ -196,10 +189,12 @@ Scavenger.prototype.attack = function(){
         this.disengage();
       }
     } else if(this.target && this.target.disabled && this.target.durability > 0){
+      // console.log(this.ship.chassis, ' attacking')
     Basic.prototype.attack.call(this)
-    } else if(this.target) {
+    } else if(this.target && !this.target.disabled) {
+      // console.log(this.ship.chassis, 'disengaging')
       this.disengage();
-    }
+    };
 
   
 };

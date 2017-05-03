@@ -65,7 +65,6 @@ User.prototype.create = function(ships) {
       if(!data.chassis) {
         data.chassis = 'ubaidian-x01' + rnd.pick(variations);
       }
-      data.chassis = 'ubaidian-x01d'
       // create user ship
       this.game.emit('ship/create', data, this);
     }

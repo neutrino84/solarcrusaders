@@ -18,7 +18,7 @@ var engine = require('engine'),
 function SectorState(game) {
   this.shipNetManager = new ShipNetManager(game);
   this.stationNetManager = new StationNetManager(game);
-  this.soundManager = new SoundManager(game);
+  // this.soundManager = new SoundManager(game);
   this.hotkeyManager = new HotkeyManager(game);
 };
 
@@ -31,7 +31,7 @@ SectorState.prototype.init = function(args) {
   this.stationNetManager.init();
 
   //initialize sound manager
-  this.soundManager.init();
+  // this.soundManager.init();
 
   // instanciate ui
   this.ui = new UI(this.game);
@@ -48,7 +48,7 @@ SectorState.prototype.preload = function() {
   this.ui.preload();
 
   //preload soundManager
-  this.soundManager.preload(this.game);
+  // this.soundManager.preload(this.game);
 
   // load background
   this.game.load.image('space', 'imgs/game/space/sector-a.jpg');
@@ -126,7 +126,7 @@ SectorState.prototype.create = function() {
   this.ui.create();
 
   //create SoundManager
-  this.soundManager.create(this);
+  // this.soundManager.create(this);
 
   this.game.emit('game/backgroundmusic')
 };

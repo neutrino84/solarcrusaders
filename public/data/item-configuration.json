@@ -131,6 +131,31 @@
         "sound": "smallBeam",
         "default_volume": 0.05
       },
+      "disintegrator": {
+        "name": "disintegrator",
+        "type": "energy",
+        "subtype": "disintegrator",
+        "sprite": "turret-a",
+        "texture": "laser-green",
+        "glow": {
+          "tint": "0xFFAAAA",
+          "size": 4.0,
+          "sprite": "turret-glow.png"
+        },
+        "emitter": ["0xFFFFFF", "0xFF0000"],
+        "icon": "item-laser-a",
+        "range": 1836,
+        "projection": 0.1,
+        "delay": 20,
+        "spread": 32,
+        "damage": 10.0,
+        "length": 1024,
+        "aoe": 1.2,
+        "spawn": 1,
+        "durability": 1000.0,
+        "sound": "smallBeam",
+        "default_volume": 0.05
+      },
       "gauss": {
         "name": "Gauss Laser Cannon",
         "type": "energy",

@@ -20,7 +20,7 @@ function Basic(ship) {
   this.settings = {
     respawn: 30000,
     disengage: 7680,
-    friendly: ['basic','user','scavenger'],
+    friendly: ['basic','user','squadron'],
     position: {
       radius: 4096,
       x: 2048,
@@ -167,6 +167,7 @@ Basic.prototype.attack = function() {
     // attack
     ship.attack({
       uuid: ship.uuid,
+      target: target.uuid,
       targ: {
         x: offset.x,
         y: offset.y

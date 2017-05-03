@@ -57,7 +57,7 @@ AI.prototype.queenCheck = function(durability, uuid){
   if(!this.consumed[uuid]){
     this.consumed[uuid] = uuid  
     this.queenThreshold = this.queenThreshold - durability;
-    // console.log(this.queenThreshold)
+    console.log('queen threshold is: ', this.queenThreshold)
   }
   
   if(this.queenThreshold < 1){
