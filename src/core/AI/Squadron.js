@@ -4,12 +4,14 @@ var engine = require('engine'),
 function Squadron(ship, home) {
   Basic.call(this, ship);
 
+  this.ship = ship;
   this.type = 'squadron';
   this.master = ship.master;
+  this.attacking = false;
 
   this.settings = {
-    respawn: 600000,
-    disengage: 9216,
+    respawn: 100000,
+    disengage: 12000,
     friendly: ['user','basic','squadron'],
     position: {
       radius: 512,
@@ -21,7 +23,7 @@ function Squadron(ship, home) {
     },
     sensor: {
       aim: 1.25,
-      range: 4096
+      range: 10096
     }
   };
 };
@@ -29,6 +31,35 @@ function Squadron(ship, home) {
 Squadron.prototype = Object.create(Basic.prototype);
 
 Squadron.prototype.constructor = Squadron;
+
+Squadron.prototype.update = function() {
+  var ship = this.ship,
+      sensor = this.sensor,
+      offset = this.offset,
+      settings = this.settings,
+      rnd = this.game.rnd,
+      p1, p2, size, health;
+
+
+  p1 = ship.movement.position;
+  sensor.setTo(p1.x, p1.y, settings.sensor.range);
+  health = ship.data.health / ship.config.stats.health;
+
+  // retreat due to damage
+  if(health < settings.escape.health) {
+    this.retreat = true;
+  } else {
+    this.retreat = false;
+  }
+
+  // target ships
+  if(rnd.frac() < 0.8) {
+    this.scanner();
+  }
+  
+  //plot course
+  this.plot();
+};
 
 Squadron.prototype.scanner = function() {
   //.. scan for user/target
@@ -39,7 +70,10 @@ Squadron.prototype.scanner = function() {
       ship = this.ship,
       master = ships[this.master],
       position = master.movement.position;
-
+  if(this.attacking){
+    console.log('THIS.ATTACKING STILL IN EFFECT')
+    return
+  }
   ship.movement.plot({ x: position.x - ship.movement.position.x, y: position.y - ship.movement.position.y })
   // console.log('master xy is: ', position.x, position.y)
   // if(this.target == null) {
@@ -71,7 +105,99 @@ Squadron.prototype.scanner = function() {
 
 Squadron.prototype.plot = function(){
   //blank
+  var rnd = this.game.rnd,
+      ship = this.ship,
+      p1 = ship.movement.position,
+      sensor = this.sensor,
+      settings = this.settings,
+      offset = this.offset,
+      size;
+
+  sensor.setTo(p1.x, p1.y, settings.sensor.range);
+      
+  // plot destination
+  if(!this.retreat && this.target) {
+    size = this.target.data.size * 4;
+    offset.copyFrom(this.target.movement.position);
+    offset.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
+    ship.movement.plot({ x: this.offset.x-p1.x, y: this.offset.y-p1.y }, this.throttle);
+  } else if(!this.target) {
+    this.scanner();
+  };
 };
+
+Squadron.prototype.engage = function(target, type){
+  var ships = this.manager.ships,
+  ship = this.ship,
+  health = ship.data.health / ship.config.stats.health;
+    if(!origin){return}
+    if(this.target === null && !this.friendly(target) && type === 'attack'){
+      this.attacking = true;
+      this.target = target;
+      console.log(ships[this.master])
+      // && target === ships[this.master].acquired
+      this.attacker && this.game.clock.events.remove(this.attacker);
+      this.attacker = this.game.clock.events.loop(ship.data.rate, this.attack, this);
+
+      this.disengager && this.game.clock.events.remove(this.disengager);
+      this.disengager = this.game.clock.events.add(this.settings.disengage, this.disengage, this);
+    }
+    
+    if(this.game.rnd.frac() < 0.5) {
+      ship.activate('piercing');
+    }
+
+    // engage countermeasures
+    if(this.game.rnd.frac() < 0.10) {
+      ship.activate('booster');
+
+      if(health < 0.5) {
+        ship.activate('shield');
+      }
+      if(health < 0.5) {
+        ship.activate('heal');
+      }
+    };
+  // };
+};
+
+Squadron.prototype.attack = function() {
+  var ship = this.ship,
+      settings = this.settings,
+      offset = this.offset,
+      rnd = this.game.rnd,
+      target, size,
+      point = {};
+
+  // attack sequence
+  if(this.target && !this.target.disabled) {
+    target = this.target;
+
+    size = target.data.size * settings.sensor.aim;
+    offset.copyFrom(target.movement.position);
+    offset.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
+
+    // attack
+    ship.attack({
+      uuid: ship.uuid,
+      target: target.uuid,
+      targ: {
+        x: offset.x,
+        y: offset.y
+      }
+    });
+  }
+  if(this.target.disabled){
+    this.disengage();
+  };
+};
+
+Squadron.prototype.disengage = function() {
+  this.target = null;
+  this.attacking = false;
+  this.attacker && this.game.clock.events.remove(this.attacker);
+};
+
 
 Squadron.prototype.getHomePosition = function() {
   var position = this.settings.position,

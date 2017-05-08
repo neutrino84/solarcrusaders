@@ -8,10 +8,12 @@ function AI(manager) {
   this.manager = manager;
   this.game = manager.game;
   this.timer = this.game.clock.events.loop(500, this.update, this);
-  this.ships = {};
+  this.ships = manager.ships;
   this.consumed = {};
   this.queenThreshold = 500;
   this.next = 1000;
+
+  // this.game.on('squad/engageHostile', this.squad_engage, this);
 };
 
 AI.prototype.constructor = AI;
@@ -53,11 +55,26 @@ AI.prototype.update = function() {
   }
 };
 
+AI.prototype.squad_engage = function(socket, args){
+  var ships = this.ships;
+    console.log('IN AI SQUAD ENGAGE ', args[1])
+    // console.log('player is ', args[1].player_id, 'target is ', args[1].target_id);
+    for (var s in ships){
+      ship = ships[s];
+      // console.log('bumbaclot ', args[1])
+      if(ship.chassis === 'squad-attack' && ship.master === args[1].player_id && ships[args[1].target_id]){
+        var target = ships[args[1].target_id];
+        // console.log(target)
+        ship.ai.engage(target);
+      };
+    };
+}
+
 AI.prototype.queenCheck = function(durability, uuid){
   if(!this.consumed[uuid]){
     this.consumed[uuid] = uuid  
     this.queenThreshold = this.queenThreshold - durability;
-    console.log('queen threshold is: ', this.queenThreshold)
+    // console.log('queen threshold is: ', this.queenThreshold)
   }
   
   if(this.queenThreshold < 1){

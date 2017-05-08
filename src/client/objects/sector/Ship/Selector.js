@@ -40,8 +40,8 @@ Selector.prototype.create = function() {
   ship.isPlayer ? this.reticle.position.set(-ship.width/1.85, -ship.height/1.85) : this.reticle.position.set(-ship.width/2, -ship.height/2);
 
   // add selector
-  this.ship.addChildAt(this.graphics, 0);
-  this.ship.addChildAt(this.reticle, 0);
+  // this.ship.addChildAt(this.graphics, 0);
+  // this.ship.addChildAt(this.reticle, 0);
 };
 
 Selector.prototype.highlight = function(type) {
@@ -58,14 +58,14 @@ Selector.prototype.highlight = function(type) {
 };
 
 Selector.prototype.hostileHighlight = function() {
-  console.log('hostileHIGHLIGHT')
+  // console.log('hostileHIGHLIGHT')
   if(!this.reticleAnimating || (this.reticleAnimating && !this.reticleAnimating.isRunning)) {
     this.reticleAnimating = this.game.tweens.create(this.reticle);
     this.reticleAnimating.to({ alpha: 1.0 }, 250);
     this.reticleAnimating.loop(true)
     this.reticleAnimating.yoyo(true, 9500);
     this.reticleAnimating.start();
-  console.log(this.reticle)
+  // console.log(this.reticle)
     this.highlightAnimating && this.highlightAnimating.stop();
   }
 };

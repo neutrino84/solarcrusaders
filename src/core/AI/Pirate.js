@@ -9,7 +9,7 @@ function Pirate(ship, home) {
   this.settings = {
     respawn: 60000,
     disengage: 9216,
-    friendly: ['pirate'],
+    friendly: ['pirate', 'squadron'],
     position: {
       radius: 512,
       x: ship.movement.position.x,

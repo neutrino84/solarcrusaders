@@ -20,6 +20,9 @@ function ShipManager(game) {
   // player
   this.player = null;
 
+  // squad target
+  this.acquired = null;
+
   // ship cache
   this.ships = {};
 
@@ -120,20 +123,50 @@ ShipManager.prototype.remove = function(data) {
   }
 };
 
-ShipManager.prototype.closestHostile = function(uuid){
-  // console.log('OK IM HERE. uuid is ', uuid)
-  this.socket.emit('targetClosestHostile', uuid);
+ShipManager.prototype.closestHostile = function(){
+  var ships = this.ships,
+      player = this.player,
+      hostiles = {},
+      ascending = function(a, b) { return a-b }, 
+      distance, targets;
+
+  for(var s in ships){
+    var ship = ships[s];
+    if(ship.disabled){
+      continue
+    }
+    if(ship.targetingComputer.targetShip === player){ 
+        distance = engine.Point.distance(ship, player); 
+        if(distance < 14000){
+          hostiles[distance] = ship;
+        };
+    }
+  };
+  
+  targets = Object.keys(hostiles);
+  if(targets && !targets.length){return}
+  player.acquired = hostiles[targets.sort(ascending)[0]];
+  // console.log(hostiles)
+  player.acquired.selector.hostileHighlight();
+  // console.log('this.acquired = ', player.acquired.data.chassis)
+};
+
+ShipManager.prototype.engageHostile = function(){
+  var player = this.player;
+  if(player.acquired){
+  // console.log('player  is ', player)  
+    this.socket.emit('squad/engageHostile', {player_id: player.uuid, target_id : player.acquired.uuid });
+  };
 };
 
 ShipManager.prototype._hostile = function(uuid){
   var hostile = this.ships[uuid];
-  // hostile.selector.graphics.alpha = 0;
-  // hostile.selector.reticle.alpha = 1;
   hostile.selector.hostileHighlight();
-  // console.log('closest hostile is ', hostile)
   this.player.hostileTarget = hostile;
-  // console.log(this.player.hostileTarget)
-  // debugger
+  this.socket.emit('squad/acquire', {
+    target_uuid: this.player.hostileTarget.uuid,
+    player_uuid: this.player.uuid
+  });
 };
 
 ShipManager.prototype.removeAll = function() {
@@ -142,7 +175,7 @@ ShipManager.prototype.removeAll = function() {
   for(var i=0; i<ships.length; i++) {
     ship = ships[s];
     this.remove(ship);
-  }
+  };
 };
 
 ShipManager.prototype.destroy = function() {

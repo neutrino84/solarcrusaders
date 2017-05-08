@@ -20,7 +20,7 @@ function Ship(manager, data) {
   if(data.master){
     this.master = data.master
     // this.master = this.manager.ships[data.master];
-    console.log('master uuid is ', this.master)
+    // console.log('squad ship is ', ship.data.health)
   }
   this.target = manager.ships[data.target];
   if(this.target){

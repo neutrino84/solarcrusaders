@@ -8,6 +8,7 @@ function TargetingComputer(ship, config) {
   this.manager = ship.manager,
   this.stats = ship.config.stats;
   this.config = config;
+  this.targetShip;
 
   this.hardpoints = [];
   this.enhancements = {};
@@ -47,12 +48,13 @@ TargetingComputer.prototype.attack = function(data) {
   if(length > 0) {
     // update target
     this.target.set(target.x, target.y);
+    this.targetShip = this.manager.ships[data.target];
 
     // display
     for(var i=0; i<length; i++) {
       hardpoints[i].fire(target);
     }
-  }
+  };
 };
 
 TargetingComputer.prototype.hit = function(ship, data) {

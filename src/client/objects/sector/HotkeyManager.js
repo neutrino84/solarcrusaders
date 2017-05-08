@@ -35,9 +35,8 @@ HotkeyManager.prototype.init = function() {
 
 HotkeyManager.prototype.create = function(manager) {
   this.config = this.game.cache.getJSON('item-configuration', false);
-  this.manager = manager;
-  this.shipManager = manager.shipManager;
-  this.ships = this.shipManager.ships;
+  this.manager = manager.shipManager;
+  this.ships = manager.ships;
 };
 
 HotkeyManager.prototype.listener = function() {
@@ -46,7 +45,6 @@ HotkeyManager.prototype.listener = function() {
       key;
   if(player){
   	this.game.input.on('keypress', function(event, key){
-      console.log(key)
   	//enhancements
 	   if(hotkeys['enhancements'][key]){
 
@@ -77,11 +75,13 @@ HotkeyManager.prototype.listener = function() {
       }
 	   };
 
+  //squadron hotkeys
      if(key === 'c'){
-        //squadron hotkeys
-        this.socket.emit('ship/hostile', this.player.uuid)
-          // this.game.on('target/hostile', this._hostile, this)
-
+        // this.socket.emit('ship/hostile', this.player.uuid);
+        this.manager.closestHostile();
+     }
+     if(key === 'e'){
+          this.manager.engageHostile();
      }
     }, this);
 

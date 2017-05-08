@@ -2417,7 +2417,7 @@
       "health": 100,
       "heal": 0.25,
       "armor": 0.0,
-      "speed": 40.0,
+      "speed": 75.0,
       "rate": 256,
       "evasion": 0.3,
       "energy": 200,

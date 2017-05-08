@@ -150,6 +150,7 @@ SectorState.prototype.createManagers = function() {
   this.inputManager = new InputManager(game, this);
   this.stationManager = new StationManager(game, this);
   this.shipManager = new ShipManager(game, this);
+  this.hotkeyManager.create(this);
   // this.shockwaveManager = new ShockwaveManager(game, this);
 };
 

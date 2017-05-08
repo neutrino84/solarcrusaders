@@ -66,7 +66,6 @@ Ship.prototype.boot = function() {
   if(this.isPlayer) {
     this.hud.show();
     this.game.emit('ship/player', this);
-    console.log(this.selector)
   }
 };
 

@@ -24,11 +24,11 @@ function ShipManager(game) {
   // networking
   this.game.on('ship/data', this.data, this);
   this.game.on('ship/plot', this.plot, this);
-  this.game.on('ship/hostile', this.targetClosestHostile, this)
   this.game.on('ship/attack', this.attack, this);
   this.game.on('ship/disabled', this.disabled, this);
   this.game.on('ship/enhancement/start', this.enhancement.bind(this));
 
+  this.game.on('squad/engageHostile', this.squad_engage, this);
   // activate ai
   this.game.clock.events.loop(1000, this.refresh, this);
 };
@@ -37,9 +37,9 @@ ShipManager.prototype.constructor = ShipManager;
 
 ShipManager.prototype.init = function() {
   // generate npcs
-  // this.generateRandomShips();
+  this.generateRandomShips();
   this.generatePirateShips();
-  // this.generateScavengerShips();
+  this.generateScavengerShips();
   // this.generateSquadronShips();
 };
 
@@ -68,7 +68,7 @@ ShipManager.prototype.create = function(data, user, position) {
   ship = new Ship(this, data);
   ship.user = user;
   if(ship.user){
-    // this.generateSquadronShips(ship.uuid)
+    this.generateSquadronShips(ship.uuid)
   }
   ship.init(function(err) {
     self.game.emit('ship/add', ship);
@@ -95,6 +95,21 @@ ShipManager.prototype.attack = function(socket, args) {
     ship.attack(data, ship.user.rtt);
   }
 };
+
+ShipManager.prototype.squad_engage = function(socket, args){
+  var ships = this.ships;
+    // console.log(args[1])
+    // console.log('player is ', args[1].player_id, 'target is ', args[1].target_id);
+    for (var s in ships){
+      ship = ships[s];
+      // console.log('bumbaclot ', args[1])
+      if(ship.chassis === 'squad-attack' && ship.master === args[1].player_id && ships[args[1].target_id]){
+        var target = ships[args[1].target_id];
+        // console.log(target)
+        ship.ai.engage(target, 'attack');
+      };
+    };
+}
 
 ShipManager.prototype.enhancement = function(socket, args) {
   var ships = this.ships,
@@ -228,44 +243,6 @@ ShipManager.prototype.refresh = function() {
   }
 };
 
-ShipManager.prototype.targetClosestHostile = function(socket, args) {
-    // console.log('YAAAAAAAAYYYYYYYY', this.ships[args[1]])
-    // this.ships[args[1]] 
-    var ships = this.ships,
-    hostiles = {},
-    player = ships[args[1]],
-    ascending = function(a, b) {
-        return a-b;
-      },
-    distance;
-
-    for(var s in ships) {
-      scan = ships[s];
-      if(scan.disabled || scan === null || scan === player) { continue; }
-      p1 = player.movement.position;
-      p2 = scan.movement.position;
-      distance = engine.Point.distance(p1, p2);
-      // if(scan.chassis === 'ubaidian-x01d'){console.log(scan)}
-      if(distance < 12000 && scan.ai && scan.ai.target && scan.ai.target.uuid === args[1]) {
-        //^ on the front end the equivalent is just ship.target
-
-
-// && scan.ai.target === player
-          hostiles[distance] = scan;
-      };
-    };
-    targets = Object.keys(hostiles);
-    if(targets && !targets.length){return}
-    target = hostiles[targets.sort(ascending)[0]];
-    if(target && target.chassis){
-      // console.log(target.selector)
-      // console.log(target.chassis)
-      // console.log(target)
-      this.sockets.emit('target/hostile', target.uuid);
-    };
-    // debugger
-};
-
 ShipManager.prototype.disabled = function(data) {
   var game = this.game,
       ships = this.ships,
@@ -307,25 +284,25 @@ ShipManager.prototype.generatePirateShips = function() {
       iterator = [{
         location: { x: -4096, y: 2048 },
         ships: [
-          // { name: 'xinli', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
-          // { name: 'mocolo', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
-          // { name: 'mavero', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
-          // { name: 'saag', chassis: 'pirate-x02', credits: 1500, reputation: -100 } 
+          { name: 'xinli', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
+          { name: 'mocolo', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
+          { name: 'mavero', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
+          { name: 'saag', chassis: 'pirate-x02', credits: 1500, reputation: -100 } 
         ]
       }, {
         location: { x: 8192, y: 2048 },
         ships: [
-          // { name: 'satel', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
-          // { name: 'oeem', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
-          // { name: 'thath', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
-          // { name: 'zeus', chassis: 'pirate-x03b', credits: 1500, reputation: -100 }
+          { name: 'satel', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
+          { name: 'oeem', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
+          { name: 'thath', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
+          { name: 'zeus', chassis: 'pirate-x03b', credits: 1500, reputation: -100 }
         ]
       }, {
         location: { x: 2048, y: -6144 },
         ships: [
-          // { name: 'manduk', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
-          // { name: 'deuh', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
-          // { name: 'talai', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
+          { name: 'manduk', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
+          { name: 'deuh', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
+          { name: 'talai', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
           { name: 'kaan', chassis: 'pirate-x03b', credits: 1500, reputation: -100 }
         ]
       }, {
