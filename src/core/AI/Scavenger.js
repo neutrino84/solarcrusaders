@@ -223,54 +223,10 @@ Scavenger.prototype.plot = function(){
   };
 };
 
-Scavenger.prototype.spawnQueenCheck = function(durability){
-  // console.log('threshold is ', this.spawnQueenThreshold, 'durability is', durability);
-  // console.log('TIMER FINISHED')
-  var game = this.manager.game;
-  // console.log('ummm')
-  game.clock.events.add(15000, function(){
-    this.spawnQueenCooldown = false;
-    // console.log('spawn reset')
-  })
-
-  this.spawnQueenThreshold -= durability
-  // console.log('new threshold is ', this.spawnQueenThreshold);
-  if(this.spawnQueenThreshold <= 0){
-    this.spawnQueenThreshold = this.nextSpawnQueenThreshold;
-    this.nextSpawnQueenThreshold = this.nextSpawnQueenThreshold + 500;
-    // console.log('SPAWN ', this.spawnQueenThreshold)
-    this.manager.spawnQueen()
-    // if(!this.spawnQueenCooldown){
-    //   this.manager.create({
-    //     name: 'Queen',
-    //     chassis: 'scavengers-x04d',
-    //     credits: global.Math.floor(5000 * global.Math.random() + 100),
-    //     reputation: global.Math.floor(-100 * (1 + global.Math.random())),
-    //     throttle: 1.0,
-    //     ai: 'pirate',
-    //     x: -8192,
-    //     y: 8192
-    //   });
-    // };
-  }
-};
-
 Scavenger.prototype.disengage = function() {
   // console.log('in disengage. queen cooldown is ', this.spawnQueenCooldown)
   var game = this.manager.game,
   durability;
-
-    if(!this.spawnQueenCooldown && this.target.config.stats.durability){
-      durability = this.target.config.stats.durability;
-      // console.log('BEGIN 10 SECOND TIMER', this.spawnQueenCooldown)
-      this.spawnQueenCooldown = true;
-      game.clock.events.add(10000, function() {
-        this.spawnQueenCheck(durability);
-        // this.spawnQueenCooldown = false;
-      }, this);
-
-    }
- 
 
   if(this.target && !this.target.disabled) {
     this.target = null;

@@ -106,6 +106,32 @@
         "sound": "smallBeam",
         "default_volume": 0.35
       },
+      "repair_beam": {
+        "name": "Type 1 Laser",
+        "type": "energy",
+        "subtype": "basic",
+        "sprite": "turret-a",
+        "texture": "laser-yellow-long",
+        "glow": {
+          "tint": "0xDB691D",
+          "size": 4.0,
+          "sprite": "turret-glow.png"
+        },
+        "emitter": ["0x000000", "0xDB691D"],
+        "icon": "item-laser-a",
+        "cooldown": 0,
+        "range": 1160,
+        "projection": 0.1,
+        "delay": 16,
+        "spread": 32,
+        "damage": 8.0,
+        "length": 1024,
+        "aoe": 1.0,
+        "spawn": 1,
+        "durability": 1000.0,
+        "sound": "capitalBeam",
+        "default_volume": 0.1
+      },
       "harvester": {
         "name": "Harvester",
         "type": "energy",
@@ -148,7 +174,7 @@
         "projection": 0.1,
         "delay": 20,
         "spread": 32,
-        "damage": 10.0,
+        "damage": 8.0,
         "length": 1024,
         "aoe": 1.2,
         "spawn": 1,

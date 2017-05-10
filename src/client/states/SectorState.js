@@ -18,7 +18,7 @@ var engine = require('engine'),
 function SectorState(game) {
   this.shipNetManager = new ShipNetManager(game);
   this.stationNetManager = new StationNetManager(game);
-  // this.soundManager = new SoundManager(game);
+  this.soundManager = new SoundManager(game);
   this.hotkeyManager = new HotkeyManager(game);
 };
 
@@ -31,7 +31,7 @@ SectorState.prototype.init = function(args) {
   this.stationNetManager.init();
 
   //initialize sound manager
-  // this.soundManager.init();
+  this.soundManager.init();
 
   // instanciate ui
   this.ui = new UI(this.game);
@@ -48,7 +48,7 @@ SectorState.prototype.preload = function() {
   this.ui.preload();
 
   //preload soundManager
-  // this.soundManager.preload(this.game);
+  this.soundManager.preload(this.game);
 
   // load background
   this.game.load.image('space', 'imgs/game/space/sector-a.jpg');
@@ -67,6 +67,8 @@ SectorState.prototype.preload = function() {
   this.game.load.image('laser-red', 'imgs/game/fx/laser-red.png');
   this.game.load.image('laser-green', 'imgs/game/fx/laser-green.png');
   this.game.load.image('laser-purple', 'imgs/game/fx/laser-purple.png');
+  this.game.load.image('laser-yellow', 'imgs/game/fx/laser-yellow.png');
+  this.game.load.image('laser-yellow-long', 'imgs/game/fx/laser-yellow-long.png');
   this.game.load.image('laser-vulcan', 'imgs/game/fx/laser-vulcan.png');
   this.game.load.image('laser-heavy', 'imgs/game/fx/laser-heavy.png');
   this.game.load.image('laser-gaus', 'imgs/game/fx/laser-gaus.png');
@@ -126,7 +128,7 @@ SectorState.prototype.create = function() {
   this.ui.create();
 
   //create SoundManager
-  // this.soundManager.create(this);
+  this.soundManager.create(this);
 
   this.game.emit('game/backgroundmusic')
 };

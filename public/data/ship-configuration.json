@@ -2426,7 +2426,7 @@
       "durability": 128,
       "critical": 0.01
     },
-    "enhancements": ["booster", "shield"],
+    "enhancements": ["shield"],
     "engine": {
       "glows": [
         {
@@ -2460,6 +2460,118 @@
           "default": {
             "type": "pulse",
             "subtype": "bazuko"
+          }
+        }
+        ]
+    }
+  },
+  "squad-attack-blue": {
+    "race": "ubaidian",
+    "class": "fighter",
+    "stats": {
+      "capacity": 3000,
+      "health": 100,
+      "heal": 0.25,
+      "armor": 0.0,
+      "speed": 75.0,
+      "rate": 256,
+      "evasion": 0.3,
+      "energy": 200,
+      "recharge": 1,
+      "size": 128,
+      "durability": 128,
+      "critical": 0.01
+    },
+    "enhancements": ["shield"],
+    "engine": {
+      "glows": [
+        {
+          "tint": "0xFFFFAA",
+          "scale": {
+            "startX": 0.1,
+            "endX": 0.2,
+            "startY": 0.5,
+            "endY": 1.5
+          },
+          "position": {
+            "x": 80,
+            "y": 65
+          },
+          "rotation": 0
+        }
+        ]
+    },
+    "targeting": {
+      "hardpoints": [
+        {
+          "type": ["pulse"],
+          "pivot": {
+            "x": 20,
+            "y": 16
+          },
+          "position": {
+            "x": 49,
+            "y": 64
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "bazuko"
+          }
+        }
+        ]
+    }
+  },
+  "squad-repair": {
+    "race": "ubaidian",
+    "class": "repair",
+    "stats": {
+      "capacity": 3000,
+      "health": 200,
+      "heal": 0.25,
+      "armor": 0.0,
+      "speed": 50.0,
+      "rate": 500,
+      "evasion": 0.3,
+      "energy": 200,
+      "recharge": 1,
+      "size": 90,
+      "durability": 128,
+      "critical": 0.01
+    },
+    "enhancements": ["shield"],
+    "engine": {
+      "glows": [
+        {
+          "tint": "0xFFFFAA",
+          "scale": {
+            "startX": 0.1,
+            "endX": 0.2,
+            "startY": 0.5,
+            "endY": 1.5
+          },
+          "position": {
+            "x": 80,
+            "y": 65
+          },
+          "rotation": 0
+        }
+        ]
+    },
+    "targeting": {
+      "hardpoints": [
+        {
+          "type": ["energy"],
+          "pivot": {
+            "x": 20,
+            "y": 16
+          },
+          "position": {
+            "x": 49,
+            "y": 64
+          },
+          "default": {
+            "type": "energy",
+            "subtype": "repair_beam"
           }
         }
         ]

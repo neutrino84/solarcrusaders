@@ -223,7 +223,11 @@ Ship.prototype.hit = function(attacker, target, slot) {
     damage = global.Math.max(0, hardpoint.data.damage * (1-ratio) * (1-this.armor));
     damage += critical ? damage : 0;
     damage *= piercing ? piercing.damage : 1;
-    health = data.health-damage;
+    if(attacker.hardpoints[0].subtype === 'repair_beam'){
+    health = data.health + damage;
+    } else {
+      health = data.health-damage;
+    }
     durability = this.durability
 
     // update damage

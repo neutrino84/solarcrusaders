@@ -37,10 +37,9 @@ ShipManager.prototype.constructor = ShipManager;
 
 ShipManager.prototype.init = function() {
   // generate npcs
-  this.generateRandomShips();
+  // this.generateRandomShips();
   this.generatePirateShips();
-  this.generateScavengerShips();
-  // this.generateSquadronShips();
+  // this.generateScavengerShips();
 };
 
 ShipManager.prototype.add = function(ship) {
@@ -98,14 +97,12 @@ ShipManager.prototype.attack = function(socket, args) {
 
 ShipManager.prototype.squad_engage = function(socket, args){
   var ships = this.ships;
-    // console.log(args[1])
-    // console.log('player is ', args[1].player_id, 'target is ', args[1].target_id);
+
     for (var s in ships){
       ship = ships[s];
-      // console.log('bumbaclot ', args[1])
+
       if(ship.chassis === 'squad-attack' && ship.master === args[1].player_id && ships[args[1].target_id]){
         var target = ships[args[1].target_id];
-        // console.log(target)
         ship.ai.engage(target, 'attack');
       };
     };
@@ -292,17 +289,17 @@ ShipManager.prototype.generatePirateShips = function() {
       }, {
         location: { x: 8192, y: 2048 },
         ships: [
-          { name: 'satel', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
-          { name: 'oeem', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
-          { name: 'thath', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
-          { name: 'zeus', chassis: 'pirate-x03b', credits: 1500, reputation: -100 }
+          // { name: 'satel', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
+          // { name: 'oeem', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
+          // { name: 'thath', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
+          // { name: 'zeus', chassis: 'pirate-x03b', credits: 1500, reputation: -100 }
         ]
       }, {
         location: { x: 2048, y: -6144 },
         ships: [
-          { name: 'manduk', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
-          { name: 'deuh', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
-          { name: 'talai', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
+          // { name: 'manduk', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
+          // { name: 'deuh', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
+          // { name: 'talai', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
           { name: 'kaan', chassis: 'pirate-x03b', credits: 1500, reputation: -100 }
         ]
       }, {
@@ -344,6 +341,11 @@ ShipManager.prototype.generateScavengerShips = function() {
       iterator = [{
         location: { x: -8192, y: 8192 },
         ships: [
+          { name: 'saaghath', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
+          { name: 'mocolo', chassis: 'scavengers-x01d', credits: 1500, reputation: -100 },
+          { name: 'fenris', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
+          { name: 'zozu', chassis: 'scavengers-x01d', credits: 1500, reputation: -100 },
+          { name: 'thovu', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
           { name: 'saaghath', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
           { name: 'mocolo', chassis: 'scavengers-x01d', credits: 1500, reputation: -100 },
           { name: 'fenris', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
@@ -393,9 +395,9 @@ ShipManager.prototype.generateSquadronShips = function(uuid) {
         ships: [
           { name: 'redOne', chassis: 'squad-attack', credits: 1500, reputation: -100 },
           { name: 'redTwo', chassis: 'squad-attack', credits: 1500, reputation: -100 },
-          { name: 'redThree', chassis: 'squad-attack', credits: 1500, reputation: -100 }
-          // { name: 'redFour', chassis: 'squad-attack', credits: 1500, reputation: -100 },
-          // { name: 'redFive', chassis: 'squad-attack', credits: 1500, reputation: -100 }
+          // { name: 'redThree', chassis: 'squad-attack', credits: 1500, reputation: -100 },
+          { name: 'yellowOne', chassis: 'squad-repair', credits: 1500, reputation: -100 },
+          { name: 'yellowTwo', chassis: 'squad-repair', credits: 1500, reputation: -100 }
         ]
       }],
       len = iterator.length;

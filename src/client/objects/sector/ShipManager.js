@@ -137,16 +137,16 @@ ShipManager.prototype.closestHostile = function(){
     }
     if(ship.targetingComputer.targetShip === player){ 
         distance = engine.Point.distance(ship, player); 
-        if(distance < 14000){
+        if(distance < 17000){
           hostiles[distance] = ship;
         };
     }
   };
-  
+
   targets = Object.keys(hostiles);
   if(targets && !targets.length){return}
   player.acquired = hostiles[targets.sort(ascending)[0]];
-  // console.log(hostiles)
+  console.log('F.E. acquiring ', player.acquired)
   player.acquired.selector.hostileHighlight();
   // console.log('this.acquired = ', player.acquired.data.chassis)
 };
@@ -154,7 +154,7 @@ ShipManager.prototype.closestHostile = function(){
 ShipManager.prototype.engageHostile = function(){
   var player = this.player;
   if(player.acquired){
-  // console.log('player  is ', player)  
+  console.log('F.E. target engaged ', player.acquired)  
     this.socket.emit('squad/engageHostile', {player_id: player.uuid, target_id : player.acquired.uuid });
   };
 };
