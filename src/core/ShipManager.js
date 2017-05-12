@@ -253,16 +253,16 @@ ShipManager.prototype.generateRandomShips = function() {
         'mechan-x01': { race: 'mechan', count: 0 },
         'mechan-x02': { race: 'mechan', count: 0 },
         'mechan-x03': { race: 'mechan', count: 0 },
-        'ubaidian-x01a': { race: 'ubaidian', count: 1 },
-        'ubaidian-x01b': { race: 'ubaidian', count: 1 },
+        'ubaidian-x01a': { race: 'ubaidian', count: 0 },
+        'ubaidian-x01b': { race: 'ubaidian', count: 0 },
         'ubaidian-x01c': { race: 'ubaidian', count: 0 },
-        'ubaidian-x01d': { race: 'ubaidian', count: 0 },
+        'ubaidian-x01d': { race: 'ubaidian', count: 1 },
         'ubaidian-x01e': { race: 'ubaidian', count: 0 },
         'ubaidian-x02': { race: 'ubaidian', count: 0 },
         'ubaidian-x03': { race: 'ubaidian', count: 0 },
         'ubaidian-x04': { race: 'ubaidian', count: 2 },
         'mechan-x01': { race: 'mechan', count: 0 },
-        'mechan-x02': { race: 'mechan', count: 0 },
+        'mechan-x02': { race: 'mechan', count: 1 },
         'mechan-x03': { race: 'mechan', count: 0 },
         'general-x01': { race: 'ubaidian', count: 0 },
         'general-x02': { race: 'ubaidian', count: 0 },
@@ -281,9 +281,9 @@ ShipManager.prototype.generatePirateShips = function() {
       iterator = [{
         location: { x: -4096, y: 2048 },
         ships: [
-          { name: 'xinli', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
-          { name: 'mocolo', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
-          { name: 'mavero', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
+          // { name: 'xinli', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
+          // { name: 'mocolo', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
+          // { name: 'mavero', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
           { name: 'saag', chassis: 'pirate-x02', credits: 1500, reputation: -100 } 
         ]
       }, {
@@ -343,12 +343,12 @@ ShipManager.prototype.generateScavengerShips = function() {
         ships: [
           { name: 'saaghath', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
           { name: 'mocolo', chassis: 'scavengers-x01d', credits: 1500, reputation: -100 },
-          { name: 'fenris', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
-          { name: 'zozu', chassis: 'scavengers-x01d', credits: 1500, reputation: -100 },
-          { name: 'thovu', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
-          { name: 'saaghath', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
-          { name: 'mocolo', chassis: 'scavengers-x01d', credits: 1500, reputation: -100 },
-          { name: 'fenris', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
+          // { name: 'fenris', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
+          // { name: 'zozu', chassis: 'scavengers-x01d', credits: 1500, reputation: -100 },
+          // { name: 'thovu', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
+          // { name: 'saaghath', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
+          // { name: 'mocolo', chassis: 'scavengers-x01d', credits: 1500, reputation: -100 },
+          // { name: 'fenris', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
           { name: 'zozu', chassis: 'scavengers-x01d', credits: 1500, reputation: -100 },
           { name: 'thovu', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
           { name: 'wivero', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 }
@@ -396,8 +396,8 @@ ShipManager.prototype.generateSquadronShips = function(uuid) {
           { name: 'redOne', chassis: 'squad-attack', credits: 1500, reputation: -100 },
           { name: 'redTwo', chassis: 'squad-attack', credits: 1500, reputation: -100 },
           // { name: 'redThree', chassis: 'squad-attack', credits: 1500, reputation: -100 },
-          { name: 'yellowOne', chassis: 'squad-repair', credits: 1500, reputation: -100 },
-          { name: 'yellowTwo', chassis: 'squad-repair', credits: 1500, reputation: -100 }
+          { name: 'yellowOne', chassis: 'squad-repair', credits: 1500, reputation: -100 }
+          // { name: 'yellowTwo', chassis: 'squad-repair', credits: 1500, reputation: -100 }
         ]
       }],
       len = iterator.length;

@@ -31,50 +31,87 @@ Selector.prototype.create = function() {
   this.graphics.pivot.set(halfWidth, halfHeight);
   this.graphics.position.set(halfWidth + (size/2), halfHeight + (size/2));
   this.graphics.blendMode = engine.BlendMode.ADD;
-  this.graphics.alpha = this.alpha;
+  // this.graphics.alpha = this.alpha;
+  this.graphics.alpha = 0;
 
   //create reticle
   this.reticle = new engine.Graphics();
-  this.reticle.lineStyle(size, 0xcc1111, 0.3);
-  ship.isPlayer ? this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius*2, this.hit.radius*2) : this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius, this.hit.radius);
-  ship.isPlayer ? this.reticle.position.set(-ship.width/1.85, -ship.height/1.85) : this.reticle.position.set(-ship.width/2, -ship.height/2);
+  this.reticleOuter = new engine.Graphics(); 
+  // this.reticle.lineStyle(size, 0xcc1111, 1.0);
+  this.reticle.lineStyle(size, 0xffff00, 1.0);
+  this.reticleOuter.lineStyle(size, 0xcc1111, 1.0);
+  // ship.isPlayer ? this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius*2, this.hit.radius*2) : this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius*1.65, this.hit.radius*1.65);
+
+    if(this.ship.data.size > 130){
+      this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.2, this.hit.radius*2.2)
+      this.reticleOuter.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.7, this.hit.radius*2.7)
+      this.reticle.position.set(-ship.width/2, -ship.height/2);
+      this.reticleOuter.position.set(-ship.width/1.585, -ship.height/1.585);
+    } else { 
+      this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius*1.65, this.hit.radius*1.65)
+      this.reticleOuter.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.1, this.hit.radius*2.1)
+      this.reticle.position.set(-ship.width/1.6, -ship.height/1.6) 
+      this.reticleOuter.position.set(-ship.width/1.3, -ship.height/1.3);
+    };
+
+    if(ship.isPlayer){
+      this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius*2, this.hit.radius*2)
+      this.reticle.position.set(-ship.width/1.85, -ship.height/1.85)
+    }
+
+  // ship.isPlayer ? this.reticle.position.set(-ship.width/1.85, -ship.height/1.85) : this.reticle.position.set(-ship.width/1.6, -ship.height/1.6);
+  // : this.reticle.position.set(-ship.width/1.5, -ship.height/1.5);
+  this.reticle.alpha = 0;
+  this.reticleOuter.alpha = 0;
 
   // add selector
-  // this.ship.addChildAt(this.graphics, 0);
-  // this.ship.addChildAt(this.reticle, 0);
+  this.ship.addChildAt(this.graphics, 0);
+  this.ship.addChildAt(this.reticle, 0);
+  this.ship.addChildAt(this.reticleOuter, 0);
 };
 
 Selector.prototype.highlight = function(type) {
   if(!this.highlightAnimating || (this.highlightAnimating && !this.highlightAnimating.isRunning)){
     if(this.reticleAnimating && this.reticleAnimating.isRunning){return}
     this.highlightAnimating = this.game.tweens.create(this.graphics);
-    this.highlightAnimating.to({ alpha: 1.0 }, 250);
+    this.highlightAnimating.to({ alpha: 0.5 }, 250);
     this.highlightAnimating.on('complete', function() {
       this.graphics.alpha = this.alpha;
     }, this);
     this.highlightAnimating.yoyo(true, 9500);
-    this.highlightAnimating.start();
+    // this.highlightAnimating.start();
   }
 };
 
 Selector.prototype.hostileHighlight = function() {
-  // console.log('hostileHIGHLIGHT')
   if(!this.reticleAnimating || (this.reticleAnimating && !this.reticleAnimating.isRunning)) {
     this.reticleAnimating = this.game.tweens.create(this.reticle);
-    this.reticleAnimating.to({ alpha: 1.0 }, 250);
+    this.reticleAnimating.to({ alpha: 0.5 }, 500);
     this.reticleAnimating.loop(true)
-    this.reticleAnimating.yoyo(true, 9500);
+    this.reticleAnimating.yoyo(true, 1000);
     this.reticleAnimating.start();
-  // console.log(this.reticle)
+    this.highlightAnimating && this.highlightAnimating.stop();
+  }
+};
+
+Selector.prototype.hostileEngaged = function() {
+  if(!this.reticleOuterAnimating || (this.reticleOuterAnimating && !this.reticleOuterAnimating.isRunning)) {
+    this.reticleOuterAnimating = this.game.tweens.create(this.reticleOuter);
+    this.reticleOuterAnimating.to({ alpha: 2.0 }, 500);
+    this.reticleOuterAnimating.loop(true)
+    this.reticleOuterAnimating.yoyo(true, 1200);
+    this.reticleOuterAnimating.start();
     this.highlightAnimating && this.highlightAnimating.stop();
   }
 };
 
 Selector.prototype.hostileHighlightStop = function() {
-    if(this.reticleAnimating){
-      this.reticleAnimating.stop();
-    };
+    this.reticleAnimating && this.reticleAnimating.stop();
     this.reticle.alpha = 0;
+};
+Selector.prototype.hostileEngagedStop = function() {
+    this.reticleOuterAnimating && this.reticleOuterAnimating.stop();
+    this.reticleOuter.alpha = 0;
 };
 
 Selector.prototype.selected = function(){

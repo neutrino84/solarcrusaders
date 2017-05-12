@@ -84,7 +84,7 @@ Squadron.prototype.plot = function(){
 
   sensor.setTo(p1.x, p1.y, settings.sensor.range);
       
-    console.log('in plot')
+    // console.log('in plot')
   // plot destination
   if(!this.retreat && this.target) {
     size = this.target.data.size * 4;
@@ -120,6 +120,10 @@ Squadron.prototype.engage = function(target, type){
 
       // this.disengager && this.game.clock.events.remove(this.disengager);
       // this.disengager = this.game.clock.events.add(this.settings.disengage, this.disengage, this);
+    } else if(this.target){
+      this.target = target;
+      this.attacker && this.game.clock.events.remove(this.attacker);
+      this.attacker = this.game.clock.events.loop(ship.data.rate, this.attack, this);
     }
     
     if(this.game.rnd.frac() < 0.5) {
@@ -169,12 +173,12 @@ Squadron.prototype.update = function() {
     this.scanner();
   };
 
-  if(this.ship.chassis === 'squad-repair' && masterHealth < 0.6 && !this.repairing){
-    console.log(masterHealth, ' engage repair')
+  if(this.ship.chassis === 'squad-repair' && masterHealth < 0.5 && !this.repairing){
+    // console.log(masterHealth, ' engage repair')
     this.engage(master, 'repair')
   }
-  if(this.ship.chassis === 'squad-repair' && masterHealth > 0.9 && this.repairing){
-    console.log(masterHealth, ' DISENGAGE repair')
+  if(this.ship.chassis === 'squad-repair' && masterHealth > 0.8 && this.repairing){
+    // console.log(masterHealth, ' DISENGAGE repair')
     this.disengage()
   }
 

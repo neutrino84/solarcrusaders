@@ -132,10 +132,12 @@ ShipManager.prototype.closestHostile = function(){
 
   for(var s in ships){
     var ship = ships[s];
+    ship.selector.hostileHighlightStop();
     if(ship.disabled){
       continue
     }
-    if(ship.targetingComputer.targetShip === player){ 
+    if(ship.targetingComputer.targetShip === player && ship.data.chassis !== 'squad-repair'){ 
+        // console.log(ship)
         distance = engine.Point.distance(ship, player); 
         if(distance < 17000){
           hostiles[distance] = ship;
@@ -146,15 +148,20 @@ ShipManager.prototype.closestHostile = function(){
   targets = Object.keys(hostiles);
   if(targets && !targets.length){return}
   player.acquired = hostiles[targets.sort(ascending)[0]];
-  console.log('F.E. acquiring ', player.acquired)
+  // console.log('F.E. acquiring ', player.acquired)
   player.acquired.selector.hostileHighlight();
   // console.log('this.acquired = ', player.acquired.data.chassis)
 };
 
 ShipManager.prototype.engageHostile = function(){
-  var player = this.player;
+  var ships = this.ships,
+      player = this.player;
   if(player.acquired){
-  console.log('F.E. target engaged ', player.acquired)  
+    for(var s in ships){
+    var ship = ships[s];
+    ship.selector.hostileEngagedStop();
+  }
+   player.acquired.selector.hostileEngaged();
     this.socket.emit('squad/engageHostile', {player_id: player.uuid, target_id : player.acquired.uuid });
   };
 };
@@ -327,6 +334,8 @@ ShipManager.prototype._disabled = function(data) {
       socket = this.socket,
       clock = this.clock;
   if(ship !== undefined) {
+    ship.selector.hostileHighlightStop();
+    ship.selector.hostileEngagedStop();
     ship.disable();
     this.game.emit('ship/sound/death', ship);
     // socket.emit('ship/death', ship);
