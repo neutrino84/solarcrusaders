@@ -83,6 +83,9 @@ HotkeyManager.prototype.listener = function() {
      if(key === 'e'){
           this.manager.engageHostile();
      }
+     if(key === 'd'){
+          this.manager.detectUnfriendlies();
+     }
     }, this);
 
     this.game.on('ship/enhancement/cancelled', this._cooled, this);

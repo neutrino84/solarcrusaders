@@ -149,9 +149,9 @@
     "moniker": "hammer-head",
     "stats": {
       "capacity": 3000,
-      "health": 210,
+      "health": 200,
       "heal": 0.21,
-      "armor": 0.42,
+      "armor": 0.20,
       "speed": 38.0,
       "rate": 256,
       "evasion": 0.05,
@@ -222,7 +222,7 @@
           },
           "default": {
             "type": "rocket",
-            "subtype": "medium"
+            "subtype": "basic"
           }
         },
         {
@@ -237,7 +237,7 @@
           },
           "default": {
             "type": "rocket",
-            "subtype": "medium"
+            "subtype": "basic"
           }
         },
         {
@@ -252,7 +252,7 @@
           },
           "default": {
             "type": "rocket",
-            "subtype": "medium"
+            "subtype": "basic"
           }
         },
         {
@@ -267,7 +267,7 @@
           },
           "default": {
             "type": "rocket",
-            "subtype": "medium"
+            "subtype": "basic"
           }
         }
               ]

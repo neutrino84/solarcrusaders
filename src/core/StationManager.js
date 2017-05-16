@@ -100,6 +100,12 @@ StationManager.prototype.generateStation = function() {
     y: 2048,
     chassis: 'ubadian-station-x01'
   });
+
+  this.create({
+    x: -8692,
+    y: 8192,
+    chassis: 'scavenger-nest-x01'
+  });
 };
 
 module.exports = StationManager;

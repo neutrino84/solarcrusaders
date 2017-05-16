@@ -8,5 +8,15 @@
       "size": 212,
       "radius": 512
     }
+  },
+  "scavenger-nest-x01": {
+    "race": "scavenger",
+    "stats": {
+      "health": 2000,
+      "heal": 2.0,
+      "speed": 2.0,
+      "size": 212,
+      "radius": 512
+    }
   }
 }

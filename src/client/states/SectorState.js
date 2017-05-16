@@ -61,6 +61,8 @@ SectorState.prototype.preload = function() {
   // load stations
   this.game.load.image('ubadian-station-x01', 'imgs/game/stations/ubaidian-x01.png');
   this.game.load.image('ubadian-station-x01-cap', 'imgs/game/stations/ubaidian-cap-x01.png');
+  this.game.load.image('scavenger-nest-x01', 'imgs/game/stations/scavenger-nest-x01.png');
+  this.game.load.image('scavenger-nest-x01-cap', 'imgs/game/stations/scavenger-lightcap-x01.png');
 
   // load strip graphics
   this.game.load.image('laser-blue', 'imgs/game/fx/laser-blue.png');
@@ -80,6 +82,7 @@ SectorState.prototype.preload = function() {
   this.game.load.json('ship-configuration', 'data/ship-configuration.json');
   this.game.load.json('item-configuration', 'data/item-configuration.json');
   this.game.load.json('station-configuration', 'data/station-configuration.json');
+  this.game.load.json('ai-configuration', 'data/ai-configuration.json');
 };
 
 // loadUpdate = function() {};

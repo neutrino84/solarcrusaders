@@ -137,7 +137,6 @@ ShipManager.prototype.closestHostile = function(){
       continue
     }
     if(ship.targetingComputer.targetShip === player && ship.data.chassis !== 'squad-repair'){ 
-        // console.log(ship)
         distance = engine.Point.distance(ship, player); 
         if(distance < 17000){
           hostiles[distance] = ship;
@@ -148,10 +147,53 @@ ShipManager.prototype.closestHostile = function(){
   targets = Object.keys(hostiles);
   if(targets && !targets.length){return}
   player.acquired = hostiles[targets.sort(ascending)[0]];
-  // console.log('F.E. acquiring ', player.acquired)
   player.acquired.selector.hostileHighlight();
-  // console.log('this.acquired = ', player.acquired.data.chassis)
 };
+
+ShipManager.prototype.detectUnfriendlies = function(){
+  var ships = this.ships,
+      player = this.player,
+      unfriendlies = {},
+      ascending = function(a, b) { return a-b }, 
+      distance, targets;
+
+  for(var s in ships){
+    var ship = ships[s],
+        distance = engine.Point.distance(ship, player); 
+    ship.selector.hostileHighlightStop();
+    if(ship.disabled){
+      continue
+    }
+
+    if(ship.data.friendlies && ship.data.friendlies.indexOf('user') < 0 && distance < 7000){
+      // console.log(ship.data.chassis, ' is unfriendly. distance is ', distance)
+      unfriendlies[distance] = ship;
+      // player.targets[distance] = ship;
+    }
+
+  };
+  
+  targets = Object.keys(unfriendlies);
+  if(targets && !targets.length){return}
+  // if(player.targetCount === 1){
+  //   for(keys in unfriendlies){
+  //     console.log(unfriendlies[keys].data.name)
+  //   }
+
+  // }
+  if(!targets[player.targetCount]){player.targetCount = 0}
+  player.previous = player.acquired;
+  if(player.previous === unfriendlies[targets.sort(ascending)[player.targetCount]]){
+    player.acquired = unfriendlies[targets.sort(ascending)[player.targetCount + 1]]
+  } else {
+    player.acquired = unfriendlies[targets.sort(ascending)[player.targetCount]];
+  };
+  // console.log(player.targetCount, targets.length, player.acquired.data.name)
+
+  player.acquired && player.acquired.selector.hostileHighlight();
+  player.targetCount++ 
+};
+
 
 ShipManager.prototype.engageHostile = function(){
   var ships = this.ships,
@@ -252,6 +294,8 @@ ShipManager.prototype._sync = function(data) {
 
 ShipManager.prototype._player = function(ship) {
   this.player = ship;
+  this.player.targets = {};
+  this.player.targetCount = 0;
   this.game.camera.follow(ship);
 };
 

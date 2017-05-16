@@ -1,4 +1,5 @@
 var engine = require('engine'),
+    client = require('client'),
     Basic = require('./Basic');
 
 function Squadron(ship, home) {
@@ -10,23 +11,27 @@ function Squadron(ship, home) {
   this.attacking = false;
   this.repairing = false;
 
-  this.settings = {
-    respawn: 100000,
-    disengage: 120000,
-    friendly: ['user','squadron'],
-    position: {
-      radius: 512,
-      x: ship.movement.position.x,
-      y: ship.movement.position.y
-    },
-    escape: {
-      health: 0.00,
-    },
-    sensor: {
-      aim: 1.25,
-      range: 19096
-    }
-  };
+  this.settings = client.AIConfiguration[this.type];
+
+  this.friendlies = this.settings.friendly;
+
+//   {
+//     respawn: 100000,
+//     disengage: 120000,
+//     friendly: ['user','squadron'],
+//     position: {
+//       radius: 512,
+//       x: ship.movement.position.x,
+//       y: ship.movement.position.y
+//     },
+//     escape: {
+//       health: 0.00,
+//     },
+//     sensor: {
+//       aim: 1.25,
+//       range: 19096
+//     }
+//   };
 };
 
 Squadron.prototype = Object.create(Basic.prototype);

@@ -1,5 +1,6 @@
 
-var engine = require('engine');
+var engine = require('engine'),
+    client = require('client');
 
 function Basic(ship) {
   this.type = 'basic';
@@ -17,23 +18,10 @@ function Basic(ship) {
   this.sensor = new engine.Circle();
   this.offset = new engine.Point();
 
-  this.settings = {
-    respawn: 30000,
-    disengage: 7680,
-    friendly: ['basic','user','squadron'],
-    position: {
-      radius: 4096,
-      x: 2048,
-      y: 2048
-    },
-    escape: {
-      health: 0.25,
-    },
-    sensor: {
-      aim: 1.5,
-      range: 4096
-    }
-  };
+  this.settings = client.AIConfiguration[this.type];
+
+  this.friendlies = this.settings.friendly;
+
 };
 
 Basic.prototype.constructor = Basic;

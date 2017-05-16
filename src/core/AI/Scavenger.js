@@ -1,52 +1,36 @@
 var engine = require('engine'),
-    Basic = require('./Basic');
+    Basic = require('./Basic'),
+    client = require('client');
     // Generator = require('../utils/Generator');
 
 function Scavenger(ship, home) {
   Basic.call(this, ship);
 
   this.type = 'scavenger';
-  this.spawnQueenThreshold = 500;
-  this.nextSpawnQueenThreshold = 1000;
-  this.spawnQueenCooldown = false;
-  // timer events
-  // this.events = new engine.Timer(this.game, false);
 
-  this.settings = {
-    respawn: 20000,
-    disengage: 9216,
-    friendly: ['scavenger', 'squadron'],
-    position: {
-      radius: 128,
-      x: ship.movement.position.x,
-      y: ship.movement.position.y
-    },
-    escape: {
-      health: 0.5,
-    },
-    sensor: {
-      aim: 0.8,
-      range: 56384
-    }
-  }
+  this.settings = client.AIConfiguration[this.type];
+
+  this.friendlies = this.settings.friendly;
+
+  // this.settings = {
+  //   respawn: 20000,
+  //   disengage: 9216,
+  //   friendly: ['scavenger', 'squadron'],
+  //   position: {
+  //     radius: 128,
+  //     x: ship.movement.position.x,
+  //     y: ship.movement.position.y
+  //   },
+  //   escape: {
+  //     health: 0.5
+  //   },
+  //   sensor: {
+  //     aim: 0.8,
+  //     range: 56384
+  //   }
+  // }
   if(ship.chassis === 'scavengers-x04d' || ship.chassis === 'scavengers-x03c'){
-    this.settings = {
-      respawn: 600000,
-      disengage: 7216,
-      friendly: ['scavenger'],
-      position: {
-        radius: 700,
-        x: ship.movement.position.x,
-        y: ship.movement.position.y
-      },
-      escape: {
-        health: 0.01,
-      },
-      sensor: {
-        aim: 0.8,
-        range: 16384
-      }
-    }
+    this.settings = client.AIConfiguration['scavenger-hostile'];
   }
 
 
@@ -182,17 +166,16 @@ Scavenger.prototype.engage = function(target) {
 };
 
 Scavenger.prototype.attack = function(){
+    if(this.target.data.chassis === 'scavengers-x02c' || this.target.data.chassis === 'scavengers-x01d' || this.target.data.chassis === 'scavengers-x03c' || this.target.data.chassis === 'scavengers-x04d'){this.target = null; return}
     if(this.ship.chassis === 'scavengers-x03c' || this.ship.chassis === 'scavengers-x04d'){
       if(this.target && !this.target.disabled){
       Basic.prototype.attack.call(this)
       } else if(this.target && this.target.disabled) {
         this.disengage();
       }
-    } else if(this.target && this.target.disabled && this.target.durability > 0){
-      // console.log(this.ship.chassis, ' attacking')
+    } else if(this.target && this.target.disabled && this.target.durability > 0 ){
     Basic.prototype.attack.call(this)
     } else if(this.target && !this.target.disabled) {
-      // console.log(this.ship.chassis, 'disengaging')
       this.disengage();
     };
 

@@ -38,7 +38,7 @@ function Ship(manager, data) {
 
   // generate ai
   this.ai = manager.ai.create(data.ai, this);
-
+   this.bonkers = 'bananas';
   // create metadata
   this.systems = {};
   this.hardpoints = {};
@@ -453,6 +453,19 @@ Object.defineProperty(Ship.prototype, 'credits', {
   set: function(value) {
     this.data.credits = value;
   }
+});
+
+Object.defineProperty(Ship.prototype, 'friendlies', {
+  get: function() {
+    if(this.ai){
+      return this.ai.friendlies;
+    } else {return null}
+  },
+
+  set: function(value) {
+    this.data.friendlies = value;
+  }
+
 });
 
 Object.defineProperty(Ship.prototype, 'reputation', {

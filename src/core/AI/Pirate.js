@@ -1,28 +1,16 @@
 var engine = require('engine'),
-    Basic = require('./Basic');
+    Basic = require('./Basic'),
+    client = require('client');
 
 function Pirate(ship, home) {
   Basic.call(this, ship);
 
   this.type = 'pirate';
 
-  this.settings = {
-    respawn: 60000,
-    disengage: 9216,
-    friendly: ['pirate', 'squadron'],
-    position: {
-      radius: 512,
-      x: ship.movement.position.x,
-      y: ship.movement.position.y
-    },
-    escape: {
-      health: 0.2,
-    },
-    sensor: {
-      aim: 1.25,
-      range: 4096
-    }
-  };
+  this.settings = client.AIConfiguration[this.type];
+
+  this.friendlies = this.settings.friendly;
+
 };
 
 Pirate.prototype = Object.create(Basic.prototype);
