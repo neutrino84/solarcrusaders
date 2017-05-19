@@ -169,7 +169,8 @@ ShipManager.prototype.data = function(socket, args) {
         evasion: ship.evasion,
         hardpoints: hardpoints,
         enhancements: enhancements,
-        friendlies: ship.friendlies
+        friendlies: ship.friendlies,
+        masterShip: ship.masterShip
       });
     }
   }

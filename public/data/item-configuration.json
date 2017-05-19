@@ -484,7 +484,7 @@
         },
         "sound": {
           "name": "heal",
-          "volume": 0.08,
+          "volume": 0.7,
           "loop": false
         }
       }

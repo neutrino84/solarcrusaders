@@ -40,7 +40,15 @@ EngineCore.prototype.create = function() {
     highlight.pivot.set(32, 32);
     highlight.position.set(conf.position.x, conf.position.y);
     highlight.scale.set(0, 0);
-    highlight.tint = conf.tint;
+    if(ship.data.masterShip){
+      var master = ship.data.masterShip;
+      console.log('this should be master color. master is ', master, 'master is', ship.manager.ships)
+      // ship.manager.ships[master].config.engine.glows[0].tint
+      highlight.tint = 0x3399FF;
+    } else {
+      highlight.tint = conf.tint;
+    }
+    
     highlight.blendMode = engine.BlendMode.ADD;
     highlight.alpha = 0;
 
@@ -50,7 +58,13 @@ EngineCore.prototype.create = function() {
     glow.rotation = global.Math.PI + engine.Math.degToRad(conf.rotation);
     glow.position.set(conf.position.x, conf.position.y);
     glow.scale.set(0, 0);
-    glow.tint = conf.tint;
+    // console.log(ship)
+    if(ship.data.masterShip){
+      // console.log('manager is ', ship.manager.ships[ship.data.masterShip])
+      glow.tint = 0x3399FF;
+    } else {
+      glow.tint = conf.tint;
+    }
     glow.blendMode = engine.BlendMode.ADD;
 
     ship.addChildAt(glow, 0);

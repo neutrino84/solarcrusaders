@@ -465,7 +465,18 @@ Object.defineProperty(Ship.prototype, 'friendlies', {
   set: function(value) {
     this.data.friendlies = value;
   }
+});
 
+Object.defineProperty(Ship.prototype, 'masterShip', {
+  get: function() {
+    if(this.ai && this.master){
+      return this.master;
+    } else {return null}
+  },
+
+  set: function(value) {
+    this.data.masterShip = value;
+  }
 });
 
 Object.defineProperty(Ship.prototype, 'reputation', {
