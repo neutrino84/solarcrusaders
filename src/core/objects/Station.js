@@ -15,7 +15,7 @@ function Station(manager, data) {
   this.chassis = this.data.chassis;
   this.config = client.StationConfiguration[this.data.chassis];
 
-  this.orbit = new Orbit(this);
+  // this.orbit = new Orbit(this);
 };
 
 Station.prototype.constructor = Station;

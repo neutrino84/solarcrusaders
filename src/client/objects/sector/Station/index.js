@@ -18,7 +18,11 @@ function Station(manager, data) {
   // core ship classes
   this.hud = new Hud(this);
   this.period = this.data.period;
-  this.orbit = new engine.Circle(this.data.x/4, this.data.y/4, this.data.radius);
+  if(this.data.chassis === 'ubadian-station-x01'){
+    this.orbit = new engine.Circle(this.data.x/4, this.data.y/4, this.data.radius);
+  } else {
+    this.orbit = new engine.Circle(data.x, data.y, 0);
+  };
   this.pivot.set(this.width/2, this.height/2);
   this.rotation = this.data.rotation;
 };
@@ -37,7 +41,7 @@ Station.prototype.boot = function() {
 
   // create hud
   this.hud.create();
-  this.hud.show();
+  // this.hud.show();
 
   // subscribe to updates
   this.data.on('data', this.data, this);

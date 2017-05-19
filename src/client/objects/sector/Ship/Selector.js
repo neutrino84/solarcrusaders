@@ -57,6 +57,11 @@ Selector.prototype.create = function() {
       this.reticle.position.set(-ship.width/2, -ship.height/2)
       this.reticleOuter.position.set(-ship.width/1.6, -ship.height/1.6);
     }
+    if(this.ship.data.chassis === 'scavengers-x04d'){
+      this.reticle.position.set(-ship.width/1.5, -ship.height/1.5)
+      this.reticleOuter.position.set(-ship.width/1.21, -ship.height/1.21);
+    }
+    
 
     if(ship.isPlayer){
       this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius*2, this.hit.radius*2)

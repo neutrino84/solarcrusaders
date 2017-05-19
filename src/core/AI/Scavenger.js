@@ -33,8 +33,7 @@ function Scavenger(ship, home) {
     this.settings = client.AIConfiguration['scavenger-hostile'];
   }
 
-
-  // this.generateShips();
+    // this.generateShips();
 };
 
 Scavenger.prototype = Object.create(Basic.prototype);
@@ -166,6 +165,7 @@ Scavenger.prototype.engage = function(target) {
 };
 
 Scavenger.prototype.attack = function(){
+    if(!this.target){return}
     if(this.target.data.chassis === 'scavengers-x02c' || this.target.data.chassis === 'scavengers-x01d' || this.target.data.chassis === 'scavengers-x03c' || this.target.data.chassis === 'scavengers-x04d'){this.target = null; return}
     if(this.ship.chassis === 'scavengers-x03c' || this.ship.chassis === 'scavengers-x04d'){
       if(this.target && !this.target.disabled){
@@ -221,7 +221,14 @@ Scavenger.prototype.disengage = function() {
 Scavenger.prototype.getHomePosition = function() {
   var position = this.settings.position,
       sensor = this.sensor;
-      sensor.setTo(position.x, position.y, position.radius);
+      sensor.setTo(-9360, 11750, position.radius);
+      var a = /^(mol)/
+      var t = this.ship.data.name;
+      // console.log(a.test(t))
+      if(a.test(t)){
+        sensor.setTo(9200, -11100, position.radius);
+      }
+      // debugger
   return this.sensor.random();
 };
 

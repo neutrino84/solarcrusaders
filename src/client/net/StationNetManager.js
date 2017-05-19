@@ -26,10 +26,12 @@ StationNetManager.prototype.getStationData = function(uuid) {
 StationNetManager.prototype._data = function(data) {
   var station,
       stations = data.stations;
+
+     // console.log(data)
+     // debugger
   if(this.game.cache.checkJSONKey('station-configuration')) {
     for(var s in stations) {
       station = stations[s];
-      
       if(data.type === 'sync' && this.stations[station.uuid] === undefined) {
         this.stations[station.uuid] = new StationData(this.game, station);
       } else if(this.stations[station.uuid]) {
@@ -43,10 +45,15 @@ StationNetManager.prototype._sync = function(data) {
   var station,
       stations = data.stations,
       uuids = [];
-
+      // console.log(stations)
+      // debugger
   // detect new
   for(var s in stations) {
     station = stations[s];
+    // console.log(station)
+      if(station.chassis === 'scavenger-nest-x01'){
+      console.log('station  ', station.x, station.y)
+      }
 
     if(this.stations[station.uuid] === undefined) {
       uuids.push(station.uuid);

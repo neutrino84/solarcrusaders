@@ -85,6 +85,7 @@ HotkeyManager.prototype.listener = function() {
      }
      if(key === 'd'){
           this.manager.detectUnfriendlies();
+          // console.log('d press')
      }
     }, this);
 

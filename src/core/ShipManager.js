@@ -106,7 +106,7 @@ ShipManager.prototype.squad_engage = function(socket, args){
         ship.ai.engage(target, 'attack');
       };
     };
-}
+};
 
 ShipManager.prototype.enhancement = function(socket, args) {
   var ships = this.ships,
@@ -230,9 +230,6 @@ ShipManager.prototype.refresh = function() {
         updates.push(update);
       }
     }
-    if(ship.disabled && ship.durability === 0){
-      // console.log('queen?')
-    }
   }
   if(updates.length > 0) {
     this.sockets.emit('ship/data', {
@@ -252,9 +249,9 @@ ShipManager.prototype.disabled = function(data) {
 ShipManager.prototype.generateRandomShips = function() {
   var iterator = {
         'ubaidian-x01a': { race: 'ubaidian', count: 0 },
-        'ubaidian-x01b': { race: 'ubaidian', count: 1 },
-        'ubaidian-x01c': { race: 'ubaidian', count: 0 },
-        'ubaidian-x01d': { race: 'ubaidian', count: 0 },
+        'ubaidian-x01b': { race: 'ubaidian', count: 0 },
+        'ubaidian-x01c': { race: 'ubaidian', count: 1 },
+        'ubaidian-x01d': { race: 'ubaidian', count: 1 },
         'ubaidian-x01e': { race: 'ubaidian', count: 1 },
         'ubaidian-x02': { race: 'ubaidian', count: 0 },
         'ubaidian-x03': { race: 'ubaidian', count: 1 },
@@ -264,7 +261,7 @@ ShipManager.prototype.generateRandomShips = function() {
         'mechan-x03': { race: 'mechan', count: 0 },
         'general-x01': { race: 'ubaidian', count: 0 },
         'general-x02': { race: 'ubaidian', count: 0 },
-        'enforcers-x01': { race: 'ubaidian', count: 2 },
+        'enforcers-x01': { race: 'ubaidian', count: 3 },
         'enforcers-x02': { race: 'ubaidian', count: 0 }
       };
   for(var chassis in iterator) {
@@ -336,22 +333,40 @@ ShipManager.prototype.generatePirateShips = function() {
 
 ShipManager.prototype.generateScavengerShips = function() {
   var base, ship,
-      iterator = [{
-        location: { x: -8192, y: 8192 },
+      iterator = [
+      {
+        location: { x: -12192, y: 12192 },
         ships: [
-          { name: 'saaghath', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
-          { name: 'mocolo', chassis: 'scavengers-x01d', credits: 1500, reputation: -100 },
-          { name: 'fenris', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
-          { name: 'zozu', chassis: 'scavengers-x01d', credits: 1500, reputation: -100 },
-          { name: 'thovu', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
-          { name: 'thaide', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
-          { name: 'sejini', chassis: 'scavengers-x01d', credits: 1500, reputation: -100 },
-          { name: 'bogu', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
-          { name: 'macrod', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
-          { name: 'zizulo', chassis: 'scavengers-x01d', credits: 1500, reputation: -100 },
-          { name: 'wivero', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 }
+          { name: 'vun-saaghath', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
+          { name: 'vun-mocolo', chassis: 'scavengers-x01d', credits: 1500, reputation: -100 },
+          { name: 'vun-fenris', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
+          { name: 'vun-zozu', chassis: 'scavengers-x01d', credits: 1500, reputation: -100 },
+          { name: 'vun-thovu', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
+          { name: 'vun-thaide', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
+          { name: 'vun-sejini', chassis: 'scavengers-x01d', credits: 1500, reputation: -100 },
+          { name: 'vun-bogu', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
+          { name: 'vun-macros', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
+          { name: 'vun-zizulo', chassis: 'scavengers-x01d', credits: 1500, reputation: -100 },
+          { name: 'vun-wivero', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 }
         ]
-      }],
+      },
+      {
+        location: { x: 12192, y: -12192 },
+        ships: [
+          { name: 'mol-saaghath', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
+          { name: 'mol-mocolo', chassis: 'scavengers-x01d', credits: 1500, reputation: -100 },
+          { name: 'mol-fenris', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
+          { name: 'mol-zozu', chassis: 'scavengers-x01d', credits: 1500, reputation: -100 },
+          { name: 'mol-thovu', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
+          { name: 'mol-thaide', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
+          { name: 'mol-sejini', chassis: 'scavengers-x01d', credits: 1500, reputation: -100 },
+          { name: 'mol-bogu', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
+          { name: 'mol-macros', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
+          { name: 'mol-zizulo', chassis: 'scavengers-x01d', credits: 1500, reputation: -100 },
+          { name: 'mol-wivero', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 }
+        ]
+      }
+      ],
       len = iterator.length;
 
   // create scavengers
@@ -375,14 +390,15 @@ ShipManager.prototype.generateScavengerShips = function() {
 };
 
 ShipManager.prototype.spawnQueen = function(){
-  console.log(' SHIP  manager SPAWN QUEEN')
   this.create({
     name: 'ScavengerQueen',
     chassis: 'scavengers-x04d',
     throttle: 1.0,
     ai: 'scavenger',
     credits: global.Math.floor(global.Math.random() * 250 + 50),
-    reputation: global.Math.floor(100 * (1 + global.Math.random()))
+    reputation: global.Math.floor(100 * (1 + global.Math.random())),
+    x: -9360,
+    y: 11750
   });
 };
 

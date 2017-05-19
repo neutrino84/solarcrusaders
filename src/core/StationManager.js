@@ -102,9 +102,17 @@ StationManager.prototype.generateStation = function() {
   });
 
   this.create({
-    x: -8692,
-    y: 8192,
-    chassis: 'scavenger-nest-x01'
+    x: -2392,
+    y: 2892,
+    chassis: 'scavenger-nest-x01',
+    radius: 0
+  });
+
+  this.create({
+    x: 2392,
+    y: -2892,
+    chassis: 'scavenger-nest-x01',
+    radius: 0
   });
 };
 

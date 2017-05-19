@@ -141,7 +141,7 @@ ShipManager.prototype.closestHostile = function(){
         if(distance < 17000){
           hostiles[distance] = ship;
         };
-    }
+    };
   };
 
   targets = Object.keys(hostiles);
@@ -153,10 +153,13 @@ ShipManager.prototype.closestHostile = function(){
 ShipManager.prototype.detectUnfriendlies = function(){
   var ships = this.ships,
       player = this.player,
-      unfriendlies = {},
+      unfriendlies = this.player.unfriendlies,
       ascending = function(a, b) { return a-b }, 
-      distance, targets;
+      distance, targets, previous;
 
+  if(!player.targetlistCooldown){
+      this.player.unfriendlies = {};
+  }
   for(var s in ships){
     var ship = ships[s],
         distance = engine.Point.distance(ship, player); 
@@ -165,33 +168,37 @@ ShipManager.prototype.detectUnfriendlies = function(){
       continue
     }
 
-    if(ship.data.friendlies && ship.data.friendlies.indexOf('user') < 0 && distance < 7000){
-      // console.log(ship.data.chassis, ' is unfriendly. distance is ', distance)
-      unfriendlies[distance] = ship;
-      // player.targets[distance] = ship;
-    }
-
+    //gen unfriendlies list   -----NEED TO PRIORITIZE non-scavs
+    if(!player.targetlistCooldown && ship.data.friendlies && ship.data.friendlies.indexOf('user') < 0 && distance < 6000){
+      this.player.unfriendlies[distance] = ship;
+    };
   };
   
-  targets = Object.keys(unfriendlies);
+  targets = Object.keys(this.player.unfriendlies);
   if(targets && !targets.length){return}
-  // if(player.targetCount === 1){
-  //   for(keys in unfriendlies){
-  //     console.log(unfriendlies[keys].data.name)
-  //   }
 
-  // }
-  if(!targets[player.targetCount]){player.targetCount = 0}
-  player.previous = player.acquired;
-  if(player.previous === unfriendlies[targets.sort(ascending)[player.targetCount]]){
-    player.acquired = unfriendlies[targets.sort(ascending)[player.targetCount + 1]]
+  target = this.player.unfriendlies[targets.sort(ascending)[player.targetCount]]
+  if(target && target !== this.player.previous) {
+    player.acquired = target
   } else {
-    player.acquired = unfriendlies[targets.sort(ascending)[player.targetCount]];
+    player.targetCount = 0
+    player.acquired = this.player.unfriendlies[targets.sort(ascending)[player.targetCount]]
   };
-  // console.log(player.targetCount, targets.length, player.acquired.data.name)
+  // };
 
   player.acquired && player.acquired.selector.hostileHighlight();
-  player.targetCount++ 
+  player.targetCount++
+  player.previous = player.acquired; 
+
+  if(player.targetCount > targets.sort(ascending).length){
+    player.targetCount = 0;
+  }
+  if(!this.player.targetlistCooldown){
+    this.player.targetlistCooldown = true;
+    this.game.clock.events.add(10000, function(){
+      player.targetlistCooldown = false;
+    }, this);    
+  };
 };
 
 
@@ -294,8 +301,10 @@ ShipManager.prototype._sync = function(data) {
 
 ShipManager.prototype._player = function(ship) {
   this.player = ship;
-  this.player.targets = {};
+  this.player.unfriendlies = {};
   this.player.targetCount = 0;
+  this.player.targetlistCooldown = false;
+  this.player.previous;
   this.game.camera.follow(ship);
 };
 
