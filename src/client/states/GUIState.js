@@ -124,7 +124,7 @@ GUIState.prototype.login = function(user) {
     this.headerPane.invalidate(true);
     this.registrationForm && (this.registrationForm = this.registrationForm.destroy());
   } else {
-    this.headerPane.logout()
+    this.headerPane.logout();
     this.registrationForm = new RegistrationForm(game);
   }
   if(this.modalComponent.visible) {
