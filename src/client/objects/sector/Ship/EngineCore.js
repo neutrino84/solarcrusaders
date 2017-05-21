@@ -13,6 +13,8 @@ function EngineCore(parent, config) {
   this.isBoosting = false;
 
   this.position = new engine.Point();
+
+  this.heavyOverdriveSFX = this.game.sound.add(('heavyOverdrive'),0,true)
 };
 
 // random flicker
@@ -63,6 +65,11 @@ EngineCore.prototype.create = function() {
 
 EngineCore.prototype.start = function() {
   this.isBoosting = true;
+  // console.log('BOOSTIN!  ship class is:',this.game.playerObj.name)
+  if(this.game.playerObj.name === 'ubaidian-x01'){this.heavyOverdriveSFX.play('', 0, 0.3, false);}
+  if(this.game.playerObj.name === 'ubaidian-x02'){this.heavyOverdriveSFX.play('', 0, 0.3, false);}
+  if(this.game.playerObj.name === 'ubaidian-x03'){this.heavyOverdriveSFX.play('', 0, 0.3, false);}  
+  if(this.game.playerObj.name === 'ubaidian-x04'){this.heavyOverdriveSFX.play('', 0, 0.3, false);} 
 };
 
 EngineCore.prototype.stop = function() {

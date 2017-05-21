@@ -130,7 +130,7 @@ Laser.prototype.destroy = function() {
   this.glow.destroy();
 
   this.parent = this.game = 
-    this.data = this.clock = undefined;
+  this.data = this.clock = undefined;
 };
 
 module.exports = Laser;

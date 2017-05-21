@@ -22,7 +22,6 @@ Reactor.prototype.create = function() {
 
 Reactor.prototype.start = function() {
   this.shieldSprite.alpha = 1.0;
-
   this.animeTween = this.game.tweens.create(this.shieldSprite);
   this.animeTween.to({ alpha: 0.5 }, 1000, engine.Easing.Quadratic.InOut);
   this.animeTween.repeat();

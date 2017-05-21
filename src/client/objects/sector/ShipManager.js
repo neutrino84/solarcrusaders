@@ -2,13 +2,14 @@
 var engine = require('engine'),
     Ship = require('./Ship'),
     EnhancementManager = require('./EnhancementManager'),
+    SoundManager = require('./SoundManager'),
     ExplosionEmitter = require('./emitters/ExplosionEmitter'),
     FlashEmitter = require('./emitters/FlashEmitter'),
     GlowEmitter = require('./emitters/GlowEmitter'),
     ShockwaveEmitter = require('./emitters/ShockwaveEmitter'),
     FireEmitter = require('./emitters/FireEmitter'),
     Indicator = require('./misc/Indicator');
-
+    // SectorState = require('../states/SectorState')
 function ShipManager(game) {
   this.game = game;
   this.clock = game.clock;
@@ -18,11 +19,15 @@ function ShipManager(game) {
   this.enhancementManager = new EnhancementManager(this);
 
   // player
-  this.player = null;
+  // this.player = null;
+
+  //this is my attempt at making a player object I can understand/use -Richard
+  //will refactor later
+  this.game.playerObj = {};
+  this.player = this.game.playerObj
 
   // ship cache
   this.ships = {};
-
   // create indicator
   this.indicator = new Indicator(game);
 
@@ -78,9 +83,16 @@ function ShipManager(game) {
   this.game.on('ship/removed', this._removed, this);
   this.game.on('ship/disabled', this._disabled, this);
   this.game.on('ship/enabled', this._enabled, this);
+
+
+
+  // this.laserArr = this.game.soundManager.laserArr
+  // tried to do this ^ but this.game.soundManager doesn't exist yet apparently
 };
 
 ShipManager.prototype.constructor = ShipManager;
+
+
 
 // ShipManager.prototype.focus = function() {
 //   this.game.input.on('keydown', this._unfollow, this);
@@ -170,6 +182,8 @@ ShipManager.prototype.destroy = function() {
   this.removeAll();
 };
 
+
+
 ShipManager.prototype._sync = function(data) {
   var ship, cached,
       game = this.game,
@@ -195,12 +209,71 @@ ShipManager.prototype._sync = function(data) {
 
 ShipManager.prototype._player = function(ship) {
   this.player = ship;
+  this.game.playerObj.name = ship.name
 };
+
+ShipManager.prototype.laserFireSFX = function(shipSize){
+  var laserArr = this.game.soundManager.laserArr
+  var heavyLaserArr = this.game.soundManager.heavyLaserArr
+
+  if(shipSize === 'light'){
+  var maxNum = laserArr.length-1
+  var minNum = 0
+
+  var randomNum = Math.floor(Math.random() * (maxNum - minNum + 1)) + minNum;
+  laserArr[randomNum].play('', 0, 0.3, false);
+  }
+  if(shipSize === 'heavy'){
+  var maxNum = heavyLaserArr.length-1
+  var minNum = 0
+  var randomNum = Math.floor(Math.random() * (maxNum - minNum + 1)) + minNum;
+  var randomNum2 = Math.floor(Math.random() * (maxNum - minNum + 1)) + minNum;
+  heavyLaserArr[randomNum].play('', 0, 0.1, false);
+  heavyLaserArr[randomNum2].play('', 0, 0.1, false);
+  }
+}
+ShipManager.prototype.rocketFireSFX = function(){
+  var rocketArr = this.game.soundManager.rocketArr
+  var maxNum = rocketArr.length-1
+  var minNum = 0
+  var randomNum = Math.floor(Math.random() * (maxNum - minNum + 1)) + minNum;
+  rocketArr[randomNum].play('', 0, 0.3, false);
+}
+
+ShipManager.prototype.thrustersSFX = function(shipSize){
+  var thrustersArr = this.game.soundManager.thrustersArr
+  var heavyThrustersArr = this.game.soundManager.heavyThrustersArr
+  if(shipSize === 'light'){
+    var maxNum = thrustersArr.length-1
+    var minNum = 0
+    var randomNum = Math.floor(Math.random() * (maxNum - minNum + 1)) + minNum;
+    thrustersArr[randomNum].play('', 0, 1, false);
+  }
+  if(shipSize === 'heavy'){
+    var maxNum = heavyThrustersArr.length-1
+    var minNum = 0
+    var randomNum = Math.floor(Math.random() * (maxNum - minNum + 1)) + minNum;
+    heavyThrustersArr[randomNum].play('', 0, 0.3, false);
+  }
+}
+
 
 ShipManager.prototype._attack = function(data) {
   var ship = this.ships[data.uuid];
+
   if(ship != this.player) {
     ship.targetingComputer.attack(data.targ);
+  }
+  else {
+    if(this.ships[data.uuid].details.hardpoints[0].type === 'rocket'){
+      this.rocketFireSFX(0.1)
+    }
+    if(this.ships[data.uuid].details.hardpoints[0].type === 'laser' && this.game.playerObj.name === 'ubaidian-x02' || this.ships[data.uuid].details.hardpoints[0].type === 'laser' && this.game.playerObj.name === 'ubaidian-x01'){
+      this.laserFireSFX('heavy')  
+    }
+    else if(this.ships[data.uuid].details.hardpoints[0].type === 'laser'){
+      this.laserFireSFX('light')    
+    } 
   }
 };
 
@@ -222,6 +295,16 @@ ShipManager.prototype._primary = function(data) {
     }
   }
 };
+ShipManager.prototype.timerOn = false
+
+ShipManager.prototype.timer = function(){
+  if(this.timerOn === false){
+    ShipManager.prototype.timerOn = true
+    setTimeout(function(){
+      ShipManager.prototype.timerOn = false
+    }, 4500)
+  }
+}
 
 ShipManager.prototype._secondary = function(data) {
   var game = this.game,
@@ -235,6 +318,15 @@ ShipManager.prototype._secondary = function(data) {
   if(ship) {
     if(data.type === 'start') {
       indicator.show(position);
+
+      if(this.timerOn === false){
+        if(this.game.playerObj.name === 'ubaidian-x02'){this.thrustersSFX('heavy')}
+        else{this.thrustersSFX('light')}
+      }  
+      this.timer()
+      
+
+
       socket.emit('ship/plot', {
         uuid: ship.uuid,
         destination: destination

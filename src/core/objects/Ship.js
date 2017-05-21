@@ -54,7 +54,6 @@ function Ship(manager, data) {
 };
 
 Ship.prototype.constructor = Ship;
-
 Ship.prototype.init = function(callback) {
   var self = this;
   if(this.data.isNewRecord()) {
@@ -218,9 +217,11 @@ Ship.prototype.hit = function(attacker, point) {
     // calc damage
     damage = global.Math.max(0, attacker.damage * (1-ratio) - this.armor);
     health = data.health-damage;
+    console.log(health)
 
     // update damage
     if(!this.disabled && health > 0) {
+      console.log(health)
       // update health
       data.health = health;
       updates.push({
