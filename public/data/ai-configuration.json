@@ -19,7 +19,7 @@
   "pirate": {
   	"respawn": 60000,
     "disengage": 9216,
-    "friendly": ["pirate", "squadron"],
+    "friendly": ["pirate"],
     "position": {
       "radius": 512,
       "x": "ship.movement.position.x",
@@ -34,7 +34,7 @@
     }
   },
   "scavenger": {
-  	"respawn": 20000,
+  	"respawn": 30000,
   	"disengage": 9216,
   	"friendly": ["scavenger"],
   	"position": {
@@ -68,7 +68,7 @@
   	}
   },
   "squadron": {
-  	"respawn": 100000,
+  	"respawn": 800000,
     "disengage": 120000,
     "friendly": ["user","squadron"],
     "position": {

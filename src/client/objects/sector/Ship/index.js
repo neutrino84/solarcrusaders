@@ -74,6 +74,7 @@ Ship.prototype.refresh = function(data) {
       ships = this.manager.ships,
       targetingComputer = this.targetingComputer;
 
+  // console.log('wtf', data)
   if(data.hardpoint) {
     attacker = ships[data.uuid];
     defender = ships[data.hardpoint.ship];
@@ -96,6 +97,17 @@ Ship.prototype.refresh = function(data) {
         this.game.camera.shake();
       }
     };
+    // show hud for squad ships
+    if(defender.data.masterShip && this.manager.ships[defender.data.masterShip].isPlayer){
+      defender.hud.show();
+      defender.timer && defender.events.remove(defender.timer);
+      defender.timer = defender.events.add(5000, function() {
+        this.hud.hide();
+        console.log('hidden')
+      }, defender);
+    }
+
+    //SHOW HUD FOR SQUAD SHIPS BEING ATTACKED
   };
   if(data.durability < this.config.stats.durability){
    this.alpha = (data.durability / this.config.stats.durability);

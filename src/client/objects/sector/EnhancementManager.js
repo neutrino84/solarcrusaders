@@ -30,6 +30,9 @@ EnhancementManager.prototype._started = function(data) {
       case 'piercing':
         ship.targetingComputer.enhance(data.enhancement, true);
         break;
+      case 'detect':
+        ship.targetingComputer.enhance(data.enhancement, true);
+        break;
     }
   }
 };
@@ -48,6 +51,9 @@ EnhancementManager.prototype._stopped = function(data) {
         ship.shieldGenerator.stop();
         break;
       case 'piercing':
+        ship.targetingComputer.enhance(data.enhancement, false);
+        break;
+      case 'detect':
         ship.targetingComputer.enhance(data.enhancement, false);
         break;
     }

@@ -23,6 +23,9 @@ Selector.prototype.create = function() {
 
   // create hit area
   this.hit = new engine.Circle(halfWidth, halfHeight, radius);
+
+  // create detector area
+  this.detectorCircle = new engine.Circle(halfWidth, halfHeight, 3500);
   
   // create selection
   this.graphics = new engine.Graphics();
@@ -33,6 +36,17 @@ Selector.prototype.create = function() {
   this.graphics.blendMode = engine.BlendMode.ADD;
   // this.graphics.alpha = this.alpha;
   this.graphics.alpha = 0;
+
+  // create detector
+  this.detector = new engine.Graphics();
+  this.detector.lineStyle(size, 0xffff00, 1.0);
+  this.detector.drawCircle(this.detectorCircle.x, this.detectorCircle.y, this.detectorCircle.radius);
+  this.detector.pivot.set(halfWidth, halfHeight);
+  this.detector.position.set(halfWidth + (size/2), halfHeight + (size/2));
+  this.detector.blendMode = engine.BlendMode.ADD;
+  // this.detector.alpha = this.alpha;
+  this.detector.alpha = 0;
+
 
   //create reticle
   this.reticle = new engine.Graphics();
@@ -75,6 +89,7 @@ Selector.prototype.create = function() {
 
   // add selector
   this.ship.addChildAt(this.graphics, 0);
+  this.ship.addChildAt(this.detector, 0);
   this.ship.addChildAt(this.reticle, 0);
   this.ship.addChildAt(this.reticleOuter, 0);
 };
@@ -89,6 +104,17 @@ Selector.prototype.highlight = function(type) {
     }, this);
     this.highlightAnimating.yoyo(true, 9500);
     // this.highlightAnimating.start();
+  }
+};
+
+Selector.prototype.detectorHighlight = function() {
+  if(!this.detectorAnimating || (this.detectorAnimating && !this.detectorAnimating.isRunning)){
+    this.detectorAnimating = this.game.tweens.create(this.detector);
+    this.detectorAnimating.to({ alpha: 1 }, 500);
+    this.detectorAnimating.on('complete', function() {
+      this.detector.alpha = 0;
+    }, this);
+    this.detectorAnimating.start();
   }
 };
 

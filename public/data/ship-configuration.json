@@ -17,7 +17,7 @@
       "durability": 136,
       "critical": 0.01
     },
-    "enhancements": ["heal", "booster", "shield", "piercing"],
+    "enhancements": ["heal", "booster", "shield", "piercing", "detect"],
     "engine": {
       "glows": [
         {
@@ -161,7 +161,7 @@
       "durability": 136,
       "critical": 0.01
     },
-    "enhancements": ["heal", "booster", "shield", "piercing"],
+    "enhancements": ["heal", "booster", "shield", "piercing", "detect"],
     "engine": {
       "glows": [
         {
@@ -291,7 +291,7 @@
       "durability": 136,
       "critical": 0.01
     },
-    "enhancements": ["heal", "booster", "shield", "piercing"],
+    "enhancements": ["heal", "booster", "shield", "piercing", "detect"],
     "engine": {
       "glows": [
         {
@@ -393,7 +393,7 @@
       "durability": 136,
       "critical": 0.01
     },
-    "enhancements": ["heal", "booster", "shield", "piercing"],
+    "enhancements": ["heal", "booster", "shield", "piercing", "detect"],
     "engine": {
       "glows": [
         {
@@ -523,7 +523,7 @@
       "durability": 136,
       "critical": 0.01
     },
-    "enhancements": ["heal", "booster", "shield", "piercing"],
+    "enhancements": ["heal", "booster", "shield", "piercing", "detect"],
     "engine": {
       "glows": [
         {
@@ -625,7 +625,7 @@
       "durability": 136,
       "critical": 0.01
     },
-    "enhancements": ["heal", "booster", "shield", "piercing"],
+    "enhancements": ["heal", "booster", "shield", "piercing", "detect"],
     "engine": {
       "glows": [
         {
@@ -768,7 +768,7 @@
       "durability": 192,
       "critical": 0.01
     },
-    "enhancements": ["heal", "booster", "shield"],
+    "enhancements": ["heal", "booster", "shield", "detect"],
     "engine": {
       "glows": [
         {
@@ -2415,7 +2415,7 @@
     "stats": {
       "capacity": 3000,
       "health": 100,
-      "heal": 0.25,
+      "heal": 0.4,
       "armor": 0.0,
       "speed": 75.0,
       "rate": 256,
@@ -2426,7 +2426,7 @@
       "durability": 128,
       "critical": 0.01
     },
-    "enhancements": ["shield"],
+    "enhancements": ["shield", "booster"],
     "engine": {
       "glows": [
         {
@@ -2438,8 +2438,8 @@
             "endY": 1.5
           },
           "position": {
-            "x": 80,
-            "y": 65
+            "x": 139,
+            "y": 109
           },
           "rotation": 0
         }
@@ -2454,8 +2454,8 @@
             "y": 16
           },
           "position": {
-            "x": 49,
-            "y": 64
+            "x": 68,
+            "y": 109
           },
           "default": {
             "type": "pulse",
@@ -2550,8 +2550,8 @@
             "endY": 1.5
           },
           "position": {
-            "x": 80,
-            "y": 65
+            "x": 135,
+            "y": 110
           },
           "rotation": 0
         }
@@ -2566,8 +2566,8 @@
             "y": 16
           },
           "position": {
-            "x": 49,
-            "y": 64
+            "x": 115,
+            "y": 108
           },
           "default": {
             "type": "energy",

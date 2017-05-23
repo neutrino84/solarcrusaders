@@ -29,6 +29,9 @@ function Ship(manager, data) {
 
   this.uuid = this.data.uuid;
   this.chassis = this.data.chassis;
+  if(data.squadron){
+    this.squadron = data.squadron;
+  }
   this.config = client.ShipConfiguration[this.data.chassis];
 
   this.disabled = false;
@@ -38,7 +41,7 @@ function Ship(manager, data) {
 
   // generate ai
   this.ai = manager.ai.create(data.ai, this);
-   this.bonkers = 'bananas';
+
   // create metadata
   this.systems = {};
   this.hardpoints = {};
@@ -223,6 +226,10 @@ Ship.prototype.hit = function(attacker, target, slot) {
     damage = global.Math.max(0, hardpoint.data.damage * (1-ratio) * (1-this.armor));
     damage += critical ? damage : 0;
     damage *= piercing ? piercing.damage : 1;
+
+    //prevent friendly fire dmg to squadron
+    if(this.master === attacker.uuid){return}  
+      
     if(attacker.hardpoints[0].subtype === 'repair_beam'){
     health = data.health + damage;
     } else {

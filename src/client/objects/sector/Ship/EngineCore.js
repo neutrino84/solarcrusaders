@@ -32,6 +32,7 @@ EngineCore.prototype.create = function() {
       config = this.config.glows;
 
   // highlights
+        // console.log('list is ', ship.manager.ships)
   for(var g=0; g<config.length; g++) {
     conf = config[g];
 
@@ -42,9 +43,7 @@ EngineCore.prototype.create = function() {
     highlight.scale.set(0, 0);
     if(ship.data.masterShip){
       var master = ship.data.masterShip;
-      console.log('this should be master color. master is ', master, 'master is', ship.manager.ships)
-      // ship.manager.ships[master].config.engine.glows[0].tint
-      highlight.tint = 0x3399FF;
+      highlight.tint = ship.manager.ships[master].config.engine.glows[0].tint;
     } else {
       highlight.tint = conf.tint;
     }
@@ -58,10 +57,8 @@ EngineCore.prototype.create = function() {
     glow.rotation = global.Math.PI + engine.Math.degToRad(conf.rotation);
     glow.position.set(conf.position.x, conf.position.y);
     glow.scale.set(0, 0);
-    // console.log(ship)
     if(ship.data.masterShip){
-      // console.log('manager is ', ship.manager.ships[ship.data.masterShip])
-      glow.tint = 0x3399FF;
+      glow.tint = ship.manager.ships[master].config.engine.glows[0].tint;
     } else {
       glow.tint = conf.tint;
     }

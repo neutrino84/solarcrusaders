@@ -66,12 +66,15 @@ ShipManager.prototype.create = function(data, user, position) {
       }, data);
   ship = new Ship(this, data);
   ship.user = user;
-  if(ship.user){
-    this.generateSquadronShips(ship.uuid)
-  }
   ship.init(function(err) {
     self.game.emit('ship/add', ship);
   });
+  if(ship.user){
+    this.generateSquadronShips(ship.uuid)
+  }
+  if(data.master){
+    this.ships[data.master].squadron[ship.uuid] = ship;
+  }
   return ship;
 };
 
@@ -301,7 +304,7 @@ ShipManager.prototype.generatePirateShips = function() {
       }, {
         location: { x: 2048, y: 8192 },
         ships: [
-          // { name: 'theni', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
+          { name: 'theni', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
           { name: 'zulu', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
           { name: 'saroc', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
           { name: 'malvo', chassis: 'pirate-x02', credits: 1500, reputation: -100 },

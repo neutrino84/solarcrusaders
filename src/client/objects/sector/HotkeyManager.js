@@ -24,6 +24,7 @@ function HotkeyManager(game) {
   this.isShielded = false;
   this.isHealing = false;
   this.isPiercing = false;
+  this.detecting = false;
 
   this.game.on('ship/player', this._player, this);
 };
@@ -52,6 +53,7 @@ HotkeyManager.prototype.listener = function() {
   		if(hotkeys['enhancements'][key] === 'heal' && this.isHealing){return};
   		if(hotkeys['enhancements'][key] === 'shield' && this.isShielded){return};
       if(hotkeys['enhancements'][key] === 'piercing' && this.isPiercing){return};
+      if(hotkeys['enhancements'][key] === 'detect' && this.detecting){return};
 
 	    this.game.emit('ship/enhancement/start', {
 	      uuid: player.uuid,
@@ -72,6 +74,10 @@ HotkeyManager.prototype.listener = function() {
         case 'piercing':
           this.isPiercing = true;
           break;
+        case 'detect':
+          this.manager.detectUnfriendlies();
+          this.detecting = true;
+          break;
       }
 	   };
 
@@ -85,7 +91,16 @@ HotkeyManager.prototype.listener = function() {
      }
      if(key === 'd'){
           this.manager.detectUnfriendlies();
-          // console.log('d press')
+          // if(this.detecting){return};
+          this.game.emit('ship/enhancement/start', {
+            uuid: player.uuid,
+            enhancement: hotkeys['enhancements'][5],
+            subtype: 'basic'
+          });
+          this.detecting = true;
+          this.game.clock.events.add(10000, function(){
+            this.detecting = false;
+          }, this);  
      }
     }, this);
 
@@ -107,6 +122,9 @@ HotkeyManager.prototype._cooled = function(data){
         break;
       case 'piercing':
         this.isPiercing = false;
+        break;
+      case 'detect':
+        this.detecting = false;
         break;
     }
   }

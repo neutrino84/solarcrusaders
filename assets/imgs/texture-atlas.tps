@@ -229,8 +229,6 @@
             <key type="filename">ships/mechan/mechan-x03.png</key>
             <key type="filename">ships/pirates/pirate-x01.png</key>
             <key type="filename">ships/pirates/pirate-x02.png</key>
-            <key type="filename">ships/ubaidian/squadron/squad-attack.png</key>
-            <key type="filename">ships/ubaidian/squadron/squad-repair.png</key>
             <key type="filename">ships/ubaidian/squadron/squad-shield.png</key>
             <key type="filename">ships/ubaidian/ubaidian-x03.png</key>
             <key type="filename">ships/ubaidian/ubaidian-x04.png</key>
@@ -247,6 +245,7 @@
                 <false/>
             </struct>
             <key type="filename">icons/enhancement-booster.png</key>
+            <key type="filename">icons/enhancement-detect.png</key>
             <key type="filename">icons/enhancement-heal.png</key>
             <key type="filename">icons/enhancement-piercing.png</key>
             <key type="filename">icons/enhancement-shield.png</key>
@@ -499,6 +498,20 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">ships/ubaidian/squadron/squad-attack.png</key>
+            <key type="filename">ships/ubaidian/squadron/squad-repair.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>55,55,110,110</rect>
+                <key>scale9Paddings</key>
+                <rect>55,55,110,110</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">ships/ubaidian/ubaidian-x01a.png</key>
             <key type="filename">ships/ubaidian/ubaidian-x01b.png</key>
             <key type="filename">ships/ubaidian/ubaidian-x01c.png</key>
@@ -613,9 +626,10 @@
             <filename>ships/ubaidian/ubaidian-x01a.png</filename>
             <filename>ships/pirates/pirate-x03b.png</filename>
             <filename>ships/enforcers/enforcers-x02.png</filename>
+            <filename>ships/ubaidian/squadron/squad-shield.png</filename>
             <filename>ships/ubaidian/squadron/squad-attack.png</filename>
             <filename>ships/ubaidian/squadron/squad-repair.png</filename>
-            <filename>ships/ubaidian/squadron/squad-shield.png</filename>
+            <filename>icons/enhancement-detect.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

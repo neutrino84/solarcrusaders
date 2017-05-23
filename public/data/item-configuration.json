@@ -484,7 +484,7 @@
         },
         "sound": {
           "name": "heal",
-          "volume": 0.7,
+          "volume": 0.5,
           "loop": false
         }
       }
@@ -567,6 +567,23 @@
         "sound": {
           "name": "piercing",
           "volume": 1.5,
+          "loop": false
+        }
+      }
+    },
+    "detect": {
+      "basic": {
+        "cost": -1,
+        "cooldown": 10,
+        "active": 3,
+        "stats": {
+          "armor": {
+            "value": 0.5
+          }   
+        },
+        "sound": {
+          "name": "detect",
+          "volume": 1,
           "loop": false
         }
       }

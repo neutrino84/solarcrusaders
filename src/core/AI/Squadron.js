@@ -111,6 +111,7 @@ Squadron.prototype.engage = function(target, type){
     if(this.target === null && type === 'repair'){
       this.repairing = true;
       this.target = target;
+      console.log('in engage', this.target)
 
       this.repairer && this.game.clock.events.remove(this.repairer);
       this.repairer = this.game.clock.events.loop(ship.data.rate, this.repair, this);
@@ -178,6 +179,19 @@ Squadron.prototype.update = function() {
     this.scanner();
   };
 
+  // trying to make it so repair ship can target the squad ships
+  // for(var s in master.squadron){
+  //   var squadShip = master.squadron[s],
+  //       squadShipHealth = squadShip.data.health / squadShip.config.stats.health;
+  //   if(this.ship.chassis === 'squad-repair' && !this.target && squadShipHealth < 1){
+  //     // console.log('squad taking damage')
+  //     if(this.ship.chassis === 'squad-repair' && squadShipHealth < 0.9 && !this.repairing){
+  //       console.log('engaging squadShip')
+  //       this.engage(squadShip, 'repair')
+  //     }
+  //   }
+  // };
+
   if(this.ship.chassis === 'squad-repair' && masterHealth < 0.5 && !this.repairing){
     // console.log(masterHealth, ' engage repair')
     this.engage(master, 'repair')
@@ -232,8 +246,6 @@ Squadron.prototype.repair = function() {
   // repair sequence
   if(this.target && !this.target.disabled) {
     target = this.target;
-// console.log('IN REPAIR')
-
     size = target.data.size * settings.sensor.aim;
     offset.copyFrom(target.movement.position);
     offset.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));

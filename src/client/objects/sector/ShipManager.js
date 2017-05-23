@@ -106,6 +106,10 @@ ShipManager.prototype.create = function(data, details) {
   // boot
   ship.boot();
 
+  if(ship.data.masterShip && ship.data.masterShip === this.player.uuid){
+    this.player.squadron[ship.uuid] = ship;
+  }
+
   return ship;
 };
 
@@ -136,9 +140,9 @@ ShipManager.prototype.closestHostile = function(){
     if(ship.disabled){
       continue
     }
-    if(ship.targetingComputer.targetShip === player && ship.data.chassis !== 'squad-repair'){ 
-        distance = engine.Point.distance(ship, player); 
-        if(distance < 17000){
+    if(ship.targetingComputer.targetShip === player && ship.data.chassis !== 'squad-repair' || Object.values(player.squadron).indexOf(ship.targetingComputer.targetShip) > -1 && ship.data.chassis !== 'squad-repair'){ 
+        distance = engine.Point.distance(ship, player);
+        if(distance < 17000 && ship.data.chassis !== 'squad-repair'){
           hostiles[distance] = ship;
         };
     };
@@ -160,6 +164,10 @@ ShipManager.prototype.detectUnfriendlies = function(){
   if(!player.targetlistCooldown){
       this.player.unfriendlies = {};
   }
+
+  if(!player.targetlistCooldown){
+    player.selector.detectorHighlight();
+  }
   for(var s in ships){
     var ship = ships[s],
         distance = engine.Point.distance(ship, player); 
@@ -167,20 +175,28 @@ ShipManager.prototype.detectUnfriendlies = function(){
     if(ship.disabled){
       continue
     }
-
     //gen unfriendlies list   -----NEED TO PRIORITIZE non-scavs
-    if(!player.targetlistCooldown && ship.data.friendlies && ship.data.friendlies.indexOf('user') < 0 && distance < 6000){
+    if(!player.targetlistCooldown && ship.data.friendlies && ship.data.friendlies.indexOf('user') < 0 && distance < 3500){
       this.player.unfriendlies[distance] = ship;
+      // ship.tintRGB = 333333;
+      // ship.tint = 222222;
+      // console.log(ship)
     };
+  };
+  if(!this.player.targetlistCooldown){
+    this.player.targetlistCooldown = true;
+    this.game.clock.events.add(10000, function(){
+      player.targetlistCooldown = false;
+    }, this);    
   };
   
   targets = Object.keys(this.player.unfriendlies);
   if(targets && !targets.length){return}
 
   target = this.player.unfriendlies[targets.sort(ascending)[player.targetCount]]
-  if(target && target !== this.player.previous) {
+  if(target && target !== this.player.previous && !target.disabled) {
     player.acquired = target
-  } else {
+  } else{
     player.targetCount = 0
     player.acquired = this.player.unfriendlies[targets.sort(ascending)[player.targetCount]]
   };
@@ -193,12 +209,6 @@ ShipManager.prototype.detectUnfriendlies = function(){
   if(player.targetCount > targets.sort(ascending).length){
     player.targetCount = 0;
   }
-  if(!this.player.targetlistCooldown){
-    this.player.targetlistCooldown = true;
-    this.game.clock.events.add(10000, function(){
-      player.targetlistCooldown = false;
-    }, this);    
-  };
 };
 
 
@@ -210,6 +220,7 @@ ShipManager.prototype.engageHostile = function(){
     var ship = ships[s];
     ship.selector.hostileEngagedStop();
   }
+  if(!player.acquired.disabled)
    player.acquired.selector.hostileEngaged();
     this.socket.emit('squad/engageHostile', {player_id: player.uuid, target_id : player.acquired.uuid });
   };
@@ -300,11 +311,13 @@ ShipManager.prototype._sync = function(data) {
 };
 
 ShipManager.prototype._player = function(ship) {
+  var ships = this.ships;
   this.player = ship;
   this.player.unfriendlies = {};
   this.player.targetCount = 0;
   this.player.targetlistCooldown = false;
   this.player.previous;
+  this.player.squadron = {};
   this.game.camera.follow(ship);
 };
 

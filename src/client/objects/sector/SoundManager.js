@@ -92,6 +92,7 @@ SoundManager.prototype.preload = function(game) {
   load.audio('shield','sounds/shields/heavyShieldsUp.mp3');
 
   load.audio('piercing','sounds/piercingDamage/component2.mp3');
+  load.audio('detect','sounds/piercingDamage/component2.mp3');
 
 
   // load.audio('heal','sounds/repair/HealthUp1.mp3');
@@ -176,7 +177,7 @@ SoundManager.prototype.generateExplosionSound = function(data){
     if(data.data.size > 127) {
     sound = bigExplosion
       if(sound === 'capitalShipExplosion2'){
-        volume = global.Math.max(2.5 - (distance / 5000), 0);
+        volume = global.Math.max(1.8 - (distance / 5000), 0);
       };
     } else {sound = smallExplosion};
   }; 
