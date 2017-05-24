@@ -103,7 +103,6 @@ Ship.prototype.refresh = function(data) {
       defender.timer && defender.events.remove(defender.timer);
       defender.timer = defender.events.add(5000, function() {
         this.hud.hide();
-        console.log('hidden')
       }, defender);
     }
 

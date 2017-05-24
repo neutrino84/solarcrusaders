@@ -58,7 +58,7 @@ ShipManager.prototype.remove = function(ship) {
 ShipManager.prototype.create = function(data, user, position) {
   var self = this, ship,
       rnd = this.game.rnd,
-      position = position || this.generateRandomPosition(user ? 1024 : 2048),
+      position = position || this.generateRandomPosition(user ? 2024 : 4048),
       data = Utils.extend({
         x: data.x || position.x,
         y: data.y || position.y,
@@ -252,17 +252,17 @@ ShipManager.prototype.disabled = function(data) {
 
 ShipManager.prototype.generateRandomShips = function() {
   var iterator = {
-        'ubaidian-x01a': { race: 'ubaidian', count: 0 },
-        'ubaidian-x01b': { race: 'ubaidian', count: 0 },
+        'ubaidian-x01a': { race: 'ubaidian', count: 1 },
+        'ubaidian-x01b': { race: 'ubaidian', count: 1 },
         'ubaidian-x01c': { race: 'ubaidian', count: 1 },
         'ubaidian-x01d': { race: 'ubaidian', count: 1 },
         'ubaidian-x01e': { race: 'ubaidian', count: 1 },
-        'ubaidian-x02': { race: 'ubaidian', count: 0 },
+        'ubaidian-x02': { race: 'ubaidian', count: 1 },
         'ubaidian-x03': { race: 'ubaidian', count: 1 },
         'ubaidian-x04': { race: 'ubaidian', count: 3 },
-        'mechan-x01': { race: 'mechan', count: 1 },
-        'mechan-x02': { race: 'mechan', count: 1 },
-        'mechan-x03': { race: 'mechan', count: 0 },
+        'mechan-x01': { race: 'mechan', count: 2 },
+        'mechan-x02': { race: 'mechan', count: 2 },
+        'mechan-x03': { race: 'mechan', count: 2 },
         'general-x01': { race: 'ubaidian', count: 0 },
         'general-x02': { race: 'ubaidian', count: 0 },
         'enforcers-x01': { race: 'ubaidian', count: 3 },
@@ -312,6 +312,28 @@ ShipManager.prototype.generatePirateShips = function() {
           { name: 'mavero', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
           { name: 'saag', chassis: 'pirate-x02', credits: 1500, reputation: -100 }
         ]
+      }, {
+        location: { x: 7048, y: 8192 },
+        ships: [
+          { name: 'figo', chassis: 'enforcers-x02', credits: 1500, reputation: -100 },
+          { name: 'zulio', chassis: 'enforcers-x02', credits: 1500, reputation: -100 },
+          { name: 'carlos', chassis: 'enforcers-x02', credits: 1500, reputation: -100 },
+          { name: 'wunwun', chassis: 'enforcers-x02', credits: 1500, reputation: -100 },
+          { name: 'tubes', chassis: 'enforcers-x02', credits: 1500, reputation: -100 },
+          { name: 'mikey', chassis: 'enforcers-x02', credits: 1500, reputation: -100 },
+          { name: 'grassy', chassis: 'enforcers-x02', credits: 1500, reputation: -100 }
+        ]
+      }, {
+        location: { x: 5048, y: -9192 },
+        ships: [
+          { name: 'marco', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
+          { name: 'poozer', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
+          { name: 'scanwan', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
+          { name: 'lobos', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
+          { name: 'jolder', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
+          { name: 'creemie', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
+          { name: 'bob', chassis: 'pirate-x02', credits: 1500, reputation: -100 }
+        ]
       }],
       len = iterator.length;
 
@@ -346,9 +368,9 @@ ShipManager.prototype.generateScavengerShips = function() {
           { name: 'vun-fenris', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
           { name: 'vun-zozu', chassis: 'scavengers-x01d', credits: 1500, reputation: -100 },
           { name: 'vun-thovu', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
-          { name: 'vun-thaide', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
-          { name: 'vun-sejini', chassis: 'scavengers-x01d', credits: 1500, reputation: -100 },
-          { name: 'vun-bogu', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
+          // { name: 'vun-thaide', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
+          // { name: 'vun-sejini', chassis: 'scavengers-x01d', credits: 1500, reputation: -100 },
+          // { name: 'vun-bogu', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
           { name: 'vun-macros', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
           { name: 'vun-zizulo', chassis: 'scavengers-x01d', credits: 1500, reputation: -100 },
           { name: 'vun-wivero', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 }
@@ -361,9 +383,9 @@ ShipManager.prototype.generateScavengerShips = function() {
           { name: 'mol-mocolo', chassis: 'scavengers-x01d', credits: 1500, reputation: -100 },
           { name: 'mol-fenris', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
           { name: 'mol-zozu', chassis: 'scavengers-x01d', credits: 1500, reputation: -100 },
-          { name: 'mol-thovu', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
-          { name: 'mol-thaide', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
-          { name: 'mol-sejini', chassis: 'scavengers-x01d', credits: 1500, reputation: -100 },
+          // { name: 'mol-thovu', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
+          // { name: 'mol-thaide', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
+          // { name: 'mol-sejini', chassis: 'scavengers-x01d', credits: 1500, reputation: -100 },
           { name: 'mol-bogu', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
           { name: 'mol-macros', chassis: 'scavengers-x02c', credits: 1500, reputation: -100 },
           { name: 'mol-zizulo', chassis: 'scavengers-x01d', credits: 1500, reputation: -100 },

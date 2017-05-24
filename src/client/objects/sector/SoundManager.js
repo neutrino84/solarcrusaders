@@ -92,11 +92,11 @@ SoundManager.prototype.preload = function(game) {
   load.audio('shield','sounds/shields/heavyShieldsUp.mp3');
 
   load.audio('piercing','sounds/piercingDamage/component2.mp3');
-  load.audio('detect','sounds/piercingDamage/component2.mp3');
+  // load.audio('heal','sounds/piercingDamage/component2.mp3');
 
 
-  // load.audio('heal','sounds/repair/HealthUp1.mp3');
-  load.audio('heal','sounds/repair/HealthSFX.flange.mp3');
+  load.audio('heal','sounds/repair/newHealth.mp3');
+  load.audio('detect','sounds/scanner/scanner.mp3');
 
   // EXPLOSIONS
   load.audio('explosion1','sounds/explosions/explosion_new_1.mp3');

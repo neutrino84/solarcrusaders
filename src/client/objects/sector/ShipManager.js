@@ -196,7 +196,7 @@ ShipManager.prototype.detectUnfriendlies = function(){
   target = this.player.unfriendlies[targets.sort(ascending)[player.targetCount]]
   if(target && target !== this.player.previous && !target.disabled) {
     player.acquired = target
-  } else{
+  } else {
     player.targetCount = 0
     player.acquired = this.player.unfriendlies[targets.sort(ascending)[player.targetCount]]
   };
