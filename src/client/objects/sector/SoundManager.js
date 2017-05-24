@@ -82,6 +82,8 @@ SoundManager.prototype.preload = function(game) {
   // load.audio('smallBeam','sounds/beamWeapons/green_beam.mp3');
   load.audio('capitalBeam','sounds/beamWeapons/capitalBeam.mp3');
   load.audio('smallBeam','sounds/beamWeapons/smallBeamBounced.mp3');
+  load.audio('harvesterBeam','sounds/beamWeapons/scavBeams/Harvester1.mp3');
+  load.audio('disintegratorBeam','sounds/beamWeapons/scavBeams/Disintegrator1.1.mp3');
   
   load.audio('beam7','sounds/beamWeapons/beam7.mp3');
   load.audio('beam9','sounds/beamWeapons/beam9.mp3');

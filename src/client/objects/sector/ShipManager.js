@@ -185,7 +185,7 @@ ShipManager.prototype.detectUnfriendlies = function(){
   };
   if(!this.player.targetlistCooldown){
     this.player.targetlistCooldown = true;
-    this.game.clock.events.add(10000, function(){
+    this.player.events.add(10000, function(){
       player.targetlistCooldown = false;
     }, this);    
   };

@@ -438,18 +438,18 @@ Ship.prototype.cooled = function(enhancement) {
 };
 
 Ship.prototype.destroy = function() {
-  var enhancements = this.enhancements,
-      available = enhancements.available;
-  for(var e in available) {
-    available[e].destroy();
-  }
-  this.ai && this.ai.destroy();
-  this.respawn && this.game.clock.events.remove(this.respawn);
-  this.manager = this.game =
-    this.data = this.user = this.sockets =
-    this.config = this.systems = this.timers =
-    this.enhancements = this.hardpoints =
-    this.data = undefined;
+  // var enhancements = this.enhancements,
+  //     available = enhancements.available;
+  // for(var e in available) {
+  //   available[e].destroy();
+  // }
+  // this.ai && this.ai.destroy();
+  // this.respawn && this.game.clock.events.remove(this.respawn);
+  // this.manager = this.game =
+  //   this.data = this.user = this.sockets =
+  //   this.config = this.systems = this.timers =
+  //   this.enhancements = this.hardpoints =
+  //   this.data = undefined;
 };
 
 Object.defineProperty(Ship.prototype, 'credits', {

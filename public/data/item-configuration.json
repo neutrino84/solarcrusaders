@@ -154,8 +154,8 @@
         "aoe": 1.0,
         "spawn": 1,
         "durability": 1000.0,
-        "sound": "smallBeam",
-        "default_volume": 0.05
+        "sound": "harvesterBeam",
+        "default_volume": 0.6
       },
       "disintegrator": {
         "name": "disintegrator",
@@ -179,8 +179,8 @@
         "aoe": 1.2,
         "spawn": 1,
         "durability": 1000.0,
-        "sound": "smallBeam",
-        "default_volume": 0.05
+        "sound": "disintegratorBeam",
+        "default_volume": 0.8
       },
       "gauss": {
         "name": "Gauss Laser Cannon",

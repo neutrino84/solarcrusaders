@@ -315,13 +315,13 @@ ShipManager.prototype.generatePirateShips = function() {
       }, {
         location: { x: 7048, y: 8192 },
         ships: [
-          { name: 'figo', chassis: 'enforcers-x02', credits: 1500, reputation: -100 },
-          { name: 'zulio', chassis: 'enforcers-x02', credits: 1500, reputation: -100 },
-          { name: 'carlos', chassis: 'enforcers-x02', credits: 1500, reputation: -100 },
-          { name: 'wunwun', chassis: 'enforcers-x02', credits: 1500, reputation: -100 },
-          { name: 'tubes', chassis: 'enforcers-x02', credits: 1500, reputation: -100 },
-          { name: 'mikey', chassis: 'enforcers-x02', credits: 1500, reputation: -100 },
-          { name: 'grassy', chassis: 'enforcers-x02', credits: 1500, reputation: -100 }
+          { name: 'figo', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
+          { name: 'zulio', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
+          { name: 'carlos', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
+          { name: 'wunwun', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
+          { name: 'tubes', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
+          { name: 'mikey', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
+          { name: 'grassy', chassis: 'pirate-x02', credits: 1500, reputation: -100 }
         ]
       }, {
         location: { x: 5048, y: -9192 },
