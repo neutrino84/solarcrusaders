@@ -259,7 +259,7 @@ ShipManager.prototype.generateRandomShips = function() {
         'ubaidian-x01e': { race: 'ubaidian', count: 1 },
         'ubaidian-x02': { race: 'ubaidian', count: 1 },
         'ubaidian-x03': { race: 'ubaidian', count: 1 },
-        'ubaidian-x04': { race: 'ubaidian', count: 3 },
+        'ubaidian-x04': { race: 'ubaidian', count: 8 },
         'mechan-x01': { race: 'mechan', count: 2 },
         'mechan-x02': { race: 'mechan', count: 2 },
         'mechan-x03': { race: 'mechan', count: 2 },

@@ -105,18 +105,27 @@ FireEmitter.prototype.plasma = function(colors, vector) {
   this.setTint(global.parseInt(colors[0]), global.parseInt(colors[1]), 50);
 };
 
-FireEmitter.prototype.boost = function(colors) {
+FireEmitter.prototype.boost = function(colors, isPlayer) {
   colors = colors || [0xFFFFFF, 0xF4F4F4];
 
   this.frequency = 100;
-  this.lifespan = 200;
+  this.lifespan = 300;
 
+  if(isPlayer){
+    this.lifespan = 900;  //<---
+    console.log('lifespan at 900!!!')     
+  }
   this.setVelocity(0, 0);
   this.setVector(0, 0);
 
-  this.setScale(0.4, 0.6, 100);
-  this.setAlpha(1.0, 0.0, 200);
-  this.setTint(global.parseInt(colors[0]), global.parseInt(colors[1]), 150);
+  this.setScale(0.4, 0.6, 300);
+  this.setAlpha(1.0, 0.0, 300);
+  if(isPlayer){
+    this.setScale(0.4, 0.6, 900); //<---
+    this.setAlpha(1.0, 0.0, 900); //<---
+  }
+
+  this.setTint(global.parseInt(colors[0]), global.parseInt(colors[1]), 1500); //<---
 };
 
 FireEmitter.prototype.piercing = function(colors, ship) {

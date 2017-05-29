@@ -82,14 +82,14 @@ HotkeyManager.prototype.listener = function() {
 	   };
 
   //squadron hotkeys
-     if(key === 'c'){
+     if(key.toLowerCase() === 'c'){
         // this.socket.emit('ship/hostile', this.player.uuid);
         this.manager.closestHostile();
      }
-     if(key === 'e'){
+     if(key.toLowerCase() === 'e'){
           this.manager.engageHostile();
      }
-     if(key === 'd'){
+     if(key.toLowerCase() === 'd'){
           this.manager.detectUnfriendlies();
           // if(this.detecting){return};
           this.game.emit('ship/enhancement/start', {

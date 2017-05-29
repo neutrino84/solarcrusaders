@@ -81,7 +81,6 @@ Scavenger.prototype.scanner = function() {
   };
   if(ship.chassis === 'scavengers-x03c' || ship.chassis === 'scavengers-x04d'){
     // Basic.prototype.scanner.call(this);
-
     if(this.target == null) {
       // scan nearby ships
       for(var s in ships) {

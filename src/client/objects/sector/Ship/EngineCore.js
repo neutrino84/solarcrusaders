@@ -121,7 +121,11 @@ EngineCore.prototype.update = function(multiplier) {
       
     if(this.isBoosting) {
       position = game.world.worldTransform.applyInverse(ship.worldTransform.apply(glows[g].position))
-      ship.manager.fireEmitter.boost([config[g].tint, 0x333333]);
+      if(this.ship.isPlayer){
+        ship.manager.fireEmitter.boost([config[g].tint, 0x333333], true);
+      } else {
+        ship.manager.fireEmitter.boost([config[g].tint, 0x333333]); 
+      };
       ship.manager.fireEmitter.at({ center: position });
       ship.manager.fireEmitter.explode(1);
     }

@@ -192,11 +192,11 @@ Squadron.prototype.update = function() {
   //   }
   // };
 
-  if(this.ship.chassis === 'squad-repair' && masterHealth < 0.5 && !this.repairing){
+  if(this.ship.chassis === 'squad-repair' && masterHealth < 0.7 && !this.repairing){
     // console.log(masterHealth, ' engage repair')
     this.engage(master, 'repair')
   }
-  if(this.ship.chassis === 'squad-repair' && masterHealth > 0.8 && this.repairing){
+  if(this.ship.chassis === 'squad-repair' && masterHealth > 0.95 && this.repairing){
     // console.log(masterHealth, ' DISENGAGE repair')
     this.disengage()
   }

@@ -10,7 +10,7 @@ function AI(manager) {
   this.timer = this.game.clock.events.loop(500, this.update, this);
   this.ships = manager.ships;
   this.consumed = {};
-  this.queenThreshold = 100;
+  this.queenThreshold = 500;
   this.next = 1000;
 
   // this.game.on('squad/engageHostile', this.squad_engage, this);

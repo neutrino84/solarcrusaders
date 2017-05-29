@@ -37,13 +37,26 @@ Sprite.prototype.cache = function(clear) {
   
   // renderer.currentRenderer.flush();
   renderer.render(this, renderTexture, clear || false);
-
+  // console.log('this.texture is ', this.texture)
+  
+  if(this.texture){this._cached = this.texture;}
+  // this.tempVar = 'something'+clear
+  // console.log('this is ', this)
+  // if(clear === 'test'){
+  //   console.log('in cache, tempVar is ', this.tempVar, 'this.cached is ', this._cached)
+  // }
+  // this._cached = true;
   this.texture = renderTexture;
-  this._cached = true;
 };
 
 Sprite.prototype.uncache = function() {
+  console.log('in uncache')
+  // console.log(this._cached)
+  console.log(this._cached)
+  this.texture = this._cached;
   this._cached = false;
+  // console.log(this._cached)
+  // console.log('EYYYY', this._cached, this.tempVar);
 };
 
 module.exports = Sprite;

@@ -104,7 +104,14 @@ Ship.prototype.refresh = function(data) {
       defender.timer = defender.events.add(5000, function() {
         this.hud.hide();
       }, defender);
-    }
+    };
+    if(attacker.data.masterShip && this.manager.ships[attacker.data.masterShip].isPlayer){
+      defender.hud.show();
+      defender.timer && defender.events.remove(defender.timer);
+      defender.timer = defender.events.add(5000, function() {
+        this.hud.hide();
+      }, defender);
+    };
 
     //SHOW HUD FOR SQUAD SHIPS BEING ATTACKED
   };

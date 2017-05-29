@@ -1,6 +1,7 @@
 
 var engine = require('engine'),
     Ship = require('./Ship'),
+    pixi = require('pixi'),
     EnhancementManager = require('./EnhancementManager'),
     ExplosionEmitter = require('./emitters/ExplosionEmitter'),
     FlashEmitter = require('./emitters/FlashEmitter'),
@@ -133,7 +134,7 @@ ShipManager.prototype.closestHostile = function(){
       hostiles = {},
       ascending = function(a, b) { return a-b }, 
       distance, targets;
-
+  if(player.disabled){return}
   for(var s in ships){
     var ship = ships[s];
     ship.selector.hostileHighlightStop();
@@ -161,37 +162,49 @@ ShipManager.prototype.detectUnfriendlies = function(){
       ascending = function(a, b) { return a-b }, 
       distance, targets, previous;
 
-  if(!player.targetlistCooldown){
-      this.player.unfriendlies = {};
-  }
+  if(player.disabled){return}
+
+  for(var s in ships){
+    var ship = ships[s];
+    ship.selector.hostileHighlightStop();
+  };
 
   if(!player.targetlistCooldown){
-    player.selector.detectorHighlight();
+      this.player.unfriendlies = {};
+      player.selector.detectorHighlight();
+
+      for(var s in ships){
+        var ship = ships[s],
+            distance = engine.Point.distance(ship, player); 
+        if(ship.disabled){
+          continue
+        }
+        //gen unfriendlies list   -----NEED TO PRIORITIZE non-scavs
+        if(ship.data.friendlies && ship.data.friendlies.indexOf('user') < 0 && distance < 3500){
+          this.player.unfriendlies[distance] = ship;
+          
+        let colorMatrix = new pixi.filters.ColorMatrixFilter();
+        ship.chassis.filters = [colorMatrix];
+        colorMatrix.hue(140, false);
+        // colorMatrix.contrast(0.1);
+        colorMatrix.grayscale(0.9);
+        };
+      };
+
+      this.player.targetlistCooldown = true;
+      this.player.events.add(10000, function(){
+        player.targetlistCooldown = false;
+      }, this);    
+      player.events.add(10000, function(){
+        for(s in this.player.unfriendlies){
+          this.player.unfriendlies[s].chassis.filters = [];
+        }
+      }, this);
   }
-  for(var s in ships){
-    var ship = ships[s],
-        distance = engine.Point.distance(ship, player); 
-    ship.selector.hostileHighlightStop();
-    if(ship.disabled){
-      continue
-    }
-    //gen unfriendlies list   -----NEED TO PRIORITIZE non-scavs
-    if(!player.targetlistCooldown && ship.data.friendlies && ship.data.friendlies.indexOf('user') < 0 && distance < 3500){
-      this.player.unfriendlies[distance] = ship;
-      // ship.tintRGB = 333333;
-      // ship.tint = 222222;
-      // console.log(ship)
-    };
-  };
-  if(!this.player.targetlistCooldown){
-    this.player.targetlistCooldown = true;
-    this.player.events.add(10000, function(){
-      player.targetlistCooldown = false;
-    }, this);    
-  };
   
   targets = Object.keys(this.player.unfriendlies);
   if(targets && !targets.length){return}
+
 
   target = this.player.unfriendlies[targets.sort(ascending)[player.targetCount]]
   if(target && target !== this.player.previous && !target.disabled) {
@@ -201,8 +214,24 @@ ShipManager.prototype.detectUnfriendlies = function(){
     player.acquired = this.player.unfriendlies[targets.sort(ascending)[player.targetCount]]
   };
   // };
+  // console.log(player.acquired)
+  // 16776960
+  // player.acquired.chassis.tint = 0x000000;
+  // player.acquired.chassis.alpha = 0;
 
   player.acquired && player.acquired.selector.hostileHighlight();
+
+  // player.acquired.chassis.cache('test');
+  // let prevColorMatrix = new pixi.filters.ColorMatrixFilter();
+  // player.acquired.chassis.filters = [prevColorMatrix];
+  // prevColorMatrix.contrast(2);
+  // prevColorMatrix.hue(125, false);
+  // console.log(player.acquired.chassis.filters)
+
+  // player.acquired.events.add(3000, function(){
+  //     player.acquired.chassis.filters = [];
+  //     // player.acquired.chassis.uncache();
+  //   }, this);
   player.targetCount++
   player.previous = player.acquired; 
 
