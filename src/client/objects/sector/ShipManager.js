@@ -107,12 +107,28 @@ ShipManager.prototype.create = function(data, details) {
   // boot
   ship.boot();
 
+  if(ship.data.chassis === 'scavengers-x04d'){
+    console.log('QUEEN SPAWNED')
+    game.emit('ship/sound/growl', ship);
+    // this.queenTimer(ship)
+  }
+
+
   if(ship.data.masterShip && ship.data.masterShip === this.player.uuid){
     this.player.squadron[ship.uuid] = ship;
   }
 
   return ship;
 };
+
+// ShipManager.prototype.queenTimer = function(ship){
+//   console.log('begin queen timer')
+//   ship.events.loop(3000, function(){
+//     console.log('send growl')
+
+//     //make sure to check what the name of this event is so you can disable it in the disabled function
+//   }, this);
+// };
 
 ShipManager.prototype.remove = function(data) {
   var game = this.game,
@@ -437,6 +453,9 @@ ShipManager.prototype._disabled = function(data) {
     // cancel autofire
     if(ship.isPlayer) {
       this.autofire && clock.events.remove(this.autofire);
+    }
+    if(ship.data.chassis === 'scavengers-x04d') {
+      ship.events.remove('eventName');
     }
   }
 };

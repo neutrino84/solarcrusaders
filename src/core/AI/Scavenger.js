@@ -161,6 +161,10 @@ Scavenger.prototype.engage = function(target) {
       ship.activate('heal');
     }
   }
+  // if(this.ship.data.chassis === 'scavengers-x04d' && this.game.rnd.frac() < 0.70) {
+  //   ship.activate('booster');
+  //   // console.log('scav queen boost')
+  // }
 };
 
 Scavenger.prototype.attack = function(){

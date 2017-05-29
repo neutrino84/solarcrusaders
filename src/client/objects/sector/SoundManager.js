@@ -26,6 +26,7 @@ function SoundManager(game) {
   this.game.on('ship/sound/attack', this.generateAttackSound, this);
   this.game.on('ship/sound/thrusters', this.generateThrusterSound, this);
   this.game.on('ship/sound/death', this.generateExplosionSound, this);
+  this.game.on('ship/sound/growl', this.generateQueenGrowl, this);
   this.game.on('ship/enhancement/started', this.generateEnhancementSound, this);
   this.game.on('ship/sound/stop', this.stopSoundLoop, this);
   this.game.on('ship/sound/spawn', this.generateSpawnSound, this);
@@ -57,6 +58,7 @@ SoundManager.prototype.preload = function(game) {
   load.audio('background1', 'sounds/mood.mp3');
   load.audio('background2', 'sounds/background_music/eerie1.mp3');
   load.audio('background3', 'sounds/background_music/eerie2.mp3');
+  load.audio('background4', 'sounds/background_music/Spacetheme1.mp3');
 
  
   load.audio('capitalLaser','sounds/lasers/capitalShipLaser.mp3');
@@ -82,10 +84,11 @@ SoundManager.prototype.preload = function(game) {
   // load.audio('smallBeam','sounds/beamWeapons/green_beam.mp3');
   load.audio('capitalBeam','sounds/beamWeapons/capitalBeam.mp3');
   load.audio('smallBeam','sounds/beamWeapons/smallBeamBounced.mp3');
-  load.audio('harvesterBeam1','sounds/beamWeapons/scavBeams/Harvester1.mp3');
-  load.audio('harvesterBeam2','sounds/beamWeapons/scavBeams/Harvester2.mp3');
-  load.audio('harvesterBeam3','sounds/beamWeapons/scavBeams/Harvester3.mp3');
-  load.audio('harvesterBeam4','sounds/beamWeapons/scavBeams/Harvester4.mp3');
+  load.audio('harvesterBeam1','sounds/beamWeapons/scavBeams/hrvstr1.mp3');
+  load.audio('harvesterBeam2','sounds/beamWeapons/scavBeams/hrvstr2.mp3');
+  load.audio('harvesterBeam3','sounds/beamWeapons/scavBeams/hrvstr3.mp3');
+  load.audio('harvesterBeam4','sounds/beamWeapons/scavBeams/hrvstr4.mp3');
+  load.audio('harvesterBeam5','sounds/beamWeapons/scavBeams/hrvstr5.mp3');
   load.audio('disintegratorBeam','sounds/beamWeapons/scavBeams/Disintegrator1.1.mp3');
   
   load.audio('beam7','sounds/beamWeapons/beam7.mp3');
@@ -93,6 +96,10 @@ SoundManager.prototype.preload = function(game) {
   load.audio('beam11','sounds/beamWeapons/beam11.mp3');
 
   load.audio('booster','sounds/thrusters/heavyOverdrive.mp3');
+  load.audio('booster-advanced','sounds/thrusters/heavyOverdrive.mp3');
+  load.audio('growl1','sounds/thrusters/scavThrusters/scavThrust1.mp3');
+  load.audio('growl2','sounds/thrusters/scavThrusters/scavThrust2.mp3');
+  load.audio('growl3','sounds/thrusters/scavThrusters/scavThrust3.mp3');
 
   load.audio('shield','sounds/shields/heavyShieldsUp.mp3');
 
@@ -115,6 +122,8 @@ SoundManager.prototype.preload = function(game) {
   load.audio('capitalShipExplosion2','sounds/explosions/actionExplosion.mp3');
   load.audio('capitalShipExplosion3','sounds/explosions/explosionBig100.mp3');
 
+  load.audio('queenDeath','sounds/explosions/queenDeath.mp3');
+
   load.audio('dangerAlert','sounds/misc/lowHealthDangerSFX.mp3');
 };
 
@@ -128,15 +137,41 @@ SoundManager.prototype.create = function(manager) {
 SoundManager.prototype.generateBackgroundMusic = function(){
   // this.generateSound('background', 0.1, true);
   var num = Math.floor((Math.random() * 3)+1);
-  this.generateSound('background'+num, 0.30, true);
-
-  var num = Math.floor((Math.random() * 3)+1);
-  this.generateSound('mediumThrusters'+num, 1, false);
+  // this.generateSound('background'+'num', 0.30, true);
+  this.generateSound('background4', 0.30, true);
 };
 
 SoundManager.prototype.generateThrusterSound = function(){
   var num = Math.floor((Math.random() * 3)+1);
   this.generateSound('mediumThrusters'+num, 1, false);
+};
+
+SoundManager.prototype.generateQueenGrowl = function(ship){
+  var num = Math.floor((Math.random() * 3)+1),
+      player = this.player;
+  if(player) {   
+    distance = engine.Point.distance(ship, player);    
+    volume = global.Math.max(1.4 - (distance / 2000), 0);
+  };
+  if(volume > 0){
+    this.generateSound('growl'+num, volume, false);
+  };
+
+  ship.events.loop(4000, function(){
+    var num = Math.floor((Math.random() * 3)+1),
+        player = this.player;
+    if(player) {   
+      distance = engine.Point.distance(ship, player);    
+      volume = global.Math.max(1.4 - (distance / 2000), 0);
+    };
+    console.log('growl'+num, volume)
+    if(volume > 0){
+      this.generateSound('growl'+num, volume, false); 
+    //put in a graphic pulse effect
+      // console.log(ship.events)
+      //NEED TO DESTROY SHIP EVENTS
+    };  
+  }, this);
 };
 
 SoundManager.prototype.generateEnhancementSound = function(data){
@@ -152,14 +187,15 @@ SoundManager.prototype.generateEnhancementSound = function(data){
       player = this.player,
       manager = this.shipManager,
       ship = this.ships[data.uuid],
-      distance = 0.1;
+      distance = 0.1,
+      num = Math.floor((Math.random() * 3)+1);
 
   if(player && player !== ship) {   
     distance = engine.Point.distance(ship, player);    
     volume = global.Math.max(1 - (distance / 2000), 0);
   };
   if(volume > 0){
-    this.generateSound(sound.name, volume, sound.loop); 
+      this.generateSound(sound.name, volume, sound.loop); 
   };
 };
 
@@ -185,6 +221,9 @@ SoundManager.prototype.generateExplosionSound = function(data){
         volume = global.Math.max(1.8 - (distance / 5000), 0);
       };
     } else {sound = smallExplosion};
+    if(data.data.chassis === 'scavengers-x04d'){
+      sound = 'queenDeath';
+    };
   }; 
   if(volume > 0){
     // if(sound === bigExplosion){
@@ -199,7 +238,7 @@ SoundManager.prototype.generateFireSound = function(data) {
       loop = false,
       player = this.player,
       manager = this.shipManager, ship = data.ship,
-      num = Math.floor((Math.random() * 4)+1), 
+      num = Math.floor((Math.random() * 5)+1), 
       key, volume;
   for(var i = 0; i<actives.length; i++){
     if(actives[i].data.sound){
@@ -208,6 +247,7 @@ SoundManager.prototype.generateFireSound = function(data) {
        var key = 'harvesterBeam'+num;
       }
       volume = actives[i].data.default_volume;
+       // console.log('default harvester vol is ', volume)
     };
     if(player && ship !== player){   
       distance = engine.Point.distance(ship, player);    
@@ -216,7 +256,7 @@ SoundManager.prototype.generateFireSound = function(data) {
   };
   if(key && data.spawn > 0 && volume > 0){
     if(actives[0].data.subtype === 'harvester'){
-      // console.log(key)
+      console.log('key is ', key, 'vol is ', volume)
     }
     this.game.clock.events.create(global.Math.random() * 200, false, actives.length, function(key,volume,loop){
       var sound = this.generateSound(key, volume, loop);

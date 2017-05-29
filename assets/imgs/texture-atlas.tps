@@ -244,6 +244,26 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">icons/enhancement-booster-advanced.png</key>
+            <key type="filename">turrets/turret-a.png</key>
+            <key type="filename">turrets/turret-b.png</key>
+            <key type="filename">turrets/turret-cap-general.png</key>
+            <key type="filename">turrets/turret-cap-hederaa.png</key>
+            <key type="filename">turrets/turret-cap-mechan.png</key>
+            <key type="filename">turrets/turret-cap-scavengers.png</key>
+            <key type="filename">turrets/turret-cap-ubaidian.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>8,8,16,16</rect>
+                <key>scale9Paddings</key>
+                <rect>8,8,16,16</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">icons/enhancement-booster.png</key>
             <key type="filename">icons/enhancement-detect.png</key>
             <key type="filename">icons/enhancement-heal.png</key>
@@ -543,25 +563,6 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">turrets/turret-a.png</key>
-            <key type="filename">turrets/turret-b.png</key>
-            <key type="filename">turrets/turret-cap-general.png</key>
-            <key type="filename">turrets/turret-cap-hederaa.png</key>
-            <key type="filename">turrets/turret-cap-mechan.png</key>
-            <key type="filename">turrets/turret-cap-scavengers.png</key>
-            <key type="filename">turrets/turret-cap-ubaidian.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>8,8,16,16</rect>
-                <key>scale9Paddings</key>
-                <rect>8,8,16,16</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
         </map>
         <key>fileList</key>
         <array>
@@ -630,6 +631,7 @@
             <filename>ships/ubaidian/squadron/squad-attack.png</filename>
             <filename>ships/ubaidian/squadron/squad-repair.png</filename>
             <filename>icons/enhancement-detect.png</filename>
+            <filename>icons/enhancement-booster-advanced.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

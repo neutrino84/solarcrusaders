@@ -511,7 +511,7 @@
     "moniker": "old-lady",
     "stats": {
       "capacity": 1000,
-      "health": 100,
+      "health": 10000,
       "heal": 0.5,
       "armor": 0.35,
       "speed": 60.0,
@@ -523,7 +523,7 @@
       "durability": 136,
       "critical": 0.01
     },
-    "enhancements": ["heal", "booster", "shield", "piercing", "detect"],
+    "enhancements": ["heal", "booster-advanced", "shield", "piercing", "detect"],
     "engine": {
       "glows": [
         {
@@ -604,7 +604,7 @@
             "subtype": "basic"
           }
         }
-              ]
+      ]
     }
   },
   "ubaidian-x01f": {

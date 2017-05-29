@@ -11,7 +11,7 @@
 },
 "asteroid-x02.png":
 {
-	"frame": {"x":1098,"y":0,"w":85,"h":74},
+	"frame": {"x":1146,"y":0,"w":85,"h":74},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":85,"h":74},
@@ -20,7 +20,7 @@
 },
 "asteroid-x03.png":
 {
-	"frame": {"x":1300,"y":0,"w":120,"h":88},
+	"frame": {"x":1348,"y":0,"w":120,"h":88},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":120,"h":88},
@@ -38,7 +38,7 @@
 },
 "asteroid-x05.png":
 {
-	"frame": {"x":1183,"y":0,"w":117,"h":125},
+	"frame": {"x":1231,"y":0,"w":117,"h":125},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":117,"h":125},
@@ -47,7 +47,7 @@
 },
 "asteroid-x06.png":
 {
-	"frame": {"x":593,"y":0,"w":57,"h":59},
+	"frame": {"x":641,"y":0,"w":57,"h":59},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":57,"h":59},
@@ -56,7 +56,7 @@
 },
 "canister.png":
 {
-	"frame": {"x":778,"y":0,"w":64,"h":64},
+	"frame": {"x":826,"y":0,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -65,7 +65,7 @@
 },
 "damage-a.png":
 {
-	"frame": {"x":1034,"y":0,"w":64,"h":64},
+	"frame": {"x":1082,"y":0,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -74,7 +74,7 @@
 },
 "damage-b.png":
 {
-	"frame": {"x":906,"y":0,"w":64,"h":64},
+	"frame": {"x":954,"y":0,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -110,23 +110,14 @@
 },
 "engine-highlight.png":
 {
-	"frame": {"x":714,"y":0,"w":64,"h":64},
+	"frame": {"x":762,"y":0,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
 	"sourceSize": {"w":64,"h":64},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"enhancement-booster.png":
-{
-	"frame": {"x":545,"y":0,"w":48,"h":48},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
-	"sourceSize": {"w":48,"h":48},
-	"pivot": {"x":0.5,"y":0.5}
-},
-"enhancement-detect.png":
+"enhancement-booster-advanced.png":
 {
 	"frame": {"x":497,"y":0,"w":48,"h":48},
 	"rotated": false,
@@ -135,7 +126,16 @@
 	"sourceSize": {"w":48,"h":48},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"enhancement-heal.png":
+"enhancement-booster.png":
+{
+	"frame": {"x":593,"y":0,"w":48,"h":48},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
+	"sourceSize": {"w":48,"h":48},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"enhancement-detect.png":
 {
 	"frame": {"x":449,"y":0,"w":48,"h":48},
 	"rotated": false,
@@ -144,9 +144,18 @@
 	"sourceSize": {"w":48,"h":48},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"enhancement-piercing.png":
+"enhancement-heal.png":
 {
 	"frame": {"x":401,"y":0,"w":48,"h":48},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
+	"sourceSize": {"w":48,"h":48},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"enhancement-piercing.png":
+{
+	"frame": {"x":545,"y":0,"w":48,"h":48},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
@@ -308,7 +317,7 @@
 },
 "pirate-x01.png":
 {
-	"frame": {"x":1676,"y":0,"w":128,"h":128},
+	"frame": {"x":1724,"y":0,"w":128,"h":128},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
@@ -317,7 +326,7 @@
 },
 "pirate-x02.png":
 {
-	"frame": {"x":1420,"y":0,"w":128,"h":128},
+	"frame": {"x":1468,"y":0,"w":128,"h":128},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
@@ -344,7 +353,7 @@
 },
 "reactor-electricity.png":
 {
-	"frame": {"x":842,"y":0,"w":64,"h":64},
+	"frame": {"x":890,"y":0,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -416,7 +425,7 @@
 },
 "squad-shield.png":
 {
-	"frame": {"x":1804,"y":0,"w":128,"h":128},
+	"frame": {"x":1852,"y":0,"w":128,"h":128},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
@@ -488,7 +497,7 @@
 },
 "turret-glow.png":
 {
-	"frame": {"x":970,"y":0,"w":64,"h":64},
+	"frame": {"x":1018,"y":0,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -497,7 +506,7 @@
 },
 "turret-rocket-a.png":
 {
-	"frame": {"x":650,"y":0,"w":64,"h":64},
+	"frame": {"x":698,"y":0,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -569,7 +578,7 @@
 },
 "ubaidian-x03.png":
 {
-	"frame": {"x":1548,"y":0,"w":128,"h":128},
+	"frame": {"x":1596,"y":0,"w":128,"h":128},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
@@ -592,6 +601,6 @@
 	"format": "RGBA8888",
 	"size": {"w":2048,"h":2048},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:38177a1c219de8f7a6df2d1238fce0ea:d58cb305c4fbf8d43465ea0183527500:a973cd4a72d4c90ced76930eac7fdc63$"
+	"smartupdate": "$TexturePacker:SmartUpdate:5d4545ef47c6e118dcd5de691789c0c2:8e088c9511bca8f6198e4e7d09f8797f:a973cd4a72d4c90ced76930eac7fdc63$"
 }
 }

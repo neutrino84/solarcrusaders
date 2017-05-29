@@ -155,7 +155,7 @@
         "spawn": 1,
         "durability": 1000.0,
         "sound": "harvesterBeam",
-        "default_volume": 0.9
+        "default_volume": 0.1
       },
       "disintegrator": {
         "name": "disintegrator",
@@ -180,7 +180,7 @@
         "spawn": 1,
         "durability": 1000.0,
         "sound": "disintegratorBeam",
-        "default_volume": 0.35
+        "default_volume": 0.30
       },
       "gauss": {
         "name": "Gauss Laser Cannon",
@@ -504,6 +504,26 @@
         },
         "sound": {
           "name": "booster",
+          "volume": 0.4,
+          "loop": false
+        }
+      }
+    },
+    "booster-advanced": {
+      "basic": {
+        "cost": -30,
+        "cooldown": 5,
+        "active": 6,
+        "stats": {
+          "speed": {
+            "value": 2.5
+          },
+          "evasion": {
+            "value": 0.5
+          }
+        },
+        "sound": {
+          "name": "booster-advanced",
           "volume": 0.4,
           "loop": false
         }
