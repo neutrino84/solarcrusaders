@@ -228,7 +228,7 @@ Ship.prototype.hit = function(attacker, target, slot) {
     damage *= piercing ? piercing.damage : 1;
 
     //prevent friendly fire dmg to squadron
-    if(this.master === attacker.uuid){return}  
+    // if(this.master === attacker.uuid){return}  
       
     if(attacker.hardpoints[0].subtype === 'repair_beam'){
     health = data.health + damage;
@@ -347,7 +347,11 @@ Ship.prototype.enable = function() {
   // re-enable
 
   this.disabled = false;
-
+  // console.log(this.data)
+  if(this.data.chassis === 'squad-attack'){
+    // console.log('respawned scav scavengers-x01d')
+    console.log('squad attack respawned')
+  }
   // reset alpha/durability
   this.durability = this.config.stats.durability;
 

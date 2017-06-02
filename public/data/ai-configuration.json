@@ -34,7 +34,7 @@
     }
   },
   "scavenger": {
-  	"respawn": 30000,
+  	"respawn": 50000,
   	"disengage": 9216,
   	"friendly": ["scavenger"],
   	"position": {
@@ -68,8 +68,8 @@
   	}
   },
   "squadron": {
-  	"respawn": 800000,
-    "disengage": 120000,
+  	"respawn": 55000,
+    "disengage": 12000,
     "friendly": ["user","squadron"],
     "position": {
       "radius": 512,
@@ -82,6 +82,23 @@
     "sensor": {
       "aim": 1.25,
       "range": 10096
+    }
+  },
+  "enforcer": {
+    "respawn": 55000,
+    "disengage": 12000,
+    "friendly": ["user","squadron"],
+    "position": {
+      "radius": 512,
+      "x": "ship.movement.position.x",
+      "y": "ship.movement.position.y"
+    },
+    "escape": {
+      "health": 0.1
+    },
+    "sensor": {
+      "aim": 1.25,
+      "range": 12096
     }
   }
 }

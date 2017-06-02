@@ -15,23 +15,6 @@ function Squadron(ship, home) {
 
   this.friendlies = this.settings.friendly;
 
-//   {
-//     respawn: 100000,
-//     disengage: 120000,
-//     friendly: ['user','squadron'],
-//     position: {
-//       radius: 512,
-//       x: ship.movement.position.x,
-//       y: ship.movement.position.y
-//     },
-//     escape: {
-//       health: 0.00,
-//     },
-//     sensor: {
-//       aim: 1.25,
-//       range: 19096
-//     }
-//   };
 };
 
 Squadron.prototype = Object.create(Basic.prototype);
@@ -49,32 +32,7 @@ Squadron.prototype.scanner = function() {
       position = master.movement.position;
   if(this.attacking){return}
   ship.movement.plot({ x: position.x - ship.movement.position.x, y: position.y - ship.movement.position.y })
-  // console.log('master xy is: ', position.x, position.y)
-  // if(this.target == null) {
-  //   // scan nearby ships
-  //   for(var s in ships) {
-  //      = ships[s];
-  //     p2 = scan.movement.position;
 
-  //     if(scan.disabled && sensor.contains(p2.x, p2.y)) {
-  //       distance = p2.distance(ship.movement.position);
-  //       priority.harvest[distance] = scan;
-
-  //       this.ship.movement.throttle = distance/2;
-  //     }
-  //   }
-  //   // if(target.durability < 1){this.disengage()}
-
-  //   // find harvestable
-  //   targets = Object.keys(priority.harvest);
-  //   // targets.length && this.engage();
-  //   this.target = priority.harvest[targets.sort(ascending)[0]];
-  //   this.attacker && this.game.clock.events.remove(this.attacker);
-  //   this.attacker = this.game.clock.events.loop(ship.data.rate, this.attack, this);
-
-  //   this.disengager && this.game.clock.events.remove(this.disengager);
-  //   this.disengager = this.game.clock.events.add(settings.disengage, this.disengage, this);
-  // };
 };
 
 Squadron.prototype.plot = function(){
@@ -111,7 +69,6 @@ Squadron.prototype.engage = function(target, type){
     if(this.target === null && type === 'repair'){
       this.repairing = true;
       this.target = target;
-      console.log('in engage', this.target)
 
       this.repairer && this.game.clock.events.remove(this.repairer);
       this.repairer = this.game.clock.events.loop(ship.data.rate, this.repair, this);
@@ -192,7 +149,7 @@ Squadron.prototype.update = function() {
   //   }
   // };
 
-  if(this.ship.chassis === 'squad-repair' && masterHealth < 0.7 && !this.repairing){
+  if(this.ship.chassis === 'squad-repair' && masterHealth < 0.75 && !this.repairing){
     // console.log(masterHealth, ' engage repair')
     this.engage(master, 'repair')
   }
@@ -272,11 +229,27 @@ Squadron.prototype.disengage = function() {
   this.attacker && this.game.clock.events.remove(this.attacker);
 };
 
+Squadron.prototype.regroup = function(distance) {
+  var ships = this.manager.ships,
+      ship = this.ship,
+      master = ships[this.master],
+      position = master.movement.position;
+
+  this.disengage();
+  console.log('distance is ', distance)
+  if(distance > 2800) {
+    ship.chassis === 'squad-repair' ? ship.activate('booster-advanced') : ship.activate('booster');
+  }
+  ship.movement.plot({ x: position.x - ship.movement.position.x, y: position.y - ship.movement.position.y })
+};
 
 Squadron.prototype.getHomePosition = function() {
   var position = this.settings.position,
-      sensor = this.sensor;
-      sensor.setTo(position.x, position.y, position.radius);
+      sensor = this.sensor,
+      ships = this.manager.ships,
+      master = ships[this.master],
+      position = master.movement.position;
+      sensor.setTo(position.x, position.y, 1000);
   return this.sensor.random();
 };
 

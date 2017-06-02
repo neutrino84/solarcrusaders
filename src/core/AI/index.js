@@ -2,6 +2,7 @@
 var Basic = require('./Basic'),
     Pirate = require('./Pirate'),
     Squadron = require('./Squadron'),
+    Enforcer = require('./Enforcer'),
     Scavenger = require('./Scavenger');
 
 function AI(manager) {
@@ -11,7 +12,8 @@ function AI(manager) {
   this.ships = manager.ships;
   this.consumed = {};
   this.queenThreshold = 50;
-  this.next = 1000;
+  this.next = 100;
+  this.queenSpawnCycle = 0;
 
   // this.game.on('squad/engageHostile', this.squad_engage, this);
 };
@@ -32,6 +34,9 @@ AI.prototype.create = function(type, ship) {
       break;
     case 'squadron':
       ai = new Squadron(ship);
+      break;
+    case 'enforcer':
+      ai = new Enforcer(ship);
       break;
     default:
       ai = null;
@@ -74,10 +79,12 @@ AI.prototype.queenCheck = function(durability, uuid){
   }
   
   if(this.queenThreshold < 1){
-    console.log('SPAWN QUEEN')
-    this.manager.spawnQueen();
+    // console.log('SPAWN QUEEN, cycle is at ', this.queenSpawnCycle);
+    this.queenSpawnCycle % 2 === 0 ? this.manager.spawnQueen('bottom') : this.manager.spawnQueen('top')
+    // this.manager.spawnQueen();
     this.queenThreshold = this.next;
     this.next = this.next + 500;
+    this.queenSpawnCycle++
   };
 }
 

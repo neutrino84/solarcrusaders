@@ -107,28 +107,18 @@ ShipManager.prototype.create = function(data, details) {
   // boot
   ship.boot();
 
+  //begin queen sounds
   if(ship.data.chassis === 'scavengers-x04d'){
-    console.log('QUEEN SPAWNED')
     game.emit('ship/sound/growl', ship);
-    // this.queenTimer(ship)
   }
 
-
-  if(ship.data.masterShip && ship.data.masterShip === this.player.uuid){
+  //save squadron to master ship
+  if(this.player && ship.data.masterShip && ship.data.masterShip === this.player.uuid){
     this.player.squadron[ship.uuid] = ship;
   }
 
   return ship;
 };
-
-// ShipManager.prototype.queenTimer = function(ship){
-//   console.log('begin queen timer')
-//   ship.events.loop(3000, function(){
-//     console.log('send growl')
-
-//     //make sure to check what the name of this event is so you can disable it in the disabled function
-//   }, this);
-// };
 
 ShipManager.prototype.remove = function(data) {
   var game = this.game,
@@ -229,25 +219,8 @@ ShipManager.prototype.detectUnfriendlies = function(){
     player.targetCount = 0
     player.acquired = this.player.unfriendlies[targets.sort(ascending)[player.targetCount]]
   };
-  // };
-  // console.log(player.acquired)
-  // 16776960
-  // player.acquired.chassis.tint = 0x000000;
-  // player.acquired.chassis.alpha = 0;
 
   player.acquired && player.acquired.selector.hostileHighlight();
-
-  // player.acquired.chassis.cache('test');
-  // let prevColorMatrix = new pixi.filters.ColorMatrixFilter();
-  // player.acquired.chassis.filters = [prevColorMatrix];
-  // prevColorMatrix.contrast(2);
-  // prevColorMatrix.hue(125, false);
-  // console.log(player.acquired.chassis.filters)
-
-  // player.acquired.events.add(3000, function(){
-  //     player.acquired.chassis.filters = [];
-  //     // player.acquired.chassis.uncache();
-  //   }, this);
   player.targetCount++
   player.previous = player.acquired; 
 
@@ -269,6 +242,26 @@ ShipManager.prototype.engageHostile = function(){
    player.acquired.selector.hostileEngaged();
     this.socket.emit('squad/engageHostile', {player_id: player.uuid, target_id : player.acquired.uuid });
   };
+};
+
+ShipManager.prototype.regroup = function() {
+  var ships = this.ships,
+      player = this.player,
+      squad = {},
+      ship, distance;
+      
+  console.log('in front end ship manager regroup function')
+      for (var s in ships){
+        var ship = ships[s];
+
+        if(ship.data.masterShip === player.uuid){
+          console.log('BOOYAW')
+          distance = engine.Point.distance(ship, player);
+          squad[ship.uuid] = distance;
+        }
+      };
+
+  this.socket.emit('squad/regroup', {player_id: player.uuid, squad: squad});
 };
 
 ShipManager.prototype._hostile = function(uuid){
@@ -449,13 +442,16 @@ ShipManager.prototype._disabled = function(data) {
     ship.selector.hostileEngagedStop();
     ship.disable();
     this.game.emit('ship/sound/death', ship);
-    // socket.emit('ship/death', ship);
     // cancel autofire
     if(ship.isPlayer) {
       this.autofire && clock.events.remove(this.autofire);
     }
     if(ship.data.chassis === 'scavengers-x04d') {
-      ship.events.remove('eventName');
+      for(var i = 0; i < ship.events.events.length; i++){
+        if(ship.events.events[i].callback.name === 'growlTimer'){
+          ship.events.remove(ship.events.events[i]);  
+        }
+      }
     }
   }
 };

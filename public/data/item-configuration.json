@@ -512,7 +512,7 @@
     "booster-advanced": {
       "basic": {
         "cost": -30,
-        "cooldown": 5,
+        "cooldown": 6,
         "active": 6,
         "stats": {
           "speed": {

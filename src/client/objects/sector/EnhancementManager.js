@@ -24,6 +24,9 @@ EnhancementManager.prototype._started = function(data) {
       case 'booster':
         ship.engineCore.start();
         break;
+      case 'booster-advanced':
+        ship.engineCore.start();
+        break;
       case 'shield':
         ship.shieldGenerator.start();
         break;

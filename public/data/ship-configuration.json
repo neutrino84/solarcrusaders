@@ -511,7 +511,7 @@
     "moniker": "old-lady",
     "stats": {
       "capacity": 1000,
-      "health": 10000,
+      "health": 100,
       "heal": 0.5,
       "armor": 0.35,
       "speed": 60.0,
@@ -1582,8 +1582,8 @@
             "endY": 0.34
           },
           "position": {
-            "x": 108,
-            "y": 64
+            "x": 73,
+            "y": 103
           },
           "rotation": 0
         },
@@ -1596,22 +1596,8 @@
             "endY": 0.12
           },
           "position": {
-            "x": 77,
-            "y": 95
-          },
-          "rotation": 0
-        },
-        {
-          "tint": "0xFFFFFF",
-          "scale": {
-            "startX": 0.02,
-            "endX": 0.04,
-            "startY": 0.08,
-            "endY": 0.12
-          },
-          "position": {
-            "x": 77,
-            "y": 32
+            "x": 73,
+            "y": 26
           },
           "rotation": 0
         }
@@ -2176,7 +2162,7 @@
     "class": "queen",
     "stats": {
       "capacity": 1000,
-      "health": 800,
+      "health": 80,
       "heal": 0.2,
       "armor": 0.1,
       "speed": 30.0,
@@ -2414,8 +2400,8 @@
     "class": "fighter",
     "stats": {
       "capacity": 3000,
-      "health": 200,
-      "heal": 0.5,
+      "health": 130,
+      "heal": 0.25,
       "armor": 0.0,
       "speed": 75.0,
       "rate": 256,
@@ -2470,7 +2456,7 @@
     "class": "repair",
     "stats": {
       "capacity": 3000,
-      "health": 200,
+      "health": 180,
       "heal": 0.35,
       "armor": 0.0,
       "speed": 50.0,
@@ -2482,7 +2468,7 @@
       "durability": 128,
       "critical": 0.01
     },
-    "enhancements": ["shield"],
+    "enhancements": ["shield", "booster-advanced"],
     "engine": {
       "glows": [
         {

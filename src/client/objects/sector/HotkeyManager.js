@@ -68,6 +68,9 @@ HotkeyManager.prototype.listener = function() {
         case 'booster':
           this.isBoosting = true;
           break;
+        case 'booster-advanced':
+          this.isBoosting = true;
+          break;
         case 'shield':
           this.isShielded = true;
           break;
@@ -81,14 +84,16 @@ HotkeyManager.prototype.listener = function() {
       }
 	   };
 
-  //squadron hotkeys
+  //squadron hotkeys ~ need to refactor to use a squadmanager instead of shipmanager
      if(key.toLowerCase() === 'c'){
-        // this.socket.emit('ship/hostile', this.player.uuid);
         this.manager.closestHostile();
-     }
+     };
      if(key.toLowerCase() === 'e'){
           this.manager.engageHostile();
-     }
+     };
+     if(key.toLowerCase() === 'r'){
+          this.manager.regroup();
+     };
      if(key.toLowerCase() === 'd'){
           this.manager.detectUnfriendlies();
           // if(this.detecting){return};
@@ -101,7 +106,7 @@ HotkeyManager.prototype.listener = function() {
           this.game.clock.events.add(10000, function(){
             this.detecting = false;
           }, this);  
-     }
+     };
     }, this);
 
     this.game.on('ship/enhancement/cancelled', this._cooled, this);
@@ -115,6 +120,9 @@ HotkeyManager.prototype._cooled = function(data){
         this.isHealing = false;
         break;
       case 'booster':
+        this.isBoosting = false;
+        break;
+      case 'booster-advanced':
         this.isBoosting = false;
         break;
       case 'shield':

@@ -148,7 +148,8 @@ SoundManager.prototype.generateThrusterSound = function(){
 
 SoundManager.prototype.generateQueenGrowl = function(ship){
   var num = Math.floor((Math.random() * 3)+1),
-      player = this.player;
+      player = this.player,
+      distance, volume;
   if(player) {   
     distance = engine.Point.distance(ship, player);    
     volume = global.Math.max(1.4 - (distance / 2000), 0);
@@ -157,7 +158,7 @@ SoundManager.prototype.generateQueenGrowl = function(ship){
     this.generateSound('growl'+num, volume, false);
   };
 
-  ship.events.loop(4000, function(){
+  ship.events.loop(4000, growlTimer = function(){
     var num = Math.floor((Math.random() * 3)+1),
         player = this.player;
     if(player) {   
@@ -172,6 +173,8 @@ SoundManager.prototype.generateQueenGrowl = function(ship){
       //NEED TO DESTROY SHIP EVENTS
     };  
   }, this);
+
+  console.log(ship.events.events)
 };
 
 SoundManager.prototype.generateEnhancementSound = function(data){
