@@ -285,7 +285,7 @@ ShipManager.prototype.generateRandomShips = function() {
   var iterator = {
         'ubaidian-x01a': { race: 'ubaidian', count: 0 },
         'ubaidian-x01b': { race: 'ubaidian', count: 1 },
-        'ubaidian-x01c': { race: 'ubaidian', count: 0 },
+        'ubaidian-x01c': { race: 'ubaidian', count: 1 },
         'ubaidian-x01d': { race: 'ubaidian', count: 1 },
         'ubaidian-x01e': { race: 'ubaidian', count: 1 },
         'ubaidian-x02': { race: 'ubaidian', count: 1 },

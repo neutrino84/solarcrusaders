@@ -166,7 +166,8 @@ ShipManager.prototype.detectUnfriendlies = function(){
       player = this.player,
       unfriendlies = this.player.unfriendlies,
       ascending = function(a, b) { return a-b }, 
-      distance, targets, previous;
+      regex = /(mol-)|(vul-)/,
+      t, distance, targets, previous, counter;
 
   if(player.disabled){return}
 
@@ -178,23 +179,30 @@ ShipManager.prototype.detectUnfriendlies = function(){
   if(!player.targetlistCooldown){
       this.player.unfriendlies = {};
       player.selector.detectorHighlight();
+      counter = 0;
 
       for(var s in ships){
         var ship = ships[s],
+            t = ship.data.name,
             distance = engine.Point.distance(ship, player); 
-        if(ship.disabled){
-          continue
-        }
-        //gen unfriendlies list   -----NEED TO PRIORITIZE non-scavs
+        
+        if(ship.disabled){continue};
+
         if(ship.data.friendlies && ship.data.friendlies.indexOf('user') < 0 && distance < 3500){
-          this.player.unfriendlies[distance] = ship;
-          
+          if(regex.test(t)){
+            this.player.unfriendlies[counter] = ship;
+            counter++
+          } else {
+            this.player.unfriendlies[distance] = ship;
+          };
+
         let colorMatrix = new pixi.filters.ColorMatrixFilter();
         ship.chassis.filters = [colorMatrix];
         colorMatrix.hue(140, false);
         // colorMatrix.contrast(0.1);
         colorMatrix.grayscale(0.9);
         };
+        
       };
 
       this.player.targetlistCooldown = true;
@@ -249,15 +257,20 @@ ShipManager.prototype.regroup = function() {
       player = this.player,
       squad = {},
       ship, distance;
-      
-      for (var s in ships){
-        var ship = ships[s];
 
-        if(ship.data.masterShip === player.uuid){
-          distance = engine.Point.distance(ship, player);
-          squad[ship.uuid] = distance;
-        }
-      };
+  if(player.disabled){return}
+
+  for (var s in ships){
+    var ship = ships[s];
+
+    ship.selector.hostileHighlightStop();
+    ship.selector.hostileEngagedStop();
+
+    if(ship.data.masterShip === player.uuid){
+      distance = engine.Point.distance(ship, player);
+      squad[ship.uuid] = distance;
+    }
+  };
 
   this.socket.emit('squad/regroup', {player_id: player.uuid, squad: squad});
 };

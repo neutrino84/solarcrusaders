@@ -47,7 +47,7 @@
   	},
   	"sensor": {
   	  "aim": 0.8,
-  	  "range": 56384
+  	  "range": 45384
   	}
   },
   "scavenger-hostile": {
@@ -87,7 +87,7 @@
   "enforcer": {
     "respawn": 55000,
     "disengage": 12000,
-    "friendly": ["user","squadron","basic"],
+    "friendly": ["user","squadron","basic","enforcer"],
     "position": {
       "radius": 512,
       "x": "ship.movement.position.x",
@@ -98,7 +98,7 @@
     },
     "sensor": {
       "aim": 1.25,
-      "range": 12096
+      "range": 11096
     }
   }
 }

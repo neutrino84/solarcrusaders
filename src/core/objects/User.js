@@ -64,7 +64,7 @@ User.prototype.create = function(ships) {
       // set chassis
       if(!data.chassis) {
         data.chassis = 'ubaidian-x01' + rnd.pick(variations);
-        // data.chassis = 'ubaidian-x01e';
+        data.chassis = 'ubaidian-x01d';
       }
       data.squadron = {};
       // create user ship

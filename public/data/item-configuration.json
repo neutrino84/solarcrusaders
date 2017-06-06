@@ -205,7 +205,7 @@
         "spawn": 1,
         "durability": 1000.0,
         "sound": "disintegratorBeam",
-        "default_volume": 0.47
+        "default_volume": 0.41
       },
       "gauss": {
         "name": "Gauss Laser Cannon",
@@ -509,7 +509,7 @@
         },
         "sound": {
           "name": "heal",
-          "volume": 0.25,
+          "volume": 0.45,
           "loop": false
         }
       }

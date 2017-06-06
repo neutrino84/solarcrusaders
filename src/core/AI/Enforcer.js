@@ -52,6 +52,8 @@ Enforcer.prototype.scanner = function() {
     ship.movement.plot({ x: position.x - ship.movement.position.x, y: position.y - ship.movement.position.y })
   } else {
       // Battleship scan nearby ships
+      var scavengerPrioritizer = 0;
+
       for(var s in ships) {
         scan = ships[s];
         p2 = scan.movement.position;
@@ -59,7 +61,12 @@ Enforcer.prototype.scanner = function() {
         if(scan.disabled) { continue; }
         if(sensor.contains(p2.x, p2.y)) {
           if(!this.friendly(scan)) {
-            priority.enemy[scan.data.health] = scan;
+            if(scan.data.chassis === 'scavengers-x03c' || scan.data.chassis === 'scavengers-x04d'){
+              priority.enemy[scavengerPrioritizer] = scan;
+              scavengerPrioritizer++
+            } else {
+              priority.enemy[scan.data.health] = scan;
+            }
           } else {
             priority.friendly[scan.data.health] = scan;
           }

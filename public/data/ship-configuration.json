@@ -758,7 +758,7 @@
       "capacity": 3000,
       "health": 200,
       "heal": 0.25,
-      "armor": 0.0,
+      "armor": 0.1,
       "speed": 32.0,
       "rate": 256,
       "evasion": 0.02,
@@ -2331,7 +2331,7 @@
       "capacity": 3000,
       "health": 250,
       "heal": 0.25,
-      "armor": 0.0,
+      "armor": 0.2,
       "speed": 10.0,
       "rate": 256,
       "evasion": 0.3,
@@ -2341,16 +2341,16 @@
       "durability": 178,
       "critical": 0.01
     },
-    "enhancements": ["heal", "booster", "shield"],
+    "enhancements": ["heal","shield"],
     "engine": {
       "glows": [
         {
           "tint": "0xFFFFAA",
           "scale": {
             "startX": 0.1,
-            "endX": 0.2,
+            "endX": 0.23,
             "startY": 0.5,
-            "endY": 0.6
+            "endY": 0.62
           },
           "position": {
             "x": 278,

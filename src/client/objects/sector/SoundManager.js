@@ -107,7 +107,7 @@ SoundManager.prototype.preload = function(game) {
   // load.audio('heal','sounds/piercingDamage/component2.mp3');
 
 
-  load.audio('heal','sounds/repair/newHealth.mp3');
+  load.audio('heal','sounds/repair/healthSFX99.mp3');
   load.audio('detect','sounds/scanner/scanner.mp3');
 
   // EXPLOSIONS
@@ -123,6 +123,9 @@ SoundManager.prototype.preload = function(game) {
   load.audio('capitalShipExplosion3','sounds/explosions/explosionBig100.mp3');
 
   load.audio('queenDeath','sounds/explosions/queenDeath.mp3');
+  load.audio('overseerDeath','sounds/explosions/overseerDeath2.mp3');
+  load.audio('harvesterDeath1','sounds/explosions/collectorDeath.mp3');
+  load.audio('harvesterDeath2','sounds/explosions/larvaDeath.mp3');
 
   load.audio('dangerAlert','sounds/misc/lowHealthDangerSFX.mp3');
 };
@@ -138,7 +141,8 @@ SoundManager.prototype.generateBackgroundMusic = function(){
   // this.generateSound('background', 0.1, true);
   var num = Math.floor((Math.random() * 3)+1);
   // this.generateSound('background'+'num', 0.30, true);
-  this.generateSound('background4', 0.30, true);
+
+  // this.generateSound('background4', 0.30, true);
 };
 
 SoundManager.prototype.generateThrusterSound = function(){
@@ -206,6 +210,7 @@ SoundManager.prototype.generateExplosionSound = function(data){
       volume = 0.3,
       bigExplosion = bigExplosionsArray[Math.floor(Math.random() * bigExplosionsArray.length)],
       smallExplosion = explosionsArray[Math.floor(Math.random() * explosionsArray.length)],
+      num = Math.floor((Math.random() * 2)+1),
       sound, distance;
       
   if(player && player === ship){
@@ -223,11 +228,20 @@ SoundManager.prototype.generateExplosionSound = function(data){
     if(data.data.chassis === 'scavengers-x04d'){
       sound = 'queenDeath';
     };
+    if(data.data.chassis === 'scavengers-x03c'){
+      sound = 'overseerDeath';
+      volume = global.Math.max(0.6 - (distance / 5000), 0);
+    };
+    if(data.data.chassis === 'scavengers-x02' || data.data.chassis === 'scavengers-x01'){
+      sound = 'harvesterDeath' + num;
+      volume = global.Math.max(0.7 - (distance / 5000), 0);
+    };
   }; 
   if(volume > 0){
-    // if(sound === bigExplosion){
+    if(sound === 'harvesterDeath1' || sound === 'harvesterDeath2'){
+      // console.log(sound, volume)
     // console.log(sound, volume)
-    // }
+    }
     this.generateSound(sound, volume, false);
   };
 };
