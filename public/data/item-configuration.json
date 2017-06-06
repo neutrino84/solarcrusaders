@@ -78,7 +78,7 @@
         "spawn": 1,
         "durability": 1000.0,
         "sound": "capitalBeam",
-        "default_volume": 0.45
+        "default_volume": 0.35
       },
       "small": {
         "name": "Mini Cannon Laser",
@@ -104,7 +104,7 @@
         "spawn": 1,
         "durability": 1000.0,
         "sound": "smallBeam",
-        "default_volume": 0.35
+        "default_volume": 0.3
       },
       "repair_beam": {
         "name": "Type 1 Laser",
@@ -120,7 +120,7 @@
         "emitter": ["0x000000", "0xDB691D"],
         "icon": "item-laser-a",
         "cooldown": 0,
-        "range": 1300,
+        "range": 1900,
         "projection": 0.1,
         "delay": 16,
         "spread": 50,
@@ -149,7 +149,32 @@
         "projection": 0.1,
         "delay": 16,
         "spread": 32,
-        "damage": 0.0,
+        "damage": 1.0,
+        "length": 1024,
+        "aoe": 1.0,
+        "spawn": 1,
+        "durability": 1000.0,
+        "sound": "harvesterBeam",
+        "default_volume": 0.1
+      },
+      "harvester-advanced": {
+        "name": "Harvester",
+        "type": "energy",
+        "subtype": "harvester",
+        "sprite": "turret-a",
+        "texture": "laser-green",
+        "glow": {
+          "tint": "0xFFAAAA",
+          "size": 4.0,
+          "sprite": "turret-glow.png"
+        },
+        "emitter": ["0xFFFFFF", "0xFF0000"],
+        "icon": "item-laser-a",
+        "range": 1536,
+        "projection": 0.1,
+        "delay": 16,
+        "spread": 32,
+        "damage": 1.5,
         "length": 1024,
         "aoe": 1.0,
         "spawn": 1,
@@ -180,7 +205,7 @@
         "spawn": 1,
         "durability": 1000.0,
         "sound": "disintegratorBeam",
-        "default_volume": 0.30
+        "default_volume": 0.47
       },
       "gauss": {
         "name": "Gauss Laser Cannon",
@@ -382,7 +407,7 @@
         "spawn": 1,
         "durability": 1000.0,
         "sound": "rocket1",
-        "default_volume": 0.009
+        "default_volume": 0.02
       },
       "medium": {
         "name": "Type 2 Launcher",
@@ -402,7 +427,7 @@
         "spawn": 1,
         "durability": 1000.0,
         "sound": "rocket1",
-        "default_volume": 0.009
+        "default_volume": 0.02
       },
       "heavy": {
         "name": "Type 1 Launcher",
@@ -422,7 +447,7 @@
         "spawn": 1,
         "durability": 1000.0,
         "sound": "rocket1",
-        "default_volume": 0.009
+        "default_volume": 0.02
       }
     },
     "plasma": {
@@ -504,7 +529,7 @@
         },
         "sound": {
           "name": "booster",
-          "volume": 0.4,
+          "volume": 0.25,
           "loop": false
         }
       }
@@ -524,7 +549,7 @@
         },
         "sound": {
           "name": "booster-advanced",
-          "volume": 0.4,
+          "volume": 0.3,
           "loop": false
         }
       }
@@ -586,7 +611,7 @@
         "damage": 5.0,
         "sound": {
           "name": "piercing",
-          "volume": 1.5,
+          "volume": 0.9,
           "loop": false
         }
       }

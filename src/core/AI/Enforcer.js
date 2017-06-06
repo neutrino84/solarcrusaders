@@ -6,7 +6,7 @@ function Enforcer(ship, home) {
   Basic.call(this, ship);
 
   this.ship = ship;
-  this.type = 'squadron';
+  this.type = 'enforcer';
   this.master = ship.master;
   this.attacking = false;
   this.repairing = false;
@@ -155,12 +155,9 @@ Enforcer.prototype.update = function() {
 
   if(ship.master){
     master = this.manager.ships[ship.master];
-    if(master.ai.target){
-      console.log(master.ai.target)
+    if(!master.disabled && master.ai.target){
       this.engage(master.ai.target) 
     }
-     // masterHealth = master.data.health / master.config.stats.health;
-     // console.log(master.ai.attacking)
   }
 
   // health = ship.data.health / ship.config.stats.health;
@@ -195,7 +192,7 @@ Enforcer.prototype.attack = function() {
       point = {};
 
   // attack sequence
-  if(this.target) {
+  if(this.target && !this.target.disabled && !this.friendly(this.target)) {
     target = this.target;
 
     size = target.data.size * settings.sensor.aim;
@@ -215,36 +212,6 @@ Enforcer.prototype.attack = function() {
   // if(this.target.disabled){
   //   this.disengage();
   // };
-};
-
-Enforcer.prototype.repair = function() {
-  var ship = this.ship,
-      settings = this.settings,
-      offset = this.offset,
-      rnd = this.game.rnd,
-      target, size,
-      point = {};
-
-  // repair sequence
-  if(this.target && !this.target.disabled) {
-    target = this.target;
-    size = target.data.size * settings.sensor.aim;
-    offset.copyFrom(target.movement.position);
-    offset.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
-
-    // attack
-    ship.attack({
-      uuid: ship.uuid,
-      target: target.uuid,
-      targ: {
-        x: offset.x,
-        y: offset.y
-      }
-    });
-  }
-  if(this.target && this.target.disabled){
-    this.disengage();
-  };
 };
 
 Enforcer.prototype.disengage = function() {
@@ -273,8 +240,14 @@ Enforcer.prototype.getHomePosition = function() {
   var position = this.settings.position,
       sensor = this.sensor,
       ships = this.manager.ships,
-      master = ships[this.master],
-      position = master.movement.position;
+      master = ships[this.master], position;
+      // position = master.movement.position;
+      if(master){
+        position = master.movement.position;
+      } else {
+        position = {x: 2048, y: -2048}
+      }
+
       sensor.setTo(position.x, position.y, 1000);
   return this.sensor.random();
 };

@@ -50,84 +50,63 @@ Selector.prototype.create = function() {
 
   //create reticle
   this.reticle = new engine.Graphics();
-  this.reticleOuter = new engine.Graphics(); 
+  this.reticleRed = new engine.Graphics(); 
   // this.reticle.lineStyle(size, 0xcc1111, 1.0);
   this.reticle.lineStyle(size, 0xffff00, 1.0);
-  this.reticleOuter.lineStyle(size, 0xcc1111, 1.0);
+  this.reticleRed.lineStyle(size, 0xcc1111, 1.0);
   // ship.isPlayer ? this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius*2, this.hit.radius*2) : this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius*1.65, this.hit.radius*1.65);
 
-  //lower number pushes bot l corner away, higher number pulls it in
+  //lower number pushes bot left corner away, higher number pulls it in
 
   switch(this.ship.data.chassis) {
-    case 'scavengers-x01d':
+    case 'scavengers-x01':
       this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.8, this.hit.radius*2.8);
-      this.reticleOuter.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.1, this.hit.radius*2.1);
+      this.reticleRed.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.1, this.hit.radius*2.1);
       this.reticle.position.set(-ship.width/1.2, -ship.height/1.2)
-      this.reticleOuter.position.set(-ship.width/1.6, -ship.height/1.6);
+      this.reticleRed.position.set(-ship.width/1.6, -ship.height/1.6);
       break
-    case 'scavengers-x02c':
+    case 'scavengers-x02':
       this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.8, this.hit.radius*2.8);
-      this.reticleOuter.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.1, this.hit.radius*2.1);
+      this.reticleRed.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.1, this.hit.radius*2.1);
       this.reticle.position.set(-ship.width/1.2, -ship.height/1.2)
-      this.reticleOuter.position.set(-ship.width/1.6, -ship.height/1.6);
+      this.reticleRed.position.set(-ship.width/1.6, -ship.height/1.6);
       break
     case 'scavengers-x03c':
       //more shit
+      this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius*4.5, this.hit.radius*4.5)
+      this.reticleRed.drawRect(this.hit.x, this.hit.y, this.hit.radius*4, this.hit.radius*4)
+      this.reticle.position.set(-ship.width/1.4, -ship.height/1.4)
+      this.reticleRed.position.set(-ship.width/1.6, -ship.width/1.6);
       break
     case 'scavengers-x04d':
-      this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius*3.2, this.hit.radius*3.2)
-      this.reticleOuter.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.7, this.hit.radius*2.7)
-      this.reticle.position.set(-ship.width/1.05, -ship.height/1.05)
-      this.reticleOuter.position.set(-ship.width/1.23, -ship.height/1.23);
+      this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius*3.05, this.hit.radius*3.05)
+      this.reticleRed.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.7, this.hit.radius*2.7)
+      this.reticle.position.set(-ship.width/1.1, -ship.height/1.1)
+      this.reticleRed.position.set(-ship.width/1.23, -ship.height/1.23);
       break
     case 'pirate-x01':
-        this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.8, this.hit.radius*2.8);
-        this.reticleOuter.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.1, this.hit.radius*2.1);
-        this.reticle.position.set(-ship.width/0.95, -ship.height/0.95); 
-        this.reticleOuter.position.set(-ship.width/1.3, -ship.height/1.3);
+      this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.8, this.hit.radius*2.8);
+      this.reticleRed.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.1, this.hit.radius*2.1);
+      this.reticle.position.set(-ship.width/0.95, -ship.height/0.95); 
+      this.reticleRed.position.set(-ship.width/1.3, -ship.height/1.3);
       break
     case 'pirate-x02':
-        this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.8, this.hit.radius*2.8);
-        this.reticleOuter.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.1, this.hit.radius*2.1);
-        this.reticle.position.set(-ship.width/0.95, -ship.height/0.95); 
-        this.reticleOuter.position.set(-ship.width/1.25, -ship.height/1.25);
+      this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.8, this.hit.radius*2.8);
+      this.reticleRed.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.1, this.hit.radius*2.1);
+      this.reticle.position.set(-ship.width/0.95, -ship.height/0.95); 
+      this.reticleRed.position.set(-ship.width/1.25, -ship.height/1.25);
       break
     case 'pirate-x03b':
-        this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius*3.4, this.hit.radius*3.4)
-        this.reticleOuter.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.7, this.hit.radius*2.7)
-        this.reticle.position.set(-ship.width/1.24, -ship.height/1.24);
-        this.reticleOuter.position.set(-ship.width/1.54, -ship.height/1.54);
+      this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius*3.4, this.hit.radius*3.4)
+      this.reticleRed.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.7, this.hit.radius*2.7)
+      this.reticle.position.set(-ship.width/1.24, -ship.height/1.24);
+      this.reticleRed.position.set(-ship.width/1.54, -ship.height/1.54);
       break
-    // case 'some chassis':
-    //   //more shit
-    // case 'some chassis':
-    //   //more shit
     // case 'some chassis':
     //   //more shit
     default:
       break;
   }
-    // if(this.ship.data.size > 130){
-    //   this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.8, this.hit.radius*2.8)
-    //   this.reticleOuter.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.7, this.hit.radius*2.7)
-    //   this.reticle.position.set(-ship.width/2, -ship.height/2);
-    //   this.reticleOuter.position.set(-ship.width/1.585, -ship.height/1.585);
-    // } else { 
-    //   this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.8, this.hit.radius*2.8)
-    //   this.reticleOuter.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.1, this.hit.radius*2.1)
-    //   this.reticle.position.set(-ship.width/1.1, -ship.height/1.1) 
-    //   this.reticleOuter.position.set(-ship.width/1.3, -ship.height/1.3);
-    // };
-    // if(this.ship.data.chassis === 'scavengers-x01d' || this.ship.data.chassis === 'scavengers-x02c'){
-    //   this.reticle.position.set(-ship.width/1.2, -ship.height/1.2)
-    //   this.reticleOuter.position.set(-ship.width/1.6, -ship.height/1.6);
-    // }
-    // if(this.ship.data.chassis === 'scavengers-x04d'){
-    //   this.reticle.position.set(-ship.width/1.5, -ship.height/1.5)
-    //   this.reticleOuter.position.set(-ship.width/1.21, -ship.height/1.21);
-    // }
-    
-
     if(ship.isPlayer){
       this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius*2, this.hit.radius*2)
       this.reticle.position.set(-ship.width/1.85, -ship.height/1.85)
@@ -136,13 +115,13 @@ Selector.prototype.create = function() {
   // ship.isPlayer ? this.reticle.position.set(-ship.width/1.85, -ship.height/1.85) : this.reticle.position.set(-ship.width/1.6, -ship.height/1.6);
   // : this.reticle.position.set(-ship.width/1.5, -ship.height/1.5);
   this.reticle.alpha = 0;
-  this.reticleOuter.alpha = 0;
+  this.reticleRed.alpha = 0;
 
   // add selector
   this.ship.addChildAt(this.graphics, 0);
   this.ship.addChildAt(this.detector, 0);
   this.ship.addChildAt(this.reticle, 0);
-  this.ship.addChildAt(this.reticleOuter, 0);
+  this.ship.addChildAt(this.reticleRed, 0);
 };
 
 Selector.prototype.highlight = function(type) {
@@ -181,12 +160,12 @@ Selector.prototype.hostileHighlight = function() {
 };
 
 Selector.prototype.hostileEngaged = function() {
-  if(!this.reticleOuterAnimating || (this.reticleOuterAnimating && !this.reticleOuterAnimating.isRunning)) {
-    this.reticleOuterAnimating = this.game.tweens.create(this.reticleOuter);
-    this.reticleOuterAnimating.to({ alpha: 2.0 }, 500);
-    this.reticleOuterAnimating.loop(true)
-    this.reticleOuterAnimating.yoyo(true, 1200);
-    this.reticleOuterAnimating.start();
+  if(!this.reticleRedAnimating || (this.reticleRedAnimating && !this.reticleRedAnimating.isRunning)) {
+    this.reticleRedAnimating = this.game.tweens.create(this.reticleRed);
+    this.reticleRedAnimating.to({ alpha: 2.0 }, 500);
+    this.reticleRedAnimating.loop(true)
+    this.reticleRedAnimating.yoyo(true, 1200);
+    this.reticleRedAnimating.start();
     this.highlightAnimating && this.highlightAnimating.stop();
   }
 };
@@ -196,8 +175,8 @@ Selector.prototype.hostileHighlightStop = function() {
     this.reticle.alpha = 0;
 };
 Selector.prototype.hostileEngagedStop = function() {
-    this.reticleOuterAnimating && this.reticleOuterAnimating.stop();
-    this.reticleOuter.alpha = 0;
+    this.reticleRedAnimating && this.reticleRedAnimating.stop();
+    this.reticleRed.alpha = 0;
 };
 
 Selector.prototype.selected = function(){

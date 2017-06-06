@@ -1929,9 +1929,9 @@
       ]
     }
   },
-  "scavengers-x01d": {
+  "scavengers-x01": {
     "race": "scavengers",
-    "class": "bug",
+    "class": "larva",
     "stats": {
       "capacity": 1000,
       "health": 30,
@@ -1946,7 +1946,7 @@
       "durability": 96,
       "critical": 0.01
     },
-    "enhancements": ["heal", "booster", "shield"],
+    "enhancements": ["heal", "booster"],
     "engine": {
       "glows": [
         {
@@ -1991,9 +1991,9 @@
       ]
     }
   },
-  "scavengers-x02c": {
+  "scavengers-x02": {
     "race": "scavengers",
-    "class": "sentinel",
+    "class": "extractor",
     "stats": {
       "capacity": 1000,
       "health": 80,
@@ -2008,7 +2008,7 @@
       "durability": 96,
       "critical": 0.01
     },
-    "enhancements": ["heal", "booster", "shield"],
+    "enhancements": ["shield", "heal"],
     "engine": {
       "glows": [
         {
@@ -2068,7 +2068,7 @@
           },
           "default": {
             "type": "energy",
-            "subtype": "harvester"
+            "subtype": "harvester-advanced"
           }
         }
       ]
@@ -2082,7 +2082,7 @@
       "health": 300,
       "heal": 0.1,
       "armor": 0.0,
-      "speed": 64.0,
+      "speed": 35.0,
       "rate": 256,
       "evasion": 0.1,
       "energy": 100,
@@ -2091,7 +2091,7 @@
       "durability": 120,
       "critical": 0.01
     },
-    "enhancements": ["heal", "booster", "shield"],
+    "enhancements": ["shield"],
     "engine": {
       "glows": [
         {
@@ -2151,7 +2151,7 @@
           },
           "default": {
             "type": "energy",
-            "subtype": "basic"
+            "subtype": "disintegrator"
           }
         }
       ]
@@ -2162,7 +2162,7 @@
     "class": "queen",
     "stats": {
       "capacity": 1000,
-      "health": 80,
+      "health": 800,
       "heal": 0.2,
       "armor": 0.1,
       "speed": 30.0,
@@ -2332,7 +2332,7 @@
       "health": 250,
       "heal": 0.25,
       "armor": 0.0,
-      "speed": 15.0,
+      "speed": 10.0,
       "rate": 256,
       "evasion": 0.3,
       "energy": 200,

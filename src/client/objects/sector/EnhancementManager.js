@@ -37,6 +37,13 @@ EnhancementManager.prototype._started = function(data) {
         ship.targetingComputer.enhance(data.enhancement, true);
         break;
     }
+  };
+  if(ship.data.ai === null){
+    ship.hud.show();
+    ship.timer && ship.events.remove(ship.timer);
+    ship.timer = ship.events.add(6000, function() {
+      this.hud.hide();
+    }, ship);
   }
 };
 

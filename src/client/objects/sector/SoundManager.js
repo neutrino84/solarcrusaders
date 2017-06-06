@@ -103,7 +103,7 @@ SoundManager.prototype.preload = function(game) {
 
   load.audio('shield','sounds/shields/heavyShieldsUp.mp3');
 
-  load.audio('piercing','sounds/piercingDamage/component2.mp3');
+  load.audio('piercing','sounds/piercingDamage/PiercingEngaged.mp3');
   // load.audio('heal','sounds/piercingDamage/component2.mp3');
 
 
@@ -165,16 +165,12 @@ SoundManager.prototype.generateQueenGrowl = function(ship){
       distance = engine.Point.distance(ship, player);    
       volume = global.Math.max(1.4 - (distance / 2000), 0);
     };
-    console.log('growl'+num, volume)
     if(volume > 0){
+      // console.log('growl'+num, volume)
       this.generateSound('growl'+num, volume, false); 
     //put in a graphic pulse effect
-      // console.log(ship.events)
-      //NEED TO DESTROY SHIP EVENTS
     };  
   }, this);
-
-  console.log(ship.events.events)
 };
 
 SoundManager.prototype.generateEnhancementSound = function(data){
@@ -250,17 +246,19 @@ SoundManager.prototype.generateFireSound = function(data) {
        var key = 'harvesterBeam'+num;
       }
       volume = actives[i].data.default_volume;
-       // console.log('default harvester vol is ', volume)
     };
     if(player && ship !== player){   
       distance = engine.Point.distance(ship, player);    
       volume = global.Math.max(volume - (distance / 10000), 0);
+      if(actives[0].data.subtype === 'disintegrator'){
+        volume = global.Math.max(volume - (distance / 45000), 0)
+      }
     }; 
   };
   if(key && data.spawn > 0 && volume > 0){
-    if(actives[0].data.subtype === 'harvester'){
-      console.log('key is ', key, 'vol is ', volume)
-    }
+    // if(actives[0].data.subtype === 'disintegrator'){
+    //   console.log('key is ', key, 'vol is ', volume)
+    // }
     this.game.clock.events.create(global.Math.random() * 200, false, actives.length, function(key,volume,loop){
       var sound = this.generateSound(key, volume, loop);
     }, this, [key, volume, loop])

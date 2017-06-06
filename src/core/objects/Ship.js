@@ -228,7 +228,7 @@ Ship.prototype.hit = function(attacker, target, slot) {
     damage *= piercing ? piercing.damage : 1;
 
     //prevent friendly fire dmg to squadron
-    // if(this.master === attacker.uuid){return}  
+    if(this.master === attacker.uuid){return}  
       
     if(attacker.hardpoints[0].subtype === 'repair_beam'){
     health = data.health + damage;
@@ -280,16 +280,16 @@ Ship.prototype.hit = function(attacker, target, slot) {
           });
         }
 
-        if(attacker.hardpoints[0].subtype === 'harvester'){
+        if(attacker.hardpoints[0].subtype === 'harvester' || attacker.hardpoints[0].subtype === 'harvester-advanced'){
           if(this.durability > 0){
-            this.durability = this.durability - 1;
+            this.durability = this.durability - attacker.hardpoints[0].data.damage;
           }
           updates.push({
             uuid: this.uuid,
             durability: this.durability
           })
 
-          if(this.durability < 1){
+          if(this.durability <= 0){
             this.manager.ai.queenCheck(this.config.stats.durability, this.uuid)
           };
           // return   
@@ -309,6 +309,10 @@ Ship.prototype.hit = function(attacker, target, slot) {
 };
 
 Ship.prototype.disable = function() {
+
+  if(this.ai === null){
+    console.log('user disabled')
+  }
   // disable
   this.disabled = true;
 
@@ -345,13 +349,12 @@ Ship.prototype.blast = function() {
 
 Ship.prototype.enable = function() {
   // re-enable
+  if(this.ai === null){
+    console.log('user respawned')
+  }
 
   this.disabled = false;
-  // console.log(this.data)
-  if(this.data.chassis === 'squad-attack'){
-    // console.log('respawned scav scavengers-x01d')
-    console.log('squad attack respawned')
-  }
+
   // reset alpha/durability
   this.durability = this.config.stats.durability;
 

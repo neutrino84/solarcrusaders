@@ -12,7 +12,7 @@ function AI(manager) {
   this.ships = manager.ships;
   this.consumed = {};
   this.queenThreshold = 50;
-  this.next = 100;
+  this.next = 500;
   this.queenSpawnCycle = 0;
 
   // this.game.on('squad/engageHostile', this.squad_engage, this);

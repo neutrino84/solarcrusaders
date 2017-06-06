@@ -478,8 +478,8 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">ships/scavengers/scavengers-x01d.png</key>
-            <key type="filename">ships/scavengers/scavengers-x02c.png</key>
+            <key type="filename">ships/scavengers/scavengers-x01.png</key>
+            <key type="filename">ships/scavengers/scavengers-x02.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -615,8 +615,6 @@
             <filename>ships/pirates/pirate-x03.png</filename>
             <filename>ships/custom/ricardo-x01.png</filename>
             <filename>turrets/turret-cap-scavengers.png</filename>
-            <filename>ships/scavengers/scavengers-x02c.png</filename>
-            <filename>ships/scavengers/scavengers-x01d.png</filename>
             <filename>ships/scavengers/scavengers-x03c.png</filename>
             <filename>ships/scavengers/scavengers-x04d.png</filename>
             <filename>ships/ubaidian/ubaidian-x01b.png</filename>
@@ -632,6 +630,8 @@
             <filename>ships/ubaidian/squadron/squad-repair.png</filename>
             <filename>icons/enhancement-detect.png</filename>
             <filename>icons/enhancement-booster-advanced.png</filename>
+            <filename>ships/scavengers/scavengers-x01.png</filename>
+            <filename>ships/scavengers/scavengers-x02.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

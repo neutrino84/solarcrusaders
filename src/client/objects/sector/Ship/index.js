@@ -64,7 +64,7 @@ Ship.prototype.boot = function() {
 
   // set player
   if(this.isPlayer) {
-    this.hud.show();
+    // this.hud.show();
     this.game.emit('ship/player', this);
   }
 };
@@ -74,7 +74,6 @@ Ship.prototype.refresh = function(data) {
       ships = this.manager.ships,
       targetingComputer = this.targetingComputer;
 
-  // console.log('wtf', data)
   if(data.hardpoint) {
     attacker = ships[data.uuid];
     defender = ships[data.hardpoint.ship];
@@ -83,17 +82,23 @@ Ship.prototype.refresh = function(data) {
     targetingComputer.hit(defender, data);
     // show hud screen
     if(attacker.isPlayer || defender.isPlayer) {
+
+      // if(defender.isPlayer){console.log('defender is ', defender)}
+
       attacker.selector.highlight();
       defender.selector.highlight();
 
-      ship = attacker.isPlayer ? defender : attacker;
-      ship.hud.show();
-      ship.timer && ship.events.remove(ship.timer);
-      ship.timer = ship.events.add(10000, function() {
+      // ship = attacker.isPlayer ? defender : attacker;
+      //^ don't understand the logic behind this code, changing it so that
+      // defender is always showing their HUD
+      defender.hud.show();
+      defender.timer && defender.events.remove(defender.timer);
+      defender.timer = defender.events.add(6000, function() {
         this.hud.hide();
-      }, ship);
-
+      }, defender);
+      
       if(defender.isPlayer) {
+        // console.log('DEFENDER hud alpha is ', defender.hud.alpha)
         this.game.camera.shake();
       }
     };

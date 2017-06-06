@@ -20,7 +20,7 @@ GlowEmitter.prototype.mini = function(ship) {
       vector = movement._vector;
 
   this.frequency = 100;
-  this.lifespan = 1;  //<-- was 1000
+  this.lifespan = 1000;  //<-- was 1000
 
   this.setVelocity(speed, speed);
   this.setVector(vector.x, vector.y);

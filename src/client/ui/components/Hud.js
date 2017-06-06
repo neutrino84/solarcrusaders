@@ -103,12 +103,18 @@ Hud.prototype.create = function() {
 };
 
 Hud.prototype.show = function() {
+  if(this.ship.ai === null){
+    console.log('hit HUD show function. this.alpha is ', this.alpha)
+  }
   this.visible = true;
   this.animating && this.animating.isRunning && this.animating.stop(false);
   this.animating = this.game.tweens.create(this);
   this.animating.to({ alpha: 1.0 }, 250);
   this.animating.on('complete', this.update, this);
   this.animating.start();
+  if(this.ship.ai === null){
+    console.log('END --- HUD show function. this.alpha is ', this.alpha)
+  }
 };
 
 Hud.prototype.hide = function() {

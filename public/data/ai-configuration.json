@@ -2,7 +2,7 @@
   "basic": {
     "respawn": 30000,
     "disengage": 7680,
-    "friendly": ["basic","user","squadron"],
+    "friendly": ["basic","user","squadron","enforcer"],
     "position": {
       "radius": 4096,
       "x": 2048,
@@ -64,7 +64,7 @@
   	},
   	"sensor": {
   	  "aim": 0.8,
-  	  "range": 16384
+  	  "range": 8000
   	}
   },
   "squadron": {
@@ -87,7 +87,7 @@
   "enforcer": {
     "respawn": 55000,
     "disengage": 12000,
-    "friendly": ["user","squadron"],
+    "friendly": ["user","squadron","basic"],
     "position": {
       "radius": 512,
       "x": "ship.movement.position.x",

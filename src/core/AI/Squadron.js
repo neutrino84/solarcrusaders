@@ -9,7 +9,7 @@ function Squadron(ship, home) {
   this.type = 'squadron';
   this.master = ship.master;
   this.attacking = false;
-  this.repairing = false;
+  this.repairing = null;
 
   this.settings = client.AIConfiguration[this.type];
 
@@ -67,7 +67,6 @@ Squadron.prototype.engage = function(target, type){
     if(!type){return}
 
     if(this.target === null && type === 'repair'){
-      this.repairing = true;
       this.target = target;
 
       this.repairer && this.game.clock.events.remove(this.repairer);
@@ -112,7 +111,7 @@ Squadron.prototype.update = function() {
       settings = this.settings,
       rnd = this.game.rnd,
       master = this.manager.ships[ship.master],
-      p1, p2, size, health, masterHealth;
+      p1, p2, size, health, masterHealth, squadShip;
 
 
   health = ship.data.health / ship.config.stats.health;
@@ -136,26 +135,25 @@ Squadron.prototype.update = function() {
     this.scanner();
   };
 
-  // trying to make it so repair ship can target the squad ships
-  // for(var s in master.squadron){
-  //   var squadShip = master.squadron[s],
-  //       squadShipHealth = squadShip.data.health / squadShip.config.stats.health;
-  //   if(this.ship.chassis === 'squad-repair' && !this.target && squadShipHealth < 1){
-  //     // console.log('squad taking damage')
-  //     if(this.ship.chassis === 'squad-repair' && squadShipHealth < 0.9 && !this.repairing){
-  //       console.log('engaging squadShip')
-  //       this.engage(squadShip, 'repair')
-  //     }
-  //   }
-  // };
-
-  if(this.ship.chassis === 'squad-repair' && masterHealth < 0.75 && !this.repairing){
-    // console.log(masterHealth, ' engage repair')
-    this.engage(master, 'repair')
-  }
-  if(this.ship.chassis === 'squad-repair' && masterHealth > 0.95 && this.repairing){
-    // console.log(masterHealth, ' DISENGAGE repair')
-    this.disengage()
+  if(this.ship.chassis === 'squad-repair'){
+    if(this.repairing){
+      if(this.repairing.data.health/this.repairing.config.stats.health > 0.9){
+        console.log('repair ship disengaging')
+        this.disengage(); 
+      }
+    };
+    if(masterHealth < 0.7 && !this.repairing){
+      this.engage(master, 'repair');
+      return
+    };
+    for(var a in master.squadron){
+      squadShip = master.squadron[a]
+      if(squadShip.data.health/squadShip.config.stats.health < 0.7){
+        this.engage(squadShip, 'repair');
+        return
+      }
+    };
+    
   }
 
   this.plot();
@@ -197,23 +195,32 @@ Squadron.prototype.repair = function() {
       settings = this.settings,
       offset = this.offset,
       rnd = this.game.rnd,
+      master = this.manager.ships[ship.master],
       target, size,
       point = {};
 
   // repair sequence
   if(this.target && !this.target.disabled) {
     target = this.target;
-    size = target.data.size * settings.sensor.aim;
-    offset.copyFrom(target.movement.position);
-    offset.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
+    this.repairing = target;
+    // console.log('this.repairing is ', this.repairing)
+
+
+    // size = target.data.size * settings.sensor.aim;
+    // offset.copyFrom(target.movement.position);
+    // offset.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
+
+    if(target !== master){
+      // console.log('repairing squad ship, health is ', this.repairing.data.health)
+    }
 
     // attack
     ship.attack({
       uuid: ship.uuid,
       target: target.uuid,
       targ: {
-        x: offset.x,
-        y: offset.y
+        x: target.movement.position.x,
+        y: target.movement.position.y
       }
     });
   }
@@ -225,7 +232,7 @@ Squadron.prototype.repair = function() {
 Squadron.prototype.disengage = function() {
   this.target = null;
   this.attacking = false;
-  this.repairing = false;
+  this.repairing = null;
   this.attacker && this.game.clock.events.remove(this.attacker);
 };
 
@@ -236,7 +243,7 @@ Squadron.prototype.regroup = function(distance) {
       position = master.movement.position;
 
   this.disengage();
-  console.log('distance is ', distance)
+  
   if(distance > 2800) {
     ship.chassis === 'squad-repair' ? ship.activate('booster-advanced') : ship.activate('booster');
   }

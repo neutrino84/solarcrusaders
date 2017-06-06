@@ -369,7 +369,7 @@
 	"sourceSize": {"w":310,"h":310},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"scavengers-x01d.png":
+"scavengers-x01.png":
 {
 	"frame": {"x":1827,"y":128,"w":150,"h":150},
 	"rotated": false,
@@ -378,7 +378,7 @@
 	"sourceSize": {"w":150,"h":150},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"scavengers-x02c.png":
+"scavengers-x02.png":
 {
 	"frame": {"x":1677,"y":128,"w":150,"h":150},
 	"rotated": false,
@@ -601,6 +601,6 @@
 	"format": "RGBA8888",
 	"size": {"w":2048,"h":2048},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:20c1abe627dfb726e4feda11356eac78:672f8260dab84cd0728db9dbffc9d066:a973cd4a72d4c90ced76930eac7fdc63$"
+	"smartupdate": "$TexturePacker:SmartUpdate:472d7e82af0a7b1b20caaa5c1fe2d6c8:db2987b2c92e3adb2f5426ab5f8ed9ad:a973cd4a72d4c90ced76930eac7fdc63$"
 }
 }

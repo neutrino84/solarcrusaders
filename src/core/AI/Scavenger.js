@@ -7,6 +7,7 @@ function Scavenger(ship, home) {
   Basic.call(this, ship);
 
   this.type = 'scavenger';
+  this.attacking = false;
 
   this.settings = client.AIConfiguration[this.type];
 
@@ -54,7 +55,7 @@ Scavenger.prototype.scanner = function() {
       ascending = function(a, b) {
         return a-b;
       };
-  if(ship.chassis === 'scavengers-x01d' || ship.chassis === 'scavengers-x02c'){
+  if(ship.chassis === 'scavengers-x01' || ship.chassis === 'scavengers-x02'){
     if(this.target == null) {
       // scan nearby ships
       for(var s in ships) {
@@ -79,7 +80,7 @@ Scavenger.prototype.scanner = function() {
       this.disengager = this.game.clock.events.add(settings.disengage, this.disengage, this);
     }
   };
-  if(ship.chassis === 'scavengers-x03c' || ship.chassis === 'scavengers-x04d'){
+  if(ship.chassis === 'scavengers-x04d'){
     // Basic.prototype.scanner.call(this);
     if(this.target == null) {
       // scan nearby ships
@@ -100,7 +101,7 @@ Scavenger.prototype.scanner = function() {
 
       // find enemies
       targets = Object.keys(priority.enemy);
-      targets.length && this.engage(priority.enemy[targets.sort(ascending)[0]]);
+      // targets.length && this.engage(priority.enemy[targets.sort(ascending)[0]]);
 
       // targets.length && this.engage();
       this.target = priority.enemy[targets.sort(ascending)[0]];
@@ -111,36 +112,17 @@ Scavenger.prototype.scanner = function() {
       this.disengager = this.game.clock.events.add(settings.disengage, this.disengage, this);
     }
   };
-};
+  if(ship.chassis === 'scavengers-x03c' && this.master){
+    master = ships[this.master];
+    position = master.movement.position
+    if(this.attacking){return}
 
-Scavenger.prototype.generateShips = function() {
-  var iterator = {
-        'scavengers-x01d': 2,
-        'scavengers-x02c': 2,
-        'scavengers-x03c': 0,
-        'scavengers-x04d': 0
-      };
-  for(var chassis in iterator) {
-    for(var i=0; i<iterator[chassis]; i++) {
-      this.generateShip(chassis);
-    }
+    size = master.data.size * 1.5;
+    position.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
+    // ship.movement.plot({ x: this.offset.x-p1.x, y: this.offset.y-p1.y }, this.throttle);
+
+    ship.movement.plot({ x: position.x - ship.movement.position.x, y: position.y - ship.movement.position.y })
   }
-};
-
-Scavenger.prototype.generateShip = function(chassis) {
-  // var name = Generator.getName('hederaa').toUpperCase(),
-  var throttle = global.Math.random() * 0.5 + 0.5;
-
-  this.manager.create({
-    name: 'steve',
-    chassis: chassis,
-    throttle: throttle,
-    ai: 'scavenger',
-    credits: global.Math.floor(global.Math.random() * 250 + 50),
-    reputation: global.Math.floor(100 * (1 + global.Math.random())),
-    x: -8192,
-    y: 8192 
-  });
 };
 
 Scavenger.prototype.engage = function(target) {
@@ -149,6 +131,15 @@ Scavenger.prototype.engage = function(target) {
       health = ship.data.health / ship.config.stats.health;
 
   // finish attack
+  if(this.target == null && !this.friendly(target)) {
+    this.target = target;
+    // console.log('in scav engage function. about to start the attacker')
+    this.attacker && this.game.clock.events.remove(this.attacker);
+    this.attacker = this.game.clock.events.loop(ship.data.rate, this.attack, this);
+
+    this.disengager && this.game.clock.events.remove(this.disengager);
+    this.disengager = this.game.clock.events.add(settings.disengage, this.disengage, this);
+  }
 
   // engage countermeasures
   if(this.game.rnd.frac() < 0.10) {
@@ -169,10 +160,11 @@ Scavenger.prototype.engage = function(target) {
 
 Scavenger.prototype.attack = function(){
     if(!this.target){return}
-    if(this.target.data.chassis === 'scavengers-x02c' || this.target.data.chassis === 'scavengers-x01d' || this.target.data.chassis === 'scavengers-x03c' || this.target.data.chassis === 'scavengers-x04d'){this.target = null; return}
+    if(this.target.data.chassis === 'scavengers-x02' || this.target.data.chassis === 'scavengers-x01' || this.target.data.chassis === 'scavengers-x03c' || this.target.data.chassis === 'scavengers-x04d'){this.target = null; return}
     if(this.ship.chassis === 'scavengers-x03c' || this.ship.chassis === 'scavengers-x04d'){
       if(this.target && !this.target.disabled){
       Basic.prototype.attack.call(this)
+      this.attacking = true;
       } else if(this.target && this.target.disabled) {
         this.disengage();
       }
@@ -181,8 +173,6 @@ Scavenger.prototype.attack = function(){
     } else if(this.target && !this.target.disabled) {
       this.disengage();
     };
-
-  
 };
 
 Scavenger.prototype.plot = function(){
@@ -210,16 +200,74 @@ Scavenger.prototype.plot = function(){
 };
 
 Scavenger.prototype.disengage = function() {
-  // console.log('in disengage. queen cooldown is ', this.spawnQueenCooldown)
   var game = this.manager.game,
   durability;
 
-  if(this.target && !this.target.disabled) {
+  // if(this.target && this.target.ai === null){
+    // console.log('trying to disengage from user. target is ', this.target.data.chassis)
+  // }
+
+  if(this.ship.hardpoints[0].subtype === 'harvester' && this.target && !this.target.disabled) {
     this.target = null;
+    this.attacking = false;
     this.attacker && this.game.clock.events.remove(this.attacker);
-  }
+  };
+
+  if(this.ship.hardpoints[0].subtype === 'disintegrator' && this.target) {
+    this.target = null;
+    this.attacking = false;
+    this.attacker && this.game.clock.events.remove(this.attacker);
+  };
+
+  // if(this.target && this.target.ai === null){
+    // console.log('222trying to disengage from user. target is ', this.target.data.chassis)
+  // }
+
 };
 
+Scavenger.prototype.update = function() {
+  var ship = this.ship,
+      ships = this.manager.ships,
+      settings = this.settings,
+      rnd = this.game.rnd,
+      master,
+      p1, p2, size, health, masterHealth;
+
+  if(ship.master){
+    master = this.manager.ships[ship.master];
+    if(!master.disabled && master.ai.target && !this.attacking){
+      // this.engage(master.ai.target) 
+      this.target = master.ai.target
+      this.attacker && this.game.clock.events.remove(this.attacker);
+      this.attacker = this.game.clock.events.loop(ship.data.rate, this.attack, this);
+
+      this.disengager && this.game.clock.events.remove(this.disengager);
+      this.disengager = this.game.clock.events.add(settings.disengage, this.disengage, this);
+    }
+  }
+
+  // health = ship.data.health / ship.config.stats.health;
+  // console.log('master is ', master)
+  // console.log(this.manager.ships[ship.master])
+  // console.log('masterHealth is ', masterHealth)
+  // debugger
+  // debugger
+  // masterHealth = master.data.health / master.config.stats.health;
+
+  // retreat due to damage
+  if(health < settings.escape.health) {
+    this.retreat = true;
+  } else {
+    this.retreat = false;
+  }
+
+  // target ships
+  if(rnd.frac() < 0.8) {
+    this.scanner();
+  };
+
+  this.plot();
+};
 
 Scavenger.prototype.getHomePosition = function() {
   var position = this.settings.position,

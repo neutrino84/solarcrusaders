@@ -143,11 +143,16 @@ Basic.prototype.attack = function() {
       rnd = this.game.rnd,
       target, size,
       point = {};
-
   // attack sequence
   if(this.target) {
     target = this.target;
 
+  if(ship.chassis === 'scavengers-x03c'){
+    // console.log('overseer attacking ', target.data.chassis)
+  }
+  if(ship.chassis === 'scavengers-x04d'){
+    // console.log('queen attacking ', target.data.chassis)
+  }
     size = target.data.size * settings.sensor.aim;
     offset.copyFrom(target.movement.position);
     offset.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));

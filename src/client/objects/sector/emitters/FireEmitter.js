@@ -112,7 +112,7 @@ FireEmitter.prototype.boost = function(colors, isPlayer) {
   this.lifespan = 300;
 
   if(isPlayer){
-    this.lifespan = 1000;  //<---     
+    this.lifespan = 300;  //<---     
   }
   this.setVelocity(0, 0);
   this.setVector(0, 0);
@@ -120,8 +120,8 @@ FireEmitter.prototype.boost = function(colors, isPlayer) {
   this.setScale(0.4, 0.6, 300);
   this.setAlpha(1.0, 0.0, 300);
   if(isPlayer){
-    this.setScale(0.4, 0.6, 100); //<---
-    this.setAlpha(1.0, 0.0, 1000); //<---
+    this.setScale(0.4, 0.6, 350); //<---
+    this.setAlpha(1.0, 0.0, 300); //<---
   }
 
   this.setTint(global.parseInt(colors[0]), global.parseInt(colors[1]), 1500); //<---

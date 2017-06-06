@@ -250,12 +250,10 @@ ShipManager.prototype.regroup = function() {
       squad = {},
       ship, distance;
       
-  console.log('in front end ship manager regroup function')
       for (var s in ships){
         var ship = ships[s];
 
         if(ship.data.masterShip === player.uuid){
-          console.log('BOOYAW')
           distance = engine.Point.distance(ship, player);
           squad[ship.uuid] = distance;
         }
