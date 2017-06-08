@@ -1,6 +1,6 @@
 {
   "basic": {
-    "respawn": 30000,
+    "respawn": 45000,
     "disengage": 7680,
     "friendly": ["basic","user","squadron","enforcer"],
     "position": {
@@ -17,13 +17,13 @@
     }
   },
   "pirate": {
-  	"respawn": 60000,
+  	"respawn": 55000,
     "disengage": 9216,
     "friendly": ["pirate"],
     "position": {
       "radius": 512,
-      "x": "ship.movement.position.x",
-      "y": "ship.movement.position.y"
+      "x": 2048,
+      "y": 2048
     },
     "escape": {
       "health": 0.2
@@ -90,15 +90,15 @@
     "friendly": ["user","squadron","basic","enforcer"],
     "position": {
       "radius": 512,
-      "x": "ship.movement.position.x",
-      "y": "ship.movement.position.y"
+      "x": 2048,
+      "y": 2048
     },
     "escape": {
       "health": 0.1
     },
     "sensor": {
       "aim": 1.25,
-      "range": 11096
+      "range": 4096
     }
   }
 }

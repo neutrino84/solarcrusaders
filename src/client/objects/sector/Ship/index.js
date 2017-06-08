@@ -83,22 +83,16 @@ Ship.prototype.refresh = function(data) {
     // show hud screen
     if(attacker.isPlayer || defender.isPlayer) {
 
-      // if(defender.isPlayer){console.log('defender is ', defender)}
-
       attacker.selector.highlight();
       defender.selector.highlight();
 
-      // ship = attacker.isPlayer ? defender : attacker;
-      //^ don't understand the logic behind this code, changing it so that
-      // defender is always showing their HUD
       defender.hud.show();
       defender.timer && defender.events.remove(defender.timer);
       defender.timer = defender.events.add(6000, function() {
         this.hud.hide();
       }, defender);
-      
+
       if(defender.isPlayer) {
-        // console.log('DEFENDER hud alpha is ', defender.hud.alpha)
         this.game.camera.shake();
       }
     };
@@ -161,6 +155,9 @@ Ship.prototype.enable = function(data) {
   this.selector.enable();
   this.engineCore.show(true);
   this.position.set(data.pos.x, data.pos.y);
+  if(this.isPlayer){
+    this.manager.regroup();
+  }
 };
 
 Ship.prototype.disable = function() {

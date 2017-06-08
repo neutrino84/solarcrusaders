@@ -128,7 +128,7 @@ Basic.prototype.engage = function(target) {
 };
 
 Basic.prototype.reengage = function() {
-
+  //what's this for?
 };
 
 Basic.prototype.disengage = function() {
@@ -187,7 +187,11 @@ Basic.prototype.plot = function(){
     offset.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
     ship.movement.plot({ x: this.offset.x-p1.x, y: this.offset.y-p1.y }, this.throttle);
   } else if(rnd.frac() < 0.1) {
+    //^ this is why newly spawned ships sometimes just sit there before moving
     p2 = this.getHomePosition();
+    // if(ship.data.chassis === 'ubaidian-x01c'){
+    // console.log('BASIC. coordinates are x : ', p2.x, ' y : ', p2.y)
+    // }
     ship.movement.plot({ x: p2.x-p1.x, y: p2.y-p1.y });
   };
 };

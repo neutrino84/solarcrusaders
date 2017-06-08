@@ -21,87 +21,117 @@ Enforcer.prototype = Object.create(Basic.prototype);
 
 Enforcer.prototype.constructor = Enforcer;
 
-Enforcer.prototype.scanner = function() {
+// Enforcer.prototype.scanner = function() {
 
-  var target, targets, scan, distance, size,
-      rnd = this.game.rnd,
-      sensor = this.sensor,
-      settings = this.settings,
-      ships = this.manager.ships,
-      ship = this.ship,
-      priority = {
-        enemy: {},
-        friendly: {}
-      },
-      ascending = function(a, b) {
-        return a-b;
-      };
-
-
+//   var target, targets, scan, distance, size,
+//       rnd = this.game.rnd,
+//       sensor = this.sensor,
+//       settings = this.settings,
+//       ships = this.manager.ships,
+//       ship = this.ship,
+//       priority = {
+//         enemy: {},
+//         friendly: {}
+//       },
+//       ascending = function(a, b) {
+//         return a-b;
+//       };
 
 
-  if(this.master){
-    master = ships[this.master];
-    position = master.movement.position
-    if(this.attacking){return}
 
-    size = master.data.size * 1.5;
-    position.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
-    // ship.movement.plot({ x: this.offset.x-p1.x, y: this.offset.y-p1.y }, this.throttle);
 
-    ship.movement.plot({ x: position.x - ship.movement.position.x, y: position.y - ship.movement.position.y })
-  } else {
-      // Battleship scan nearby ships
-      var scavengerPrioritizer = 0;
+//   if(this.master){
 
-      for(var s in ships) {
-        scan = ships[s];
-        p2 = scan.movement.position;
+//     master = ships[this.master];
+//     position = master.movement.position
+//     if(this.attacking){return}
 
-        if(scan.disabled) { continue; }
-        if(sensor.contains(p2.x, p2.y)) {
-          if(!this.friendly(scan)) {
-            if(scan.data.chassis === 'scavengers-x03c' || scan.data.chassis === 'scavengers-x04d'){
-              priority.enemy[scavengerPrioritizer] = scan;
-              scavengerPrioritizer++
-            } else {
-              priority.enemy[scan.data.health] = scan;
-            }
-          } else {
-            priority.friendly[scan.data.health] = scan;
-          }
-        }
-      }
+//     size = master.data.size / 3;
+//     position.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
 
-      // find weakest
-      targets = Object.keys(priority.enemy);
-      targets.length && this.engage(priority.enemy[targets.sort(ascending)[0]]);
-  }
+//     // ship.movement.plot({ x: this.offset.x-p1.x, y: this.offset.y-p1.y }, this.throttle);
 
-};
+//     // ship.movement.plot({ x: position.x - ship.movement.position.x, y: position.y - ship.movement.position.y })
+//   } else {
+//       // Battleship scan nearby ships
+//       var scavengerPrioritizer = 0;
+
+//       for(var s in ships) {
+//         scan = ships[s];
+//         p2 = scan.movement.position;
+
+//         if(scan.disabled) { continue; }
+//         if(sensor.contains(p2.x, p2.y)) {
+//           if(!this.friendly(scan)) {
+//             if(scan.data.chassis === 'scavengers-x03c' || scan.data.chassis === 'scavengers-x04d'){
+//               priority.enemy[scavengerPrioritizer] = scan;
+//               scavengerPrioritizer++
+//               console.log('got here prioritizer is ', scavengerPrioritizer)
+//             } else {
+//               priority.enemy[scan.data.health] = scan;
+//             }
+//           } else {
+//             priority.friendly[scan.data.health] = scan;
+//           }
+//         }
+//       }
+
+//       // find weakest
+//       targets = Object.keys(priority.enemy);
+//       // targets.length && this.engage(priority.enemy[targets.sort(ascending)[0]]);
+//       if(!targets.length){
+//       };
+//   };
+// };
 
 Enforcer.prototype.plot = function(){
   //blank
   var rnd = this.game.rnd,
       ship = this.ship,
+      ships = this.manager.ships,
       p1 = ship.movement.position,
       sensor = this.sensor,
       settings = this.settings,
       offset = this.offset,
-      size;
+      position, size;
 
   sensor.setTo(p1.x, p1.y, settings.sensor.range);
       
     // console.log('in plot')
   // plot destination
   if(!this.retreat && this.target) {
+
     size = this.target.data.size * 4;
     offset.copyFrom(this.target.movement.position);
     offset.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
     ship.movement.plot({ x: this.offset.x-p1.x, y: this.offset.y-p1.y }, this.throttle);
-  } else if(!this.target) {
-    this.scanner();
-  };
+
+  } 
+  else if(!this.target && this.master){
+    // this.scanner();
+
+    master = ships[this.master];
+    position = master.movement.position
+    // if(this.attacking){return}
+
+    // if(master.ai.target){
+    //   this.target = master.ai.target;
+    //   this.plot();
+    //   return
+    // }
+
+
+    size = master.data.size / 3;
+    // position.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
+    //^ why the fuck is this affecting the master ship's movement???
+    ship.movement.plot({ x: position.x - ship.movement.position.x, y: position.y - ship.movement.position.y })
+  } 
+  else if(rnd.frac() < 0.07){
+    //^ this is why newly spawned ships sometimes just sit there before moving
+    p2 = this.getHomePosition();
+    // console.log('ENFORCER2. coordinates are x : ', p2.x, ' y : ', p2.y)
+    ship.movement.plot({ x: p2.x-p1.x, y: p2.y-p1.y });
+  }
 };
 
 // Enforcer.prototype.engage = function(target, type){
@@ -157,13 +187,21 @@ Enforcer.prototype.update = function() {
       ships = this.manager.ships,
       settings = this.settings,
       rnd = this.game.rnd,
-      master,
-      p1, p2, size, health, masterHealth;
+      master, distance, p1, p2, 
+      size, health, masterHealth;
 
-  if(ship.master){
+  if(ship.master && !this.attacking){
     master = this.manager.ships[ship.master];
     if(!master.disabled && master.ai.target){
       this.engage(master.ai.target) 
+    }
+  } else if(ship.master && this.attacking){
+    master = this.manager.ships[ship.master];
+    distance = master.movement.position.distance(ship.movement.position);
+    if(distance > 2000){
+      // console.log('enforcers returning')
+      this.disengage();
+      this.plot();
     }
   }
 
@@ -183,7 +221,7 @@ Enforcer.prototype.update = function() {
   }
 
   // target ships
-  if(rnd.frac() < 0.8) {
+  if(!this.master && rnd.frac() < 0.8) {
     this.scanner();
   };
 
@@ -201,7 +239,7 @@ Enforcer.prototype.attack = function() {
   // attack sequence
   if(this.target && !this.target.disabled && !this.friendly(this.target)) {
     target = this.target;
-
+    this.attacking = true;
     size = target.data.size * settings.sensor.aim;
     offset.copyFrom(target.movement.position);
     offset.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
@@ -216,9 +254,9 @@ Enforcer.prototype.attack = function() {
       }
     });
   }
-  // if(this.target.disabled){
-  //   this.disengage();
-  // };
+  if(this.target.disabled){
+    this.disengage();
+  };
 };
 
 Enforcer.prototype.disengage = function() {
@@ -237,7 +275,7 @@ Enforcer.prototype.regroup = function() {
 
   this.disengage();
   console.log(distance)
-  if(tdistance > 400) {
+  if(distance > 400) {
       ship.activate('booster');
   }
   ship.movement.plot({ x: position.x - ship.movement.position.x, y: position.y - ship.movement.position.y })
@@ -248,15 +286,18 @@ Enforcer.prototype.getHomePosition = function() {
       sensor = this.sensor,
       ships = this.manager.ships,
       master = ships[this.master], position;
-      // position = master.movement.position;
-      if(master){
-        position = master.movement.position;
-      } else {
-        position = {x: 2048, y: -2048}
-      }
+      // position = master.movement.position;\
 
-      sensor.setTo(position.x, position.y, 1000);
-  return this.sensor.random();
+      return this.manager.generateRandomPosition(30048);
+
+  //     if(master){
+  //       position = master.movement.position;
+  //     } else {
+  //       position = {x: 2048, y: -2048}
+  //     }
+
+  //     sensor.setTo(position.x, position.y, 1000);
+  // return this.sensor.random();
 };
 
 module.exports = Enforcer;

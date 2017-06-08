@@ -123,7 +123,7 @@ SoundManager.prototype.preload = function(game) {
   load.audio('capitalShipExplosion3','sounds/explosions/explosionBig100.mp3');
 
   load.audio('queenDeath','sounds/explosions/queenDeath.mp3');
-  load.audio('overseerDeath','sounds/explosions/overseerDeath2.mp3');
+  load.audio('overseerDeath','sounds/explosions/overseerDeath3.mp3');
   load.audio('harvesterDeath1','sounds/explosions/collectorDeath.mp3');
   load.audio('harvesterDeath2','sounds/explosions/larvaDeath.mp3');
 
@@ -230,7 +230,7 @@ SoundManager.prototype.generateExplosionSound = function(data){
     };
     if(data.data.chassis === 'scavengers-x03c'){
       sound = 'overseerDeath';
-      volume = global.Math.max(0.6 - (distance / 5000), 0);
+      volume = global.Math.max(0.85 - (distance / 5000), 0);
     };
     if(data.data.chassis === 'scavengers-x02' || data.data.chassis === 'scavengers-x01'){
       sound = 'harvesterDeath' + num;

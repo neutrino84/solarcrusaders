@@ -190,7 +190,7 @@ ShipManager.prototype.detectUnfriendlies = function(){
 
         if(ship.data.friendlies && ship.data.friendlies.indexOf('user') < 0 && distance < 3500){
           if(regex.test(t)){
-            this.player.unfriendlies[counter] = ship;
+            this.player.unfriendlies[5000+counter] = ship;
             counter++
           } else {
             this.player.unfriendlies[distance] = ship;
@@ -202,7 +202,7 @@ ShipManager.prototype.detectUnfriendlies = function(){
         // colorMatrix.contrast(0.1);
         colorMatrix.grayscale(0.9);
         };
-        
+
       };
 
       this.player.targetlistCooldown = true;
@@ -258,7 +258,7 @@ ShipManager.prototype.regroup = function() {
       squad = {},
       ship, distance;
 
-  if(player.disabled){return}
+  // if(player.disabled){return}
 
   for (var s in ships){
     var ship = ships[s];
@@ -447,7 +447,8 @@ ShipManager.prototype._secondary = function(data) {
 ShipManager.prototype._disabled = function(data) {
   var ship = this.ships[data.uuid],
       socket = this.socket,
-      clock = this.clock;
+      clock = this.clock,
+      othership;
   if(ship !== undefined) {
     ship.selector.hostileHighlightStop();
     ship.selector.hostileEngagedStop();
@@ -456,14 +457,19 @@ ShipManager.prototype._disabled = function(data) {
     // cancel autofire
     if(ship.isPlayer) {
       this.autofire && clock.events.remove(this.autofire);
-    }
+      for(var a in this.ships){
+        othership = this.ships[a];
+        othership.selector.hostileHighlightStop();
+        othership.selector.hostileEngagedStop();
+      }
+    };
     if(ship.data.chassis === 'scavengers-x04d') {
       for(var i = 0; i < ship.events.events.length; i++){
         if(ship.events.events[i].callback.name === 'growlTimer'){
           ship.events.remove(ship.events.events[i]);  
         }
       }
-    }
+    };
   }
 };
 

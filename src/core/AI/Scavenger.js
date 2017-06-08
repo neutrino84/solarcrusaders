@@ -244,15 +244,7 @@ Scavenger.prototype.update = function() {
       this.disengager && this.game.clock.events.remove(this.disengager);
       this.disengager = this.game.clock.events.add(settings.disengage, this.disengage, this);
     }
-  }
-
-  // health = ship.data.health / ship.config.stats.health;
-  // console.log('master is ', master)
-  // console.log(this.manager.ships[ship.master])
-  // console.log('masterHealth is ', masterHealth)
-  // debugger
-  // debugger
-  // masterHealth = master.data.health / master.config.stats.health;
+  };
 
   // retreat due to damage
   if(health < settings.escape.health) {

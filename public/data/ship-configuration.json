@@ -756,7 +756,7 @@
     "class": "battlecarrier",
     "stats": {
       "capacity": 3000,
-      "health": 200,
+      "health": 250,
       "heal": 0.25,
       "armor": 0.1,
       "speed": 32.0,
@@ -946,8 +946,8 @@
     "class": "frigate",
     "stats": {
       "capacity": 500,
-      "health": 5,
-      "heal": 0.2,
+      "health": 50,
+      "heal": 0.25,
       "armor": 0.0,
       "speed": 48.0,
       "rate": 256,
@@ -2332,7 +2332,7 @@
       "health": 250,
       "heal": 0.25,
       "armor": 0.2,
-      "speed": 10.0,
+      "speed": 30.0,
       "rate": 256,
       "evasion": 0.3,
       "energy": 200,

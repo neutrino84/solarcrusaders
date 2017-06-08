@@ -19,8 +19,6 @@ function Ship(manager, data) {
 
   if(data.master){
     this.master = data.master
-    // this.master = this.manager.ships[data.master];
-    // console.log('squad ship is ', ship.data.health)
   }
   this.target = manager.ships[data.target];
   if(this.target){
@@ -288,12 +286,9 @@ Ship.prototype.hit = function(attacker, target, slot) {
             uuid: this.uuid,
             durability: this.durability
           })
-
           if(this.durability <= 0){
             this.manager.ai.queenCheck(this.config.stats.durability, this.uuid)
-          };
-          // return   
-          // console.log(updates)    
+          };   
         };
       }
 
@@ -310,15 +305,12 @@ Ship.prototype.hit = function(attacker, target, slot) {
 
 Ship.prototype.disable = function() {
 
-  if(this.ai === null){
-    console.log('user disabled')
-  }
   // disable
   this.disabled = true;
 
   // disengage ai
   this.ai && this.ai.disengage();
-  
+
   // respawn time
   this.respawn = this.game.clock.events.add(this.ai ? this.ai.settings.respawn : Ship.RESPAWN_TIME, this.enable, this);
 
@@ -348,18 +340,17 @@ Ship.prototype.blast = function() {
 };
 
 Ship.prototype.enable = function() {
+  
   // re-enable
-  if(this.ai === null){
-    console.log('user respawned')
-  }
-
   this.disabled = false;
 
   // reset alpha/durability
   this.durability = this.config.stats.durability;
+  this.alpha = 1.0;
 
-  // activate ui
-  this.ai && this.ai.reengage();
+  // activate ui ---  commenting out since Basic.reengage() currently doesn't do anything
+  // this.ai && this.ai.reengage();
+
 
   // update health / energy
   this.data.health = this.config.stats.health;

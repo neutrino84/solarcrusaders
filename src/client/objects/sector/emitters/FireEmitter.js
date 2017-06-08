@@ -120,7 +120,7 @@ FireEmitter.prototype.boost = function(colors, isPlayer) {
   this.setScale(0.4, 0.6, 300);
   this.setAlpha(1.0, 0.0, 300);
   if(isPlayer){
-    this.setScale(0.4, 0.6, 350); //<---
+    this.setScale(0.4, 0.6, 360); //<---
     this.setAlpha(1.0, 0.0, 300); //<---
   }
 

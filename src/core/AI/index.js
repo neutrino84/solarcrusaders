@@ -11,8 +11,8 @@ function AI(manager) {
   this.timer = this.game.clock.events.loop(500, this.update, this);
   this.ships = manager.ships;
   this.consumed = {};
-  this.queenThreshold = 50;
-  this.next = 500;
+  this.queenThreshold = 300;
+  this.next = 400;
   this.queenSpawnCycle = 0;
 
   // this.game.on('squad/engageHostile', this.squad_engage, this);
@@ -85,6 +85,11 @@ AI.prototype.queenCheck = function(durability, uuid){
     this.queenThreshold = this.next;
     this.next = this.next + 500;
     this.queenSpawnCycle++
+    if(this.queenThreshold > 2000){
+      this.queenThreshold = 300;
+      this.next = 400;
+      this.queenSpawnCycle = 0;
+    }
   };
 }
 
