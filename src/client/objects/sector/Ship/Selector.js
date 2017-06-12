@@ -61,12 +61,14 @@ Selector.prototype.create = function() {
   switch(this.ship.data.chassis) {
     case 'scavengers-x01':
       this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.8, this.hit.radius*2.8);
+      // this.reticle.rotation = 62.05;
       this.reticleRed.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.1, this.hit.radius*2.1);
       this.reticle.position.set(-ship.width/1.2, -ship.height/1.2)
       this.reticleRed.position.set(-ship.width/1.6, -ship.height/1.6);
       break
     case 'scavengers-x02':
       this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.8, this.hit.radius*2.8);
+      // this.reticle.rotation = 62.05;
       this.reticleRed.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.1, this.hit.radius*2.1);
       this.reticle.position.set(-ship.width/1.2, -ship.height/1.2)
       this.reticleRed.position.set(-ship.width/1.6, -ship.height/1.6);
@@ -86,18 +88,22 @@ Selector.prototype.create = function() {
       break
     case 'pirate-x01':
       this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.8, this.hit.radius*2.8);
+      // this.reticle.rotation = 5.05;
       this.reticleRed.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.1, this.hit.radius*2.1);
       this.reticle.position.set(-ship.width/0.95, -ship.height/0.95); 
       this.reticleRed.position.set(-ship.width/1.3, -ship.height/1.3);
       break
     case 'pirate-x02':
       this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.8, this.hit.radius*2.8);
+      // this.reticle.rotation = 1
+      // this.reticle.pivot = new PIXI.Point(250, 250);
       this.reticleRed.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.1, this.hit.radius*2.1);
       this.reticle.position.set(-ship.width/0.95, -ship.height/0.95); 
       this.reticleRed.position.set(-ship.width/1.25, -ship.height/1.25);
       break
     case 'pirate-x03b':
       this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius*3.4, this.hit.radius*3.4)
+      // this.reticle.rotation = 15.05;
       this.reticleRed.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.7, this.hit.radius*2.7)
       this.reticle.position.set(-ship.width/1.24, -ship.height/1.24);
       this.reticleRed.position.set(-ship.width/1.54, -ship.height/1.54);

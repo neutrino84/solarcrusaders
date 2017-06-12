@@ -288,13 +288,14 @@ Enforcer.prototype.getHomePosition = function() {
       master = ships[this.master], position;
       // position = master.movement.position;\
 
-      return this.manager.generateRandomPosition(30048);
 
-  //     if(master){
-  //       position = master.movement.position;
-  //     } else {
-  //       position = {x: 2048, y: -2048}
-  //     }
+      if(master && !master.disabled){
+        position = master.movement.position;
+        return position
+      } else if(master && master.disabled){
+        return this.manager.generateRandomPosition(2048);
+      }
+      return this.manager.generateRandomPosition(30048);
 
   //     sensor.setTo(position.x, position.y, 1000);
   // return this.sensor.random();

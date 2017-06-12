@@ -34,6 +34,9 @@ function SoundManager(game) {
 
   this.game.on('ship/hardpoint/fire', this.generateFireSound, this);
   this.game.on('ship/hardpoint/stopfire', this.stopFireSound, this);
+
+  this.game.on('squad/sound/engage', this.generateSquadEngageSound, this);
+
   this.game.on('game/backgroundmusic', this.generateBackgroundMusic, this);
 
   this.dangerAlert = false
@@ -142,7 +145,7 @@ SoundManager.prototype.generateBackgroundMusic = function(){
   var num = Math.floor((Math.random() * 3)+1);
   // this.generateSound('background'+'num', 0.30, true);
 
-  // this.generateSound('background4', 0.30, true);
+  this.generateSound('background4', 0.30, true);
 };
 
 SoundManager.prototype.generateThrusterSound = function(){
@@ -280,6 +283,21 @@ SoundManager.prototype.generateFireSound = function(data) {
 };
 
 SoundManager.prototype.stopFireSound = function(launcher){
+};
+
+SoundManager.prototype.generateSquadEngageSound = function(){
+  
+  var sound = 'callbackSound',
+      volume = 0.5,
+      num = Math.floor((Math.random() * 3)+1);
+
+  // if(player && player !== ship) {   
+  //   distance = engine.Point.distance(ship, player);    
+  //   volume = global.Math.max(1 - (distance / 2000), 0);
+  // };
+  if(volume > 0){
+      this.generateSound(sound, volume, sound.loop); 
+  };
 };
 
 // SoundManager.prototype.generateAttackSound = function(data){

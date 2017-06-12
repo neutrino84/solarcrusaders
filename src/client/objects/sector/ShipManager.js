@@ -145,6 +145,9 @@ ShipManager.prototype.closestHostile = function(){
     var ship = ships[s];
     ship.selector.hostileHighlightStop();
     if(ship.disabled){
+      console.log(ship.data.chassis, ' cached tint: ', ship.chassis.cachedTint, ' current tint: ', ship.chassis.tint)
+      ship.chassis.tint = 0x333333;
+      console.log('current tint: ', ship.chassis.tint)
       continue
     }
     if(ship.targetingComputer.targetShip === player && ship.data.chassis !== 'squad-repair' || Object.values(player.squadron).indexOf(ship.targetingComputer.targetShip) > -1 && ship.data.chassis !== 'squad-repair'){ 
@@ -240,14 +243,28 @@ ShipManager.prototype.detectUnfriendlies = function(){
 
 ShipManager.prototype.engageHostile = function(){
   var ships = this.ships,
-      player = this.player;
+      player = this.player,
+      available = true,
+      ship;
+  for(var s in ships){
+    ship = ships[s];
+    if(ship.data.masterShip && ship.data.masterShip === player.uuid && ship.disabled){
+      available = false;
+    };
+  };
+  if(ship.data.masterShip === player.uuid){
+      distance = engine.Point.distance(ship, player);
+      squad[ship.uuid] = distance;
+    }
+
   if(player.acquired){
     for(var s in ships){
     var ship = ships[s];
     ship.selector.hostileEngagedStop();
   }
-  if(!player.acquired.disabled)
+  if(!player.acquired.disabled && available)
    player.acquired.selector.hostileEngaged();
+    this.game.emit('squad/sound/engage');
     this.socket.emit('squad/engageHostile', {player_id: player.uuid, target_id : player.acquired.uuid });
   };
 };
@@ -361,6 +378,11 @@ ShipManager.prototype._sync = function(data) {
 
 ShipManager.prototype._player = function(ship) {
   var ships = this.ships;
+  for(var a in ships){
+    if(ships[a].disabled){
+      ships[a].chassis.tint = 0x333333;
+    };
+  };
   this.player = ship;
   this.player.unfriendlies = {};
   this.player.targetCount = 0;

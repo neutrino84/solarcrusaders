@@ -41,7 +41,7 @@ ShipManager.prototype.init = function() {
   this.generateRandomShips();
   this.generatePirateShips();
   this.generateEnforcerShips();
-  this.generateScavengerShips();
+  // this.generateScavengerShips();
 };
 
 ShipManager.prototype.add = function(ship) {
@@ -509,7 +509,8 @@ ShipManager.prototype.generateEnforcerShips = function(uuid, masterx, mastery) {
 ShipManager.prototype.spawnQueen = function(position, uuid){
   console.log(position)
   var ships = this.ships,
-      spawnPosition = {}, masterShip;
+      cycle = this.ai.queenSpawnCycle,
+      spawnPosition = {}, masterShip, rando;
 
   if(position === 'bottom'){
     spawnPosition.x = -9360;
@@ -531,7 +532,7 @@ ShipManager.prototype.spawnQueen = function(position, uuid){
   if(!uuid){
     //create queen
     this.create({
-      name: 'Fenris',
+      name: 'Fenris'+cycle,
       chassis: 'scavengers-x04d',
       throttle: 1.0,
       ai: 'scavenger',
@@ -544,9 +545,11 @@ ShipManager.prototype.spawnQueen = function(position, uuid){
     });
   } else {
     //create overseers
-    for(var i = 0; i < this.ai.queenSpawnCycle+1; i++){
+    rando = this.game.rnd
+    console.log(rando)  
+    for(var i = 0; i < cycle*rando+1; i++){
       this.create({
-        name: 'overseer' + this.ai.queenSpawnCycle,
+        name: 'overseer' + cycle,
         chassis: 'scavengers-x03c',
         throttle: 1.0,
         ai: 'scavenger',
