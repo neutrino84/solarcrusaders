@@ -12,6 +12,7 @@ var engine = require('engine'),
     ShipManager = require('../objects/sector/ShipManager'),
     StationManager = require('../objects/sector/StationManager'),
     SoundManager = require('../objects/sector/SoundManager'),
+    SquadManager = require('../objects/sector/SquadManager'),
     HotkeyManager = require('../objects/sector/HotkeyManager'),
     Asteroid = require('../objects/sector/misc/Asteroid');
     
@@ -20,6 +21,7 @@ function SectorState(game) {
   this.stationNetManager = new StationNetManager(game);
   this.soundManager = new SoundManager(game);
   this.hotkeyManager = new HotkeyManager(game);
+  this.squadManager = new SquadManager(game);
 };
 
 SectorState.prototype = Object.create(engine.State.prototype);
@@ -155,6 +157,7 @@ SectorState.prototype.createManagers = function() {
   this.inputManager = new InputManager(game, this);
   this.stationManager = new StationManager(game, this);
   this.shipManager = new ShipManager(game, this);
+  this.squadManager.create(this);
   this.hotkeyManager.create(this);
   // this.shockwaveManager = new ShockwaveManager(game, this);
 };
@@ -165,7 +168,7 @@ SectorState.prototype.createSnow = function() {
 };
 
 SectorState.prototype.createAsteroids = function() {
-  var asteroid, amount = 30;
+  var asteroid, amount = 60;
   for(var i=0; i<amount; i++) {
     asteroid = new Asteroid(this.game);
     asteroid.position.set(2048 / 4, 2048 / 4);

@@ -22,6 +22,7 @@ ShipNetManager.prototype.init = function() {
   this.socket.on('ship/enhancement/started',this._started.bind(this));
   this.socket.on('ship/enhancement/stopped', this._stopped.bind(this));
   this.socket.on('ship/enhancement/cancelled', this._cancelled.bind(this));
+  this.socket.on('global/sound/spawn', this._spawn.bind(this));
 };
 
 ShipNetManager.prototype.getShipData = function(uuid) {
@@ -68,6 +69,10 @@ ShipNetManager.prototype._sync = function(data) {
 
 ShipNetManager.prototype._hostile = function(data) {
   this.game.emit('target/hostile', data);
+};
+
+ShipNetManager.prototype._spawn = function(data) {
+  this.game.emit('global/sound/spawn', data);
 };
 
 ShipNetManager.prototype._removed = function(data) {

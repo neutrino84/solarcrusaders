@@ -184,7 +184,7 @@ Scavenger.prototype.plot = function(){
       settings = this.settings,
       offset = this.offset,
       size, distance;
-
+      
   sensor.setTo(p1.x, p1.y, settings.sensor.range);    
 
   if(!this.retreat && this.target && this.target.durability > 0) {

@@ -60,31 +60,66 @@ Selector.prototype.create = function() {
 
   switch(this.ship.data.chassis) {
     case 'scavengers-x01':
+ 
+      // this.reticleRed.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.1, this.hit.radius*2.1);
+      // this.reticleRed.position.set(-ship.width/1.6, -ship.height/1.6);
+
+      // this.reticleRed.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.1, this.hit.radius*2.1);
+      // this.reticleRed.position.set(-ship.width/1.6, -ship.height/1.6);
+
       this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.8, this.hit.radius*2.8);
-      // this.reticle.rotation = 62.05;
-      this.reticleRed.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.1, this.hit.radius*2.1);
-      this.reticle.position.set(-ship.width/1.2, -ship.height/1.2)
-      this.reticleRed.position.set(-ship.width/1.6, -ship.height/1.6);
+      this.reticle.position.set(-128, -125)
+
+      this.reticleRed.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.8, this.hit.radius*2.8);
+      this.reticleRed.position.set(-ship.width/1.2, -ship.height/1.2);
+
+      this.reticleRed.pivot.set((-84), (208));
+      this.reticleRed.rotation = 0.785398 
+
       break
     case 'scavengers-x02':
+      // this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.8, this.hit.radius*2.8);
+      // this.reticleRed.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.1, this.hit.radius*2.1);
+      // this.reticle.position.set(-ship.width/1.2, -ship.height/1.2)
+      // this.reticleRed.position.set(-ship.width/1.6, -ship.height/1.6);
+      // this.reticleRed.pivot.set((-ship.width/1.6)/2, (-ship.height/1.6)/2);
+
+      // this.reticleRed.pivot.set((-84), (208));
+
+      // this.reticleRed.rotation = 0.785398
+
       this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.8, this.hit.radius*2.8);
-      // this.reticle.rotation = 62.05;
-      this.reticleRed.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.1, this.hit.radius*2.1);
-      this.reticle.position.set(-ship.width/1.2, -ship.height/1.2)
-      this.reticleRed.position.set(-ship.width/1.6, -ship.height/1.6);
+      this.reticle.position.set(-139, -136)
+
+      this.reticleRed.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.8, this.hit.radius*2.8);
+      this.reticleRed.position.set(-ship.width/1.2, -ship.height/1.2);
+
+      this.reticleRed.pivot.set((-71), (208));
+      this.reticleRed.rotation = 0.785398 
       break
     case 'scavengers-x03c':
       //more shit
       this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius*4.5, this.hit.radius*4.5)
       this.reticleRed.drawRect(this.hit.x, this.hit.y, this.hit.radius*4, this.hit.radius*4)
       this.reticle.position.set(-ship.width/1.4, -ship.height/1.4)
+      this.reticle.pivot.set(0, 19)
       this.reticleRed.position.set(-ship.width/1.6, -ship.width/1.6);
+
+      this.reticleRed.pivot.set((-158), (429));
+      this.reticleRed.rotation = 0.785398 
+      //xxx
       break
     case 'scavengers-x04d':
       this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius*3.05, this.hit.radius*3.05)
       this.reticleRed.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.7, this.hit.radius*2.7)
-      this.reticle.position.set(-ship.width/1.1, -ship.height/1.1)
-      this.reticleRed.position.set(-ship.width/1.23, -ship.height/1.23);
+      // this.reticle.position.set(-ship.width/1.1, -ship.height/1.1)
+      this.reticle.position.set(-438.5454545454545, -454.5454545454545)
+      // this.reticleRed.position.set(-ship.width/1.23, -ship.height/1.23);
+      this.reticleRed.position.set(-385.5040650406504, -406.5040650406504);
+      // -385.5040650406504 -406.5040650406504
+      this.reticleRed.pivot.set((-268), (662));
+      this.reticleRed.rotation = 0.785398 
+
       break
     case 'pirate-x01':
       this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius*2.8, this.hit.radius*2.8);
@@ -108,20 +143,45 @@ Selector.prototype.create = function() {
       this.reticle.position.set(-ship.width/1.24, -ship.height/1.24);
       this.reticleRed.position.set(-ship.width/1.54, -ship.height/1.54);
       break
+    case 'squad-shield_2':
+      // create shield area
+      this.shieldBlueCircle = new engine.Circle(halfWidth, halfHeight, 900);
+      
+      // create detector
+      this.shieldBlue = new engine.Graphics(); 
+      this.shieldBlue.lineStyle(size, 0x0000ef, 1.5);
+      this.shieldBlue.drawCircle(this.shieldBlueCircle.x, this.shieldBlueCircle.y, this.shieldBlueCircle.radius);
+      this.shieldBlue.pivot.set(halfWidth, halfHeight);
+      this.shieldBlue.position.set(halfWidth + (size/2), halfHeight + (size/2));
+      this.shieldBlue.blendMode = engine.BlendMode.ADD;
+      // this.shieldBlue.alpha = this.alpha;
+      this.shieldBlue.alpha = 1;
+
+      this.ship.addChildAt(this.shieldBlue, 0);
+      break
+
     // case 'some chassis':
     //   //more shit
     default:
       break;
   }
     if(ship.isPlayer){
-      this.reticle.drawRect(this.hit.x, this.hit.y, this.hit.radius*2, this.hit.radius*2)
-      this.reticle.position.set(-ship.width/1.85, -ship.height/1.85)
+      this.reticle.drawRect(0, 0, this.hit.radius*2, this.hit.radius*2)
+      // this.reticle.position.set(-ship.width/1.85, -ship.height/1.85)
+      this.reticle.position.set(ship.height/2, ship.width/2)
+      // this.reticle.pivot.set(this.ship.width/2, this.ship.height/2);
+      this.reticle.pivot.set(this.ship.width/2, this.ship.height/2);
+      // this.reticle.rotation = 0.785398 
+      //^ 45 degrees in radians
+      // console.log(this.reticle)
     }
 
   // ship.isPlayer ? this.reticle.position.set(-ship.width/1.85, -ship.height/1.85) : this.reticle.position.set(-ship.width/1.6, -ship.height/1.6);
   // : this.reticle.position.set(-ship.width/1.5, -ship.height/1.5);
   this.reticle.alpha = 0;
   this.reticleRed.alpha = 0;
+  // this.reticleRed.pivot.set(-this.ship.width, -this.ship.height)
+  // this.reticleRed.rotation = 0.785398 
 
   // add selector
   this.ship.addChildAt(this.graphics, 0);
@@ -152,14 +212,19 @@ Selector.prototype.detectorHighlight = function() {
     }, this);
     this.detectorAnimating.start();
   }
+      this.reticle.pivot.set(this.reticle.pivot.x,this.reticle.pivot.y+1)
+      if(this.ship.data.chassis === 'scavengers-x03c'){
+        console.log(this.reticle.rotation, this.reticle.pivot.x, this.reticle.pivot.y)
+      }
+      //yyy
 };
 
 Selector.prototype.hostileHighlight = function() {
   if(!this.reticleAnimating || (this.reticleAnimating && !this.reticleAnimating.isRunning)) {
     this.reticleAnimating = this.game.tweens.create(this.reticle);
-    this.reticleAnimating.to({ alpha: 0.5 }, 500);
+    this.reticleAnimating.to({ alpha: 0.9 }, 500);
     this.reticleAnimating.loop(true)
-    this.reticleAnimating.yoyo(true, 1000);
+    this.reticleAnimating.yoyo(true, 1500);
     this.reticleAnimating.start();
     this.highlightAnimating && this.highlightAnimating.stop();
   }
@@ -168,21 +233,41 @@ Selector.prototype.hostileHighlight = function() {
 Selector.prototype.hostileEngaged = function() {
   if(!this.reticleRedAnimating || (this.reticleRedAnimating && !this.reticleRedAnimating.isRunning)) {
     this.reticleRedAnimating = this.game.tweens.create(this.reticleRed);
-    this.reticleRedAnimating.to({ alpha: 2.0 }, 500);
+    this.reticleRedAnimating.to({ alpha: 1.75 }, 500);
     this.reticleRedAnimating.loop(true)
-    this.reticleRedAnimating.yoyo(true, 1200);
+    this.reticleRedAnimating.yoyo(true, 500);
     this.reticleRedAnimating.start();
     this.highlightAnimating && this.highlightAnimating.stop();
   }
+
+  // this.reticleRedAnimating = this.game.tweens.create(this.reticle);
+  // this.reticleRedAnimating.to({ alpha: 0.5 }, 500);
+  // this.reticleRedAnimating.loop(true)
+  // this.reticleRedAnimating.yoyo(true, 1000);
+  // this.reticleRedAnimating.start();
+
+
+  // this.reticleRed.pivot.set(this.reticle.pivot.x,this.reticle.pivot.y+1)
+  // if(this.ship.data.chassis === 'scavengers-x02'){
+  //   console.log(this.reticle.rotation, this.reticle.pivot.x, this.reticle.pivot.y)
+  // }
 };
 
 Selector.prototype.hostileHighlightStop = function() {
     this.reticleAnimating && this.reticleAnimating.stop();
     this.reticle.alpha = 0;
 };
+
 Selector.prototype.hostileEngagedStop = function() {
     this.reticleRedAnimating && this.reticleRedAnimating.stop();
     this.reticleRed.alpha = 0;
+};
+
+Selector.prototype.contains = function(position) {
+  if(this.shieldBlueCircle) {
+    // if(position)
+    console.log('YO!',position)
+  };
 };
 
 Selector.prototype.selected = function(){

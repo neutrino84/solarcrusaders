@@ -34,10 +34,10 @@ HotkeyManager.prototype.constructor = HotkeyManager;
 HotkeyManager.prototype.init = function() { 
 };
 
-HotkeyManager.prototype.create = function(manager) {
+HotkeyManager.prototype.create = function(sectorState) {
   this.config = this.game.cache.getJSON('item-configuration', false);
-  this.manager = manager.shipManager;
-  this.ships = manager.ships;
+  this.manager = sectorState.shipManager;
+  this.squadManager = sectorState.squadManager;
 };
 
 HotkeyManager.prototype.listener = function() {
@@ -63,28 +63,28 @@ HotkeyManager.prototype.listener = function() {
 
       switch(hotkeys['enhancements'][key]) {
         case 'heal':
-          console.log('key is ', key)
+          // console.log('key is ', key)
           this.isHealing = true;
           break;
         case 'booster':
-          console.log('key is ', key)
+          // console.log('key is ', key)
           this.isBoosting = true;
           break;
         case 'booster-advanced':
-          console.log('key is ', key)
+          // console.log('key is ', key)
           this.isBoosting = true;
           break;
         case 'shield':
-        console.log('key is ', key)
+        // console.log('key is ', key)
           this.isShielded = true;
           break;
         case 'piercing':
-        console.log('key is ', key)
+        // console.log('key is ', key)
           this.isPiercing = true;
           break;
         case 'detect':
-        console.log('key is ', key)
-          this.manager.detectUnfriendlies();
+        // console.log('key is ', key)
+          this.squadManager.detectUnfriendlies();
           this.detecting = true;
           break;
       }
@@ -92,17 +92,17 @@ HotkeyManager.prototype.listener = function() {
 
   //squadron hotkeys ~ need to refactor to use a squadmanager instead of shipmanager
      if(key.toLowerCase() === 'c'){
-        this.manager.closestHostile();
+        this.squadManager.closestHostile();
      };
      if(key.toLowerCase() === 'e'){
-          this.manager.engageHostile();
+          this.squadManager.engageHostile();
      };
      if(key.toLowerCase() === 'r'){
-          this.manager.regroup();
+          this.squadManager.regroup();
      };
      if(key.toLowerCase() === 'd'){
-          this.manager.detectUnfriendlies();
-          // if(this.detecting){return};
+          this.squadManager.detectUnfriendlies();
+          if(this.detecting){return};
           this.game.emit('ship/enhancement/start', {
             uuid: player.uuid,
             enhancement: hotkeys['enhancements'][5],

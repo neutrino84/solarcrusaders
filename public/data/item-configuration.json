@@ -129,8 +129,8 @@
         "aoe": 1.0,
         "spawn": 4,
         "durability": 1000.0,
-        "sound": "capitalBeam",
-        "default_volume": 0.1
+        "sound": "repairBeam",
+        "default_volume": 0.4
       },
       "harvester": {
         "name": "Harvester",

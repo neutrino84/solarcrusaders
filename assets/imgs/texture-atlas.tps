@@ -520,6 +520,9 @@
             </struct>
             <key type="filename">ships/ubaidian/squadron/squad-attack.png</key>
             <key type="filename">ships/ubaidian/squadron/squad-repair.png</key>
+            <key type="filename">ships/ubaidian/squadron/squad-shield_1.png</key>
+            <key type="filename">ships/ubaidian/squadron/squad-shield_2.png</key>
+            <key type="filename">ships/ubaidian/squadron/squad-shield_3.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -632,6 +635,9 @@
             <filename>icons/enhancement-booster-advanced.png</filename>
             <filename>ships/scavengers/scavengers-x01.png</filename>
             <filename>ships/scavengers/scavengers-x02.png</filename>
+            <filename>ships/ubaidian/squadron/squad-shield_2.png</filename>
+            <filename>ships/ubaidian/squadron/squad-shield_1.png</filename>
+            <filename>ships/ubaidian/squadron/squad-shield_3.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

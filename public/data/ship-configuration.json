@@ -2507,6 +2507,62 @@
         ]
     }
   },
+  "squad-shield_2": {
+    "race": "ubaidian",
+    "class": "shield",
+    "stats": {
+      "capacity": 3000,
+      "health": 180,
+      "heal": 0.35,
+      "armor": 2.5,
+      "speed": 50.0,
+      "rate": 500,
+      "evasion": 0.3,
+      "energy": 400,
+      "recharge": 1,
+      "size": 90,
+      "durability": 128,
+      "critical": 0.01
+    },
+    "enhancements": ["shield"],
+    "engine": {
+      "glows": [
+        {
+          "tint": "0xFFFFAA",
+          "scale": {
+            "startX": 0.1,
+            "endX": 0.2,
+            "startY": 0.5,
+            "endY": 1.5
+          },
+          "position": {
+            "x": 135,
+            "y": 110
+          },
+          "rotation": 0
+        }
+        ]
+    },
+    "targeting": {
+      "hardpoints": [
+        {
+          "type": ["energy"],
+          "pivot": {
+            "x": 20,
+            "y": 16
+          },
+          "position": {
+            "x": 115,
+            "y": 108
+          },
+          "default": {
+            "type": "energy",
+            "subtype": "repair_beam"
+          }
+        }
+        ]
+    }
+  },
   "ricardo-x01": {
     "race": "ubaidian",
     "class": "destroyer",

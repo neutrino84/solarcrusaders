@@ -236,6 +236,25 @@ Squadron.prototype.disengage = function() {
   this.attacker && this.game.clock.events.remove(this.attacker);
 };
 
+Squadron.prototype.shield = function() {
+  var ships = this.manager.ships,
+      ship = this.ship,
+      master = ships[this.master],
+      position = ship.movement.position;
+      masterPosition = master.movement.position,
+      shield = new engine.Circle(),
+      a = /^(squad-shield)/,
+      t = ship.chassis;
+
+  if(a.test(t)){
+    console.log('SHIELD')
+    shield.setTo(position.x, position.y, 900)
+    if(shield.contains(masterPosition.x, masterPosition.y)){
+      console.log('INSIDE!')
+    }
+  };
+};
+
 Squadron.prototype.regroup = function(distance) {
   var ships = this.manager.ships,
       ship = this.ship,

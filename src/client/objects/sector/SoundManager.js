@@ -37,6 +37,8 @@ function SoundManager(game) {
 
   this.game.on('squad/sound/engage', this.generateSquadEngageSound, this);
 
+  this.game.on('global/sound/spawn', this.generateSpawnSound, this);
+
   this.game.on('game/backgroundmusic', this.generateBackgroundMusic, this);
 
   this.dangerAlert = false
@@ -87,6 +89,7 @@ SoundManager.prototype.preload = function(game) {
   // load.audio('smallBeam','sounds/beamWeapons/green_beam.mp3');
   load.audio('capitalBeam','sounds/beamWeapons/capitalBeam.mp3');
   load.audio('smallBeam','sounds/beamWeapons/smallBeamBounced.mp3');
+  load.audio('repairBeam','sounds/beamWeapons/repairBeams/ubadianRepair1.mp3');
   load.audio('harvesterBeam1','sounds/beamWeapons/scavBeams/hrvstr1.mp3');
   load.audio('harvesterBeam2','sounds/beamWeapons/scavBeams/hrvstr2.mp3');
   load.audio('harvesterBeam3','sounds/beamWeapons/scavBeams/hrvstr3.mp3');
@@ -103,6 +106,8 @@ SoundManager.prototype.preload = function(game) {
   load.audio('growl1','sounds/thrusters/scavThrusters/scavThrust1.mp3');
   load.audio('growl2','sounds/thrusters/scavThrusters/scavThrust2.mp3');
   load.audio('growl3','sounds/thrusters/scavThrusters/scavThrust3.mp3');
+
+  load.audio('queenSpawn','sounds/misc/queenSpawn.mp3');
 
   load.audio('shield','sounds/shields/heavyShieldsUp.mp3');
 
@@ -145,7 +150,7 @@ SoundManager.prototype.generateBackgroundMusic = function(){
   var num = Math.floor((Math.random() * 3)+1);
   // this.generateSound('background'+'num', 0.30, true);
 
-  this.generateSound('background4', 0.30, true);
+  // this.generateSound('background4', 0.30, true);
 };
 
 SoundManager.prototype.generateThrusterSound = function(){
@@ -223,10 +228,14 @@ SoundManager.prototype.generateExplosionSound = function(data){
     distance = engine.Point.distance(ship, player);    
     volume = global.Math.max(1 - (distance / 5000), 0);
     if(data.data.size > 127) {
-    sound = bigExplosion
-      if(sound === 'capitalShipExplosion2'){
-        volume = global.Math.max(1.8 - (distance / 5000), 0);
-      };
+      sound = bigExplosion
+      if(volume >.5){volume = .5}
+      if(volume>.1){console.log(sound, volume)}
+      // if(sound === 'capitalShipExplosion2'){
+      //   volume = global.Math.max(1.8 - (distance / 5000), 0);
+      // };
+      
+    
     } else {sound = smallExplosion};
     if(data.data.chassis === 'scavengers-x04d'){
       sound = 'queenDeath';
@@ -241,10 +250,9 @@ SoundManager.prototype.generateExplosionSound = function(data){
     };
   }; 
   if(volume > 0){
-    if(sound === 'harvesterDeath1' || sound === 'harvesterDeath2'){
-      // console.log(sound, volume)
+    // if(sound === 'harvesterDeath1' || sound === 'harvesterDeath2'){
     // console.log(sound, volume)
-    }
+    // }
     this.generateSound(sound, volume, false);
   };
 };
@@ -296,7 +304,7 @@ SoundManager.prototype.generateSquadEngageSound = function(){
   //   volume = global.Math.max(1 - (distance / 2000), 0);
   // };
   if(volume > 0){
-      this.generateSound(sound, volume, sound.loop); 
+      // this.generateSound(sound, volume, false); 
   };
 };
 
@@ -336,6 +344,8 @@ SoundManager.prototype.generateSquadEngageSound = function(){
 
 SoundManager.prototype.generateSpawnSound = function(data){
   console.log('Playing ', data, 'spawn sound')
+  this.generateSound(data, 0.2, false);
+  this.game.camera.shake(5000);
 };
 
 SoundManager.prototype.generateSound = function(key, volume, loop = false){
