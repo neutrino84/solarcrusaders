@@ -227,7 +227,10 @@ Ship.prototype.hit = function(attacker, target, slot) {
 
     //prevent friendly fire dmg to squadron
     if(this.master === attacker.uuid){return}  
-      
+    if(this.squadron){
+      // console.log('mastership hit', this)
+      this.shieldCheck(this.uuid)
+    };
     if(attacker.hardpoints[0].subtype === 'repair_beam'){
     health = data.health + damage;
     } else {
@@ -335,6 +338,25 @@ Ship.prototype.blast = function() {
       if(ship.game && !ship.disabled && ship != this) {
         ship.movement.destabalize(this);
       }
+    }
+  }
+};
+
+Ship.prototype.shieldCheck = function(uuid) {
+  var ship, ships, distance, end, start,
+      manager = this.manager, a, t;
+  if(manager != undefined) {
+    ships = manager.ships;
+  if(!this.squadron){return}
+
+    for(var s in ships) {
+      ship = ships[s];
+      var a = /^(squad-shield)/,
+          t = ship.chassis;
+
+      if(a.test(t) && ship.master === uuid && !ship.disabled){
+        ship.ai.shieldCheck();
+      };
     }
   }
 };

@@ -30,10 +30,14 @@ Asteroid.prototype.update = function() {
 };
 
 Asteroid.prototype.createOrbit = function() {
-  var x = 2048 / 4,
-      y = 2048 / 4,
-      width = this.game.rnd.integerInRange(256, 2048);
-      height = this.game.rnd.integerInRange(256, 2048),
+  var x = 2048/4,
+      y = 2048/4,
+      // x = 2048 / 4,
+      // y = 2048 / 4,
+      // width = this.game.rnd.integerInRange(256, 2048);
+      // height = this.game.rnd.integerInRange(256, 2048),
+      width = this.game.rnd.integerInRange(256, 4048);
+      height = this.game.rnd.integerInRange(256, 4048),
       ellipse = new engine.Ellipse(x, y, width, height);
   return ellipse;
 };

@@ -134,185 +134,6 @@ ShipManager.prototype.remove = function(data) {
   }
 };
 
-ShipManager.prototype.closestHostile = function(){
-  var ships = this.ships,
-      player = this.player,
-      hostiles = {},
-      ascending = function(a, b) { return a-b }, 
-      distance, targets;
-  if(player.disabled){return}
-  for(var s in ships){
-    var ship = ships[s];
-    ship.selector.hostileHighlightStop();
-    // if(ship.disabled){
-    //   console.log(ship.data.chassis, ' cached tint: ', ship.chassis.cachedTint, ' current tint: ', ship.chassis.tint)
-    //   ship.chassis.tint = 0x333333;
-    //   console.log('current tint: ', ship.chassis.tint)
-    //   continue
-    // }
-    if(ship.targetingComputer.targetShip === player && ship.data.chassis !== 'squad-repair' || Object.values(player.squadron).indexOf(ship.targetingComputer.targetShip) > -1 && ship.data.chassis !== 'squad-repair'){ 
-        distance = engine.Point.distance(ship, player);
-        if(distance < 17000 && ship.data.chassis !== 'squad-repair'){
-          hostiles[distance] = ship;
-        };
-    };
-  };
-
-  for(var s in player.squadron){
-    if(player.squadron[s].data.chassis === 'squad-shield_2'){
-      this.socket.emit('squad/shieldCheck', {player_id: player.uuid, shieldShip_id : player.squadron[s].uuid });
-      // console.log('shield ship: ', player.squadron[s].selector.shieldBlueCircle, player.movement._position)
-      // if(player.squadron[s].selector.shieldBlueCircle.contains(player.movement._position.x, player.movement._position.y )){
-      //   console.log('AW YA')
-      // }
-    }
-    
-  }
-
-  targets = Object.keys(hostiles);
-  if(targets && !targets.length){return}
-  player.acquired = hostiles[targets.sort(ascending)[0]];
-  player.acquired.selector.hostileHighlight();
-};
-
-ShipManager.prototype.detectUnfriendlies = function(){
-  var ships = this.ships,
-      player = this.player,
-      unfriendlies = this.player.unfriendlies,
-      ascending = function(a, b) { return a-b }, 
-      regex = /(mol-)|(vul-)/,
-      t, distance, targets, previous, counter;
-
-  if(player.disabled){return}
-
-  for(var s in ships){
-    var ship = ships[s];
-    ship.selector.hostileHighlightStop();
-  };
-
-  if(!player.targetlistCooldown){
-      this.player.unfriendlies = {};
-      player.selector.detectorHighlight();
-      counter = 0;
-
-      for(var s in ships){
-        var ship = ships[s],
-            t = ship.data.name,
-            distance = engine.Point.distance(ship, player); 
-        // ship.selector.detectorHighlight();
-        if(ship.disabled){continue};
-
-        if(ship.data.friendlies && ship.data.friendlies.indexOf('user') < 0 && distance < 3500){
-          if(regex.test(t)){
-            this.player.unfriendlies[5000+counter] = ship;
-            counter++
-          } else {
-            this.player.unfriendlies[distance] = ship;
-          };
-
-        let colorMatrix = new pixi.filters.ColorMatrixFilter();
-        ship.chassis.filters = [colorMatrix];
-        colorMatrix.hue(140, false);
-        // colorMatrix.contrast(0.1);
-        colorMatrix.grayscale(0.9);
-        };
-
-      };
-
-      this.player.targetlistCooldown = true;
-      this.player.events.add(10000, function(){
-        player.targetlistCooldown = false;
-      }, this);    
-      player.events.add(10000, function(){
-        for(s in this.player.unfriendlies){
-          this.player.unfriendlies[s].chassis.filters = [];
-        }
-      }, this);
-  }
-  
-  targets = Object.keys(this.player.unfriendlies);
-  if(targets && !targets.length){return}
-
-
-  target = this.player.unfriendlies[targets.sort(ascending)[player.targetCount]]
-  if(target && target !== this.player.previous && !target.disabled) {
-    player.acquired = target
-  } else {
-    player.targetCount = 0
-    player.acquired = this.player.unfriendlies[targets.sort(ascending)[player.targetCount]]
-  };
-
-  player.acquired && player.acquired.selector.hostileHighlight();
-  player.targetCount++
-  player.previous = player.acquired; 
-
-  if(player.targetCount > targets.sort(ascending).length){
-    player.targetCount = 0;
-  }
-};
-
-
-ShipManager.prototype.engageHostile = function(){
-  var ships = this.ships,
-      player = this.player,
-      available = false, squad,
-      ship;
-  for(var s in ships){
-    ship = ships[s];
-    if(ship.data.masterShip && ship.data.masterShip === player.uuid && !ship.disabled){
-      available = true;
-    };
-  };
-  // if(ship.data.masterShip === player.uuid){
-  //     distance = engine.Point.distance(ship, player);
-  //     squad[ship.uuid] = distance;
-  // }
-
-  if(player.acquired){
-    for(var s in ships){
-    var ship = ships[s];
-    ship.selector.hostileEngagedStop();
-  }
-  if(!player.acquired.disabled && available)
-   player.acquired.selector.hostileEngaged();
-    this.game.emit('squad/sound/engage');
-    this.socket.emit('squad/engageHostile', {player_id: player.uuid, target_id : player.acquired.uuid });
-  };
-};
-
-ShipManager.prototype.regroup = function() {
-  var ships = this.ships,
-      player = this.player,
-      squad = {},
-      ship, distance;
-
-  // if(player.disabled){return}
-
-  for (var s in ships){
-    var ship = ships[s];
-
-    ship.selector.hostileHighlightStop();
-    ship.selector.hostileEngagedStop();
-
-    if(ship.data.masterShip === player.uuid){
-      distance = engine.Point.distance(ship, player);
-      squad[ship.uuid] = distance;
-    }
-  };
-
-  this.socket.emit('squad/regroup', {player_id: player.uuid, squad: squad});
-};
-
-ShipManager.prototype._hostile = function(uuid){
-  var hostile = this.ships[uuid];
-  hostile.selector.hostileHighlight();
-  this.player.hostileTarget = hostile;
-  this.socket.emit('squad/acquire', {
-    target_uuid: this.player.hostileTarget.uuid,
-    player_uuid: this.player.uuid
-  });
-};
-
 ShipManager.prototype.removeAll = function() {
   var ship,
       ships = this.ships;
@@ -464,8 +285,17 @@ ShipManager.prototype._secondary = function(data) {
       start = this.shipsGroup.worldTransform.apply(ship.position),
       position = this.game.world.worldTransform.applyInverse(end),
       destination = { x: end.x - start.x, y: end.y - start.y };
+  // console.log(data)
+    // console.log('front end destination is ', destination)
   if(ship) {
-    if(data.type === 'start') {
+    if(data.shield){
+      indicator.show(position);
+      socket.emit('squad/shield', {
+        uuid: ship.uuid,
+        destination: {x: position.x, y: position.y }
+      })
+    }
+    else if(data.type === 'start') {
       indicator.show(position);
       socket.emit('ship/plot', {
         uuid: ship.uuid,

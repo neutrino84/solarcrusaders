@@ -8,8 +8,12 @@ function Selection(game) {
   this.input = new engine.InputHandler(this.world.static);
   this.input.start();
 
+  this.shieldCheck = false;
+
   this.world.static.on('inputUp', this._onInput, this);
   this.world.static.on('inputDown', this._onInput, this);
+
+  this.game.on('shieldDestination', this._shield, this)
 };
 
 Selection.prototype.constructor = Selection;
@@ -26,8 +30,17 @@ Selection.prototype._onInput = function(world, pointer) {
     this.game.emit('ship/primary', data);
   } else if(pointer.button === engine.Mouse.RIGHT_BUTTON) {
     data.type = pointer.rightButton.isDown ? 'start' : 'stop';
+    if(this.shieldCheck){
+      data.shield = true;
+    }
     this.game.emit('ship/secondary', data);
+
+    this.shieldCheck = false;
   }
+};
+
+Selection.prototype._shield = function(data) {
+  this.shieldCheck = data;
 };
 
 Selection.prototype.destroy = function() {

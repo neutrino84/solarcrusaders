@@ -154,8 +154,10 @@ SoundManager.prototype.generateBackgroundMusic = function(){
 };
 
 SoundManager.prototype.generateThrusterSound = function(){
-  var num = Math.floor((Math.random() * 3)+1);
-  this.generateSound('mediumThrusters'+num, 1, false);
+  var num = Math.floor((Math.random() * 5)+1);
+  if(num<4){
+    this.generateSound('mediumThrusters'+num, 1, false); 
+  }
 };
 
 SoundManager.prototype.generateQueenGrowl = function(ship){

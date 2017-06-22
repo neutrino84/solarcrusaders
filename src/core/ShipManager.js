@@ -30,7 +30,7 @@ function ShipManager(game) {
 
   this.game.on('squad/engageHostile', this.squad_engage, this);
   this.game.on('squad/regroup', this.squad_regroup, this);
-  this.game.on('squad/shieldCheck', this.squad_shield, this);
+  this.game.on('squad/shield', this.squad_shield, this);
   // activate ai
   this.game.clock.events.loop(1000, this.refresh, this);
 };
@@ -39,9 +39,9 @@ ShipManager.prototype.constructor = ShipManager;
 
 ShipManager.prototype.init = function() {
   // generate npcs
-  this.generateRandomShips();
+  // this.generateRandomShips();
   this.generatePirateShips();
-  this.generateEnforcerShips();
+  // this.generateEnforcerShips();
   this.generateScavengerShips();
 };
 
@@ -98,6 +98,7 @@ ShipManager.prototype.plot = function(socket, args) {
       data = args[1],
       ship = this.ships[data.uuid];
   if(ship && ship.user && ship.user.uuid === user.uuid) {
+    // console.log('backend destination is ', data.destination)
     ship.movement.plot(data.destination);
   }
 };
@@ -145,7 +146,7 @@ ShipManager.prototype.squad_regroup = function(socket, args){
 
 ShipManager.prototype.squad_shield = function(socket, args){
   var ships = this.ships,
-      player = ships[args[1].player_id],
+      player = ships[args[1].uuid],
       distance;
 
     for (var s in ships){
@@ -155,7 +156,8 @@ ShipManager.prototype.squad_shield = function(socket, args){
 
       if(a.test(t) && ship.master === player.uuid && !ship.disabled){
         // distance = args[1].squad[ship.uuid];
-        ship.ai.shield();
+        // console.log('core', args[1].destination)
+        ship.ai.shield(args[1].destination);
       };
     };
 };
@@ -330,58 +332,60 @@ ShipManager.prototype.generatePirateShips = function() {
           { name: 'xinli', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
           // { name: 'mocolo', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
           // { name: 'mavero', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
-          { name: 'saag', chassis: 'pirate-x02', credits: 1500, reputation: -100 } 
+          // { name: 'saag', chassis: 'pirate-x02', credits: 1500, reputation: -100 } 
         ]
-      }, {
-        location: { x: 8192, y: 2048 },
-        ships: [
-          // { name: 'satel', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
-          // { name: 'oeem', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
-          { name: 'thath', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
-          { name: 'zeus', chassis: 'pirate-x03b', credits: 1500, reputation: -100 }
-        ]
-      }, {
-        location: { x: 2048, y: -6144 },
-        ships: [
-          // { name: 'manduk', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
-          // { name: 'deuh', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
-          { name: 'talai', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
-          { name: 'kaan', chassis: 'pirate-x03b', credits: 1500, reputation: -100 }
-        ]
-      }, {
-        location: { x: 2048, y: 8192 },
-        ships: [
-          // { name: 'theni', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
-          // { name: 'zulu', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
-          // { name: 'saroc', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
-          { name: 'malvo', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
-          { name: 'mocolo', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
-          { name: 'mavero', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
-          { name: 'saag', chassis: 'pirate-x03b', credits: 1500, reputation: -100 }
-        ]
-      }, {
-        location: { x: 7048, y: 8192 },
-        ships: [
-          // { name: 'figo', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
-          // { name: 'zulio', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
-          // { name: 'carlos', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
-          { name: 'wunwun', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
-          { name: 'tubes', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
-          { name: 'mikey', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
-          { name: 'grassy', chassis: 'pirate-x02', credits: 1500, reputation: -100 }
-        ]
-      }, {
-        location: { x: 5048, y: -9192 },
-        ships: [
-          // { name: 'marco', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
-          // { name: 'poozer', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
-          // { name: 'scanwan', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
-          { name: 'lobos', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
-          { name: 'jolder', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
-          { name: 'creemie', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
-          { name: 'bob', chassis: 'pirate-x02', credits: 1500, reputation: -100 }
-        ]
-      }],
+      }, 
+      // {
+      //   location: { x: 8192, y: 2048 },
+      //   ships: [
+      //     // { name: 'satel', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
+      //     // { name: 'oeem', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
+      //     { name: 'thath', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
+      //     { name: 'zeus', chassis: 'pirate-x03b', credits: 1500, reputation: -100 }
+      //   ]
+      // }, {
+      //   location: { x: 2048, y: -6144 },
+      //   ships: [
+      //     // { name: 'manduk', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
+      //     // { name: 'deuh', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
+      //     { name: 'talai', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
+      //     { name: 'kaan', chassis: 'pirate-x03b', credits: 1500, reputation: -100 }
+      //   ]
+      // }, {
+      //   location: { x: 2048, y: 8192 },
+      //   ships: [
+      //     // { name: 'theni', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
+      //     // { name: 'zulu', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
+      //     // { name: 'saroc', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
+      //     { name: 'malvo', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
+      //     { name: 'mocolo', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
+      //     { name: 'mavero', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
+      //     { name: 'saag', chassis: 'pirate-x03b', credits: 1500, reputation: -100 }
+      //   ]
+      // }, {
+      //   location: { x: 7048, y: 8192 },
+      //   ships: [
+      //     // { name: 'figo', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
+      //     // { name: 'zulio', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
+      //     // { name: 'carlos', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
+      //     { name: 'wunwun', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
+      //     { name: 'tubes', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
+      //     { name: 'mikey', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
+      //     { name: 'grassy', chassis: 'pirate-x02', credits: 1500, reputation: -100 }
+      //   ]
+      // }, {
+      //   location: { x: 5048, y: -9192 },
+      //   ships: [
+      //     // { name: 'marco', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
+      //     // { name: 'poozer', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
+      //     // { name: 'scanwan', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
+      //     { name: 'lobos', chassis: 'pirate-x02', credits: 1500, reputation: -100 },
+      //     { name: 'jolder', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
+      //     { name: 'creemie', chassis: 'pirate-x01', credits: 1500, reputation: -100 },
+      //     { name: 'bob', chassis: 'pirate-x02', credits: 1500, reputation: -100 }
+      //   ]
+      // }
+      ],
       len = iterator.length;
 
   // create pirates
@@ -411,32 +415,32 @@ ShipManager.prototype.generateScavengerShips = function() {
         location: { x: -12192, y: 12192 },
         ships: [
           { name: 'vun-saaghath', chassis: 'scavengers-x02', credits: 1500, reputation: -100 },
-          { name: 'vun-mocolo', chassis: 'scavengers-x02', credits: 1500, reputation: -100 },
-          { name: 'vun-shidu', chassis: 'scavengers-x01', credits: 1500, reputation: -100 },
-          { name: 'vun-zozu', chassis: 'scavengers-x02', credits: 1500, reputation: -100 },
-          { name: 'vun-thovu', chassis: 'scavengers-x01', credits: 1500, reputation: -100 },
-          { name: 'vun-thaide', chassis: 'scavengers-x01', credits: 1500, reputation: -100 },
-          { name: 'vun-sejini', chassis: 'scavengers-x01', credits: 1500, reputation: -100 },
-          { name: 'vun-bogu', chassis: 'scavengers-x01', credits: 1500, reputation: -100 },
-          { name: 'vun-macros', chassis: 'scavengers-x01', credits: 1500, reputation: -100 },
-          { name: 'vun-zizulo', chassis: 'scavengers-x01', credits: 1500, reputation: -100 },
-          { name: 'vun-wivero', chassis: 'scavengers-x01', credits: 1500, reputation: -100 }
+          // { name: 'vun-mocolo', chassis: 'scavengers-x02', credits: 1500, reputation: -100 },
+          // { name: 'vun-shidu', chassis: 'scavengers-x01', credits: 1500, reputation: -100 },
+          // { name: 'vun-zozu', chassis: 'scavengers-x02', credits: 1500, reputation: -100 },
+          // { name: 'vun-thovu', chassis: 'scavengers-x01', credits: 1500, reputation: -100 },
+          // { name: 'vun-thaide', chassis: 'scavengers-x01', credits: 1500, reputation: -100 },
+          // { name: 'vun-sejini', chassis: 'scavengers-x01', credits: 1500, reputation: -100 },
+          // { name: 'vun-bogu', chassis: 'scavengers-x01', credits: 1500, reputation: -100 },
+          // { name: 'vun-macros', chassis: 'scavengers-x01', credits: 1500, reputation: -100 },
+          // { name: 'vun-zizulo', chassis: 'scavengers-x01', credits: 1500, reputation: -100 },
+          // { name: 'vun-wivero', chassis: 'scavengers-x01', credits: 1500, reputation: -100 }
         ]
       },
       {
         location: { x: 12192, y: -12192 },
         ships: [
           { name: 'mol-saaghath', chassis: 'scavengers-x01', credits: 1500, reputation: -100 },
-          { name: 'mol-mocolo', chassis: 'scavengers-x02', credits: 1500, reputation: -100 },
-          { name: 'mol-shidu', chassis: 'scavengers-x02', credits: 1500, reputation: -100 },
-          { name: 'mol-zozu', chassis: 'scavengers-x02', credits: 1500, reputation: -100 },
-          { name: 'mol-thovu', chassis: 'scavengers-x01', credits: 1500, reputation: -100 },
-          { name: 'mol-thaide', chassis: 'scavengers-x01', credits: 1500, reputation: -100 },
-          { name: 'mol-sejini', chassis: 'scavengers-x01', credits: 1500, reputation: -100 },
-          { name: 'mol-bogu', chassis: 'scavengers-x01', credits: 1500, reputation: -100 },
-          { name: 'mol-macros', chassis: 'scavengers-x01', credits: 1500, reputation: -100 },
-          { name: 'mol-zizulo', chassis: 'scavengers-x01', credits: 1500, reputation: -100 },
-          { name: 'mol-wivero', chassis: 'scavengers-x01', credits: 1500, reputation: -100 }
+          // { name: 'mol-mocolo', chassis: 'scavengers-x02', credits: 1500, reputation: -100 },
+          // { name: 'mol-shidu', chassis: 'scavengers-x02', credits: 1500, reputation: -100 },
+          // { name: 'mol-zozu', chassis: 'scavengers-x02', credits: 1500, reputation: -100 },
+          // { name: 'mol-thovu', chassis: 'scavengers-x01', credits: 1500, reputation: -100 },
+          // { name: 'mol-thaide', chassis: 'scavengers-x01', credits: 1500, reputation: -100 },
+          // { name: 'mol-sejini', chassis: 'scavengers-x01', credits: 1500, reputation: -100 },
+          // { name: 'mol-bogu', chassis: 'scavengers-x01', credits: 1500, reputation: -100 },
+          // { name: 'mol-macros', chassis: 'scavengers-x01', credits: 1500, reputation: -100 },
+          // { name: 'mol-zizulo', chassis: 'scavengers-x01', credits: 1500, reputation: -100 },
+          // { name: 'mol-wivero', chassis: 'scavengers-x01', credits: 1500, reputation: -100 }
         ]
       }
       ],
@@ -538,13 +542,6 @@ ShipManager.prototype.spawnQueen = function(position, uuid){
     spawnPosition.y = -11750;
   } else if(uuid){
     masterShip = ships[uuid];
-    // if(masterShip.data.toporbot === 'bottom'){
-    //   spawnPosition.x = -9360;
-    //   spawnPosition.y = 11750;
-    // } else if(masterShip.data.toporbot === 'top'){
-    //   spawnPosition.x = 9360;
-    //   spawnPosition.y = -11750;
-    // }
   };
 
   if(!uuid){

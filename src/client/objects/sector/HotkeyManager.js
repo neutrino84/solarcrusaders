@@ -100,6 +100,13 @@ HotkeyManager.prototype.listener = function() {
      if(key.toLowerCase() === 'r'){
           this.squadManager.regroup();
      };
+     if(key.toLowerCase() === 's'){
+          // this.squadManager.regroup();
+          this.game.emit('shieldDestination', true);
+          this.player.events.add(3000, function(){
+            this.game.emit('shieldDestination', false);
+          }, this); 
+     };
      if(key.toLowerCase() === 'd'){
           this.squadManager.detectUnfriendlies();
           if(this.detecting){return};

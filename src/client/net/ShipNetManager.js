@@ -13,6 +13,7 @@ ShipNetManager.prototype.constructor = ShipNetManager;
 
 ShipNetManager.prototype.init = function() {
   this.socket.on('target/hostile', this._hostile.bind(this));
+  this.socket.on('squad/shieldUp', this._shieldUp.bind(this));
   this.socket.on('ship/sync', this._sync.bind(this));
   this.socket.on('ship/data', this._data.bind(this));
   this.socket.on('ship/removed', this._removed.bind(this));
@@ -69,6 +70,10 @@ ShipNetManager.prototype._sync = function(data) {
 
 ShipNetManager.prototype._hostile = function(data) {
   this.game.emit('target/hostile', data);
+};
+
+ShipNetManager.prototype._shieldUp = function(data) {
+  this.game.emit('squad/shieldUp', data);
 };
 
 ShipNetManager.prototype._spawn = function(data) {

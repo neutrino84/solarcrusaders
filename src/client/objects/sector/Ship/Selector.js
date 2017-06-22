@@ -155,7 +155,7 @@ Selector.prototype.create = function() {
       this.shieldBlue.position.set(halfWidth + (size/2), halfHeight + (size/2));
       this.shieldBlue.blendMode = engine.BlendMode.ADD;
       // this.shieldBlue.alpha = this.alpha;
-      this.shieldBlue.alpha = 1;
+      this.shieldBlue.alpha = 0;
 
       this.ship.addChildAt(this.shieldBlue, 0);
       break
@@ -223,6 +223,7 @@ Selector.prototype.hostileHighlight = function() {
   if(!this.reticleAnimating || (this.reticleAnimating && !this.reticleAnimating.isRunning)) {
     this.reticleAnimating = this.game.tweens.create(this.reticle);
     this.reticleAnimating.to({ alpha: 0.9 }, 500);
+    // this.reticleAnimating.to({ rotation: 0.9 }, 500);
     this.reticleAnimating.loop(true)
     this.reticleAnimating.yoyo(true, 1500);
     this.reticleAnimating.start();
@@ -231,9 +232,14 @@ Selector.prototype.hostileHighlight = function() {
 };
 
 Selector.prototype.hostileEngaged = function() {
+  console.log('HERE')
+  var dbl = 0.785398*2;
   if(!this.reticleRedAnimating || (this.reticleRedAnimating && !this.reticleRedAnimating.isRunning)) {
     this.reticleRedAnimating = this.game.tweens.create(this.reticleRed);
     this.reticleRedAnimating.to({ alpha: 1.75 }, 500);
+    // console.log(this.reticleRedAnimating)
+    // this.reticleRedAnimating.target.pivot.set(-this.ship.width/2, -this.ship.height/2);
+    // this.reticleRedAnimating.to({ rotation: dbl }, 500);
     this.reticleRedAnimating.loop(true)
     this.reticleRedAnimating.yoyo(true, 500);
     this.reticleRedAnimating.start();
@@ -254,24 +260,17 @@ Selector.prototype.hostileEngaged = function() {
 };
 
 Selector.prototype.hostileHighlightStop = function() {
+    // console.log('in hostile highlight stop')
     this.reticleAnimating && this.reticleAnimating.stop();
     this.reticle.alpha = 0;
+    if(this.shieldBlue){
+      this.shieldBlue.alpha = 0; 
+    }
 };
 
 Selector.prototype.hostileEngagedStop = function() {
     this.reticleRedAnimating && this.reticleRedAnimating.stop();
     this.reticleRed.alpha = 0;
-};
-
-Selector.prototype.contains = function(position) {
-  if(this.shieldBlueCircle) {
-    // if(position)
-    console.log('YO!',position)
-  };
-};
-
-Selector.prototype.selected = function(){
-  //code for being targetted by player ship
 };
 
 Selector.prototype.disable = function() {

@@ -2515,7 +2515,7 @@
       "health": 180,
       "heal": 0.35,
       "armor": 2.5,
-      "speed": 50.0,
+      "speed": 70.0,
       "rate": 500,
       "evasion": 0.3,
       "energy": 400,
@@ -2524,7 +2524,7 @@
       "durability": 128,
       "critical": 0.01
     },
-    "enhancements": ["shield"],
+    "enhancements": ["shield","booster"],
     "engine": {
       "glows": [
         {

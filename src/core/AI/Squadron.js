@@ -9,12 +9,14 @@ function Squadron(ship, home) {
   this.type = 'squadron';
   this.master = ship.master;
   this.attacking = false;
+  this.shielding = false;
   this.repairing = null;
 
   this.settings = client.AIConfiguration[this.type];
 
   this.friendlies = this.settings.friendly;
 
+  this.counter = 0;
 };
 
 Squadron.prototype = Object.create(Basic.prototype);
@@ -30,7 +32,7 @@ Squadron.prototype.scanner = function() {
       ship = this.ship,
       master = ships[this.master],
       position = master.movement.position;
-  if(this.attacking){return}
+  if(this.attacking || this.shielding){return}
   ship.movement.plot({ x: position.x - ship.movement.position.x, y: position.y - ship.movement.position.y })
 
 };
@@ -55,7 +57,6 @@ Squadron.prototype.plot = function(){
     offset.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
     ship.movement.plot({ x: this.offset.x-p1.x, y: this.offset.y-p1.y }, this.throttle);
   } else if(!this.target) {
-    // console.log('BOOBOO')
     this.scanner();
   };
 };
@@ -134,6 +135,10 @@ Squadron.prototype.update = function() {
   if(rnd.frac() < 0.8) {
     this.scanner();
   };
+
+  if(this.shielding){
+    this.shield();
+  }
 
   if(this.ship.chassis === 'squad-repair'){
     if(this.repairing){
@@ -232,11 +237,12 @@ Squadron.prototype.repair = function() {
 Squadron.prototype.disengage = function() {
   this.target = null;
   this.attacking = false;
+  this.shielding = false;
   this.repairing = null;
   this.attacker && this.game.clock.events.remove(this.attacker);
 };
 
-Squadron.prototype.shield = function() {
+Squadron.prototype.shield = function(data) {
   var ships = this.manager.ships,
       ship = this.ship,
       master = ships[this.master],
@@ -244,15 +250,66 @@ Squadron.prototype.shield = function() {
       masterPosition = master.movement.position,
       shield = new engine.Circle(),
       a = /^(squad-shield)/,
-      t = ship.chassis;
+      t = ship.chassis, 
+      destination = new engine.Point();
 
   if(a.test(t)){
-    console.log('SHIELD')
-    shield.setTo(position.x, position.y, 900)
-    if(shield.contains(masterPosition.x, masterPosition.y)){
-      console.log('INSIDE!')
+    if(!this.shielding && data){this.shielding = {x: data.x, y: data.y}}
+    // ship.activate('booster');
+      // this.shielding = {x: data.x, y: data.y}
+
+      // x: data.x - ship.movement.position.x , y: data.y - ship.movement.position.y
+    // destination = {x: data.x, y: data.y};
+    // console.log('SHIELD! shield is ', this.shielding)
+    destination.setTo(this.shielding.x, this.shielding.y);
+    // console.log(destination)
+    distance = (destination).distance(position);
+    // console.log(distance)
+    
+    if(distance < 95){
+      this.manager.game.sockets.ioserver.emit('squad/shieldUp', ship.uuid)
     }
+    // this.ship.movement.throttle = distance/2;
+    this.ship.movement.throttle = distance;
+    // console.log(this.throttle)
+    // ship.movement.plot({x: this.shielding.x, y: this.shielding.y}, this.throttle)
+    ship.movement.plot({x: this.shielding.x - this.ship.movement.position.x, y: this.shielding.y - this.ship.movement.position.y}, this.ship.movement.throttle)
   };
+};
+
+Squadron.prototype.shieldCheck = function(data) {
+  var ships = this.manager.ships,
+      ship = this.ship,
+      master = ships[this.master],
+      position = ship.movement.position;
+      masterPosition = master.movement.position,
+      shield = new engine.Circle(),
+      a = /^(squad-shield)/,
+      t = ship.chassis, 
+      destination = new engine.Point();
+
+  if(!this.shielding){return}
+  
+  // ship.activate('booster');
+    // this.shielding = {x: data.x, y: data.y}
+
+    // x: data.x - ship.movement.position.x , y: data.y - ship.movement.position.y
+  // destination = {x: data.x, y: data.y};
+  // console.log('SHIELD! shield is ', this.shielding)
+  destination.setTo(this.shielding.x, this.shielding.y);
+  // console.log(destination)
+  distance = (destination).distance(position);
+  // console.log(distance)
+  
+  if(distance < 95){
+    this.manager.game.sockets.ioserver.emit('squad/shieldUp', ship.uuid)
+  }
+  // this.ship.movement.throttle = distance/2;
+  this.ship.movement.throttle = distance;
+  // console.log(this.throttle)
+  // ship.movement.plot({x: this.shielding.x, y: this.shielding.y}, this.throttle)
+  ship.movement.plot({x: this.shielding.x - this.ship.movement.position.x, y: this.shielding.y - this.ship.movement.position.y}, this.ship.movement.throttle)
+  
 };
 
 Squadron.prototype.regroup = function(distance) {

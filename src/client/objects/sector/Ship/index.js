@@ -156,7 +156,8 @@ Ship.prototype.enable = function(data) {
   this.engineCore.show(true);
   this.position.set(data.pos.x, data.pos.y);
   if(this.isPlayer){
-    this.manager.regroup();
+    this.game.emit('squad/regroup', this);
+    // this.user.socket.emit('squad/regroup', this);
   }
 };
 

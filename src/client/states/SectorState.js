@@ -168,7 +168,7 @@ SectorState.prototype.createSnow = function() {
 };
 
 SectorState.prototype.createAsteroids = function() {
-  var asteroid, amount = 60;
+  var asteroid, amount = 80;
   for(var i=0; i<amount; i++) {
     asteroid = new Asteroid(this.game);
     asteroid.position.set(2048 / 4, 2048 / 4);
