@@ -209,7 +209,7 @@ Ship.prototype.hit = function(attacker, target, slot) {
       compensated = movement.compensated(),
       distance = compensated.distance(target),
       ratio = distance / (this.size * hardpoint.data.aoe),
-      damage, health, critical, durability;
+      damage, health, critical, durability, shielded;
   if(ratio < 1.0) {
     // // test data
     // if(!attacker.ai && this.ai) {
@@ -219,18 +219,28 @@ Ship.prototype.hit = function(attacker, target, slot) {
     //     targ: target
     //   });
     // }
+
+    //prevent friendly fire dmg to squadron
+    if(this.master === attacker.uuid){return}  
+
     // calc damage
     critical = this.game.rnd.rnd() <= attacker.critical;
     damage = global.Math.max(0, hardpoint.data.damage * (1-ratio) * (1-this.armor));
     damage += critical ? damage : 0;
     damage *= piercing ? piercing.damage : 1;
 
-    //prevent friendly fire dmg to squadron
-    if(this.master === attacker.uuid){return}  
-    if(this.squadron){
-      // console.log('mastership hit', this)
-      this.shieldCheck(this.uuid)
+
+
+
+    if(this.squadron && this.shieldCheck(this.uuid)){
+        // console.log('aw yeah', this.armor)
+        // // this.armor = this.config.stats.armor + 1
+        // this.armor = 2.0
+        // console.log('aw yeah CHECK', this.armor)
+        damage = damage/2;
+        shielded = true;
     };
+    // console.log(damage)
     if(attacker.hardpoints[0].subtype === 'repair_beam'){
     health = data.health + damage;
     } else {
@@ -247,7 +257,8 @@ Ship.prototype.hit = function(attacker, target, slot) {
         attacker: attacker.uuid,
         health: data.health,
         damage: damage,
-        critical: critical
+        critical: critical,
+        shielded: shielded
       });
 
       // update attacker
@@ -347,15 +358,15 @@ Ship.prototype.shieldCheck = function(uuid) {
       manager = this.manager, a, t;
   if(manager != undefined) {
     ships = manager.ships;
-  if(!this.squadron){return}
+    if(!this.squadron){return}
 
-    for(var s in ships) {
-      ship = ships[s];
+    for(var s in this.squadron) {
+      ship = this.squadron[s];
       var a = /^(squad-shield)/,
           t = ship.chassis;
 
       if(a.test(t) && ship.master === uuid && !ship.disabled){
-        ship.ai.shieldCheck();
+        return (ship.ai.shieldCheck())
       };
     }
   }

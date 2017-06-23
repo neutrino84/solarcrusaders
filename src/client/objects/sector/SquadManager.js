@@ -185,16 +185,19 @@ SquadManager.prototype.engageHostile = function(){
     ship.selector.hostileEngagedStop();
   }
   if(!player.acquired.disabled && available)
-    console.log('SquadManager, engageHostile')
    player.acquired.selector.hostileEngaged();
     this.game.emit('squad/sound/engage');
     this.socket.emit('squad/engageHostile', {player_id: player.uuid, target_id : player.acquired.uuid });
   };
 };
 
-SquadManager.prototype.shieldUp = function(uuid) {
-  var ship = this.manager.ships[uuid]
-    ship.selector.shieldBlue.alpha = 1;
+SquadManager.prototype.shieldUp = function(data) {
+  var ship = this.manager.ships[data.uuid];
+  if(data.active){
+    ship.selector.shieldBlue.alpha = 1; 
+  } else {
+    ship.selector.shieldBlue.alpha = 0; 
+  }
 };
 
 SquadManager.prototype.regroup = function() {

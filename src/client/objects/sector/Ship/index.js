@@ -73,7 +73,11 @@ Ship.prototype.refresh = function(data) {
   var ship, attacker, defender,
       ships = this.manager.ships,
       targetingComputer = this.targetingComputer;
-
+  if(data.shielded){
+    this.shieldGenerator.start();
+  } else {
+    this.shieldGenerator.stop();
+  }
   if(data.hardpoint) {
     attacker = ships[data.uuid];
     defender = ships[data.hardpoint.ship];
