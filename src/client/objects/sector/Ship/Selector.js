@@ -165,16 +165,16 @@ Selector.prototype.create = function() {
     default:
       break;
   }
-    if(ship.isPlayer){
-      this.reticle.drawRect(0, 0, this.hit.radius*2, this.hit.radius*2)
-      // this.reticle.position.set(-ship.width/1.85, -ship.height/1.85)
-      this.reticle.position.set(ship.height/2, ship.width/2)
-      // this.reticle.pivot.set(this.ship.width/2, this.ship.height/2);
-      this.reticle.pivot.set(this.ship.width/2, this.ship.height/2);
-      // this.reticle.rotation = 0.785398 
-      //^ 45 degrees in radians
-      // console.log(this.reticle)
-    }
+  if(ship.isPlayer){
+    this.reticle.drawRect(0, 0, this.hit.radius*2, this.hit.radius*2)
+    // this.reticle.position.set(-ship.width/1.85, -ship.height/1.85)
+    this.reticle.position.set(ship.height/2, ship.width/2)
+    // this.reticle.pivot.set(this.ship.width/2, this.ship.height/2);
+    this.reticle.pivot.set(this.ship.width/2, this.ship.height/2);
+    // this.reticle.rotation = 0.785398 
+    //^ 45 degrees in radians
+    // console.log(this.reticle)
+  }
 
   // ship.isPlayer ? this.reticle.position.set(-ship.width/1.85, -ship.height/1.85) : this.reticle.position.set(-ship.width/1.6, -ship.height/1.6);
   // : this.reticle.position.set(-ship.width/1.5, -ship.height/1.5);
@@ -216,7 +216,6 @@ Selector.prototype.detectorHighlight = function() {
       if(this.ship.data.chassis === 'scavengers-x03c'){
         console.log(this.reticle.rotation, this.reticle.pivot.x, this.reticle.pivot.y)
       }
-      //yyy
 };
 
 Selector.prototype.hostileHighlight = function() {
@@ -232,7 +231,6 @@ Selector.prototype.hostileHighlight = function() {
 };
 
 Selector.prototype.hostileEngaged = function() {
-  console.log('HERE')
   var dbl = 0.785398*2;
   if(!this.reticleRedAnimating || (this.reticleRedAnimating && !this.reticleRedAnimating.isRunning)) {
     this.reticleRedAnimating = this.game.tweens.create(this.reticleRed);

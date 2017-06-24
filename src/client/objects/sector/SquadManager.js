@@ -57,7 +57,7 @@ SquadManager.prototype.closestHostile = function(){
     //   console.log('current tint: ', ship.chassis.tint)
     //   continue
     // }
-    if(!ship.disabled && ship.targetingComputer.targetShip === player && ship.data.chassis !== 'squad-repair' || Object.values(player.squadron).indexOf(ship.targetingComputer.targetShip) > -1 && ship.data.chassis !== 'squad-repair'){ 
+    if(!ship.disabled && ship.targetingComputer.targetShip === player && ship.data.chassis !== 'squad-repair' || !ship.disabled && Object.values(player.squadron).indexOf(ship.targetingComputer.targetShip) > -1 && ship.data.chassis !== 'squad-repair'){ 
         distance = engine.Point.distance(ship, player);
         if(distance < 17000 && ship.data.chassis !== 'squad-repair'){
           hostiles[distance] = ship;
@@ -67,23 +67,14 @@ SquadManager.prototype.closestHostile = function(){
           continue
         };
     };
-  };
-
-  for(var s in player.squadron){
-    if(player.squadron[s].data.chassis === 'squad-shield_2' && !player.squadron[s].disabled){
-      this.socket.emit('squad/shieldCheck', {player_id: player.uuid, shieldShip_id : player.squadron[s].uuid });
-      // console.log('shield ship: ', player.squadron[s].selector.shieldBlueCircle, player.movement._position)
-      // if(player.squadron[s].selector.shieldBlueCircle.contains(player.movement._position.x, player.movement._position.y )){
-      //   console.log('AW YA')
-      // }
-    }
-    
-  }
+  }; 
 
   targets = Object.keys(hostiles);
   if(targets && !targets.length){return}
   player.acquired = hostiles[targets.sort(ascending)[0]];
-  player.acquired.selector.hostileHighlight();
+  if(!player.acquired.disabled){
+    player.acquired.selector.hostileHighlight();
+  }
   console.log('hostile ', player.acquired)
 };
 

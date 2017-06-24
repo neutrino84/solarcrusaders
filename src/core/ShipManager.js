@@ -564,8 +564,9 @@ ShipManager.prototype.spawnQueen = function(position, uuid){
     console.log('queen --> overseer')
     //create overseers
     rando = this.game.rnd
-    // console.log(rando)  
-    for(var i = 0; i < cycle*rando+1; i++){
+    console.log(rando.s0, cycle) 
+    console.log(rando.s0*cycle+1) 
+    for(var i = 0; i < cycle*rando.s0+1; i++){
       console.log('overseer created')
       this.create({
         name: 'overseer' + cycle,
