@@ -261,14 +261,17 @@ Selector.prototype.hostileHighlightStop = function() {
     // console.log('in hostile highlight stop')
     this.reticleAnimating && this.reticleAnimating.stop();
     this.reticle.alpha = 0;
-    if(this.shieldBlue){
-      this.shieldBlue.alpha = 0; 
-    }
 };
 
 Selector.prototype.hostileEngagedStop = function() {
     this.reticleRedAnimating && this.reticleRedAnimating.stop();
     this.reticleRed.alpha = 0;
+};
+
+Selector.prototype.shieldBlueStop = function() {
+    if(this.shieldBlue){
+      this.shieldBlue.alpha = 0;
+    }
 };
 
 Selector.prototype.disable = function() {

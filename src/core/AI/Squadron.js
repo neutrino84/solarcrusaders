@@ -143,18 +143,18 @@ Squadron.prototype.update = function() {
 
   if(this.ship.chassis === 'squad-repair'){
     if(this.repairing){
-      if(this.repairing.data.health/this.repairing.config.stats.health > 0.9){
+      if(this.repairing.data.health/this.repairing.config.stats.health > 0.8){
         console.log('repair ship disengaging')
         this.disengage(); 
       }
     };
-    if(masterHealth < 0.7 && !this.repairing){
+    if(masterHealth < 0.65 && !this.repairing){
       this.engage(master, 'repair');
       return
     };
     for(var a in master.squadron){
       squadShip = master.squadron[a]
-      if(squadShip.data.health/squadShip.config.stats.health < 0.7){
+      if(squadShip.data.health/squadShip.config.stats.health < 0.6){
         this.engage(squadShip, 'repair');
         return
       }

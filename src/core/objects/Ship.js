@@ -121,10 +121,13 @@ Ship.prototype.createSystems = function() {
   }
 };
 
-Ship.prototype.createHardpoints = function() {
+Ship.prototype.createHardpoints = function(hardpoints) {
   var hardpoint, type, subtype, stats,
-      hardpoints = this.config.targeting.hardpoints;
+      hardpoints = hardpoints || this.config.targeting.hardpoints;
+      if(!this.ai){
 
+      console.log('in backend create hardpoints', hardpoints)
+      }
   // create turrets
   for(var i=0; i<hardpoints.length; i++) {
     stats = hardpoints[i];
@@ -161,6 +164,9 @@ Ship.prototype.attack = function(data, rtt) {
   compensated = movement.compensated(rtt);
   distance = compensated.distance(target);
 
+  if(!this.ai){
+    // console.log('player attacked, player is ', this)
+  }
   // validate attack
   for(var slot in hardpoints) {
     hardpoint = hardpoints[slot];
@@ -209,7 +215,7 @@ Ship.prototype.hit = function(attacker, target, slot) {
       compensated = movement.compensated(),
       distance = compensated.distance(target),
       ratio = distance / (this.size * hardpoint.data.aoe),
-      damage, health, critical, durability, shielded;
+      damage, health, critical, durability, shielded, killpoints, master;
   if(ratio < 1.0) {
     // // test data
     // if(!attacker.ai && this.ai) {
@@ -237,11 +243,10 @@ Ship.prototype.hit = function(attacker, target, slot) {
         // // this.armor = this.config.stats.armor + 1
         // this.armor = 2.0
         // console.log('aw yeah CHECK', this.armor)
-        damage = damage/2;
+        damage = damage/1.9;
         shielded = true;
     };
-    // console.log(damage)
-    if(attacker.hardpoints[0].subtype === 'repair_beam'){
+    if(attacker.hardpoints[0].subtype === 'repair_beam' && data.health < this.config.stats.health){
     health = data.health + damage;
     } else {
       health = data.health-damage;
@@ -283,12 +288,26 @@ Ship.prototype.hit = function(attacker, target, slot) {
         // disable ship
         if(!this.disabled) {
           this.disable();
-          
+
+          if(!attacker.ai || attacker.master){
+            killpoints = this.config.stats.health;
+            if(attacker.master){
+              master = attacker.master
+            }
+          }
           // update attacker reputation
+          // console.log('destroyed ships reputation: ', this.reputation, 'destroyed ships credits: ', this.credits)
+
+          // console.log('reputation: ', attacker.chassis, attacker.reputation, 'credits: ', attacker.credits)
           attacker.reputation = global.Math.floor(attacker.reputation + (this.reputation * -0.05));
+          attacker.credits = global.Math.floor(attacker.credits + this.credits);
+          // console.log('reputation: ', attacker.chassis, attacker.reputation, 'credits: ', attacker.credits)
           updates.push({
             uuid: attacker.uuid,
-            reputation: attacker.reputation
+            reputation: attacker.reputation,
+            killpoints: killpoints,
+            credits : attacker.credits,
+            master : master
           });
         }
 

@@ -199,7 +199,7 @@
         "projection": 0.1,
         "delay": 20,
         "spread": 32,
-        "damage": 8.0,
+        "damage": 800.0,
         "length": 1024,
         "aoe": 1.2,
         "spawn": 1,

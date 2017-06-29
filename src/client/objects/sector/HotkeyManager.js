@@ -38,6 +38,7 @@ HotkeyManager.prototype.create = function(sectorState) {
   this.config = this.game.cache.getJSON('item-configuration', false);
   this.manager = sectorState.shipManager;
   this.squadManager = sectorState.squadManager;
+  this.playerManager = sectorState.playerManager;
 };
 
 HotkeyManager.prototype.listener = function() {
@@ -119,6 +120,15 @@ HotkeyManager.prototype.listener = function() {
           this.game.clock.events.add(10000, function(){
             this.detecting = false;
           }, this);  
+     };
+     if(key.toLowerCase() === '8'){
+          this.playerManager.upgradeSystem('weapon');
+     };
+     if(key.toLowerCase() === '9'){
+          this.playerManager.upgradeSystem('armor');
+     };
+     if(key.toLowerCase() === '0'){
+          this.playerManager.upgradeSystem('engine');
      };
     }, this);
 

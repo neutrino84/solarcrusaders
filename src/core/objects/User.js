@@ -82,7 +82,7 @@ User.prototype.save = function(callback) {
       ships = this.ships,
       len = ships.length,
       series = [];
-  
+      
   // save user
   series.push(function(next) {
     self.data.updateAttributes({

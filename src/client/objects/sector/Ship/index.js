@@ -16,6 +16,10 @@ function Ship(manager, data) {
   this.manager = manager;
   this.data = data;
   
+  if(!data.ai){
+  // console.log('in front end ship index, data is ', data)
+  // console.log('in front end ship index, data.config is ', data.config) 
+  }
   // config data
   this.config = data.config.ship;
 
@@ -77,7 +81,12 @@ Ship.prototype.refresh = function(data) {
     this.shieldGenerator.start();
   } else {
     this.shieldGenerator.stop();
-  }
+  };
+  if(data.killpoints){
+    if(this.data.ai === 'squadron' && data.master === this.manager.player.uuid || data.uuid === this.manager.player.uuid){
+      this.game.emit('killpoints', this, data.killpoints)
+    };
+  };
   if(data.hardpoint) {
     attacker = ships[data.uuid];
     defender = ships[data.hardpoint.ship];

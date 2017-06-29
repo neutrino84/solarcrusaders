@@ -28,6 +28,9 @@ TargetingComputer.prototype.create = function() {
   for(var h in hardpoints) {
     slot = hardpoints[h].slot;
 
+  if(this.ship.isPlayer){
+    // console.log('ship is ', this.ship)
+  }
     hardpoint = new Hardpoint(this, hardpoints[h], this.config.hardpoints[slot]);
     hardpoint.subGroup = ship.manager.subGroup;
     hardpoint.fxGroup = ship.manager.fxGroup;

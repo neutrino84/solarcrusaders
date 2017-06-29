@@ -13,6 +13,7 @@ var engine = require('engine'),
     StationManager = require('../objects/sector/StationManager'),
     SoundManager = require('../objects/sector/SoundManager'),
     SquadManager = require('../objects/sector/SquadManager'),
+    PlayerManager = require('../objects/sector/PlayerManager'),
     HotkeyManager = require('../objects/sector/HotkeyManager'),
     Asteroid = require('../objects/sector/misc/Asteroid');
     
@@ -22,6 +23,7 @@ function SectorState(game) {
   this.soundManager = new SoundManager(game);
   this.hotkeyManager = new HotkeyManager(game);
   this.squadManager = new SquadManager(game);
+  this.playerManager = new PlayerManager(game);
 };
 
 SectorState.prototype = Object.create(engine.State.prototype);
@@ -158,6 +160,7 @@ SectorState.prototype.createManagers = function() {
   this.stationManager = new StationManager(game, this);
   this.shipManager = new ShipManager(game, this);
   this.squadManager.create(this);
+  this.playerManager.create(this);
   this.hotkeyManager.create(this);
   // this.shockwaveManager = new ShockwaveManager(game, this);
 };

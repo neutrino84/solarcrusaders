@@ -75,7 +75,6 @@ SquadManager.prototype.closestHostile = function(){
   if(!player.acquired.disabled){
     player.acquired.selector.hostileHighlight();
   }
-  console.log('hostile ', player.acquired)
 };
 
 SquadManager.prototype.detectUnfriendlies = function(){
@@ -103,7 +102,6 @@ SquadManager.prototype.detectUnfriendlies = function(){
             distance = engine.Point.distance(ship, player); 
         // ship.selector.detectorHighlight();
         if(ship.disabled){
-          console.log('ship disabled. ship is ', ship)
           continue
         };
 
@@ -177,7 +175,7 @@ SquadManager.prototype.engageHostile = function(){
   }
   if(!player.acquired.disabled && available)
    player.acquired.selector.hostileEngaged();
-    this.game.emit('squad/sound/engage');
+    this.game.emit('squad/sound','engage');
     this.socket.emit('squad/engageHostile', {player_id: player.uuid, target_id : player.acquired.uuid });
   };
 };
@@ -195,6 +193,7 @@ SquadManager.prototype.regroup = function() {
   var ships = this.ships,
       player = this.player,
       squad = {},
+      available = false,
       ship, distance;
 
   for (var s in ships){
@@ -203,13 +202,17 @@ SquadManager.prototype.regroup = function() {
     ship.selector.hostileHighlightStop();
     ship.selector.hostileEngagedStop();
 
-    if(ship.data.masterShip === player.uuid){
+    if(ship.data.masterShip === player.uuid && !ship.disabled){
+      available = true;
+      ship.selector.shieldBlueStop();
       distance = engine.Point.distance(ship, player);
       squad[ship.uuid] = distance;
     }
   };
-
-  this.socket.emit('squad/regroup', {player_id: player.uuid, squad: squad});
+  if(available){
+    this.socket.emit('squad/regroup', {player_id: player.uuid, squad: squad});
+    this.game.emit('squad/sound','regroup')
+  }
 };
 
 SquadManager.prototype._hostile = function(uuid){

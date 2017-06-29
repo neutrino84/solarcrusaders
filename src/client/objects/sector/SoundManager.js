@@ -35,7 +35,7 @@ function SoundManager(game) {
   this.game.on('ship/hardpoint/fire', this.generateFireSound, this);
   this.game.on('ship/hardpoint/stopfire', this.stopFireSound, this);
 
-  this.game.on('squad/sound/engage', this.generateSquadEngageSound, this);
+  this.game.on('squad/sound', this.generateSquadSound, this);
 
   this.game.on('global/sound/spawn', this.generateSpawnSound, this);
 
@@ -136,6 +136,21 @@ SoundManager.prototype.preload = function(game) {
   load.audio('harvesterDeath2','sounds/explosions/larvaDeath.mp3');
 
   load.audio('dangerAlert','sounds/misc/lowHealthDangerSFX.mp3');
+
+  //SQUAD CALLBACKS
+  load.audio('copyThatCommander','sounds/squadCallbacks/copyThatCommander.mp3');
+  load.audio('copyThatCommander2','sounds/squadCallbacks/copyThatCommander2.mp3');
+
+  load.audio('engagingTarget','sounds/squadCallbacks/engagingTarget.mp3');
+  load.audio('targetEngaged','sounds/squadCallbacks/targetEngaged.mp3');
+
+  load.audio('headsUpWereTakingFire','sounds/squadCallbacks/headsUpWereTakingFire.mp3');
+  load.audio('returningToFormation','sounds/squadCallbacks/returningToFormation.mp3');
+  load.audio('standby','sounds/squadCallbacks/standby.mp3');
+
+  load.audio('ShieldMaidenInbound','sounds/squadCallbacks/ShieldMaidenInbound.mp3');
+  load.audio('ShieldMaidenOnline','sounds/squadCallbacks/ShieldMaidenOnline.mp3');
+
 };
 
 SoundManager.prototype.create = function(manager) {
@@ -150,7 +165,7 @@ SoundManager.prototype.generateBackgroundMusic = function(){
   var num = Math.floor((Math.random() * 3)+1);
   // this.generateSound('background'+'num', 0.30, true);
 
-  // this.generateSound('background4', 0.30, true);
+  this.generateSound('background4', 0.30, true);
 };
 
 SoundManager.prototype.generateThrusterSound = function(){
@@ -295,19 +310,31 @@ SoundManager.prototype.generateFireSound = function(data) {
 SoundManager.prototype.stopFireSound = function(launcher){
 };
 
-SoundManager.prototype.generateSquadEngageSound = function(){
+SoundManager.prototype.generateSquadSound = function(sound){
   
-  var sound = 'callbackSound',
-      volume = 0.5,
-      num = Math.floor((Math.random() * 3)+1);
+  var volume = 0.1,
+      num;
 
-  // if(player && player !== ship) {   
-  //   distance = engine.Point.distance(ship, player);    
-  //   volume = global.Math.max(1 - (distance / 2000), 0);
-  // };
-  if(volume > 0){
-      // this.generateSound(sound, volume, false); 
-  };
+      switch(sound) {
+        case 'engage':
+          num = Math.floor((Math.random() * 3))
+          console.log(num)
+          if(num === 2){
+            this.generateSound('engagingTarget', volume, false);
+          } else if (num === 1){
+            this.generateSound('targetEngaged', volume, false);
+          }
+          break
+        case 'regroup':
+          num = Math.floor((Math.random() * 3))
+          console.log(num)
+          if(num){
+            this.generateSound('returningToFormation', volume, false);
+          }
+          break;
+        default:
+          break;
+      }
 };
 
 // SoundManager.prototype.generateAttackSound = function(data){
