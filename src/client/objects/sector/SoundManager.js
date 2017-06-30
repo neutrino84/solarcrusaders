@@ -165,7 +165,7 @@ SoundManager.prototype.generateBackgroundMusic = function(){
   var num = Math.floor((Math.random() * 3)+1);
   // this.generateSound('background'+'num', 0.30, true);
 
-  this.generateSound('background4', 0.30, true);
+  // this.generateSound('background4', 0.30, true);
 };
 
 SoundManager.prototype.generateThrusterSound = function(){

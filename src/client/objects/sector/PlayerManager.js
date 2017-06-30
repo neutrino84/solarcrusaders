@@ -32,6 +32,11 @@ function PlayerManager(game) {
     5: 60000,
     currentTier : 1
   };
+  this.systemLevels = {
+    weapon: 1,
+    armor: 1,
+    engine: 1
+  }
 
   this.game.on('ship/player', this._player, this);
   this.game.on('killpoints', this.playerKillpoints, this);
@@ -75,22 +80,30 @@ PlayerManager.prototype.upgradeSystem = function(type) {
         var hardpoint, config, slot,
             ship = this.player,
             hardpoints = ship.data.hardpoints;
-            console.log(ship)
-        var chassis = this.player.chassis;
-        var disintegrator = client.ItemConfiguration['hardpoint']['energy']['disintegrator'];
-        var curWeapon = client.ShipConfiguration['ubaidian-x01e']['targeting']['hardpoints'];
+            // console.log(ship)
+        var chassis = ship.data.chassis;
+        var skel = {};
+        for( var i in hardpoints){
+          skel[i] = hardpoints[i]
+          // skel[i].subtype = hardpoints[i].subtype;
+          // skel[i].type = hardpoints[i].type; 
+        }
+        console.log('skel is ', skel)
+
+        var newWeaponData; 
+        // var disintegrator = client.ItemConfiguration['hardpoint']['energy']['disintegrator'];
+        var curWeapons = client.ShipConfiguration[chassis]['targeting']['hardpoints'];
         var newWeapon = [];
-        for(a in curWeapon){
-          newWeapon[a] = curWeapon[a]
+        var nextWeaponLevel = this.systemLevels.weapon+1;
+        for(a in curWeapons){
+          newWeapon[a] = curWeapons[a];
         }
-        for(a in newWeapon){
-          newWeapon[a].default = {subtype: "disintegrator", type : "energy"}
+        for(b in newWeapon){
+          var newWeaponData = client.ItemConfiguration['hardpoint'][newWeapon[b].default.type][newWeapon[b].default.subtype+nextWeaponLevel];
+          newWeapon[b].default.type = newWeaponData.type;
+          newWeapon[b].default.subtype = newWeaponData.subtype;
         }
-        console.log(newWeapon)      
-        // newWeapon[a].position = curWeapon[a].position;
-        // newWeapon[a].pivot = curWeapon[a].pivot;
-        // newWeapon[a].type = curWeapon[a].type;
-        // newWeapon[a].default = {subtype: "disintegrator", type : "energy"}
+          console.log(newWeapon)
 
         console.log('UPGRADING WEAPON')
         // this.player.config.targeting.hardpoints[0].default.type = 'energy';
@@ -105,23 +118,21 @@ PlayerManager.prototype.upgradeSystem = function(type) {
 
         this.socket.emit('ship/upgrade/hardpoints', {uuid: ship.uuid, hardpoints: newWeapon});
 
+        var counter = 0
         for(var h in this.player.targetingComputer.hardpoints) {
+          var playerHardpoints = this.player.targetingComputer.hardpoints
           slot = hardpoints[h].slot;
+          // console.log('hardpoints are: ', hardpoints, 'playerHardpoints is: ', playerHardpoints)
+          // console.log(this.player.targetingComputer.hardpoints[h])
+          // this.player.targetingComputer.hardpoints[h].data = disintegrator;
+          // this.player.targetingComputer.hardpoints[h].data.slot = h;
+          // this.player.data.hardpoints[h] = disintegrator;
+          // this.player.data.hardpoints[h].slot = counter;
+          // console.log(counter)
+          counter++
 
-          // console.log(thiss.player.targetingComputer.hardpoints[h].data)
-          // console.log(hardpoints)
-          // console.log(hardpoints[h])
-          // hardpoint = new Hardpoint(this.player.targetingComputer, hardpoints[h], null);
-          // hardpoint.subGroup = ship.manager.subGroup;
-          // hardpoint.fxGroup = ship.manager.fxGroup;
-          // hardpoint.flashEmitter = ship.manager.flashEmitter;
-          // hardpoint.explosionEmitter = ship.manager.explosionEmitter;
-          // hardpoint.glowEmitter = ship.manager.glowEmitter;
-          // hardpoint.fireEmitter = ship.manager.fireEmitter;
-          // hardpoint.shockwaveEmitter = ship.manager.shockwaveEmitter;
-
-          this.player.targetingComputer.hardpoints[slot].data = disintegrator;
         }
+        // console.log(this.player)
         // console.log(this.player.targetingComputer.hardpoints)
         // console.log(this.player.targetingComputer.hardpoints)
 
@@ -129,12 +140,15 @@ PlayerManager.prototype.upgradeSystem = function(type) {
         // this.player.targetingComputer.create();
         // debugger
         //0-3 is quantum pulse. 4 is basic rocket
+        this.systemLevels.weapon++
         break
       case 'armor':
         console.log('UPGRADING ARMOR')
+        this.systemLevels.armor++
         break
       case 'engine':
         console.log('UPGRADING ENGINE')
+        this.systemLevels.engine++
         break
       default:
         break;
@@ -144,7 +158,7 @@ PlayerManager.prototype.upgradeSystem = function(type) {
 
 PlayerManager.prototype._player = function(ship) {
   this.player = ship;
-  // console.log('in player manger, player is ', this.player)
+  console.log('in player manger, player is ', this.player)
   this.player.squadron = {};
 };
 
