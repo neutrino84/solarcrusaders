@@ -21,16 +21,14 @@ function TargetingComputer(ship, config) {
 
 TargetingComputer.prototype.constructor = TargetingComputer;
 
-TargetingComputer.prototype.create = function() {
+TargetingComputer.prototype.create = function(hardpoints) {
   var hardpoint, config, slot,
       ship = this.ship,
-      hardpoints = ship.data.hardpoints;
+      hardpoints = hardpoints || ship.data.hardpoints;
+      console.log(hardpoints)
   for(var h in hardpoints) {
     slot = hardpoints[h].slot;
 
-  if(this.ship.isPlayer){
-    // console.log('ship is ', this.ship)
-  }
     hardpoint = new Hardpoint(this, hardpoints[h], this.config.hardpoints[slot]);
     hardpoint.subGroup = ship.manager.subGroup;
     hardpoint.fxGroup = ship.manager.fxGroup;
@@ -41,6 +39,9 @@ TargetingComputer.prototype.create = function() {
     hardpoint.shockwaveEmitter = ship.manager.shockwaveEmitter;
 
     this.hardpoints[slot] = hardpoint;
+  }
+  if(this.ship.isPlayer){
+    // console.log('in TargetingComp ship is ', this.ship)
   }
 };
 
@@ -123,6 +124,20 @@ TargetingComputer.prototype.update = function() {
     for(var h in hardpoints) {
       hardpoints[h].update();
     }
+  }
+};
+
+TargetingComputer.prototype.clear = function() {
+  var hardpoint,
+      hardpoints = this.hardpoints;
+  
+  for(var h in hardpoints) {
+    hardpoint = hardpoints[h];
+    hardpoint.destroy();
+    hardpoint.fxGroup =
+      hardpoint.flashEmitter =
+      hardpoint.explosionEmitter =
+      hardpoint.glowEmitter = undefined;
   }
 };
 

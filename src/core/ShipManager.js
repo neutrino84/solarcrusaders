@@ -42,9 +42,9 @@ ShipManager.prototype.constructor = ShipManager;
 
 ShipManager.prototype.init = function() {
   // generate npcs
-  // this.generateRandomShips();
-  // this.generatePirateShips();
-  // this.generateEnforcerShips();
+  this.generateRandomShips();
+  this.generatePirateShips();
+  this.generateEnforcerShips();
   this.generateScavengerShips();
 };
 
@@ -78,7 +78,7 @@ ShipManager.prototype.create = function(data, user, position) {
     self.game.emit('ship/add', ship);
   });
   if(ship.user){
-    // this.generateSquadronShips(ship.uuid)
+    this.generateSquadronShips(ship.uuid)
   };
   if(ship.data.chassis === 'enforcers-x02'){
     this.generateEnforcerShips(ship.uuid, data.x, data.y)
@@ -344,33 +344,33 @@ ShipManager.prototype.generatePirateShips = function() {
         location: { x: -4096, y: 2048 },
         ships: [
           { name: 'xinli', chassis: 'pirate-x02', credits: 750, reputation: -100 },
-          // { name: 'mocolo', chassis: 'pirate-x02', credits: 750, reputation: -100 },
-          // { name: 'mavero', chassis: 'pirate-x02', credits: 750, reputation: -100 },
-          // { name: 'saag', chassis: 'pirate-x02', credits: 750, reputation: -100 } 
+          { name: 'mocolo', chassis: 'pirate-x02', credits: 750, reputation: -100 },
+          { name: 'mavero', chassis: 'pirate-x02', credits: 750, reputation: -100 },
+          { name: 'saag', chassis: 'pirate-x02', credits: 750, reputation: -100 } 
         ]
       }, {
         location: { x: 8192, y: 2048 },
         ships: [
-          // { name: 'satel', chassis: 'pirate-x01', credits: 700, reputation: -100 },
-          // { name: 'oeem', chassis: 'pirate-x01', credits: 700, reputation: -100 },
-          // { name: 'thath', chassis: 'pirate-x02', credits: 750, reputation: -100 },
+          { name: 'satel', chassis: 'pirate-x01', credits: 700, reputation: -100 },
+          { name: 'oeem', chassis: 'pirate-x01', credits: 700, reputation: -100 },
+          { name: 'thath', chassis: 'pirate-x02', credits: 750, reputation: -100 },
           { name: 'zeus', chassis: 'pirate-x03b', credits: 1800, reputation: -300 }
         ]
       }, {
         location: { x: 2048, y: -6144 },
         ships: [
-          // { name: 'manduk', chassis: 'pirate-x02', credits: 750, reputation: -100 },
-          // { name: 'deuh', chassis: 'pirate-x01', credits: 700, reputation: -100 },
-          // { name: 'talai', chassis: 'pirate-x01', credits: 700, reputation: -100 },
-          // { name: 'kaan', chassis: 'pirate-x03b', credits: 1800, reputation: -300 }
+          { name: 'manduk', chassis: 'pirate-x02', credits: 750, reputation: -100 },
+          { name: 'deuh', chassis: 'pirate-x01', credits: 700, reputation: -100 },
+          { name: 'talai', chassis: 'pirate-x03b', credits: 700, reputation: -100 },
+          { name: 'kaan', chassis: 'pirate-x03b', credits: 1800, reputation: -300 }
         ]
       }, {
         location: { x: 2048, y: 8192 },
         ships: [
-          // { name: 'theni', chassis: 'pirate-x01', credits: 700, reputation: -100 },
-          // { name: 'zulu', chassis: 'pirate-x01', credits: 700, reputation: -100 },
-          // { name: 'saroc', chassis: 'pirate-x02', credits: 750, reputation: -100 },
-          // { name: 'malvo', chassis: 'pirate-x02', credits: 750, reputation: -100 },
+          { name: 'theni', chassis: 'pirate-x01', credits: 700, reputation: -100 },
+          { name: 'zulu', chassis: 'pirate-x01', credits: 700, reputation: -100 },
+          { name: 'saroc', chassis: 'pirate-x02', credits: 750, reputation: -100 },
+          { name: 'malvo', chassis: 'pirate-x02', credits: 750, reputation: -100 }
           // { name: 'mocolo', chassis: 'pirate-x02', credits: 750, reputation: -100 },
           // { name: 'mavero', chassis: 'pirate-x02', credits: 750, reputation: -100 },
           // { name: 'saag', chassis: 'pirate-x03b', credits: 1800, reputation: -300 }
@@ -378,10 +378,10 @@ ShipManager.prototype.generatePirateShips = function() {
       }, {
         location: { x: 7048, y: 8192 },
         ships: [
-          // { name: 'figo', chassis: 'pirate-x01', credits: 700, reputation: -100 },
-          // { name: 'zulio', chassis: 'pirate-x02', credits: 750, reputation: -100 },
-          // { name: 'carlos', chassis: 'pirate-x02', credits: 750, reputation: -100 },
-          // { name: 'wunwun', chassis: 'pirate-x01', credits: 700, reputation: -100 },
+          { name: 'figo', chassis: 'pirate-x01', credits: 700, reputation: -100 },
+          { name: 'zulio', chassis: 'pirate-x02', credits: 750, reputation: -100 },
+          { name: 'carlos', chassis: 'pirate-x02', credits: 750, reputation: -100 },
+          { name: 'wunwun', chassis: 'pirate-x01', credits: 700, reputation: -100 }
           // { name: 'tubes', chassis: 'pirate-x02', credits: 750, reputation: -100 },
           // { name: 'mikey', chassis: 'pirate-x02', credits: 750, reputation: -100 },
           // { name: 'grassy', chassis: 'pirate-x02', credits: 750, reputation: -100 }
@@ -389,11 +389,11 @@ ShipManager.prototype.generatePirateShips = function() {
       }, {
         location: { x: 5048, y: -9192 },
         ships: [
-          // { name: 'marco', chassis: 'pirate-x01', credits: 700, reputation: -100 },
-          // { name: 'poozer', chassis: 'pirate-x01', credits: 700, reputation: -100 },
-          // { name: 'scanwan', chassis: 'pirate-x02', credits: 750, reputation: -100 },
-          // { name: 'lobos', chassis: 'pirate-x02', credits: 750, reputation: -100 },
-          // { name: 'jolder', chassis: 'pirate-x01', credits: 700, reputation: -100 },
+          { name: 'marco', chassis: 'pirate-x01', credits: 700, reputation: -100 },
+          { name: 'poozer', chassis: 'pirate-x01', credits: 700, reputation: -100 },
+          { name: 'scanwan', chassis: 'pirate-x02', credits: 750, reputation: -100 },
+          { name: 'lobos', chassis: 'pirate-x02', credits: 750, reputation: -100 },
+          { name: 'jolder', chassis: 'pirate-x01', credits: 700, reputation: -100 }
           // { name: 'creemie', chassis: 'pirate-x01', credits: 700, reputation: -100 },
           // { name: 'bob', chassis: 'pirate-x02', credits: 750, reputation: -100 }
         ]

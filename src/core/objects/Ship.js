@@ -124,10 +124,6 @@ Ship.prototype.createSystems = function() {
 Ship.prototype.createHardpoints = function(hardpoints) {
   var hardpoint, type, subtype, stats,
       hardpoints = hardpoints || this.config.targeting.hardpoints;
-      if(!this.ai){
-
-      console.log('in backend create hardpoints', hardpoints)
-      }
   // create turrets
   for(var i=0; i<hardpoints.length; i++) {
     stats = hardpoints[i];
