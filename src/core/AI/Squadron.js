@@ -113,17 +113,9 @@ Squadron.prototype.update = function() {
       settings = this.settings,
       rnd = this.game.rnd,
       master = this.manager.ships[ship.master],
+      health = ship.data.health / ship.config.stats.health,
+      masterHealth = master.data.health / master.config.stats.health,
       p1, p2, size, health, masterHealth, squadShip;
-
-
-  health = ship.data.health / ship.config.stats.health;
-  masterHealth = master.data.health / master.config.stats.health;
-  // console.log('master is ', master)
-  // console.log(this.manager.ships[ship.master])
-  // console.log('masterHealth is ', masterHealth)
-  // debugger
-  // debugger
-  // masterHealth = master.data.health / master.config.stats.health;
 
   // retreat due to damage
   if(health < settings.escape.health) {
@@ -139,6 +131,11 @@ Squadron.prototype.update = function() {
 
   if(this.shieldDestination){
     this.shield();
+  }
+  if(this.shielding && this.ship.disabled){
+    console.log('shield ship unshielding from update')
+    this.shielding = false;
+    this.manager.game.sockets.ioserver.emit('squad/shieldUp', {uuid: ship.uuid, active: false})
   }
 
   if(this.ship.chassis === 'squad-repair'){
@@ -239,9 +236,13 @@ Squadron.prototype.disengage = function() {
   this.target = null;
   this.attacking = false;
   this.shieldDestination = null;
-  this.shielding = false;
   this.repairing = null;
   this.attacker && this.game.clock.events.remove(this.attacker);
+  if(this.shielding){
+    console.log('hereeeeeee')
+    this.shielding = false;
+    this.manager.game.sockets.ioserver.emit('squad/shieldUp', {uuid: ship.uuid, active: false})
+  }
 };
 
 Squadron.prototype.shield = function(data) {

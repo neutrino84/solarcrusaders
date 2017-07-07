@@ -223,7 +223,7 @@ Ship.prototype.hit = function(attacker, target, slot) {
     // }
 
     //prevent friendly fire dmg to squadron
-    if(this.master === attacker.uuid){return}  
+    // if(this.master === attacker.uuid){return}  
 
     // calc damage
     critical = this.game.rnd.rnd() <= attacker.critical;
@@ -350,6 +350,11 @@ Ship.prototype.disable = function() {
   this.game.emit('ship/disabled', {
     uuid: this.uuid
   });
+
+  if(this.chassis === 'squad-shield_2'){
+    console.log('in backend Ship.js. telling shield ship to stop')
+    this.ai.disengage();
+  }
 };
 
 Ship.prototype.blast = function() {

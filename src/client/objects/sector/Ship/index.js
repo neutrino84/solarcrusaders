@@ -170,6 +170,7 @@ Ship.prototype.enable = function(data) {
   this.position.set(data.pos.x, data.pos.y);
   if(this.isPlayer){
     this.game.emit('squad/regroup', this);
+    this.game.emit('system/sound', 'systemsOnline');
     // this.user.socket.emit('squad/regroup', this);
   }
 };
@@ -183,6 +184,9 @@ Ship.prototype.disable = function() {
   this.shieldGenerator.stop();
   this.repair.stop();
   this.explosion.start();
+  if(this.chassis === 'squad-repair'){
+    
+  }
 };
 
 Ship.prototype.destroy = function(options) {

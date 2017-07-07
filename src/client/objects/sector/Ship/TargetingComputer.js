@@ -25,7 +25,7 @@ TargetingComputer.prototype.create = function(hardpoints) {
   var hardpoint, config, slot,
       ship = this.ship,
       hardpoints = hardpoints || ship.data.hardpoints;
-      console.log(hardpoints)
+      
   for(var h in hardpoints) {
     slot = hardpoints[h].slot;
 

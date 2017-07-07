@@ -41,6 +41,10 @@ function SoundManager(game) {
 
   this.game.on('game/backgroundmusic', this.generateBackgroundMusic, this);
 
+  this.game.on('upgrades/sound/available', this.generateUpgradeSound, this);
+
+  this.game.on('system/sound', this.generateSystemSound, this);
+
   this.dangerAlert = false
 }
 
@@ -137,6 +141,19 @@ SoundManager.prototype.preload = function(game) {
 
   load.audio('dangerAlert','sounds/misc/lowHealthDangerSFX.mp3');
 
+  //SYSTEM SOUNDS
+  load.audio('intiatingRepairs','sounds/systemVoice/intiatingRepairs.mp3');
+  load.audio('repairsCompleted','sounds/systemVoice/repairsCompleted.mp3');
+  load.audio('reactorOnline','sounds/systemVoice/reactorOnline.mp3');
+  load.audio('sensorsOnline','sounds/systemVoice/sensorsOnline.mp3');
+  load.audio('systemsOnline','sounds/systemVoice/systemsOnline.mp3');
+  load.audio('weaponsSystemsOnline','sounds/systemVoice/weaponsSystemsOnline.mp3');
+  load.audio('targetDestroyed','sounds/systemVoice/targetDestroyed.mp3');
+  load.audio('warningDamageCritical','sounds/systemVoice/warningDamageCritical.mp3');
+
+  //UPGRADES
+  load.audio('upgradeAvailable','sounds/upgrades/upgradeAvailable.rc.mp3');
+
   //SQUAD CALLBACKS
   load.audio('copyThatCommander','sounds/squadCallbacks/copyThatCommander.mp3');
   load.audio('copyThatCommander2','sounds/squadCallbacks/copyThatCommander2.mp3');
@@ -165,7 +182,7 @@ SoundManager.prototype.generateBackgroundMusic = function(){
   var num = Math.floor((Math.random() * 3)+1);
   // this.generateSound('background'+'num', 0.30, true);
 
-  // this.generateSound('background4', 0.30, true);
+  this.generateSound('background4', 0.30, true);
 };
 
 SoundManager.prototype.generateThrusterSound = function(){
@@ -218,7 +235,7 @@ SoundManager.prototype.generateEnhancementSound = function(data){
       distance = 0.1,
       num = Math.floor((Math.random() * 3)+1);
 
-  if(player && player !== ship) {   
+  if(player && ship && player !== ship) {   
     distance = engine.Point.distance(ship, player);    
     volume = global.Math.max(1 - (distance / 2000), 0);
   };
@@ -310,6 +327,16 @@ SoundManager.prototype.generateFireSound = function(data) {
 SoundManager.prototype.stopFireSound = function(launcher){
 };
 
+SoundManager.prototype.generateUpgradeSound = function(sound){
+  this.game.clock.events.create(1500, false, 1, function(){
+    this.generateSound(sound, 0.4, false); 
+  }, this)
+};
+
+SoundManager.prototype.generateSystemSound = function(sound){
+  this.generateSound(sound, 0.35, false); 
+};
+
 SoundManager.prototype.generateSquadSound = function(sound){
   
   var volume = 0.1,
@@ -317,7 +344,7 @@ SoundManager.prototype.generateSquadSound = function(sound){
 
       switch(sound) {
         case 'engage':
-          num = Math.floor((Math.random() * 3))
+          num = Math.floor((Math.random() * 2)+1)
           console.log(num)
           if(num === 2){
             this.generateSound('engagingTarget', volume, false);
@@ -407,6 +434,9 @@ SoundManager.prototype.generateDamageCriticalSound = function() {
 
 SoundManager.prototype._player = function(ship){
   this.player = ship;
+  this.game.clock.events.create(1500, false, 1, function(){
+    this.generateSystemSound('systemsOnline')
+  }, this)
 };
 
 SoundManager.prototype.shutdown = function() {

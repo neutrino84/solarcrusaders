@@ -70,6 +70,8 @@ SectorState.prototype.preload = function() {
 
   // load strip graphics
   this.game.load.image('laser-blue', 'imgs/game/fx/laser-blue.png');
+  this.game.load.image('laser-blue2', 'imgs/game/fx/laser-blue2.png');
+  this.game.load.image('laser-blue3', 'imgs/game/fx/laser-blue3.png');
   this.game.load.image('laser-red', 'imgs/game/fx/laser-red.png');
   this.game.load.image('laser-green', 'imgs/game/fx/laser-green.png');
   this.game.load.image('laser-purple', 'imgs/game/fx/laser-purple.png');

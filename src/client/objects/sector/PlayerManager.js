@@ -28,7 +28,7 @@ function PlayerManager(game) {
   this.credits = 0;
   this.upgrade = {
     1: 50,
-    2: 1500,
+    2: 200,
     3: 6000,
     4: 13000,
     5: 60000,
@@ -64,6 +64,7 @@ PlayerManager.prototype.playerKillpoints = function(socket, killpoints) {
   
   if(this.killpoints > threshold){
     console.log('upgrade available')
+    if(!this.upgradeAvailable) this.game.emit('upgrades/sound/available','upgradeAvailable');
     this.upgradeAvailable = true;
     this.upgradeAvailableFlasherStart();
   }
@@ -71,7 +72,6 @@ PlayerManager.prototype.playerKillpoints = function(socket, killpoints) {
 
 PlayerManager.prototype.upgradeSystem = function(type) {
   var killpoints = this.killpoints,
-      available = false,
       curTier = this.upgrade.currentTier,
       threshold = this.upgrade[curTier],
       ship = this.player;
@@ -84,17 +84,22 @@ PlayerManager.prototype.upgradeSystem = function(type) {
             newWeaponsObj = {},
             nextWeaponLevel = this.systemLevels.weapon+1,
             stockWeapons = this.stockWeapons,
+            weaponsCap = 3,
             newWeaponData, slot;
 
         // set current weapon cap
-        if(nextWeaponLevel > 2){
-          nextWeaponLevel = 2;
+        if(nextWeaponLevel > weaponsCap){
+          nextWeaponLevel = weaponsCap;
         };
 
         for(var b = 0; b < Object.keys(stockWeapons).length; b++){
-          newWeaponData = client.ItemConfiguration['hardpoint'][this.stockWeapons[b].default.type][this.stockWeapons[b].default.subtype+nextWeaponLevel];
+            var type = this.stockWeapons[b].default.type,
+                subtype = this.stockWeapons[b].default.subtype,
+                newWeaponData = client.ItemConfiguration['hardpoint'][type][subtype+nextWeaponLevel], copy;  
 
-          var copy = newWeaponData.constructor();
+          if(type === 'rocket' && nextWeaponLevel === 3) newWeaponData = client.ItemConfiguration['hardpoint'][this.stockWeapons[b].default.type]['medium']
+          // console.log('new weapon data is ', newWeaponData)
+          copy = newWeaponData.constructor();
 
           for (var attr in newWeaponData) {
             if (newWeaponData.hasOwnProperty(attr)) copy[attr] = newWeaponData[attr];
@@ -113,6 +118,7 @@ PlayerManager.prototype.upgradeSystem = function(type) {
 
           
         };
+        console.log('new weapon is ', newWeaponsObj[0])
 
         // update backend      
         this.socket.emit('ship/upgrade/hardpoints', {uuid: ship.uuid, hardpoints: newWeaponsArray});
@@ -120,7 +126,7 @@ PlayerManager.prototype.upgradeSystem = function(type) {
         //update frontend
         this.player.targetingComputer.create(newWeaponsObj);
 
-
+        this.upgradeAvailable = false;
         this.upgrade.currentTier++
         this.systemLevels.weapon++
         this.upgradeAvailableFlasherStop();
@@ -128,12 +134,14 @@ PlayerManager.prototype.upgradeSystem = function(type) {
 
       case 'armor':
         console.log('UPGRADING ARMOR')
+        this.upgradeAvailable = false;
         this.upgrade.currentTier++
         this.systemLevels.armor++
         this.upgradeAvailableFlasherStop();
         break
       case 'engine':
         console.log('UPGRADING ENGINE')
+        this.upgradeAvailable = false;
         this.upgrade.currentTier++
         this.systemLevels.engine++
         this.upgradeAvailableFlasherStop();
@@ -146,17 +154,23 @@ PlayerManager.prototype.upgradeSystem = function(type) {
 
 PlayerManager.prototype.upgradeAvailableFlasherStart = function(){
   var ship = this.player;
-  ship.events.loop(500, flasherOn = function(){
+  ship.events.loop(100, flasher = function(){
     var ship = this.player;
-    let colorMatrix = new pixi.filters.ColorMatrixFilter();
-    ship.chassis.filters = [colorMatrix];
-    colorMatrix.hue(240, false);
-    colorMatrix.grayscale(0.7);
+    if(this.filters.length){
+      this.filters = [];
+      ship.chassis.filters = [];
+    } else {
+      let colorMatrix = new pixi.filters.ColorMatrixFilter();
+      this.filters = [colorMatrix];
+      ship.chassis.filters = this.filters;
+      colorMatrix.hue(240, false);
+      colorMatrix.grayscale(0.7);
+    }
   }, this);
-  ship.events.loop(750, flasherOff = function(){
-    var ship = this.player;
-    ship.chassis.filters = [];
-  }, this);
+  // ship.events.loop(750, flasherOff = function(){
+  //   var ship = this.player;
+  //   ship.chassis.filters = [];
+  // }, this);
 };
 
 // PlayerManager.prototype.flasherOn = function(){
@@ -175,18 +189,23 @@ PlayerManager.prototype.upgradeAvailableFlasherStop = function(){
   var ship = this.player;
 
   for(var i = 0; i < ship.events.events.length; i++){
-    if(ship.events.events[i].callback.name === 'flasherOn' || ship.events.events[i].callback.name === 'flasherOff'){
+    if(ship.events.events[i].callback.name === 'flasher' || ship.events.events[i].callback.name === 'flasherOff'){
       ship.events.remove(ship.events.events[i]);  
     }
   }
   ship.chassis.filters = [];
+  this.filters = [];
 };
 
 PlayerManager.prototype._player = function(ship) {
   this.player = ship;
   this.chassis = ship.data.chassis,
   this.stockWeapons = client.ShipConfiguration[this.chassis]['targeting']['hardpoints'],
-  this.player.squadron = {};
+  ship.chassis.filters = [],
+  this.filters = ship.chassis.filters;
+  // ship.chassis.filters = [];
+  console.log(ship.chassis)
+  console.log(this.filters)
 };
 
 module.exports = PlayerManager;
