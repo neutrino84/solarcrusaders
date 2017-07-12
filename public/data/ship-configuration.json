@@ -354,7 +354,7 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "nucleon"
+            "subtype": "vulcan"
           }
         },
         {

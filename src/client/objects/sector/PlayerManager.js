@@ -27,9 +27,9 @@ function PlayerManager(game) {
   this.killpoints = 0;
   this.credits = 0;
   this.upgrade = {
-    1: 50,
-    2: 200,
-    3: 6000,
+    1: 300,
+    2: 600,
+    3: 4000,
     4: 13000,
     5: 60000,
     currentTier : 1
@@ -59,12 +59,11 @@ PlayerManager.prototype.playerKillpoints = function(socket, killpoints) {
   var curTier = this.upgrade.currentTier,
       threshold = this.upgrade[curTier];
 
-  this.killpoints += killpoints;
+  this.killpoints += killpoints*0.75;
   console.log('PLAYERS KILLPOINTS ARE: ', this.killpoints)
   
   if(this.killpoints > threshold){
-    console.log('upgrade available')
-    if(!this.upgradeAvailable) this.game.emit('upgrades/sound/available','upgradeAvailable');
+    if(!this.upgradeAvailable) this.game.emit('upgrades/sound/available', {key : 'upgradeAvailable', volume : 0.4});
     this.upgradeAvailable = true;
     this.upgradeAvailableFlasherStart();
   }
@@ -118,7 +117,7 @@ PlayerManager.prototype.upgradeSystem = function(type) {
 
           
         };
-        console.log('new weapon is ', newWeaponsObj[0])
+        // console.log('new weapon is ', newWeaponsObj[0])
 
         // update backend      
         this.socket.emit('ship/upgrade/hardpoints', {uuid: ship.uuid, hardpoints: newWeaponsArray});
@@ -126,6 +125,7 @@ PlayerManager.prototype.upgradeSystem = function(type) {
         //update frontend
         this.player.targetingComputer.create(newWeaponsObj);
 
+        this.game.emit('upgrades/sound/upgraded', {key : 'weaponSystemsUpgraded', volume : 0.15});
         this.upgradeAvailable = false;
         this.upgrade.currentTier++
         this.systemLevels.weapon++
@@ -134,6 +134,7 @@ PlayerManager.prototype.upgradeSystem = function(type) {
 
       case 'armor':
         console.log('UPGRADING ARMOR')
+        this.game.emit('upgrades/sound/upgraded','armorUpgraded');
         this.upgradeAvailable = false;
         this.upgrade.currentTier++
         this.systemLevels.armor++
@@ -141,6 +142,7 @@ PlayerManager.prototype.upgradeSystem = function(type) {
         break
       case 'engine':
         console.log('UPGRADING ENGINE')
+        this.game.emit('upgrades/sound/upgraded','reactorUpgraded');
         this.upgradeAvailable = false;
         this.upgrade.currentTier++
         this.systemLevels.engine++
@@ -203,9 +205,6 @@ PlayerManager.prototype._player = function(ship) {
   this.stockWeapons = client.ShipConfiguration[this.chassis]['targeting']['hardpoints'],
   ship.chassis.filters = [],
   this.filters = ship.chassis.filters;
-  // ship.chassis.filters = [];
-  console.log(ship.chassis)
-  console.log(this.filters)
 };
 
 module.exports = PlayerManager;

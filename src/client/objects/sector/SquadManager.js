@@ -183,9 +183,9 @@ SquadManager.prototype.engageHostile = function(){
 SquadManager.prototype.shieldUp = function(data) {
   var ship = this.manager.ships[data.uuid];
   if(data.active){
-    ship.selector.shieldBlue.alpha = 1; 
+    if(ship.selector.shieldBlue) {ship.selector.shieldBlue.alpha = 1}; 
   } else {
-    ship.selector.shieldBlue.alpha = 0; 
+    if (ship.selector.shieleBlue) {ship.selector.shieldBlue.alpha = 0}; 
   }
 };
 

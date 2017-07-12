@@ -116,6 +116,7 @@ Ship.prototype.createSystems = function() {
   var enhancement,
       enhancements = this.config.enhancements,
       available = this.enhancements.available;
+      // console.log(enhancements)
   for(var e in enhancements) {
     available[enhancements[e]] = new Enhancement(this, enhancements[e]);
   }
@@ -239,7 +240,7 @@ Ship.prototype.hit = function(attacker, target, slot) {
         // // this.armor = this.config.stats.armor + 1
         // this.armor = 2.0
         // console.log('aw yeah CHECK', this.armor)
-        damage = damage/1.9;
+        damage = damage*0.7;
         shielded = true;
     };
     if(attacker.hardpoints[0].subtype === 'repair_beam' && data.health < this.config.stats.health){

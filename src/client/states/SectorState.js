@@ -79,6 +79,9 @@ SectorState.prototype.preload = function() {
   this.game.load.image('laser-yellow-long', 'imgs/game/fx/laser-yellow-long.png');
   this.game.load.image('laser-vulcan', 'imgs/game/fx/laser-vulcan.png');
   this.game.load.image('laser-heavy', 'imgs/game/fx/laser-heavy.png');
+  this.game.load.image('laser-bazuko', 'imgs/game/fx/laser-bazuko.png');
+  this.game.load.image('laser-bazuko', 'imgs/game/fx/laser-bazuko2.png');
+  this.game.load.image('laser-bazuko', 'imgs/game/fx/laser-bazuko3.png');
   this.game.load.image('laser-gaus', 'imgs/game/fx/laser-gaus.png');
 
   // load texture atlas

@@ -42,6 +42,7 @@ function SoundManager(game) {
   this.game.on('game/backgroundmusic', this.generateBackgroundMusic, this);
 
   this.game.on('upgrades/sound/available', this.generateUpgradeSound, this);
+  this.game.on('upgrades/sound/upgraded', this.generateUpgradeSound, this);
 
   this.game.on('system/sound', this.generateSystemSound, this);
 
@@ -69,7 +70,8 @@ SoundManager.prototype.preload = function(game) {
   load.audio('background3', 'sounds/background_music/eerie2.mp3');
   load.audio('background4', 'sounds/background_music/Spacetheme1.mp3');
 
- 
+
+  //WEAPONS 
   load.audio('capitalLaser','sounds/lasers/capitalShipLaser.mp3');
   load.audio('cruiserLaser','sounds/lasers/cruiserLaser1.mp3');
   load.audio('multiLaser','sounds/lasers/midSizeMultiLaser.mp3');
@@ -85,10 +87,6 @@ SoundManager.prototype.preload = function(game) {
   load.audio('rocket2','sounds/rockets/rocket2.mp3');
   load.audio('rocket3','sounds/rockets/rocket3.mp3');
 
-  load.audio('mediumThrusters1','sounds/thrusters/mediumThrusters1.mp3');
-  load.audio('mediumThrusters2','sounds/thrusters/mediumThrusters2.mp3');
-  load.audio('mediumThrusters3','sounds/thrusters/mediumThrusters3.mp3');
-
   load.audio('basicBeam','sounds/beamWeapons/basicBeam.mp3');
   // load.audio('smallBeam','sounds/beamWeapons/green_beam.mp3');
   load.audio('capitalBeam','sounds/beamWeapons/capitalBeam.mp3');
@@ -99,11 +97,23 @@ SoundManager.prototype.preload = function(game) {
   load.audio('harvesterBeam3','sounds/beamWeapons/scavBeams/hrvstr3.mp3');
   load.audio('harvesterBeam4','sounds/beamWeapons/scavBeams/hrvstr4.mp3');
   load.audio('harvesterBeam5','sounds/beamWeapons/scavBeams/hrvstr5.mp3');
+
+  load.audio('musicalBeam_a','sounds/beamWeapons/musicalBeams/A.mp3');
+  load.audio('musicalBeam_e','sounds/beamWeapons/musicalBeams/E.mp3');
+  load.audio('musicalBeam_fsharp','sounds/beamWeapons/musicalBeams/Fsharp.mp3');
+  load.audio('musicalBeam_g','sounds/beamWeapons/musicalBeams/G.mp3');
+
   load.audio('disintegratorBeam','sounds/beamWeapons/scavBeams/Disintegrator1.1.mp3');
   
   load.audio('beam7','sounds/beamWeapons/beam7.mp3');
   load.audio('beam9','sounds/beamWeapons/beam9.mp3');
   load.audio('beam11','sounds/beamWeapons/beam11.mp3');
+
+
+  load.audio('mediumThrusters1','sounds/thrusters/mediumThrusters1.mp3');
+  load.audio('mediumThrusters2','sounds/thrusters/mediumThrusters2.mp3');
+  load.audio('mediumThrusters3','sounds/thrusters/mediumThrusters3.mp3');
+
 
   load.audio('booster','sounds/thrusters/heavyOverdrive.mp3');
   load.audio('booster-advanced','sounds/thrusters/heavyOverdrive.mp3');
@@ -142,17 +152,20 @@ SoundManager.prototype.preload = function(game) {
   load.audio('dangerAlert','sounds/misc/lowHealthDangerSFX.mp3');
 
   //SYSTEM SOUNDS
-  load.audio('intiatingRepairs','sounds/systemVoice/intiatingRepairs.mp3');
+  load.audio('systemsOnline','sounds/systemVoice/systemsOnline.mp3');
   load.audio('repairsCompleted','sounds/systemVoice/repairsCompleted.mp3');
   load.audio('reactorOnline','sounds/systemVoice/reactorOnline.mp3');
   load.audio('sensorsOnline','sounds/systemVoice/sensorsOnline.mp3');
-  load.audio('systemsOnline','sounds/systemVoice/systemsOnline.mp3');
   load.audio('weaponsSystemsOnline','sounds/systemVoice/weaponsSystemsOnline.mp3');
   load.audio('targetDestroyed','sounds/systemVoice/targetDestroyed.mp3');
   load.audio('warningDamageCritical','sounds/systemVoice/warningDamageCritical.mp3');
+  // load.audio('initiatingRepairs','sounds/systemVoice/intiatingRepairs.mp3');
 
   //UPGRADES
   load.audio('upgradeAvailable','sounds/upgrades/upgradeAvailable.rc.mp3');
+  load.audio('weaponSystemsUpgraded','sounds/upgrades/weaponSystemsUpgraded.mp3');
+  load.audio('reactorUpgraded','sounds/upgrades/reactorUpgraded.mp3');
+  load.audio('armorUpgraded','sounds/upgrades/armorUpgraded.mp3');
 
   //SQUAD CALLBACKS
   load.audio('copyThatCommander','sounds/squadCallbacks/copyThatCommander.mp3');
@@ -179,10 +192,10 @@ SoundManager.prototype.create = function(manager) {
 
 SoundManager.prototype.generateBackgroundMusic = function(){
   // this.generateSound('background', 0.1, true);
-  var num = Math.floor((Math.random() * 3)+1);
-  // this.generateSound('background'+'num', 0.30, true);
+  var num = Math.floor((Math.random() * 4)+1);
+  this.generateSound('background'+num, 0.50, true);
 
-  this.generateSound('background4', 0.30, true);
+  // this.generateSound('background4', 0.60, true);
 };
 
 SoundManager.prototype.generateThrusterSound = function(){
@@ -264,10 +277,10 @@ SoundManager.prototype.generateExplosionSound = function(data){
     if(data.data.size > 127) {
       sound = bigExplosion
       if(volume >.5){volume = .5}
+      if(sound === 'capitalShipExplosion' && volume > 0.2){
+        volume = 0.2
+      };
       if(volume>.1){console.log(sound, volume)}
-      // if(sound === 'capitalShipExplosion2'){
-      //   volume = global.Math.max(1.8 - (distance / 5000), 0);
-      // };
       
     
     } else {sound = smallExplosion};
@@ -296,13 +309,20 @@ SoundManager.prototype.generateFireSound = function(data) {
       loop = false,
       player = this.player,
       manager = this.shipManager, ship = data.ship,
-      num = Math.floor((Math.random() * 5)+1), 
+      harvesterNum = Math.floor((Math.random() * 5)+1), 
+      beamArr = ['musicalBeam_a','musicalBeam_e','musicalBeam_fsharp','musicalBeam_g'],
+      beamNum = Math.floor((Math.random() * beamArr.length)),
       key, volume;
+
+
   for(var i = 0; i<actives.length; i++){
     if(actives[i].data.sound){
       var key = actives[i].data.sound;
       if(actives[i].data.subtype === 'harvester'){
-       var key = 'harvesterBeam'+num;
+       var key = 'harvesterBeam'+harvesterNum;
+      }
+      if(actives[i].data.sound === 'capitalBeam'){
+        var key = beamArr[beamNum];
       }
       volume = actives[i].data.default_volume;
     };
@@ -327,19 +347,22 @@ SoundManager.prototype.generateFireSound = function(data) {
 SoundManager.prototype.stopFireSound = function(launcher){
 };
 
-SoundManager.prototype.generateUpgradeSound = function(sound){
+SoundManager.prototype.generateUpgradeSound = function(data){
+  var sound = data.key,
+      volume = data.volume;
+
   this.game.clock.events.create(1500, false, 1, function(){
-    this.generateSound(sound, 0.4, false); 
+    this.generateSound(sound, volume, false); 
   }, this)
 };
 
 SoundManager.prototype.generateSystemSound = function(sound){
-  this.generateSound(sound, 0.35, false); 
+  this.generateSound(sound, 0.33, false); 
 };
 
 SoundManager.prototype.generateSquadSound = function(sound){
   
-  var volume = 0.1,
+  var volume = 0.2,
       num;
 
       switch(sound) {
@@ -434,7 +457,7 @@ SoundManager.prototype.generateDamageCriticalSound = function() {
 
 SoundManager.prototype._player = function(ship){
   this.player = ship;
-  this.game.clock.events.create(1500, false, 1, function(){
+  this.game.clock.events.create(1100, false, 1, function(){
     this.generateSystemSound('systemsOnline')
   }, this)
 };
