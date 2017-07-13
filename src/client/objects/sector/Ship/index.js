@@ -179,14 +179,14 @@ Ship.prototype.disable = function() {
   this.disabled = true;
   this.chassis.tint = 0x333333;
   this.hud.disable();
+  if(this.data.chassis === 'squad-shield_2'){
+    this.selector.shieldBlue.alpha = 0;
+  };
   this.selector.disable();
   this.engineCore.show(false);
   this.shieldGenerator.stop();
   this.repair.stop();
   this.explosion.start();
-  if(this.chassis === 'squad-repair'){
-    
-  }
 };
 
 Ship.prototype.destroy = function(options) {

@@ -134,15 +134,26 @@ PlayerManager.prototype.upgradeSystem = function(type) {
 
       case 'armor':
         console.log('UPGRADING ARMOR')
-        this.game.emit('upgrades/sound/upgraded','armorUpgraded');
+
+        // update backend      
+        this.socket.emit('ship/upgrade/stats', {uuid: ship.uuid, stat: 'armor'});
+
+        this.game.emit('upgrades/sound/upgraded', {key : 'armorUpgraded', volume : 0.15});
+
         this.upgradeAvailable = false;
         this.upgrade.currentTier++
         this.systemLevels.armor++
         this.upgradeAvailableFlasherStop();
         break
+
       case 'engine':
         console.log('UPGRADING ENGINE')
-        this.game.emit('upgrades/sound/upgraded','reactorUpgraded');
+
+        // update backend      
+        this.socket.emit('ship/upgrade/stats', {uuid: ship.uuid, stat: 'speed'});
+
+        this.game.emit('upgrades/sound/upgraded', {key : 'reactorUpgraded', volume : 0.15});
+
         this.upgradeAvailable = false;
         this.upgrade.currentTier++
         this.systemLevels.engine++

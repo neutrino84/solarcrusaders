@@ -239,7 +239,6 @@ Squadron.prototype.disengage = function() {
   this.repairing = null;
   this.attacker && this.game.clock.events.remove(this.attacker);
   if(this.shielding){
-    console.log('hereeeeeee')
     this.shielding = false;
     this.manager.game.sockets.ioserver.emit('squad/shieldUp', {uuid: ship.uuid, active: false})
   }

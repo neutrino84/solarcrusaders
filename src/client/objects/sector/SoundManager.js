@@ -270,6 +270,7 @@ SoundManager.prototype.generateExplosionSound = function(data){
       
   if(player && player === ship){
     sound = bigExplosion;
+    volume = 0.5;
   };
   if(player && player !== ship) {   
     distance = engine.Point.distance(ship, player);    
@@ -351,7 +352,7 @@ SoundManager.prototype.generateUpgradeSound = function(data){
   var sound = data.key,
       volume = data.volume;
 
-  this.game.clock.events.create(1500, false, 1, function(){
+  this.game.clock.events.create(1400, false, 1, function(){
     this.generateSound(sound, volume, false); 
   }, this)
 };

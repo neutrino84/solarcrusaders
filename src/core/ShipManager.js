@@ -28,6 +28,7 @@ function ShipManager(game) {
   this.game.on('ship/disabled', this.disabled, this);
   this.game.on('ship/enhancement/start', this.enhancement.bind(this));
   this.game.on('ship/upgrade/hardpoints', this.upgradeHardpoints, this);
+  this.game.on('ship/upgrade/stats', this.upgradeStats, this);
 
   this.game.on('squad/engageHostile', this.squad_engage, this);
   this.game.on('squad/regroup', this.squad_regroup, this);
@@ -42,10 +43,11 @@ ShipManager.prototype.constructor = ShipManager;
 
 ShipManager.prototype.init = function() {
   // generate npcs
-  this.generateRandomShips();
-  this.generatePirateShips();
-  this.generateEnforcerShips();
-  this.generateScavengerShips();
+  // this.generateRandomShips();
+  // this.generatePirateShips();
+  // this.generateEnforcerShips();
+  // this.generateScavengerShips();
+  // this.generateTestShips();
 };
 
 ShipManager.prototype.add = function(ship) {
@@ -192,6 +194,33 @@ ShipManager.prototype.upgradeHardpoints = function(socket, args) {
   
   // console.log(args[1].uuid, args[1].hardpoints)
   ships[args[1].uuid].createHardpoints(args[1].hardpoints)
+};
+
+ShipManager.prototype.upgradeStats = function(socket, args) {
+  var data, ship, position, movement,
+      ships = this.ships,
+      ship = ships[args[1].uuid],
+      arr = [], newVal;
+  switch(args[1].stat){
+
+    case 'armor':
+      if(!ship.newArmorValue){
+        ship.newArmorValue = ship.armor*1.4;
+      } else { ship.newArmorValue = ship.newArmorValue*1.3};
+      // console.log(ship.config.stats.armor, '-->', ship.newArmorValue)
+      break;
+
+    case 'speed':
+      if(!ship.newSpeedValue){
+        ship.newSpeedValue = ship.speed*1.5;
+      } else { ship.newSpeedValue = ship.newSpeedValue*1.3};
+      // console.log(ship.config.stats.speed, '-->', ship.newSpeedValue)
+      break;
+
+    default:
+      break;
+  }
+  // ships[args[1].uuid].armorUpgrade();
 };
 
 ShipManager.prototype.data = function(socket, args) {
@@ -401,6 +430,46 @@ ShipManager.prototype.generatePirateShips = function() {
       len = iterator.length;
 
   // create pirates
+  for(var i=0; i<len; i++) {
+    base = iterator[i];
+    for(var s=0; s<base.ships.length; s++) {
+      ship = base.ships[s];
+
+      this.create({
+        name: ship.name,
+        chassis: ship.chassis,
+        credits:  global.Math.floor(ship.credits * global.Math.random() + 100),
+        reputation: global.Math.floor(ship.reputation * (1 + global.Math.random())),
+        throttle: 1.0,
+        ai: 'pirate',
+        x: base.location.x,
+        y: base.location.y
+      });
+    }
+  }
+};
+
+ShipManager.prototype.generateTestShips = function() {
+  var base, ship,
+      iterator = [{
+        location: { x: -4096, y: 2048 },
+        ships: [
+          { name: 'xinli', chassis: 'pirate-x02', credits: 750, reputation: -100 }
+        ]
+      }, {
+        location: { x: 8192, y: 2048 },
+        ships: [
+          { name: 'satel', chassis: 'pirate-x01', credits: 700, reputation: -100 }
+        ]
+      }, {
+        location: { x: 2048, y: -6144 },
+        ships: [
+          { name: 'manduk', chassis: 'pirate-x02', credits: 750, reputation: -100 }
+        ]
+      }],
+      len = iterator.length;
+
+  // create ships
   for(var i=0; i<len; i++) {
     base = iterator[i];
     for(var s=0; s<base.ships.length; s++) {

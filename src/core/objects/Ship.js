@@ -25,6 +25,9 @@ function Ship(manager, data) {
     this.target.disabled = true;
   }
 
+  this.newArmorValue;
+  this.newSpeedValue;
+
   this.uuid = this.data.uuid;
   this.chassis = this.data.chassis;
   if(data.squadron){
@@ -66,7 +69,7 @@ Ship.RESPAWN_TIME = 10000;
 
 Ship.prototype.init = function(callback) {
   var self = this;
-  
+
   if(this.data.isNewRecord()) {
     this.createSystems();
     this.createHardpoints();
@@ -116,7 +119,6 @@ Ship.prototype.createSystems = function() {
   var enhancement,
       enhancements = this.config.enhancements,
       available = this.enhancements.available;
-      // console.log(enhancements)
   for(var e in enhancements) {
     available[enhancements[e]] = new Enhancement(this, enhancements[e]);
   }
@@ -622,8 +624,9 @@ Object.defineProperty(Ship.prototype, 'recharge', {
 
 Object.defineProperty(Ship.prototype, 'armor', {
   get: function() {
-    var total = this.data.armor,
+    var total = this.newArmorValue || this.data.armor;
         armor = this.enhancements.active.armor;
+        
     for(var a in armor) {
       total += armor[a].stat('armor', 'value');
     }
@@ -666,7 +669,7 @@ Object.defineProperty(Ship.prototype, 'evasion', {
 
 Object.defineProperty(Ship.prototype, 'speed', {
   get: function() {
-    var total = this.data.speed,
+    var total = this.newSpeedValue || this.data.speed,
         speed = this.enhancements.active.speed;
     for(var a in speed) {
       total *= speed[a].stat('speed', 'value');

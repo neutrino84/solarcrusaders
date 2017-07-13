@@ -125,6 +125,7 @@ HotkeyManager.prototype.listener = function() {
           this.playerManager.upgradeSystem('weapon');
      };
      if(key.toLowerCase() === '9'){
+      // console.log('in hotkey')
           this.playerManager.upgradeSystem('armor');
      };
      if(key.toLowerCase() === '0'){
