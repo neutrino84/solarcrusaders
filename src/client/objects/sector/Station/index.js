@@ -41,7 +41,7 @@ Station.prototype.boot = function() {
 
   // create hud
   this.hud.create();
-  // this.hud.show();
+  this.hud.show();
 
   // subscribe to updates
   this.data.on('data', this.data, this);

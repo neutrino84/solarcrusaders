@@ -193,7 +193,7 @@ SoundManager.prototype.create = function(manager) {
 SoundManager.prototype.generateBackgroundMusic = function(){
   // this.generateSound('background', 0.1, true);
   var num = Math.floor((Math.random() * 4)+1);
-  this.generateSound('background'+num, 0.50, true);
+  // this.generateSound('background'+num, 0.50, true);
 
   // this.generateSound('background4', 0.60, true);
 };
@@ -369,7 +369,6 @@ SoundManager.prototype.generateSquadSound = function(sound){
       switch(sound) {
         case 'engage':
           num = Math.floor((Math.random() * 2)+1)
-          console.log(num)
           if(num === 2){
             this.generateSound('engagingTarget', volume, false);
           } else if (num === 1){
@@ -378,7 +377,6 @@ SoundManager.prototype.generateSquadSound = function(sound){
           break
         case 'regroup':
           num = Math.floor((Math.random() * 3))
-          console.log(num)
           if(num){
             this.generateSound('returningToFormation', volume, false);
           }

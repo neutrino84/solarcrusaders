@@ -5,7 +5,7 @@
       "health": 1000,
       "heal": 2.0,
       "speed": 2.0,
-      "size": 212,
+      "size": 312,
       "radius": 512
     }
   },
@@ -15,7 +15,7 @@
       "health": 2000,
       "heal": 2.0,
       "speed": 2.0,
-      "size": 212,
+      "size": 312,
       "radius": 512
     }
   }

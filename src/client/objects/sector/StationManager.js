@@ -21,12 +21,16 @@ function StationManager(game) {
 StationManager.prototype.constructor = StationManager;
 
 StationManager.prototype.create = function(data) {
+  console.log(data)
+  
   var game = this.game,
       station = new Station(this, data);
       station.boot();
 
   // add to group
   this.stations[data.uuid] = station;
+
+  console.log(station)
 
   // wait
   this.stationsGroup.add(this.stations[data.uuid]);

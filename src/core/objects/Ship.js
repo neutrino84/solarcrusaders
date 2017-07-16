@@ -11,9 +11,12 @@ var async = require('async'),
 function Ship(manager, data) {
   this.manager = manager;
   this.game = manager.game;
+  // this.stations = manager.stations;
   this.sockets = manager.sockets;
   this.model = manager.model;
   
+  // console.log(data)
+
   this.data = new this.model.Ship(data);
   this.data.init();
 
@@ -25,6 +28,7 @@ function Ship(manager, data) {
     this.target.disabled = true;
   }
 
+  //placeholders for upgrades
   this.newArmorValue;
   this.newSpeedValue;
 
@@ -182,7 +186,7 @@ Ship.prototype.attack = function(data, rtt) {
         hardpoint.cooldown(runtime-rtt);
       }
     }
-  }
+  };
 
   // broadcast atack
   sockets.emit('ship/attack', data);
@@ -190,17 +194,26 @@ Ship.prototype.attack = function(data, rtt) {
 
 Ship.prototype.attacked = function(target, slot) {
   var ship, ships,
+      stations = this.game.sectorManager.stationManager.stations;
       manager = this.manager;
   if(manager != undefined) {
     ships = manager.ships;
+    // console.log('this.game is ', this.game)
+    // stations = manager.stations;
+    // console.log('stations are ', stations)
+    // debugger
     for(var s in ships) {
       ship = ships[s];
 
       if(ship.game && ship != this) {
         ship.hit(this, target, slot);
       }
+    };
+    for(var st in stations){
+      // console.log('station is ', stations[st])
+        stations[st].hit(this, target, slot);
     }
-  }
+  };
 };
 
 Ship.prototype.hit = function(attacker, target, slot) {
@@ -215,6 +228,7 @@ Ship.prototype.hit = function(attacker, target, slot) {
       distance = compensated.distance(target),
       ratio = distance / (this.size * hardpoint.data.aoe),
       damage, health, critical, durability, shielded, killpoints, master;
+
   if(ratio < 1.0) {
     // // test data
     // if(!attacker.ai && this.ai) {
@@ -226,7 +240,7 @@ Ship.prototype.hit = function(attacker, target, slot) {
     // }
 
     //prevent friendly fire dmg to squadron
-    // if(this.master === attacker.uuid){return}  
+    if(this.master === attacker.uuid){return}  
 
     // calc damage
     critical = this.game.rnd.rnd() <= attacker.critical;
@@ -234,17 +248,12 @@ Ship.prototype.hit = function(attacker, target, slot) {
     damage += critical ? damage : 0;
     damage *= piercing ? piercing.damage : 1;
 
-
-
-
     if(this.squadron && this.shieldCheck(this.uuid)){
-        // console.log('aw yeah', this.armor)
-        // // this.armor = this.config.stats.armor + 1
-        // this.armor = 2.0
-        // console.log('aw yeah CHECK', this.armor)
         damage = damage*0.7;
         shielded = true;
+        //shielded = true --> tells front end to show the shield filter
     };
+
     if(attacker.hardpoints[0].subtype === 'repair_beam' && data.health < this.config.stats.health){
     health = data.health + damage;
     } else {
@@ -293,14 +302,10 @@ Ship.prototype.hit = function(attacker, target, slot) {
             if(attacker.master){
               master = attacker.master
             }
-          }
-          // update attacker reputation
-          // console.log('destroyed ships reputation: ', this.reputation, 'destroyed ships credits: ', this.credits)
+          };
 
-          // console.log('reputation: ', attacker.chassis, attacker.reputation, 'credits: ', attacker.credits)
           attacker.reputation = global.Math.floor(attacker.reputation + (this.reputation * -0.05));
           attacker.credits = global.Math.floor(attacker.credits + this.credits);
-          // console.log('reputation: ', attacker.chassis, attacker.reputation, 'credits: ', attacker.credits)
           updates.push({
             uuid: attacker.uuid,
             reputation: attacker.reputation,
@@ -313,7 +318,7 @@ Ship.prototype.hit = function(attacker, target, slot) {
         if(attacker.hardpoints[0].subtype === 'harvester' || attacker.hardpoints[0].subtype === 'harvester-advanced'){
           if(this.durability > 0){
             this.durability = this.durability - attacker.hardpoints[0].data.damage;
-          }
+          };
           updates.push({
             uuid: this.uuid,
             durability: this.durability
@@ -322,7 +327,7 @@ Ship.prototype.hit = function(attacker, target, slot) {
             this.manager.ai.queenCheck(this.config.stats.durability, this.uuid)
           };   
         };
-      }
+      };
 
    
 
@@ -370,7 +375,7 @@ Ship.prototype.blast = function() {
       ship = ships[s];
 
       if(ship.game && !ship.disabled && ship != this) {
-        ship.movement.destabalize(this);
+        ship.movement.destabilize(this);
       }
     }
   }
@@ -626,7 +631,7 @@ Object.defineProperty(Ship.prototype, 'armor', {
   get: function() {
     var total = this.newArmorValue || this.data.armor;
         armor = this.enhancements.active.armor;
-        
+
     for(var a in armor) {
       total += armor[a].stat('armor', 'value');
     }

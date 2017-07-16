@@ -16,10 +16,6 @@ function Ship(manager, data) {
   this.manager = manager;
   this.data = data;
   
-  if(!data.ai){
-  // console.log('in front end ship index, data is ', data)
-  // console.log('in front end ship index, data.config is ', data.config) 
-  }
   // config data
   this.config = data.config.ship;
 

@@ -22,7 +22,7 @@ function Movement(parent) {
   this.vector = new engine.Point();
   this.direction = new engine.Point();
   this.relative = new engine.Point();
-  this.stabalization = new engine.Point();
+  this.stabilization = new engine.Point();
 };
 
 Movement.CLOCK_RATE = 100;
@@ -110,11 +110,11 @@ Movement.prototype.compensated = function(rtt) {
   } else {
     relative.set(position.x, position.y);
   }
-
+  // console.log(this.parent.chassis)
   return relative;
 };
 
-Movement.prototype.destabalize = function(ship) {
+Movement.prototype.destabilize = function(ship) {
   var stabalization = this.stabalization,
       end = this.position,
       start = ship.movement.position,

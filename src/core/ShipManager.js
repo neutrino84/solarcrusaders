@@ -12,6 +12,7 @@ function ShipManager(game) {
   this.sockets = game.sockets.ioserver;
 
   this.ships = {};
+  // this.stations = game.stationManager.stations;
 
   // ai manager
   this.ai = new AI(this);
@@ -48,6 +49,10 @@ ShipManager.prototype.init = function() {
   // this.generateEnforcerShips();
   // this.generateScavengerShips();
   // this.generateTestShips();
+
+  // console.log(this.game)
+  // debugger
+  // this.stations = game.stationManager.stations;
 };
 
 ShipManager.prototype.add = function(ship) {
@@ -80,7 +85,7 @@ ShipManager.prototype.create = function(data, user, position) {
     self.game.emit('ship/add', ship);
   });
   if(ship.user){
-    this.generateSquadronShips(ship.uuid)
+    // this.generateSquadronShips(ship.uuid)
   };
   if(ship.data.chassis === 'enforcers-x02'){
     this.generateEnforcerShips(ship.uuid, data.x, data.y)
@@ -116,6 +121,7 @@ ShipManager.prototype.attack = function(socket, args) {
       user = socket.request.session.user,
       data = args[1],
       ship = ships[data.uuid];
+
   if(ship && ship.user && ship.user.uuid === user.uuid) {
     ship.attack(data, ship.user.rtt);
   }
@@ -197,23 +203,22 @@ ShipManager.prototype.upgradeHardpoints = function(socket, args) {
 };
 
 ShipManager.prototype.upgradeStats = function(socket, args) {
-  var data, ship, position, movement,
-      ships = this.ships,
-      ship = ships[args[1].uuid],
-      arr = [], newVal;
+  var ships = this.ships,
+      ship = ships[args[1].uuid];
+
   switch(args[1].stat){
 
     case 'armor':
       if(!ship.newArmorValue){
         ship.newArmorValue = ship.armor*1.4;
-      } else { ship.newArmorValue = ship.newArmorValue*1.3};
+      } else { ship.newArmorValue = ship.newArmorValue*1.35};
       // console.log(ship.config.stats.armor, '-->', ship.newArmorValue)
       break;
 
     case 'speed':
       if(!ship.newSpeedValue){
-        ship.newSpeedValue = ship.speed*1.5;
-      } else { ship.newSpeedValue = ship.newSpeedValue*1.3};
+        ship.newSpeedValue = ship.speed*1.22;
+      } else { ship.newSpeedValue = ship.newSpeedValue*1.2};
       // console.log(ship.config.stats.speed, '-->', ship.newSpeedValue)
       break;
 
@@ -451,17 +456,20 @@ ShipManager.prototype.generatePirateShips = function() {
 
 ShipManager.prototype.generateTestShips = function() {
   var base, ship,
-      iterator = [{
-        location: { x: -4096, y: 2048 },
-        ships: [
-          { name: 'xinli', chassis: 'pirate-x02', credits: 750, reputation: -100 }
-        ]
-      }, {
-        location: { x: 8192, y: 2048 },
-        ships: [
-          { name: 'satel', chassis: 'pirate-x01', credits: 700, reputation: -100 }
-        ]
-      }, {
+      iterator = [
+      // {
+      //   location: { x: -4096, y: 2048 },
+      //   ships: [
+      //     { name: 'xinli', chassis: 'pirate-x02', credits: 750, reputation: -100 }
+      //   ]
+      // }, 
+      // {
+      //   location: { x: 8192, y: 2048 },
+      //   ships: [
+      //     { name: 'satel', chassis: 'pirate-x01', credits: 700, reputation: -100 }
+      //   ]
+      // }, 
+      {
         location: { x: 2048, y: -6144 },
         ships: [
           { name: 'manduk', chassis: 'pirate-x02', credits: 750, reputation: -100 }
