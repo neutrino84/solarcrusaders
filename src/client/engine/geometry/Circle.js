@@ -25,7 +25,7 @@ function Circle(x, y, radius) {
 Circle.prototype = {
 
   circumference: function() {
-    return 2 * (Math.PI * this._radius);
+    return 2 * (global.Math.PI * this._radius);
   },
 
   random: function(relative, out) {

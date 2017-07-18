@@ -242,9 +242,6 @@ Point.angle = function(a, b) {
     angle += 2 * global.Math.PI;
   }
   return angle;
-
-  // return global.Math.atan2(a.x * b.y - a.y * b.x, a.x * b.x + a.y * b.y);
-  // return global.Math.atan2(a.y - b.y, a.x - b.x);
 };
 
 Point.negative = function(a, out) {
