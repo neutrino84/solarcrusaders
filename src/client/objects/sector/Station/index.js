@@ -96,7 +96,7 @@ Station.prototype.update = function() {
 
   this.period += delta;
 
-  // this.orbit.circumferencePoint(this.period, false, false, this.position);
+  this.orbit.circumferencePoint(this.period, false, false, this.position);
   this.worldPosition = this.game.world.worldTransform.applyInverse(this.position)
   // this.game.world.worldTransform.applyInverse(this.position)
     if(this.data.chassis === 'ubadian-station-x01'){
@@ -105,7 +105,7 @@ Station.prototype.update = function() {
     this.socket.emit('station/data', {uuids: [this.data.uuid], position: this.worldPosition});
   // this.rotation += rotation;
   this.cap.rotation -= 0.01;
-  // engine.Sprite.prototype.update.call(this);
+  engine.Sprite.prototype.update.call(this);
 };
 
 Station.prototype.destroy = function(options) {
