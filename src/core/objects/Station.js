@@ -8,13 +8,14 @@ function Station(manager, data) {
   this.game = manager.game;
   this.sockets = manager.sockets;
   this.model = manager.model;
-
+  console.log('station data is ', data)
   this.data = new this.model.Station(data);
   this.data.init();
 
   this.uuid = this.data.uuid;
   this.chassis = this.data.chassis;
   this.config = client.StationConfiguration[this.data.chassis];
+  this.radius = this.config.stats.radius;
 
   // create system
   // this.movement = new Movement(this);
@@ -62,8 +63,12 @@ Station.prototype.hit = function(attacker, target, slot) {
       damage, health, critical;
       // console.log('target is ', target)
       if(this.chassis === 'ubadian-station-x01'){
-        console.log('movement.position is ', this.movement.position, 'target is ', target)
+        // console.log('movement.position is ', this.movement.position, 'target is ', target)
       }
+      console.log('target: ', target.x, target.y)
+      console.log('station location is ', this.data.x, this.data.y)
+      // console.log('distance: ', distance)
+      // console.log('ratio: ', ratio)
   if(ratio < 1.0) {
     console.log('inside!')
     // // test data

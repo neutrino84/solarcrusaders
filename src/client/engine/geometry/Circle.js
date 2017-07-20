@@ -264,7 +264,6 @@ Circle.circumferencePoint = function(a, angle, asDegrees, relative, out) {
     out.x = a.radius * global.Math.cos(angle);
     out.y = a.radius * global.Math.sin(angle);
   }
-
   return out;
 };
 

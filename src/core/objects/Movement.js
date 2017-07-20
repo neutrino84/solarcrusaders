@@ -110,7 +110,6 @@ Movement.prototype.compensated = function(rtt) {
   } else {
     relative.set(position.x, position.y);
   }
-  // console.log(this.parent.chassis)
   return relative;
 };
 

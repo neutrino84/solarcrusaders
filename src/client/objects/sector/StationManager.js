@@ -21,8 +21,8 @@ function StationManager(game) {
 StationManager.prototype.constructor = StationManager;
 
 StationManager.prototype.create = function(data) {
-  console.log(data)
-  
+  // console.log(data)
+
   var game = this.game,
       station = new Station(this, data);
       station.boot();
@@ -30,7 +30,7 @@ StationManager.prototype.create = function(data) {
   // add to group
   this.stations[data.uuid] = station;
 
-  console.log(station)
+  // console.log(station)
 
   // wait
   this.stationsGroup.add(this.stations[data.uuid]);
@@ -46,6 +46,8 @@ StationManager.prototype.sync = function(data) {
     
     if(station) {
       // sync station
+      stationNetManager._sync({stations: this.stations})
+      // console.log('in manager, station is ', station)
 
     } else {
       data = stationNetManager.getStationData(stations[s].uuid);
