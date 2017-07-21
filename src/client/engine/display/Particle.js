@@ -3,18 +3,23 @@ var pixi = require('pixi'),
     Point = require('../geometry/Point'),
     Core = require('./components/Core');
 
-function Particle(game, key, frame) {
+function Particle(emitter, key, frame) {
   pixi.Sprite.call(this);
 
   this.type = Const.PARTICLE;
-  this.clock = game.clock;
 
-  this.vector = new Point(0, 0);
-  this.velocity = new Point(0, 0);
-  this.drag = new Point(0, 0);
+  this.emitter = emitter;
+  this.game = emitter.game;
+  this.clock = emitter.game.clock;
 
-  this.angularVelocity = 0;
-  this.angularDrag = 0;
+  this.vector = new Point(0.0, 0.0);
+  this.velocity = new Point(0.0, 0.0);
+  this.drag = new Point(0.0, 0.0);
+
+  this.angularVelocity = 0.0;
+  this.angularDrag = 0.0;
+
+  this.started = null;
 
   this.scaleData = null;
   this.alphaData = null;
@@ -26,7 +31,7 @@ function Particle(game, key, frame) {
 
   this.rotation = global.Math.random() * global.Math.PI;
 
-  Core.init.call(this, game, key, frame);
+  Core.init.call(this, emitter.game, key, frame);
 };
 
 Particle.prototype = Object.create(pixi.Sprite.prototype);
@@ -41,51 +46,59 @@ Core.install.call(
 );
 
 Particle.prototype.update = function() {
-  this.step = this.clock.elapsedMS / 1000
-  this.elapsed = this.clock.time - this.started;
+    this.step = this.clock.elapsedMS / 1000;
+    this.elapsed = this.clock.time - this.started;
 
-  // spin
-  this.rotation += this.angularVelocity * this.step;
-  this.angularVelocity -= this.angularDrag * this.step;
+    // spin
+    this.rotation += this.angularVelocity * this.step;
+    this.angularVelocity *= this.angularDrag * this.step;
 
-  // momentum
-  this.position.set(
-    this.position.x + this.velocity.x * this.vector.x * this.step,
-    this.position.y + this.velocity.y * this.vector.y * this.step
-  );
+    // momentum
+    this.position.set(
+      this.position.x + this.velocity.x * this.vector.x * this.step,
+      this.position.y + this.velocity.y * this.vector.y * this.step
+    );
 
-  // friction
-  this.velocity.subtract(
-    this.drag.x * this.step,
-    this.drag.y * this.step
-  );
+    // friction
+    // this.velocity.multiply(
+    //   this.drag.x * this.step,
+    //   this.drag.y * this.step
+    // );
 
-  // auto scale
-  if(this._s) {
-    this._s--;
-    this.scale.set(this.scaleData[this._s].x, this.scaleData[this._s].y);
-  }
+    // auto scale
+    if(this._s) {
+      this._s--;
+      this.scale.set(this.scaleData[this._s].x, this.scaleData[this._s].y);
+    }
 
-  // auto alpha
-  if(this._a) {
-    this._a--;
-    this.alpha = this.alphaData[this._a].v;
-  }
+    // auto alpha
+    if(this._a) {
+      this._a--;
+      this.alpha = this.alphaData[this._a].v;
+    }
 
-  // auto tint
-  if(this._t) {
-    this._t--;
-    this.tint = this.tintData[this._t].t;
-  }
+    // auto tint
+    if(this._t) {
+      this._t--;
+      this.tint = this.tintData[this._t].t;
+    }
 
-  // check if dead
-  if(this.elapsed >= this.lifespan) {
-    this.visible = false;
-  }
+    // check if dead
+    if(this.elapsed > this.lifespan) {
+      this.visible = false;
+      this.emitter.pooling.push(this);
+    }
 };
 
-Particle.prototype.onEmit = function() {
+Particle.prototype.reset = function(x, y) {
+  this.elapsed = 0;
+  this.started = this.clock.time;
+  this.position.set(x, y);
+};
+
+Particle.prototype.emit = function() {
   this.visible = true;
+  this.update();
 };
 
 Particle.prototype.setAlphaData = function(data) {
@@ -105,11 +118,5 @@ Particle.prototype.setTintData = function(data) {
   this._t = data.length - 1;
   this.tint = this.tintData[this._t].t;
 }
-
-Particle.prototype.reset = function(x, y) {
-  this.position.set(x, y);
-  this.elapsed = 0;
-  this.started = this.clock.time;
-};
 
 module.exports = Particle;

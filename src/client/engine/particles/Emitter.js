@@ -18,21 +18,20 @@ function Emitter(game, x, y, maxParticles) {
   this.vector = new Point(0, 0);
   this.velocity = new Point(0, 0);
 
-  this.minParticleScale = 1;
-  this.maxParticleScale = 1;
+  this.minParticleScale = 1.0;
+  this.maxParticleScale = 1.0;
 
   this.startTint = 0xFFFFFF;
   this.endTint = 0xFFFFFF;
 
-  this.minRotation = 0;
-  this.maxRotation = 0;
+  this.minRotation = 0.0;
+  this.maxRotation = 0.0;
 
-  this.minParticleAlpha = 1;
-  this.maxParticleAlpha = 1;
+  this.minParticleAlpha = 1.0;
+  this.maxParticleAlpha = 1.0;
 
-  this.particleClass = Particle;
+  this.angularDrag = 0.0;
 
-  this.angularDrag = 0;
   this.frequency = 100;
   this.lifespan = 2000;
 
@@ -45,9 +44,7 @@ function Emitter(game, x, y, maxParticles) {
   this.emitY = y;
 
   this.on = false;
-
-  // this.particleBringToTop = false;
-  // this.particleSendToBack = false;
+  this.pooling = [];
 
   this._quantity = 0;
   this._timer = 0;
@@ -112,41 +109,36 @@ Emitter.prototype.makeParticles = function(keys, frames, quantity) {
 
   var particle,
       i = 0,
-      rndKey = keys,
-      rndFrame = frames;
+      key = keys,
+      frame = frames;
 
+  // save frames
   this._frames = frames;
 
   if(quantity > this.maxParticles) {
     this.maxParticles = quantity;
   }
 
-  while(i < quantity) {
+  while(i<quantity) {
     if(Array.isArray(keys)) {
-      rndKey = this.game.rnd.pick(keys);
+      key = this.game.rnd.pick(keys);
     }
 
     if(Array.isArray(frames)) {
-      rndFrame = this.game.rnd.pick(frames);
+      frame = this.game.rnd.pick(frames);
     }
 
-    particle = new this.particleClass(this.game, rndKey, rndFrame);
-    particle.visible = false;
+    // create particle
+    particle = new Particle(this, key, frame);
     particle.anchor.copy(this.particleAnchor);
+    particle.visible = false;
 
+    // add to pool
     this.add(particle);
+    this.pooling.push(particle);
 
     i++;
   }
-};
-
-Emitter.prototype.kill = function() {
-  this.on = false;
-  this.visible = false;
-};
-
-Emitter.prototype.revive = function() {
-  this.visible = true;
 };
 
 Emitter.prototype.explode = function(quantity) {
@@ -188,7 +180,6 @@ Emitter.prototype.start = function(explode, lifespan, frequency, quantity) {
     quantity = this.maxParticles;
   }
 
-  this.revive();
   this.lifespan = lifespan;
   this.frequency = frequency;
 
@@ -206,56 +197,56 @@ Emitter.prototype.start = function(explode, lifespan, frequency, quantity) {
 
 Emitter.prototype.emitParticle = function() {
   var frame, rnd = this.game.rnd,
-      particle = this.getFirstVisible(false);
+      particle = this.pooling.pop(); //this.getFirstVisible(false);
+  if(particle) {
+    particle.reset(this.emitX, this.emitY);
+    particle.lifespan = this.lifespan;
 
-  if(particle === null) {
+    if(Array.isArray(this._frames)) {
+      frame = rnd.pick(this._frames);
+    } else {
+      frame = this._frames;
+    }
+    particle.setFrameByName(frame);
+
+    if(this.scaleData) {
+      particle.setScaleData(this.scaleData);
+    } else if(this.minParticleScale !== 1 || this.maxParticleScale !== 1) {
+      particle.scale.set(rnd.realInRange(this.minParticleScale, this.maxParticleScale));
+    }
+
+    if(this.alphaData) {
+      particle.setAlphaData(this.alphaData);
+    } else {
+      particle.alpha = rnd.realInRange(this.minParticleAlpha, this.maxParticleAlpha);
+    }
+
+    if(this.tintData) {
+      particle.setTintData(this.tintData);
+    } else {
+      particle.tint = rnd.realInRange(this.minParticleTint, this.maxParticleTint);
+    }
+
+    particle.blendMode = this.blendMode;
+
+    particle.vector.x = this.vector.x;
+    particle.vector.y = this.vector.y;
+
+    particle.velocity.x = this.velocity.x;
+    particle.velocity.y = this.velocity.y
+
+    particle.drag.x = this.particleDrag.x;
+    particle.drag.y = this.particleDrag.y;
+
+    particle.angularVelocity = Math.degToRad(rnd.between(this.minRotation, this.maxRotation));
+    particle.angularDrag = Math.degToRad(this.angularDrag);
+
+    particle.emit();
+
+    return true;
+  } else {
     return false;
   }
-
-  particle.reset(this.emitX, this.emitY);
-  particle.lifespan = this.lifespan;
-
-  if(Array.isArray(this._frames)) {
-    frame = rnd.pick(this._frames);
-  } else {
-    frame = this._frames;
-  }
-  particle.setFrameByName(frame);
-
-  if(this.scaleData) {
-    particle.setScaleData(this.scaleData);
-  } else if(this.minParticleScale !== 1 || this.maxParticleScale !== 1) {
-    particle.scale.set(
-      rnd.realInRange(this.minParticleScale, this.maxParticleScale));
-  }
-
-  if(this.alphaData) {
-    particle.setAlphaData(this.alphaData);
-  } else {
-    particle.alpha = rnd.realInRange(this.minParticleAlpha, this.maxParticleAlpha);
-  }
-
-  if(this.tintData) {
-    particle.setTintData(this.tintData);
-  }
-
-  particle.blendMode = this.blendMode;
-
-  particle.vector.x = this.vector.x;
-  particle.vector.y = this.vector.y;
-
-  particle.velocity.x = this.velocity.x;
-  particle.velocity.y = this.velocity.y
-  
-  particle.drag.x = this.particleDrag.x;
-  particle.drag.y = this.particleDrag.y;
-
-  particle.angularVelocity = Math.degToRad(rnd.between(this.minRotation, this.maxRotation));
-  particle.angularDrag = Math.degToRad(this.angularDrag);
-
-  particle.onEmit();
-
-  return true;
 };
 
 Emitter.prototype.setVector = function(x, y) {
