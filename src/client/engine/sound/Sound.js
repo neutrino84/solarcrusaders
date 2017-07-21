@@ -1,24 +1,19 @@
 var EventEmitter = require('eventemitter3'),
     Device = require('../system/Device');
 
-function Sound(game, key, volume, loop, connect) {
-  if(volume === undefined) { volume = 1; }
-  if(loop === undefined) { loop = false; }
-  if(connect === undefined) { connect = game.sound.connectToMaster; }
-
+function Sound(game, key, buffer) {
   this.game = game;
   this.name = key;
   this.key = key;
-  this.loop = loop;
-  this.volume = volume;
+  this.buffer = buffer;
   this.markers = {};
-  this.context = null;
-  this.autoplay = false;
+  this.loop = false;
   this.totalDuration = 0;
   this.startTime = 0;
   this.currentTime = 0;
   this.duration = 0;
   this.durationMS = 0;
+  this.rate = 1.0;
   this.position = 0;
   this.stopTime = 0;
   this.paused = false;
@@ -27,19 +22,17 @@ function Sound(game, key, volume, loop, connect) {
   this.isPlaying = false;
   this.currentMarker = '';
   this.fadeTween = null;
-  this.pendingPlayback = false;
-  this.override = false;
-  this.allowMultiple = false;
+  this.decoded = false;
 
-  this.externalNode = null;
-  this.masterGainNode = null;
-  this.gainNode = null;
+  // connect sound to manager
+  this.context = this.game.sound.context;
+  this.masterGain = this.game.sound.masterGain;
+  this.gainNode = this.context.createGain();
+  this.gainNode.connect(this.masterGain);
 
-  this.connect(volume, connect);
-
+  // private vars
   this._sound = null;
-  this._volume = volume;
-  this._buffer = null;
+  this._volume = 1.0;
   this._muted = false;
   this._tempMarker = 0;
   this._tempPosition = 0;
@@ -47,7 +40,6 @@ function Sound(game, key, volume, loop, connect) {
   this._muteVolume = 0;
   this._tempLoop = 0;
   this._paused = false;
-  this._onDecodedEventDispatched = false;
 
   EventEmitter.call(this);
 };
@@ -55,29 +47,6 @@ function Sound(game, key, volume, loop, connect) {
 Sound.prototype = Object.create(EventEmitter.prototype);
 Sound.prototype.constructor = Sound;
 
-Sound.prototype.connect = function(volume, connect) {
-  this.context = this.game.sound.context;
-  this.masterGainNode = this.game.sound.masterGain;
-
-  if(this.context.createGain === undefined) {
-    this.gainNode = this.context.createGainNode();
-  } else {
-    this.gainNode = this.context.createGain();
-  }
-
-  this.gainNode.gain.value = volume * this.game.sound.volume;
-
-  if(connect) {
-    this.gainNode.connect(this.masterGainNode);
-  }
-};
-
-Sound.prototype.soundHasUnlocked = function(key) {
-  if(key === this.key) {
-    this._sound = this.game.cache.getSoundData(this.key);
-    this.totalDuration = this._sound.duration;
-  }
-};
 
 Sound.prototype.addMarker = function(name, start, duration, volume, loop) {
   if(volume === undefined || volume === null) { volume = 1; }
@@ -102,34 +71,17 @@ Sound.prototype.onEndedHandler = function() {
   if(this._sound) {
     this._sound.onended = null;
   }
-  
   this.isPlaying = false;
   this.currentTime = this.durationMS;
   this.stop();
 };
 
 Sound.prototype.update = function() {
-  if(!this.game.cache.checkSoundKey(this.key)) {
-    this.destroy();
-    return;
-  }
-
-  if(this.isDecoded && !this._onDecodedEventDispatched) {
-    this.emit('decoded', this);
-    this._onDecodedEventDispatched = true;
-  }
-
-  if(this.pendingPlayback && this.game.cache.isSoundReady(this.key)) {
-    this.pendingPlayback = false;
-    this.play(this._tempMarker, this._tempPosition, this._tempVolume, this._tempLoop);
-  }
-
   if(this.isPlaying) {
     this.currentTime = this.game.clock.time - this.startTime;
 
     if(this.currentTime >= this.durationMS) {
       if(this.loop) {
-        // won't work with markers, needs to reset the position
         this.emit('loop', this);
 
         if(this.currentMarker === '') {
@@ -140,8 +92,6 @@ Sound.prototype.update = function() {
           this.play(this.currentMarker, 0, this.volume, true, true);
         }
       } else {
-        // stop if we're using an audio marker, 
-        // otherwise we let onended handle it
         if(this.currentMarker !== '') {
           this.stop();
         }
@@ -150,75 +100,58 @@ Sound.prototype.update = function() {
   }
 };
 
-Sound.prototype.loopFull = function(volume) {
-  this.play(null, 0, volume, true);
-};
-
-Sound.prototype.play = function(marker, position, volume, loop, forceRestart) {
+Sound.prototype.play = function(marker, position, volume, loop, rate, force) {
   if(marker === undefined || marker === false || marker === null) { marker = ''; }
-  if(forceRestart === undefined) { forceRestart = true; }
-  if(this.isPlaying && !this.allowMultiple && !forceRestart && !this.override) {
-    // Use Restart instead
+  if(force === undefined) { force = true; }
+
+  // already playing
+  if(this.isPlaying && !force) {
     return this;
   }
 
-  if(this._sound && this.isPlaying && !this.allowMultiple && (this.override || forceRestart)) {
-    if(this._sound.stop === undefined) {
-      this._sound.noteOff(0);
-    } else {
-      try {
-        this._sound.stop(0);
-      } catch(e) {}
-    }
-    if(this.externalNode) {
-      this._sound.disconnect(this.externalNode);
-    } else {
-      this._sound.disconnect(this.gainNode);
-    }
+  // force play
+  if(this._sound && this.isPlaying && force) {
+    this._sound.stop(0);
+    this._sound.disconnect(this.gainNode);
   }
 
+  // must provide marker if audiosprite
   if(marker === '' && Object.keys(this.markers).length > 0) {
-    // If they didn't specify a marker but this is an audio sprite, 
-    // we should never play the entire thing
     return this;
   }
 
+  // play marker
   if(marker !== '') {
     this.currentMarker = marker;
 
     if(this.markers[marker]) {
-      // Playing a marker? Then we default to the marker values
       this.position = this.markers[marker].start;
       this.volume = this.markers[marker].volume;
       this.loop = this.markers[marker].loop;
       this.duration = this.markers[marker].duration;
       this.durationMS = this.markers[marker].durationMS;
 
-      if(typeof volume !== 'undefined') {
-        this.volume = volume;
-      }
-
-      if(typeof loop !== 'undefined') {
-        this.loop = loop;
-      }
+      if(volume !== undefined) { this.volume = volume; }
+      if(loop !== undefined) { this.loop = loop; }
 
       this._tempMarker = marker;
       this._tempPosition = this.position;
       this._tempVolume = this.volume;
       this._tempLoop = this.loop;
     } else {
-      // console.warn("Sound.play: audio marker " + marker + " doesn't exist");
       return this;
     }
   } else {
     position = position || 0;
 
-    if(volume === undefined) { volume = this._volume; }
+    if(volume === undefined) { volume = this.volume; }
     if(loop === undefined) { loop = this.loop; }
+    if(rate === undefined) { rate = 1.0; }
 
     this.position = global.Math.max(0, position);
     this.volume = volume;
     this.loop = loop;
+    this.rate = rate;
     this.duration = 0;
     this.durationMS = 0;
 
@@ -228,66 +161,45 @@ Sound.prototype.play = function(marker, position, volume, loop, forceRestart) {
     this._tempLoop = loop;
   }
 
-  // Does the sound need decoding?
-  if(this.game.cache.isSoundDecoded(this.key)) {
-    this._sound = this.context.createBufferSource();
+  this._sound = this.context.createBufferSource();
+  this._sound.connect(this.gainNode);
+  this._sound.buffer = this.buffer;
+  this._sound.playbackRate.value = this.rate;
 
-    if(this.externalNode) {
-      this._sound.connect(this.externalNode);
-    } else {
-      this._sound.connect(this.gainNode);
-    }
-
-    this._buffer = this.game.cache.getSoundData(this.key);
-    this._sound.buffer = this._buffer;
-
-    if(this.loop && marker === '') {
-      this._sound.loop = true;
-    }
-
-    if(!this.loop && marker === '') {
-      this._sound.onended = this.onEndedHandler.bind(this);
-    }
-
-    this.totalDuration = this._sound.buffer.duration;
-
-    if(this.duration === 0) {
-      this.duration = this.totalDuration;
-      this.durationMS = Math.ceil(this.totalDuration * 1000);
-    }
-
-    // Useful to cache this somewhere perhaps?
-    if(this._sound.start === undefined) {
-      this._sound.noteGrainOn(0, this.position, this.duration);
-    } else {
-      if(this.loop && marker === '') {
-        this._sound.start(0, 0);
-      } else {
-        this._sound.start(0, this.position, this.duration);
-      }
-    }
-
-    this.isPlaying = true;
-    this.startTime = this.game.clock.time;
-    this.currentTime = 0;
-    this.stopTime = this.startTime + this.durationMS;
-    this.emit('play', this);
-  } else {
-    this.pendingPlayback = true;
-
-    if(this.game.cache.getSound(this.key) && this.game.cache.getSound(this.key).isDecoding === false) {
-      this.game.sound.decode(this.key, this);
-    }
+  if(this.loop && marker === '') {
+    this._sound.loop = true;
   }
 
-  return this;
+  if(!this.loop && marker === '') {
+    this._sound.onended = this.onEndedHandler.bind(this);
+  }
+
+  this.totalDuration = this._sound.buffer.duration;
+  if(this.duration === 0) {
+    this.duration = this.totalDuration;
+    this.durationMS = global.Math.ceil(this.totalDuration * 1000);
+  }
+
+  if(this.loop && marker === '') {
+    this._sound.start(0, 0);
+  } else {
+    this._sound.start(0, this.position, this.duration);
+  }
+
+  this.isPlaying = true;
+  this.currentTime = 0;
+  this.startTime = this.game.clock.time;
+  this.stopTime = this.startTime + this.durationMS;
+
+  this.emit('play', this);
 };
 
 Sound.prototype.restart = function(marker, position, volume, loop) {
   marker = marker || '';
   position = position || 0;
   volume = volume || 1;
-  if(loop === undefined) { loop = false; }
+  loop = loop || false;
+
   this.play(marker, position, volume, loop, true);
 };
 
@@ -303,16 +215,12 @@ Sound.prototype.pause = function() {
 
 Sound.prototype.resume = function() {
   if(this.paused && this._sound) {
-    var p = Math.max(0, this.position + (this.pausedPosition / 1000));
+    var pausedPosition = Math.max(0, this.position + (this.pausedPosition / 1000)),
+        duration = this.duration - (this.pausedPosition / 1000);
 
     this._sound = this.context.createBufferSource();
-    this._sound.buffer = this._buffer;
-
-    if(this.externalNode) {
-      this._sound.connect(this.externalNode);
-    } else {
-      this._sound.connect(this.gainNode);
-    }
+    this._sound.buffer = this.buffer;
+    this._sound.connect(this.gainNode);
 
     if(this.loop) {
       this._sound.loop = true;
@@ -322,58 +230,41 @@ Sound.prototype.resume = function() {
       this._sound.onended = this.onEndedHandler.bind(this);
     }
 
-    var duration = this.duration - (this.pausedPosition / 1000);
-    if(this._sound.start === undefined) {
-      this._sound.noteGrainOn(0, p, duration);
-      this._sound.noteOn(0); // the zero is vitally important, crashes iOS6 without it
+    if(this.loop && Device.chrome) {
+      this._sound.start(0, pausedPosition);
     } else {
-      if(this.loop && Device.chrome) {
-        this._sound.start(0, p);
-      } else {
-        this._sound.start(0, p, duration);
-      }
+      this._sound.start(0, pausedPosition, duration);
     }
 
     this.isPlaying = true;
     this.paused = false;
     this.startTime += (this.game.clock.time - this.pausedTime);
+
     this.emit('resume', this);
   }
 };
 
 Sound.prototype.stop = function() {
+  // disconnect sound
   if(this.isPlaying && this._sound) {
-    if(this._sound.stop === undefined) {
-      this._sound.noteOff(0);
-    } else {
-      try {
-        this._sound.stop(0);
-      } catch (e) {}
-    }
-    if(this.externalNode) {
-      this._sound.disconnect(this.externalNode);
-    } else {
-      this._sound.disconnect(this.gainNode);
-    }
+    this._sound.stop(0);
+    this._sound.disconnect(this.gainNode);
   }
 
-  this.pendingPlayback = false;
+  // stop playing
   this.isPlaying = false;
 
+  // emit if not paused
   if(!this.paused) {
-    var prevMarker = this.currentMarker;
-
-    if(this.currentMarker !== '') {
-      this.emit('markerComplete', this.currentMarker, this);
-    }
-
-    this.currentMarker = '';
-
+    // var prevMarker = this.currentMarker;
+    // if(this.currentMarker !== '') {
+    //   this.emit('markerComplete', this.currentMarker, this);
+    // }
+    // this.currentMarker = '';
     if(this.fadeTween !== null) {
       this.fadeTween.stop();
     }
-
-    this.emit('stop', this, prevMarker);
+    this.emit('stop', this); //, prevMarker);
   }
 };
 
@@ -410,32 +301,10 @@ Sound.prototype.fadeComplete = function() {
   }
 };
 
-Sound.prototype.destroy = function(remove) {
-  if(remove === undefined) { remove = true; }
-    this.stop();
-  if(remove) {
-    this.game.sound.remove(this);
-  } else {
-    this.markers = {};
-    this.context = null;
-    this._buffer = null;
-    this.externalNode = null;
-
-    this.removeAllListeners();
-  }
+Sound.prototype.destroy = function() {
+  this.stop();
+  this.game.sound.remove(this);
 };
-
-Object.defineProperty(Sound.prototype, 'isDecoding', {
-  get: function() {
-    return this.game.cache.getSound(this.key).isDecoding;
-  }
-});
-
-Object.defineProperty(Sound.prototype, 'isDecoded', {
-  get: function() {
-    return this.game.cache.isSoundDecoded(this.key);
-  }
-});
 
 Object.defineProperty(Sound.prototype, 'mute', {
   get: function() {
@@ -444,20 +313,15 @@ Object.defineProperty(Sound.prototype, 'mute', {
 
   set: function(value) {
     value = value || false;
-
     if(value === this._muted) { return; }
-
     if(value) {
       this._muted = true;
       this._muteVolume = this._tempVolume;
-
       this.gainNode.gain.value = 0;
     } else {
       this._muted = false;
-
       this.gainNode.gain.value = this._muteVolume;
     }
-
     this.emit('mute', this);
   }
 });
@@ -472,13 +336,9 @@ Object.defineProperty(Sound.prototype, 'volume', {
       this._muteVolume = value;
       return;
     }
-
     this._tempVolume = value;
     this._volume = value;
-
-    if(this.gainNode) {
-      this.gainNode.gain.value = value;
-    }
+    this.gainNode.gain.value = value;
   }
 });
 
