@@ -2,6 +2,7 @@ var Device = require('./system/Device'),
     Game = require('./core/Game'),
     State = require('./core/State'),
     Group = require('./core/Group'),
+    Camera = require('./core/Camera'),
     Sprite = require('./display/Sprite'),
     Shader = require('./display/Shader'),
     Particle = require('./display/Particle'),
@@ -31,6 +32,7 @@ var core = module.exports =
     Device: Device,
     Game: Game,
     State: State,
+    Camera: Camera,
 
     // display
     Group: Group,
