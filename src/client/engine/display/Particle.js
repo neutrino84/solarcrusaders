@@ -96,7 +96,7 @@ Particle.prototype.reset = function(x, y) {
   this.position.set(x, y);
 };
 
-Particle.prototype.emit = function() {
+Particle.prototype.start = function() {
   this.visible = true;
   this.update();
 };

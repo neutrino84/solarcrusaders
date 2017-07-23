@@ -197,7 +197,7 @@ Emitter.prototype.start = function(explode, lifespan, frequency, quantity) {
 
 Emitter.prototype.emitParticle = function() {
   var frame, rnd = this.game.rnd,
-      particle = this.pooling.pop(); //this.getFirstVisible(false);
+      particle = this.pooling.pop();
   if(particle) {
     particle.reset(this.emitX, this.emitY);
     particle.lifespan = this.lifespan;
@@ -241,7 +241,7 @@ Emitter.prototype.emitParticle = function() {
     particle.angularVelocity = Math.degToRad(rnd.between(this.minRotation, this.maxRotation));
     particle.angularDrag = Math.degToRad(this.angularDrag);
 
-    particle.emit();
+    particle.start();
 
     return true;
   } else {
