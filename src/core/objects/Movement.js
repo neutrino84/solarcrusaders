@@ -4,16 +4,17 @@ var engine = require('engine');
 function Movement(parent) {
   this.parent = parent;
   this.game = parent.game;
+  this.data = parent.data;
 
-  this.throttle = 0.0;
+  this.time = null;
   this.magnitude = 0.0;
-  this.speed = 0.0;
-  this.rotation = global.Math.PI * global.Math.random();
-  this.time = this.game.clock.time;
+  this.throttle = this.data.throttle;
+  this.speed = this.data.speed;
+  this.rotation = this.data.rotation;
 
   this.start = {
-    x: global.parseFloat(parent.data.x),
-    y: global.parseFloat(parent.data.y)
+    x: global.parseFloat(this.data.x),
+    y: global.parseFloat(this.data.y)
   }
 
   this.last = new engine.Point(this.start.x, this.start.y);
@@ -26,7 +27,7 @@ function Movement(parent) {
 };
 
 Movement.CLOCK_RATE = 100;
-Movement.FRICTION = 1.2;
+Movement.FRICTION = 1.05;
 Movement.STOP_THRESHOLD = 32.0;
 Movement.THROTTLE_THRESHOLD = 256.0;
 
