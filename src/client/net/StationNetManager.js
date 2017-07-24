@@ -40,8 +40,12 @@ StationNetManager.prototype._data = function(data) {
         this.stations[station.uuid] = new StationData(this.game, station);
         console.log('syncing')
       } else if(this.stations[station.uuid]) {
+<<<<<<< HEAD
         // console.log('~~update~~, station is ', station)
         // console.log('~~update~~', this.stations[station.uuid].x, this.stations[station.uuid].y)
+=======
+        console.log('in  NETmanager, data is ', data)
+>>>>>>> 50147832439f8f82455db0584f4bff74195d5c8d
         this.stations[station.uuid].update(station);
       }
     }
@@ -52,7 +56,11 @@ StationNetManager.prototype._sync = function(data) {
   var station,
       stations = data.stations,
       uuids = [];
+<<<<<<< HEAD
       // console.log('in sync, data is ', data)
+=======
+      // console.log(stations[0])
+>>>>>>> 50147832439f8f82455db0584f4bff74195d5c8d
       // debugger
   // detect new
   for(var s in stations) {
@@ -64,7 +72,13 @@ StationNetManager.prototype._sync = function(data) {
 
     if(this.stations[station.uuid] === undefined) {
       uuids.push(station.uuid);
+<<<<<<< HEAD
       // console.log('pushing', uuids)
+=======
+    } else {
+      // console.log(station, station.period)
+
+>>>>>>> 50147832439f8f82455db0584f4bff74195d5c8d
     }
   }
   // console.log(data)

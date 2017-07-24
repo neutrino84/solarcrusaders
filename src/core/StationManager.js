@@ -107,11 +107,10 @@ StationManager.prototype.update = function() {
     if(station) {
       orbit = station.orbit;
       orbit.update();
-      // console.log('in update period is', station.period)
-      
-      // console.log(orbit)
+      // console.log(station.orbit.period)
       data = {
-        uuid: station.uuid
+        uuid: station.uuid,
+        period: station.orbit.period
       };
     }
 
