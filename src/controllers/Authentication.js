@@ -14,7 +14,6 @@ function Authentication(routes) {
   this.game = app.game;
   this.model = app.model;
   this.server = app.server;
-  this.sockets = app.sockets;
 
   // queue must be used to
   // prevent duplication
@@ -30,19 +29,19 @@ function Authentication(routes) {
 Authentication.prototype.constructor = Authentication;
 
 Authentication.prototype.init = function() {
-  var self = this;
+  var self = this,
+      express = this.routes.express;
 
-  this.routes.express.use(passport.initialize());
-  this.routes.express.use(passport.session());
+  express.use(passport.initialize());
+  express.use(passport.session());
 
   passport.use(this.passport);
 
   // create guest user
   this.routes.play.get('/', function(req, res, next) {
     if(!req.session.user) {
-      var name = Generator.getUsername(),
-          username = Generator.getGuest(),
-          guest = new self.model.User({ name: name, username: username });
+      var username = Generator.getGuest(),
+          guest = new self.model.User({ username: username });
       req.session.user = guest.toStreamObject();
       req.session.save(function() {
         next();
