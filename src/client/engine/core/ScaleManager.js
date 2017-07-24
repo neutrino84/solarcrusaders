@@ -41,7 +41,6 @@ function ScaleManager(game, width, height) {
   this.height = 0;
 
   this.event = null;
-  // this.grid = null;
 
   this.minWidth = null;
   this.maxWidth = null;
@@ -108,8 +107,6 @@ function ScaleManager(game, width, height) {
 
   this.parentScaleFactor = new Point(1, 1);
 
-  // this.onSizeChange = new Phaser.Signal();
-
   this.onResize = null;
   this.onResizeContext = null;
 
@@ -143,16 +140,6 @@ function ScaleManager(game, width, height) {
   }
 
   this.setupScale(width, height);
-
-  // auto lower resolution
-  this.game.on('fpsProblem', function() {
-    this.resolutionMode = 'low';
-
-    this.scaleMode = ScaleManager.EXACT_FIT;
-    this.fullScreenScaleMode = ScaleManager.EXACT_FIT;
-
-    this.refresh();
-  }, this);
 };
 
 ScaleManager.EXACT_FIT = 0;
@@ -218,8 +205,6 @@ ScaleManager.prototype = {
 
     // Don't use updateOrientationState so events are not fired
     this.screenOrientation = this.dom.getScreenOrientation(this.compatibility.orientationFallback);
-
-    // this.grid = new Phaser.FlexGrid(this, this.width, this.height);
 
     this._booted = true;
 
@@ -341,9 +326,6 @@ ScaleManager.prototype = {
       this._lastReportedCanvasSize.setTo(0, 0, width, height);
       this._lastReportedGameSize.setTo(0, 0, this.game.width, this.game.height);
 
-      // this.grid.onResize(width, height);
-      // this.onSizeChange.dispatch(this, width, height);
-
       this.game.states.resize(this.game.width, this.game.height);
     }
   },
@@ -417,13 +399,8 @@ ScaleManager.prototype = {
     this.updateScalingAndBounds();
 
     if(resize) {
-      //  Resize the renderer (which in turn resizes the Display canvas!)
       this.game.renderer.resize(this.width, this.height);
-
-      //  The Camera can never be smaller than the Game size
-      this.game.camera.setSize(this.width, this.height);
-
-      //  This should only happen if the world is smaller than the new canvas size
+      this.game.camera.resize(this.width, this.height);
       this.game.world.resize(this.width, this.height);
     }
   },
@@ -715,9 +692,7 @@ ScaleManager.prototype = {
   },
 
   reset: function(clearWorld) {
-    if(clearWorld) {
-        // this.grid.reset();
-    }
+
   },
 
   setMaximum: function() {

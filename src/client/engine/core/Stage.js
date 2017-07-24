@@ -22,11 +22,11 @@ Stage.prototype.boot = function() {
 
 Stage.prototype.update = function() {
   this.currentRenderOrderID = 0;
-  this.game.world.camera.update();
   var i = this.children.length;
   while(i--) {
     this.children[i].update();
   }
+  this.game.world.camera.update();
 };
 
 Stage.prototype.checkVisibility = function() {
@@ -75,10 +75,6 @@ Stage.prototype.visibilityChange = function(event) {
   } else {
     this.game.gameResumed(event);
   }
-};
-
-Stage.prototype.destroy = function() {
-  pixi.Container.prototype.destroy.call(this);
 };
 
 module.exports = Stage;

@@ -5,29 +5,21 @@ var Rectangle = require('../geometry/Rectangle'),
 
 function World(game) {
   Group.call(this, game, null);
-
-  this.game = game;
-  this.camera = null;
-  
-  this.bounds = new Rectangle(0, 0, game.width, game.height);
-
-  this.game.on('state/change', this.stateChange, this);
 };
 
 World.prototype = Object.create(Group.prototype);
 World.prototype.constructor = World;
 
 World.prototype.boot = function() {
-  this.static = new Group(this.game);
-  this.background = new Group(this.game);
-  this.foreground = new Group(this.game);
-
-  // components
+  // main game containers
+  this.static = new Group(this.game, this.game.stage);
   this.main = new Group(this.game, this.game.stage);
   this.front = new Group(this.game, this.game.stage);
   this.ui = new Group(this.game, this.game.stage);
 
-  this.main.add(this.static);
+  // create prallax
+  this.background = new Group(this.game);
+  this.foreground = new Group(this.game);
   this.main.add(this.background);
   this.main.add(this.foreground);
   
@@ -39,49 +31,12 @@ World.prototype.boot = function() {
   this.game.stage.addChild(this);
 };
 
-World.prototype.setBounds = function(x, y, width, height) {
-  this._width = width;
-  this._height = height;
-
-  this._bounds.addFrame(this.transform, this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
-
-  if(this.camera.bounds) {
-    this.camera.bounds.setTo(x, y,
-      global.Math.max(width, this.game.width),
-      global.Math.max(height, this.game.height));
-  }
+World.prototype.size = function(x, y, width, height) {
+  this._bounds.addFrame(this.transform, x, y, width, height);
 };
 
-World.prototype_calculateBounds = function() {
-  this._bounds.addFrame(this.transform, this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
-};
-
-World.prototype.update = function() {
-  var background = this.background,
-      foreground = this.foreground,
-      view = this.camera.view;
-
-  background.x = this.x;
-  background.y = this.y;
-  background.pivot.x = this.pivot.x / 6;
-  background.pivot.y = this.pivot.y / 6;
-  background.scale.x = this.scale.x / 3 + 0.5;
-  background.scale.y = this.scale.y / 3 + 0.5;
-
-  foreground.x = this.x;
-  foreground.y = this.y;
-  foreground.pivot.x = this.pivot.x / 4;
-  foreground.pivot.y = this.pivot.y / 4;
-  foreground.scale.x = this.scale.x / 2 + 0.5;
-  foreground.scale.y = this.scale.y / 2 + 0.5;
-
-  Group.prototype.update.call(this);
-};
-
-World.prototype.resize = function(width, height) {};
-
-World.prototype.stateChange = function() {
-  this.camera.reset();
+World.prototype.resize = function(width, height) {
+  //..
 };
 
 World.prototype.shutdown = function() {
