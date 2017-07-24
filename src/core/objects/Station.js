@@ -13,15 +13,18 @@ function Station(manager, data) {
 
   this.uuid = this.data.uuid;
   this.chassis = this.data.chassis;
+
+  // station configuration
   this.config = client.StationConfiguration[this.data.chassis];
 
+  // station orbit movement
   this.orbit = new Orbit(this);
 };
 
 Station.prototype.constructor = Station;
 
-Station.prototype.init = function(callback) {
-  callback();
+Station.prototype.init = function(callback, context) {
+  callback.call(context);
 };
 
 Station.prototype.save = function(callback) {
@@ -54,16 +57,6 @@ Station.prototype.enable = function() {
     uuid: this.uuid
   });
 };
-
-Object.defineProperty(Station.prototype, 'rotation', {
-  get: function() {
-    return this.data.rotation;
-  },
-
-  set: function(value) {
-    this.data.rotation = value;
-  }
-});
 
 Object.defineProperty(Station.prototype, 'health', {
   get: function() {

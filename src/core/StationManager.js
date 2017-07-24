@@ -6,9 +6,6 @@ var uuid = require('uuid'),
 function StationManager(game) {
   this.game = game;
   this.model = game.model;
-  this.sockets = game.sockets.ioserver;
-
-  this.game.on('station/add', this.add, this);
 
   this.stations = {};
 };
@@ -16,11 +13,9 @@ function StationManager(game) {
 StationManager.prototype.constructor = StationManager;
 
 StationManager.prototype.init = function() {
-  // io router
-  this.game.on('station/data', this.data.bind(this));
-
-  // generate station
-  this.generateStation();
+  // listen to messaging
+  this.game.on('station/add', this.add, this);
+  this.game.on('station/create', this.create, this);
 };
 
 StationManager.prototype.add = function(station) {
@@ -30,20 +25,14 @@ StationManager.prototype.add = function(station) {
 };
 
 StationManager.prototype.create = function(data) {
-  var self = this,
-      station;
-  station = new Station(this, data);
-  station.init(function(err) {
-    self.game.emit('station/add', station);
-  });
+  var station = new Station(this, data);
+      station.init(function(err) {
+        this.game.emit('station/add', station);
+      }, this);
 };
 
-StationManager.prototype.data = function(socket, args, next) {
+StationManager.prototype.data = function(uuids) {
   var station,
-      uuid,
-      uuids = args[1].uuids,
-      user = socket.request.session.user,
-      sockets = this.sockets,
       stations = [];
   for(var u in uuids) {
     station = this.stations[uuids[u]];
@@ -51,55 +40,48 @@ StationManager.prototype.data = function(socket, args, next) {
       stations.push({
         uuid: station.uuid,
         name: station.data.name,
-        x: station.data.x,
-        y: station.data.y,
-        chassis: station.chassis,
-        period: station.period,
+        x: station.orbit.position.x,
+        y: station.orbit.position.y,
+        throttle: station.orbit.throttle,
+        rotation: station.orbit.rotation,
+        spin: station.orbit.spin,
+        period: station.orbit.period,
+        speed: station.speed * station.orbit.throttle,
         radius: station.radius,
+        chassis: station.chassis,
         race: station.race,
-        rotation: station.rotation,
         size: station.size,
         health: station.health,
-        heal: station.heal,
-        speed: station.speed
+        heal: station.heal
       });
     }
   }
-  sockets.emit('station/data', {
-    type: 'sync', stations: stations
-  });
+  return stations;
 };
 
-StationManager.prototype.update = function() {
-  var data, station, orbit, moving,
-      sockets = this.sockets,
+StationManager.prototype.sync = function() {
+  var data, station, orbit,
       stations = this.stations,
       synced = [];
   for(var s in stations) {
     station = stations[s];
 
     if(station) {
-      // orbit = station.orbit;
-      // orbit.update();
+      orbit = station.orbit;
+      orbit.update();
+      position = orbit.position;
       data = {
         uuid: station.uuid,
-        period: station.data.period
+        pos: { x: position.x, y: position.y },
+        spd: station.speed * orbit.throttle,
+        rot: orbit.rotation,
+        spn: orbit.spin
       };
     }
 
     synced.push(data);
   }
-  sockets.emit('station/sync', {
-    stations: synced
-  });
-};
-
-StationManager.prototype.generateStation = function() {
-  this.create({
-    x: 2048,
-    y: 2048,
-    chassis: 'ubadian-station-x01'
-  });
+  return synced;
 };
 
 module.exports = StationManager;
