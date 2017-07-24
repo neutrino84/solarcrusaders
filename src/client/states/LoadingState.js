@@ -1,7 +1,6 @@
 
 var engine = require('engine'),
     SectorState = require('./SectorState'),
-    SelectionState = require('./SelectionState'),
     Layout = require('../ui/Layout'),
     Pane = require('../ui/components/Pane'),
     Image = require('../ui/components/Image'),
@@ -25,15 +24,6 @@ LoadingState.prototype.create = function() {
   // load game
   game.states.add('sector', sectorState);
   game.states.start('sector');
-
-  // var game = this.game,
-  //     selectionState = new SelectionState(game);
-
-  // // load game
-  // game.states.add('selection', selectionState);
-  // game.states.start('selection');
-
-  // -----
 
   this.image = new Image(game, {
     margin: [10],
