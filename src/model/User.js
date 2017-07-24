@@ -8,6 +8,7 @@ var uuid = require('uuid'),
 
 var User = schema.define('user', {
   uuid:       { type: schema.UUID, default: uuid.v4 },
+  ship:       { type: schema.UUID },
   status:     { type: schema.String, default: 'offline' },
   role:       { type: schema.String, default: 'guest' },
   edition:    { type: schema.String, default: 'none' },

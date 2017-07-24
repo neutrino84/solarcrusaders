@@ -2,8 +2,8 @@
 var client = require('client'),
     uuid = require('uuid'),
     db = require('../database'),
-    schema = db.schema,
-    Faction = require('./Faction');
+    Faction = require('./Faction'),
+    schema = db.schema;
 
 var Ship = schema.define('ship', {
   uuid:       { type: schema.UUID, default: uuid.v4 },
@@ -35,13 +35,6 @@ var Ship = schema.define('ship', {
   critical:   { type: schema.Double }
 });
 
-// Ship.NAMES = [
-//   'ubaidian-x01', 'ubaidian-x02', 'ubaidian-x03', 'ubaidian-x04',
-//   'hederaa-x01',
-//   'mechan-x01', 'mechan-x02', 'mechan-x03',
-//   'general-x01', 'general-x02', 'general-x03'
-// ];
-
 Ship.CLASSES = [
   'mining',           // 1 light socket
   'frigate',          // 1 light socket
@@ -56,8 +49,6 @@ Ship.CLASSES = [
 ];
 
 Ship.validatesLengthOf('name', { min: 2, max: 64 });
-
-// Ship.validatesInclusionOf('chassis', { in: Ship.NAMES });
 Ship.validatesInclusionOf('class', { in: Ship.CLASSES });
 Ship.validatesInclusionOf('race', { in: Faction.RACES });
 
