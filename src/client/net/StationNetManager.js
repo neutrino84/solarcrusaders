@@ -35,6 +35,7 @@ StationNetManager.prototype._data = function(data) {
       if(data.type === 'sync' && this.stations[station.uuid] === undefined) {
         this.stations[station.uuid] = new StationData(this.game, station);
       } else if(this.stations[station.uuid]) {
+        console.log('in  NETmanager, data is ', data)
         this.stations[station.uuid].update(station);
       }
     }
@@ -45,7 +46,7 @@ StationNetManager.prototype._sync = function(data) {
   var station,
       stations = data.stations,
       uuids = [];
-      // console.log(stations)
+      // console.log(stations[0])
       // debugger
   // detect new
   for(var s in stations) {
@@ -57,6 +58,9 @@ StationNetManager.prototype._sync = function(data) {
 
     if(this.stations[station.uuid] === undefined) {
       uuids.push(station.uuid);
+    } else {
+      // console.log(station, station.period)
+
     }
   }
 

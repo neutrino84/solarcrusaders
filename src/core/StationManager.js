@@ -79,11 +79,12 @@ StationManager.prototype.update = function() {
     station = stations[s];
 
     if(station) {
-      // orbit = station.orbit;
-      // orbit.update();
+      orbit = station.orbit;
+      orbit.update();
+      // console.log(station.orbit.period)
       data = {
         uuid: station.uuid,
-        period: station.data.period
+        period: station.orbit.period
       };
     }
 
@@ -101,19 +102,19 @@ StationManager.prototype.generateStation = function() {
     chassis: 'ubadian-station-x01'
   });
 
-  this.create({
-    x: -2392,
-    y: 2892,
-    chassis: 'scavenger-nest-x01',
-    radius: 0
-  });
+  // this.create({
+  //   x: -2392,
+  //   y: 2892,
+  //   chassis: 'scavenger-nest-x01',
+  //   radius: 0
+  // });
 
-  this.create({
-    x: 2392,
-    y: -2892,
-    chassis: 'scavenger-nest-x01',
-    radius: 0
-  });
+  // this.create({
+  //   x: 2392,
+  //   y: -2892,
+  //   chassis: 'scavenger-nest-x01',
+  //   radius: 0
+  // });
 };
 
 module.exports = StationManager;
