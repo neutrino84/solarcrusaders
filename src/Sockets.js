@@ -1,12 +1,16 @@
 
-var io = require('socket.io'),
+var EventEmitter = require('eventemitter3'),
+    io = require('socket.io'),
     winston = require('winston');
 
 function Socket(app) {
   this.app = app;
   this.server = app.server;
+
+  EventEmitter.call(this);
 };
 
+Socket.prototype = Object.create(EventEmitter.prototype);
 Socket.prototype.constructor = Socket;
 
 Socket.prototype.init = function(next) {
@@ -24,7 +28,7 @@ Socket.prototype.init = function(next) {
     socket.on('disconnecting', this.disconnecting.bind(this, socket));
 
     // emit global socket messages
-    socket.use(this.emit.bind(this, socket));
+    socket.use(this.receive.bind(this, socket));
   }.bind(this));
 
   next();
@@ -36,8 +40,12 @@ Socket.prototype.configure = function(socket, next) {
   this.server.session(request, res, next);
 };
 
-Socket.prototype.emit = function(socket, args, err) {
-  this.app.game.emit(args[0], socket, args, err);
+Socket.prototype.send = function(path, data) {
+  this.ioserver.emit(path, data);
+};
+
+Socket.prototype.receive = function(socket, args, err) {
+  this.emit(args[0], socket, args, err);
 };
 
 Socket.prototype.disconnecting = function(socket) {
