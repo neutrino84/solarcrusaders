@@ -15,7 +15,7 @@ function Planet(game) {
   this.atmosphere.cache();
   this.addChild(this.atmosphere);
 
-  this.pivot.set(this._width/2, this._height/2);
+  this.pivot.set(this.width/2, this.height/2);
   this.position.set(2048/6, 2048/6);
 };
 

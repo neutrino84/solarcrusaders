@@ -28,7 +28,8 @@ NebulaCluster.prototype.create = function(density) {
     nebula.pivot.set(256, 256);
     nebula.position.set(global.Math.random() * 128, global.Math.random() * 128);
     nebula.rotation = (2 * global.Math.PI / density) * i;
-    nebula.scale.set(i%3+3/d, i%3+3/d)
+    nebula.scale.set(i%3+8/d, i%3+8/d);
+    nebula.alpha = 0.5;
 
     this.addChild(nebula);
     this.sprites.push(nebula);

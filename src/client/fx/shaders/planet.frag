@@ -25,13 +25,13 @@ void main(void) {
     vec3 pos = ro + t * rd;
     vec3 nor = pos;
     vec2 uv;
-         uv.x = atan(nor.x, nor.z) / .7853 - 0.01 * time;
+         uv.x = atan(nor.x, nor.z) / .7853 - 0.04 * time;
          uv.y = acos(nor.y) / .7853;
 
     planet = texture2D(uSampler, uv).rgb;
 
-    uv.x -= 0.016 * time;
-    uv.y -= 0.024 * time;
+    uv.x -= 0.04 * time;
+    uv.y -= 0.04 * time;
 
     clouds = texture2D(uClouds, uv).rgb;
     clouds.b /= 2.6;
@@ -41,7 +41,7 @@ void main(void) {
     // textures
     color = mix(planet * planet, planet, 0.5);
     color *= 1.86 * pow(max(0.44, dot(pos, normalize(vec3(2.6, 0.0, 6.0)))), 7.6);
-    color += clouds * (clouds / 2.0) * 0.5;
+    color += clouds * (clouds / 2.0);// * 0.5;
 
     alpha += 1.0;
   }

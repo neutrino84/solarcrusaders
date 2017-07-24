@@ -8,20 +8,16 @@ function Space(game) {
   this.spaceTexture = new pixi.Texture(engine.Shader.getRepeatTexture(game, 'space'));
   this.nebulaTexture = new pixi.Texture(engine.Shader.getRepeatTexture(game, 'nebula'));
 
-  pixi.Sprite.call(this, this.spaceTexture);
-
-  this.game = game;
+  engine.Shader.call(this, game, this.spaceTexture);
 
   this.tileScale = new pixi.Point(1, 1);
   this.tilePosition = new pixi.Point(0, 0);
 
   this.width = game.width;
   this.height = game.height;
-
-  this._glDatas = [];
 };
 
-Space.prototype = Object.create(pixi.Sprite.prototype);
+Space.prototype = Object.create(engine.Shader.prototype);
 Space.prototype.constructor = Space;
 
 Space.prototype.update = function() {
@@ -41,13 +37,7 @@ Space.prototype.resize = function(width, height) {
   this.height = height;
 };
 
-Space.prototype.getRepeatTexture = function(key) {
-  var base = this.game.cache.getBaseTexture(key);
-      base.wrapMode = pixi.WRAP_MODES.REPEAT;
-  return base;
-};
-
-Space.prototype._renderWebGL = function(renderer) {
+Space.prototype._renderShaderWebGL = function(renderer) {
   var gl, glData, vertices,
       textureUvs, textureWidth, textureHeight,
       uTransform, texture = this._texture;
@@ -113,7 +103,6 @@ Space.prototype.destroy = function() {
   this.spaceTexture = null;
   this.nebulaTexture = null;
   
-  this._tileScaleOffset = null;
   this._glDatas = null;
 };
 

@@ -1,29 +1,23 @@
-precision mediump float;
-
-varying mediump vec2 vTextureCoord;
-
+varying vec2 vTextureCoord;
 uniform sampler2D uSampler;
-uniform vec2 texelSize;
-uniform float matrix[9];
+
+uniform vec4 color;
+uniform vec4 filterArea;
+uniform vec4 filterClamp;
+vec2 px = vec2(1.0 / filterArea.x, 1.0 / filterArea.y);
 
 void main(void) {
-  float c11 = texture2D(uSampler, vTextureCoord - texelSize).a; // top left
-  float c12 = texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y - texelSize.y)).a; // top center
-  float c13 = texture2D(uSampler, vec2(vTextureCoord.x + texelSize.x, vTextureCoord.y - texelSize.y)).a; // top right
-
-  float c21 = texture2D(uSampler, vec2(vTextureCoord.x - texelSize.x, vTextureCoord.y)).a; // mid left
-  float c22 = texture2D(uSampler, vTextureCoord).a; // mid center
-  float c23 = texture2D(uSampler, vec2(vTextureCoord.x + texelSize.x, vTextureCoord.y)).a; // mid right
-
-  float c31 = texture2D(uSampler, vec2(vTextureCoord.x - texelSize.x, vTextureCoord.y + texelSize.y)).a; // bottom left
-  float c32 = texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y + texelSize.y)).a; // bottom center
-  float c33 = texture2D(uSampler, vTextureCoord + texelSize).a; // bottom right
-
-  // gl_FragColor =
-  float c =
-    c11 * matrix[0] + c12 * matrix[1] + c13 * matrix[2] +
-    c21 * matrix[3] + c22 * matrix[4] + c23 * matrix[5] +
-    c31 * matrix[6] + c32 * matrix[7] + c33 * matrix[8];
-
-  gl_FragColor = vec4(c, c, c, c);
+    const float PI = 3.14159265358979323846264;
+    vec4 ownColor = texture2D(uSampler, vTextureCoord);
+    vec4 curColor;
+    float a = 0.0;
+    vec2 displaced;
+    for(float angle=0.0; angle<=PI*2.0; angle+=0.5) {//%SIZE%) {
+      displaced.x = vTextureCoord.x + %SIZE% * px.x * cos(angle);
+      displaced.y = vTextureCoord.y + %SIZE% * px.y * sin(angle);
+      curColor = texture2D(uSampler, clamp(displaced, filterClamp.xy, filterClamp.zw));
+      a = max(a, curColor.a);
+    }
+    a = min(1.0-ownColor.a, a);
+    gl_FragColor = vec4(color.r * a, color.g * a, color.b * a, a);
 }
