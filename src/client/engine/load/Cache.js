@@ -71,13 +71,20 @@ Cache.prototype = {
   },
 
   addImage: function(key, url, data) {
+    var cache = this._cache,
+        resolution = pixi.utils.getResolutionOfUrl(url),
+        scale = pixi.SCALE_MODES.LINEAR,
+        baseTexture;
+
     if(this.checkImageKey(key)) {
       this.removeImage(key);
     }
 
-    var baseTexture = new pixi.BaseTexture(data);
+    // create base texture
+    baseTexture = new pixi.BaseTexture(data, scale, resolution);
+    baseTexture.key = key;
 
-    this._cache.image[key] = {
+    cache.image[key] = {
       key: key,
       url: url,
       data: data,
@@ -87,11 +94,7 @@ Cache.prototype = {
     };
 
     // add to PIXI cache
-    pixi.utils.BaseTextureCache[key] = baseTexture;
-
-    // if there is an @2x at the end of the url we are 
-    // going to assume its a highres image
-    baseTexture.resolution = pixi.utils.getResolutionOfUrl(url);
+    pixi.BaseTexture.addToCache(baseTexture, key);
   },
 
   addDefaultImage: function() {
@@ -112,24 +115,10 @@ Cache.prototype = {
     this.addTexture('__default', texture);
   },
 
-  addSound: function(key, url, data, webAudio, audioTag) {
-    if(webAudio === undefined) { webAudio = true; audioTag = false; }
-    if(audioTag === undefined) { webAudio = false; audioTag = true; }
-
-    var decoded = false;
-
-    if(audioTag) {
-      decoded = true;
-    }
-
+  addSound: function(key, url, data) {
     this._cache.sound[key] = {
       url: url,
-      data: data,
-      isDecoding: false,
-      decoded: decoded,
-      webAudio: webAudio,
-      audioTag: audioTag,
-      locked: this.game.sound.touchLocked
+      data: data
     };
   },
 
@@ -193,75 +182,24 @@ Cache.prototype = {
     };
 
     this._cache.image[key] = obj;
-    // this._resolveURL(url, obj);
   },
 
   addTextureAtlas: function(key, url, data, atlasData, format) {
-    var atlas = {
-      key: key,
-      url: url,
-      data: data,
-      base: new pixi.BaseTexture(data)
-    };
-
-    // let's just work it out from the frames array
+    var cache = this._cache,
+        resolution = pixi.utils.getResolutionOfUrl(url),
+        scale = pixi.SCALE_MODES.LINEAR,
+        atlas = {
+          key: key,
+          url: url,
+          data: data,
+          base: new pixi.BaseTexture(data, scale, resolution)
+        };
     if(Array.isArray(atlasData.frames)) {
       atlas.frameData = AnimationParser.JSONData(this.game, atlasData, key);
     } else {
       atlas.frameData = AnimationParser.JSONDataHash(this.game, atlasData, key);
     }
-
-    this._cache.image[key] = atlas;
-  },
-
-  reloadSound: function(key) {
-    var self = this,
-        sound = this.getSound(key);
-
-    if(sound) {
-      sound.data.src = sound.url;
-      sound.data.addEventListener('canplaythrough',
-        function() {
-          return self.reloadSoundComplete(key);
-        }, false);
-      sound.data.load();
-    }
-  },
-
-  reloadSoundComplete: function(key) {
-    var sound = this.getSound(key);
-    if(sound) {
-      sound.locked = false;
-      this.onSoundUnlock.dispatch(key);
-    }
-  },
-
-  updateSound: function(key, property, value) {
-    var sound = this.getSound(key);
-    if(sound) {
-      sound[property] = value;
-    }
-  },
-
-  decodedSound: function(key, data) {
-    var sound = this.getSound(key);
-        sound.data = data;
-        sound.decoded = true;
-        sound.isDecoding = false;
-  },
-
-  isSoundDecoded: function(key) {
-    var sound = this.getItem(key, Cache.SOUND);
-    if(sound) {
-      return sound.decoded;
-    }
-  },
-
-  isSoundReady: function(key) {
-    var sound = this.getItem(key, Cache.SOUND);
-    if(sound) {
-      return (sound.decoded && !this.game.sound.touchLocked);
-    }
+    cache.image[key] = atlas;
   },
 
   checkKey: function(cache, key) {

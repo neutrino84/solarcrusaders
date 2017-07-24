@@ -205,27 +205,21 @@ Loader.prototype.spritesheet = function(key, url, frameWidth, frameHeight, frame
   }, false, '.png');
 };
 
-Loader.prototype.audio = function(key, urls, autoDecode) {
-  if(this.game.sound.noAudio) {
-    return this;
-  }
-  if(autoDecode === undefined) { autoDecode = true; }
+Loader.prototype.audio = function(key, urls) {
+  if(this.game.sound.noAudio) { return this; }
   if(typeof urls === 'string') {
     urls = [urls];
   }
-  return this.addToFileList('audio', key, urls, { buffer: null, autoDecode: autoDecode });
+  return this.addToFileList('audio', key, urls, { buffer: null });
 };
 
-Loader.prototype.audiosprite = function(key, urls, jsonURL, jsonData, autoDecode) {
-  if(this.game.sound.noAudio) {
-    return this;
-  }
+Loader.prototype.audiosprite = function(key, urls, jsonURL, jsonData) {
+  if(this.game.sound.noAudio) { return this; }
 
   if(jsonURL === undefined) { jsonURL = null; }
   if(jsonData === undefined) { jsonData = null; }
-  if(autoDecode === undefined) { autoDecode = true; }
 
-  this.audio(key, urls, autoDecode);
+  this.audio(key, urls);
 
   if(jsonURL) {
     this.json(key + '-audioatlas', jsonURL);
@@ -468,11 +462,8 @@ Loader.prototype.loadFile = function(file) {
     case 'audio':
       file.url = this.getAudioURL(file.url);
       if(file.url) {
-        //  WebAudio or Audio Tag?
-        if(this.game.sound.usingWebAudio) {
+        if(!this.game.sound.noAudio) {
           this.xhrLoad(file, this.transformUrl(file.url, file), 'arraybuffer', this.fileComplete);
-        } else if(this.game.sound.usingAudioTag) {
-          this.loadAudioTag(file);
         }
       } else {
         this.fileError(file, null, 'No supported audio URL specified or device does not have audio playback support');
@@ -524,15 +515,9 @@ Loader.prototype.fileComplete = function(file, xhr) {
       }
       break;
     case 'audio':
-      if(game.sound.usingWebAudio) {
+      if(!game.sound.noAudio) {
         file.data = xhr.response;
-        cache.addSound(file.key, file.url, file.data, true, false);
-
-        if(file.autoDecode) {
-          game.sound.decode(file.key);
-        }
-      } else {
-        cache.addSound(file.key, file.url, file.data, false, true);
+        cache.addSound(file.key, file.url, file.data);
       }
       break;
     case 'text':
@@ -634,40 +619,6 @@ Loader.prototype.loadImageTag = function(file) {
     file.data.onload = null;
     file.data.onerror = null;
     this.fileComplete(file);
-  }
-};
-
-Loader.prototype.loadAudioTag = function(file) {
-  var self = this;
-  if(this.game.sound.touchLocked) {
-    //  If audio is locked we can't do this yet, so need to queue this load request. Bum.
-    file.data = new Audio();
-    file.data.name = file.key;
-    file.data.preload = 'auto';
-    file.data.src = this.transformUrl(file.url, file);
-
-    this.fileComplete(file);
-  } else {
-    file.data = new Audio();
-    file.data.name = file.key;
-    
-    var playThroughEvent = function() {
-      file.data.removeEventListener('canplaythrough', playThroughEvent, false);
-      file.data.onerror = null;
-      // Why does this cycle through games?
-      // Phaser.GAMES[self.game.id].load.fileComplete(file);
-    };
-
-    file.data.onerror = function() {
-        file.data.removeEventListener('canplaythrough', playThroughEvent, false);
-        file.data.onerror = null;
-        self.fileError(file);
-    };
-
-    file.data.preload = 'auto';
-    file.data.src = this.transformUrl(file.url, file);
-    file.data.addEventListener('canplaythrough', playThroughEvent, false);
-    file.data.load();
   }
 };
 
