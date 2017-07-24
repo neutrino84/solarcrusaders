@@ -27,7 +27,6 @@ function ShipData(game, data) {
     hardpoint: game.cache.getJSON('item-configuration', false)['hardpoint']
   };
 
-
   EventEmitter.call(this);
 };
 
