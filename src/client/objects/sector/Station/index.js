@@ -8,19 +8,24 @@ function Station(manager, data) {
   this.name = data.name;
   this.manager = manager;
   this.data = data;
+  this.speed = data.speed;
 
   // config data
   this.config = data.config.station;
 
-  // layer chassis
-  // this.chassis = new engine.Sprite(manager.game, data.chassis + '.png');
-  
+  // destination
+  this.vector = new engine.Point();
+  this.destination = new engine.Point();
+
   // core ship classes
-  this.hud = new Hud(this);
-  this.period = this.data.period;
-  this.orbit = new engine.Circle(this.data.x/4, this.data.y/4, this.data.radius);
+  this.rotation = this.rot = data.rotation;
+  this.position.set(this.data.x, this.data.y);
   this.pivot.set(this.width/2, this.height/2);
-  this.rotation = this.data.rotation;
+
+  // timer events
+  this.events = new engine.Timer(this.game, false);
+
+  this.hud = new Hud(this);
 };
 
 Station.prototype = Object.create(engine.Sprite.prototype);
@@ -40,29 +45,46 @@ Station.prototype.boot = function() {
   this.hud.show();
 
   // subscribe to updates
-  this.data.on('data', this.data, this);
+  this.data.on('data', this.refresh, this);
 };
 
-Station.prototype.data = function(data) {
+Station.prototype.refresh = function(data) {
   this.hud.data(data);
 };
 
 Station.prototype.update = function() {
-  var delta = this.data.speed * (1/60) * (1/100),
-      rotation = delta/6;
+  // calculate movement]
+  if(!this.destination.isZero()) {
+    var elapsed = this.game.clock.elapsed,
+        d1 = this.destination.distance(this.position),
+        d2 = this.rotation-(this.rotation+this.spin),
+        interpolate1 = (elapsed * (this.speed / 200)) / d1;
+        interpolate2 = (elapsed * (this.spin / 200)) / d2;
+        destination = engine.Point.interpolate(this.position, this.destination, interpolate1, this.vector),
+        rotation = engine.Math.linearInterpolation([this.rotation, this.rotation+this.spin], interpolate2);
+    this.position.set(destination.x, destination.y);
+    this.rotation = rotation;
+    this.cap.rotation = -rotation*8;
+  }
 
-  this.orbit.circumferencePoint(this.period, false, false, this.position);
-  this.period += delta;
-  // this.rotation += rotation;
-  this.cap.rotation -= 0.01;
+  // update
+  this.hud.update();
 
   engine.Sprite.prototype.update.call(this);
 };
 
+Station.prototype.plot = function(data) {
+  this.speed = data.spd;
+  this.rot = data.rot;
+  this.spin = data.spn;
+  this.destination.copyFrom(data.pos);
+};
+
 Station.prototype.destroy = function(options) {
+  engine.Sprite.prototype.destroy.call(this, options);
+
   this.manager = this.game = this.target =
     this.targeted = undefined;
-  engine.Sprite.prototype.destroy.call(this, options);
 };
 
 module.exports = Station;
