@@ -5,7 +5,7 @@ var uuid = require('uuid'),
     ShipManager = require('./ShipManager'),
     UserManager = require('./UserManager'),
     StationManager = require('./StationManager'),
-    PlayManager = require('./PlayManager');
+    EventManager = require('./EventManager');
 
 function SectorManager(game) {
   this.game = game;
@@ -20,7 +20,7 @@ function SectorManager(game) {
 
   // instance managers
   this.stationManager = new StationManager(game);
-  this.playManager = new PlayManager(game);
+  this.eventManager = new PlayManager(game);
   this.shipManager = new ShipManager(game);
   this.userManager = new UserManager(game);
 };
@@ -29,7 +29,7 @@ SectorManager.prototype.constructor = SectorManager;
 
 SectorManager.prototype.init = function() {
   this.stationManager.init();
-  this.playManager.init();
+  this.eventManager.init();
   this.shipManager.init();
   this.userManager.init();
 
