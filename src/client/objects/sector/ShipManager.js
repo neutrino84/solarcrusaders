@@ -9,12 +9,12 @@ var engine = require('engine'),
     FireEmitter = require('./emitters/FireEmitter'),
     Indicator = require('./misc/Indicator');
 
-function ShipManager(game) {
+function ShipManager(game, state) {
   this.game = game;
+  this.state = state;
   this.clock = game.clock;
   this.net = game.net;
   this.socket = game.net.socket;
-  this.shipNetManager = game.states.current.shipNetManager;
   this.enhancementManager = new EnhancementManager(this);
 
   // player
@@ -60,39 +60,44 @@ function ShipManager(game) {
   this.trajectoryGraphics = new engine.Graphics(game);
   this.trajectoryGroup.addChild(this.trajectoryGraphics);
 
-  // authentication
-  this.game.on('disconnected', this._disconnectd, this);
-
   // networking
-  // TODO: move to ShipNetManager... maybe not?
-  this.socket.on('ship/sync', this._syncBind = this._sync.bind(this));
-  this.socket.on('ship/attack', this.attackBind = this._attack.bind(this));
   // this.socket.on('ship/test', this._test.bind(this));
 
   // subscribe to messages
+  this.game.on('auth/disconnect', this._disconnect, this);
+
+  this.game.on('sector/sync', this._sync, this);
+
   this.game.on('game/pause', this._pause, this);
   this.game.on('game/resume', this._resume, this);
 
   this.game.on('ship/player', this._player, this);
   this.game.on('ship/primary', this._primary, this);
   this.game.on('ship/secondary', this._secondary, this);
+  this.game.on('ship/attack', this._attack, this);
   this.game.on('ship/removed', this._removed, this);
   this.game.on('ship/disabled', this._disabled, this);
   this.game.on('ship/enabled', this._enabled, this);
-  this.game.on('ship/hardpoint/cooled', this._cooled, this);
 };
 
 ShipManager.prototype.constructor = ShipManager;
 
-ShipManager.prototype.create = function(data, details) {
+ShipManager.prototype.create = function(data, sync) {
   var game = this.game,
       container = this.shipsGroup,
-      ship = new Ship(this, details);
+      ships = this.ships,
+      ship = new Ship(this, data);
 
+  // set data
   ship.uuid = data.uuid;
-  ship.user = details.user;
-  ship.username = details.username;
-  ship.position.set(data.pos.x, data.pos.y);
+  ship.user = data.user;
+  ship.username = data.username;
+
+  // set position
+  ship.position.set(sync.pos.x, sync.pos.y);
+
+  // add ship registry
+  ships[ship.uuid] = ship;
 
   // display
   container.add(ship);
@@ -120,9 +125,8 @@ ShipManager.prototype.remove = function(data) {
 ShipManager.prototype.removeAll = function() {
   var ship,
       ships = this.ships;
-  for(var i=0; i<ships.length; i++) {
-    ship = ships[s];
-    this.remove(ship);
+  for(var s in ships) {
+    this.remove(ships[s]);
   }
 };
 
@@ -131,11 +135,8 @@ ShipManager.prototype.destroy = function() {
       auth = this.game.auth,
       socket = this.socket;
 
-  auth.removeListener('disconnected', this._disconnectd);
-
-  socket.removeListener('ship/sync', this._syncBind);
-  socket.removeListener('ship/attack', this._attackBind);
-
+  game.removeListener('auth/disconect', this._disconnect);
+  game.removeListener('sector/sync', this._sync);
   game.removeListener('ship/player', this._player);
   game.removeListener('ship/primary', this._primary);
   game.removeListener('ship/secondary', this._secondary);
@@ -158,46 +159,39 @@ ShipManager.prototype.destroy = function() {
   game.world.remove(this.flashEmitter);
   game.world.remove(this.glowEmitter);
 
+  this.removeAll();
+
   this.game = this.socket = this._syncBind =
    this._attackBind = undefined;
-
-  this.removeAll();
 };
 
 ShipManager.prototype._sync = function(data) {
-  var ship, cached,
-      game = this.game,
+  var game = this.game,
+      netManager = this.state.netManager,
       ships = data.ships,
       length = ships.length,
-      details, created, distance;
+      sync, ship, d;
   for(var s=0; s<length; s++) {
-    ship = ships[s];
-    shipData = this.shipNetManager.getShipData(ship.uuid);
+    sync = ships[s];
+    ship = this.ships[sync.uuid];
 
-    if(shipData) {
-      created = !this.ships[ship.uuid];
-      cached = created ? this.ships[ship.uuid] = this.create(ship, shipData) : this.ships[ship.uuid];
-      cached.movement.plot(ship);
-
-      // if(cached.movement._speed > 0) {
-      //   console.log(cached.movement._speed);
-      
-      //   this.trajectoryGraphics.lineStyle(0);
-      //   this.trajectoryGraphics.beginFill(0x0000FF, 0.5);
-      //   this.trajectoryGraphics.drawCircle(ship.pos.x, ship.pos.y, 6);
-      //   this.trajectoryGraphics.endFill();
-      // }
+    if(ship) {
+      ship.movement.plot(sync);
+    } else {
+      d = netManager.getShipData(sync.uuid);
+      d && this.create(d, sync);
     }
+
+    // this.trajectoryGraphics.lineStyle(0);
+    // this.trajectoryGraphics.beginFill(0x0000FF, 0.5);
+    // this.trajectoryGraphics.drawCircle(ship.pos.x, ship.pos.y, 6);
+    // this.trajectoryGraphics.endFill();
   }
 };
 
 ShipManager.prototype._player = function(ship) {
   this.player = ship;
   this.game.camera.follow(ship);
-};
-
-ShipManager.prototype._cooled = function(data) {
-  this.player.targetingComputer.cooled(data);
 };
 
 ShipManager.prototype._attack = function(data) {
@@ -234,7 +228,7 @@ ShipManager.prototype._primary = function(data) {
   if(ship) {
     if(!ship.disabled && data.type === 'start') {
       this.autofire && clock.events.remove(this.autofire);
-      this.autofire = clock.events.loop(25, function() {
+      this.autofire = clock.events.loop(20, function() {
         ship.targetingComputer.fire();
       });
     } else {
@@ -248,19 +242,21 @@ ShipManager.prototype._secondary = function(data) {
       ship = this.player,
       socket = this.socket,
       indicator = this.indicator,
-      end = this.game.input.mousePointer,
-      start = this.shipsGroup.worldTransform.apply(ship.position),
-      position = this.game.world.worldTransform.applyInverse(end),
-      destination = { x: end.x - start.x, y: end.y - start.y };
+      end, start, position, destination;
+
   if(ship) {
+    end = this.game.input.mousePointer,
+    start = this.shipsGroup.worldTransform.apply(ship.position);
+    position = this.game.world.worldTransform.applyInverse(end);
+    destination = { x: end.x - start.x, y: end.y - start.y }
+
     if(data.type === 'start') {
       indicator.show(position);
+      game.emit('ship/plot');
       socket.emit('ship/plot', {
         uuid: ship.uuid,
         destination: destination
       });
-
-      game.emit('ship/sound/thrusters');
     }
   }
 };
@@ -268,12 +264,12 @@ ShipManager.prototype._secondary = function(data) {
 ShipManager.prototype._disabled = function(data) {
   var ship = this.ships[data.uuid],
       socket = this.socket,
-      clock = this.clock;
+      clock = this.clock,
+      game = this.game;
   if(ship !== undefined) {
     ship.disable();
-    this.game.emit('ship/sound/death', ship);
-    // socket.emit('ship/death', ship);
-    // cancel autofire
+    ship.explode();
+
     if(ship.isPlayer) {
       this.autofire && clock.events.remove(this.autofire);
     }
@@ -304,7 +300,7 @@ ShipManager.prototype._pause = function() {
   //..
 };
 
-ShipManager.prototype._disconnectd = function() {
+ShipManager.prototype._disconnect = function() {
   this.removeAll();
 };
 

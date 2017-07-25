@@ -6,6 +6,7 @@ var engine = require('engine'),
     TargetingComputer = require('./TargetingComputer'),
     ShieldGenerator = require('./ShieldGenerator'),
     Explosion = require('./Explosion'),
+    Damage = require('./Damage'),
     Selector = require('./Selector'),
     Hud = require('../../../ui/components/Hud');
 
@@ -31,14 +32,15 @@ function Ship(manager, data) {
 
   // core ship classes
   this.hud = new Hud(this);
-  this.selector = new Selector(this);
   this.movement = new Movement(this);
+  this.damage = new Damage(this);
   this.engineCore = new EngineCore(this, this.config.engine);
   this.targetingComputer = new TargetingComputer(this, this.config.targeting);
   this.shieldGenerator = new ShieldGenerator(this, this.config.shields);
   this.repair = new Repair(this);
   this.explosion = new Explosion(this);
-}
+  this.selector = new Selector(this);
+};
 
 Ship.prototype = Object.create(engine.Sprite.prototype);
 Ship.prototype.constructor = Ship;
@@ -48,19 +50,23 @@ Ship.prototype.boot = function() {
   this.addChild(this.chassis);
 
   // create main systems
-  this.selector.create();
   this.engineCore.create();
   this.targetingComputer.create();
   this.shieldGenerator.create();
   this.repair.create();
   this.hud.create();
+  this.damage.create();
   this.explosion.create();
+  this.selector.create();
 
   // subscribe to updates
   this.data.on('data', this.refresh, this);
 
   // start events
   this.events.start();
+
+  // set disabled
+  this.data.disabled && this.disable();
 
   // set player
   if(this.isPlayer) {
@@ -71,8 +77,12 @@ Ship.prototype.boot = function() {
 
 Ship.prototype.refresh = function(data) {
   var ship, attacker, defender,
+      damage = this.damage,
       ships = this.manager.ships,
       targetingComputer = this.targetingComputer;
+
+  // critical hit
+  data.critical && damage.critical();
 
   if(data.hardpoint) {
     attacker = ships[data.uuid];
@@ -80,26 +90,28 @@ Ship.prototype.refresh = function(data) {
 
     // send hit to targeting computer
     targetingComputer.hit(defender, data);
+
+    // show selector damage
+    defender.selector.damage();
+    defender.selector.timer && defender.events.remove(defender.selector.timer);
+    defender.selector.timer = defender.events.add(500, defender.selector.reset, defender.selector);
+
     // show hud screen
-    if(attacker.isPlayer || defender.isPlayer) {
-      attacker.selector.highlight();
-      defender.selector.highlight();
+    defender.hud.show();
+    defender.hud.timer && defender.events.remove(defender.hud.timer);
+    defender.hud.timer = defender.events.add(10000, defender.hud.hide, defender.hud);
 
-      ship = attacker.isPlayer ? defender : attacker;
-      ship.hud.show();
-      ship.timer && ship.events.remove(ship.timer);
-      ship.timer = ship.events.add(10000, function() {
-        this.hud.hide();
-      }, ship);
-
-      if(defender.isPlayer) {
-        this.game.camera.shake();
-      }
-    };
+    if(defender.isPlayer) {
+      this.game.camera.shake();
+    }
   };
-  if(data.durability < this.config.stats.durability){
-   this.alpha = (data.durability / this.config.stats.durability);
+
+  if(data.durability) {
+    if(data.durability < this.config.stats.durability) {
+      this.alpha = (data.durability / this.config.stats.durability);
+    }
   }
+
   // update hud
   this.hud.data(data);
 };
@@ -110,17 +122,14 @@ Ship.prototype.update = function() {
       speed = this.data.speed,
       multiplier = velocity/speed;
 
-  this.movement.update();
   this.events.update(this.game.clock.time);
+  this.movement.update();
   this.targetingComputer.update();
   this.hud.update();
   this.selector.update();
-  
-  // if(this.data.durability < this.config.stats.durability){
-  //  this.alpha = (this.data.durability / this.config.stats.durability * 0.5)  + .5;
-  // }
+
   // update disabled state
-  if(this.disabled){
+  if(this.disabled) {
     this.engineCore.update(0);
     this.explosion.update();
   } else {
@@ -131,9 +140,9 @@ Ship.prototype.update = function() {
 };
 
 Ship.prototype.enable = function(data) {
-  this.alpha = 1;
+  this.alpha = 1.0;
   this.disabled = false;
-  this.chassis.tint = 0xFFFFFF;
+  // this.chassis.tint = 0xFFFFFF;
   this.hud.enable();
   this.selector.enable();
   this.engineCore.show(true);
@@ -142,12 +151,16 @@ Ship.prototype.enable = function(data) {
 
 Ship.prototype.disable = function() {
   this.disabled = true;
-  this.chassis.tint = 0x333333;
+  // this.chassis.tint = 0x333333;
   this.hud.disable();
   this.selector.disable();
+  this.engineCore.stop();
   this.engineCore.show(false);
   this.shieldGenerator.stop();
   this.repair.stop();
+};
+
+Ship.prototype.explode = function() {
   this.explosion.start();
 };
 

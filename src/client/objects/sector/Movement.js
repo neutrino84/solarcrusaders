@@ -82,7 +82,7 @@ Movement.prototype.update = function() {
   ship.position.set(position.x + direction.x, position.y + direction.y);
 
   // update rotation
-  if(velocity > 0 && speed > 0) {
+  if(!ship.disabled && velocity > 0 && speed > 0) {
     a1 = position.y - ship.position.y;
     a2 = position.x - ship.position.x;
 
@@ -91,6 +91,10 @@ Movement.prototype.update = function() {
     } else {
       ship.rotation = 0;
     }
+  }
+
+  if(ship.disabled && velocity > 0) {
+    ship.rotation += velocity/100;
   }
 };
 
@@ -105,7 +109,7 @@ Movement.prototype.plot = function(data) {
 
   this._destination.copyFrom(data.pos);
   this._speed = data.spd;
-  this._velocity = (data.spd / (1/10)) * (1/fps);
+  this._velocity = (data.spd / (1/10)) * (1/60);
 
   // set velocity
   this.velocity = this._velocity * 6;
