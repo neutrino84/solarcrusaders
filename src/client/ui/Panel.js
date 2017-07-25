@@ -199,13 +199,23 @@ Panel.prototype.getPreferredSize = function() {
 };
 
 Panel.prototype.destroy = function(options) {
+  // remove panel
+  this.parent && this.parent.panels &&
+    this.parent.removePanel(this);
+
+  // destroy sub-panels and views
+  var arr = this.panels.concat(this.views),
+      len = arr.length;
+  for(var i=0; i<len; i++) {
+    arr[i].destroy(options);
+  }
+
+  // destroy group
   engine.Group.prototype.destroy.call(this, options);
 
-  this.layout = this.margin =
-    this.padding = undefined;
-  
-  this.views = [];
-  this.panels = [];
+  // remove references
+  this.layout = this.constraint =
+    this.margin = this.padding = undefined;
 };
 
 Object.defineProperty(Panel.prototype, 'top', {
