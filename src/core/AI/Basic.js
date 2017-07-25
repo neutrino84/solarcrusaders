@@ -18,19 +18,19 @@ function Basic(ship) {
   this.offset = new engine.Point();
 
   this.settings = {
-    respawn: 30000,
     disengage: 7680,
-    friendly: ['basic','user','scavenger'],
+    friendly: ['basic', 'user', 'scavenger'],
     position: {
       radius: 4096,
       x: 2048,
       y: 2048
     },
+    bounds: 4096,
     escape: {
       health: 0.25,
     },
     sensor: {
-      aim: 1.5,
+      aim: 0.5,
       range: 4096
     }
   };
@@ -46,7 +46,6 @@ Basic.prototype.update = function() {
       rnd = this.game.rnd,
       p1, p2, size, health;
 
-
   p1 = ship.movement.position;
   sensor.setTo(p1.x, p1.y, settings.sensor.range);
   health = ship.data.health / ship.config.stats.health;
@@ -58,11 +57,16 @@ Basic.prototype.update = function() {
     this.retreat = false;
   }
 
+  // check bounds
+  if(settings.bounds && p1.distance(settings.position) > settings.bounds) {
+    this.retreat = true;
+  }
+
   // target ships
-  if(rnd.frac() < 0.8) {
+  if(this.target == null && rnd.frac() < 0.5) {
     this.scanner();
   }
-  
+
   //plot course
   this.plot();
 };
@@ -96,7 +100,12 @@ Basic.prototype.scanner = function() {
 
   // find weakest
   targets = Object.keys(priority.enemy);
-  targets.length && this.engage(priority.enemy[targets.sort(ascending)[0]]);
+
+  if(this.game.rnd.frac() > 0.5) {
+    targets.sort(ascending)
+  }
+
+  targets.length && this.engage(priority.enemy[targets[0]]);
 };
 
 Basic.prototype.friendly = function(target) {
@@ -139,10 +148,6 @@ Basic.prototype.engage = function(target) {
   }
 };
 
-Basic.prototype.reengage = function() {
-
-};
-
 Basic.prototype.disengage = function() {
   this.target = null;
   this.attacker && this.game.clock.events.remove(this.attacker);
@@ -178,28 +183,28 @@ Basic.prototype.attack = function() {
 Basic.prototype.plot = function(){
   var rnd = this.game.rnd,
       ship = this.ship,
-      p1 = ship.movement.position,
-      sensor = this.sensor,
       settings = this.settings,
       offset = this.offset,
-      size;
+      p1 = ship.movement.position,
+      p2, size;
 
-  sensor.setTo(p1.x, p1.y, settings.sensor.range);
-      
   // plot destination
   if(!this.retreat && this.target) {
     size = this.target.data.size * 4;
     offset.copyFrom(this.target.movement.position);
     offset.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
     ship.movement.plot({ x: this.offset.x-p1.x, y: this.offset.y-p1.y }, this.throttle);
-  } else if(rnd.frac() < 0.1) {
+  } else if(rnd.frac() > 0.75 || this.retreat) {
     p2 = this.getHomePosition();
     ship.movement.plot({ x: p2.x-p1.x, y: p2.y-p1.y });
   };
 };
 
 Basic.prototype.getHomePosition = function() {
-  return this.manager.generateRandomPosition(1024);
+  var position = this.settings.position,
+      sensor = this.sensor;
+      sensor.setTo(position.x, position.y, position.radius);
+  return sensor.random();
 };
 
 Basic.prototype.destroy = function() {
