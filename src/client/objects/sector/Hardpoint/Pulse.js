@@ -2,11 +2,12 @@
 var pixi = require('pixi'),
     engine = require('engine');
 
-function Pulse(hardpoint) {
-  this.hardpoint = hardpoint;
-  this.game = hardpoint.game;
-  this.data = hardpoint.data;
-  this.clock  = this.game.clock;
+function Pulse(parent) {
+  this.parent = parent;
+  this.game = parent.game;
+  this.manager = parent.manager;
+  this.data = parent.data;
+  this.clock  = parent.game.clock;
 
   this.started = 0;
   this.elapsed = 0;
@@ -15,7 +16,7 @@ function Pulse(hardpoint) {
 
   this.spread = null;
 
-  this.isDone = false;
+  this.isDone = true;
   this.isRunning = false;
   this.hasExploded = false;
 
@@ -37,22 +38,21 @@ function Pulse(hardpoint) {
   this.glow.blendMode = engine.BlendMode.ADD;
 };
 
-Pulse.prototype.start = function(destination, distance, spawn, index, slot) {
+Pulse.prototype.start = function(destination, distance, spawn, index, slot, total) {
   this.elapsed = 0;
   this.length = this.data.length;
   this.duration = distance * this.data.projection;
   this.runtime = this.duration + this.length;
-  this.delay = this.data.delay + (this.runtime * ((index+1) / (spawn+1))) + (slot * 64 * this.game.rnd.frac());
+  this.delay = this.data.delay + (this.duration * ((index) / (spawn+1))) + (this.parent.ship.data.rate * this.game.rnd.realInRange(this.data.offset.min, this.data.offset.max) * (slot/total));
   this.started = this.clock.time + this.delay;
 
-  this.isDone = false;
   this.isRunning = true;
   this.hasExploded = false;
 
   // create randomness
   this.strip.alpha = 1;
   this.glow.rotation = this.game.rnd.realInRange(0, global.Math.PI);
-  this.scale = this.game.rnd.realInRange(1, 2);
+  this.scale = this.game.rnd.realInRange(3, 6);
   this.glow.scale.set(this.scale, this.scale);
   this.spread = {
     x: this.game.rnd.realInRange(-this.data.spread, this.data.spread),
@@ -62,19 +62,18 @@ Pulse.prototype.start = function(destination, distance, spawn, index, slot) {
   this.destination.copyFrom(destination);
   this.destination.add(this.spread.x, this.spread.y)
 
-  this.origin.copyFrom(this.hardpoint.updateTransform());
+  this.origin.copyFrom(this.parent.updateTransform());
   this._start.copyFrom(this.origin);
   this._end.copyFrom(this.origin);
 
-  this.hardpoint.fxGroup.addChild(this.strip);
-  this.hardpoint.sprite.addChild(this.glow);
+  this.manager.fxGroup.addChild(this.strip);
+  this.parent.sprite.addChild(this.glow);
 };
 
 Pulse.prototype.stop = function() {
   this.isRunning = false;
-  this.isDone = true;
-  this.hardpoint.fxGroup.removeChild(this.strip);
-  this.hardpoint.sprite.removeChild(this.glow);
+  this.manager.fxGroup.removeChild(this.strip);
+  this.parent.sprite.removeChild(this.glow);
 };
 
 Pulse.prototype.update = function() {
@@ -88,7 +87,7 @@ Pulse.prototype.update = function() {
 
     // animate glow scale at start
     if(this.elapsed < 0) {
-      this.origin.copyFrom(this.hardpoint.updateTransform());
+      this.origin.copyFrom(this.parent.updateTransform());
       this._start.copyFrom(this.origin);
       this._end.copyFrom(this.origin);
 
@@ -108,7 +107,7 @@ Pulse.prototype.update = function() {
     this.glow.alpha = 1-f3;
 
     // update orig / dest
-    this.origin.copyFrom(this.hardpoint.updateTransform());
+    this.origin.copyFrom(this.parent.updateTransform());
 
     if(this.elapsed <= this.duration) {
       f1 = this.elapsed/this.duration;
@@ -123,9 +122,9 @@ Pulse.prototype.update = function() {
       this.strip.alpha = 1-f2;
 
       // create hole
-      this.hardpoint.fireEmitter.pulse(this.data.emitter);
-      this.hardpoint.fireEmitter.at({ center: this.destination });
-      this.hardpoint.fireEmitter.explode(1);
+      this.manager.fireEmitter.pulse(this.data.emitter);
+      this.manager.fireEmitter.at({ center: this.destination });
+      this.manager.fireEmitter.explode(1);
     }
 
     if(this.elapsed >= this.length) {
@@ -148,8 +147,8 @@ Pulse.prototype.destroy = function() {
   this.strip.destroy();
   this.glow.destroy();
 
-  this.hardpoint = this.game = 
-    this.data = this.clock = 
+  this.parent = this.game =
+    this.data = this.clock = this.manager =
     this.destination = this.origin =
     this.target = undefined;
 };

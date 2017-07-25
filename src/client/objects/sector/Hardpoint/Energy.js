@@ -2,10 +2,11 @@
 var pixi = require('pixi'),
     engine = require('engine');
 
-function Energy(hardpoint) {
-  this.hardpoint = hardpoint;
-  this.game = hardpoint.game;
-  this.data = hardpoint.data;
+function Energy(parent) {
+  this.parent = parent;
+  this.game = parent.game;
+  this.manager = parent.manager;
+  this.data = parent.data;
   this.clock  = this.game.clock;
 
   this.elapsed = 0;
@@ -58,12 +59,12 @@ Energy.prototype.start = function(destination, distance, spawn, index) {
   this.offset.copyFrom(destination);
   this.offset.add(this.spread(), this.spread());
 
-  this.origin.copyFrom(this.hardpoint.updateTransform());
+  this.origin.copyFrom(this.parent.updateTransform());
   this._start.copyFrom(this.origin);
   this._end.copyFrom(this.origin);
 
-  this.hardpoint.fxGroup.addChild(this.strip);
-  this.hardpoint.sprite.addChild(this.glow);
+  this.manager.fxGroup.addChild(this.strip);
+  this.parent.sprite.addChild(this.glow);
 };
 
 Energy.prototype.spread = function(spread) {
@@ -75,8 +76,8 @@ Energy.prototype.spread = function(spread) {
 Energy.prototype.stop = function() {
   this.isDone = true;
   this.isRunning = false;
-  this.hardpoint.fxGroup.removeChild(this.strip);
-  this.hardpoint.sprite.removeChild(this.glow);
+  this.manager.fxGroup.removeChild(this.strip);
+  this.parent.sprite.removeChild(this.glow);
 };
 
 Energy.prototype.continue = function(target) {
@@ -117,7 +118,7 @@ Energy.prototype.update = function() {
 
     // animate glow scale at start
     if(this.elapsed < 0) {
-      this.origin.copyFrom(this.hardpoint.updateTransform());
+      this.origin.copyFrom(this.parent.updateTransform());
       this._start.copyFrom(this.origin);
       this._end.copyFrom(this.origin);
 
@@ -146,17 +147,17 @@ Energy.prototype.update = function() {
     } else {
       this._start.copyFrom(this.destination);
 
-      this.hardpoint.fireEmitter.energy(this.data.emitter);
-      this.hardpoint.fireEmitter.at({ center: this.destination });
-      this.hardpoint.fireEmitter.explode(2);
+      this.manager.fireEmitter.energy(this.data.emitter);
+      this.manager.fireEmitter.at({ center: this.destination });
+      this.manager.fireEmitter.explode(1);
     }
 
     if(this.elapsed > this.length) {
       f2 = (this.elapsed-this.length)/this.duration;
-      this.origin.copyFrom(this.hardpoint.updateTransform());
+      this.origin.copyFrom(this.parent.updateTransform());
       this.origin.interpolate(this.destination, f2, this._end);
     } else {
-      this._end.copyFrom(this.hardpoint.updateTransform(this.destination));
+      this._end.copyFrom(this.parent.updateTransform(this.destination));
     }
 
     // stop once done
@@ -172,8 +173,8 @@ Energy.prototype.destroy = function() {
   this.strip.destroy();
   this.glow.destroy();
 
-  this.hardpoint = this.game = 
-    this.data = this.clock =
+  this.parent = this.game =
+    this.data = this.clock = this.manager =
     this.destination = this.origin =
     this.target = this.offset = undefined;
 };

@@ -6,7 +6,6 @@ function TargetingComputer(ship, config) {
   this.ship = ship;
   this.game = ship.game;
   this.manager = ship.manager,
-  this.stats = ship.config.stats;
   this.config = config;
 
   this.hardpoints = [];
@@ -15,7 +14,7 @@ function TargetingComputer(ship, config) {
   this.target = new engine.Point();
 
   // throttle firing rate
-  this.fire = this.game.clock.throttle(this.fired, this.stats.rate, this, true);
+  this.fire = this.game.clock.throttle(this.fired, this.ship.data.rate, this, true);
 };
 
 TargetingComputer.prototype.constructor = TargetingComputer;
@@ -23,20 +22,13 @@ TargetingComputer.prototype.constructor = TargetingComputer;
 TargetingComputer.prototype.create = function() {
   var hardpoint, config, slot,
       ship = this.ship,
-      hardpoints = ship.data.hardpoints;
-  for(var h in hardpoints) {
-    slot = hardpoints[h].slot;
-
-    hardpoint = new Hardpoint(this, hardpoints[h], this.config.hardpoints[slot]);
-    hardpoint.subGroup = ship.manager.subGroup;
-    hardpoint.fxGroup = ship.manager.fxGroup;
-    hardpoint.flashEmitter = ship.manager.flashEmitter;
-    hardpoint.explosionEmitter = ship.manager.explosionEmitter;
-    hardpoint.glowEmitter = ship.manager.glowEmitter;
-    hardpoint.fireEmitter = ship.manager.fireEmitter;
-    hardpoint.shockwaveEmitter = ship.manager.shockwaveEmitter;
-
-    this.hardpoints[slot] = hardpoint;
+      hardpoints = this.hardpoints,
+      config = this.config.hardpoints,
+      data = ship.data.hardpoints,
+      length = config.length;
+  for(var i=0; i<length; i++) {
+    hardpoint = new Hardpoint(this, config[i], data[i], i, length);
+    hardpoints.push(hardpoint);
   }
 };
 
@@ -50,7 +42,8 @@ TargetingComputer.prototype.attack = function(data) {
 
     // display
     for(var i=0; i<length; i++) {
-      hardpoints[i].fire(target);
+      hardpoint = hardpoints[i];
+      hardpoint.fire(this.target);
     }
   }
 };
@@ -80,10 +73,7 @@ TargetingComputer.prototype.fired = function() {
     // display
     for(var i=0; i<hardpoints.length; i++) {
       hardpoint = hardpoints[i];
-
-      if(hardpoint.cooled) {
-        hardpoint.fire(this.target);
-      }
+      hardpoint.fire(this.target);
     }
 
     // server
@@ -95,10 +85,6 @@ TargetingComputer.prototype.fired = function() {
       }
     });
   }
-};
-
-TargetingComputer.prototype.cooled = function(data) {
-  this.hardpoints[data.slot].cooled = true;
 };
 
 TargetingComputer.prototype.enhance = function(name, state) {

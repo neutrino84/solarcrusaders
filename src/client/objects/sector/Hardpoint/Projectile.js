@@ -5,7 +5,9 @@ var pixi = require('pixi'),
 function Projectile(parent) {
   this.parent = parent;
   this.game = parent.game;
+  this.ship = parent.ship;
   this.data = parent.data;
+  this.manager = parent.manager;
   this.clock  = parent.game.clock;
   this.spread = {
     x: global.Math.random() * this.data.spread - this.data.spread / 2,
@@ -17,25 +19,25 @@ function Projectile(parent) {
   this.length = 0;
   this.duration = 0;
 
-  this.isDone = false;
+  this.isDone = true;
   this.isRunning = false;
 
   this.target = new engine.Point();
   this.origin = new engine.Point();
   this.destination = new engine.Point();
-  this.offset = new engine.Point(global.Math.random() * 256 - 256 / 2, global.Math.random() * 256 - 256 / 2);
 
   this.projectile = new engine.Sprite(this.game, 'texture-atlas', this.data.texture);
-  this.projectile.scale.set(0.5, 0.5);
+  this.projectile.scale.set(0.8, 0.8);
   this.projectile.pivot.set(32, 32);
+  this.projectile.alpha = 0.0;
 };
 
-Projectile.prototype.start = function(destination, distance, spawn, index) {
+Projectile.prototype.start = function(destination, distance, spawn, index, slot) {
   this.elapsed = 0;
   this.duration = distance * this.data.projection;
   this.length = this.data.length;
   this.runtime = this.duration;
-  this.delay = ((this.runtime / spawn) * index) + (this.data.delay/spawn * (global.parseInt(this.data.slot) + 1));
+  this.delay = this.data.delay + (this.runtime * ((index) / (spawn+1))) + ((slot * (this.runtime)/(slot+1)) * this.game.rnd.frac());
   this.started = this.clock.time + this.delay;
 
   this.isRunning = true;
@@ -43,34 +45,45 @@ Projectile.prototype.start = function(destination, distance, spawn, index) {
 
   this.destination.set(destination.x + this.spread.x, destination.y + this.spread.y);
 
-  this.parent.subGroup.addChild(this.projectile);
+  this.manager.fxGroup.addChild(this.projectile);
 };
 
 Projectile.prototype.stop = function() {
   this.isRunning = false;
-  this.parent.subGroup.removeChild(this.projectile);
+  this.projectile.alpha = 0.0;
+  this.manager.fxGroup.removeChild(this.projectile);
 };
 
 Projectile.prototype.explode = function() {
   if(!this.hasExploded) {
-    this.isDone = true;
     this.hasExploded = true;
-    this.parent.explosionEmitter.rocket();
-    this.parent.explosionEmitter.at({ center: this.projectile.position });
-    this.parent.explosionEmitter.explode(2);
+
+    this.manager.explosionEmitter.rocket();
+    this.manager.explosionEmitter.at({ center: this.projectile.position });
+    this.manager.explosionEmitter.explode(2);
+
+    this.manager.shockwaveEmitter.rocket();
+    this.manager.shockwaveEmitter.at({ center: this.projectile.position });
+    this.manager.shockwaveEmitter.explode(1);
   }
 };
 
 Projectile.prototype.update = function() {
-  var f1, sin;
+  var f1, f2;
 
   if(this.isRunning === true) {
     this.elapsed = this.clock.time - this.started;
-    this.origin.copyFrom(this.parent.updateTransform());
 
     if(this.elapsed < 0) {
+      f2 = 1-(-this.elapsed/this.delay);
+
+      this.origin.copyFrom(this.parent.updateTransform());
+
       this.projectile.position.x = this.origin.x;
       this.projectile.position.y = this.origin.y;
+      this.projectile.rotation = this.origin.angle(this.destination);
+      this.projectile.alpha = f2;
+
       return;
     }
 
@@ -82,10 +95,10 @@ Projectile.prototype.update = function() {
     this.projectile.position.y = this.target.y;
     this.projectile.rotation = this.target.angle(this.destination);
 
-    if(this.elapsed >= this.length) {
-      this.parent.fireEmitter.rocket();
-      this.parent.fireEmitter.at({ center: this.projectile.position });
-      this.parent.fireEmitter.explode(1);
+    if(f1 < 0.5) {
+      this.manager.fireEmitter.rocket();
+      this.manager.fireEmitter.at({ center: this.projectile.position });
+      this.manager.fireEmitter.explode(1);
     }
 
     if(this.elapsed > this.runtime) {
@@ -100,7 +113,7 @@ Projectile.prototype.destroy = function() {
 
   this.projectile.destroy();
 
-  this.parent = this.game = 
+  this.parent = this.ship = this.game = this.manager =
     this.data = this.clock = this._start =
     this._end = this.destination = this.origin =
     this.target = this.offset = undefined;
