@@ -114,15 +114,15 @@ Movement.prototype.compensated = function(rtt) {
 };
 
 Movement.prototype.destabilize = function(ship) {
-  var stabalization = this.stabalization,
+  var stabilization = this.stabilization,
       end = this.position,
       start = ship.movement.position,
       size = ship.config.stats.size * 8,
       distance = start.distance(end);
   if(distance <= size) {
-    stabalization.set(end.x - start.x, end.y - start.y);
-    stabalization.divide(distance, distance);
-    stabalization.multiply(size, size);
+    stabilization.set(end.x - start.x, end.y - start.y);
+    stabilization.divide(distance, distance);
+    stabilization.multiply(size, size);
   }
 };
 

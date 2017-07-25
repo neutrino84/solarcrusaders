@@ -44,10 +44,10 @@ ShipManager.prototype.constructor = ShipManager;
 
 ShipManager.prototype.init = function() {
   // generate npcs
-  // this.generateRandomShips();
-  // this.generatePirateShips();
-  // this.generateEnforcerShips();
-  // this.generateScavengerShips();
+  this.generateRandomShips();
+  this.generatePirateShips();
+  this.generateEnforcerShips();
+  this.generateScavengerShips();
   // this.generateTestShips();
 
   // console.log(this.game)
@@ -85,13 +85,13 @@ ShipManager.prototype.create = function(data, user, position) {
     self.game.emit('ship/add', ship);
   });
   if(ship.user){
-    // this.generateSquadronShips(ship.uuid)
+    this.generateSquadronShips(ship.uuid);
   };
   if(ship.data.chassis === 'enforcers-x02'){
-    this.generateEnforcerShips(ship.uuid, data.x, data.y)
+    this.generateEnforcerShips(ship.uuid, data.x, data.y);
   };
   if(ship.data.chassis === 'scavengers-x04d'){
-    this.spawnQueen(data.toporbot, ship.uuid)
+    this.spawnQueen(data.toporbot, ship.uuid);
   };
   if(ship.data.chassis === 'enforcers-x01' && data.master){
     this.ships[data.master].squadron[ship.uuid] = ship;
@@ -210,8 +210,8 @@ ShipManager.prototype.upgradeStats = function(socket, args) {
 
     case 'armor':
       if(!ship.newArmorValue){
-        ship.newArmorValue = ship.armor*1.4;
-      } else { ship.newArmorValue = ship.newArmorValue*1.35};
+        ship.newArmorValue = ship.armor*1.25;
+      } else { ship.newArmorValue = ship.newArmorValue*1.3};
       // console.log(ship.config.stats.armor, '-->', ship.newArmorValue)
       break;
 

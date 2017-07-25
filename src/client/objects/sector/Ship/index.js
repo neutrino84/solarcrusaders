@@ -62,9 +62,11 @@ Ship.prototype.boot = function() {
   // start events
   this.events.start();
 
+
   // set player
   if(this.isPlayer) {
     // this.hud.show();
+    console.log(this.game)
     this.game.emit('ship/player', this);
   }
 };
@@ -167,6 +169,7 @@ Ship.prototype.enable = function(data) {
   if(this.isPlayer){
     this.game.emit('squad/regroup', this);
     this.game.emit('system/sound', 'systemsOnline');
+    // this.game.hotkeyManager.refresh();
     // this.user.socket.emit('squad/regroup', this);
   }
 };

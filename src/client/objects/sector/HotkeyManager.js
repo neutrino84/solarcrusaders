@@ -137,6 +137,15 @@ HotkeyManager.prototype.listener = function() {
   };
 };
 
+HotkeyManager.prototype.refresh = function(){
+  console.log('in refresh')
+  this.isBoosting = false;
+  this.isShielded = false;
+  this.isHealing = false;
+  this.isPiercing = false;
+  this.detecting = false;
+};
+
 HotkeyManager.prototype._cooled = function(data){
   if(data.uuid === this.player.uuid){
     switch(data.enhancement) {

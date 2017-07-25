@@ -66,8 +66,8 @@ Station.prototype.hit = function(attacker, target, slot) {
       }
       orbit.compensated();
   if(ratio < 1.3) {
-    
-    console.log('inside!')
+
+    // console.log('inside!')
     // debugger
     // // test data
     // if(!attacker.ai && this.ai) {
@@ -120,7 +120,6 @@ Station.prototype.hit = function(attacker, target, slot) {
           this.disable();
 
           if(!attacker.ai || attacker.master){
-            killpoints = this.config.stats.health;
             if(attacker.master){
               master = attacker.master
             }
@@ -130,7 +129,6 @@ Station.prototype.hit = function(attacker, target, slot) {
           updates.push({
             uuid: attacker.uuid,
             reputation: attacker.reputation,
-            killpoints: killpoints,
             credits : attacker.credits
           });
         }

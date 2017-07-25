@@ -20,7 +20,7 @@ function Orbit(parent) {
   }
 
   this.period = 0;
-  console.log('radius is ', parent.data.radius*1.5);
+  // console.log('radius is ', parent.data.radius*1.5);
   // console.log(global)
   this.circle = new engine.Circle(this.center.x, this.center.y, this.parent.data.radius*1.5);
   this.last = new engine.Point(this.center.x, this.center.y);
@@ -44,11 +44,11 @@ Orbit.prototype.update = function() {
   this.period += delta;
   this.circle.circumferencePoint(this.period, false, false, this.position);
   // console.log(this.position)
-  console.log('this.period is ', this.period);
+  // console.log('this.period is ', this.period);
 };
 
 Orbit.prototype.compensated = function(rtt) {
-  console.log('(',this.center.x, this.center.y,')' , this.position);
+  // console.log('(',this.center.x, this.center.y,')' , this.position);
 };
 
 Orbit.prototype.destroy = function() {

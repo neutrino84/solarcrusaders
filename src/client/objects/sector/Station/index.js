@@ -17,7 +17,7 @@ function Station(manager, data) {
   // config data
   this.config = data.config.station;
 
-  this.worldPosition;
+  this.worldPosition = null;
   // layer chassis
   // this.chassis = new engine.Sprite(manager.game, data.chassis + '.png');
   
@@ -62,12 +62,6 @@ Station.prototype.boot = function() {
 };
 
 Station.prototype.data = function(data) {
-<<<<<<< HEAD
-  console.log('in station data. data is ', data)
-=======
-  console.log('HIT STATION DATA')
-  // this.period = this.data.period
->>>>>>> 50147832439f8f82455db0584f4bff74195d5c8d
   this.hud.data(data);
 };
 
@@ -106,24 +100,8 @@ Station.prototype.data = function(data) {
 Station.prototype.update = function() {
   var delta = this.data.speed * (1/60) * (1/100),
       rotation = delta/6;
-
-<<<<<<< HEAD
-  this.period += delta;
-
-  this.orbit.circumferencePoint(this.period, false, false, this.position);
-  this.worldPosition = this.game.world.worldTransform.applyInverse(this.position)
-  // this.game.world.worldTransform.applyInverse(this.position)
-    if(this.data.chassis === 'ubadian-station-x01'){
-     // console.log('station uuid is ', this.data.uuid, '(',this.position.x, this.position.y, ') world position: ', worldPosition.x, worldPosition.y)
-    }
-    this.socket.emit('station/data', {uuids: [this.data.uuid], position: this.worldPosition});
-=======
   // console.log(this.period)
   this.orbit.circumferencePoint(this.period, false, false, this.position);
-  // console.log(this.orbit)
-  // debugger
->>>>>>> 50147832439f8f82455db0584f4bff74195d5c8d
-  // this.rotation += rotation;
   this.cap.rotation -= 0.01;
   engine.Sprite.prototype.update.call(this);
 };
