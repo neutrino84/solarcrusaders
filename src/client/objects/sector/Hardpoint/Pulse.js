@@ -33,7 +33,7 @@ function Pulse(parent) {
 
   this.glow = new engine.Sprite(this.game, 'texture-atlas', 'turret-glow.png');
   this.glow.pivot.set(32, 32);
-  this.glow.position.set(0, 16);
+  this.glow.position.set(-2, 8);
   this.glow.tint = global.parseInt(this.data.glow);
   this.glow.blendMode = engine.BlendMode.ADD;
 };
@@ -49,10 +49,12 @@ Pulse.prototype.start = function(destination, distance, spawn, index, slot, tota
   this.isRunning = true;
   this.hasExploded = false;
 
+  // reset strip alpha
+  this.strip.alpha = 1.0;
+
   // create randomness
-  this.strip.alpha = 1;
   this.glow.rotation = this.game.rnd.realInRange(0, global.Math.PI);
-  this.scale = this.game.rnd.realInRange(3, 6);
+  this.scale = this.game.rnd.realInRange(1.0, 2.0);
   this.glow.scale.set(this.scale, this.scale);
   this.spread = {
     x: this.game.rnd.realInRange(-this.data.spread, this.data.spread),
@@ -65,6 +67,11 @@ Pulse.prototype.start = function(destination, distance, spawn, index, slot, tota
   this.origin.copyFrom(this.parent.updateTransform());
   this._start.copyFrom(this.origin);
   this._end.copyFrom(this.origin);
+
+  // emit particles
+  this.manager.fireEmitter.flash(this.data.emitter);
+  this.manager.fireEmitter.at({ center: this.origin });
+  this.manager.fireEmitter.explode(1);
 
   this.manager.fxGroup.addChild(this.strip);
   this.parent.sprite.addChild(this.glow);
@@ -94,17 +101,15 @@ Pulse.prototype.update = function() {
       f1 = 1-(-this.elapsed/this.delay);
 
       this.glow.scale.set(this.scale * f1, this.scale * f1);
-      this.glow.alpha = f1 * 1.0;
+      this.glow.alpha = 1.0 * f1;
       return;
     } else {
+      f3 = this.elapsed/this.runtime;
+
+      // update glow
       this.glow.scale.set(this.scale, this.scale);
-      this.glow.alpha = 1.0;
+      this.glow.alpha = 1-f3;
     }
-
-    f3 = this.elapsed/this.runtime;
-
-    // update glow
-    this.glow.alpha = 1-f3;
 
     // update orig / dest
     this.origin.copyFrom(this.parent.updateTransform());
@@ -121,7 +126,7 @@ Pulse.prototype.update = function() {
       // fade out strip
       this.strip.alpha = 1-f2;
 
-      // create hole
+      // emit particles
       this.manager.fireEmitter.pulse(this.data.emitter);
       this.manager.fireEmitter.at({ center: this.destination });
       this.manager.fireEmitter.explode(1);

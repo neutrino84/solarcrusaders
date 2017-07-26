@@ -38,7 +38,7 @@ function Hardpoint(parent, config, data, slot, total) {
 
   this.sprite = new engine.Sprite(this.game, 'texture-atlas', data.sprite + '.png');
   this.sprite.position.set(config.position.x, config.position.y);
-  this.sprite.pivot.set(config.pivot.x, config.pivot.y);
+  this.sprite.pivot.set(8, 8);
   
   this.ship.addChild(this.sprite);
   this.sprite.addChild(this.cap);
