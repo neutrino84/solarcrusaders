@@ -29,14 +29,35 @@ function EnhancementPane(game, settings) {
   this.buttons = {};
   this.config = this.game.cache.getJSON('item-configuration')['enhancement'];
 
+  // generate containers
+  for(var i=0; i<EnhancementPane.MAXIMUM; i++) {
+    this.containers.push(
+      new Pane(this.game, {
+        constraint: Layout.CENTER,
+        width: 34,
+        height: 36,
+        layout: {
+          type: 'stack'
+        },
+        bg: {
+          fillAlpha: 0.4,
+          color: 0x000000
+        }
+      })
+    );
+    this.addPanel(this.containers[i]);
+  }
+
   this.game.on('ship/player', this._player, this);
   this.game.on('ship/enhancement/started', this._started, this);
   this.game.on('ship/enhancement/stopped', this._stopped, this);
-  this.game.on('ship/enhancement/cancelled', this._cancelled, this);
+  this.game.on('ship/enhancement/cooled', this._cooled, this);
 };
 
 EnhancementPane.prototype = Object.create(Pane.prototype);
 EnhancementPane.prototype.constructor = EnhancementPane;
+
+EnhancementPane.MAXIMUM = 10;
 
 // EnhancementPane.prototype.reset = function() {
 //   var button,
@@ -119,9 +140,8 @@ EnhancementPane.prototype._select = function(button) {
 EnhancementPane.prototype._started = function(data) {
   var config = this.config[data.enhancement],
       button = this.buttons[data.enhancement];
-      
-  if(!button){return}
-  if(this.player && data.uuid === this.player.uuid) {
+
+  if(this.player && button && data.uuid === this.player.uuid) {
     // disable
     button.disabled(true);
     button.count = global.parseInt(config['basic'].cooldown);
@@ -141,12 +161,13 @@ EnhancementPane.prototype._started = function(data) {
 
 EnhancementPane.prototype._stopped = function(data) {
   if(!this.player || data.uuid !== this.player.uuid) { return; }
+
+  // cancel timer
+  this.timer && this.game.clock.events.remove(this.timer);
 };
 
-EnhancementPane.prototype._cancelled = function(data) {
+EnhancementPane.prototype._cooled = function(data) {
   if(!this.player || data.uuid !== this.player.uuid) { return; }
-
-  // console.log(data)
 
   var button = this.buttons[data.enhancement];
       button.disabled(false);
@@ -158,32 +179,26 @@ EnhancementPane.prototype._cancelled = function(data) {
 
 EnhancementPane.prototype._player = function(player) {
   var enhancement, button, container,
-      enhancementData, enhancementStats,
-      tooltipText, tooltip,
       enhancements = player.data.enhancements,
+      containers = this.containers,
       buttons = this.buttons;
-
-  if(this.player) { return;}
 
   // set player object
   this.player = player;
+
+  // clear buttons
+  for(var b in buttons) {
+    button = buttons[b];
+    button.destroy({
+      children: false,
+      texture: true,
+      baseTexture: false
+    });
+  }
   
   // create buttons
-  for(var i=0; i<10; i++) {
+  for(var i=0; i<enhancements.length; i++) {
     enhancement = enhancements[i];
-
-    container = new Pane(this.game, {
-      constraint: Layout.CENTER,
-      width: 34,
-      height: 36,
-      layout: {
-        type: 'stack'
-      },
-      bg: {
-        fillAlpha: 0.4,
-        color: 0x000000
-      }
-    });
 
     if(enhancement) {
       button = this.create(enhancement);
@@ -193,26 +208,11 @@ EnhancementPane.prototype._player = function(player) {
 
       buttons[enhancement] = button;
 
-      container.addPanel(button);
+      containers[i].addPanel(button);
     }
-
-    this.addPanel(container);
-    
-    // enhancementData = client.ItemConfiguration['enhancement'][enhancement];
-    // enhancementStats = Object.keys(enhancementData.stats);
-    // tooltipText = enhancementData.tooltip.replace('{statValue}', enhancementData.stats[enhancementStats[0]].value);
-  
-    // tooltip = new Tooltip(game, tooltipText, button);
-    // tooltip.attach();
   }
 
-  // hotkey
-  // this.game.input.on('keypress', function(event, key){
-  //   var button = this.buttons[enhancements[key-1]];
-  //   button && this._select(button);
-  // }, this);
-
-  this.parent.parent.invalidate();
+  this.invalidate();
 };
 
 module.exports = EnhancementPane;

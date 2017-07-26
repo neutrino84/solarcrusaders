@@ -66,6 +66,8 @@ HudStation.prototype.create = function() {
       data = station.data;
 
   this.station = station;
+  this.visible = false;
+  this.alpha = 0.0;
 
   this.healthBar.percentage(data.health / stats.health);
 
@@ -73,9 +75,6 @@ HudStation.prototype.create = function() {
 
   this.pivot.set(this.cachedWidth/2, this.cachedHeight/2);
   this.position.set(this.station.width/2, this.station.height/2);
-
-  this.visible = false;
-  this.alpha = 0.0;
 
   this.station.addChild(this);
 };
@@ -110,7 +109,7 @@ HudStation.prototype.update = function() {
     inverse = (1.0+scale)/scale;
 
     this.scale.set(inverse, inverse);
-    this.container.rotation = -station.rotation;
+    this.rotation = -station.rotation;
     this.container.y = -(station.data.size/inverse+8);
   }
 };
@@ -120,7 +119,7 @@ HudStation.prototype.data = function(data) {
       healthBar = this.healthBar,
       energyBar = this.energyBar;
   if(this.visible) {
-    data.health && healthBar.change('width', data.health / stats.health);
+    data.health && healthBar.change('width', data.health/stats.health);
   }
 };
 
