@@ -175,9 +175,7 @@ Hardpoint.prototype.updateTransform = function(target, distance) {
       distance = distance || 18;
 
   // absolute origin
-  // ship.updateTransform();
   this.game.world.worldTransform.applyInverse(ship.worldTransform.apply(this.sprite), origin);
-  // distance && engine.Line.pointAtDistance({ x: origin.x, y: origin.y }, target, distance, origin);
   this.rotation = engine.Point.angle(origin, target);
   this.sprite.rotation = this.rotation - ship.rotation;
 
