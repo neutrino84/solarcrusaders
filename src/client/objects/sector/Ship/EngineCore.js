@@ -46,7 +46,7 @@ EngineCore.prototype.create = function() {
 
     // create exaust
     glow = new engine.Sprite(ship.game, 'texture-atlas', 'engine-glow.png');
-    glow.pivot.set(128, 64);
+    glow.pivot.set(82, 41);
     glow.rotation = global.Math.PI + engine.Math.degToRad(conf.rotation);
     glow.position.set(conf.position.x, conf.position.y);
     glow.scale.set(0, 0);
