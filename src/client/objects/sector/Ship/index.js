@@ -119,7 +119,7 @@ Ship.prototype.refresh = function(data) {
 Ship.prototype.update = function() {
   var time = this.game.time,
       velocity = this.movement.velocity,
-      speed = this.data.speed,
+      speed = this.config.stats.speed,
       multiplier = velocity/speed;
 
   this.events.update(this.game.clock.time);
