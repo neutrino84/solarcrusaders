@@ -20,7 +20,7 @@ function SectorManager(game) {
 
   // instance managers
   this.stationManager = new StationManager(game);
-  this.eventManager = new PlayManager(game);
+  this.eventManager = new EventManager(game);
   this.shipManager = new ShipManager(game);
   this.userManager = new UserManager(game);
 };
