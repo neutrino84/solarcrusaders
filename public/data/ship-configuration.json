@@ -1710,10 +1710,10 @@
     "class": "battleship",
     "stats": {
       "capacity": 3000,
-      "health": 200,
+      "health": 250,
       "heal": 0.25,
-      "armor": 0.0,
-      "speed": 18.0,
+      "armor": 0.15,
+      "speed": 20.0,
       "rate": 256,
       "evasion": 0.02,
       "energy": 200,

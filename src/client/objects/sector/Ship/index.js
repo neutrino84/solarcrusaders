@@ -66,7 +66,6 @@ Ship.prototype.boot = function() {
   // set player
   if(this.isPlayer) {
     // this.hud.show();
-    console.log(this.game)
     this.game.emit('ship/player', this);
   }
 };
@@ -112,14 +111,15 @@ Ship.prototype.refresh = function(data) {
       defender.hud.show();
       defender.timer && defender.events.remove(defender.timer);
       defender.timer = defender.events.add(5000, function() {
-        this.hud.hide();
+        console.log(defender.timer)
+        defender.hud.hide();
       }, defender);
     };
     if(attacker.data.masterShip && this.manager.ships[attacker.data.masterShip].isPlayer){
       defender.hud.show();
       defender.timer && defender.events.remove(defender.timer);
       defender.timer = defender.events.add(5000, function() {
-        this.hud.hide();
+        defender.hud.hide();
       }, defender);
     };
 
@@ -168,9 +168,8 @@ Ship.prototype.enable = function(data) {
   this.position.set(data.pos.x, data.pos.y);
   if(this.isPlayer){
     this.game.emit('squad/regroup', this);
+    this.game.emit('hotkeys/refresh', this);
     this.game.emit('system/sound', 'systemsOnline');
-    // this.game.hotkeyManager.refresh();
-    // this.user.socket.emit('squad/regroup', this);
   }
 };
 

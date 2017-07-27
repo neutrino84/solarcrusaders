@@ -51,7 +51,8 @@ StationManager.prototype.sync = function(data) {
       // console.log(this.stations[station.data.uuid].period)
     } else {
       data = stationNetManager.getStationData(stations[s].uuid);
-
+      // console.log(data.x, data.y)
+      // debugger
       if(data) {
         this.game.emit('station/create', data);
       }

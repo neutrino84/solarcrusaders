@@ -8,20 +8,18 @@ function Station(manager, data) {
   this.game = manager.game;
   this.sockets = manager.sockets;
   this.model = manager.model;
-  console.log('station data is ', data)
   this.data = new this.model.Station(data);
   this.data.init();
 
   this.uuid = this.data.uuid;
   this.chassis = this.data.chassis;
   this.config = client.StationConfiguration[this.data.chassis];
-  this.radius = this.config.stats.radius;
-
-  // create system
-  // this.movement = new Movement(this);
+  this.radius = this.config.stats.radius
 
   // console.log(data)
   this.orbit = new Orbit(this);
+
+  this.disabled = false;
 };
 
 Station.prototype.constructor = Station;
@@ -58,14 +56,16 @@ Station.prototype.hit = function(attacker, target, slot) {
       hardpoint = attacker.hardpoints[slot],
       piercing = attacker.enhancements.active.piercing,
       // compensated = orbit.compensated(),
-      distance = orbit.position.distance(target),
+      distance = orbit.position.distance({x: target.x/4, y: target.y/4}),
       ratio = distance / (this.size * hardpoint.data.aoe),
       damage, health, critical;
       // console.log('target is ', target)
-      if(this.chassis === 'ubadian-station-x01'){
-      }
+      // if(this.chassis === 'ubadian-station-x01'){
+        // console.log(ratio)
+        // console.log('ubaidan station distance: ', distance)
+      // }
       orbit.compensated();
-  if(ratio < 1.3) {
+  if(ratio < 0.325) {
 
     // console.log('inside!')
     // debugger
@@ -79,11 +79,14 @@ Station.prototype.hit = function(attacker, target, slot) {
     // }
 
     // calc damage
-    critical = this.game.rnd.rnd() <= attacker.critical;
-    damage = global.Math.max(0, hardpoint.data.damage * (1-ratio) * (1-this.armor));
-    damage += critical ? damage : 0;
-    damage *= piercing ? piercing.damage : 1;
+    // critical = this.game.rnd.rnd() <= attacker.critical;
+    damage = global.Math.max(0, hardpoint.data.damage * (1-ratio));
+    // damage += critical ? damage : 0;
+    // damage *= piercing ? piercing.damage : 1;
 
+    health = data.health - damage;
+
+    // console.log('statio health is ', health)
     // update damage
     if(!this.disabled && health > 0) {
       // update health
@@ -92,25 +95,21 @@ Station.prototype.hit = function(attacker, target, slot) {
         uuid: this.uuid,
         attacker: attacker.uuid,
         health: data.health,
-        damage: damage,
-        critical: critical
+        damage: damage
       });
-
+      
       // update attacker
       attacker.credits = global.Math.floor(attacker.credits + damage + (ai && ai.type === 'pirate' ? damage : 0));
       updates.push({
         uuid: attacker.uuid,
         credits: attacker.credits,
         hardpoint: {
-          ship: this.uuid,
+          station: this.uuid,
           slot: hardpoint.slot,
           target: target,
           damage: damage
         }
       });
-
-      // defend
-      ai && ai.engage(attacker);
     } else {
         // disengage attacker
         attacker.ai && attacker.ai.disengage();

@@ -21,17 +21,25 @@ function Station(manager, data) {
   // layer chassis
   // this.chassis = new engine.Sprite(manager.game, data.chassis + '.png');
   
+  // timer events
+  this.events = new engine.Timer(this.game, false);
+
   // core ship classes
   this.hud = new Hud(this);
-  this.period = this.data.period;
+  // this.period = this.data.period;
+  this.period = 0;
   if(this.data.chassis === 'ubadian-station-x01'){
     // console.log('station front end data is ', data)
     // var newRadius = this.game.world.worldTransform.applyInverse(this.data.radius*1.5)
     // console.log(newRadius)
     this.orbit = new engine.Circle(this.data.x/4, this.data.y/4, this.data.radius*1.5);
-    // this.orbit = new engine.Circle(0, 0, this.data.radius);
+        // this.orbit = new engine.Circle(this.data.x, this.data.y, this.data.radius*1.5);
+
+    // this.orbit = new engine.Circle(0, 0, this.data.radius*1.5);
+
   } else {
-    this.orbit = new engine.Circle(data.x, data.y, 0);
+    console.log(data.x, data.y)
+    this.orbit = new engine.Circle(data.x/4, data.y/4, 0);
   };
   this.pivot.set(this.width/2, this.height/2);
   this.rotation = this.data.rotation;
@@ -57,12 +65,30 @@ Station.prototype.boot = function() {
   this.hud.create();
   // this.hud.show();
 
+  // start events
+  this.events.start();
+
   // subscribe to updates
-  this.data.on('data', this.data, this);
+  this.data.on('data', this.refresh, this);
+
+  this.orbit.circumferencePoint(this.period, false, false, this.position);
+  // engine.Sprite.prototype.update.call(this);
+  console.log(this.manager.game)
 };
 
-Station.prototype.data = function(data) {
+Station.prototype.refresh = function(data) {
+  if(data.attacker){
+    this.hud.show()
+    this.timer && this.events.remove(this.timer);
+    this.timer = this.events.add(3500, function() {
+      this.hud.hide();
+    }, this);
+  }
   this.hud.data(data);
+  // this.timer = this.manager.game.events.add(2000, function() {
+  //   this.hud.hide();
+  // }, this);
+  
 };
 
 // StationManager.prototype.refresh = function(data) {
@@ -100,8 +126,12 @@ Station.prototype.data = function(data) {
 Station.prototype.update = function() {
   var delta = this.data.speed * (1/60) * (1/100),
       rotation = delta/6;
-  // console.log(this.period)
+  
   this.orbit.circumferencePoint(this.period, false, false, this.position);
+
+
+  this.events.update(this.game.clock.time);
+
   this.cap.rotation -= 0.01;
   engine.Sprite.prototype.update.call(this);
 };

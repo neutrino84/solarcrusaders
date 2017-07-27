@@ -46,6 +46,7 @@ HotkeyManager.prototype.listener = function() {
   	  hotkeys = this.hotkeys,
       key;
   if(player){
+    this.game.on('hotkeys/refresh', this._refresh, this)
   	this.game.input.on('keypress', function(event, key){
   	//enhancements
 	   if(hotkeys['enhancements'][key]){
@@ -137,7 +138,7 @@ HotkeyManager.prototype.listener = function() {
   };
 };
 
-HotkeyManager.prototype.refresh = function(){
+HotkeyManager.prototype._refresh = function(){
   console.log('in refresh')
   this.isBoosting = false;
   this.isShielded = false;

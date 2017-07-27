@@ -88,7 +88,7 @@ ShipManager.prototype.create = function(data, user, position) {
     this.generateSquadronShips(ship.uuid);
   };
   if(ship.data.chassis === 'enforcers-x02'){
-    this.generateEnforcerShips(ship.uuid, data.x, data.y);
+    // this.generateEnforcerShips(ship.uuid, data.x, data.y);
   };
   if(ship.data.chassis === 'scavengers-x04d'){
     this.spawnQueen(data.toporbot, ship.uuid);

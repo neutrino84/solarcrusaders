@@ -240,7 +240,7 @@ Ship.prototype.hit = function(attacker, target, slot) {
     // }
 
     //prevent friendly fire dmg to squadron
-    if(this.master === attacker.uuid){return}  
+    // if(this.master === attacker.uuid){return}  
 
     // calc damage
     critical = this.game.rnd.rnd() <= attacker.critical;

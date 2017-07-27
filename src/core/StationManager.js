@@ -165,19 +165,17 @@ StationManager.prototype.generateStation = function() {
     chassis: 'ubadian-station-x01'
   });
 
-  // this.create({
-  //   x: -2392,
-  //   y: 2892,
-  //   chassis: 'scavenger-nest-x01',
-  //   radius: 0
-  // });
+  this.create({
+    x: -2392*4,
+    y: 2892*4,
+    chassis: 'scavenger-nest-x01'
+  });
 
-  // this.create({
-  //   x: 2392,
-  //   y: -2892,
-  //   chassis: 'scavenger-nest-x01',
-  //   radius: 0
-  // });
+  this.create({
+    x: 2392*4,
+    y: -2892*4,
+    chassis: 'scavenger-nest-x01'
+  });
 };
 
 module.exports = StationManager;

@@ -14,15 +14,15 @@ function Orbit(parent) {
     x: global.parseFloat(parent.data.x),
     y: global.parseFloat(parent.data.y)
   };
+
   if(parent.radius){
     this.radius = parent.radius;
-    // console.log(this.radius)
   }
 
   this.period = 0;
-  // console.log('radius is ', parent.data.radius*1.5);
-  // console.log(global)
-  this.circle = new engine.Circle(this.center.x, this.center.y, this.parent.data.radius*1.5);
+
+  this.circle = new engine.Circle(this.center.x/4, this.center.y/4, this.parent.data.radius*1.5);
+
   this.last = new engine.Point(this.center.x, this.center.y);
   this.position = new engine.Point();
   this.relative = new engine.Point();
@@ -30,6 +30,8 @@ function Orbit(parent) {
   this.vector = new engine.Point();
   this.direction = new engine.Point();
   this.stabilization = new engine.Point();
+
+  this.circle.circumferencePoint(this.period, false, false, this.position);
 }
  
 Orbit.CLOCK_RATE = 100;
@@ -42,9 +44,9 @@ Orbit.prototype.constructor = Orbit;
 Orbit.prototype.update = function() {
   var delta = this.speed * (1/60) * (1/100);
   this.period += delta;
-  this.circle.circumferencePoint(this.period, false, false, this.position);
-  // console.log(this.position)
-  // console.log('this.period is ', this.period);
+  if(this.parent.chassis === 'ubadian-station-x01'){
+    this.circle.circumferencePoint(this.period, false, false, this.position);
+  }
 };
 
 Orbit.prototype.compensated = function(rtt) {
