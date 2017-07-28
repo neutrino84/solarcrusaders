@@ -27,8 +27,8 @@ function PlayerManager(game) {
   this.killpoints = 0;
   this.credits = 0;
   this.upgrade = {
-    1: 300,
-    2: 600,
+    1: 400,
+    2: 1000,
     3: 4000,
     4: 13000,
     5: 60000,
@@ -59,8 +59,8 @@ PlayerManager.prototype.playerKillpoints = function(socket, killpoints) {
   var curTier = this.upgrade.currentTier,
       threshold = this.upgrade[curTier];
 
-  this.killpoints += killpoints*0.75;
-  console.log('PLAYERS KILLPOINTS ARE: ', this.killpoints)
+  this.killpoints += killpoints*0.7;
+  // console.log('PLAYERS KILLPOINTS ARE: ', this.killpoints)
   
   if(this.killpoints > threshold){
     if(!this.upgradeAvailable) this.game.emit('upgrades/sound/available', {key : 'upgradeAvailable', volume : 0.4});

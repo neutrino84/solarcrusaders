@@ -38,7 +38,7 @@ function Station(manager, data) {
     // this.orbit = new engine.Circle(0, 0, this.data.radius*1.5);
 
   } else {
-    console.log(data.x, data.y)
+    console.log('data.radius) is', data.radius)
     this.orbit = new engine.Circle(data.x/4, data.y/4, 0);
   };
   this.pivot.set(this.width/2, this.height/2);
@@ -54,10 +54,6 @@ Station.prototype.boot = function() {
   this.cap.position.set(this.width/2, this.height/2);
   this.cap.rotation = global.Math.random() * global.Math.PI;
 
-    // this.orbit.circumferencePoint(this.period, false, false, this.position);
-    // console.log(this.orbit.x, this.orbit.y, this.orbit.radius, this.data.x, this.data.y)
-  console.log('orbit radius is ', this.orbit.radius)
-
   // add cap
   this.addChild(this.cap);
 
@@ -72,8 +68,6 @@ Station.prototype.boot = function() {
   this.data.on('data', this.refresh, this);
 
   this.orbit.circumferencePoint(this.period, false, false, this.position);
-  // engine.Sprite.prototype.update.call(this);
-  console.log(this.manager.game)
 };
 
 Station.prototype.refresh = function(data) {

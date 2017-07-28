@@ -78,7 +78,7 @@
         "spawn": 1,
         "durability": 1000.0,
         "sound": "capitalBeam",
-        "default_volume": 0.30
+        "default_volume": 0.28
       },
       "small": {
         "name": "Mini Cannon Laser",
@@ -127,7 +127,7 @@
         "damage": 3,
         "length": 1024,
         "aoe": 1.0,
-        "spawn": 4,
+        "spawn": 2,
         "durability": 1000.0,
         "sound": "repairBeam",
         "default_volume": 0.2
@@ -187,7 +187,7 @@
         "type": "energy",
         "subtype": "disintegrator",
         "sprite": "turret-a",
-        "texture": "laser-green",
+        "texture": "laser-green2",
         "glow": {
           "tint": "0xFFAAAA",
           "size": 4.0,
@@ -500,7 +500,7 @@
         "type": "pulse",
         "subtype": "bazuko2",
         "sprite": "turret-a",
-        "texture": "laser-bazuko",
+        "texture": "laser-bazuko2",
         "glow": "0x12def9",
         "emitter": ["0xFFFFFF", "0x99FF99"],
         "icon": "item-laser-a",
@@ -522,7 +522,7 @@
         "type": "pulse",
         "subtype": "bazuko3",
         "sprite": "turret-a",
-        "texture": "laser-bazuko",
+        "texture": "laser-bazuko3",
         "glow": "0x12def9",
         "emitter": ["0xFFFFFF", "0x99FF99"],
         "icon": "item-laser-a",
@@ -566,7 +566,7 @@
         "type": "pulse",
         "subtype": "nucleon2",
         "sprite": "turret-a",
-        "texture": "laser-red",
+        "texture": "laser-red2",
         "glow": "0xff6666",
         "emitter": ["0xFFFFFF", "0xFF3333"],
         "icon": "item-laser-a",

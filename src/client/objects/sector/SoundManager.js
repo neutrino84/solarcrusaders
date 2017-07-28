@@ -281,7 +281,7 @@ SoundManager.prototype.generateExplosionSound = function(data){
       if(sound === 'capitalShipExplosion' && volume > 0.2){
         volume = 0.2
       };
-      if(volume>.1){console.log(sound, volume)}
+      // if(volume>.1){console.log(sound, volume)}
       
     
     } else {sound = smallExplosion};
