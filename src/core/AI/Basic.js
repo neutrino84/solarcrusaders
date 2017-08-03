@@ -21,7 +21,7 @@ function Basic(ship) {
     disengage: 7680,
     friendly: ['basic', 'user', 'scavenger'],
     position: {
-      radius: 4096,
+      radius: 2048,
       x: 2048,
       y: 2048
     },
