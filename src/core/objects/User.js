@@ -24,8 +24,20 @@ User.prototype.init = function(callback, context) {
   var self = this,
       game = this.game,
       data = this.data,
+      socket = this.socket,
       ships = this.ships;
   if(data.isNewRecord()) {
+    // connect demo ship
+    game.emit('ship/create', {
+      chassis: 'ubaidian-x02',
+      x: 2048,
+      y: 2048
+    }, this);
+
+    // update client
+    socket.emit('auth/sync', this.data.toStreamObject());
+
+    // call callback
     callback.call(context);
   } else {
     async.series([
@@ -35,17 +47,18 @@ User.prototype.init = function(callback, context) {
       var data = results[0],
           ships = results[1];
 
-      // if(ships && ships.length) {
-      //   for(var s=0; s<ships.length; s++) {
-      //     if(ship.uuid === this.data.ship) {
-      //       ship = ships[s].toStreamObject();
+      if(ships && ships.length) {
+        for(var s=0; s<ships.length; s++) {
+          if(ship.uuid === this.data.ship) {
+            ship = ships[s].toStreamObject();
 
-      //       // create user ship
-      //       game.emit('ship/create', ship, this);
-      //     }
-      //   }
-      // }
+            // create user ship
+            game.emit('ship/create', ship, this);
+          }
+        }
+      }
 
+    // call callback
       callback.call(context);
     });
   }
