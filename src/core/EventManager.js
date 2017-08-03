@@ -47,16 +47,6 @@ EventManager.prototype.add = function(object) {
     // connect home station
     // object.station = this.station;
     // object.data.station = this.station.uuid;
-
-    // // connect demo ship
-    this.game.emit('ship/create', {
-      chassis: 'ubaidian-x01',
-      x: 2048,
-      y: 2048
-    }, object);
-
-    // finalize 
-    object.socket.emit('auth/sync', object.data.toStreamObject());
   } else if(object instanceof Station) {
     // if(this.station !== object && object.data.default) {
     //   this.station = object;
