@@ -29,16 +29,9 @@ function Station(manager, data) {
   // this.period = this.data.period;
   this.period = 0;
   if(this.data.chassis === 'ubadian-station-x01'){
-    // console.log('station front end data is ', data)
-    // var newRadius = this.game.world.worldTransform.applyInverse(this.data.radius*1.5)
-    // console.log(newRadius)
     this.orbit = new engine.Circle(this.data.x/4, this.data.y/4, this.data.radius*1.5);
-        // this.orbit = new engine.Circle(this.data.x, this.data.y, this.data.radius*1.5);
-
-    // this.orbit = new engine.Circle(0, 0, this.data.radius*1.5);
 
   } else {
-    console.log('data.radius) is', data.radius)
     this.orbit = new engine.Circle(data.x/4, data.y/4, 0);
   };
   this.pivot.set(this.width/2, this.height/2);

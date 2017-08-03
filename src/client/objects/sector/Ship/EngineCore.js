@@ -12,6 +12,7 @@ function EngineCore(ship, config) {
   this.highlights = [];
 
   this.clamp = 1.0;
+  // this.clamp = 0.2;
   this.isBoosting = false;
 };
 
@@ -104,15 +105,15 @@ EngineCore.prototype.update = function(multiplier) {
       scale, highlight, position;
 
   // set brightness
-  multiplier = engine.Math.clamp(multiplier, 0.25, this.clamp);
+  // multiplier = engine.Math.clamp(multiplier, 0.25, this.clamp);
   
   for(var g=0; g<length; g++) {
     scale = config[g].scale;
     
     // update glow
     glows[g].scale.set(
-      multiplier * scale.endX + scale.startX + flicker,
-      multiplier * scale.endY + scale.startY + flicker);
+      scale.endX + scale.startX + flicker,
+      scale.endY + scale.startY + flicker);
 
     // update highlight
     highlight = highlights[g];
@@ -126,7 +127,7 @@ EngineCore.prototype.update = function(multiplier) {
       } else {
         ship.manager.fireEmitter.boost([config[g].tint, 0x333333]); 
       };
-      ship.manager.fireEmitter.at({ center: position });
+      // ship.manager.fireEmitter.at({ center: position });
       ship.manager.fireEmitter.explode(1);
     }
   }

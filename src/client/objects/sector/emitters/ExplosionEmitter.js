@@ -14,6 +14,7 @@ ExplosionEmitter.prototype.small = function(ship) {
   var movement = ship.movement,
       speed = movement._speed,
       vector = movement._vector;
+      console.log('small')
 
   this.lifespan = 500;
 
@@ -26,6 +27,7 @@ ExplosionEmitter.prototype.small = function(ship) {
   this.setVector(vector.x, vector.y);
 
   this.setScale(this.game.rnd.realInRange(0.1, 0.25), this.game.rnd.realInRange(0.5, 0.75), 250);
+
   this.setAlpha(1.0, 0.0, 500);
   this.setTint(0xFF8888, 0xFF6666, 250);
 };
@@ -48,6 +50,8 @@ ExplosionEmitter.prototype.medium = function(ship) {
   this.setScale(this.game.rnd.realInRange(0.25, 0.75), this.game.rnd.realInRange(1.25, 2.25), 1000);
   this.setAlpha(1.0, 0.0, 1000);
   this.setTint(0xFF8888, 0x666666, 750);
+
+  console.log('medium')
 };
 
 ExplosionEmitter.prototype.explosion = function(ship) {
@@ -68,6 +72,7 @@ ExplosionEmitter.prototype.explosion = function(ship) {
   this.setScale(1.0, ship.data.size / 48, 1000);
   this.setAlpha(1.0, 0.0, 1000);
   this.setTint(0xFF3333, 0x333333, 256);
+  console.log('explosion')
 };
 
 ExplosionEmitter.prototype.smulder = function(ship) {
@@ -88,6 +93,7 @@ ExplosionEmitter.prototype.smulder = function(ship) {
   this.setScale(this.game.rnd.realInRange(0.25, 1), this.game.rnd.realInRange(1.25, 2), 1000);
   this.setAlpha(0.5, 0.0, 1000);
   this.setTint(0x333333, 0x666666, 1000);
+  console.log('smulder')
 };
 
 ExplosionEmitter.prototype.rocket = function() {

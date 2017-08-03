@@ -37,8 +37,8 @@ function Hardpoint(parent, data, config) {
   this.sprite.position.set(config.position.x, config.position.y);
   this.sprite.pivot.set(config.pivot.x, config.pivot.y);
   
-  this.ship.addChild(this.sprite);
-  this.sprite.addChild(this.cap);
+  // this.ship.addChild(this.sprite);
+  // this.sprite.addChild(this.cap);
 
   if(config.type && config.type.indexOf('projectile') >= 0) {
     this.sprite.visible = false;

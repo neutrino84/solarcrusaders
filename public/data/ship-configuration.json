@@ -8,9 +8,9 @@
       "health": 100,
       "heal": 0.5,
       "armor": 0.25,
-      "speed": 66.0,
+      "speed": 16.0,
       "rate": 256,
-      "evasion": 0.1,
+      "evasion": 0.9,
       "energy": 200,
       "recharge": 1,
       "size": 136,
@@ -23,56 +23,56 @@
         {
           "tint": "0x3399FF",
           "scale": {
-            "startX": 0.1,
-            "endX": 0.25,
-            "startY": 0.2,
-            "endY": 0.4
+            "startX": 0.01,
+            "endX": 0.02,
+            "startY": 0.02,
+            "endY": 0.025
           },
           "position": {
-            "x": 142,
-            "y": 92
+            "x": 39,
+            "y": 21
           },
           "rotation": 0
         },
         {
           "tint": "0x3399FF",
           "scale": {
-            "startX": 0.1,
-            "endX": 0.25,
-            "startY": 0.2,
-            "endY": 0.4
+           "startX": 0.02,
+            "endX": 0.03,
+            "startY": 0.04,
+            "endY": 0.06
           },
           "position": {
-            "x": 142,
-            "y": 164
+            "x": 41,
+            "y": 24
           },
           "rotation": 0
         },
         {
           "tint": "0x3399FF",
           "scale": {
-            "startX": 0.1,
-            "endX": 0.22,
-            "startY": 0.2,
-            "endY": 0.4
+            "startX": 0.02,
+            "endX": 0.03,
+            "startY": 0.04,
+            "endY": 0.06
           },
           "position": {
-            "x": 152,
-            "y": 102
+            "x": 41,
+            "y": 40
           },
           "rotation": 0
         },
         {
           "tint": "0x3399FF",
           "scale": {
-            "startX": 0.1,
-            "endX": 0.22,
-            "startY": 0.2,
-            "endY": 0.4
+            "startX": 0.02,
+            "endX": 0.03,
+            "startY": 0.04,
+            "endY": 0.06
           },
           "position": {
-            "x": 152,
-            "y": 154
+            "x": 39,
+            "y": 42
           },
           "rotation": 0
         }
@@ -87,8 +87,8 @@
             "y": 16
           },
           "position": {
-            "x": 91,
-            "y": 70
+            "x": 18,
+            "y": 31
           },
           "default": {
             "type": "pulse",
@@ -102,8 +102,8 @@
             "y": 16
           },
           "position": {
-            "x": 59,
-            "y": 128
+            "x": 26,
+            "y": 17
           },
           "default": {
             "type": "pulse",
@@ -117,8 +117,8 @@
             "y": 16
           },
           "position": {
-            "x": 91,
-            "y": 187
+            "x": 26,
+            "y": 46
           },
           "default": {
             "type": "pulse",
@@ -132,8 +132,8 @@
             "y": 16
           },
           "position": {
-            "x": 128,
-            "y": 128
+            "x": 32,
+            "y": 31
           },
           "default": {
             "type": "rocket",

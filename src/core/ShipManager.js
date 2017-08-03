@@ -85,7 +85,7 @@ ShipManager.prototype.create = function(data, user, position) {
     self.game.emit('ship/add', ship);
   });
   if(ship.user){
-    this.generateSquadronShips(ship.uuid);
+    // this.generateSquadronShips(ship.uuid);
   };
   if(ship.data.chassis === 'enforcers-x02'){
     // this.generateEnforcerShips(ship.uuid, data.x, data.y);

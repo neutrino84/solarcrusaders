@@ -119,7 +119,8 @@ SectorState.prototype.create = function() {
       };
 
   this.game.world.setBounds(0, 0, 4096, 4096);
-  this.game.world.scale.set(0.14, 0.14);
+  // this.game.world.scale.set(0.14, 0.14);
+  this.game.world.scale.set(0.9, 0.9);
 
   this.game.camera.bounds = null;
   this.game.camera.focusOnXY(2048, 2048);
