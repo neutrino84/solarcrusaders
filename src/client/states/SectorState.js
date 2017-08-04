@@ -11,11 +11,19 @@ var engine = require('engine'),
     InputManager = require('../objects/sector/InputManager'),
     ShipManager = require('../objects/sector/ShipManager'),
     StationManager = require('../objects/sector/StationManager'),
-    Asteroid = require('../objects/sector/misc/Asteroid');
+    Asteroid = require('../objects/sector/misc/Asteroid'),
+    SoundManager = require('../objects/sector/SoundManager'),
+    SquadManager = require('../objects/sector/SquadManager'),
+    PlayerManager = require('../objects/sector/PlayerManager'),
+    HotkeyManager = require('../objects/sector/HotkeyManager');
     
 function SectorState(game) {
   this.shipNetManager = new ShipNetManager(game);
   this.stationNetManager = new StationNetManager(game);
+  this.soundManager = new SoundManager(game);
+  this.hotkeyManager = new HotkeyManager(game);
+  this.squadManager = new SquadManager(game);
+  this.playerManager = new PlayerManager(game);
 };
 
 SectorState.prototype = Object.create(engine.State.prototype);
@@ -26,8 +34,14 @@ SectorState.prototype.init = function(args) {
   this.shipNetManager.init();
   this.stationNetManager.init();
 
+  //initialize sound manager
+  this.soundManager.init();
+
   // instanciate ui
   this.ui = new UI(this.game);
+
+  //initialize hotkey manager
+  this.hotkeyManager.init();
 
   // this.scrollLock = false;
   this.game.stage.disableVisibilityChange = true;
@@ -36,6 +50,9 @@ SectorState.prototype.init = function(args) {
 SectorState.prototype.preload = function() {
   // preload ui
   this.ui.preload();
+
+  //preload soundManager
+  this.soundManager.preload(this.game);
 
   // load background
   this.game.load.image('space', 'imgs/game/space/sector-a.jpg');
@@ -48,12 +65,29 @@ SectorState.prototype.preload = function() {
   // load stations
   this.game.load.image('ubadian-station-x01', 'imgs/game/stations/ubaidian-x01.png');
   this.game.load.image('ubadian-station-x01-cap', 'imgs/game/stations/ubaidian-cap-x01.png');
+  this.game.load.image('scavenger-nest-x01', 'imgs/game/stations/scavenger-nest-x01.png');
+  this.game.load.image('scavenger-nest-x01-cap', 'imgs/game/stations/scavenger-lightcap-x01.png');
 
   // load strip graphics
   this.game.load.image('laser-blue', 'imgs/game/fx/laser-blue.png');
+  this.game.load.image('laser-blue2', 'imgs/game/fx/laser-blue2.png');
+  this.game.load.image('laser-blue3', 'imgs/game/fx/laser-blue3.png');
   this.game.load.image('laser-red', 'imgs/game/fx/laser-red.png');
+  this.game.load.image('laser-red2', 'imgs/game/fx/laser-red2.png');
+  this.game.load.image('laser-red3', 'imgs/game/fx/laser-red3.png');
+  this.game.load.image('laser-green', 'imgs/game/fx/laser-green.png');
+  this.game.load.image('laser-green2', 'imgs/game/fx/laser-green2.png');
+  this.game.load.image('laser-green3', 'imgs/game/fx/laser-green3.png');
+  this.game.load.image('laser-purple', 'imgs/game/fx/laser-purple.png');
+  this.game.load.image('laser-yellow', 'imgs/game/fx/laser-yellow.png');
+  this.game.load.image('laser-yellow2', 'imgs/game/fx/laser-yellow2.png');
+  this.game.load.image('laser-yellow3', 'imgs/game/fx/laser-yellow3.png');
+  this.game.load.image('laser-yellow-long', 'imgs/game/fx/laser-yellow-long.png');
   this.game.load.image('laser-vulcan', 'imgs/game/fx/laser-vulcan.png');
   this.game.load.image('laser-heavy', 'imgs/game/fx/laser-heavy.png');
+  this.game.load.image('laser-bazuko', 'imgs/game/fx/laser-bazuko.png');
+  this.game.load.image('laser-bazuko2', 'imgs/game/fx/laser-bazuko2.png');
+  this.game.load.image('laser-bazuko3', 'imgs/game/fx/laser-bazuko3.png');
   this.game.load.image('laser-gaus', 'imgs/game/fx/laser-gaus.png');
 
   // load texture atlas
@@ -84,7 +118,7 @@ SectorState.prototype.create = function() {
       };
 
   this.game.world.setBounds(0, 0, 4096, 4096);
-  this.game.world.scale.set(0.14, 0.14);
+  this.game.world.scale.set(0.5, 0.5);
 
   this.game.camera.bounds = null;
   this.game.camera.focusOnXY(2048, 2048);
@@ -109,6 +143,11 @@ SectorState.prototype.create = function() {
 
   // create ui
   this.ui.create();
+
+  //create SoundManager
+  this.soundManager.create(this);
+
+  this.game.emit('game/backgroundmusic')
 };
 
 SectorState.prototype.createSpace = function() {
@@ -130,6 +169,9 @@ SectorState.prototype.createManagers = function() {
   this.inputManager = new InputManager(game, this);
   this.stationManager = new StationManager(game, this);
   this.shipManager = new ShipManager(game, this);
+  this.squadManager.create(this);
+  this.playerManager.create(this);
+  this.hotkeyManager.create(this);
   // this.shockwaveManager = new ShockwaveManager(game, this);
 };
 
@@ -139,7 +181,7 @@ SectorState.prototype.createSnow = function() {
 };
 
 SectorState.prototype.createAsteroids = function() {
-  var asteroid, amount = 30;
+  var asteroid, amount = 80;
   for(var i=0; i<amount; i++) {
     asteroid = new Asteroid(this.game);
     asteroid.position.set(2048 / 4, 2048 / 4);

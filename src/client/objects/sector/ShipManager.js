@@ -1,6 +1,7 @@
 
 var engine = require('engine'),
     Ship = require('./Ship'),
+    pixi = require('pixi'),
     EnhancementManager = require('./EnhancementManager'),
     ExplosionEmitter = require('./emitters/ExplosionEmitter'),
     FlashEmitter = require('./emitters/FlashEmitter'),
@@ -19,6 +20,9 @@ function ShipManager(game) {
 
   // player
   this.player = null;
+
+  // squad target
+  this.acquired = null;
 
   // ship cache
   this.ships = {};
@@ -80,6 +84,8 @@ function ShipManager(game) {
   this.game.on('ship/disabled', this._disabled, this);
   this.game.on('ship/enabled', this._enabled, this);
   this.game.on('ship/hardpoint/cooled', this._cooled, this);
+
+  this.game.on('target/hostile', this._hostile, this)
 };
 
 ShipManager.prototype.constructor = ShipManager;
@@ -99,6 +105,15 @@ ShipManager.prototype.create = function(data, details) {
 
   // boot
   ship.boot();
+
+  //begin queen sounds
+  if(ship.data.chassis === 'scavengers-x04d'){
+    game.emit('ship/sound/growl', ship);
+  }  
+  //save squadron to master ship
+  if(this.player && ship.data.masterShip && ship.data.masterShip === this.player.uuid){
+    this.player.squadron[ship.uuid] = ship;
+  }
 
   return ship;
 };
@@ -193,6 +208,11 @@ ShipManager.prototype._sync = function(data) {
 
 ShipManager.prototype._player = function(ship) {
   this.player = ship;
+  this.player.unfriendlies = {};
+  this.player.targetCount = 0;
+  this.player.targetlistCooldown = false;
+  this.player.previous;
+  this.player.squadron = {};
   this.game.camera.follow(ship);
 };
 
@@ -252,13 +272,23 @@ ShipManager.prototype._secondary = function(data) {
       start = this.shipsGroup.worldTransform.apply(ship.position),
       position = this.game.world.worldTransform.applyInverse(end),
       destination = { x: end.x - start.x, y: end.y - start.y };
+
   if(ship) {
-    if(data.type === 'start') {
+    if(data.shield){
+      indicator.show(position);
+      socket.emit('squad/shield', {
+        uuid: ship.uuid,
+        destination: {x: position.x, y: position.y }
+      })
+    }
+    else if(data.type === 'start') {
       indicator.show(position);
       socket.emit('ship/plot', {
         uuid: ship.uuid,
         destination: destination
       });
+
+      game.emit('ship/sound/thrusters');
     }
   }
 };
@@ -267,12 +297,26 @@ ShipManager.prototype._disabled = function(data) {
   var ship = this.ships[data.uuid],
       clock = this.clock;
   if(ship !== undefined) {
+    ship.selector.hostileHighlightStop();
+    ship.selector.hostileEngagedStop();
     ship.disable();
-
+    this.game.emit('ship/sound/death', ship);
     // cancel autofire
     if(ship.isPlayer) {
       this.autofire && clock.events.remove(this.autofire);
-    }
+      for(var a in this.ships){
+        b = this.ships[a];
+        b.selector.hostileHighlightStop();
+        b.selector.hostileEngagedStop();
+      }
+    };
+    if(ship.data.chassis === 'scavengers-x04d') {
+      for(var i = 0; i < ship.events.events.length; i++){
+        if(ship.events.events[i].callback.name === 'growlTimer'){
+          ship.events.remove(ship.events.events[i]);  
+        }
+      }
+    };
   }
 };
 
