@@ -1,10 +1,12 @@
 
 var engine = require('engine'),
+    pixi = require('pixi'),
     Energy = require('./Energy'),
     Projectile = require('./Projectile'),
     Pulse = require('./Pulse'),
     Plasma = require('./Plasma'),
-    Missile = require('./Missile');
+    Missile = require('./Missile'),
+    OutlineFilter = require('../../../fx/filters/OutlineFilter');
 
 function Hardpoint(parent, data, config) {
   this.parent = parent;
@@ -30,6 +32,7 @@ function Hardpoint(parent, data, config) {
   this.origin = new engine.Point();
 
   this.cap = new engine.Sprite(this.game, 'texture-atlas', 'turret-cap-' + this.ship.config.race + '.png');
+
   this.sprite = new engine.Sprite(this.game, 'texture-atlas', data.sprite + '.png');
   this.sprite.position.set(config.position.x, config.position.y);
   this.sprite.pivot.set(config.pivot.x, config.pivot.y);
@@ -40,6 +43,10 @@ function Hardpoint(parent, data, config) {
   if(config.type && config.type.indexOf('projectile') >= 0) {
     this.sprite.visible = false;
     this.cap.visible = false;
+  };
+
+  if(config.type && config.type.indexOf('plasma') >= 0){
+
   };
 };
 
@@ -56,7 +63,8 @@ Hardpoint.prototype.fire = function(targ) {
       data = this.data,
       length = actives.length,
       spawn = data.spawn,
-      distance = engine.Point.distance(ship.position, targ);
+      distance = engine.Point.distance(ship.position, targ),
+      rnd = this.game.rnd.frac();
 
   if(distance <= data.range) {
 
@@ -89,6 +97,12 @@ Hardpoint.prototype.fire = function(targ) {
       }
       launcher.start(target, distance, spawn, i, data.slot);
       actives.push(launcher);
+    };
+
+    if(this.parent.enhancements.piercing && this.config.type && this.config.type.indexOf('projectile') < 0) {
+      this.fireEmitter.piercing(data.emitter, this.ship);
+      this.fireEmitter.at({ center: this.origin });
+      this.fireEmitter.explode(3);
     }
 
     this.game.emit('ship/hardpoint/fire', {
@@ -96,7 +110,7 @@ Hardpoint.prototype.fire = function(targ) {
       spawn: spawn,
       ship: ship
     });
-  }
+  };
 
   this.isRunning = true;
 };
@@ -148,7 +162,6 @@ Hardpoint.prototype.update = function() {
 
   while(remove.length > 0) {
     launcher = remove.pop();
-    // actives.splice(actives.indexOf(launcher), 1);
     engine.Utility.splice(actives, actives.indexOf(launcher));
     cache.push(launcher);
   }
@@ -168,9 +181,9 @@ Hardpoint.prototype.updateTransform = function(target, distance) {
       distance = distance || 18;
 
   // absolute origin
-  ship.updateTransform();
+  // ship.updateTransform();
   game.world.worldTransform.applyInverse(ship.worldTransform.apply(sprite), origin);
-  distance && engine.Line.pointAtDistance({ x: origin.x, y: origin.y }, target, distance, origin);
+  // distance && engine.Line.pointAtDistance({ x: origin.x, y: origin.y }, target, distance, origin);
   sprite.rotation = engine.Point.angle(origin, target)-ship.rotation;
 
   return origin;

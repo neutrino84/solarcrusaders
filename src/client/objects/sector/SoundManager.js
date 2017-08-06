@@ -316,7 +316,6 @@ SoundManager.prototype.generateFireSound = function(data) {
       beamNum = Math.floor((Math.random() * beamArr.length)),
       key, volume;
 
-
   for(var i = 0; i<actives.length; i++){
     if(actives[i].data.sound){
       var key = actives[i].data.sound;
