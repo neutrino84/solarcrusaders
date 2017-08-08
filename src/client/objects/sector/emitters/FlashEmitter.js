@@ -42,7 +42,7 @@ FlashEmitter.prototype.critical = function(colors) {
   this.setVelocity(speed, speed);
   this.setVector(rnd.frac(), rnd.frac());
 
-  this.setScale(4.0, 2.0, 4096);
+  this.setScale(2.0, 1.0, 4096);
   this.setAlpha(1.0, 0.0, 4096);
   this.setTint(global.parseInt(colors[0]), global.parseInt(colors[1]), 4096);
 };

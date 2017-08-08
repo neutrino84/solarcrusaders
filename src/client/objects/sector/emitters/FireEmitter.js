@@ -14,21 +14,6 @@ function FireEmitter(game) {
 FireEmitter.prototype = Object.create(engine.Emitter.prototype);
 FireEmitter.prototype.constructor = FireEmitter;
 
-FireEmitter.prototype.flash = function(colors) {
-  var colors = colors || ['0xFFFFFF', '0xFF0000'],
-      rnd = this.game.rnd;
-  
-  this.lifespan = 300;
-
-  this.setVector(0, 0);
-  this.setVelocity(0, 0);
-  
-  this.setScale(0.1, 1.0, 200);
-  this.setAlpha(1.0, 0.0, 300);
-
-  this.setTint(global.parseInt(colors[0]), global.parseInt(colors[1]), 150);
-};
-
 FireEmitter.prototype.energy = function(colors) {
   var colors = colors || ['0xFFFFFF', '0xFF0000'],
       rnd = this.game.rnd;
@@ -53,7 +38,7 @@ FireEmitter.prototype.pulse = function(colors) {
   this.setVector(0, 0);
   this.setVelocity(0, 0);
   
-  this.setScale(0.5, 1.5, 200);
+  this.setScale(0.25, 0.75, 200);
   this.setAlpha(1.0, 0.0, 200);
 
   this.setTint(global.parseInt(colors[0]), global.parseInt(colors[1]), 100);
