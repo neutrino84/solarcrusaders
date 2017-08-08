@@ -80,7 +80,7 @@ SectorState.prototype.create = function() {
 
   // set world
   this.game.world.size(0, 0, 4096, 4096);
-  this.game.world.scale.set(0.42, 0.42);
+  this.game.world.scale.set(0.65, 0.65);
 
   // adjust camera
   this.game.camera.focus(2048, 2048);

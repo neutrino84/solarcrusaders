@@ -1,5 +1,6 @@
-
-var engine = require('engine');
+var pixi = require('pixi'),
+    engine = require('engine'),
+    OutlineFilter = require('../../../fx/filters/OutlineFilter');
 
 function Selector(ship) {
   this.ship = ship;
@@ -46,6 +47,21 @@ Selector.prototype.create = function() {
   // add selector
   // this.ship.addChildAt(this.graphics, 0);
   // this.ship.addChildAt(this.reticle, 0);
+
+   this.outline = new OutlineFilter(1.0, 0x6699FF);
+   this.outline.blendMode = engine.BlendMode.ADD;
+   this.sprite = new engine.Sprite(this.game, 'texture-atlas', ship.data.chassis + '.png');
+   this.sprite.filters = [this.outline];
+   
+   this.ship.addChild(this.sprite);
+};
+
+Selector.prototype.reset = function() {
+  this.outline.color = 0x6699FF;
+};
+
+Selector.prototype.damage = function() {
+  this.outline.color = 0xFF6666;
 };
 
 Selector.prototype.highlight = function() {

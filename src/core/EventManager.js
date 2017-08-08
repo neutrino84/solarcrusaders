@@ -40,6 +40,14 @@ EventManager.prototype.init = function() {
     y: 2048,
     radius: 512
   });
+
+  // create general ships
+  this.game.emit('ship/create', {
+    chassis: 'general-x01',
+    x: 2048,
+    y: 2048,
+    ai: 'pirate'
+  });
 };
 
 EventManager.prototype.add = function(object) {
