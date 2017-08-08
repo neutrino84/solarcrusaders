@@ -43,7 +43,7 @@ EventManager.prototype.init = function() {
 
   // create general ships
   this.game.emit('ship/create', {
-    chassis: 'general-x01',
+    chassis: 'ubaidian-x01c',
     x: 2048,
     y: 2048,
     ai: 'pirate'
