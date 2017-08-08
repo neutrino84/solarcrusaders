@@ -1,291 +1,174 @@
-var engine = require('engine'),
-    Ship = require('./Ship'),
-    ShipManager = require('./ShipManager'),
-    EnhancementManager = require('./EnhancementManager'),
-    ExplosionEmitter = require('./emitters/ExplosionEmitter'),
-    FlashEmitter = require('./emitters/FlashEmitter'),
-    GlowEmitter = require('./emitters/GlowEmitter'),
-    ShockwaveEmitter = require('./emitters/ShockwaveEmitter'),
-    FireEmitter = require('./emitters/FireEmitter'),
-    Indicator = require('./misc/Indicator');
 
+var engine = require('engine');
 
 function SoundManager(game) {
   this.game = game;
-  this.clock = game.clock;
-  this.net = game.net;
-  this.socket = game.net.socket;
-  this.game.soundManager = this;
-  // this.shipManager = this.game.states.current.shipManager;
 
-  this.sounds = {};
-
-  this.isLooping = [];  
-
+  // listen to player
   this.game.on('ship/player', this._player, this);
-  this.game.on('ship/sound/attack', this.generateAttackSound, this);
-  this.game.on('ship/sound/thrusters', this.generateThrusterSound, this);
-  this.game.on('ship/sound/death', this.generateExplosionSound, this);
-  this.game.on('ship/enhancement/started', this.generateEnhancementSound, this);
-  this.game.on('ship/sound/stop', this.stopSoundLoop, this);
-  this.game.on('ship/sound/spawn', this.generateSpawnSound, this);
-  this.game.on('ship/sound/damageCritical', this.generateDamageCriticalSound, this);
-
-  this.game.on('ship/hardpoint/fire', this.generateFireSound, this);
-  this.game.on('ship/hardpoint/stopfire', this.stopFireSound, this);
-  this.game.on('game/backgroundmusic', this.generateBackgroundMusic, this);
-
-  this.dangerAlert = false
-}
+};
 
 SoundManager.prototype.constructor = SoundManager;
 
-SoundManager.prototype.init = function() { 
-  console.log('in SoundManager init()')
+SoundManager.MINIMUM_VOLUME = 0.2;
+
+SoundManager.prototype.init = function() {
+  //..
 };
 
-
-SoundManager.prototype.preload = function(game) {
+SoundManager.prototype.preload = function() {
   var game = this.game,
       load = game.load;
 
+  load.audio('pulse-basic', 'sounds/pulses/basic.mp3');
+  load.audio('pulse-nucleon', 'sounds/pulses/nucleon.mp3');
+  load.audio('pulse-vulcan', 'sounds/pulses/vulcan.mp3');
+  load.audio('plasma-basic', 'sounds/plasmas/basic.mp3');
+  load.audio('laser-basic', 'sounds/lasers/basic.mp3');
+  load.audio('laser-light', 'sounds/lasers/light.mp3');
 
-  
-  // load sound
-  console.log('loading sounds')
+  load.audio('booster-basic', 'sounds/enhancements/booster-basic.mp3');
+  load.audio('shield-basic', 'sounds/enhancements/shield-basic.mp3');
 
-  load.audio('background1', 'sounds/mood.mp3');
-  load.audio('background2', 'sounds/background_music/eerie1.mp3');
-  load.audio('background3', 'sounds/background_music/eerie2.mp3');
-
- 
-  load.audio('capitalLaser','sounds/lasers/capitalShipLaser.mp3');
-  load.audio('cruiserLaser','sounds/lasers/cruiserLaser1.mp3');
-  load.audio('multiLaser','sounds/lasers/midSizeMultiLaser.mp3');
-
-  load.audio('nucleon_pulse','sounds/pulses/nucleon_pulse.mp3');
-  load.audio('quantum_pulse','sounds/pulses/quantum_pulse.mp3');
-  load.audio('tarkin_pulse','sounds/pulses/tarkin_pulse.mp3');
-  load.audio('grenlin_pulse','sounds/pulses/grenlin_pulse.mp3');
-  load.audio('bazuko_pulse','sounds/pulses/bazuko_pulse.mp3');
-  load.audio('vulcan_pulse','sounds/pulses/vulcan_pulse.mp3')
- 
-  load.audio('rocket1','sounds/rockets/rocket1.mp3');
-  load.audio('rocket2','sounds/rockets/rocket2.mp3');
-  load.audio('rocket3','sounds/rockets/rocket3.mp3');
-
-  load.audio('mediumThrusters1','sounds/thrusters/mediumThrusters1.mp3');
-  load.audio('mediumThrusters2','sounds/thrusters/mediumThrusters2.mp3');
-  load.audio('mediumThrusters3','sounds/thrusters/mediumThrusters3.mp3');
-
-  load.audio('basicBeam','sounds/beamWeapons/basicBeam.mp3');
-  // load.audio('smallBeam','sounds/beamWeapons/green_beam.mp3');
-  load.audio('capitalBeam','sounds/beamWeapons/capitalBeam.mp3');
-  load.audio('smallBeam','sounds/beamWeapons/smallBeamBounced.mp3');
-  
-  load.audio('beam7','sounds/beamWeapons/beam7.mp3');
-  load.audio('beam9','sounds/beamWeapons/beam9.mp3');
-  load.audio('beam11','sounds/beamWeapons/beam11.mp3');
-
-  load.audio('booster','sounds/thrusters/heavyOverdrive.mp3');
-
-  load.audio('shield','sounds/shields/heavyShieldsUp.mp3');
-
-  load.audio('piercing','sounds/piercingDamage/component2.mp3');
-
-
-  load.audio('heal','sounds/repair/HealthUp1.mp3');
-
-  // EXPLOSIONS
-  load.audio('explosion1','sounds/explosions/explosion_new_1.mp3');
-  load.audio('explosion2','sounds/explosions/explosion_new_2.mp3');
-  load.audio('explosion3','sounds/explosions/explosion_new_3.mp3');
-  load.audio('explosion4','sounds/explosions/explosion_new_3.pitched2.mp3');
-  load.audio('explosion5','sounds/explosions/explosion_new_3.pitched3.mp3');
-  load.audio('explosion6','sounds/explosions/explosion_new_3.rerepitched.mp3');
-
-  load.audio('capitalShipExplosion','sounds/explosions/deathExplosion.mp3');
-  load.audio('capitalShipExplosion2','sounds/explosions/actionExplosion.mp3');
-  load.audio('capitalShipExplosion3','sounds/explosions/explosionBig100.mp3');
-
-  load.audio('dangerAlert','sounds/misc/lowHealthDangerSFX.mp3');
+  load.audio('damage-a', 'sounds/explosions/damage-a.mp3');
+  load.audio('damage-b', 'sounds/explosions/damage-b.mp3');
+  load.audio('explosion-a', 'sounds/explosions/explosion-a.mp3');
 };
 
-SoundManager.prototype.create = function(manager) {
-  this.config = this.game.cache.getJSON('item-configuration', false);
-  this.manager = manager;
-  this.shipManager = manager.shipManager;
+SoundManager.prototype.create = function() {
+  this.manager = this.game.states.current;
+  this.shipManager = this.manager.shipManager;
   this.ships = this.shipManager.ships;
+  this.config = this.game.cache.getJSON('item-configuration', false);
+
+  // generate sound pools
+  this.game.sound.add('pulse-basic', 6);
+  this.game.sound.add('pulse-nucleon', 6);
+  this.game.sound.add('pulse-vulcan', 6);
+  this.game.sound.add('plasma-basic', 6);
+  this.game.sound.add('laser-basic', 6);
+  this.game.sound.add('laser-light', 6);
+
+  this.game.sound.add('booster-basic', 2);
+  this.game.sound.add('shield-basic', 2);
+
+  this.game.sound.add('damage-a', 3);
+  this.game.sound.add('damage-b', 3);
+  this.game.sound.add('explosion-a', 2);
+
+  // subscribe to events
+  this.game.on('ship/enhancement/started', this._enhance, this);
+  this.game.on('ship/disabled', this._disabled, this);
+  this.game.on('ship/hardpoint/fire', this._fire, this);
+  this.game.on('ship/hardpoint/hit', this._hit, this);
 };
 
-SoundManager.prototype.generateBackgroundMusic = function(){
-  // this.generateSound('background', 0.1, true);
-  var num = Math.floor((Math.random() * 3)+1);
-  this.generateSound('background'+num, 0.30, true);
-
-  var num = Math.floor((Math.random() * 3)+1);
-  this.generateSound('mediumThrusters'+num, 1, false);
-};
-
-SoundManager.prototype.generateThrusterSound = function(){
-  var num = Math.floor((Math.random() * 3)+1);
-  this.generateSound('mediumThrusters'+num, 1, false);
-};
-
-SoundManager.prototype.generateEnhancementSound = function(data){
-  if(!this.config){
-    return
-  };
-  
-  var enhancements = this.config.enhancement,
+SoundManager.prototype._enhance = function(data) {
+  var game = this.game,
+      player = this.player || { x: 2048, y: 2048 },
+      ship = this.ships[data.uuid],
+      enhancements = this.config.enhancement,
       enhancement = data.enhancement,
       subtype = data.subtype,
       sound = enhancements[enhancement][subtype].sound,
-      volume = sound.volume,
-      player = this.player,
-      manager = this.shipManager,
+      volume;
+  if(sound && ship) {
+    volume = sound.volume;
+
+    if(player !== ship) {   
+      distance = engine.Point.distance(ship, player);
+      volume = global.Math.max(1-(distance/2048), 0);
+      volume *= sound.volume;
+    }
+  }
+  if(volume > SoundManager.MINIMUM_VOLUME) {
+    this.game.sound.play(sound.name, volume, false); 
+  }
+};
+
+SoundManager.prototype._hit = function(data) {
+  var game = this.game,
+      player = this.player || { x: 2048, y: 2048 },
+      target = data.target,
+      ship = data.ship,
+      explosion = game.rnd.pick(['damage-a', 'damage-b']),
+      distance = engine.Point.distance(target, player),
+      volume = global.Math.max(1-(distance/8192), 0),
+      v, r;
+  if(volume > SoundManager.MINIMUM_VOLUME) {
+    v = game.rnd.realInRange(volume/6, volume/2),
+    r = game.rnd.realInRange(0.8, 1.6);
+
+    game.sound.play(explosion, v, false, r);
+  }
+};
+
+SoundManager.prototype._disabled = function(data) {
+  var game = this.game,
+      player = this.player || { x: 2048, y: 2048 },
       ship = this.ships[data.uuid],
-      distance = 0.1;
-
-  if(player && player !== ship) {   
-    distance = engine.Point.distance(ship, player);    
-    volume = global.Math.max(1 - (distance / 2000), 0);
-  };
-  if(volume > 0){
-    this.generateSound(sound.name, volume, sound.loop); 
-  };
-};
-
-SoundManager.prototype.generateExplosionSound = function(data){
-  var explosionsArray = ['explosion2','explosion3','explosion4','explosion5','explosion6'],
-      bigExplosionsArray = ['capitalShipExplosion','capitalShipExplosion2','capitalShipExplosion3'],
-      player = this.player,
-      ship = data,
-      volume = 0.3,
-      bigExplosion = bigExplosionsArray[Math.floor(Math.random() * bigExplosionsArray.length)],
-      smallExplosion = explosionsArray[Math.floor(Math.random() * explosionsArray.length)],
+      volume = 0.5,
+      rnd = game.rnd,
+      explosion = rnd.pick(['explosion-a']),
       sound, distance;
-      
-  if(player && player === ship){
-    sound = bigExplosion;
-  };
-  if(player && player !== ship) {   
-    distance = engine.Point.distance(ship, player);    
-    volume = global.Math.max(1 - (distance / 5000), 0);
-    if(data.data.size > 127) {
-    sound = bigExplosion
-      if(sound === 'capitalShipExplosion2'){
-        volume = global.Math.max(2.5 - (distance / 5000), 0);
-      };
-    } else {sound = smallExplosion};
-  }; 
-  if(volume > 0){
-    // if(sound === bigExplosion){
-    // console.log(sound, volume)
-    // }
-    this.generateSound(sound, volume, false);
-  };
+  if(ship) {
+    if(player === ship) {
+      sound = explosion;
+    } else if(player && player !== ship) {
+      distance = engine.Point.distance(ship, player);
+      volume = global.Math.max(1-(distance/8192), 0);
+      volume *= volume;
+      sound = explosion;
+    }
+    if(sound && volume > SoundManager.MINIMUM_VOLUME) {
+      game.sound.play(sound, volume, false, rnd.realInRange(0.8, 1.2));
+    }
+  }
 };
 
-SoundManager.prototype.generateFireSound = function(data) {
-  var actives = data.actives,
-      loop = false,
-      player = this.player,
-      manager = this.shipManager, ship = data.ship, 
-      key, volume;
-  for(var i = 0; i<actives.length; i++){
-    if(actives[i].data.sound){
-      var key = actives[i].data.sound;
-      volume = actives[i].data.default_volume;
-    };
-    if(player && ship !== player){   
-      distance = engine.Point.distance(ship, player);    
-      volume = global.Math.max(volume - (distance / 10000), 0);
-    }; 
-  };
+SoundManager.prototype._fire = function(data) {
+  var created = data.created,
+      game = this.game,
+      player = this.player || { x: 2048, y: 2048 },
+      rnd = game.rnd,
+      ship = data.ship,
+      launcher, sound, 
+      volume = 0.0,
+      v, r;
 
-  if(key && data.spawn > 0 && volume > 0){
-    this.game.clock.events.create(global.Math.random() * 200, false, actives.length, function(key,volume,loop){
-      var sound = this.generateSound(key, volume, loop);
-    }, this, [key, volume, loop])
-  };
+  if(data.spawn>0) {
+    distance = engine.Point.distance(ship, player);
+    volume = global.Math.max(1-(distance/8192), 0);
+
+    if(volume > SoundManager.MINIMUM_VOLUME) {
+      // smooth distance
+      volume *= volume;
+
+      for(var i=0; i<created.length; i++) {
+        // thin out and apply sound
+        launcher = created[i];
+        sound = launcher.data.sound;
+        volume *= launcher.data.volume;
+        variation = launcher.data.variation;
+
+        if(sound) {
+          v = rnd.realInRange(volume/8.0, volume/2.0);
+          r = rnd.realInRange(1.0-variation, 1.0+variation);
+
+          // each spawn gets a slightly different volume
+          game.clock.events.create(launcher.delay, false, data.spawn,
+            function(key, volume, rate) {
+              this.game.sound.play(key, volume, false, rate, false);
+            }, this, [sound, v, r]
+          );
+        }
+      }
+    }
+  }
 };
 
-SoundManager.prototype.stopFireSound = function(launcher){
-};
-
-// SoundManager.prototype.generateAttackSound = function(data){
-//   var manager = this.game.sound,
-//       player = this.player,
-//       camera = this.game.camera,
-//       cache = this.game.cache,
-//       ship = data.ship,
-//       hardpoints = ship.details.hardpoints,
-//       hardpoint = hardpoints[data.slot],
-//       distance, loop,volume, sound;
-
-//       hardpoint.sound === 'capitalBeam' ? loop = false : loop = false;
-
-//   if(player && player !== ship) {   
-//     distance = engine.Point.distance(ship, player);    
-//     volume = global.Math.max(1 - (distance / 3000), 0);
-//   } else {
-//     volume = 0.3;
-//     if(hardpoint.sound === 'grenlin_pulse'){
-//       volume = 0.2;
-//     }
-//     if(hardpoint.sound === 'bazuko_pulse'){
-//       volume = 0.2;
-//     }
-//   };
-//   this.game.clock.events.create(data.sound.runtime*global.Math.random(), false, hardpoint.spawn, function(key,volume,loop){
-//     var sound = this.generateSound(key, volume, loop);
-//     if(sound && hardpoint.sound === 'capitalBeam'){
-//       this.sounds[data.ship.uuid] = sound
-//     }
-//   }, this, [hardpoint.sound, volume, loop])
-
-
-// };
-
-SoundManager.prototype.generateSpawnSound = function(data){
-  console.log('Playing ', data, 'spawn sound')
-};
-
-SoundManager.prototype.generateSound = function(key, volume, loop = false){
-  return this.game.sound.play(key, volume, loop);
-};
-
-SoundManager.prototype.stopSoundLoop = function(data){
-  // console.log(this.sounds[data.ship.uuid])
-  // this.game.sound.stop(sound)
-  // var pauseThis = this.sounds[data.ship.uuid],
-  //     loopArr = this.isLooping;
-  // for(var i = 0; i<loopArr.length; i++){
-  //   if (loopArr.indexOf(sound)){
-  //     console.log('it exists')
-  //   }
-  // }
-  // console.log(this.sounds[data.ship.uuid], 'stop!')
-  // this.sounds[data.ship.uuid].loop = false;
-  // this.sounds[data.ship.uuid].destroy();
-  // this.game.soundToPause.pause();
-};
-
-
-SoundManager.prototype.play = function(){
-  pulseArr[0].play('', 0, volume, false)
-}
-SoundManager.prototype.generateDamageCriticalSound = function() {
-  this.generateSound('dangerAlert', 0.5, false);
-};
-
-SoundManager.prototype._player = function(ship){
+SoundManager.prototype._player = function(ship) {
   this.player = ship;
-};
-
-SoundManager.prototype.shutdown = function() {
-  //.. properly destroy
 };
 
 module.exports = SoundManager;
