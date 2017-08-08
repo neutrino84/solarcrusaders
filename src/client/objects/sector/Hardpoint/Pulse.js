@@ -68,11 +68,6 @@ Pulse.prototype.start = function(destination, distance, spawn, index, slot, tota
   this._start.copyFrom(this.origin);
   this._end.copyFrom(this.origin);
 
-  // emit particles
-  this.manager.fireEmitter.flash(this.data.emitter);
-  this.manager.fireEmitter.at({ center: this.origin });
-  this.manager.fireEmitter.explode(1);
-
   this.manager.fxGroup.addChild(this.strip);
   this.parent.sprite.addChild(this.glow);
 };
