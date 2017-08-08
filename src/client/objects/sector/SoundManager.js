@@ -20,19 +20,19 @@ SoundManager.prototype.preload = function() {
   var game = this.game,
       load = game.load;
 
-  load.audio('pulse-basic', 'sounds/pulses/basic.mp3');
-  load.audio('pulse-nucleon', 'sounds/pulses/nucleon.mp3');
-  load.audio('pulse-vulcan', 'sounds/pulses/vulcan.mp3');
-  load.audio('plasma-basic', 'sounds/plasmas/basic.mp3');
-  load.audio('laser-basic', 'sounds/lasers/basic.mp3');
-  load.audio('laser-light', 'sounds/lasers/light.mp3');
+  // load.audio('pulse-basic', 'sounds/pulses/basic.mp3');
+  // load.audio('pulse-nucleon', 'sounds/pulses/nucleon.mp3');
+  // load.audio('pulse-vulcan', 'sounds/pulses/vulcan.mp3');
+  // load.audio('plasma-basic', 'sounds/plasmas/basic.mp3');
+  // load.audio('laser-basic', 'sounds/lasers/basic.mp3');
+  // load.audio('laser-light', 'sounds/lasers/light.mp3');
 
-  load.audio('booster-basic', 'sounds/enhancements/booster-basic.mp3');
-  load.audio('shield-basic', 'sounds/enhancements/shield-basic.mp3');
+  // load.audio('booster-basic', 'sounds/enhancements/booster-basic.mp3');
+  // load.audio('shield-basic', 'sounds/enhancements/shield-basic.mp3');
 
-  load.audio('damage-a', 'sounds/explosions/damage-a.mp3');
-  load.audio('damage-b', 'sounds/explosions/damage-b.mp3');
-  load.audio('explosion-a', 'sounds/explosions/explosion-a.mp3');
+  // load.audio('damage-a', 'sounds/explosions/damage-a.mp3');
+  // load.audio('damage-b', 'sounds/explosions/damage-b.mp3');
+  // load.audio('explosion-a', 'sounds/explosions/explosion-a.mp3');
 };
 
 SoundManager.prototype.create = function() {
@@ -42,19 +42,19 @@ SoundManager.prototype.create = function() {
   this.config = this.game.cache.getJSON('item-configuration', false);
 
   // generate sound pools
-  this.game.sound.add('pulse-basic', 6);
-  this.game.sound.add('pulse-nucleon', 6);
-  this.game.sound.add('pulse-vulcan', 6);
-  this.game.sound.add('plasma-basic', 6);
-  this.game.sound.add('laser-basic', 6);
-  this.game.sound.add('laser-light', 6);
+  // this.game.sound.add('pulse-basic', 6);
+  // this.game.sound.add('pulse-nucleon', 6);
+  // this.game.sound.add('pulse-vulcan', 6);
+  // this.game.sound.add('plasma-basic', 6);
+  // this.game.sound.add('laser-basic', 6);
+  // this.game.sound.add('laser-light', 6);
 
-  this.game.sound.add('booster-basic', 2);
-  this.game.sound.add('shield-basic', 2);
+  // this.game.sound.add('booster-basic', 2);
+  // this.game.sound.add('shield-basic', 2);
 
-  this.game.sound.add('damage-a', 3);
-  this.game.sound.add('damage-b', 3);
-  this.game.sound.add('explosion-a', 2);
+  // this.game.sound.add('damage-a', 3);
+  // this.game.sound.add('damage-b', 3);
+  // this.game.sound.add('explosion-a', 2);
 
   // subscribe to events
   this.game.on('ship/enhancement/started', this._enhance, this);

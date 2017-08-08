@@ -50,8 +50,7 @@ SectorState.prototype.preload = function() {
   // load strip graphics
   this.game.load.image('laser-blue', 'imgs/game/fx/laser-blue.png');
   this.game.load.image('laser-red', 'imgs/game/fx/laser-red.png');
-  this.game.load.image('laser-energy', 'imgs/game/fx/laser-energy.png');
-
+// 
   // load texture atlas
   this.game.load.atlasJSONHash('texture-atlas', 'imgs/game/texture-atlas.png', 'data/texture-atlas.json');
 

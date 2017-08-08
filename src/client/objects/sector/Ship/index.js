@@ -24,7 +24,8 @@ function Ship(manager, data) {
   this.chassis = new engine.Sprite(manager.game, 'texture-atlas', data.chassis + '.png');
 
   // defaults
-  this.rotation = data.rotation + global.Math.PI;
+  this.rotation = data.rotation 
+  // + global.Math.PI;
   this.pivot.set(this.width/2, this.height/2);
 
   // timer events
