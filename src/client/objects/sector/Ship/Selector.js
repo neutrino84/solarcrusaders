@@ -44,7 +44,7 @@ Selector.prototype.create = function() {
   // this.reticle.alpha = 0.0;
 
   // add selector
-  this.ship.addChildAt(this.graphics, 0);
+  // this.ship.addChildAt(this.graphics, 0);
   // this.ship.addChildAt(this.reticle, 0);
 };
 
