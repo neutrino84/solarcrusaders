@@ -85,8 +85,8 @@ Camera.prototype.update = function() {
   }
 
   if(this.shaking > 0.0) {
-    x += (rnd.realInRange(-20, 20) * this.shaking);
-    y += (rnd.realInRange(-20, 20) * this.shaking);
+    x += (rnd.realInRange(-10, 10) * this.shaking);
+    y += (rnd.realInRange(-10, 10) * this.shaking);
   }
 
   this.set(x, y);
