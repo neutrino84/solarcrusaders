@@ -16,6 +16,7 @@ function ShieldFilter(game, sprite) {
   this.uniforms.scale = sprite.texture.width/320.0;
   this.uniforms.mapSampler = sprite.texture;
   this.uniforms.filterMatrix = this.matrix.toArray(true);
+  this.uniforms.time = 0.0;
 };
 
 ShieldFilter.prototype = Object.create(pixi.Filter.prototype);
