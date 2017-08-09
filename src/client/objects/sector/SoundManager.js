@@ -6,6 +6,7 @@ function SoundManager(game) {
 
   // listen to player
   this.game.on('ship/player', this._player, this);
+  this.game.on('ship/secondary', this.generateThrusterSound, this);
 };
 
 SoundManager.prototype.constructor = SoundManager;
@@ -20,7 +21,9 @@ SoundManager.prototype.preload = function() {
   var game = this.game,
       load = game.load;
 
-  // load.audio('pulse-basic', 'sounds/pulses/basic.mp3');
+      console.log('soundmanager preload')
+
+  load.audio('pulse-basic', 'sounds/pulses/basic.mp3');
   // load.audio('pulse-nucleon', 'sounds/pulses/nucleon.mp3');
   // load.audio('pulse-vulcan', 'sounds/pulses/vulcan.mp3');
   // load.audio('plasma-basic', 'sounds/plasmas/basic.mp3');
@@ -33,6 +36,10 @@ SoundManager.prototype.preload = function() {
   // load.audio('damage-a', 'sounds/explosions/damage-a.mp3');
   // load.audio('damage-b', 'sounds/explosions/damage-b.mp3');
   // load.audio('explosion-a', 'sounds/explosions/explosion-a.mp3');
+
+  load.audio('thruster1', 'sounds/thrusters/medium1.mp3');
+  load.audio('thruster2', 'sounds/thrusters/medium2.mp3');
+  load.audio('thruster3', 'sounds/thrusters/medium3.mp3');
 };
 
 SoundManager.prototype.create = function() {
@@ -42,7 +49,7 @@ SoundManager.prototype.create = function() {
   this.config = this.game.cache.getJSON('item-configuration', false);
 
   // generate sound pools
-  // this.game.sound.add('pulse-basic', 6);
+  this.game.sound.add('pulse-basic', 6);
   // this.game.sound.add('pulse-nucleon', 6);
   // this.game.sound.add('pulse-vulcan', 6);
   // this.game.sound.add('plasma-basic', 6);
@@ -55,6 +62,10 @@ SoundManager.prototype.create = function() {
   // this.game.sound.add('damage-a', 3);
   // this.game.sound.add('damage-b', 3);
   // this.game.sound.add('explosion-a', 2);
+
+  this.game.sound.add('thruster1', 6);
+  this.game.sound.add('thruster2', 6);
+  this.game.sound.add('thruster3', 6);
 
   // subscribe to events
   this.game.on('ship/enhancement/started', this._enhance, this);
@@ -165,6 +176,17 @@ SoundManager.prototype._fire = function(data) {
       }
     }
   }
+};
+
+SoundManager.prototype.generateThrusterSound = function(){
+  var num = Math.floor((Math.random() * 3)+1);
+  // console.log(num)
+  // if(num<4){
+    // this.generateSound('thruster'+num, 1, false); 
+    this.game.sound.play('thruster'+num, 0.7, false);
+    // this.game.sound.play('thruster1', 1, false);
+    // this.game.sound.play('pulse-basic', 2, false);
+  // }
 };
 
 SoundManager.prototype._player = function(ship) {

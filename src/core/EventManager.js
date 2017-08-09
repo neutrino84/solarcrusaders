@@ -42,12 +42,12 @@ EventManager.prototype.init = function() {
   });
 
   // create general ships
-  this.game.emit('ship/create', {
-    chassis: 'ubaidian-x01c',
-    x: 2048,
-    y: 2048,
-    ai: 'pirate'
-  });
+  // this.game.emit('ship/create', {
+  //   chassis: 'ubaidian-x01c',
+  //   x: 2048,
+  //   y: 2048,
+  //   ai: 'pirate'
+  // });
 };
 
 EventManager.prototype.add = function(object) {
