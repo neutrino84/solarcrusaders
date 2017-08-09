@@ -104,6 +104,7 @@ Sound.prototype.play = function(marker, position, volume, loop, rate, force) {
   if(marker === undefined || marker === false || marker === null) { marker = ''; }
   if(force === undefined) { force = true; }
 
+  console.log(marker, position, volume)
   // already playing
   if(this.isPlaying && !force) {
     return this;

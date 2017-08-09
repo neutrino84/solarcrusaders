@@ -24,8 +24,8 @@
         "aoe": 1.0,
         "spawn": 1,
         "durability": 1000.0,
-        "sound": "laser-basic",
-        "volume": 1.0,
+        "sound": "capitalBeam",
+        "volume": 0.28,
         "variation": 0.25
       }
     },
@@ -54,7 +54,7 @@
         "spawn": 1,
         "durability": 1000.0,
         "sound": "pulse-basic",
-        "volume": 1.0,
+        "volume": 0.5,
         "variation": 0.05
       }
     },
