@@ -537,23 +537,8 @@
             "y": 16
           },
           "position": {
-            "x": 93,
-            "y": 39
-          },
-          "default": {
-            "type": "pulse",
-            "subtype": "basic"
-          }
-        },
-        {
-          "type": ["energy", "pulse"],
-          "pivot": {
-            "x": 20,
-            "y": 16
-          },
-          "position": {
-            "x": 93,
-            "y": 89
+            "x": 52,
+            "y": 22
           },
           "default": {
             "type": "pulse",
@@ -568,7 +553,22 @@
           },
           "position": {
             "x": 52,
-            "y": 64
+            "y": 49
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "basic"
+          }
+        },
+        {
+          "type": ["energy", "pulse"],
+          "pivot": {
+            "x": 20,
+            "y": 16
+          },
+          "position": {
+            "x": 29,
+            "y": 36
           },
           "default": {
             "type": "pulse",
@@ -582,8 +582,8 @@
             "y": 16
           },
           "position": {
-            "x": 66,
-            "y": 64
+            "x": 29,
+            "y": 36
           },
           "default": {
             "type": "rocket",
