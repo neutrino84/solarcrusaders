@@ -69,6 +69,8 @@ SoundManager.prototype.create = function() {
   this.game.sound.add('thruster2', 6);
   this.game.sound.add('thruster3', 6);
 
+  this.game.sound.add('systemsOnline', 1);
+
   // subscribe to events
   this.game.on('ship/enhancement/started', this._enhance, this);
   this.game.on('ship/disabled', this._disabled, this);
@@ -182,7 +184,7 @@ SoundManager.prototype._fire = function(data) {
 };
 
 SoundManager.prototype.generateSystemSound = function(sound){
-  this.generateSound(sound, 0.33, false); 
+  this.game.sound.play(sound, 0.3, false);
 };
 
 SoundManager.prototype.generateThrusterSound = function(){
@@ -196,8 +198,11 @@ SoundManager.prototype.generateThrusterSound = function(){
   // }
 };
 
-SoundManager.prototype._player = function(ship) {
+SoundManager.prototype._player = function(ship){
   this.player = ship;
+  this.game.clock.events.create(1100, false, 1, function(){
+    this.generateSystemSound('systemsOnline')
+  }, this)
 };
 
 module.exports = SoundManager;
