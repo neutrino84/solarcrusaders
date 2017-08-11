@@ -24,8 +24,10 @@ function HotkeyManager(game) {
   this.isShielded = false;
   this.isHealing = false;
   this.isPiercing = false;
+  this.detecting = false;
 
   this.game.on('ship/player', this._player, this);
+  this.game.on('ship/enhancement/cooled', this._cooled, this);
 };
 
 HotkeyManager.prototype.constructor = HotkeyManager;
@@ -35,9 +37,9 @@ HotkeyManager.prototype.init = function() {
 
 HotkeyManager.prototype.create = function(manager) {
   this.config = this.game.cache.getJSON('item-configuration', false);
-  this.manager = manager;
-  this.shipManager = manager.shipManager;
-  this.ships = this.shipManager.ships;
+  // this.squadManager = manager.squadManager;
+  // this.playerManager = manager.playerManager;
+
 };
 
 HotkeyManager.prototype.listener = function() {
@@ -53,6 +55,7 @@ HotkeyManager.prototype.listener = function() {
   		if(hotkeys['enhancements'][key] === 'heal' && this.isHealing){return};
   		if(hotkeys['enhancements'][key] === 'shield' && this.isShielded){return};
       if(hotkeys['enhancements'][key] === 'piercing' && this.isPiercing){return};
+      if(hotkeys['enhancements'][key] === 'detect' && this.detecting){return};
 
 	    this.game.emit('ship/enhancement/start', {
 	      uuid: player.uuid,
@@ -73,6 +76,10 @@ HotkeyManager.prototype.listener = function() {
         case 'piercing':
           this.isPiercing = true;
           break;
+        case 'detect':
+          // this.squadManager.detectUnfriendlies();
+          this.detecting = true;
+          break;
       }
 
 	   } 
@@ -80,12 +87,11 @@ HotkeyManager.prototype.listener = function() {
         //squadron hotkeys
      }
     }, this);
-
-    this.game.on('ship/enhancement/cancelled', this._cooled, this);
   };
 };
 
 HotkeyManager.prototype._cooled = function(data){
+  console.log('in cooled. data is ', data)
   if(data.uuid === this.player.uuid){
     switch(data.enhancement) {
       case 'heal':
