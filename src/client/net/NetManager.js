@@ -17,6 +17,9 @@ function NetManager(game) {
   this.socket.on('sector/sync', this._sync.bind(this));
   this.socket.on('sector/data', this._data.bind(this));
 
+  this.socket.on('ship/enhancement/started',this._started.bind(this));
+  this.socket.on('ship/enhancement/stopped', this._stopped.bind(this));
+
   // ship
   this.connect('ship/attack');
   this.connect('ship/removed');
@@ -47,6 +50,14 @@ NetManager.prototype.getShipData = function(uuid) {
 
 NetManager.prototype.getStationData = function(uuid) {
   return this.stations[uuid];
+};
+
+NetManager.prototype._started = function(data) {
+  this.game.emit('ship/enhancement/started', data);
+};
+
+NetManager.prototype._stopped = function(data) {
+  this.game.emit('ship/enhancement/stopped', data);
 };
 
 NetManager.prototype._data = function(data) {

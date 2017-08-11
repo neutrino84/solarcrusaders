@@ -7,6 +7,7 @@ function SoundManager(game) {
   // listen to player
   this.game.on('ship/player', this._player, this);
   this.game.on('ship/secondary', this.generateThrusterSound, this);
+  this.game.on('ship/enhancement/started', this.generateEnhancementSound, this);
 };
 
 SoundManager.prototype.constructor = SoundManager;
@@ -36,6 +37,10 @@ SoundManager.prototype.preload = function() {
   // load.audio('damage-a', 'sounds/explosions/damage-a.mp3');
   // load.audio('damage-b', 'sounds/explosions/damage-b.mp3');
   // load.audio('explosion-a', 'sounds/explosions/explosion-a.mp3');
+  load.audio('heal-basic', 'sounds/enhancements/heal-basic.mp3');
+  load.audio('booster-basic', 'sounds/enhancements/booster-basic.mp3');
+  load.audio('shield-basic', 'sounds/enhancements/shield-basic.mp3');
+  load.audio('piercing-basic', 'sounds/enhancements/piercing-basic.mp3');
 
   load.audio('thruster1', 'sounds/thrusters/medium1.mp3');
   load.audio('thruster2', 'sounds/thrusters/medium2.mp3');
@@ -68,6 +73,11 @@ SoundManager.prototype.create = function() {
   this.game.sound.add('thruster1', 6);
   this.game.sound.add('thruster2', 6);
   this.game.sound.add('thruster3', 6);
+
+   this.game.sound.add('heal-basic', 3);
+   this.game.sound.add('booster-basic', 3);
+   this.game.sound.add('shield-basic', 3);
+   this.game.sound.add('piercing-basic', 3);
 
   this.game.sound.add('systemsOnline', 1);
 
@@ -190,14 +200,14 @@ SoundManager.prototype.generateSystemSound = function(sound){
 SoundManager.prototype.generateThrusterSound = function(){
   var num = Math.floor((Math.random() * 3)+1);
   
-  this.game.sound.play('thruster'+num, 0.7, false);
+  this.game.sound.play('thruster'+num, 0.5, false);
 };
 
 SoundManager.prototype.generateEnhancementSound = function(data){
   if(!this.config){
     return
   };
-  
+  // console.log(data)
   var enhancements = this.config.enhancement,
       enhancement = data.enhancement,
       subtype = data.subtype,
@@ -213,8 +223,8 @@ SoundManager.prototype.generateEnhancementSound = function(data){
     distance = engine.Point.distance(ship, player);    
     volume = global.Math.max(1 - (distance / 2000), 0);
   };
+  console.log(sound)
   if(volume > 0){
-      // this.generateSound(sound.name, volume, sound.loop); 
       this.game.sound.play(sound.name, volume, false);
   };
 };

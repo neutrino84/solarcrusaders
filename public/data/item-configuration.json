@@ -135,6 +135,10 @@
           "heal": {
             "value": 2.0
           }
+        },
+        "sound": {
+          "name": "heal-basic",
+          "volume": 1.0
         }
       }
     },
@@ -182,6 +186,10 @@
           "critical": {
             "value": 4.0
           }
+        },
+        "sound": {
+          "name": "piercing-basic",
+          "volume": 1.0
         }
       }
     }
