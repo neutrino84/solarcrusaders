@@ -40,6 +40,8 @@ SoundManager.prototype.preload = function() {
   load.audio('thruster1', 'sounds/thrusters/medium1.mp3');
   load.audio('thruster2', 'sounds/thrusters/medium2.mp3');
   load.audio('thruster3', 'sounds/thrusters/medium3.mp3');
+
+  load.audio('systemsOnline', 'sounds/system/systemsOnline.mp3');
 };
 
 SoundManager.prototype.create = function() {
@@ -72,6 +74,7 @@ SoundManager.prototype.create = function() {
   this.game.on('ship/disabled', this._disabled, this);
   this.game.on('ship/hardpoint/fire', this._fire, this);
   this.game.on('ship/hardpoint/hit', this._hit, this);
+  this.game.on('system/sound', this.generateSystemSound, this);
 };
 
 SoundManager.prototype._enhance = function(data) {
@@ -176,6 +179,10 @@ SoundManager.prototype._fire = function(data) {
       }
     }
   }
+};
+
+SoundManager.prototype.generateSystemSound = function(sound){
+  this.generateSound(sound, 0.33, false); 
 };
 
 SoundManager.prototype.generateThrusterSound = function(){

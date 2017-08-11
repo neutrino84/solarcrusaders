@@ -148,6 +148,12 @@ Ship.prototype.enable = function(data) {
   this.selector.enable();
   this.engineCore.show(true);
   this.position.set(data.pos.x, data.pos.y);
+
+  if(this.isPlayer){
+    this.game.emit('squad/regroup', this);
+    this.game.emit('hotkeys/refresh', this);
+    this.game.emit('system/sound', 'systemsOnline');
+  }
 };
 
 Ship.prototype.disable = function() {
