@@ -189,13 +189,34 @@ SoundManager.prototype.generateSystemSound = function(sound){
 
 SoundManager.prototype.generateThrusterSound = function(){
   var num = Math.floor((Math.random() * 3)+1);
-  // console.log(num)
-  // if(num<4){
-    // this.generateSound('thruster'+num, 1, false); 
-    this.game.sound.play('thruster'+num, 0.7, false);
-    // this.game.sound.play('thruster1', 1, false);
-    // this.game.sound.play('pulse-basic', 2, false);
-  // }
+  
+  this.game.sound.play('thruster'+num, 0.7, false);
+};
+
+SoundManager.prototype.generateEnhancementSound = function(data){
+  if(!this.config){
+    return
+  };
+  
+  var enhancements = this.config.enhancement,
+      enhancement = data.enhancement,
+      subtype = data.subtype,
+      sound = enhancements[enhancement][subtype].sound,
+      volume = sound.volume,
+      player = this.player,
+      manager = this.shipManager,
+      ship = this.ships[data.uuid],
+      distance = 0.1,
+      num = Math.floor((Math.random() * 3)+1);
+
+  if(player && ship && player !== ship) {   
+    distance = engine.Point.distance(ship, player);    
+    volume = global.Math.max(1 - (distance / 2000), 0);
+  };
+  if(volume > 0){
+      // this.generateSound(sound.name, volume, sound.loop); 
+      this.game.sound.play(sound.name, volume, false);
+  };
 };
 
 SoundManager.prototype._player = function(ship){
