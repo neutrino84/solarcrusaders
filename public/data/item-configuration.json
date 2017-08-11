@@ -138,7 +138,7 @@
         },
         "sound": {
           "name": "heal-basic",
-          "volume": 1.0
+          "volume": 0.5
         }
       }
     },
@@ -157,7 +157,7 @@
         },
         "sound": {
           "name": "booster-basic",
-          "volume": 1.0
+          "volume": 0.5
         }
       }
     },
@@ -173,7 +173,7 @@
         },
         "sound": {
           "name": "shield-basic",
-          "volume": 1.0
+          "volume": 0.5
         }
       }
     },
@@ -189,7 +189,7 @@
         },
         "sound": {
           "name": "piercing-basic",
-          "volume": 1.0
+          "volume": 0.5
         }
       }
     }
