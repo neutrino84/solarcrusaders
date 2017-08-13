@@ -27,6 +27,33 @@
         "sound": "capitalBeam",
         "volume": 0.28,
         "variation": 0.25
+      },
+      "repair": {
+        "name": "Type 1 Laser",
+        "type": "energy",
+        "subtype": "repair",
+        "sprite": "turret-a",
+        "texture": "laser-yellow-long",
+        "glow": {
+          "tint": "0xDB691D",
+          "size": 4.0,
+          "sprite": "turret-glow.png"
+        },
+        "emitter": ["0x000000", "0xDB691D"],
+        "icon": "item-laser-a",
+        "cooldown": 0,
+        "range": 1900,
+        "projection": 0.1,
+        "delay": 16,
+        "spread": 50,
+        "damage": 3,
+        "length": 1024,
+        "aoe": 1.0,
+        "spawn": 2,
+        "durability": 1000.0,
+        "sound": "beam-repair",
+        "volume": 1.3,
+        "variation": 0.05
       }
     },
     "pulse": {
@@ -149,7 +176,7 @@
         "active": 2,
         "stats": {
           "speed": {
-            "value": 2.5
+            "value": 1.75
           },
           "evasion": {
             "value": 0.5

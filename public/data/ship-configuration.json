@@ -367,10 +367,10 @@
     "moniker": "star-fire",
     "stats": {
       "capacity": 1000,
-      "health": 100,
+      "health": 120,
       "heal": 0.5,
       "armor": 0.15,
-      "speed": 60.0,
+      "speed": 40.0,
       "rate": 256,
       "evasion": 0.14,
       "energy": 100,
@@ -391,8 +391,8 @@
             "endY": 3.9
           },
           "position": {
-            "x": 101,
-            "y": 63
+            "x": 57,
+            "y": 35
           },
           "rotation": 0
         }
@@ -407,8 +407,8 @@
             "y": 16
           },
           "position": {
-            "x": 96,
-            "y": 52
+            "x": 43,
+            "y": 35
           },
           "default": {
             "type": "pulse",
@@ -422,8 +422,8 @@
             "y": 16
           },
           "position": {
-            "x": 76,
-            "y": 62
+            "x": 54,
+            "y": 29
           },
           "default": {
             "type": "pulse",
@@ -437,8 +437,8 @@
             "y": 16
           },
           "position": {
-            "x": 96,
-            "y": 74
+            "x": 54,
+            "y": 42
           },
           "default": {
             "type": "pulse",
@@ -472,7 +472,7 @@
       "health": 150,
       "heal": 0.5,
       "armor": 0.4,
-      "speed": 62.0,
+      "speed": 40.0,
       "rate": 256,
       "evasion": 0.1,
       "energy": 200,
@@ -847,7 +847,7 @@
       "health": 400,
       "heal": 0.1,
       "armor": 0.0,
-      "speed": 8.0,
+      "speed": 20.0,
       "rate": 256,
       "evasion": 0.02,
       "energy": 200,
@@ -936,6 +936,160 @@
           }
         }
       ]
+    }
+  },
+  "squad-attack": {
+    "race": "ubaidian",
+    "class": "fighter",
+    "stats": {
+      "capacity": 3000,
+      "health": 110,
+      "heal": 0.25,
+      "armor": 0.0,
+      "speed": 30.0,
+      "rate": 256,
+      "evasion": 0.3,
+      "energy": 200,
+      "recharge": 1,
+      "size": 128,
+      "durability": 128,
+      "critical": 0.01
+    },
+    "enhancements": ["shield", "booster"],
+    "engine": {
+      "glows": [
+        {
+          "tint": "0xFFFFAA",
+          "scale": {
+            "startX": 0.1,
+            "endX": 0.2,
+            "startY": 0.5,
+            "endY": 1.5
+          },
+          "position": {
+            "x": 33,
+            "y": 26
+          },
+          "rotation": 0
+        }
+        ]
+    },
+    "targeting": {
+      "hardpoints": [
+        {
+          "type": ["pulse"],
+          "pivot": {
+            "x": 20,
+            "y": 16
+          },
+          "position": {
+            "x": 19,
+            "y": 26
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "basic"
+          }
+        }
+        ]
+    }
+  },
+  "squad-repair": {
+    "race": "ubaidian",
+    "class": "repair",
+    "stats": {
+      "capacity": 3000,
+      "health": 180,
+      "heal": 0.35,
+      "armor": 0.0,
+      "speed": 30.0,
+      "rate": 500,
+      "evasion": 0.3,
+      "energy": 200,
+      "recharge": 1,
+      "size": 90,
+      "durability": 128,
+      "critical": 0.01
+    },
+    "enhancements": ["shield", "booster"],
+    "engine": {
+      "glows": [
+        {
+          "tint": "0xFFFFAA",
+          "scale": {
+            "startX": 0.1,
+            "endX": 0.2,
+            "startY": 0.5,
+            "endY": 1.5
+          },
+          "position": {
+            "x": 32,
+            "y": 27
+          },
+          "rotation": 0
+        }
+        ]
+    },
+    "targeting": {
+      "hardpoints": [
+        {
+          "type": ["energy"],
+          "pivot": {
+            "x": 20,
+            "y": 16
+          },
+          "position": {
+            "x": 23,
+            "y": 27
+          },
+          "default": {
+            "type": "energy",
+            "subtype": "repair"
+          }
+        }
+        ]
+    }
+  },
+  "squad-shield": {
+    "race": "ubaidian",
+    "class": "shield",
+    "stats": {
+      "capacity": 3000,
+      "health": 180,
+      "heal": 0.35,
+      "armor": 0.5,
+      "speed": 30.0,
+      "rate": 500,
+      "evasion": 0.3,
+      "energy": 400,
+      "recharge": 1,
+      "size": 90,
+      "durability": 128,
+      "critical": 0.01
+    },
+    "enhancements": ["shield","booster"],
+    "engine": {
+      "glows": [
+        {
+          "tint": "0xFFFFAA",
+          "scale": {
+            "startX": 0.1,
+            "endX": 0.2,
+            "startY": 0.5,
+            "endY": 1.5
+          },
+          "position": {
+            "x": 34,
+            "y": 27
+          },
+          "rotation": 0
+        }
+        ]
+    },
+    "targeting": {
+      "hardpoints": [
+        
+        ]
     }
   },
   "general-x01": {

@@ -33,7 +33,7 @@ User.prototype.init = function(callback, context) {
       x: 2048,
       y: 2048
     }, this);
-
+// 'ubaidian-x01d'
     // update client
     socket.emit('auth/sync', this.data.toStreamObject());
 

@@ -156,7 +156,7 @@ Ship.prototype.attack = function(data, rtt) {
   // validate attack
   for(var slot in hardpoints) {
     hardpoint = hardpoints[slot];
-
+    
     if(distance <= hardpoint.data.range) {
       // compute travel time
       runtime = distance * hardpoint.data.projection + hardpoint.data.delay;

@@ -20,7 +20,7 @@ function Pirate(ship, home) {
     },
     sensor: {
       aim: 0.5,
-      range: 4096
+      range: 2096
     }
   };
 };

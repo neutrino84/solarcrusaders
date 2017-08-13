@@ -30,6 +30,7 @@ SoundManager.prototype.preload = function() {
   // load.audio('plasma-basic', 'sounds/plasmas/basic.mp3');
   // load.audio('laser-basic', 'sounds/lasers/basic.mp3');
   // load.audio('laser-light', 'sounds/lasers/light.mp3');
+  load.audio('beam-repair', 'sounds/beamWeapons/repairBeams/beam-repair.mp3');
 
   // load.audio('booster-basic', 'sounds/enhancements/booster-basic.mp3');
   // load.audio('shield-basic', 'sounds/enhancements/shield-basic.mp3');
@@ -62,6 +63,8 @@ SoundManager.prototype.create = function() {
   // this.game.sound.add('plasma-basic', 6);
   // this.game.sound.add('laser-basic', 6);
   // this.game.sound.add('laser-light', 6);
+
+  this.game.sound.add('beam-repair', 6);
 
   // this.game.sound.add('booster-basic', 2);
   // this.game.sound.add('shield-basic', 2);
