@@ -196,6 +196,7 @@ SoundManager.prototype._fire = function(data) {
   }
 };
 
+<<<<<<< HEAD
 SoundManager.prototype.generateSystemSound = function(sound){
   this.game.sound.play(sound, 0.3, false);
 };
@@ -233,6 +234,20 @@ SoundManager.prototype.generateEnhancementSound = function(data){
 };
 
 SoundManager.prototype._player = function(ship){
+=======
+SoundManager.prototype.generateThrusterSound = function(){
+  var num = Math.floor((Math.random() * 3)+1);
+  // console.log(num)
+  // if(num<4){
+    // this.generateSound('thruster'+num, 1, false); 
+    this.game.sound.play('thruster'+num, 0.7, false);
+    // this.game.sound.play('thruster1', 1, false);
+    // this.game.sound.play('pulse-basic', 2, false);
+  // }
+};
+
+SoundManager.prototype._player = function(ship) {
+>>>>>>> f97493062c2ec24db88daaf7de74b19c7f1a45b2
   this.player = ship;
   this.game.clock.events.create(1100, false, 1, function(){
     this.generateSystemSound('systemsOnline')
