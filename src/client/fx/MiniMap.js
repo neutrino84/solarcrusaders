@@ -3,10 +3,11 @@ var pixi = require('pixi'),
     engine = require('engine'),
     glslify = require('glslify'),
     Shader = require('pixi-gl-core').GLShader,
+    Layout = require('../ui/Layout'),
     Ship = require('../objects/sector/minimap/Ship');
 
-function MiniMap(game) {
-  this.spaceTexture = new pixi.Texture(this.getRepeatTexture('space'));
+function MiniMap(game, settings) {
+  this.spaceTexture = new pixi.Texture(this.getRepeatTexture(undefined));
 
   engine.Shader.call(this, game, this.spaceTexture);
 
@@ -14,7 +15,7 @@ function MiniMap(game) {
   var divider = 2;
   var size = game.width < game.height ? game.width/divider : game.height/divider;
   
-  this.settings = {
+  this.settings = engine.Class.mixin(settings, {
     colors: {
       pirate: 0xFF0000, neutral: 0xFFFF00, other: 0x8A8A8A
     },
@@ -29,10 +30,10 @@ function MiniMap(game) {
         y: 2000
       }
     }
-  };
+  });
 
   this._width = this._height = this.settings.size;
-  this.position.set(this.settings.margin[0], this.settings.margin[1]);
+  this.paint();
 
   this.others = [];
   this.neutrals = [];
@@ -43,7 +44,7 @@ function MiniMap(game) {
 
   this._drawShips();
 
-  game.clock.events.loop(2000, this._test, this);
+  //game.clock.events.loop(2000, this._test, this);
 };
 
 MiniMap.prototype = Object.create(engine.Shader.prototype);
@@ -64,7 +65,7 @@ MiniMap.prototype._drawShips = function() {
 };
 
 MiniMap.prototype._drawShip = function(ship) {
-  this.shipGroup.add(new MapShip(this.game, ship, this.settings));
+  this.shipGroup.add(new Ship(this.game, ship, this.settings));
 };
 
 
@@ -122,13 +123,27 @@ MiniMap.prototype.removeShip = function(index) {
   this.shipGroup.remove( this.shipGroup.children[index]);
 };
 
+MiniMap.prototype.paint = function(top, left, bottom, right) {
+  var ax = this.settings.layout.ax,
+      ay = this.settings.layout.ay,
+      width = this._width,
+      height = this._height;
+  this.settings.margin[0] =
+    ax == Layout.RIGHT ? game.width - width :
+      ax == Layout.CENTER ? (game.width - width) / 2 : this.settings.margin[0];
+  this.settings.margin[1] =
+    ay == Layout.BOTTOM ? game.height - height :
+      ay == Layout.CENTER ? (game.height - height) / 2 : this.settings.margin[1];
+  this.position.set(this.settings.margin[0], this.settings.margin[1]);
+};
+
 MiniMap.prototype.resize = function(width, height) {
   this.settings.size = width < height ? width / this.settings.divider : height / this.settings.divider;
   this._width = this._height = this.settings.size;
-
+  this.paint();
   for(var i = 0; i < this.shipGroup.children.length; i++){
     this.shipGroup.children[i].update();
   }
-}
+};
 
 module.exports = MiniMap;

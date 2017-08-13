@@ -13,6 +13,7 @@ var engine = require('engine'),
     BottomPane = require('../ui/panes/BottomPane'),
 
     LeaderBoardPane = require('../ui/panes/LeaderBoardPane'),
+    MiniMapPane = require('../ui/panes/MiniMapPane'),
 
     Alert = require('../ui/components/Alert'),
     FlashMessage = require('../ui/components/FlashMessage'),
@@ -90,6 +91,13 @@ GUIState.prototype.create = function() {
   this.leaderBoardPanel = new Panel(game, new FlowLayout(Layout.RIGHT, Layout.TOP, Layout.HORIZONTAL, 6));
   this.leaderBoardPanel.addPanel(Layout.NONE, this.leaderBoardPane);
 
+  // miniMap pane added to canvas
+  this.miniMapPanel = new Panel(game, new FlowLayout(Layout.LEFT, Layout.TOP, Layout.HORIZONTAL, 6));
+
+  //added miniMap pane
+  this.miniMapPane = new MiniMapPane(game);
+  this.miniMapPanel.addPanel(Layout.NONE, this.miniMapPane);
+
   this.root = new Panel(game, new StackLayout());
   this.root.setSize(game.width, game.height);
   this.root.visible = false;
@@ -99,6 +107,7 @@ GUIState.prototype.create = function() {
   this.root.addPanel(Layout.STRETCH, this.basePanel);
   this.root.addPanel(Layout.STRETCH, this.centerPanel);
   this.root.addPanel(Layout.STRETCH, this.leaderBoardPanel);
+  this.root.addPanel(Layout.STRETCH, this.miniMapPanel);
   this.root.addPanel(Layout.STRETCH, this.modalComponent);
 
   // add root to stage
@@ -186,6 +195,7 @@ GUIState.prototype.resize = function(width, height) {
     this.root.setSize(width, height);
     this.root.invalidate();
   }
+  this.miniMapPane && this.miniMapPane.resize(width, height);
 };
 
 GUIState.prototype._pause = function() {
