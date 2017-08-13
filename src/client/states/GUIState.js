@@ -14,6 +14,8 @@ var engine = require('engine'),
 
     LeaderBoardPane = require('../ui/panes/LeaderBoardPane'),
 
+    ChatSystemPane = require('../ui/panes/ChatSystemPane'),
+
     Alert = require('../ui/components/Alert'),
     FlashMessage = require('../ui/components/FlashMessage'),
     Modal = require('../ui/components/Modal'),
@@ -75,6 +77,8 @@ GUIState.prototype.create = function() {
 
   // added leaderBoard pane
   this.leaderBoardPane = new LeaderBoardPane(game);
+  //added chatSystem pane
+  this.chatSystemPane = new ChatSystemPane(game, {users: this.leaderBoardPane.users});
 
   this.headerPane = new HeaderPane(game);
 
@@ -90,6 +94,10 @@ GUIState.prototype.create = function() {
   this.leaderBoardPanel = new Panel(game, new FlowLayout(Layout.RIGHT, Layout.TOP, Layout.HORIZONTAL, 6));
   this.leaderBoardPanel.addPanel(Layout.NONE, this.leaderBoardPane);
 
+  // chatSystem pane added to canvas
+  this.chatSystemPanel = new Panel(game, new FlowLayout(Layout.LEFT, Layout.BOTTOM, Layout.HORIZONTAL, 6));
+  this.chatSystemPanel.addPanel(Layout.NONE, this.chatSystemPane);
+
   this.root = new Panel(game, new StackLayout());
   this.root.setSize(game.width, game.height);
   this.root.visible = false;
@@ -99,6 +107,7 @@ GUIState.prototype.create = function() {
   this.root.addPanel(Layout.STRETCH, this.basePanel);
   this.root.addPanel(Layout.STRETCH, this.centerPanel);
   this.root.addPanel(Layout.STRETCH, this.leaderBoardPanel);
+  this.root.addPanel(Layout.STRETCH, this.chatSystemPanel);
   this.root.addPanel(Layout.STRETCH, this.modalComponent);
 
   // add root to stage
@@ -186,6 +195,7 @@ GUIState.prototype.resize = function(width, height) {
     this.root.setSize(width, height);
     this.root.invalidate();
   }
+  this.chatSystemPane !== undefined && this.chatSystemPane.resize();
 };
 
 GUIState.prototype._pause = function() {
