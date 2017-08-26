@@ -48,24 +48,24 @@ EventManager.prototype.init = function() {
     y: 2048,
     ai: 'pirate'
   });
-  this.game.emit('ship/create', {
-    chassis: 'squad-attack',
-    x: 2048,
-    y: 2048,
-    ai: 'basic'
-  });
-  this.game.emit('ship/create', {
-    chassis: 'squad-attack',
-    x: 2048,
-    y: 2048,
-    ai: 'basic'
-  });
-  this.game.emit('ship/create', {
-    chassis: 'squad-attack',
-    x: 2048,
-    y: 2048,
-    ai: 'basic'
-  });
+  // this.game.emit('ship/create', {
+  //   chassis: 'squad-attack',
+  //   x: 2048,
+  //   y: 2048,
+  //   ai: 'basic'
+  // });
+  // this.game.emit('ship/create', {
+  //   chassis: 'squad-attack',
+  //   x: 2048,
+  //   y: 2048,
+  //   ai: 'basic'
+  // });
+  // this.game.emit('ship/create', {
+  //   chassis: 'squad-attack',
+  //   x: 2048,
+  //   y: 2048,
+  //   ai: 'basic'
+  // });
 };
 
 EventManager.prototype.add = function(object) {
