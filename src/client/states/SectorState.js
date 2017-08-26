@@ -103,7 +103,7 @@ SectorState.prototype.create = function() {
 
 SectorState.prototype.createSpace = function() {
   this.space = new Space(this.game);
-  // this.space.cache();
+  this.space.cache();
 
   this.planet = new Planet(this.game);
 

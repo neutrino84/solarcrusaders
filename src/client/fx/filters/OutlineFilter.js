@@ -4,7 +4,7 @@ var pixi = require('pixi'),
 
 function OutlineFilter(size, color) {
   pixi.Filter.call(this,
-    glslify('./outline.vert', 'utf8'),
+    glslify('./default.vert', 'utf8'),
     glslify('./outline.frag', 'utf8').replace(/%SIZE%/gi, size.toFixed(7))
   );
 
@@ -17,10 +17,10 @@ OutlineFilter.prototype.constructor = OutlineFilter;
 
 Object.defineProperties(OutlineFilter.prototype, {
   color: {
-    get: function () {
+    get: function() {
       return pixi.utils.rgb2hex(this.uniforms.color);
     },
-    set: function (value) {
+    set: function(value) {
       pixi.utils.hex2rgb(value, this.uniforms.color);
     }
   }
