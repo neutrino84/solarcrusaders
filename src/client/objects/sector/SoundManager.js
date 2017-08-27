@@ -8,6 +8,7 @@ function SoundManager(game) {
   this.game.on('ship/player', this._player, this);
   this.game.on('ship/secondary', this.generateThrusterSound, this);
   this.game.on('ship/enhancement/started', this.generateEnhancementSound, this);
+  this.game.on('game/backgroundmusic', this.generateBackgroundMusic, this);
 };
 
 SoundManager.prototype.constructor = SoundManager;
@@ -23,6 +24,10 @@ SoundManager.prototype.preload = function() {
       load = game.load;
 
       console.log('soundmanager preload')
+
+  load.audio('background1', 'sounds/background_music/eerie1.mp3');
+  load.audio('background2', 'sounds/background_music/eerie2.mp3');
+  load.audio('background3', 'sounds/background_music/Spacetheme1.mp3');    
 
   load.audio('pulse-basic', 'sounds/pulses/basic.mp3');
   // load.audio('pulse-nucleon', 'sounds/pulses/nucleon.mp3');
@@ -46,6 +51,27 @@ SoundManager.prototype.preload = function() {
   load.audio('thruster1', 'sounds/thrusters/medium1.mp3');
   load.audio('thruster2', 'sounds/thrusters/medium2.mp3');
   load.audio('thruster3', 'sounds/thrusters/medium3.mp3');
+
+  // EXPLOSIONS
+  load.audio('explosion1','sounds/explosions/explosion_new_1.mp3');
+  load.audio('explosion2','sounds/explosions/explosion_new_2.mp3');
+  load.audio('explosion3','sounds/explosions/explosion_new_3.mp3');
+  load.audio('explosion4','sounds/explosions/explosion_new_3.pitched2.mp3');
+  load.audio('explosion5','sounds/explosions/explosion_new_3.pitched3.mp3');
+  load.audio('explosion6','sounds/explosions/explosion_new_3.rerepitched.mp3');
+
+  load.audio('capitalShipExplosion','sounds/explosions/deathExplosion.mp3');
+  load.audio('capitalShipExplosion2','sounds/explosions/actionExplosion.mp3');
+  load.audio('capitalShipExplosion3','sounds/explosions/explosionBig100.mp3');
+
+  load.audio('queenDeath','sounds/explosions/queenDeath.mp3');
+  load.audio('overseerDeath','sounds/explosions/overseerDeath3.mp3');
+  load.audio('harvesterDeath1','sounds/explosions/collectorDeath.mp3');
+  load.audio('harvesterDeath2','sounds/explosions/larvaDeath.mp3');
+
+  load.audio('dangerAlert','sounds/misc/lowHealthDangerSFX.mp3');
+
+  load.audio('queenSpawn','sounds/misc/queenSpawn.mp3');
 
   load.audio('systemsOnline', 'sounds/system/systemsOnline.mp3');
 };
@@ -81,6 +107,28 @@ SoundManager.prototype.create = function() {
    this.game.sound.add('booster-basic', 3);
    this.game.sound.add('shield-basic', 3);
    this.game.sound.add('piercing-basic', 3);
+
+  
+
+  this.game.sound.add('background1', 2);
+  this.game.sound.add('background2', 2);
+  this.game.sound.add('background3', 2);
+
+
+  this.game.sound.add('explosion1', 6);
+  this.game.sound.add('explosion2', 6);
+  this.game.sound.add('explosion3', 6);
+  this.game.sound.add('explosion4', 6);
+  this.game.sound.add('explosion5', 6);
+  this.game.sound.add('explosion6', 6);
+
+  this.game.sound.add('capitalShipExplosion', 6);
+  this.game.sound.add('capitalShipExplosion2', 6);
+  this.game.sound.add('capitalShipExplosion3', 6);
+
+  this.game.sound.add('dangerAlert', 1);
+
+  this.game.sound.add('queenSpawn', 1);
 
   this.game.sound.add('systemsOnline', 1);
 
@@ -198,6 +246,13 @@ SoundManager.prototype._fire = function(data) {
 
 SoundManager.prototype.generateSystemSound = function(sound){
   this.game.sound.play(sound, 0.3, false);
+  this.generateBackgroundMusic();
+};
+
+SoundManager.prototype.generateBackgroundMusic = function(){
+  var num = Math.floor((Math.random() * 2)+1);
+  console.log('background'+num)
+  this.game.sound.play('background'+num, 1, false);
 };
 
 SoundManager.prototype.generateThrusterSound = function(){
@@ -226,9 +281,53 @@ SoundManager.prototype.generateEnhancementSound = function(data){
     distance = engine.Point.distance(ship, player);    
     volume = global.Math.max(1 - (distance / 2000), 0);
   };
-  console.log(sound)
   if(volume > 0){
       this.game.sound.play(sound.name, volume, false);
+  };
+};
+
+SoundManager.prototype.generateExplosionSound = function(data){
+  var explosionsArray = ['explosion2','explosion3','explosion4','explosion5','explosion6'],
+      bigExplosionsArray = ['capitalShipExplosion','capitalShipExplosion2','capitalShipExplosion3'],
+      player = this.player,
+      ship = data,
+      volume = 0.3,
+      bigExplosion = bigExplosionsArray[Math.floor(Math.random() * bigExplosionsArray.length)],
+      smallExplosion = explosionsArray[Math.floor(Math.random() * explosionsArray.length)],
+      num = Math.floor((Math.random() * 2)+1),
+      sound, distance;
+      
+  if(player && player === ship){
+    sound = bigExplosion;
+    volume = 0.75;
+    console.log(sound)
+  };
+  if(player && player !== ship) {   
+    distance = engine.Point.distance(ship, player);    
+    volume = global.Math.max(1 - (distance / 5000), 0);
+    console.log(data.data.size)
+    if(data.data.size >= 64) {
+      sound = bigExplosion
+      if(volume >.6){volume = .6}
+      if(sound === 'capitalShipExplosion' && volume > 0.2){
+        volume = 0.2
+      };
+    
+    } else {sound = smallExplosion};
+    if(data.data.chassis === 'scavengers-x04d'){
+      sound = 'queenDeath';
+    };
+    if(data.data.chassis === 'scavengers-x03c'){
+      sound = 'overseerDeath';
+      volume = global.Math.max(0.85 - (distance / 5000), 0);
+    };
+    if(data.data.chassis === 'scavengers-x02' || data.data.chassis === 'scavengers-x01'){
+      sound = 'harvesterDeath' + num;
+      volume = global.Math.max(0.7 - (distance / 5000), 0);
+    };
+  }; 
+  if(volume > 0){
+    this.generateSound(sound, volume, false);
   };
 };
 

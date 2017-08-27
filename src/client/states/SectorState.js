@@ -99,6 +99,8 @@ SectorState.prototype.create = function() {
 
   // create SoundManager
   this.soundManager.create();
+
+  this.game.emit('game/backgroundmusic')
 };
 
 SectorState.prototype.createSpace = function() {

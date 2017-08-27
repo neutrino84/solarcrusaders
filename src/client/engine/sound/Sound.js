@@ -104,6 +104,7 @@ Sound.prototype.play = function(marker, position, volume, loop, rate, force) {
   if(marker === undefined || marker === false || marker === null) { marker = ''; }
   if(force === undefined) { force = true; }
 
+
   // already playing
   if(this.isPlaying && !force) {
     return this;
@@ -190,7 +191,7 @@ Sound.prototype.play = function(marker, position, volume, loop, rate, force) {
   this.currentTime = 0;
   this.startTime = this.game.clock.time;
   this.stopTime = this.startTime + this.durationMS;
-
+  console.log(this)
   this.emit('play', this);
 };
 

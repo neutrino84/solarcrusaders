@@ -210,7 +210,6 @@ Loader.prototype.audio = function(key, urls) {
   if(typeof urls === 'string') {
     urls = [urls];
   }
-  console.log(key, urls)
   return this.addToFileList('audio', key, urls, { buffer: null });
 };
 

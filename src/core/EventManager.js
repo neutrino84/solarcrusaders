@@ -42,12 +42,24 @@ EventManager.prototype.init = function() {
   });
 
   // create general ships
-  this.game.emit('ship/create', {
-    chassis: 'ubaidian-x01c',
-    x: 2048,
-    y: 2048,
-    ai: 'pirate'
-  });
+  // this.game.emit('ship/create', {
+  //   chassis: 'ubaidian-x01c',
+  //   x: 2048,
+  //   y: 2048,
+  //   ai: 'pirate'
+  // });
+  // this.game.emit('ship/create', {
+  //   chassis: 'ubaidian-x01b',
+  //   x: 2048,
+  //   y: 2048,
+  //   ai: 'pirate'
+  // });
+  // this.game.emit('ship/create', {
+  //   chassis: 'squad-attack',
+  //   x: 2048,
+  //   y: 2048,
+  //   ai: 'basic'
+  // });
   // this.game.emit('ship/create', {
   //   chassis: 'squad-attack',
   //   x: 2048,
@@ -61,7 +73,7 @@ EventManager.prototype.init = function() {
   //   ai: 'basic'
   // });
   // this.game.emit('ship/create', {
-  //   chassis: 'squad-attack',
+  //   chassis: 'general-x01',
   //   x: 2048,
   //   y: 2048,
   //   ai: 'basic'
