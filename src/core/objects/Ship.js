@@ -275,7 +275,6 @@ Ship.prototype.disable = function() {
   
   // respawn time
   if(!this.ai) {
-    console.log('in check', Ship.RESPAWN_TIME)
     this.respawn = this.game.clock.events.add(9000, this.enable, this);
     // Ship.RESPAWN_TIME;
   } else {

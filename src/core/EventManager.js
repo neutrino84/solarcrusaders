@@ -14,8 +14,8 @@ function EventManager(game) {
 
   this.level = 1;
   this.ships = {
-    basic: 15,
-    pirate: 15
+    basic: 9,
+    pirate: 7
   };
 
   this.chassis = ['ubaidian-x01a','ubaidian-x01b','ubaidian-x01c','ubaidian-x01d','ubaidian-x01e','ubaidian-x01f']
@@ -43,50 +43,7 @@ EventManager.prototype.init = function() {
     radius: 512
   });
 
-  // create general ships
-
-  // this.game.emit('ship/create', {
-  //   chassis: 'ubaidian-x01c',
-  //   x: 2048,
-  //   y: 2048,
-  //   ai: 'pirate'
-  // });
-  // this.game.emit('ship/create', {
-  //   chassis: this.game.rnd.pick(this.chassis),
-  //   x: 2048,
-  //   y: 2048,
-  //   ai: 'pirate'
-  // });
-  // this.game.emit('ship/create', {
-  //   chassis: 'squad-attack',
-  //   x: 2048,
-  //   y: 2048,
-  //   ai: 'basic'
-  // });
-  // this.game.emit('ship/create', {
-  //   chassis: 'squad-attack',
-  //   x: 2048,
-  //   y: 2048,
-  //   ai: 'basic'
-  // });
-  // this.game.emit('ship/create', {
-  //   chassis: 'squad-attack',
-  //   x: 2048,
-  //   y: 2048,
-  //   ai: 'basic'
-  // });
-  // this.game.emit('ship/create', {
-  //   chassis: 'general-x01',
-  //   x: 2048,
-  //   y: 2048,
-  //   ai: 'basic'
-  // });
-
-  // generate pirates
-  // this.shipGen(this.ships.pirate, 'pirate');
-  // generate basics
-  // this.shipGen(this.ships.basic, 'basic');
-
+  //generate ships
   for(var a in this.ships){
     this.shipGen(this.ships[a], a.toString())
   };
