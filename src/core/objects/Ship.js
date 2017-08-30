@@ -274,9 +274,13 @@ Ship.prototype.disable = function() {
   this.ai && this.ai.disengage();
   
   // respawn time
-  // if(!this.ai) {
-  //   this.respawn = this.game.clock.events.add(Ship.RESPAWN_TIME, this.enable, this);
-  // }
+  if(!this.ai) {
+    console.log('in check', Ship.RESPAWN_TIME)
+    this.respawn = this.game.clock.events.add(9000, this.enable, this);
+    // Ship.RESPAWN_TIME;
+  } else {
+    this.respawn = this.game.clock.events.add(12000, this.enable, this);
+  };
 
   // blast close
   // this.blast();
@@ -314,7 +318,7 @@ Ship.prototype.enable = function() {
 
   // reset
   this.movement.magnitude = 0;
-  this.movement.position.copyFrom(this.ai ? this.ai.getHomePosition() : this.manager.generateRandomPosition(1024));
+  // this.movement.position.copyFrom(this.ai ? this.ai.getHomePosition() : this.manager.generateRandomPosition(1024));
 
   // broadcast
   this.sockets.send('ship/enabled', {

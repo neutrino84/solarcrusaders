@@ -4,9 +4,9 @@
         <key>fileFormatVersion</key>
         <int>4</int>
         <key>texturePackerVersion</key>
-        <string>4.4.0</string>
+        <string>4.3.3</string>
         <key>fileName</key>
-        <string>/Users/oliver/projects/solarcrusaders/assets/imgs/texture-atlas.tps</string>
+        <string>/Users/GalvanizeComp/Desktop/solarcrusaders/assets/imgs/texture-atlas.tps</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -172,8 +172,6 @@
         <false/>
         <key>prependSmartFolderName</key>
         <false/>
-        <key>autodetectAnimations</key>
-        <true/>
         <key>globalSpriteSettings</key>
         <struct type="SpriteSettings">
             <key>scale</key>
@@ -355,7 +353,28 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">ships/ubaidian/squadron/squad-attack.png</key>
+            <key type="filename">ships/ubaidian/squadron/squad-repair.png</key>
+            <key type="filename">ships/ubaidian/squadron/squad-shield.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>14,14,27,27</rect>
+                <key>scale9Paddings</key>
+                <rect>14,14,27,27</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">ships/ubaidian/ubaidian-x01.png</key>
+            <key type="filename">ships/ubaidian/ubaidian-x01a.png</key>
+            <key type="filename">ships/ubaidian/ubaidian-x01b.png</key>
+            <key type="filename">ships/ubaidian/ubaidian-x01c.png</key>
+            <key type="filename">ships/ubaidian/ubaidian-x01d.png</key>
+            <key type="filename">ships/ubaidian/ubaidian-x01e.png</key>
+            <key type="filename">ships/ubaidian/ubaidian-x01f.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -430,6 +449,15 @@
             <filename>fx/engine-highlight.png</filename>
             <filename>fx/explosion-e.png</filename>
             <filename>ships/general/general-x01.png</filename>
+            <filename>ships/ubaidian/ubaidian-x01a.png</filename>
+            <filename>ships/ubaidian/ubaidian-x01b.png</filename>
+            <filename>ships/ubaidian/ubaidian-x01c.png</filename>
+            <filename>ships/ubaidian/ubaidian-x01d.png</filename>
+            <filename>ships/ubaidian/ubaidian-x01e.png</filename>
+            <filename>ships/ubaidian/ubaidian-x01f.png</filename>
+            <filename>ships/ubaidian/squadron/squad-repair.png</filename>
+            <filename>ships/ubaidian/squadron/squad-shield.png</filename>
+            <filename>ships/ubaidian/squadron/squad-attack.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

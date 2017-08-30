@@ -180,7 +180,7 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "tarkin"
+            "subtype": "basic"
           }
         },
         {
@@ -195,7 +195,7 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "tarkin"
+            "subtype": "basic"
           }
         },
         {
@@ -210,7 +210,7 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "tarkin"
+            "subtype": "basic"
           }
         },
         {
@@ -241,7 +241,7 @@
       "heal": 0.21,
       "armor": 0.20,
       "speed": 30.0,
-      "rate": 350,
+      "rate": 450,
       "evasion": 0.05,
       "energy": 200,
       "recharge": 1,
@@ -261,8 +261,8 @@
             "endY": 0.4
           },
           "position": {
-            "x": 181,
-            "y": 94
+            "x": 54,
+            "y": 35
           },
           "rotation": 0
         },
@@ -275,8 +275,8 @@
             "endY": 0.4
           },
           "position": {
-            "x": 181,
-            "y": 164
+            "x": 51,
+            "y": 27
           },
           "rotation": 0
         },
@@ -289,8 +289,8 @@
             "endY": 0.8
           },
           "position": {
-            "x": 203,
-            "y": 128
+            "x": 51,
+            "y": 44
           },
           "rotation": 0
         }
@@ -305,8 +305,8 @@
             "y": 16
           },
           "position": {
-            "x": 104,
-            "y": 76
+            "x": 29,
+            "y": 22
           },
           "default": {
             "type": "rocket",
@@ -320,8 +320,8 @@
             "y": 16
           },
           "position": {
-            "x": 104,
-            "y": 178
+            "x": 29,
+            "y": 49
           },
           "default": {
             "type": "rocket",
@@ -335,23 +335,8 @@
             "y": 16
           },
           "position": {
-            "x": 169,
-            "y": 128
-          },
-          "default": {
-            "type": "rocket",
-            "subtype": "basic"
-          }
-        },
-        {
-          "type": ["projectile"],
-          "pivot": {
-            "x": 20,
-            "y": 16
-          },
-          "position": {
-            "x": 73,
-            "y": 125
+            "x": 47,
+            "y": 35
           },
           "default": {
             "type": "rocket",
@@ -407,8 +392,8 @@
             "y": 16
           },
           "position": {
-            "x": 43,
-            "y": 35
+            "x": 54,
+            "y": 29
           },
           "default": {
             "type": "pulse",
@@ -422,8 +407,8 @@
             "y": 16
           },
           "position": {
-            "x": 54,
-            "y": 29
+            "x": 42,
+            "y": 35
           },
           "default": {
             "type": "pulse",
@@ -452,8 +437,8 @@
             "y": 16
           },
           "position": {
-            "x": 75,
-            "y": 63
+            "x": 42,
+            "y": 35
           },
           "default": {
             "type": "rocket",
@@ -611,7 +596,7 @@
       "durability": 64,
       "critical": 0.01
     },
-    "enhancements": ["heal", "booster-advanced", "shield", "piercing"],
+    "enhancements": ["heal", "booster", "shield", "piercing"],
     "engine": {
       "glows": [
         {
@@ -644,7 +629,7 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "quantum"
+            "subtype": "basic"
           }
         },
         {
@@ -659,7 +644,7 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "quantum"
+            "subtype": "basic"
           }
         },
         {
@@ -674,7 +659,7 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "quantum"
+            "subtype": "basic"
           }
         },
         {
@@ -788,7 +773,7 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "tarkin"
+            "subtype": "basic"
           }
         },
         {
@@ -803,7 +788,7 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "tarkin"
+            "subtype": "basic"
           }
         },
         {
@@ -818,7 +803,7 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "grenlin"
+            "subtype": "basic"
           }
         },
         {
@@ -833,7 +818,7 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "grenlin"
+            "subtype": "basic"
           }
         }
               ]

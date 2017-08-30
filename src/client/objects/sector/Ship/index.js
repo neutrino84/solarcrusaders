@@ -143,22 +143,22 @@ Ship.prototype.update = function() {
 Ship.prototype.enable = function(data) {
   this.alpha = 1.0;
   this.disabled = false;
-  // this.chassis.tint = 0xFFFFFF;
+  this.chassis.tint = 0xFFFFFF;
   this.hud.enable();
   this.selector.enable();
   this.engineCore.show(true);
   this.position.set(data.pos.x, data.pos.y);
 
   if(this.isPlayer){
-    this.game.emit('squad/regroup', this);
+    // this.game.emit('squad/regroup', this);
     this.game.emit('hotkeys/refresh', this);
-    this.game.emit('system/sound', 'systemsOnline');
+    this.game.emit('system/sound');
   }
 };
 
 Ship.prototype.disable = function() {
   this.disabled = true;
-  // this.chassis.tint = 0x333333;
+  this.chassis.tint = 0x333333;
   this.hud.disable();
   this.selector.disable();
   this.engineCore.stop();

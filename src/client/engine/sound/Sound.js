@@ -191,7 +191,6 @@ Sound.prototype.play = function(marker, position, volume, loop, rate, force) {
   this.currentTime = 0;
   this.startTime = this.game.clock.time;
   this.stopTime = this.startTime + this.durationMS;
-  console.log(this)
   this.emit('play', this);
 };
 

@@ -8,6 +8,7 @@ function SoundManager(game) {
   this.game.on('ship/player', this._player, this);
   this.game.on('ship/secondary', this.generateThrusterSound, this);
   this.game.on('ship/enhancement/started', this.generateEnhancementSound, this);
+  this.game.on('ship/sound/death', this.generateExplosionSound, this);
   this.game.on('game/backgroundmusic', this.generateBackgroundMusic, this);
 };
 
@@ -53,16 +54,16 @@ SoundManager.prototype.preload = function() {
   load.audio('thruster3', 'sounds/thrusters/medium3.mp3');
 
   // EXPLOSIONS
-  load.audio('explosion1','sounds/explosions/explosion_new_1.mp3');
-  load.audio('explosion2','sounds/explosions/explosion_new_2.mp3');
-  load.audio('explosion3','sounds/explosions/explosion_new_3.mp3');
-  load.audio('explosion4','sounds/explosions/explosion_new_3.pitched2.mp3');
-  load.audio('explosion5','sounds/explosions/explosion_new_3.pitched3.mp3');
-  load.audio('explosion6','sounds/explosions/explosion_new_3.rerepitched.mp3');
+  load.audio('explosion-a','sounds/explosions/explosion_new_1.mp3');
+  load.audio('explosion-b','sounds/explosions/explosion_new_2.mp3');
+  load.audio('explosion-c','sounds/explosions/explosion_new_3.mp3');
+  load.audio('explosion-d','sounds/explosions/explosion_new_3.pitched2.mp3');
+  load.audio('explosion-e','sounds/explosions/explosion_new_3.pitched3.mp3');
+  load.audio('explosion-f','sounds/explosions/explosion_new_3.rerepitched.mp3');
 
-  load.audio('capitalShipExplosion','sounds/explosions/deathExplosion.mp3');
-  load.audio('capitalShipExplosion2','sounds/explosions/actionExplosion.mp3');
-  load.audio('capitalShipExplosion3','sounds/explosions/explosionBig100.mp3');
+  load.audio('capital-explosion-a','sounds/explosions/deathExplosion.mp3');
+  load.audio('capital-explosion-b','sounds/explosions/actionExplosion.mp3');
+  load.audio('capital-explosion-c','sounds/explosions/explosionBig100.mp3');
 
   load.audio('queenDeath','sounds/explosions/queenDeath.mp3');
   load.audio('overseerDeath','sounds/explosions/overseerDeath3.mp3');
@@ -73,7 +74,13 @@ SoundManager.prototype.preload = function() {
 
   load.audio('queenSpawn','sounds/misc/queenSpawn.mp3');
 
-  load.audio('systemsOnline', 'sounds/system/systemsOnline.mp3');
+  // SYSTEM
+  load.audio('systems-online', 'sounds/system/systemsOnline.mp3');
+  load.audio('sensors-online', 'sounds/system/sensorsOnline.mp3');
+  load.audio('weapons-systems-online', 'sounds/system/weaponsSystemsOnline.mp3');
+  load.audio('reactor-online', 'sounds/system/reactorOnline.mp3');
+  load.audio('repairs-completed', 'sounds/system/repairsCompleted.mp3');
+
 };
 
 SoundManager.prototype.create = function() {
@@ -110,27 +117,31 @@ SoundManager.prototype.create = function() {
 
   
 
-  this.game.sound.add('background1', 2);
-  this.game.sound.add('background2', 2);
-  this.game.sound.add('background3', 2);
+  this.game.sound.add('background1', 1);
+  this.game.sound.add('background2', 1);
+  this.game.sound.add('background3', 1);
 
 
-  this.game.sound.add('explosion1', 6);
-  this.game.sound.add('explosion2', 6);
-  this.game.sound.add('explosion3', 6);
-  this.game.sound.add('explosion4', 6);
-  this.game.sound.add('explosion5', 6);
-  this.game.sound.add('explosion6', 6);
+  this.game.sound.add('explosion-a', 6);
+  this.game.sound.add('explosion-b', 6);
+  this.game.sound.add('explosion-c', 6);
+  this.game.sound.add('explosion-d', 6);
+  this.game.sound.add('explosion-e', 6);
+  this.game.sound.add('explosion-f', 6);
 
-  this.game.sound.add('capitalShipExplosion', 6);
-  this.game.sound.add('capitalShipExplosion2', 6);
-  this.game.sound.add('capitalShipExplosion3', 6);
+  this.game.sound.add('capital-explosion-a', 6);
+  this.game.sound.add('capital-explosion-b', 6);
+  this.game.sound.add('capital-explosion-c', 6);
 
   this.game.sound.add('dangerAlert', 1);
 
   this.game.sound.add('queenSpawn', 1);
 
-  this.game.sound.add('systemsOnline', 1);
+  this.game.sound.add('systems-online', 1);
+  this.game.sound.add('reactor-online', 1);
+  this.game.sound.add('sensors-online', 1);
+  this.game.sound.add('weapons-systems-online', 1);
+  this.game.sound.add('repairs-completed', 1);
 
   // subscribe to events
   this.game.on('ship/enhancement/started', this._enhance, this);
@@ -186,7 +197,8 @@ SoundManager.prototype._disabled = function(data) {
       ship = this.ships[data.uuid],
       volume = 0.5,
       rnd = game.rnd,
-      explosion = rnd.pick(['explosion-a']),
+      explosion = rnd.pick(['explosion-a','explosion-b','explosion-c','explosion-d', 'explosion-e','explosion-f']),
+      bigExplosion = rnd.pick(['capital-explosion-a','capital-explosion-b','capital-explosion-c']),
       sound, distance;
   if(ship) {
     if(player === ship) {
@@ -245,14 +257,18 @@ SoundManager.prototype._fire = function(data) {
 };
 
 SoundManager.prototype.generateSystemSound = function(sound){
-  this.game.sound.play(sound, 0.3, false);
-  this.generateBackgroundMusic();
+  var systemSFX = ['reactor-online','sensors-online','weapons-systems-online','repairs-completed']
+  if(sound){
+    this.game.sound.play(sound, 0.2, false);
+  } else {
+    this.game.sound.play(this.game.rnd.pick(systemSFX), 0.2, false)
+  }
 };
 
 SoundManager.prototype.generateBackgroundMusic = function(){
   var num = Math.floor((Math.random() * 2)+1);
   console.log('background'+num)
-  this.game.sound.play('background'+num, 1, false);
+  this.game.sound.play('background'+num, 0.8, false);
 };
 
 SoundManager.prototype.generateThrusterSound = function(){
@@ -327,14 +343,16 @@ SoundManager.prototype.generateExplosionSound = function(data){
     };
   }; 
   if(volume > 0){
-    this.generateSound(sound, volume, false);
+    this.game.sound.play(sound, volume, false);
   };
 };
 
 SoundManager.prototype._player = function(ship){
   this.player = ship;
+
   this.game.clock.events.create(1100, false, 1, function(){
-    this.generateSystemSound('systemsOnline')
+    this.generateBackgroundMusic();
+    this.generateSystemSound('systems-online')
   }, this)
 };
 

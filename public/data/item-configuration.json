@@ -93,14 +93,14 @@
         "sprite": "turret-b",
         "texture": "turret-rocket-a.png",
         "icon": "item-rocket-a",
-        "cooldown": 0,
-        "range": 1432,
+        "cooldown": 100000,
+        "range": 1332,
         "projection": 0.24,
         "delay": 32,
         "spread": 128,
-        "damage": 2.0,
+        "damage": 1.8,
         "length": 256,
-        "aoe": 3.0,
+        "aoe": 2.5,
         "spawn": 1,
         "durability": 1000.0
       }
@@ -165,7 +165,7 @@
         },
         "sound": {
           "name": "heal-basic",
-          "volume": 0.3
+          "volume": 0.05
         }
       }
     },
