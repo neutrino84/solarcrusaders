@@ -57,6 +57,8 @@ function Ship(manager, data, user) {
 
 Ship.prototype.constructor = Ship;
 
+Ship.RESPAWN_TIME = 10000;
+
 Ship.prototype.init = function(callback) {
   var self = this,
       data = this.data,
@@ -274,12 +276,12 @@ Ship.prototype.disable = function() {
   this.ai && this.ai.disengage();
   
   // respawn time
-  if(!this.ai) {
-    this.respawn = this.game.clock.events.add(9000, this.enable, this);
-    // Ship.RESPAWN_TIME;
-  } else {
-    this.respawn = this.game.clock.events.add(12000, this.enable, this);
-  };
+  // if(!this.ai) {
+  //   this.respawn = this.game.clock.events.add(9000, this.enable, this);
+  // } else {
+  //   this.respawn = this.game.clock.events.add(12000, this.enable, this);
+  // };
+  this.respawn = this.game.clock.events.add(this.ai ? this.ai.settings.respawn : Ship.RESPAWN_TIME, this.enable, this)
 
   // blast close
   // this.blast();

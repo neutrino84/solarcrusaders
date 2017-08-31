@@ -1,0 +1,105 @@
+{
+  "basic": {
+    "respawn": 45000,
+    "disengage": 7680,
+    "friendly": ["basic","user","squadron","enforcer"],
+    "position": {
+      "radius": 4096,
+      "x": 2048,
+      "y": 2048
+    },
+    "escape": {
+      "health": 0.25
+    },
+    "sensor": {
+      "aim": 1.5,
+      "range": 4096
+    }
+  },
+  "pirate": {
+  	"respawn": 55000,
+    "disengage": 9216,
+    "friendly": ["pirate"],
+    "position": {
+      "radius": 512,
+      "x": 2048,
+      "y": 2048
+    },
+    "escape": {
+      "health": 0.2
+    },
+    "sensor": {
+      "aim": 1.25,
+      "range": 4096
+    }
+  },
+  "scavenger": {
+  	"respawn": 50000,
+  	"disengage": 9216,
+  	"friendly": ["scavenger"],
+  	"position": {
+  	  "radius": 828,
+  	  "x": -8192,
+  	  "y": 8192
+  	},
+  	"escape": {
+  	  "health": 0.7
+  	},
+  	"sensor": {
+  	  "aim": 0.8,
+  	  "range": 45384
+  	}
+  },
+  "scavenger-hostile": {
+  	"respawn": 600000,
+  	"disengage": 7216,
+  	"friendly": ["scavenger"],
+  	"position": {
+  	  "radius": 700,
+  	  "x": "ship.movement.position.x",
+  	  "y": "ship.movement.position.y"
+  	},
+  	"escape": {
+  	  "health": 0.01
+  	},
+  	"sensor": {
+  	  "aim": 0.8,
+  	  "range": 8000
+  	}
+  },
+  "squadron": {
+  	"respawn": 55000,
+    "disengage": 12000,
+    "friendly": ["user","squadron"],
+    "position": {
+      "radius": 512,
+      "x": "ship.movement.position.x",
+      "y": "ship.movement.position.y"
+    },
+    "escape": {
+      "health": 0.00
+    },
+    "sensor": {
+      "aim": 1.25,
+      "range": 10096
+    }
+  },
+  "enforcer": {
+    "respawn": 55000,
+    "disengage": 12000,
+    "friendly": ["user","squadron","basic","enforcer"],
+    "position": {
+      "radius": 512,
+      "x": 2048,
+      "y": 2048
+    },
+    "escape": {
+      "health": 0.1
+    },
+    "sensor": {
+      "aim": 1.25,
+      "range": 4096
+    }
+  }
+}
+

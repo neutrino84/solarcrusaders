@@ -17,23 +17,25 @@ function Basic(ship) {
   this.sensor = new engine.Circle();
   this.offset = new engine.Point();
 
-  this.settings = {
-    disengage: 7680,
-    friendly: ['basic', 'user', 'scavenger'],
-    position: {
-      radius: 2048,
-      x: 2048,
-      y: 2048
-    },
-    bounds: 4096,
-    escape: {
-      health: 0.25,
-    },
-    sensor: {
-      aim: 0.5,
-      range: 2096
-    }
-  };
+  this.settings = client.AIConfiguration[this.type];
+
+  // this.settings = {
+  //   disengage: 7680,
+  //   friendly: ['basic', 'user', 'scavenger'],
+  //   position: {
+  //     radius: 2048,
+  //     x: 2048,
+  //     y: 2048
+  //   },
+  //   bounds: 4096,
+  //   escape: {
+  //     health: 0.25,
+  //   },
+  //   sensor: {
+  //     aim: 0.5,
+  //     range: 2096
+  //   }
+  // };
 };
 
 Basic.prototype.constructor = Basic;

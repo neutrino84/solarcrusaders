@@ -6,10 +6,8 @@ function SoundManager(game) {
 
   // listen to player
   this.game.on('ship/player', this._player, this);
-  this.game.on('ship/secondary', this.generateThrusterSound, this);
+  
   this.game.on('ship/enhancement/started', this.generateEnhancementSound, this);
-  this.game.on('ship/sound/death', this.generateExplosionSound, this);
-  this.game.on('game/backgroundmusic', this.generateBackgroundMusic, this);
 };
 
 SoundManager.prototype.constructor = SoundManager;
@@ -149,6 +147,7 @@ SoundManager.prototype.create = function() {
   this.game.on('ship/hardpoint/fire', this._fire, this);
   this.game.on('ship/hardpoint/hit', this._hit, this);
   this.game.on('system/sound', this.generateSystemSound, this);
+  this.game.on('ship/secondary', this.generateThrusterSound, this);
 };
 
 SoundManager.prototype._enhance = function(data) {
