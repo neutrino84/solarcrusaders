@@ -1,5 +1,6 @@
 
-var engine = require('engine');
+var engine = require('engine'),
+    client = require('client');
 
 function Basic(ship) {
   this.type = 'basic';
@@ -18,6 +19,8 @@ function Basic(ship) {
   this.offset = new engine.Point();
 
   this.settings = client.AIConfiguration[this.type];
+
+  this.friendlies = this.settings.friendly;
 
   // this.settings = {
   //   disengage: 7680,

@@ -6,23 +6,27 @@ function Scavenger(ship, home) {
 
   this.type = 'scavenger';
 
-  this.settings = {
-    disengage: 9216,
-    friendly: ['scavenger'],
-    position: {
-      radius: 128,
-      x: ship.movement.position.x,
-      y: ship.movement.position.y
-    },
-    bounds: false,
-    escape: {
-      health: 0.5,
-    },
-    sensor: {
-      aim: 0.8,
-      range: 16384
-    }
-  }
+  this.settings = client.AIConfiguration[this.type];
+
+  this.friendlies = this.settings.friendly;
+
+  // this.settings = {
+  //   disengage: 9216,
+  //   friendly: ['scavenger'],
+  //   position: {
+  //     radius: 128,
+  //     x: ship.movement.position.x,
+  //     y: ship.movement.position.y
+  //   },
+  //   bounds: false,
+  //   escape: {
+  //     health: 0.5,
+  //   },
+  //   sensor: {
+  //     aim: 0.8,
+  //     range: 16384
+  //   }
+  // }
 };
 
 Scavenger.prototype = Object.create(Basic.prototype);
