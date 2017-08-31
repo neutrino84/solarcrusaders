@@ -1063,6 +1063,200 @@
         ]
     }
   },
+  "pirate-x01": {
+    "race": "general",
+    "class": "fighter",
+    "stats": {
+      "capacity": 800,
+      "health": 80,
+      "heal": 0.2,
+      "armor": 0.0,
+      "speed": 44.0,
+      "rate": 256,
+      "evasion": 0.1,
+      "energy": 80,
+      "recharge": 1,
+      "size": 96,
+      "durability": 96,
+      "critical": 0.01
+    },
+    "enhancements": ["heal", "booster", "shield"],
+    "engine": {
+      "glows": [
+        {
+          "tint": "0xFFFFFF",
+          "scale": {
+            "startX": 0.06,
+            "endX": 0.08,
+            "startY": 0.2,
+            "endY": 0.22
+          },
+          "position": {
+            "x": 43,
+            "y": 21
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "0xFFFFFF",
+          "scale": {
+            "startX": 0.06,
+            "endX": 0.08,
+            "startY": 0.2,
+            "endY": 0.22
+          },
+          "position": {
+            "x": 43,
+            "y": 43
+          },
+          "rotation": 0
+        }
+      ]
+    },
+    "targeting": {
+      "hardpoints": [
+        {
+          "pivot": {
+            "x": 17,
+            "y": 16
+          },
+          "position": {
+            "x": 23,
+            "y": 20
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "basic"
+          }
+        },
+        {
+          "pivot": {
+            "x": 17,
+            "y": 16
+          },
+          "position": {
+            "x": 23,
+            "y": 44
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "basic"
+          }
+        }
+      ]
+    }
+  },
+  "pirate-x02": {
+    "race": "general",
+    "class": "invader",
+    "stats": {
+      "capacity": 3000,
+      "health": 250,
+      "heal": 0.25,
+      "armor": 0.15,
+      "speed": 20.0,
+      "rate": 256,
+      "evasion": 0.02,
+      "energy": 200,
+      "recharge": 1,
+      "size": 135,
+      "durability": 135,
+      "critical": 0.01
+    },
+    "enhancements": ["heal", "booster", "shield"],
+    "engine": {
+      "glows": [
+        {
+          "tint": "0xFFFFFF",
+          "scale": {
+            "startX": 0.02,
+            "endX": 0.05,
+            "startY": 0.08,
+            "endY": 0.12
+          },
+          "position": {
+            "x": 85,
+            "y": 40
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "0xFFFFFF",
+          "scale": {
+            "startX": 0.02,
+            "endX": 0.05,
+            "startY": 0.08,
+            "endY": 0.12
+          },
+          "position": {
+            "x": 85,
+            "y": 62
+          },
+          "rotation": 0
+        }
+      ]
+    },
+    "targeting": {
+      "hardpoints": [
+        {
+          "pivot": {
+            "x": 17,
+            "y": 16
+          },
+          "position": {
+            "x": 32,
+            "y": 52
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "basic"
+          }
+        },
+        {
+          "pivot": {
+            "x": 17,
+            "y": 16
+          },
+          "position": {
+            "x": 65,
+            "y": 40
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "basic"
+          }
+        },
+        {
+          "pivot": {
+            "x": 17,
+            "y": 16
+          },
+          "position": {
+            "x": 65,
+            "y": 64
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "basic"
+          }
+        },
+        {
+          "pivot": {
+            "x": 17,
+            "y": 16
+          },
+          "position": {
+            "x": 15,
+            "y": 52
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "basic"
+          }
+        }
+      ]
+    }
+  },
   "general-x01": {
     "race": "general",
     "class": "destroyer",
