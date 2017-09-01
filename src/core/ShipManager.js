@@ -51,10 +51,15 @@ ShipManager.prototype.remove = function(ship) {
 ShipManager.prototype.create = function(data, user) {
   var self = this, ship,
       game = this.game;
+  // console.log('data is ', data, 'user is ', user)
   ship = new Ship(this, data, user);
   ship.init(function() {
     game.emit('ship/add', ship);
   });
+  if(user){
+    // console.log(user.uuid)
+    game.emit('squad/create', user.uuid)
+  }
 };
 
 ShipManager.prototype.plot = function(socket, args) {

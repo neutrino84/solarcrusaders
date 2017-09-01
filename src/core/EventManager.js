@@ -14,13 +14,14 @@ function EventManager(game) {
 
   this.level = 1;
   this.ships = {
-    basic: 4,
-    pirate: 7
+    basic: 0,
+    pirate: 0
   };
 
   this.chassis = {
     basic : ['ubaidian-x01a','ubaidian-x01b','ubaidian-x01c','ubaidian-x01d','ubaidian-x01e','ubaidian-x01f'],
-    pirate: ['pirate-x01','pirate-x02']
+    pirate: ['pirate-x01','pirate-x02'],
+    squadron: ['squad-shield','squad-repair','squad-attack']
   }
 };
 
@@ -33,6 +34,7 @@ EventManager.prototype.init = function() {
   this.game.on('station/add', this.add, this);
   this.game.on('station/disabled', this.disabled, this);
   this.game.on('ship/disabled', this.disabled, this);
+  this.game.on('squad/create', this.squadGen, this);
 
   // refresh data interval
   this.game.clock.events.loop(1000, this.update, this);
@@ -53,7 +55,6 @@ EventManager.prototype.init = function() {
 };
 
 EventManager.prototype.shipGen = function(num, ai){
-
   for(var i = 0; i<num; i++){
     this.game.emit('ship/create', {
       chassis: this.game.rnd.pick(this.chassis[ai]),
@@ -62,6 +63,16 @@ EventManager.prototype.shipGen = function(num, ai){
       ai: ai
     });
   };
+};
+
+EventManager.prototype.squadGen = function(master){
+  this.game.emit('ship/create', {
+    chassis: this.game.rnd.pick(this.chassis['squadron']),
+    x: 2048,
+    y: 2048,
+    ai: 'squadron',
+    master: master
+  });
 };
 
 EventManager.prototype.add = function(object) {

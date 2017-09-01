@@ -34,7 +34,7 @@ Explosion.prototype.start = function() {
   manager.glowEmitter.explosion(ship);
   manager.glowEmitter.at({ center: ship.position });
   // manager.glowEmitter.explode(3);
-  manager.glowEmitter.explode(0.9);
+  manager.glowEmitter.explode(1.3);
 
   events.repeat(50, 100, function() {
     if(rnd.frac() > 0.35) {

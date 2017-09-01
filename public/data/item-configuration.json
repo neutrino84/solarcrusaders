@@ -165,7 +165,7 @@
         },
         "sound": {
           "name": "heal-basic",
-          "volume": 0.05
+          "volume": 0.65
         }
       }
     },

@@ -16,10 +16,12 @@ function Ship(manager, data, user) {
   
   this.data = new this.model.Ship(data);
   this.data.init();
-
   this.uuid = this.data.uuid;
   this.parent = this.data.parent;
   this.chassis = this.data.chassis;
+  if(data.master){
+    this.master = data.master
+  };
 
   // ship configuration
   this.config = client.ShipConfiguration[this.data.chassis];
