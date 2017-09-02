@@ -37,7 +37,7 @@ HotkeyManager.prototype.init = function() {
 
 HotkeyManager.prototype.create = function(manager) {
   this.config = this.game.cache.getJSON('item-configuration', false);
-  // this.squadManager = manager.squadManager;
+  this.squadManager = manager.squadManager;
   // this.playerManager = manager.playerManager;
 
 };
@@ -83,9 +83,46 @@ HotkeyManager.prototype.listener = function() {
       }
 
 	   } 
-     if(hotkeys['squadron'][key]){
-        //squadron hotkeys
-     }
+     //squadron hotkeys ~ need to refactor to use a squadmanager instead of shipmanager
+        if(key.toLowerCase() === 'c'){
+           this.squadManager.closestHostile();
+        };
+        if(key.toLowerCase() === 'e'){
+             this.squadManager.engageHostile();
+        };
+        if(key.toLowerCase() === 'r'){
+             this.squadManager.regroup();
+        };
+        if(key.toLowerCase() === 's'){
+             // this.squadManager.regroup();
+             this.game.emit('shieldDestination', true);
+             this.player.events.add(3000, function(){
+               this.game.emit('shieldDestination', false);
+             }, this); 
+        };
+        if(key.toLowerCase() === 'd'){
+             this.squadManager.detectUnfriendlies();
+             if(this.detecting){return};
+             this.game.emit('ship/enhancement/start', {
+               uuid: player.uuid,
+               enhancement: hotkeys['enhancements'][5],
+               subtype: 'basic'
+             });
+             this.detecting = true;
+             this.game.clock.events.add(10000, function(){
+               this.detecting = false;
+             }, this);  
+        };
+        if(key.toLowerCase() === '8'){
+             this.playerManager.upgradeSystem('weapon');
+        };
+        if(key.toLowerCase() === '9'){
+         // console.log('in hotkey')
+             this.playerManager.upgradeSystem('armor');
+        };
+        if(key.toLowerCase() === '0'){
+             this.playerManager.upgradeSystem('engine');
+        };
     }, this);
   };
 };

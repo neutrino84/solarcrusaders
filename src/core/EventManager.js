@@ -14,8 +14,8 @@ function EventManager(game) {
 
   this.level = 1;
   this.ships = {
-    basic: 0,
-    pirate: 0
+    basic: 2,
+    pirate: 8
   };
 
   this.chassis = {
@@ -67,7 +67,8 @@ EventManager.prototype.shipGen = function(num, ai){
 
 EventManager.prototype.squadGen = function(master){
   this.game.emit('ship/create', {
-    chassis: this.game.rnd.pick(this.chassis['squadron']),
+    // chassis: this.game.rnd.pick(this.chassis['squadron']),
+    chassis: 'squad-attack',
     x: 2048,
     y: 2048,
     ai: 'squadron',

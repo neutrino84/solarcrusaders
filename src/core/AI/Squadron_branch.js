@@ -33,7 +33,6 @@ Squadron.prototype.scanner = function() {
       ship = this.ship,
       master = ships[this.master],
       position = master.movement.position;
-
   if(this.attacking || this.shieldDestination){return}
   ship.movement.plot({ x: position.x - ship.movement.position.x, y: position.y - ship.movement.position.y })
 };
@@ -67,8 +66,6 @@ Squadron.prototype.engage = function(target, type){
   ship = this.ship,
   health = ship.data.health / ship.config.stats.health;
     if(!type){return}
-
-    console.log('engaging')
 
     if(this.target === null && type === 'repair'){
       this.target = target;
@@ -142,12 +139,12 @@ Squadron.prototype.update = function() {
 
   if(this.ship.chassis === 'squad-repair'){
     if(this.repairing){
-      if(this.repairing.data.health/this.repairing.config.stats.health >= 1){
+      if(this.repairing.data.health/this.repairing.config.stats.health > 0.8){
         console.log('repair ship disengaging')
         this.disengage(); 
       }
     };
-    if(masterHealth < 0.75 && !this.repairing){
+    if(masterHealth < 0.65 && !this.repairing){
       this.engage(master, 'repair');
       return
     };
@@ -171,8 +168,6 @@ Squadron.prototype.attack = function() {
       rnd = this.game.rnd,
       target, size,
       point = {};
-
-  console.log('attacking')
 
   // attack sequence
   if(this.target) {
@@ -322,5 +317,3 @@ Squadron.prototype.getHomePosition = function() {
 };
 
 module.exports = Squadron;
-
-

@@ -47,10 +47,12 @@ SquadManager.prototype.closestHostile = function(){
       hostiles = {},
       ascending = function(a, b) { return a-b }, 
       distance, targets;
+
+      console.log('closestHostile')
   if(player.disabled){return}
   for(var s in ships){
     var ship = ships[s];
-    ship.selector.hostileHighlightStop();
+    // ship.selector.hostileHighlightStop();
     // if(ship.disabled){
     //   console.log(ship.data.chassis, ' cached tint: ', ship.chassis.cachedTint, ' current tint: ', ship.chassis.tint)
     //   ship.chassis.tint = 0x333333;
@@ -86,6 +88,7 @@ SquadManager.prototype.detectUnfriendlies = function(){
       t, distance, targets, previous, counter;
   if(player.disabled){return}
 
+    console.log('in detect')
   for(var s in ships){
     var ship = ships[s];
     ship.selector.hostileHighlightStop();

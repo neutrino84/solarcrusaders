@@ -272,7 +272,6 @@ SoundManager.prototype.generateBackgroundMusic = function(){
 
 SoundManager.prototype.generateThrusterSound = function(){
   var num = Math.floor((Math.random() * 3)+1);
-  
   this.game.sound.play('thruster'+num, 0.5, false);
 };
 

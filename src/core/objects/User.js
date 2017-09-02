@@ -34,8 +34,11 @@ User.prototype.init = function(callback, context) {
     game.emit('ship/create', {
       chassis: 'ubaidian-x01c',
       x: 2048,
-      y: 2048
+      y: 2048,
+      uuid: this.uuid
     }, this);
+
+    console.log('in user.js. uuid is ', this.uuid)
 // 'ubaidian-x01d'
     // update client
     socket.emit('auth/sync', this.data.toStreamObject());

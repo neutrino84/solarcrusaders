@@ -58,7 +58,7 @@ ShipManager.prototype.create = function(data, user) {
   });
   if(user){
     // console.log(user.uuid)
-    game.emit('squad/create', user.uuid)
+    game.emit('squad/create', data.uuid)
   }
 };
 

@@ -93,7 +93,9 @@ HotkeyManager.prototype.listener = function() {
 	   };
 
   //squadron hotkeys ~ need to refactor to use a squadmanager instead of shipmanager
+    console.log(1+ key)
      if(key.toLowerCase() === 'c'){
+      console.log(key)
         this.squadManager.closestHostile();
      };
      if(key.toLowerCase() === 'e'){
