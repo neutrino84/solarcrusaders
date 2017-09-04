@@ -39,10 +39,10 @@ Selector.prototype.create = function() {
 
   //create reticle
   this.reticle = new engine.Graphics();
-  this.reticle.lineStyle(10, 0x336699, 1.0);
-  this.reticle.drawRect(0, 0, ship.width, ship.height);
+  this.reticle.lineStyle(2, 0x336699, 1.0);
+  this.reticle.drawRect(0, 0, ship.width*2, ship.height*2);
   this.reticle.pivot.set(halfWidth, halfHeight);
-  this.reticle.position.set(halfWidth + 5, halfHeight + 5);
+  this.reticle.position.set(ship.width/0.95, ship.height/0.95);
   this.reticle.blendMode = engine.BlendMode.ADD;
   this.reticle.rotation = global.Math.PI / 4;
   this.reticle.alpha = 0.0;
@@ -115,7 +115,9 @@ Selector.prototype.highlight = function() {
 };
 
 Selector.prototype.hostileHighlight = function() {
+  console.log('in hostile highlight')
   if(!this.reticleAnimating || (this.reticleAnimating && !this.reticleAnimating.isRunning)) {
+    console.log('AND NEXT')
     this.reticleAnimating = this.game.tweens.create(this.reticle);
     this.reticleAnimating.to({ alpha: 0.9 }, 500);
     // this.reticleAnimating.to({ rotation: 0.9 }, 500);
@@ -127,9 +129,30 @@ Selector.prototype.hostileHighlight = function() {
 };
 
 Selector.prototype.hostileHighlightStop = function() {
-    // console.log('in hostile highlight stop')
+    console.log('in hostile highlight stop')
     this.reticleAnimating && this.reticleAnimating.stop();
     this.reticle.alpha = 0;
+};
+
+Selector.prototype.hostileEngaged = function() {
+  var dbl = 0.785398*2;
+  console.log('in hostile negaged')
+  if(!this.reticleRedAnimating || (this.reticleRedAnimating && !this.reticleRedAnimating.isRunning)) {
+    this.reticleRedAnimating = this.game.tweens.create(this.reticleRed);
+    this.reticleRedAnimating.to({ alpha: 1.75 }, 500);
+    // console.log(this.reticleRedAnimating)
+    // this.reticleRedAnimating.target.pivot.set(-this.ship.width/2, -this.ship.height/2);
+    // this.reticleRedAnimating.to({ rotation: dbl }, 500);
+    this.reticleRedAnimating.loop(true)
+    this.reticleRedAnimating.yoyo(true, 500);
+    this.reticleRedAnimating.start();
+    this.highlightAnimating && this.highlightAnimating.stop();
+  }
+};
+
+Selector.prototype.hostileEngagedStop = function() {
+    this.reticleRedAnimating && this.reticleRedAnimating.stop();
+    this.reticleRed.alpha = 0;
 };
 
 Selector.prototype.selected = function(){

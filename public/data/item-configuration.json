@@ -219,6 +219,23 @@
           "volume": 0.5
         }
       }
+    },
+    "detect": {
+      "basic": {
+        "cost": -10,
+        "cooldown": 10,
+        "active": 3,
+        "stats": {
+          "armor": {
+            "value": 0.5
+          }   
+        },
+        "sound": {
+          "name": "detect",
+          "volume": 0.6,
+          "loop": false
+        }
+      }
     }
   }
 }

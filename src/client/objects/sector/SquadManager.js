@@ -88,17 +88,17 @@ SquadManager.prototype.detectUnfriendlies = function(){
       t, distance, targets, previous, counter;
   if(player.disabled){return}
 
-    console.log('in detect')
+    // console.log('in detect')
   for(var s in ships){
     var ship = ships[s];
     ship.selector.hostileHighlightStop();
   };
-
+  // console.log('detect tlist ', this.player.targetlistCooldown)
   if(!player.targetlistCooldown){
       this.player.unfriendlies = {};
       player.selector.detectorHighlight();
       counter = 0;
-
+      // console.log('insice uf statement ship is ', ships)
       for(var s in ships){
         var ship = ships[s],
             t = ship.data.name,
@@ -107,8 +107,9 @@ SquadManager.prototype.detectUnfriendlies = function(){
         if(ship.disabled){
           continue
         };
-
-        if(ship.data.friendlies && ship.data.friendlies.indexOf('user') < 0 && distance < 3500){
+        // console.log('ship.data.friendlies is ', ship.data.friendlies)
+        // console.log(ship.data.friendlies.indexOf('user'))
+        if(ship.data.friendlies && ship.data.friendlies.indexOf('user') < 0 && distance < 800){
           if(regex.test(t)){
             this.player.unfriendlies[5000+counter] = ship;
             counter++
@@ -135,7 +136,6 @@ SquadManager.prototype.detectUnfriendlies = function(){
         }
       }, this);
   }
-  
   targets = Object.keys(this.player.unfriendlies);
   if(targets && !targets.length){return}
 
@@ -147,7 +147,6 @@ SquadManager.prototype.detectUnfriendlies = function(){
     player.targetCount = 0
     player.acquired = this.player.unfriendlies[targets.sort(ascending)[player.targetCount]]
   };
-
   player.acquired && player.acquired.selector.hostileHighlight();
   // console.log('detect ', player.acquired)
   player.targetCount++
@@ -164,17 +163,19 @@ SquadManager.prototype.engageHostile = function(){
       player = this.player,
       available = false, squad,
       ship;
-
   for(var s in ships){
     ship = ships[s];
     if(ship.data.masterShip && ship.data.masterShip === player.uuid && !ship.disabled){
+      console.log('available!')
       available = true;
     };
   };
+  console.log('GOT HERE')
   if(player.acquired){
     for(var s in ships){
     var ship = ships[s];
     ship.selector.hostileEngagedStop();
+    ship.selector.hostileHighlightStop();
   }
   if(!player.acquired.disabled && available)
    player.acquired.selector.hostileEngaged();
@@ -233,6 +234,7 @@ SquadManager.prototype._player = function(ship) {
   this.player.unfriendlies = {};
   this.player.targetCount = 0;
   this.player.targetlistCooldown = false;
+  console.log('tlist: ', this.player.targetlistCooldown)
   this.player.previous;
   this.player.squadron = {};
 };

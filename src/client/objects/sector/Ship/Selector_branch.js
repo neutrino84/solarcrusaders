@@ -258,7 +258,7 @@ Selector.prototype.hostileEngaged = function() {
 };
 
 Selector.prototype.hostileHighlightStop = function() {
-    // console.log('in hostile highlight stop')
+    console.log('in hostile highlight stop')
     this.reticleAnimating && this.reticleAnimating.stop();
     this.reticle.alpha = 0;
 };

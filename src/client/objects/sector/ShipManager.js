@@ -105,6 +105,11 @@ ShipManager.prototype.create = function(data, sync) {
   // boot
   ship.boot();
 
+  //save squadron to master ship
+  if(this.player && ship.data.masterShip && ship.data.masterShip === this.player.uuid){
+    this.player.squadron[ship.uuid] = ship;
+  }
+
   return ship;
 };
 

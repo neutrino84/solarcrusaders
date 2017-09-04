@@ -520,6 +520,30 @@ Object.defineProperty(Ship.prototype, 'recharge', {
   }
 });
 
+Object.defineProperty(Ship.prototype, 'friendlies', {
+  get: function() {
+    if(this.ai){
+      return this.ai.friendlies;
+    } else {return null}
+  },
+
+  set: function(value) {
+    this.data.friendlies = value;
+  }
+});
+
+Object.defineProperty(Ship.prototype, 'masterShip', {
+  get: function() {
+    if(this.ai && this.master){
+      return this.master;
+    } else {return null}
+  },
+
+  set: function(value) {
+    this.data.masterShip = value;
+  }
+});
+
 Object.defineProperty(Ship.prototype, 'armor', {
   get: function() {
     var total = this.data.armor,

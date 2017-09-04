@@ -248,6 +248,7 @@
                 <false/>
             </struct>
             <key type="filename">icons/enhancement-booster.png</key>
+            <key type="filename">icons/enhancement-detect.png</key>
             <key type="filename">icons/enhancement-heal.png</key>
             <key type="filename">icons/enhancement-piercing.png</key>
             <key type="filename">icons/enhancement-shield.png</key>
@@ -474,6 +475,7 @@
             <filename>ships/ubaidian/squadron/squad-attack.png</filename>
             <filename>ships/pirates/pirate-x01.png</filename>
             <filename>ships/pirates/pirate-x02.png</filename>
+            <filename>icons/enhancement-detect.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

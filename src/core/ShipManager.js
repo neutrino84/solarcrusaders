@@ -31,6 +31,10 @@ ShipManager.prototype.init = function() {
   this.sockets.on('ship/attack', this.attack, this);
   this.sockets.on('ship/enhancement/start', this.enhancement, this);
 
+  this.sockets.on('squad/engageHostile', this.squad_engage, this);
+  this.game.on('squad/regroup', this.squad_regroup, this);
+  this.game.on('squad/shield', this.squad_shield, this);
+
   // update data interval
   this.game.clock.events.loop(1000, this.update, this);
 };
@@ -80,6 +84,55 @@ ShipManager.prototype.attack = function(socket, args) {
   if(ship && ship.user && ship.user.uuid === user.uuid) {
     ship.attack(data, ship.user.rtt);
   }
+};
+
+ShipManager.prototype.squad_engage = function(socket, args){
+  var ships = this.ships;
+
+  console.log('YOOOO  args is ', args)
+    for (var s in ships){
+      ship = ships[s];
+
+      if(ship.chassis === 'squad-attack' && ship.master === args[1].player_id && ships[args[1].target_id]){
+        var target = ships[args[1].target_id];
+        ship.ai.engage(target, 'attack');
+      };
+    };
+};
+
+ShipManager.prototype.squad_regroup = function(socket, args){
+  var ships = this.ships,
+      player = ships[args[1].player_id],
+      distance;
+
+    for (var s in ships){
+      ship = ships[s];
+      var a = /^(squad)/,
+          t = ship.chassis;
+
+      if(a.test(t) && ship.master === player.uuid && args[1].squad[ship.uuid] && !ship.disabled){
+        distance = args[1].squad[ship.uuid];
+        ship.ai.regroup(distance);
+      };
+    };
+};
+
+ShipManager.prototype.squad_shield = function(socket, args){
+  var ships = this.ships,
+      player = ships[args[1].uuid],
+      distance;
+
+    for (var s in ships){
+      ship = ships[s];
+      var a = /^(squad-shield)/,
+          t = ship.chassis;
+
+      if(a.test(t) && ship.master === player.uuid && !ship.disabled){
+        // distance = args[1].squad[ship.uuid];
+        // console.log('core', args[1].destination)
+        ship.ai.shield(args[1].destination);
+      };
+    };
 };
 
 ShipManager.prototype.enhancement = function(socket, args) {
@@ -133,6 +186,8 @@ ShipManager.prototype.data = function(uuids) {
         rate: ship.rate,
         critical: ship.critical,
         evasion: ship.evasion,
+        friendlies: ship.friendlies,
+        masterShip: ship.masterShip,
         enhancements: ship.serialized.enhancements,
         hardpoints: ship.serialized.hardpoints
       });
