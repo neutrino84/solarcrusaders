@@ -28,6 +28,7 @@ function NetManager(game) {
   this.connect('ship/enhancement/started');
   this.connect('ship/enhancement/stopped');
   this.connect('ship/enhancement/cooled');
+  this.connect('squad/shieldUp');
 };
 
 NetManager.prototype.constructor = NetManager;

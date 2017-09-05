@@ -8,11 +8,12 @@ function Selection(game) {
   this.input = new engine.InputHandler(this.world.static);
   this.input.start();
 
+  this.shieldCheck = false;
+
   this.world.static.on('inputUp', this._onInput, this);
   this.world.static.on('inputDown', this._onInput, this);
 
-  this.game.on('shieldDestination', this._shield, this);
-  this.shieldCheck = false;
+  this.game.on('shieldDestination', this._shield, this)
 };
 
 Selection.prototype.constructor = Selection;
@@ -39,7 +40,6 @@ Selection.prototype._onInput = function(world, pointer) {
 };
 
 Selection.prototype._shield = function(data) {
-  console.log('in selection/input manager, data is ', data)
   this.shieldCheck = data;
 };
 

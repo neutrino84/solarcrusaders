@@ -37,7 +37,8 @@ Selector.prototype.create = function() {
       ret2: -14,
       red1: 20,
       red2: 23
-    },'ubaidian-x01b' : {
+    },
+    'ubaidian-x01b' : {
       ret1: 38,
       ret2: -14,
       red1: 20,
@@ -149,6 +150,20 @@ Selector.prototype.create = function() {
   this.detector.blendMode = engine.BlendMode.ADD;
   this.detector.alpha = 0;
 
+  //shield circle
+  if(this.data.chassis === 'squad-shield'){
+    console.log('hey baby')
+    this.shieldBlueCircle = new engine.Circle(halfWidth, halfHeight, 300);
+    this.shieldBlue = new engine.Graphics(); 
+    this.shieldBlue.lineStyle(2, 0x0000ef, 1.5);
+    this.shieldBlue.drawCircle(this.shieldBlueCircle.x, this.shieldBlueCircle.y, this.shieldBlueCircle.radius);
+    this.shieldBlue.pivot.set(halfWidth, halfHeight);
+    this.shieldBlue.position.set(halfWidth + (size/2), halfHeight + (size/2));
+    this.shieldBlue.blendMode = engine.BlendMode.ADD;
+    this.shieldBlue.alpha = 0;
+    this.ship.addChildAt(this.shieldBlue, 0);
+  }
+
   // add selector
   this.ship.addChildAt(this.graphics, 0);
   this.ship.addChildAt(this.reticle, 0);
@@ -230,6 +245,12 @@ Selector.prototype.hostileEngaged = function() {
   }
 };
 
+Selector.prototype.shieldBlueStop = function() {
+    if(this.shieldBlue){
+      this.shieldBlue.alpha = 0;
+    }
+};
+
 Selector.prototype.hostileEngagedStop = function() {
     this.reticleRedAnimating && this.reticleRedAnimating.stop();
     this.reticleRed.alpha = 0;
@@ -261,3 +282,4 @@ Selector.prototype.destroy = function() {
 };
 
 module.exports = Selector;
+

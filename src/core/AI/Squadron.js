@@ -250,7 +250,7 @@ Squadron.prototype.shield = function(data) {
       a = /^(squad-shield)/,
       t = ship.chassis, 
       destination = new engine.Point();
-
+  // console.log('in squadron AI, preshield check')
   if(a.test(t)){
     if(data){
       if(this.shielding){

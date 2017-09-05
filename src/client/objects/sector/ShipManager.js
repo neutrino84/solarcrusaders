@@ -247,21 +247,28 @@ ShipManager.prototype._secondary = function(data) {
       ship = this.player,
       socket = this.socket,
       indicator = this.indicator,
-      end, start, position, destination;
+      start = this.shipsGroup.worldTransform.apply(ship.position),
+      end = this.game.input.mousePointer,
+      position = this.game.world.worldTransform.applyInverse(end),
+      destination = { x: end.x - start.x, y: end.y - start.y };
 
   if(ship) {
-    end = this.game.input.mousePointer,
-    start = this.shipsGroup.worldTransform.apply(ship.position);
-    position = this.game.world.worldTransform.applyInverse(end);
-    destination = { x: end.x - start.x, y: end.y - start.y }
-
-    if(data.type === 'start') {
+    if(data.shield){
+      indicator.show(position);
+      socket.emit('squad/shield', {
+        uuid: ship.uuid,
+        destination: {x: position.x, y: position.y }
+      })
+    }
+    else if(data.type === 'start') {
       indicator.show(position);
       game.emit('ship/plot');
       socket.emit('ship/plot', {
         uuid: ship.uuid,
         destination: destination
       });
+
+      game.emit('ship/sound/thrusters');
     }
   }
 };

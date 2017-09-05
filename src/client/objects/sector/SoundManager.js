@@ -329,7 +329,6 @@ SoundManager.prototype.generateEnhancementSound = function(data){
 SoundManager.prototype.generateSquadSound = function(sound){
   var volume = 0.2,
       num;
-      console.log('OUTSIDE')
       switch(sound) {
         case 'engage':
           num = Math.floor((Math.random() * 2)+1)

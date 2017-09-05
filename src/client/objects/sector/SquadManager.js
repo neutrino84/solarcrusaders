@@ -175,10 +175,15 @@ SquadManager.prototype.engageHostile = function(){
 
 SquadManager.prototype.shieldUp = function(data) {
   var ship = this.manager.ships[data.uuid];
+  // console.log('in squad manager, shieldUp. data.active is ', data.active)
   if(data.active){
     if(ship.selector.shieldBlue) {ship.selector.shieldBlue.alpha = 1}; 
   } else {
-    if (ship.selector.shieleBlue) {ship.selector.shieldBlue.alpha = 0}; 
+    console.log('IN HERE')
+    if (ship.selector.shieldBlue) {
+      ship.selector.shieldBlue.alpha = 0
+      // ship.selector.shieldBlueStop();
+    }; 
   }
 };
 
