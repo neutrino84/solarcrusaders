@@ -50,7 +50,6 @@ Squadron.prototype.plot = function(){
 
   sensor.setTo(p1.x, p1.y, settings.sensor.range);
       
-    // console.log('in plot')
   // plot destination
   if(!this.retreat && this.target) {
     size = this.target.data.size * 4;
@@ -68,8 +67,6 @@ Squadron.prototype.engage = function(target, type){
   health = ship.data.health / ship.config.stats.health;
     if(!type){return}
 
-    console.log('engaging')
-
     if(this.target === null && type === 'repair'){
       this.target = target;
 
@@ -80,7 +77,6 @@ Squadron.prototype.engage = function(target, type){
     if(this.target === null && !this.friendly(target) && type === 'attack'){
       this.attacking = true;
       this.target = target;
-      // console.log('B.E. Engaging target ', this.target)
       this.attacker && this.game.clock.events.remove(this.attacker);
       this.attacker = this.game.clock.events.loop(ship.data.rate, this.attack, this);
 
@@ -135,7 +131,6 @@ Squadron.prototype.update = function() {
     this.shield();
   }
   if(this.shielding && this.ship.disabled){
-    console.log('shield ship unshielding from update')
     this.shielding = false;
     this.manager.game.sockets.ioserver.emit('squad/shieldUp', {uuid: ship.uuid, active: false})
   }
@@ -143,7 +138,6 @@ Squadron.prototype.update = function() {
   if(this.ship.chassis === 'squad-repair'){
     if(this.repairing){
       if(this.repairing.data.health/this.repairing.config.stats.health >= 1){
-        console.log('repair ship disengaging')
         this.disengage(); 
       }
     };
@@ -171,8 +165,6 @@ Squadron.prototype.attack = function() {
       rnd = this.game.rnd,
       target, size,
       point = {};
-
-  console.log('attacking')
 
   // attack sequence
   if(this.target) {

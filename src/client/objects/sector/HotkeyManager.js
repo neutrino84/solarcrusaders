@@ -128,7 +128,6 @@ HotkeyManager.prototype.listener = function() {
 };
 
 HotkeyManager.prototype._cooled = function(data){
-  console.log('in cooled. data is ', data)
   if(data.uuid === this.player.uuid){
     switch(data.enhancement) {
       case 'heal':
@@ -149,11 +148,9 @@ HotkeyManager.prototype._cooled = function(data){
 
 HotkeyManager.prototype._player = function(ship){
   this.player = ship,
-  console.log(ship)
   this.enhancements = ship.config.enhancements;
   for(var e in this.enhancements){
   	var key = parseInt(e)+1;
-  	// console.log(key)
   	this.hotkeys['enhancements'][key] = this.enhancements[e];
   }
 

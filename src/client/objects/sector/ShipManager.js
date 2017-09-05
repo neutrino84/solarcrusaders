@@ -286,7 +286,6 @@ ShipManager.prototype._disabled = function(data) {
 ShipManager.prototype._enabled = function(data) {
   var ship = this.ships[data.uuid];
   if(ship !== undefined) {
-    console.log('ship enabled. ship is ', ship)
     ship.enable(data);
   }
 };

@@ -32,4 +32,8 @@ function Pirate(ship, home) {
 Pirate.prototype = Object.create(Basic.prototype);
 Pirate.prototype.constructor = Pirate;
 
+// Pirate.prototype.update = function() {
+  
+// }
+
 module.exports = Pirate;

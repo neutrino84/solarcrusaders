@@ -23,6 +23,7 @@ function SquadManager(game) {
   // squad target
   this.acquired = null;
 
+
   this.game.on('ship/player', this._player, this);
   this.game.on('squad/regroup', this.regroup, this);
   this.game.on('squad/shieldUp', this.shieldUp, this);
@@ -37,6 +38,7 @@ SquadManager.prototype.create = function(sectorState) {
   // this.config = this.game.cache.getJSON('item-configuration', false);
   this.manager = sectorState.shipManager;
   this.ships = this.manager.ships;
+  console.log('creating squad manager')
 };
 
 SquadManager.prototype.closestHostile = function(){
@@ -45,7 +47,6 @@ SquadManager.prototype.closestHostile = function(){
       hostiles = {},
       ascending = function(a, b) { return a-b }, 
       distance, targets;
-
   if(player.disabled){return}
   for(var s in ships){
     var ship = ships[s];
@@ -89,18 +90,22 @@ SquadManager.prototype.detectUnfriendlies = function(){
     var ship = ships[s];
     ship.selector.hostileHighlightStop();
   };
+
   if(!player.targetlistCooldown){
       this.player.unfriendlies = {};
       player.selector.detectorHighlight();
       counter = 0;
+
       for(var s in ships){
         var ship = ships[s],
             t = ship.data.name,
             distance = engine.Point.distance(ship, player); 
+        // ship.selector.detectorHighlight();
         if(ship.disabled){
           continue
         };
-        if(ship.data.friendlies && ship.data.friendlies.indexOf('user') < 0 && distance < 800){
+
+        if(ship.data.friendlies && ship.data.friendlies.indexOf('user') < 0 && distance < 3500){
           if(regex.test(t)){
             this.player.unfriendlies[5000+counter] = ship;
             counter++
@@ -127,6 +132,7 @@ SquadManager.prototype.detectUnfriendlies = function(){
         }
       }, this);
   }
+  
   targets = Object.keys(this.player.unfriendlies);
   if(targets && !targets.length){return}
 
@@ -138,7 +144,9 @@ SquadManager.prototype.detectUnfriendlies = function(){
     player.targetCount = 0
     player.acquired = this.player.unfriendlies[targets.sort(ascending)[player.targetCount]]
   };
+
   player.acquired && player.acquired.selector.hostileHighlight();
+  // console.log('detect ', player.acquired)
   player.targetCount++
   player.previous = player.acquired; 
 
@@ -151,20 +159,19 @@ SquadManager.prototype.detectUnfriendlies = function(){
 SquadManager.prototype.engageHostile = function(){
   var ships = this.ships,
       player = this.player,
-      available = false, 
-      squad,
+      available = false, squad,
       ship;
+
   for(var s in ships){
     ship = ships[s];
-    if(ship.data.masterShip && ship.data.masterShip === player.uuid && !ship.disabled && ship.data.chassis === 'squad-attack'){
+    if(ship.data.masterShip && ship.data.masterShip === player.uuid && !ship.disabled){
       available = true;
     };
   };
-  if(player.acquired && available){
+  if(player.acquired){
     for(var s in ships){
     var ship = ships[s];
     ship.selector.hostileEngagedStop();
-    ship.selector.hostileHighlightStop();
   }
   if(!player.acquired.disabled && available)
    player.acquired.selector.hostileEngaged();

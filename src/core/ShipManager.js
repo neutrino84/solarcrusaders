@@ -61,7 +61,7 @@ ShipManager.prototype.create = function(data, user) {
     game.emit('ship/add', ship);
   });
   if(user){
-    // console.log(user.uuid)
+    game.emit('squad/create', data.uuid)
     game.emit('squad/create', data.uuid)
   }
 };
@@ -89,7 +89,6 @@ ShipManager.prototype.attack = function(socket, args) {
 ShipManager.prototype.squad_engage = function(socket, args){
   var ships = this.ships;
 
-  console.log('YOOOO  args is ', args)
     for (var s in ships){
       ship = ships[s];
 

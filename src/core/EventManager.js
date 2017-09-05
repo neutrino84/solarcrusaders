@@ -15,12 +15,12 @@ function EventManager(game) {
   this.level = 1;
   this.ships = {
     basic: 0,
-    pirate: 1
+    pirate: 3
   };
 
   this.chassis = {
     basic : ['ubaidian-x01a','ubaidian-x01b','ubaidian-x01c','ubaidian-x01d','ubaidian-x01e','ubaidian-x01f'],
-    pirate: ['pirate-x01','pirate-x02'],
+    pirate: ['pirate-x01', 'pirate-x02', 'ubaidian-x01e', 'ubaidian-x01f'],
     squadron: ['squad-shield','squad-repair','squad-attack']
   }
 };
@@ -67,8 +67,8 @@ EventManager.prototype.shipGen = function(num, ai){
 
 EventManager.prototype.squadGen = function(master){
   this.game.emit('ship/create', {
-    // chassis: this.game.rnd.pick(this.chassis['squadron']),
-    chassis: 'squad-attack',
+    chassis: this.game.rnd.pick(this.chassis['squadron']),
+    // chassis: 'squad-attack',
     x: 2048,
     y: 2048,
     ai: 'squadron',

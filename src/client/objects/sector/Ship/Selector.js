@@ -18,6 +18,75 @@ Selector.prototype.create = function() {
       halfWidth = ship.width/2,
       halfHeight = ship.height/2,
       color = ship.data.ai && ship.data.ai === 'pirate' ? 0xcc3333 : 0x3366cc;
+//y is opposite, x is NOT
+  this.valuesTable = {
+    'pirate-x01' : {
+      ret1: 32,
+      ret2: -13,
+      red1: 12,
+      red2: 17
+    },
+    'pirate-x02' : {
+      ret1: 50,
+      ret2: -16,
+      red1: 33,
+      red2: 40
+    },
+    'ubaidian-x01a' : {
+      ret1: 38,
+      ret2: -14,
+      red1: 20,
+      red2: 23
+    },'ubaidian-x01b' : {
+      ret1: 38,
+      ret2: -14,
+      red1: 20,
+      red2: 23
+    },
+    'ubaidian-x01c' : {
+      ret1: 38,
+      ret2: -14,
+      red1: 20,
+      red2: 23
+    },
+    'ubaidian-x01d' : {
+      ret1: 38,
+      ret2: -14,
+      red1: 20,
+      red2: 23
+    },
+    'ubaidian-x01e' : {
+      ret1: 38,
+      ret2: -14,
+      red1: 20,
+      red2: 23
+    },
+    'ubaidian-x01f' : {
+      ret1: 38,
+      ret2: -14,
+      red1: 20,
+      red2: 23
+    },
+    'squad-attack' : {
+      ret1: 38,
+      ret2: -14,
+      red1: 20,
+      red2: 23
+    },
+    'squad-repair' : {
+      ret1: 38,
+      ret2: -14,
+      red1: 20,
+      red2: 23
+    },
+    'squad-shield' : {
+      ret1: 38,
+      ret2: -14,
+      red1: 20,
+      red2: 23
+    },
+  }
+
 
   // add selector highlight
   this.alpha = ship.isPlayer ? 0.4 : 0.2;
@@ -42,16 +111,33 @@ Selector.prototype.create = function() {
   this.reticle.lineStyle(2, 0x336699, 1.0);
   this.reticle.drawRect(0, 0, ship.width*2, ship.height*2);
   this.reticle.pivot.set(halfWidth, halfHeight);
-  this.reticle.position.set(ship.width/0.95, ship.height/0.95);
+  // this.reticle.position.set(ship.width/0.95, ship.height/0.95);
+  // if(this.ship.data.chassis === 'ubaidian-x01a'){
+  //   console.log('first: ', ship.width/2 +5, 'second: ', (ship.height/2 -50))
+  // }
+  this.reticle.position.set(this.valuesTable[this.ship.data.chassis]['ret1'], this.valuesTable[this.ship.data.chassis]['ret2']);
+
+  // this.reticle.position.set(ship.width/2 +5, ship.height/2 -50);
+
   this.reticle.blendMode = engine.BlendMode.ADD;
   this.reticle.rotation = global.Math.PI / 4;
   this.reticle.alpha = 0.0;
 
+  // this.reticleRed = new engine.Graphics(); 
+  // this.reticleRed.lineStyle(1, 0xcc1111, 1.0);
+  // this.reticleRed.drawRect(0, 0, ship.width, ship.height);
+  // this.reticleRed.pivot.set(halfWidth, halfHeight);
+  // this.reticleRed.position.set(halfWidth + 5, halfHeight + 5);
+  // this.reticleRed.alpha = 0;
+
   this.reticleRed = new engine.Graphics(); 
-  this.reticleRed.lineStyle(1, 0xcc1111, 1.0);
-  this.reticleRed.drawRect(0, 0, ship.width, ship.height);
-  this.reticleRed.pivot.set(halfWidth, halfHeight);
-  this.reticleRed.position.set(halfWidth + 5, halfHeight + 5);
+  this.reticleRed.lineStyle(2, 0xcc1111, 1.0);
+  this.reticleRed.drawRect(0, 0, ship.width + 40, ship.height + 40);
+  this.reticleRed.pivot.set(halfWidth +2, halfHeight + 5);
+  // if(this.ship.data.chassis === 'ubaidian-x01a'){
+  //   console.log('first: ', halfWidth/2 +5, 'second: ', (halfHeight/2 +5))
+  // }
+  this.reticleRed.position.set(this.valuesTable[this.ship.data.chassis]['red1'], this.valuesTable[this.ship.data.chassis]['red2']);
   this.reticleRed.alpha = 0;
 
   // create detector
@@ -61,7 +147,6 @@ Selector.prototype.create = function() {
   this.detector.pivot.set(halfWidth, halfHeight);
   this.detector.position.set(halfWidth + (size/2), halfHeight + (size/2));
   this.detector.blendMode = engine.BlendMode.ADD;
-  // this.detector.alpha = this.alpha;
   this.detector.alpha = 0;
 
   // add selector
@@ -87,7 +172,6 @@ Selector.prototype.damage = function() {
 };
 
 Selector.prototype.detectorHighlight = function() {
-  console.log('select detect')
   if(!this.detectorAnimating || (this.detectorAnimating && !this.detectorAnimating.isRunning)){
     this.detectorAnimating = this.game.tweens.create(this.detector);
     this.detectorAnimating.to({ alpha: 1 }, 500);
@@ -115,12 +199,10 @@ Selector.prototype.highlight = function() {
 };
 
 Selector.prototype.hostileHighlight = function() {
-  console.log('in hostile highlight')
   if(!this.reticleAnimating || (this.reticleAnimating && !this.reticleAnimating.isRunning)) {
-    console.log('AND NEXT')
     this.reticleAnimating = this.game.tweens.create(this.reticle);
     this.reticleAnimating.to({ alpha: 0.9 }, 500);
-    // this.reticleAnimating.to({ rotation: 0.9 }, 500);
+    this.reticleAnimating.to({ rotation: 0.9 }, 500);
     this.reticleAnimating.loop(true)
     this.reticleAnimating.yoyo(true, 1500);
     this.reticleAnimating.start();
@@ -129,14 +211,12 @@ Selector.prototype.hostileHighlight = function() {
 };
 
 Selector.prototype.hostileHighlightStop = function() {
-    console.log('in hostile highlight stop')
     this.reticleAnimating && this.reticleAnimating.stop();
     this.reticle.alpha = 0;
 };
 
 Selector.prototype.hostileEngaged = function() {
   var dbl = 0.785398*2;
-  console.log('in hostile negaged')
   if(!this.reticleRedAnimating || (this.reticleRedAnimating && !this.reticleRedAnimating.isRunning)) {
     this.reticleRedAnimating = this.game.tweens.create(this.reticleRed);
     this.reticleRedAnimating.to({ alpha: 1.75 }, 500);

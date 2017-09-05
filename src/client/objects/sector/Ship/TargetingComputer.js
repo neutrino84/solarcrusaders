@@ -39,6 +39,7 @@ TargetingComputer.prototype.attack = function(data) {
   if(length > 0) {
     // update target
     this.target.set(target.x, target.y);
+    this.targetShip = this.manager.ships[data.target];
 
     // display
     for(var i=0; i<length; i++) {

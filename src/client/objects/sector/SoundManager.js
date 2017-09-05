@@ -79,6 +79,20 @@ SoundManager.prototype.preload = function() {
   load.audio('reactor-online', 'sounds/system/reactorOnline.mp3');
   load.audio('repairs-completed', 'sounds/system/repairsCompleted.mp3');
 
+  //SQUAD CALLBACKS
+  load.audio('copyThatCommander','sounds/squadCallbacks/copyThatCommander.mp3');
+  load.audio('copyThatCommander2','sounds/squadCallbacks/copyThatCommander2.mp3');
+
+  load.audio('engagingTarget','sounds/squadCallbacks/engagingTarget.mp3');
+  load.audio('targetEngaged','sounds/squadCallbacks/targetEngaged.mp3');
+
+  load.audio('headsUpWereTakingFire','sounds/squadCallbacks/headsUpWereTakingFire.mp3');
+  load.audio('returningToFormation','sounds/squadCallbacks/returningToFormation.mp3');
+  load.audio('standby','sounds/squadCallbacks/standby.mp3');
+
+  load.audio('ShieldMaidenInbound','sounds/squadCallbacks/ShieldMaidenInbound.mp3');
+  load.audio('ShieldMaidenOnline','sounds/squadCallbacks/ShieldMaidenOnline.mp3');
+
 };
 
 SoundManager.prototype.create = function() {
@@ -141,6 +155,16 @@ SoundManager.prototype.create = function() {
   this.game.sound.add('weapons-systems-online', 1);
   this.game.sound.add('repairs-completed', 1);
 
+  this.game.sound.add('copyThatCommander', 1);
+  this.game.sound.add('copyThatCommander2', 1);
+  this.game.sound.add('engagingTarget', 1);
+  this.game.sound.add('targetEngaged', 1);
+  this.game.sound.add('returningToFormation', 1);
+  this.game.sound.add('standby', 1);
+  this.game.sound.add('headsUpWereTakingFire', 1);
+  this.game.sound.add('ShieldMaidenInbound', 1);
+  this.game.sound.add('ShieldMaidenOnline', 1);
+
   // subscribe to events
   this.game.on('ship/enhancement/started', this._enhance, this);
   this.game.on('ship/disabled', this._disabled, this);
@@ -148,6 +172,8 @@ SoundManager.prototype.create = function() {
   this.game.on('ship/hardpoint/hit', this._hit, this);
   this.game.on('system/sound', this.generateSystemSound, this);
   this.game.on('ship/secondary', this.generateThrusterSound, this);
+
+  this.game.on('squad/sound', this.generateSquadSound, this);
 };
 
 SoundManager.prototype._enhance = function(data) {
@@ -298,6 +324,32 @@ SoundManager.prototype.generateEnhancementSound = function(data){
   if(volume > 0){
       this.game.sound.play(sound.name, volume, false);
   };
+};
+
+SoundManager.prototype.generateSquadSound = function(sound){
+  var volume = 0.2,
+      num;
+      console.log('OUTSIDE')
+      switch(sound) {
+        case 'engage':
+          num = Math.floor((Math.random() * 2)+1)
+          if(num === 2){
+            console.log('INSIDE1')
+            this.game.sound.play('engagingTarget', volume, false);
+          } else if (num === 1){
+            console.log('INSIDE2')
+            this.game.sound.play('targetEngaged', volume, false);
+          }
+          break
+        case 'regroup':
+          num = Math.floor((Math.random() * 3))
+          if(num){
+            this.game.sound.play('returningToFormation', volume, false);
+          }
+          break;
+        default:
+          break;
+      }
 };
 
 SoundManager.prototype.generateExplosionSound = function(data){
