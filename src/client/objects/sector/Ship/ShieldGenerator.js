@@ -26,8 +26,21 @@ ShieldGenerator.prototype.start = function() {
   this.parent.addChild(this.shieldSprite);
 };
 
+ShieldGenerator.prototype.startShieldField = function() {
+  this.tween2 && this.tween2.stop(true);
+  this.tween2 = this.game.tweens.create(this.shieldSprite);
+  this.tween2.to({ alpha: 0.0 }, 500, engine.Easing.Quadratic.InOut);
+  this.tween2.on('complete', this.remove, this);
+
+  this.parent.addChild(this.shieldSprite);
+};
+
 ShieldGenerator.prototype.stop = function() {
   this.tween && this.tween.start();
+};
+
+ShieldGenerator.prototype.stopShieldField = function() {
+  this.tween2 && this.tween2.start();
 };
 
 ShieldGenerator.prototype.remove = function() {

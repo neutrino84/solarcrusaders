@@ -152,7 +152,6 @@ Selector.prototype.create = function() {
 
   //shield circle
   if(this.data.chassis === 'squad-shield'){
-    console.log('hey baby')
     this.shieldBlueCircle = new engine.Circle(halfWidth, halfHeight, 300);
     this.shieldBlue = new engine.Graphics(); 
     this.shieldBlue.lineStyle(2, 0x0000ef, 1.5);

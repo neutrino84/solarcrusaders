@@ -22,6 +22,11 @@ function Ship(manager, data, user) {
   if(data.master){
     this.master = data.master
   };
+  if(user){
+
+  console.log('SHIP HAS A USER. DATA IS ', data)
+  this.squadron = data.squadron
+  }
 
   // ship configuration
   this.config = client.ShipConfiguration[this.data.chassis];
@@ -201,7 +206,7 @@ Ship.prototype.hit = function(attacker, target, slot) {
       compensated = movement.compensated(),
       distance = compensated.distance(target),
       ratio = distance / (this.size * hardpoint.data.aoe),
-      damage, health, critical;
+      damage, rawDamage, health, critical, shielded;
   if(ratio < 1.0) {
     // // test data
     // if(!attacker.ai && this.ai) {
@@ -218,14 +223,23 @@ Ship.prototype.hit = function(attacker, target, slot) {
     // calc damage
     critical = this.game.rnd.rnd() <= attacker.critical;
     damage = global.Math.max(0, hardpoint.data.damage * (1-ratio));
+    rawDamage = global.Math.max(0, hardpoint.data.damage * (1-ratio));
     if(attacker.hardpoints[0].subtype !== 'repair'){
       damage = damage * (1-this.armor)
     };
     damage += critical ? damage : 0;
     damage *= piercing ? piercing.damage : 1.0;
+    // console.log('this.squadron is ', this.squadron )
+    if(this.squadron && this.shieldCheck(this.uuid)){
+        damage = damage*0.7;
+        shielded = true;
+        console.log('SHIELDED')
+        shielded = true 
+        // --> tells front end to show the shield filter
+    };
 
     if(attacker.hardpoints[0].subtype === 'repair' && data.health < (this.config.stats.health - 3)){
-      health = data.health + damage;
+      health = data.health + rawDamage;
     } else if(attacker.hardpoints[0].subtype !== 'repair'){
       health = data.health - damage;
     };
@@ -239,7 +253,8 @@ Ship.prototype.hit = function(attacker, target, slot) {
         attacker: attacker.uuid,
         health: data.health,
         damage: damage,
-        critical: critical
+        critical: critical,
+        shielded: shielded
       });
 
       // update attacker
@@ -277,6 +292,25 @@ Ship.prototype.hit = function(attacker, target, slot) {
     // broadcast
     if(updates.length) {
       this.game.emit('ship/data', updates);
+    }
+  }
+};
+
+Ship.prototype.shieldCheck = function(uuid) {
+  var ship, ships, distance, end, start,
+      manager = this.manager, a, t;
+  if(manager) {
+    ships = manager.ships;
+    if(!this.squadron){return}
+
+    for(var s in this.squadron) {
+      ship = this.squadron[s];
+      var a = /^(squad-shield)/,
+          t = ship.chassis;
+
+      if(a.test(t) && ship.master === uuid && !ship.disabled){
+        return (ship.ai.shieldCheck())
+      };
     }
   }
 };

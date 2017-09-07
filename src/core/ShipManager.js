@@ -54,17 +54,61 @@ ShipManager.prototype.remove = function(ship) {
 
 ShipManager.prototype.create = function(data, user) {
   var self = this, ship,
-      game = this.game;
+      game = this.game,
+      squadship = /^(squad)/,
+      chassis = data.chassis;
   // console.log('data is ', data, 'user is ', user)
   ship = new Ship(this, data, user);
   ship.init(function() {
     game.emit('ship/add', ship);
   });
+  if(data.master && squadship.test(chassis)){
+    this.ships[data.master].squadron[ship.uuid] = ship;
+    // console.log('IN HERE!!!!!!', this.ships[data.master].squadron)
+  }
   if(user){
+    // console.log('user is ', data)
     game.emit('squad/create', data.uuid)
     // game.emit('squad/create', data.uuid)
   }
 };
+
+// ShipManager.prototype.create = function(data, user, position) {
+//   var self = this, ship,
+//       rnd = this.game.rnd,
+//       position = position || this.generateRandomPosition(user ? 2024 : 4048),
+//       data = Utils.extend({
+//         x: data.x || position.x,
+//         y: data.y || position.y,
+//         rotation: rnd.frac() * engine.Math.PI
+//       }, data), squadship = /^(squad)/,
+//       chassis = data.chassis;
+
+//   ship = new Ship(this, data);
+//   ship.user = user;
+//   ship.init(function(err) {
+//     self.game.emit('ship/add', ship);
+//   });
+//   if(ship.user){
+//     this.generateSquadronShips(ship.uuid);
+//   };
+//   if(ship.data.chassis === 'enforcers-x02'){
+//     // this.generateEnforcerShips(ship.uuid, data.x, data.y);
+//   };
+//   if(ship.data.chassis === 'scavengers-x04d'){
+//     this.spawnQueen(data.toporbot, ship.uuid);
+//   };
+//   if(ship.data.chassis === 'enforcers-x01' && data.master){
+//     this.ships[data.master].squadron[ship.uuid] = ship;
+//   };
+//   if(data.master && squadship.test(chassis)){
+//     this.ships[data.master].squadron[ship.uuid] = ship;
+//   }
+//   if(data.master && ship.data.chassis === 'scavengers-x03c'){
+//     this.ships[data.master].squadron[ship.uuid] = ship;
+//   }
+//   return ship;
+// };
 
 ShipManager.prototype.plot = function(socket, args) {
   var user = socket.request.session.user,

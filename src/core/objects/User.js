@@ -29,13 +29,14 @@ User.prototype.init = function(callback, context) {
   if(data.isNewRecord()) {
     // connect demo ship
 
-    // console.log('this is ', this.uuid)
+    // console.log('in user backend. data is ', this.data)
 
     game.emit('ship/create', {
       chassis: 'ubaidian-x01c',
       x: 2048,
       y: 2048,
-      uuid: this.uuid
+      uuid: this.uuid,
+      squadron: {}
     }, this);
 
 // 'ubaidian-x01d'
@@ -68,6 +69,28 @@ User.prototype.init = function(callback, context) {
     });
   }
 };
+
+// User.prototype.create = function(ships) {
+//   var data,
+//       game = this.game,
+//       rnd = game.rnd,
+//       variations = ['a','b','c','d','e','f'];
+
+//   if(ships && ships.length) {
+//     for(var s=0; s<ships.length; s++) {
+//       ship = ships[s];
+//       data = ship.toStreamObject ? json : ship;
+
+//       // set chassis
+//       if(!data.chassis) {
+//         data.chassis = 'ubaidian-x01' + rnd.pick(variations);        
+//       }
+//       data.squadron = {};
+//       // create user ship
+//       this.game.emit('ship/create', data, this);
+//     }
+//   }
+// };
 
 User.prototype.save = function(callback) {
   var self = this, ship,
