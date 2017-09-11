@@ -221,6 +221,8 @@
             <key type="filename">fx/engine-highlight.png</key>
             <key type="filename">fx/turret-glow.png</key>
             <key type="filename">ships/pirates/pirate-x01.png</key>
+            <key type="filename">ships/scavengers/scavenger-x01.png</key>
+            <key type="filename">ships/scavengers/scavenger-x02.png</key>
             <key type="filename">turrets/turret-rocket-a.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -356,6 +358,7 @@
                 <false/>
             </struct>
             <key type="filename">ships/pirates/pirate-x02.png</key>
+            <key type="filename">ships/scavengers/scavenger-x03.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -365,6 +368,19 @@
                 <rect>26,26,52,52</rect>
                 <key>scale9Paddings</key>
                 <rect>26,26,52,52</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">ships/scavengers/scavenger-x04.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>52,52,104,104</rect>
+                <key>scale9Paddings</key>
+                <rect>52,52,104,104</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -476,6 +492,10 @@
             <filename>ships/pirates/pirate-x01.png</filename>
             <filename>ships/pirates/pirate-x02.png</filename>
             <filename>icons/enhancement-detect.png</filename>
+            <filename>ships/scavengers/scavenger-x01.png</filename>
+            <filename>ships/scavengers/scavenger-x02.png</filename>
+            <filename>ships/scavengers/scavenger-x03.png</filename>
+            <filename>ships/scavengers/scavenger-x04.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

@@ -279,6 +279,8 @@ ShipManager.prototype._disabled = function(data) {
       clock = this.clock,
       game = this.game;
   if(ship !== undefined) {
+    ship.selector.hostileHighlightStop();
+    ship.selector.hostileEngagedStop();
     ship.disable();
     ship.explode();
     this.game.emit('ship/sound/death', ship);

@@ -282,7 +282,7 @@ Squadron.prototype.shieldCheck = function() {
       t = ship.chassis, 
       destination = new engine.Point();
   if(!this.shielding){return false}
-  shield.setTo(position.x, position.y, 300)
+  shield.setTo(position.x, position.y, 400)
   if(shield.contains(masterPosition.x, masterPosition.y)){
     return true
   }

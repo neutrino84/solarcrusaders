@@ -36,6 +36,13 @@ SoundManager.prototype.preload = function() {
   // load.audio('laser-light', 'sounds/lasers/light.mp3');
   load.audio('beam-repair', 'sounds/beamWeapons/repairBeams/beam-repair.mp3');
 
+  // load.audio('beam-harvester','sounds/beamWeapons/scavBeams/hrvstr1.mp3');
+  load.audio('beam-harvester1','sounds/beamWeapons/scavBeams/hrvstr1.mp3');
+  load.audio('beam-harvester2','sounds/beamWeapons/scavBeams/hrvstr2.mp3');
+  load.audio('beam-harvester3','sounds/beamWeapons/scavBeams/hrvstr3.mp3');
+  load.audio('beam-harvester4','sounds/beamWeapons/scavBeams/hrvstr4.mp3');
+  load.audio('beam-harvester5','sounds/beamWeapons/scavBeams/hrvstr5.mp3');
+
   // load.audio('booster-basic', 'sounds/enhancements/booster-basic.mp3');
   // load.audio('shield-basic', 'sounds/enhancements/shield-basic.mp3');
 
@@ -133,6 +140,13 @@ SoundManager.prototype.create = function() {
   this.game.sound.add('background2', 1);
   this.game.sound.add('background3', 1);
 
+  // this.game.sound.add('beam-harvester', 1);
+  this.game.sound.add('beam-harvester1', 1);
+  this.game.sound.add('beam-harvester2', 1);
+  this.game.sound.add('beam-harvester3', 1);
+  this.game.sound.add('beam-harvester4', 1);
+  this.game.sound.add('beam-harvester5', 1);
+  
 
   this.game.sound.add('explosion-a', 6);
   this.game.sound.add('explosion-b', 6);
@@ -248,8 +262,9 @@ SoundManager.prototype._fire = function(data) {
       ship = data.ship,
       launcher, sound, 
       volume = 0.0,
+      harvesterNum = Math.floor((Math.random() * 5)+1), 
       v, r;
-
+      // console.log(launcher.data.sound, launcher.data.volume)
   if(data.spawn>0) {
     distance = engine.Point.distance(ship, player);
     volume = global.Math.max(1-(distance/8192), 0);
@@ -261,17 +276,31 @@ SoundManager.prototype._fire = function(data) {
       for(var i=0; i<created.length; i++) {
         // thin out and apply sound
         launcher = created[i];
-        sound = launcher.data.sound;
+
+        // console.log(launcher)
+        // debugger
+        // if(launcher.data.sound === 'beam-harvester'){
+        //   sound = 'beam-harvester'+harvesterNum
+        //   console.log(sound)
+        // } else {
+          sound = launcher.data.sound;
+        // }
         volume *= launcher.data.volume;
         variation = launcher.data.variation;
 
         if(sound) {
+          
           v = rnd.realInRange(volume/8.0, volume/2.0);
           r = rnd.realInRange(1.0-variation, 1.0+variation);
 
+          if(sound === 'beam-harvester'){
+          sound = 'beam-harvester'+harvesterNum
+          console.log(sound)
+          }
           // each spawn gets a slightly different volume
           game.clock.events.create(launcher.delay, false, data.spawn,
             function(key, volume, rate) {
+              
               this.game.sound.play(key, volume, false, rate, false);
             }, this, [sound, v, r]
           );

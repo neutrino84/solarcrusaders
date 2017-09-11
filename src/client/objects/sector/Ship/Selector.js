@@ -86,6 +86,30 @@ Selector.prototype.create = function() {
       red1: 20,
       red2: 23
     },
+    'scavenger-x01' : {
+      ret1: 38,
+      ret2: -14,
+      red1: 20,
+      red2: 23
+    },
+    'scavenger-x02' : {
+      ret1: 38,
+      ret2: -14,
+      red1: 20,
+      red2: 23
+    },
+    'scavenger-x03' : {
+      ret1: 38,
+      ret2: -14,
+      red1: 20,
+      red2: 23
+    },
+    'scavenger-x04' : {
+      ret1: 38,
+      ret2: -14,
+      red1: 20,
+      red2: 23
+    }
   }
 
 
@@ -152,7 +176,7 @@ Selector.prototype.create = function() {
 
   //shield circle
   if(this.data.chassis === 'squad-shield'){
-    this.shieldBlueCircle = new engine.Circle(halfWidth, halfHeight, 300);
+    this.shieldBlueCircle = new engine.Circle(halfWidth, halfHeight, 400);
     this.shieldBlue = new engine.Graphics(); 
     this.shieldBlue.lineStyle(2, 0x0000ef, 1.5);
     this.shieldBlue.drawCircle(this.shieldBlueCircle.x, this.shieldBlueCircle.y, this.shieldBlueCircle.radius);

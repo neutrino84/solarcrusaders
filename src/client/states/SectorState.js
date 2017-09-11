@@ -51,8 +51,25 @@ SectorState.prototype.preload = function() {
 
   // load strip graphics
   this.game.load.image('laser-blue', 'imgs/game/fx/laser-blue.png');
+  this.game.load.image('laser-blue2', 'imgs/game/fx/laser-blue2.png');
+  this.game.load.image('laser-blue3', 'imgs/game/fx/laser-blue3.png');
   this.game.load.image('laser-red', 'imgs/game/fx/laser-red.png');
-  this.game.load.image('laser-yellow-long', 'imgs/game/fx/laser-red.png');
+  this.game.load.image('laser-red2', 'imgs/game/fx/laser-red2.png');
+  this.game.load.image('laser-red3', 'imgs/game/fx/laser-red3.png');
+  this.game.load.image('laser-green', 'imgs/game/fx/laser-green.png');
+  this.game.load.image('laser-green2', 'imgs/game/fx/laser-green2.png');
+  this.game.load.image('laser-green3', 'imgs/game/fx/laser-green3.png');
+  this.game.load.image('laser-purple', 'imgs/game/fx/laser-purple.png');
+  this.game.load.image('laser-yellow', 'imgs/game/fx/laser-yellow.png');
+  this.game.load.image('laser-yellow2', 'imgs/game/fx/laser-yellow2.png');
+  this.game.load.image('laser-yellow3', 'imgs/game/fx/laser-yellow3.png');
+  this.game.load.image('laser-yellow-long', 'imgs/game/fx/laser-yellow-long.png');
+  this.game.load.image('laser-vulcan', 'imgs/game/fx/laser-vulcan.png');
+  this.game.load.image('laser-heavy', 'imgs/game/fx/laser-heavy.png');
+  this.game.load.image('laser-bazuko', 'imgs/game/fx/laser-bazuko.png');
+  this.game.load.image('laser-bazuko2', 'imgs/game/fx/laser-bazuko2.png');
+  this.game.load.image('laser-bazuko3', 'imgs/game/fx/laser-bazuko3.png');
+  this.game.load.image('laser-gaus', 'imgs/game/fx/laser-gaus.png');
 // 
   // load texture atlas
   this.game.load.atlasJSONHash('texture-atlas', 'imgs/game/texture-atlas.png', 'data/texture-atlas.json');

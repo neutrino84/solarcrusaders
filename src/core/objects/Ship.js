@@ -231,10 +231,8 @@ Ship.prototype.hit = function(attacker, target, slot) {
     damage *= piercing ? piercing.damage : 1.0;
     // console.log('this.squadron is ', this.squadron )
     if(this.squadron && this.shieldCheck(this.uuid)){
-        damage = damage*0.7;
+        damage = damage*0.65;
         shielded = true;
-        console.log('SHIELDED')
-        shielded = true 
         // --> tells front end to show the shield filter
     };
 

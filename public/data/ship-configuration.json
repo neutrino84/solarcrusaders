@@ -1257,6 +1257,345 @@
       ]
     }
   },
+  "scavenger-x01": {
+    "race": "general",
+    "class": "larva",
+    "stats": {
+      "capacity": 1000,
+      "health": 30,
+      "heal": 0.05,
+      "armor": 0.0,
+      "speed": 15.0,
+      "rate": 256,
+      "evasion": 0.2,
+      "energy": 60,
+      "recharge": 1,
+      "size": 96,
+      "durability": 96,
+      "critical": 0.01
+    },
+    "enhancements": ["booster"],
+    "engine": {
+      "glows": [
+        {
+          "tint": "",
+          "scale": {
+            "startX": 0.0,
+            "endX": 0.0,
+            "startY": 0,
+            "endY": 0
+          },
+          "position": {
+            "x": 108,
+            "y": 64
+          },
+          "rotation": 0
+        }
+      ]
+    },
+    "targeting": {
+      "hardpoints": [
+        {
+          "tint": "",
+          "scale": {
+            "startX": 0,
+            "endX": 0,
+            "startY": 0,
+            "endY": 0
+          },
+          "position": {
+            "x": 38,
+            "y": 33
+          },
+          "pivot": {
+            "x": 17,
+            "y": 16
+          },
+          "default": {
+            "type": "energy",
+            "subtype": "harvester"
+          }
+        }
+      ]
+    }
+  },
+  "scavenger-x02": {
+    "race": "general",
+    "class": "extractor",
+    "stats": {
+      "capacity": 1000,
+      "health": 80,
+      "heal": 0.05,
+      "armor": 0.0,
+      "speed": 20.0,
+      "rate": 256,
+      "evasion": 0.1,
+      "energy": 100,
+      "recharge": 1,
+      "size": 96,
+      "durability": 96,
+      "critical": 0.01
+    },
+    "enhancements": ["shield", "heal"],
+    "engine": {
+      "glows": [
+        {
+          "tint": "",
+          "scale": {
+            "startX": 0.0,
+            "endX": 0.0,
+            "startY": 0.0,
+            "endY": 0.0
+          },
+          "position": {
+            "x": 108,
+            "y": 64
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "",
+          "scale": {
+            "startX": 0.0,
+            "endX": 0.0,
+            "startY": 0.0,
+            "endY": 0.0
+          },
+          "position": {
+            "x": 77,
+            "y": 95
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "",
+          "scale": {
+            "startX": 0.0,
+            "endX": 0.0,
+            "startY": 0.0,
+            "endY": 0.0
+          },
+          "position": {
+            "x": 77,
+            "y": 32
+          },
+          "rotation": 0
+        }
+      ]
+    },
+    "targeting": {
+      "hardpoints": [
+        {
+          "pivot": {
+            "x": 17,
+            "y": 16
+          },
+          "position": {
+            "x": 33,
+            "y": 31
+          },
+          "default": {
+            "type": "energy",
+            "subtype": "harvester"
+          }
+        }
+      ]
+    }
+  },
+  "scavenger-x03": {
+    "race": "scavengers",
+    "class": "overseer",
+    "stats": {
+      "capacity": 1000,
+      "health": 300,
+      "heal": 0.1,
+      "armor": 0.0,
+      "speed": 35.0,
+      "rate": 256,
+      "evasion": 0.1,
+      "energy": 100,
+      "recharge": 1,
+      "size": 120,
+      "durability": 120,
+      "critical": 0.01
+    },
+    "enhancements": ["shield"],
+    "engine": {
+      "glows": [
+        {
+          "tint": "",
+          "scale": {
+            "startX": 0,
+            "endX": 0,
+            "startY": 0,
+            "endY": 0
+          },
+          "position": {
+            "x": 108,
+            "y": 64
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "",
+          "scale": {
+            "startX": 0,
+            "endX": 0,
+            "startY": 0,
+            "endY": 0
+          },
+          "position": {
+            "x": 77,
+            "y": 95
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "",
+          "scale": {
+            "startX": 0,
+            "endX": 0,
+            "startY": 0,
+            "endY": 0
+          },
+          "position": {
+            "x": 80,
+            "y": 53
+          },
+          "rotation": 0
+        }
+      ]
+    },
+    "targeting": {
+      "hardpoints": [
+        {
+          "pivot": {
+            "x": 17,
+            "y": 16
+          },
+          "position": {
+            "x": 74,
+            "y": 67
+          },
+          "default": {
+            "type": "energy",
+            "subtype": "disintegrator"
+          }
+        }
+      ]
+    }
+  },
+  "scavenger-x04": {
+    "race": "scavengers",
+    "class": "queen",
+    "stats": {
+      "capacity": 1000,
+      "health": 800,
+      "heal": 0.2,
+      "armor": 0.1,
+      "speed": 30.0,
+      "rate": 256,
+      "evasion": 0.1,
+      "energy": 100,
+      "recharge": 1,
+      "size": 300,
+      "durability": 300,
+      "critical": 0.01
+    },
+    "enhancements": ["heal", "booster", "shield"],
+    "engine": {
+      "glows": [
+        {
+          "tint": "",
+          "scale": {
+            "startX": 0.0,
+            "endX": 0.0,
+            "startY": 0.0,
+            "endY": 0.0
+          },
+          "position": {
+            "x": 174,
+            "y": 88
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "",
+          "scale": {
+            "startX": 0.0,
+            "endX": 0.0,
+            "startY": 0.0,
+            "endY": 0.0
+          },
+          "position": {
+            "x": 170,
+            "y": 106
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "",
+          "scale": {
+            "startX": 0.0,
+            "endX": 0.0,
+            "startY": 0.0,
+            "endY": 0.0
+          },
+          "position": {
+            "x": 175,
+            "y": 120
+          },
+          "rotation": 0
+        }
+      ]
+    },
+    "targeting": {
+      "hardpoints": [
+        {
+          "pivot": {
+            "x": 17,
+            "y": 16
+          },
+          "position": {
+            "x": 140,
+            "y": 61
+          },
+          "default": {
+            "type": "energy",
+            "subtype": "disintegrator"
+          }
+        },
+        {
+          "pivot": {
+            "x": 17,
+            "y": 16
+          },
+          "position": {
+            "x": 140,
+            "y": 76
+          },
+          "default": {
+            "type": "energy",
+            "subtype": "disintegrator"
+          }
+        },
+        {
+          "pivot": {
+            "x": 17,
+            "y": 16
+          },
+          "position": {
+            "x": 158,
+            "y": 118
+          },
+          "default": {
+            "type": "energy",
+            "subtype": "disintegrator"
+          }
+        }
+      ]
+    }
+  },
   "general-x01": {
     "race": "general",
     "class": "destroyer",
