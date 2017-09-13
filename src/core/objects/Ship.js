@@ -361,10 +361,16 @@ Ship.prototype.enable = function() {
   this.data.health = this.config.stats.health;
   this.data.energy = this.config.stats.energy;
   this.data.durability = this.config.stats.durability;
+  this.alpha = 1.0;
 
   // reset
   this.movement.magnitude = 0;
   // this.movement.position.copyFrom(this.ai ? this.ai.getHomePosition() : this.manager.generateRandomPosition(1024));
+
+  //remove from ai consumed list
+  if(this.manager.ai.consumed[this.uuid]){
+    this.manager.ai.consumed[this.uuid] = null;
+  }
 
   // broadcast
   this.sockets.send('ship/enabled', {
@@ -375,6 +381,8 @@ Ship.prototype.enable = function() {
     }
   });
 };
+
+
 
 Ship.prototype.activate = function(name) {
   var game = this.game,
