@@ -50,6 +50,7 @@ HotkeyManager.prototype.listener = function() {
   	this.game.input.on('keypress', function(event, key){
   	//enhancements
 	   if(hotkeys['enhancements'][key]){
+      console.log(key)
 
   		if(hotkeys['enhancements'][key] === 'booster' && this.isBoosting){return};
   		if(hotkeys['enhancements'][key] === 'heal' && this.isHealing){return};
@@ -68,10 +69,14 @@ HotkeyManager.prototype.listener = function() {
           this.isHealing = true;
           break;
         case 'booster':
+        console.log('boosting is ', this.isBoosting)
           this.isBoosting = true;
+        console.log('boosting is ', this.isBoosting)
           break;
         case 'shield':
+          console.log('shielded is ', this.isShielded)
           this.isShielded = true;
+          console.log('shielded is ', this.isShielded)
           break;
         case 'piercing':
           this.isPiercing = true;
@@ -91,6 +96,7 @@ HotkeyManager.prototype.listener = function() {
              this.squadManager.engageHostile();
         };
         if(key.toLowerCase() === 'r'){
+          console.log(this.player.movement._position)
              this.squadManager.regroup();
         };
         if(key.toLowerCase() === 's'){
@@ -129,6 +135,7 @@ HotkeyManager.prototype.listener = function() {
 
 HotkeyManager.prototype._cooled = function(data){
   if(data.uuid === this.player.uuid){
+    console.log(data.enhancement,' is cooled')
     switch(data.enhancement) {
       case 'heal':
         this.isHealing = false;

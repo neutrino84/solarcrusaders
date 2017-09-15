@@ -582,7 +582,7 @@ ShipManager.prototype.generateEnforcerShips = function(uuid, masterx, mastery) {
     });
 
     this.create({
-      name: 'White Sentinel',
+      name: 'Ivory Sentinel',
       chassis: 'enforcers-x02',
       throttle: 1.0,
       ai: 'enforcer',

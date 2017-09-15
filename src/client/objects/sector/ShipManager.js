@@ -110,6 +110,10 @@ ShipManager.prototype.create = function(data, sync) {
     this.player.squadron[ship.uuid] = ship;
   }
 
+  if(ship.data.chassis === 'scavenger-x04'){
+    game.emit('ship/sound/growl', ship);
+  }
+
   return ship;
 };
 

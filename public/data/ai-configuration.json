@@ -21,7 +21,7 @@
     "disengage": 9216,
     "friendly": ["pirate"],
     "position": {
-      "radius": 512,
+      "radius": 1012,
       "x": 2048,
       "y": 2048
     },
@@ -38,15 +38,15 @@
   	"disengage": 9216,
   	"friendly": ["scavenger"],
   	"position": {
-  	  "radius": 828,
-  	  "x": -8192,
-  	  "y": 8192
+  	  "radius": 800,
+  	  "x": -5055,
+  	  "y": 4973
   	},
   	"escape": {
   	  "health": 0.7
   	},
   	"sensor": {
-  	  "aim": 0.8,
+  	  "aim": 0.01,
   	  "range": 45384
   	}
   },
@@ -63,8 +63,8 @@
   	  "health": 0.01
   	},
   	"sensor": {
-  	  "aim": 0.8,
-  	  "range": 8000
+  	  "aim": 0.01,
+  	  "range": 7000
   	}
   },
   "squadron": {

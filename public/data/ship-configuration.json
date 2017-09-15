@@ -13,7 +13,7 @@
       "energy": 200,
       "recharge": 1,
       "size": 64,
-      "durability": 1000,
+      "durability": 100,
       "critical": 0.025
     },
     "enhancements": ["heal", "booster", "shield", "piercing"],
@@ -1262,10 +1262,10 @@
     "class": "larva",
     "stats": {
       "capacity": 1000,
-      "health": 30,
+      "health": 120,
       "heal": 0.05,
       "armor": 0.0,
-      "speed": 15.0,
+      "speed": 25.0,
       "rate": 256,
       "evasion": 0.2,
       "energy": 60,
@@ -1324,7 +1324,7 @@
     "class": "extractor",
     "stats": {
       "capacity": 1000,
-      "health": 80,
+      "health": 120,
       "heal": 0.05,
       "armor": 0.0,
       "speed": 20.0,
@@ -1403,7 +1403,7 @@
     }
   },
   "scavenger-x03": {
-    "race": "scavengers",
+    "race": "general",
     "class": "overseer",
     "stats": {
       "capacity": 1000,
@@ -1486,16 +1486,16 @@
     }
   },
   "scavenger-x04": {
-    "race": "scavengers",
+    "race": "general",
     "class": "queen",
     "stats": {
       "capacity": 1000,
-      "health": 800,
+      "health": 100,
       "heal": 0.2,
       "armor": 0.1,
-      "speed": 30.0,
-      "rate": 256,
-      "evasion": 0.1,
+      "speed": 12.0,
+      "rate": 1800,
+      "evasion": 0.2,
       "energy": 100,
       "recharge": 1,
       "size": 300,

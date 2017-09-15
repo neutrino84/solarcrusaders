@@ -71,7 +71,7 @@ Ship.prototype.boot = function() {
 
   // set player
   if(this.isPlayer) {
-    this.hud.show();
+    // this.hud.show();
     this.game.emit('ship/player', this);
   }
 };
@@ -107,7 +107,7 @@ Ship.prototype.refresh = function(data) {
     // show hud screen
     defender.hud.show();
     defender.hud.timer && defender.events.remove(defender.hud.timer);
-    defender.hud.timer = defender.events.add(10000, defender.hud.hide, defender.hud);
+    defender.hud.timer = defender.events.add(3000, defender.hud.hide, defender.hud);
 
     if(defender.isPlayer) {
       this.game.camera.shake();

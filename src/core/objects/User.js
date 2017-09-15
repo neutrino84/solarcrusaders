@@ -29,8 +29,6 @@ User.prototype.init = function(callback, context) {
   if(data.isNewRecord()) {
     // connect demo ship
 
-    // console.log('in user backend. data is ', this.data)
-
     game.emit('ship/create', {
       chassis: 'ubaidian-x01c',
       x: 2048,

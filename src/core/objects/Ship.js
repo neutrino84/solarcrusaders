@@ -13,8 +13,9 @@ function Ship(manager, data, user) {
   this.sockets = manager.sockets;
   this.model = manager.model;
   this.user = user;
-  
+
   this.data = new this.model.Ship(data);
+
   this.data.init();
   this.uuid = this.data.uuid;
   this.parent = this.data.parent;
@@ -22,9 +23,8 @@ function Ship(manager, data, user) {
   if(data.master){
     this.master = data.master
   };
-  if(user){
 
-  console.log('SHIP HAS A USER. DATA IS ', data)
+  if(user){
   this.squadron = data.squadron
   }
 
@@ -37,8 +37,7 @@ function Ship(manager, data, user) {
   // movement
   this.movement = new Movement(this);
 
-  // generate ai
-  this.ai = manager.ai.create(data.ai, this);
+  this.ai = manager.ai.create(data.ai, this, data.faction);
 
   // create metadata
   this.hardpoints = {};
@@ -206,7 +205,7 @@ Ship.prototype.hit = function(attacker, target, slot) {
       compensated = movement.compensated(),
       distance = compensated.distance(target),
       ratio = distance / (this.size * hardpoint.data.aoe),
-      damage, rawDamage, health, critical, shielded;
+      damage, rawDamage, health, critical, shielded, durability;
   if(ratio < 1.0) {
     // // test data
     // if(!attacker.ai && this.ai) {
@@ -218,7 +217,8 @@ Ship.prototype.hit = function(attacker, target, slot) {
     // }
 
     //prevent friendly fire dmg to squadron
-    if(this.master === attacker.uuid){return}  
+    if(this.master === attacker.uuid || attacker.hardpoints[0].subtype === 'repair' && data.health >= (this.config.stats.health)){return}  
+
 
     // calc damage
     critical = this.game.rnd.rnd() <= attacker.critical;
@@ -236,11 +236,15 @@ Ship.prototype.hit = function(attacker, target, slot) {
         // --> tells front end to show the shield filter
     };
 
-    if(attacker.hardpoints[0].subtype === 'repair' && data.health < (this.config.stats.health - 3)){
+    if(attacker.hardpoints[0].subtype === 'repair' && data.health < (this.config.stats.health)){
       health = data.health + rawDamage;
     } else if(attacker.hardpoints[0].subtype !== 'repair'){
       health = data.health - damage;
     };
+
+    //ASK OLLIE WHY HEALING TO FULL HEALTH OR ABOVE FULL HEALTH DESTROYS THE SHIP
+
+    durability = this.durability;
 
     // update damage
     if(!this.disabled && health > 0) {
@@ -285,6 +289,19 @@ Ship.prototype.hit = function(attacker, target, slot) {
           reputation: attacker.reputation
         });
       }
+
+      if(attacker.hardpoints[0].subtype === 'harvester'){
+        if(this.durability > 0){
+          this.durability = this.durability - attacker.hardpoints[0].data.damage;
+        };
+        updates.push({
+          uuid: this.uuid,
+          durability: this.durability
+        })
+        if(this.durability <= 0){
+          this.manager.ai.queenCheck(this.config.stats.durability, this.uuid);
+        };   
+      };
     }
 
     // broadcast
@@ -314,6 +331,8 @@ Ship.prototype.shieldCheck = function(uuid) {
 };
 
 Ship.prototype.disable = function() {
+  console.log('got disabled')
+
   // disable
   this.disabled = true;
 
@@ -337,21 +356,21 @@ Ship.prototype.disable = function() {
   });
 };
 
-// Ship.prototype.blast = function() {
-//   var ship, ships, distance, end, start,
-//       manager = this.manager;
-//   if(manager != undefined) {
-//     ships = manager.ships;
+Ship.prototype.blast = function() {
+  var ship, ships, distance, end, start,
+      manager = this.manager;
+  if(manager != undefined) {
+    ships = manager.ships;
 
-//     for(var s in ships) {
-//       ship = ships[s];
+    for(var s in ships) {
+      ship = ships[s];
 
-//       if(ship.game && !ship.disabled && ship != this) {
-//         ship.movement.destabalize(this);
-//       }
-//     }
-//   }
-// };
+      if(ship.game && !ship.disabled && ship != this) {
+        ship.movement.destabalize(this);
+      }
+    }
+  }
+};
 
 Ship.prototype.enable = function() {
   // re-enable
@@ -569,6 +588,20 @@ Object.defineProperty(Ship.prototype, 'friendlies', {
 
   set: function(value) {
     this.data.friendlies = value;
+  }
+});
+
+Object.defineProperty(Ship.prototype, 'faction', {
+  get: function() {
+    if(this.ai){
+      return this.ai.faction;
+      console.log('THIS.AI,FACTION ISSSSSS ', this.ai.faction)
+      debugger
+    } else {return null}
+  },
+
+  set: function(value) {
+    this.data.faction = value;
   }
 });
 

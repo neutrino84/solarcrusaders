@@ -14,23 +14,24 @@ function EventManager(game) {
 
   this.level = 1;
   this.ships = {
-    basic: 2,
-    pirate: 4
+    basic: 0,
+    pirate: 0
   };
 
   this.chassis = {
     basic : ['ubaidian-x01a','ubaidian-x01b','ubaidian-x01c','ubaidian-x01d','ubaidian-x01e','ubaidian-x01f'],
-    pirate: ['scavenger-x01','scavenger-x02'],
-    squadron: ['squad-shield','squad-repair','squad-attack']
+    pirate: ['pirate-x01','pirate-x02'],
+    squadron: ['squad-shield','squad-repair','squad-attack'],
+    scavenger: ['scavenger-x01','scavenger-x02']
   };
 
   this.spawnPoints = {
     scavenger: [{
-        x: -12192,
-        y: 12192
+        x: 2048,
+        y: 2048
     }, {
-        x: 12192, 
-        y: -12192
+        x: 2048, 
+        y: 2050
     }]
   };
 };
@@ -50,12 +51,37 @@ EventManager.prototype.init = function() {
   this.game.clock.events.loop(1000, this.update, this);
 
   // create default station
+  // this.game.emit('station/create', {
+  //   default: true,
+  //   chassis: 'ubadian-station-x01',
+  //   x: 2048,
+  //   y: 2048,
+  //   radius: 512
+  // });
+
+  // create scavenger nests
+  // this.game.emit('station/create', {
+  //   default: true,
+  //   chassis: 'ubadian-station-x01',
+  //   x: 2850, 
+  //   y: 2850,
+  //   radius: 50
+  // });
+
   this.game.emit('station/create', {
     default: true,
-    chassis: 'ubadian-station-x01',
-    x: 2048,
-    y: 2048,
-    radius: 512
+    chassis: 'scavenger-x01',
+    x: 3550*1.5, 
+    y: -3550*1.5,
+    radius: 0
+  });
+
+  this.game.emit('station/create', {
+    default: true,
+    chassis: 'scavenger-x01',
+    x: -3550*1.5, 
+    y: 3550*1.5,
+    radius: 0
   });
 
   //generate ships
@@ -63,7 +89,7 @@ EventManager.prototype.init = function() {
     this.shipGen(this.ships[a], a.toString())
   };
 
-  this.scavGen();
+  this.scavGen(10);
 };
 
 EventManager.prototype.shipGen = function(num, ai){
@@ -79,16 +105,16 @@ EventManager.prototype.shipGen = function(num, ai){
 
 EventManager.prototype.squadGen = function(master){
   this.game.emit('ship/create', {
+    chassis: 'squad-repair',
     // chassis: this.game.rnd.pick(this.chassis['squadron']),
-    chassis: this.game.rnd.pick(this.chassis['squadron']),
     x: 2048,
     y: 2048,
     ai: 'squadron',
     master: master
   });
   this.game.emit('ship/create', {
+    chassis: 'squad-repair',
     // chassis: this.game.rnd.pick(this.chassis['squadron']),
-    chassis: this.game.rnd.pick(this.chassis['squadron']),
     x: 2048,
     y: 2048,
     ai: 'squadron',
@@ -96,21 +122,28 @@ EventManager.prototype.squadGen = function(master){
   });
 };
 
-EventManager.prototype.scavGen = function() {
-  var spawnSet = [{x: -12192, y: 12192},{x: 12192, y: -12192}],
-      rando = Math.floor((Math.random() * 2)),
-      spawnPoint = spawnSet[rando];
-      // Math.floor((Math.random() * 1))
-  // this.game.rnd.pick(this.spawnPoints['scavenger'])
-  console.log(spawnPoint)
-  // this.game.emit('ship/create', {
-  //   // chassis: this.game.rnd.pick(this.chassis['squadron']),
-  //   chassis: this.game.rnd.pick(this.chassis['squadron']),
-  //   x: 2048,
-  //   y: 2048,
-  //   ai: 'squadron',
-  //   master: master
-  // }); 
+EventManager.prototype.scavGen = function(num) {
+
+  // for(var i = 0; i < Math.round(num/2); i++){
+  //   this.game.emit('ship/create', {
+  //     chassis: this.game.rnd.pick(this.chassis['scavenger']),
+  //     x: 5411,
+  //     y: -5354,
+  //     ai: 'scavenger',
+  //     faction: 'vulothi'
+
+  //   }); 
+    this.game.emit('ship/create', {
+      // chassis: this.game.rnd.pick(this.chassis['scavenger']),
+      chassis: 'scavenger-x04',
+      x: -5055,
+      y: 4973,
+      ai: 'scavenger',
+      faction: 'fenris'
+
+    }); 
+  // };
+
 
 
   // var base, ship,

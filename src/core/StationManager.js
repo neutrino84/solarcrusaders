@@ -25,6 +25,7 @@ StationManager.prototype.add = function(station) {
 };
 
 StationManager.prototype.create = function(data) {
+  console.log('station data is ', data)
   var station = new Station(this, data);
       station.init(function(err) {
         this.game.emit('station/add', station);

@@ -48,6 +48,8 @@ SectorState.prototype.preload = function() {
   // load stations
   this.game.load.image('ubadian-station-x01', 'imgs/game/stations/ubaidian-x01.png');
   this.game.load.image('ubadian-station-x01-cap', 'imgs/game/stations/ubaidian-cap-x01.png');
+  this.game.load.image('scavenger-x01', 'imgs/game/stations/scavenger-x01.png');
+  this.game.load.image('scavenger-x01-cap', 'imgs/game/stations/scavenger-x01.png');
 
   // load strip graphics
   this.game.load.image('laser-blue', 'imgs/game/fx/laser-blue.png');
