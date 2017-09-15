@@ -1068,10 +1068,10 @@
     "class": "fighter",
     "stats": {
       "capacity": 800,
-      "health": 80,
+      "health": 50,
       "heal": 0.2,
       "armor": 0.0,
-      "speed": 44.0,
+      "speed": 30.0,
       "rate": 256,
       "evasion": 0.1,
       "energy": 80,
@@ -1080,7 +1080,7 @@
       "durability": 96,
       "critical": 0.01
     },
-    "enhancements": ["heal", "booster", "shield"],
+    "enhancements": ["booster", "shield"],
     "engine": {
       "glows": [
         {
@@ -1265,7 +1265,7 @@
       "health": 120,
       "heal": 0.05,
       "armor": 0.0,
-      "speed": 25.0,
+      "speed": 30.0,
       "rate": 256,
       "evasion": 0.2,
       "energy": 60,
@@ -1327,7 +1327,7 @@
       "health": 120,
       "heal": 0.05,
       "armor": 0.0,
-      "speed": 20.0,
+      "speed": 35.0,
       "rate": 256,
       "evasion": 0.1,
       "energy": 100,

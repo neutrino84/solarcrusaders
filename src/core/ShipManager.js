@@ -21,7 +21,7 @@ ShipManager.prototype.constructor = ShipManager;
 
 ShipManager.prototype.init = function(eventManager) {
   this.ai = new AI(this, eventManager);
-
+  this.eventManager = eventManager;
   // internal
   this.game.on('ship/add', this.add, this);
   this.game.on('ship/remove', this.remove, this);
@@ -61,7 +61,9 @@ ShipManager.prototype.create = function(data, user) {
       game = this.game,
       squadship = /^(squad)/,
       chassis = data.chassis;
-  // console.log('shipmanager data is ', data)
+      if(data.chassis === 'scavenger-x03'){
+      console.log('shipmanager data is ', data)
+      }
   // debugger
 
   ship = new Ship(this, data, user);
@@ -72,19 +74,19 @@ ShipManager.prototype.create = function(data, user) {
     this.ships[data.master].squadron[ship.uuid] = ship;
     // console.log('IN HERE!!!!!!', this.ships[data.master].squadron)
   }
-  // if(ship.data.chassis === 'scavenger-x04'){
-  //   ship.data.squadron = {};
-  //   this.spawnQueen(data.toporbot, ship.uuid);
-  // };
-  if(data.master && ship.data.chassis === 'scavenger-x03'){
-    console.log(this.ships[data.master].squadron)
-    this.ships[data.master].data.squadron[ship.uuid] = ship;
+  if(ship.data.chassis === 'scavenger-x04'){
+    // console.log(ship)
+    console.log("in shipmanager queen's brood is ", data.brood)
+    ship.data.brood = {};
+    this.eventManager.spawnQueen(data.position, ship.uuid);
+  };
+  if(data.queen && ship.data.chassis === 'scavenger-x03'){
+    console.log(this.ships[data.queen])
+    this.ships[data.queen].data.brood[ship.uuid] = ship;
   }
     
   if(user){
-    // console.log('user is ', data)
     game.emit('squad/create', data.uuid)
-    // game.emit('squad/create', data.uuid)
   }
 };
 
@@ -190,39 +192,39 @@ ShipManager.prototype.squad_shield = function(socket, args){
     };
 };
 
-ShipManager.prototype.spawnQueen = function(position, uuid){
-  console.log(position)
-  var ships = this.ships,
-      cycle = this.ai.queenSpawnCycle,
-      spawnPosition = {}, masterShip, rando;
+// ShipManager.prototype.spawnQueen = function(position, uuid){
+//   console.log(position)
+//   var ships = this.ships,
+//       cycle = this.ai.queenSpawnCycle,
+//       spawnPosition = {}, masterShip, rando;
 
-  if(position === 'bottom'){
-    spawnPosition.x = -5055;
-  } else if(position === 'top'){
-    spawnPosition.x = 5411;
-    spawnPosition.y = -5354;
-  };
-  if(uuid){
-    masterShip = ships[uuid];
-  };
+//   if(position === 'bottom'){
+//     spawnPosition.x = -5055;
+//   } else if(position === 'top'){
+//     spawnPosition.x = 5411;
+//     spawnPosition.y = -5354;
+//   };
+//   if(uuid){
+//     masterShip = ships[uuid];
+//   };
 
-  if(!uuid){
-    //create queen
-    this.create({
-      name: 'Fenris',
-      chassis: 'scavenger-x04',
-      throttle: 1.0,
-      ai: 'scavenger',
-      credits: 5000,
-      reputation: -1000,
-      x: spawnPosition.x,
-      y: spawnPosition.y,
-      toporbot: position,
-      squadron: {}
-    });
+//   if(!uuid){
+//     //create queen
+//     this.create({
+//       name: 'Fenris',
+//       chassis: 'scavenger-x04',
+//       throttle: 1.0,
+//       ai: 'scavenger',
+//       credits: 5000,
+//       reputation: -1000,
+//       x: spawnPosition.x,
+//       y: spawnPosition.y,
+//       toporbot: position,
+//       squadron: {}
+//     });
 
-    this.sockets.send('global/sound/spawn', 'queenSpawn');
-  } 
+//     this.sockets.send('global/sound/spawn', 'queenSpawn');
+//   } 
   // else {
   //   console.log('queen --> overseer')
   //   //create overseers
@@ -243,7 +245,7 @@ ShipManager.prototype.spawnQueen = function(position, uuid){
   //   }
   // }
 
-};
+// };
 
 ShipManager.prototype.enhancement = function(socket, args) {
   var ships = this.ships,

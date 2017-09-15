@@ -23,6 +23,9 @@ function Ship(manager, data, user) {
   if(data.master){
     this.master = data.master
   };
+  if(data.queen){
+    this.queen = data.queen
+  };
 
   if(user){
   this.squadron = data.squadron

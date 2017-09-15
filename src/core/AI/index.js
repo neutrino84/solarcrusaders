@@ -11,7 +11,7 @@ function AI(manager, events) {
   this.timer = this.game.clock.events.loop(500, this.update, this);
   this.ships = {};
   this.consumed = {};
-  this.queenThreshold = 30;
+  this.queenThreshold = 300;
   this.next = 700;
   this.queenSpawnCycle = 0;
   this.events = events;
@@ -68,11 +68,7 @@ AI.prototype.queenCheck = function(durability, uuid){
   }
   
   if(this.queenThreshold < 1){
-    console.log('SPAWN QUEEN, cycle is at ', this.queenSpawnCycle);
-    this.queenSpawnCycle % 2 === 0 ? this.manager.spawnQueen('bottom') : this.manager.spawnQueen('top')
-    // console.log('init is ', this.events.init)
-    console.log('eventManager is ', this.events)
-    this.events.test();
+    this.events.spawnQueen(this.queenSpawnCycle);
     this.queenThreshold = this.next;
     this.next = this.next + 500;
     this.queenSpawnCycle++

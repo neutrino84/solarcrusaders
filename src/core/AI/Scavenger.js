@@ -65,7 +65,9 @@ Scavenger.prototype.scanner = function() {
       },
       ascending = function(a, b) {
         return a-b;
-      };
+      }, 
+      rnd = this.game.rnd,
+      queen, position, size;
 
   switch(ship.chassis) {
     case 'scavenger-x01' || 'scavenger-x02':
@@ -96,11 +98,11 @@ Scavenger.prototype.scanner = function() {
 
     case 'scavenger-x03':
       if(this.attacking){return}
-      if(this.master){master = ships[this.master]}
-      //   console.log(this)
+      if(ship.queen){queen = ships[ship.queen]}
+        // console.log(queen)
       // debugger
-      position = master.movement.position;
-      size = master.data.size * 1.5;
+      position = queen.movement.position;
+      size = queen.data.size * 1.5;
       position.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
       // ship.movement.plot({ x: this.offset.x-p1.x, y: this.offset.y-p1.y }, this.throttle);
       ship.movement.plot({ x: position.x - ship.movement.position.x, y: position.y - ship.movement.position.y })
@@ -130,7 +132,7 @@ Scavenger.prototype.scanner = function() {
 
         // targets.length && this.engage();
         this.target = priority.enemy[targets.sort(ascending)[0]];
-        if(this.target){console.log('scanning, target is ', this.target.chassis)}
+        // if(this.target){console.log('scanning, target is ', this.target.chassis)}
         this.attacker && this.game.clock.events.remove(this.attacker);
         this.attacker = this.game.clock.events.loop(ship.data.rate, this.attack, this);
 
@@ -149,17 +151,17 @@ Scavenger.prototype.update = function() {
       ships = this.manager.ships,
       settings = this.settings,
       rnd = this.game.rnd,
-      master,
-      p1, p2, size, health, masterHealth;
+      queen,
+      p1, p2, size, health, queenHealth;
   if(this.ship.chassis === 'scavenger-x04'){
     // console.log('in update. target is ', this.target.chassis)
   }
 
-  if(ship.master){
-    master = this.manager.ships[ship.master];
-    if(!master.disabled && master.ai.target && !this.attacking){
-      // this.engage(master.ai.target) 
-      this.target = master.ai.target
+  if(ship.queen){
+    queen = this.manager.ships[ship.queen];
+    if(!queen.disabled && queen.ai.target && !this.attacking){
+      // this.engage(queen.ai.target) 
+      this.target = queen.ai.target
       this.attacker && this.game.clock.events.remove(this.attacker);
       this.attacker = this.game.clock.events.loop(ship.data.rate, this.attack, this);
 
@@ -230,7 +232,7 @@ Scavenger.prototype.attack = function(){
     
     if(this.ship.chassis === 'scavenger-x03' || this.ship.chassis === 'scavenger-x04'){
       if(this.target && !this.target.disabled){
-        console.log('attacking ', this.target.chassis)
+        // console.log('attacking ', this.target.chassis)
       Basic.prototype.attack.call(this)
       this.attacking = true;
       } else if(this.target && this.target.disabled) {

@@ -151,7 +151,7 @@ SquadManager.prototype.detectUnfriendlies = function(){
 SquadManager.prototype.engageHostile = function(){
   var ships = this.ships,
       player = this.player,
-      available = true, 
+      available = false, 
       squad,
       ship;
   for(var s in ships){

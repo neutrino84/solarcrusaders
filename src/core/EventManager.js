@@ -14,8 +14,8 @@ function EventManager(game) {
 
   this.level = 1;
   this.ships = {
-    basic: 2,
-    pirate: 6
+    basic: 4,
+    pirate: 12
   };
 
   this.chassis = {
@@ -79,7 +79,7 @@ EventManager.prototype.init = function() {
     this.shipGen(this.ships[a], a.toString())
   };
 
-  this.scavGen(10);
+  this.scavGen(12);
 };
 
 EventManager.prototype.shipGen = function(num, ai){
@@ -95,18 +95,9 @@ EventManager.prototype.shipGen = function(num, ai){
 
 EventManager.prototype.squadGen = function(master){
   this.game.emit('ship/create', {
-    // chassis: 'squad-repair',
     chassis: this.game.rnd.pick(this.chassis['squadron']),
     x: 2050,
     y: 2040,
-    ai: 'squadron',
-    master: master
-  });
-  this.game.emit('ship/create', {
-    // chassis: 'squad-repair',
-    chassis: this.game.rnd.pick(this.chassis['squadron']),
-    x: 2040,
-    y: 2050,
     ai: 'squadron',
     master: master
   });
@@ -137,8 +128,52 @@ EventManager.prototype.scavGen = function(num) {
   };
 };
 
-EventManager.prototype.test = function() {
-  console.log('in event manager, test function worked!')
+EventManager.prototype.spawnQueen = function(cycle, uuid){
+  var ships = this.ships,
+      spawnPosition = {}, position, rando;
+// this.queenSpawnCycle % 2 === 0 ? this.events.spawnQueen('bottom') : this.events.spawnQueen('top');
+  if(cycle % 2 === 0){
+    spawnPosition.x = -5055;
+    spawnPosition.y = 4973;
+    position = 'bottom'
+  } else {
+    spawnPosition.x = 5411;
+    spawnPosition.y = -5354;
+    position = 'top';
+  };
+  // if(uuid){
+  //   queen = ships[uuid];
+  // };
+
+  if(!uuid){
+    //create queen
+    this.game.emit('ship/create', {
+      chassis: 'scavenger-x04',
+      ai: 'scavenger',
+      credits: 5000,
+      reputation: -1000,
+      x: spawnPosition.x,
+      y: spawnPosition.y,
+      position: position,
+      brood: {}
+    });
+    this.sockets.send('global/sound/spawn', 'queenSpawn');
+  } else {
+    //create overseers
+    rando = this.game.rnd
+    // for(var i = 0; i < cycle*rando.s0+1; i++){
+      console.log('overseer created')
+      this.game.emit('ship/create', {
+        chassis: 'scavenger-x03',
+        ai: 'scavenger',
+        credits: 2000,
+        reputation: -650,
+        x: spawnPosition.x,
+        y: spawnPosition.y,
+        queen: uuid
+      });
+    // }
+  }
 };
 
 EventManager.prototype.add = function(object) {
