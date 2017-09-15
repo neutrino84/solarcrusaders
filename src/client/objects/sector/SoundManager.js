@@ -55,6 +55,7 @@ SoundManager.prototype.preload = function() {
   load.audio('booster-basic', 'sounds/enhancements/booster-basic.mp3');
   load.audio('shield-basic', 'sounds/enhancements/shield-basic.mp3');
   load.audio('piercing-basic', 'sounds/enhancements/piercing-basic.mp3');
+  load.audio('detect', 'sounds/enhancements/detect.mp3');
 
   load.audio('thruster1', 'sounds/thrusters/medium1.mp3');
   load.audio('thruster2', 'sounds/thrusters/medium2.mp3');
@@ -138,6 +139,7 @@ SoundManager.prototype.create = function() {
    this.game.sound.add('booster-basic', 3);
    this.game.sound.add('shield-basic', 3);
    this.game.sound.add('piercing-basic', 3);
+   this.game.sound.add('detect', 2);
 
   
 
@@ -346,7 +348,7 @@ SoundManager.prototype.generateSystemSound = function(sound){
 };
 
 SoundManager.prototype.generateBackgroundMusic = function(){
-  var num = Math.floor((Math.random() * 2)+1);
+  var num = Math.floor((Math.random() * 3)+1);
   console.log('background'+num)
   this.game.sound.play('background'+num, 0.8, false);
 };

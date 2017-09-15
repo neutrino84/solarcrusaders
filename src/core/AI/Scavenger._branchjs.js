@@ -30,7 +30,7 @@ function Scavenger(ship, home) {
   //     range: 56384
   //   }
   // }
-  if(ship.chassis === 'scavengers-x04d' || ship.chassis === 'scavengers-x03c'){
+  if(ship.chassis === 'scavenger-x04' || ship.chassis === 'scavengers-x03c'){
     this.settings = client.AIConfiguration['scavenger-hostile'];
   }
 
@@ -100,9 +100,9 @@ Scavenger.prototype.scanner = function() {
       }
 
       // find enemies
-      targets = Object.keys(priority.enemy);
+      targets = Ob
+ject.keys(priority.enemy);
       // targets.length && this.engage(priority.enemy[targets.sort(ascending)[0]]);
-
       // targets.length && this.engage();
       this.target = priority.enemy[targets.sort(ascending)[0]];
       this.attacker && this.game.clock.events.remove(this.attacker);
@@ -175,29 +175,6 @@ Scavenger.prototype.attack = function(){
     };
 };
 
-Scavenger.prototype.plot = function(){
-  // plot destination
-  var rnd = this.game.rnd,
-      ship = this.ship,
-      sensor = this.sensor,
-      p1 = ship.movement.position,
-      settings = this.settings,
-      offset = this.offset,
-      size, distance;
-      // return
-  sensor.setTo(p1.x, p1.y, settings.sensor.range);    
-
-  if(!this.retreat && this.target && this.target.durability > 0) {
-    size = this.target.data.size * 4;
-    offset.copyFrom(this.target.movement.position);
-    offset.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
-    ship.movement.plot({ x: this.offset.x-p1.x, y: this.offset.y-p1.y }, this.throttle);
-  } else if(rnd.frac() < 0.5) {
-    p2 = this.getHomePosition();
-    distance = p2.distance(p1);
-    ship.movement.plot({ x: p2.x-p1.x, y: p2.y-p1.y }, distance/7 );
-  };
-};
 
 Scavenger.prototype.disengage = function() {
   var game = this.manager.game,

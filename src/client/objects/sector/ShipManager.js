@@ -293,6 +293,13 @@ ShipManager.prototype._disabled = function(data) {
     if(ship.isPlayer) {
       this.autofire && clock.events.remove(this.autofire);
     }
+    if(ship.data.chassis === 'scavenger-x04') {
+      for(var i = 0; i < ship.events.events.length; i++){
+        if(ship.events.events[i].callback.name === 'growlTimer'){
+          ship.events.remove(ship.events.events[i]);  
+        }
+      }
+    };
   }
 };
 

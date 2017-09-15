@@ -3,8 +3,9 @@ var Basic = require('./Basic'),
     Pirate = require('./Pirate'),
     Squadron = require('./Squadron'),
     Scavenger = require('./Scavenger');
+    // eventManager = require('../EventManager');
 
-function AI(manager) {
+function AI(manager, events) {
   this.manager = manager;
   this.game = manager.game;
   this.timer = this.game.clock.events.loop(500, this.update, this);
@@ -13,6 +14,7 @@ function AI(manager) {
   this.queenThreshold = 30;
   this.next = 700;
   this.queenSpawnCycle = 0;
+  this.events = events;
 };
 
 AI.prototype.constructor = AI;
@@ -42,6 +44,10 @@ AI.prototype.create = function(type, ship, faction) {
   return ai;
 };
 
+// AI.prototype.connectEventManager = function(eventManager) {
+//   this.eventManager = eventManager;
+// };
+
 AI.prototype.update = function() {
   var ship,
       ships = this.ships;
@@ -64,7 +70,9 @@ AI.prototype.queenCheck = function(durability, uuid){
   if(this.queenThreshold < 1){
     console.log('SPAWN QUEEN, cycle is at ', this.queenSpawnCycle);
     this.queenSpawnCycle % 2 === 0 ? this.manager.spawnQueen('bottom') : this.manager.spawnQueen('top')
-    // this.manager.spawnQueen();
+    // console.log('init is ', this.events.init)
+    console.log('eventManager is ', this.events)
+    this.events.test();
     this.queenThreshold = this.next;
     this.next = this.next + 500;
     this.queenSpawnCycle++

@@ -14,12 +14,14 @@ function ShipManager(game) {
   this.ships = {};
 
   // ai manager
-  this.ai = new AI(this);
+  // this.ai = new AI(this);
 };
 
 ShipManager.prototype.constructor = ShipManager;
 
-ShipManager.prototype.init = function() {
+ShipManager.prototype.init = function(eventManager) {
+  this.ai = new AI(this, eventManager);
+
   // internal
   this.game.on('ship/add', this.add, this);
   this.game.on('ship/remove', this.remove, this);
@@ -37,6 +39,8 @@ ShipManager.prototype.init = function() {
 
   // update data interval
   this.game.clock.events.loop(1000, this.update, this);
+
+  // this.ai.connectEventManager(eventManager)
 };
 
 ShipManager.prototype.add = function(ship) {

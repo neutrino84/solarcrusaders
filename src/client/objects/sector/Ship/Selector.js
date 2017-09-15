@@ -99,16 +99,16 @@ Selector.prototype.create = function() {
       red2: 23
     },
     'scavenger-x03' : {
-      ret1: 38,
-      ret2: -14,
-      red1: 20,
-      red2: 23
+      ret1: 57,
+      ret2: 2,
+      red1: 38,
+      red2: 35
     },
     'scavenger-x04' : {
-      ret1: 38,
-      ret2: -14,
-      red1: 20,
-      red2: 23
+      ret1: 121,
+      ret2: 9,
+      red1: 100,
+      red2: 90
     }
   }
 
@@ -134,7 +134,13 @@ Selector.prototype.create = function() {
   //create reticle
   this.reticle = new engine.Graphics();
   this.reticle.lineStyle(2, 0x336699, 1.0);
-  this.reticle.drawRect(0, 0, ship.width*2, ship.height*2);
+  if(this.ship.data.chassis === 'scavenger-x04'){
+    this.reticle.drawRect(0, 0, ship.width*1.65, ship.height*1.65);
+  } else if (this.ship.data.chassis === 'scavenger-x03'){
+    this.reticle.drawRect(0, 0, ship.width*1.65, ship.height*1.65);
+  } else {
+    this.reticle.drawRect(0, 0, ship.width*2, ship.height*2); 
+  }
   this.reticle.pivot.set(halfWidth, halfHeight);
   // this.reticle.position.set(ship.width/0.95, ship.height/0.95);
   // if(this.ship.data.chassis === 'ubaidian-x01a'){
@@ -240,7 +246,7 @@ Selector.prototype.hostileHighlight = function() {
   if(!this.reticleAnimating || (this.reticleAnimating && !this.reticleAnimating.isRunning)) {
     this.reticleAnimating = this.game.tweens.create(this.reticle);
     this.reticleAnimating.to({ alpha: 0.9 }, 500);
-    this.reticleAnimating.to({ rotation: 0.9 }, 500);
+    // this.reticleAnimating.to({ rotation: 0.9 }, 500);
     this.reticleAnimating.loop(true)
     this.reticleAnimating.yoyo(true, 1500);
     this.reticleAnimating.start();

@@ -256,13 +256,11 @@ Scavenger.prototype.plot = function(){
   sensor.setTo(p1.x, p1.y, settings.sensor.range);    
 
   if(!this.retreat && this.target && this.target.durability > 0) {
-    console.log('plotting to ', this.target.chassis)
     size = this.target.data.size * 4;
     offset.copyFrom(this.target.movement.position);
-    offset.add(rnd.realInRange(-size, size), 3rnd.realInRange(-size, size));
+    offset.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
     ship.movement.plot({ x: this.offset.x-p1.x, y: this.offset.y-p1.y }, this.throttle);
   } else if(rnd.frac() < 0.65) {
-    console.log('in here )))))))))))))')
     p2 = this.getHomePosition();
     distance = p2.distance(p1);
     ship.movement.plot({ x: p2.x-p1.x, y: p2.y-p1.y }, distance/7 );
@@ -273,12 +271,9 @@ Scavenger.prototype.getHomePosition = function() {
   var position = this.settings.position,
       sensor = this.sensor,
       random_boolean = Math.random() >= 0.5;
-      // console.log('in here ---- faction is ', this.faction )
       if(this.faction === 'vulothi'){
-        // console.log('vulothi check')
         sensor.setTo(5411, -5354, 800);
       } else if(this.faction === 'fenris'){
-        // console.log('vulothi check')
         sensor.setTo(position.x, position.y, 800);
       }
   return this.sensor.random();

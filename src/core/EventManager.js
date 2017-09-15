@@ -14,8 +14,8 @@ function EventManager(game) {
 
   this.level = 1;
   this.ships = {
-    basic: 0,
-    pirate: 0
+    basic: 2,
+    pirate: 6
   };
 
   this.chassis = {
@@ -23,16 +23,6 @@ function EventManager(game) {
     pirate: ['pirate-x01','pirate-x02'],
     squadron: ['squad-shield','squad-repair','squad-attack'],
     scavenger: ['scavenger-x01','scavenger-x02']
-  };
-
-  this.spawnPoints = {
-    scavenger: [{
-        x: 2048,
-        y: 2048
-    }, {
-        x: 2048, 
-        y: 2050
-    }]
   };
 };
 
@@ -105,18 +95,18 @@ EventManager.prototype.shipGen = function(num, ai){
 
 EventManager.prototype.squadGen = function(master){
   this.game.emit('ship/create', {
-    chassis: 'squad-repair',
-    // chassis: this.game.rnd.pick(this.chassis['squadron']),
-    x: 2048,
-    y: 2048,
+    // chassis: 'squad-repair',
+    chassis: this.game.rnd.pick(this.chassis['squadron']),
+    x: 2050,
+    y: 2040,
     ai: 'squadron',
     master: master
   });
   this.game.emit('ship/create', {
-    chassis: 'squad-repair',
-    // chassis: this.game.rnd.pick(this.chassis['squadron']),
-    x: 2048,
-    y: 2048,
+    // chassis: 'squad-repair',
+    chassis: this.game.rnd.pick(this.chassis['squadron']),
+    x: 2040,
+    y: 2050,
     ai: 'squadron',
     master: master
   });
@@ -124,83 +114,31 @@ EventManager.prototype.squadGen = function(master){
 
 EventManager.prototype.scavGen = function(num) {
 
-  // for(var i = 0; i < Math.round(num/2); i++){
-  //   this.game.emit('ship/create', {
-  //     chassis: this.game.rnd.pick(this.chassis['scavenger']),
-  //     x: 5411,
-  //     y: -5354,
-  //     ai: 'scavenger',
-  //     faction: 'vulothi'
-
-  //   }); 
+  for(var i = 0; i < Math.round(num/2); i++){
     this.game.emit('ship/create', {
-      // chassis: this.game.rnd.pick(this.chassis['scavenger']),
-      chassis: 'scavenger-x04',
+      chassis: this.game.rnd.pick(this.chassis['scavenger']),
+      x: 5411,
+      y: -5354,
+      ai: 'scavenger',
+      faction: 'vulothi'
+
+    }); 
+    this.game.emit('ship/create', {
+      chassis: this.game.rnd.pick(this.chassis['scavenger']),
+      // chassis: 'scavenger-x03',
       x: -5055,
       y: 4973,
+      // x: 2048,
+      // y: 2048,
       ai: 'scavenger',
       faction: 'fenris'
 
     }); 
-  // };
+  };
+};
 
-
-
-  // var base, ship,
-  //     iterator = [
-  //     {
-  //       location: { x: -12192, y: 12192 },
-  //       ships: [
-  //         { name: 'vun-saaghath', chassis: 'scavengers-x02', credits: 0, reputation: -100 },
-  //         { name: 'vun-mocolo', chassis: 'scavengers-x02', credits: 0, reputation: -100 },
-  //         { name: 'vun-shidu', chassis: 'scavengers-x01', credits: 0, reputation: -100 },
-  //         { name: 'vun-zozu', chassis: 'scavengers-x02', credits: 0, reputation: -100 },
-  //         { name: 'vun-thovu', chassis: 'scavengers-x01', credits: 0, reputation: -100 },
-  //         { name: 'vun-thaide', chassis: 'scavengers-x01', credits: 0, reputation: -100 },
-  //         { name: 'vun-sejini', chassis: 'scavengers-x01', credits: 0, reputation: -100 },
-  //         { name: 'vun-bogu', chassis: 'scavengers-x02', credits: 0, reputation: -100 },
-  //         { name: 'vun-macros', chassis: 'scavengers-x01', credits: 0, reputation: -100 }
-  //         // { name: 'vun-zizulo', chassis: 'scavengers-x01', credits: 0, reputation: -100 },
-  //         // { name: 'vun-wivero', chassis: 'scavengers-x01', credits: 0, reputation: -100 }
-  //       ]
-  //     },
-  //     {
-  //       location: { x: 12192, y: -12192 },
-  //       ships: [
-  //         { name: 'mol-saaghath', chassis: 'scavengers-x01', credits: 0, reputation: -100 },
-  //         { name: 'mol-mocolo', chassis: 'scavengers-x02', credits: 0, reputation: -100 },
-  //         { name: 'mol-shidu', chassis: 'scavengers-x02', credits: 0, reputation: -100 },
-  //         { name: 'mol-zozu', chassis: 'scavengers-x02', credits: 0, reputation: -100 },
-  //         { name: 'mol-thovu', chassis: 'scavengers-x01', credits: 0, reputation: -100 },
-  //         { name: 'mol-thaide', chassis: 'scavengers-x01', credits: 0, reputation: -100 },
-  //         { name: 'mol-sejini', chassis: 'scavengers-x02', credits: 0, reputation: -100 },
-  //         { name: 'mol-bogu', chassis: 'scavengers-x01', credits: 0, reputation: -100 },
-  //         { name: 'mol-macros', chassis: 'scavengers-x01', credits: 0, reputation: -100 }
-  //         // { name: 'mol-zizulo', chassis: 'scavengers-x01', credits: 0, reputation: -100 },
-  //         // { name: 'mol-wivero', chassis: 'scavengers-x01', credits: 0, reputation: -100 }
-  //       ]
-  //     }
-  //     ],
-  //     len = iterator.length;
-
-  // create scavengers
-  // for(var i=0; i<len; i++) {
-  //   base = iterator[i];
-  //   for(var s=0; s<base.ships.length; s++) {
-  //     ship = base.ships[s];
-
-  //     this.create({
-  //       name: ship.name,
-  //       chassis: ship.chassis,
-  //       credits:  global.Math.floor(ship.credits * global.Math.random() + 100),
-  //       reputation: global.Math.floor(ship.reputation * (1 + global.Math.random())),
-  //       throttle: 1.0,
-  //       ai: 'scavenger',
-  //       x: base.location.x,
-  //       y: base.location.y
-  //     });
-  //   }
-  // }
+EventManager.prototype.test = function() {
+  console.log('in event manager, test function worked!')
 };
 
 EventManager.prototype.add = function(object) {

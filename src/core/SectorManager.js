@@ -29,7 +29,7 @@ SectorManager.prototype.constructor = SectorManager;
 
 SectorManager.prototype.init = function() {
   this.stationManager.init();
-  this.shipManager.init();
+  this.shipManager.init(this.eventManager);
   this.userManager.init();
   this.eventManager.init();
 
