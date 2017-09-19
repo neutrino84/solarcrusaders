@@ -11,7 +11,7 @@ function AI(manager, events) {
   this.timer = this.game.clock.events.loop(500, this.update, this);
   this.ships = {};
   this.consumed = {};
-  this.queenThreshold = 300;
+  this.queenThreshold = 30;
   this.next = 700;
   this.queenSpawnCycle = 0;
   this.events = events;
@@ -78,7 +78,7 @@ AI.prototype.queenCheck = function(durability, uuid){
       this.queenSpawnCycle = 0;
     }
   };
-}
+};
 
 AI.prototype.destroy = function() {
   this.timer && this.game.clock.events.remove(this.timer);

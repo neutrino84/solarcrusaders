@@ -75,16 +75,12 @@ ShipManager.prototype.create = function(data, user) {
     // console.log('IN HERE!!!!!!', this.ships[data.master].squadron)
   }
   if(ship.data.chassis === 'scavenger-x04'){
-    // console.log(ship)
-    console.log("in shipmanager queen's brood is ", data.brood)
     ship.data.brood = {};
-    this.eventManager.spawnQueen(data.position, ship.uuid);
+    this.eventManager.spawnQueen(data.cycle, ship.uuid);
   };
   if(data.queen && ship.data.chassis === 'scavenger-x03'){
-    console.log(this.ships[data.queen])
     this.ships[data.queen].data.brood[ship.uuid] = ship;
   }
-    
   if(user){
     game.emit('squad/create', data.uuid)
   }

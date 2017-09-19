@@ -26,7 +26,6 @@ function Ship(manager, data, user) {
   if(data.queen){
     this.queen = data.queen
   };
-
   if(user){
   this.squadron = data.squadron
   }
@@ -220,7 +219,7 @@ Ship.prototype.hit = function(attacker, target, slot) {
     // }
 
     //prevent friendly fire dmg to squadron
-    if(this.master === attacker.uuid || attacker.hardpoints[0].subtype === 'repair' && data.health >= (this.config.stats.health)){return}  
+    // if(this.master === attacker.uuid || attacker.hardpoints[0].subtype === 'repair' && data.health >= (this.config.stats.health)){return}  
 
 
     // calc damage
@@ -232,7 +231,6 @@ Ship.prototype.hit = function(attacker, target, slot) {
     };
     damage += critical ? damage : 0;
     damage *= piercing ? piercing.damage : 1.0;
-    // console.log('this.squadron is ', this.squadron )
     if(this.squadron && this.shieldCheck(this.uuid)){
         damage = damage*0.65;
         shielded = true;
@@ -244,8 +242,6 @@ Ship.prototype.hit = function(attacker, target, slot) {
     } else if(attacker.hardpoints[0].subtype !== 'repair'){
       health = data.health - damage;
     };
-
-    //ASK OLLIE WHY HEALING TO FULL HEALTH OR ABOVE FULL HEALTH DESTROYS THE SHIP
 
     durability = this.durability;
 
@@ -334,8 +330,6 @@ Ship.prototype.shieldCheck = function(uuid) {
 };
 
 Ship.prototype.disable = function() {
-  console.log('got disabled')
-
   // disable
   this.disabled = true;
 

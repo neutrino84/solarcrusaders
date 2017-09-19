@@ -100,8 +100,7 @@ Scavenger.prototype.scanner = function() {
       }
 
       // find enemies
-      targets = Ob
-ject.keys(priority.enemy);
+      targets = Object.keys(priority.enemy);
       // targets.length && this.engage(priority.enemy[targets.sort(ascending)[0]]);
       // targets.length && this.engage();
       this.target = priority.enemy[targets.sort(ascending)[0]];

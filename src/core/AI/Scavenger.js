@@ -97,15 +97,25 @@ Scavenger.prototype.scanner = function() {
       break
 
     case 'scavenger-x03':
-      if(this.attacking){return}
-      if(ship.queen){queen = ships[ship.queen]}
+      if(this.attacking && ship.queen){
+        return }
+      if(ship.queen){
+        queen = ships[ship.queen]
         // console.log(queen)
       // debugger
-      position = queen.movement.position;
-      size = queen.data.size * 1.5;
-      position.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
-      // ship.movement.plot({ x: this.offset.x-p1.x, y: this.offset.y-p1.y }, this.throttle);
-      ship.movement.plot({ x: position.x - ship.movement.position.x, y: position.y - ship.movement.position.y })
+        if(!queen.disabled){
+          position = queen.movement.position;
+          size = queen.data.size * 1.5;
+          position.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
+          distance = position.distance(ship.movement.position);
+          // ship.movement.plot({  x: this.offset.x-p1.x, y: this.offset.y-p1.y }, this.throttle);
+          this.target = queen;
+          ship.movement.plot({ x: position.x - ship.movement.position.x, y: position.y - ship.movement.position.y}, distance/10)
+        } else {
+          Basic.prototype.scanner.call(this);
+          console.log('here~~, target is ', this.target)
+        }
+      } 
       break;
 
     case 'scavenger-x04':
@@ -259,13 +269,20 @@ Scavenger.prototype.plot = function(){
 
   if(!this.retreat && this.target && this.target.durability > 0) {
     size = this.target.data.size * 4;
+    distance = this.target.movement.position.distance(p1)
     offset.copyFrom(this.target.movement.position);
     offset.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
-    ship.movement.plot({ x: this.offset.x-p1.x, y: this.offset.y-p1.y }, this.throttle);
+    if(ship.data.chassis === 'scavenger-x03' && !this.attacking){
+      ship.movement.plot({ x: this.offset.x-p1.x, y: this.offset.y-p1.y }, distance/10);
+    } else if(ship.data.chassis === 'scavenger-x01' || ship.data.chassis === 'scavenger-x02'){
+      ship.movement.plot({ x: this.offset.x-p1.x, y: this.offset.y-p1.y }, distance/5);
+    } else {
+      ship.movement.plot({ x: this.offset.x-p1.x, y: this.offset.y-p1.y }, this.throttle);
+    }
   } else if(rnd.frac() < 0.65) {
     p2 = this.getHomePosition();
     distance = p2.distance(p1);
-    ship.movement.plot({ x: p2.x-p1.x, y: p2.y-p1.y }, distance/7 );
+    ship.movement.plot({ x: p2.x-p1.x, y: p2.y-p1.y }, distance/8 );
   };
 };
 

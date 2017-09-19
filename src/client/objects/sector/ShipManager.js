@@ -281,6 +281,9 @@ ShipManager.prototype._disabled = function(data) {
   var ship = this.ships[data.uuid],
       socket = this.socket,
       clock = this.clock,
+      chassis = ship.data.chassis,
+      scav = /^(scavenger)/,
+      isScavenger = scav.test(chassis),
       game = this.game;
   if(ship !== undefined) {
     ship.selector.hostileHighlightStop();
@@ -292,13 +295,27 @@ ShipManager.prototype._disabled = function(data) {
     // ship.selector.hostileEngagedStop();
     if(ship.isPlayer) {
       this.autofire && clock.events.remove(this.autofire);
-    }
-    if(ship.data.chassis === 'scavenger-x04') {
+    };
+    if(chassis === 'scavenger-x04') {
       for(var i = 0; i < ship.events.events.length; i++){
         if(ship.events.events[i].callback.name === 'growlTimer'){
           ship.events.remove(ship.events.events[i]);  
         }
       }
+    };
+    if(isScavenger){
+      ship.events.loop(100, alphaFader = function(){
+        if(ship.alpha > 0){
+          ship.alpha -= 0.01
+        }
+        if(ship.alpha <= 0){
+          for(var i = 0; i < ship.events.events.length; i++){
+            if(ship.events.events[i].callback.name === 'alphaFader'){
+              ship.events.remove(ship.events.events[i]);  
+            }
+          };
+        }
+      })
     };
   }
 };
@@ -307,7 +324,12 @@ ShipManager.prototype._enabled = function(data) {
   var ship = this.ships[data.uuid];
   if(ship !== undefined) {
     ship.enable(data);
-  }
+  };
+  for(var i = 0; i < ship.events.events.length; i++){
+    if(ship.events.events[i].callback.name === 'alphaFader'){
+      ship.events.remove(ship.events.events[i]);  
+    }
+  };
 };
 
 ShipManager.prototype._removed = function(ship) {

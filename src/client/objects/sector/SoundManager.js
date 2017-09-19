@@ -350,7 +350,7 @@ SoundManager.prototype.generateSystemSound = function(sound){
 SoundManager.prototype.generateBackgroundMusic = function(){
   var num = Math.floor((Math.random() * 3)+1);
   console.log('background'+num)
-  this.game.sound.play('background'+num, 0.8, false);
+  this.game.sound.play('background'+num, 0.8, true);
 };
 
 SoundManager.prototype.generateThrusterSound = function(){
@@ -362,7 +362,6 @@ SoundManager.prototype.generateEnhancementSound = function(data){
   if(!this.config){
     return
   };
-  // console.log(data)
   var enhancements = this.config.enhancement,
       enhancement = data.enhancement,
       subtype = data.subtype,

@@ -78,7 +78,7 @@
         "spawn": 1,
         "durability": 1000.0,
         "sound": "beam-harvester",
-        "volume": 0.8,
+        "volume": 0.4,
         "variation": 0.05
       },
       "disintegrator": {

@@ -150,14 +150,12 @@ Squadron.prototype.update = function() {
     };
     for(var a in master.squadron){
       squadShip = master.squadron[a]
-      if(squadShip.data.health/squadShip.config.stats.health < 0.6){
+      if(squadShip !== ship && squadShip.data.health/squadShip.config.stats.health < 0.6){
         this.engage(squadShip, 'repair');
         return
       }
     };
-    
   }
-
   this.plot();
 };
 
