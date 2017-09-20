@@ -28,6 +28,7 @@ function HotkeyManager(game) {
 
   this.game.on('ship/player', this._player, this);
   this.game.on('ship/enhancement/cooled', this._cooled, this);
+  this.game.on('hotkeys/refresh', this.refresh, this);
 };
 
 HotkeyManager.prototype.constructor = HotkeyManager;
@@ -77,11 +78,9 @@ HotkeyManager.prototype.listener = function() {
           this.isPiercing = true;
           break;
         case 'detect':
-          // this.squadManager.detectUnfriendlies();
           this.detecting = true;
           break;
-      }
-
+      };
 	   } 
      //squadron hotkeys ~ need to refactor to use a squadmanager instead of shipmanager
         if(key.toLowerCase() === 'c'){
@@ -126,6 +125,12 @@ HotkeyManager.prototype.listener = function() {
         };
     }, this);
   };
+};
+
+HotkeyManager.prototype.refresh = function() {
+  console.log(this.isHealing, this.isBoosting, this.isShielded, this.isPiercing)
+  this.isHealing = this.isBoosting = this.isShielded = this.isPiercing = false;
+  console.log(this.isHealing, this.isBoosting, this.isShielded, this.isPiercing)
 };
 
 HotkeyManager.prototype._cooled = function(data){

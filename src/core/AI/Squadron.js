@@ -32,10 +32,16 @@ Squadron.prototype.scanner = function() {
       ships = this.manager.ships,
       ship = this.ship,
       master = ships[this.master],
-      position = master.movement.position;
+      position = master.movement.position,
+      offset = this.offset,
+      rnd = this.game.rnd;
 
   if(this.attacking || this.shieldDestination){return}
-  ship.movement.plot({ x: position.x - ship.movement.position.x, y: position.y - ship.movement.position.y })
+    size = master.data.size * 3;
+    distance = position.distance(ship.movement.position);
+    offset.copyFrom(position);
+    offset.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
+  ship.movement.plot({ x: offset.x - ship.movement.position.x, y: offset.y - ship.movement.position.y } , distance/1.5)
 };
 
 Squadron.prototype.plot = function(){

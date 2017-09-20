@@ -25,12 +25,13 @@ User.prototype.init = function(callback, context) {
       game = this.game,
       data = this.data,
       socket = this.socket,
-      ships = this.ships;
+      ships = this.ships,
+      chassis = ['ubaidian-x01a','ubaidian-x01b','ubaidian-x01c','ubaidian-x01d','ubaidian-x01e','ubaidian-x01f']
   if(data.isNewRecord()) {
     // connect demo ship
 
     game.emit('ship/create', {
-      chassis: 'ubaidian-x01c',
+      chassis: this.game.rnd.pick(chassis),
       x: 2048,
       y: 2048,
       uuid: this.uuid,

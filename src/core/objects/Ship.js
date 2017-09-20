@@ -13,7 +13,7 @@ function Ship(manager, data, user) {
   this.sockets = manager.sockets;
   this.model = manager.model;
   this.user = user;
-
+  
   this.data = new this.model.Ship(data);
 
   this.data.init();
@@ -28,7 +28,10 @@ function Ship(manager, data, user) {
   };
   if(user){
   this.squadron = data.squadron
-  }
+  };
+  // if(data.battalion){
+  //   this.battalion = data.battalion
+  // };
 
   // ship configuration
   this.config = client.ShipConfiguration[this.data.chassis];
@@ -219,7 +222,7 @@ Ship.prototype.hit = function(attacker, target, slot) {
     // }
 
     //prevent friendly fire dmg to squadron
-    // if(this.master === attacker.uuid || attacker.hardpoints[0].subtype === 'repair' && data.health >= (this.config.stats.health)){return}  
+    if(this.master === attacker.uuid || attacker.hardpoints[0].subtype === 'repair' && data.health >= (this.config.stats.health)){return}  
 
 
     // calc damage
@@ -592,7 +595,6 @@ Object.defineProperty(Ship.prototype, 'faction', {
   get: function() {
     if(this.ai){
       return this.ai.faction;
-      console.log('THIS.AI,FACTION ISSSSSS ', this.ai.faction)
       debugger
     } else {return null}
   },

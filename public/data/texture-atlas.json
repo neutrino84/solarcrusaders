@@ -54,6 +54,24 @@
 	"sourceSize": {"w":57,"h":59},
 	"pivot": {"x":0.5,"y":0.5}
 },
+"enforcer-x01.png":
+{
+	"frame": {"x":635,"y":265,"w":64,"h":64},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
+	"sourceSize": {"w":64,"h":64},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"enforcer-x02.png":
+{
+	"frame": {"x":3,"y":359,"w":104,"h":104},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":104,"h":104},
+	"sourceSize": {"w":104,"h":104},
+	"pivot": {"x":0.5,"y":0.5}
+},
 "engine-glow.png":
 {
 	"frame": {"x":340,"y":291,"w":82,"h":82},
@@ -65,7 +83,7 @@
 },
 "engine-highlight.png":
 {
-	"frame": {"x":560,"y":265,"w":64,"h":64},
+	"frame": {"x":425,"y":293,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -74,7 +92,7 @@
 },
 "enhancement-booster.png":
 {
-	"frame": {"x":961,"y":236,"w":48,"h":48},
+	"frame": {"x":854,"y":241,"w":48,"h":48},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
@@ -83,7 +101,7 @@
 },
 "enhancement-detect.png":
 {
-	"frame": {"x":425,"y":360,"w":48,"h":48},
+	"frame": {"x":854,"y":292,"w":48,"h":48},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
@@ -92,7 +110,7 @@
 },
 "enhancement-heal.png":
 {
-	"frame": {"x":476,"y":360,"w":48,"h":48},
+	"frame": {"x":970,"y":386,"w":48,"h":48},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
@@ -101,7 +119,7 @@
 },
 "enhancement-piercing.png":
 {
-	"frame": {"x":318,"y":376,"w":48,"h":48},
+	"frame": {"x":970,"y":437,"w":48,"h":48},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
@@ -110,7 +128,7 @@
 },
 "enhancement-shield.png":
 {
-	"frame": {"x":369,"y":376,"w":48,"h":48},
+	"frame": {"x":836,"y":410,"w":48,"h":48},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
@@ -164,7 +182,7 @@
 },
 "general-x01.png":
 {
-	"frame": {"x":627,"y":265,"w":64,"h":64},
+	"frame": {"x":492,"y":293,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -173,7 +191,7 @@
 },
 "general-x02.png":
 {
-	"frame": {"x":425,"y":293,"w":64,"h":64},
+	"frame": {"x":702,"y":316,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -182,7 +200,7 @@
 },
 "icon-target.png":
 {
-	"frame": {"x":913,"y":284,"w":40,"h":40},
+	"frame": {"x":918,"y":134,"w":40,"h":40},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":40},
@@ -191,7 +209,7 @@
 },
 "pirate-x01.png":
 {
-	"frame": {"x":492,"y":293,"w":64,"h":64},
+	"frame": {"x":635,"y":332,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -200,7 +218,7 @@
 },
 "pirate-x02.png":
 {
-	"frame": {"x":3,"y":359,"w":104,"h":104},
+	"frame": {"x":704,"y":134,"w":104,"h":104},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":104,"h":104},
@@ -209,7 +227,7 @@
 },
 "scavenger-x01.png":
 {
-	"frame": {"x":779,"y":284,"w":64,"h":64},
+	"frame": {"x":559,"y":340,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -218,7 +236,7 @@
 },
 "scavenger-x02.png":
 {
-	"frame": {"x":694,"y":316,"w":64,"h":64},
+	"frame": {"x":769,"y":316,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -227,7 +245,7 @@
 },
 "scavenger-x03.png":
 {
-	"frame": {"x":704,"y":134,"w":104,"h":104},
+	"frame": {"x":811,"y":134,"w":104,"h":104},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":104,"h":104},
@@ -308,7 +326,7 @@
 },
 "turret-glow.png":
 {
-	"frame": {"x":846,"y":284,"w":64,"h":64},
+	"frame": {"x":836,"y":343,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -317,7 +335,7 @@
 },
 "turret-rocket-a.png":
 {
-	"frame": {"x":956,"y":287,"w":64,"h":64},
+	"frame": {"x":903,"y":386,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -344,7 +362,7 @@
 },
 "ubaidian-x01b.png":
 {
-	"frame": {"x":811,"y":134,"w":72,"h":72},
+	"frame": {"x":918,"y":236,"w":72,"h":72},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":72,"h":72},
@@ -353,7 +371,7 @@
 },
 "ubaidian-x01c.png":
 {
-	"frame": {"x":886,"y":134,"w":72,"h":72},
+	"frame": {"x":704,"y":241,"w":72,"h":72},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":72,"h":72},
@@ -362,7 +380,7 @@
 },
 "ubaidian-x01d.png":
 {
-	"frame": {"x":811,"y":209,"w":72,"h":72},
+	"frame": {"x":779,"y":241,"w":72,"h":72},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":72,"h":72},
@@ -371,7 +389,7 @@
 },
 "ubaidian-x01e.png":
 {
-	"frame": {"x":886,"y":209,"w":72,"h":72},
+	"frame": {"x":905,"y":311,"w":72,"h":72},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":72,"h":72},
@@ -380,7 +398,7 @@
 },
 "ubaidian-x01f.png":
 {
-	"frame": {"x":704,"y":241,"w":72,"h":72},
+	"frame": {"x":560,"y":265,"w":72,"h":72},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":72,"h":72},
@@ -398,7 +416,7 @@
 },
 "ubaidian-x03.png":
 {
-	"frame": {"x":559,"y":332,"w":64,"h":64},
+	"frame": {"x":702,"y":383,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -407,7 +425,7 @@
 },
 "ubaidian-x04.png":
 {
-	"frame": {"x":626,"y":332,"w":64,"h":64},
+	"frame": {"x":769,"y":383,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -421,6 +439,6 @@
 	"format": "RGBA8888",
 	"size": {"w":1024,"h":1024},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:5ff64c849f2c8e40bd284c92bb3ac81d:3dfd6de7017cdf90d01c1bd22e4bdf2b:a973cd4a72d4c90ced76930eac7fdc63$"
+	"smartupdate": "$TexturePacker:SmartUpdate:07f477fa86960a90a4bed71ee578263d:f6412cc40423632913b21446028fea7d:a973cd4a72d4c90ced76930eac7fdc63$"
 }
 }

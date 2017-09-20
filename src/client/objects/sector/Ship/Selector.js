@@ -109,6 +109,18 @@ Selector.prototype.create = function() {
       ret2: 9,
       red1: 100,
       red2: 90
+    },
+    'enforcer-x01' : {
+      ret1: 121,
+      ret2: 9,
+      red1: 100,
+      red2: 90
+    },
+    'enforcer-x02' : {
+      ret1: 121,
+      ret2: 9,
+      red1: 100,
+      red2: 90
     }
   }
 

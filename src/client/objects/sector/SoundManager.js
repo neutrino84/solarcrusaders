@@ -36,7 +36,6 @@ SoundManager.prototype.preload = function() {
   // load.audio('laser-light', 'sounds/lasers/light.mp3');
   load.audio('beam-repair', 'sounds/beamWeapons/repairBeams/beam-repair.mp3');
 
-  // load.audio('beam-harvester','sounds/beamWeapons/scavBeams/hrvstr1.mp3');
   load.audio('beam-harvester1','sounds/beamWeapons/scavBeams/hrvstr1.mp3');
   load.audio('beam-harvester2','sounds/beamWeapons/scavBeams/hrvstr2.mp3');
   load.audio('beam-harvester3','sounds/beamWeapons/scavBeams/hrvstr3.mp3');
@@ -45,8 +44,8 @@ SoundManager.prototype.preload = function() {
 
   load.audio('beam-disintegrator','sounds/beamWeapons/scavBeams/Disintegrator1.1.mp3');
 
-  // load.audio('booster-basic', 'sounds/enhancements/booster-basic.mp3');
-  // load.audio('shield-basic', 'sounds/enhancements/shield-basic.mp3');
+  load.audio('basicBeam','sounds/beamWeapons/ubadianBeams/basicBeam.mp3');
+  load.audio('capitalBeam','sounds/beamWeapons/ubadianBeams/capitalBeam.mp3');
 
   // load.audio('damage-a', 'sounds/explosions/damage-a.mp3');
   // load.audio('damage-b', 'sounds/explosions/damage-b.mp3');
@@ -156,6 +155,8 @@ SoundManager.prototype.create = function() {
   this.game.sound.add('beam-harvester4', 1);
   this.game.sound.add('beam-harvester5', 1);
   
+  this.game.sound.add('basicBeam', 6);
+  this.game.sound.add('capitalBeam', 6);
 
   this.game.sound.add('explosion-a', 6);
   this.game.sound.add('explosion-b', 6);

@@ -60,19 +60,27 @@ ShipManager.prototype.create = function(data, user) {
   var self = this, ship,
       game = this.game,
       squadship = /^(squad)/,
-      chassis = data.chassis;
-      if(data.chassis === 'scavenger-x03'){
-      console.log('shipmanager data is ', data)
-      }
-  // debugger
-
+      scavship = /^(scav)/,
+      enforcership = /^(enforcer)/,
+      chassis = data.chassis,
+      rndPosition;
+  if(squadship.test(chassis)){
+    // console.log('DATA IS ', data)
+  } 
+  // if(user){
+  //   rndPosition = this.eventManager.generateRandomPosition(2000);
+  //   data.x = rndPosition.x;
+  //   data.y = rndPosition.y;
+    //^ this is putting the user in a slightly more random position (not center), but it's kind of jarring...
+  // };
   ship = new Ship(this, data, user);
   ship.init(function() {
     game.emit('ship/add', ship);
   });
+  // if(scavship.test(chassis)){console.log(chassis)}
+
   if(data.master && squadship.test(chassis)){
     this.ships[data.master].squadron[ship.uuid] = ship;
-    // console.log('IN HERE!!!!!!', this.ships[data.master].squadron)
   }
   if(ship.data.chassis === 'scavenger-x04'){
     ship.data.brood = {};
@@ -81,9 +89,16 @@ ShipManager.prototype.create = function(data, user) {
   if(data.queen && ship.data.chassis === 'scavenger-x03'){
     this.ships[data.queen].data.brood[ship.uuid] = ship;
   }
+  if(ship.data.chassis === 'enforcer-x02'){
+    ship.battalion = {};
+    this.eventManager.enforcerGen(data.x, data.y, ship.uuid);
+  };
+  if(ship.data.chassis === 'enforcer-x01'){
+    this.ships[data.master].battalion[ship.uuid] = ship;
+  };
   if(user){
-    game.emit('squad/create', data.uuid)
-  }
+    this.eventManager.squadGen(data.uuid);
+  };
 };
 
 // ShipManager.prototype.create = function(data, user, position) {

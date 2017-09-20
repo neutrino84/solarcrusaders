@@ -220,6 +220,7 @@
             </struct>
             <key type="filename">fx/engine-highlight.png</key>
             <key type="filename">fx/turret-glow.png</key>
+            <key type="filename">ships/enforcers/enforcer-x01.png</key>
             <key type="filename">ships/pirates/pirate-x01.png</key>
             <key type="filename">ships/scavengers/scavenger-x01.png</key>
             <key type="filename">ships/scavengers/scavenger-x02.png</key>
@@ -357,6 +358,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">ships/enforcers/enforcer-x02.png</key>
             <key type="filename">ships/pirates/pirate-x02.png</key>
             <key type="filename">ships/scavengers/scavenger-x03.png</key>
             <struct type="IndividualSpriteSettings">
@@ -496,6 +498,8 @@
             <filename>ships/scavengers/scavenger-x02.png</filename>
             <filename>ships/scavengers/scavenger-x03.png</filename>
             <filename>ships/scavengers/scavenger-x04.png</filename>
+            <filename>ships/enforcers/enforcer-x01.png</filename>
+            <filename>ships/enforcers/enforcer-x02.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

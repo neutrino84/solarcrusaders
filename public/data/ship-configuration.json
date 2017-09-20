@@ -149,20 +149,6 @@
             "y": 45
           },
           "rotation": 0
-        },
-        {
-          "tint": "0x3399FF",
-          "scale": {
-            "startX": 0.1,
-            "endX": 0.22,
-            "startY": 0.2,
-            "endY": 0.4
-          },
-          "position": {
-            "x": 152,
-            "y": 154
-          },
-          "rotation": 0
         }
       ]
     },
@@ -1257,12 +1243,153 @@
       ]
     }
   },
+  "enforcer-x01": {
+    "race": "ubaidian",
+    "class": "fighter",
+    "stats": {
+      "capacity": 3000,
+      "health": 100,
+      "heal": 0.25,
+      "armor": 0.0,
+      "speed": 30.0,
+      "rate": 256,
+      "evasion": 0.3,
+      "energy": 200,
+      "recharge": 1,
+      "size": 64,
+      "durability": 64,
+      "critical": 0.01
+    },
+    "enhancements": ["heal", "booster", "shield"],
+    "engine": {
+      "glows": [
+        {
+          "tint": "0xFFFFAA",
+          "scale": {
+            "startX": 0.1,
+            "endX": 0.2,
+            "startY": 0.5,
+            "endY": 1.5
+          },
+          "position": {
+            "x": 40,
+            "y": 32
+          },
+          "rotation": 0
+        }
+        ]
+    },
+    "targeting": {
+      "hardpoints": [
+        {
+          "type": ["energy", "pulse"],
+          "pivot": {
+            "x": 20,
+            "y": 16
+          },
+          "position": {
+            "x": 19,
+            "y": 32
+          },
+          "default": {
+            "type": "energy",
+            "subtype": "basic"
+          }
+        }
+        ]
+    }
+  },
+  "enforcer-x02": {
+    "race": "ubaidian",
+    "class": "battleship",
+    "stats": {
+      "capacity": 3000,
+      "health": 250,
+      "heal": 0.25,
+      "armor": 0.2,
+      "speed": 20.0,
+      "rate": 256,
+      "evasion": 0.3,
+      "energy": 200,
+      "recharge": 1,
+      "size": 104,
+      "durability": 104,
+      "critical": 0.05
+    },
+    "enhancements": ["heal","shield"],
+    "engine": {
+      "glows": [
+        {
+          "tint": "0xFFFFAA",
+          "scale": {
+            "startX": 0.1,
+            "endX": 0.23,
+            "startY": 0.5,
+            "endY": 0.62
+          },
+          "position": {
+            "x": 84,
+            "y": 33
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "0xFFFFAA",
+          "scale": {
+            "startX": 0.1,
+            "endX": 0.23,
+            "startY": 0.5,
+            "endY": 0.62
+          },
+          "position": {
+            "x": 84,
+            "y": 69
+          },
+          "rotation": 0
+        }
+      ]
+    },
+    "targeting": {
+      "hardpoints": [
+        {
+          "type": ["energy"],
+          "pivot": {
+            "x": 20,
+            "y": 16
+          },
+          "position": {
+            "x": 58,
+            "y": 29
+          },
+          "default": {
+            "type": "energy",
+            "subtype": "basic"
+          }
+        },
+        {
+          "type": ["energy"],
+          "pivot": {
+            "x": 6,
+            "y": 39
+          },
+          "position": {
+            "x": 58,
+            "y": 77
+          },
+          "default": {
+            "type": "energy",
+            "subtype": "basic"
+          }
+        }
+      ]
+    }
+  },
   "scavenger-x01": {
     "race": "general",
     "class": "larva",
     "stats": {
       "capacity": 1000,
-      "health": 120,
+      "health": 90,
       "heal": 0.05,
       "armor": 0.0,
       "speed": 30.0,
@@ -1324,7 +1451,7 @@
     "class": "extractor",
     "stats": {
       "capacity": 1000,
-      "health": 120,
+      "health": 80,
       "heal": 0.05,
       "armor": 0.0,
       "speed": 35.0,
@@ -1410,7 +1537,7 @@
       "health": 250,
       "heal": 0.1,
       "armor": 0.0,
-      "speed": 25.0,
+      "speed": 22.0,
       "rate": 256,
       "evasion": 0.1,
       "energy": 100,
@@ -1493,9 +1620,9 @@
       "health": 450,
       "heal": 0.2,
       "armor": 0.1,
-      "speed": 12.0,
+      "speed": 11.0,
       "rate": 1800,
-      "evasion": 0.2,
+      "evasion": 2,
       "energy": 100,
       "recharge": 1,
       "size": 300,

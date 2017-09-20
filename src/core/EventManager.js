@@ -14,15 +14,17 @@ function EventManager(game) {
 
   this.level = 1;
   this.ships = {
-    basic: 4,
-    pirate: 10
+    basic: 8,
+    pirate: 15,
+    enforcer: 0
   };
 
   this.chassis = {
     basic : ['ubaidian-x01a','ubaidian-x01b','ubaidian-x01c','ubaidian-x01d','ubaidian-x01e','ubaidian-x01f'],
     pirate: ['pirate-x01','pirate-x02'],
-    squadron: ['squad-shield','squad-repair','squad-attack'],
-    scavenger: ['scavenger-x01','scavenger-x02']
+    squadron: ['squad-shield','squad-repair','squad-attack','squad-attack','squad-attack'],
+    scavenger: ['scavenger-x01','scavenger-x02'],
+    enforcer: ['enforcer-x02']
   };
 };
 
@@ -79,28 +81,51 @@ EventManager.prototype.init = function() {
     this.shipGen(this.ships[a], a.toString())
   };
 
-  this.scavGen(12);
+  this.scavGen(0);
 };
 
 EventManager.prototype.shipGen = function(num, ai){
+  var randomPostion;
+
   for(var i = 0; i<num; i++){
+
+  randomPostion = this.generateRandomPosition(2700); 
+
     this.game.emit('ship/create', {
       chassis: this.game.rnd.pick(this.chassis[ai]),
-      x: 2048,
-      y: 2048,
+      x: randomPostion.x,
+      y: randomPostion.y,
       ai: ai
     });
   };
 };
 
 EventManager.prototype.squadGen = function(master){
-  this.game.emit('ship/create', {
-    chassis: this.game.rnd.pick(this.chassis['squadron']),
-    x: 2050,
-    y: 2040,
-    ai: 'squadron',
-    master: master
-  });
+  for(var i = 0; i <2; i++){
+  var randomPostion = this.generateRandomPosition(2700);
+    this.game.emit('ship/create', {
+      chassis: this.game.rnd.pick(this.chassis['squadron']),
+      x: randomPostion.x,
+      y: randomPostion.y,
+      ai: 'squadron',
+      master: master
+    });
+  }
+};
+
+EventManager.prototype.enforcerGen = function(x, y, master){
+  console.log('rando starting position is ', this.generateRandomPosition(100));
+  for(var i = 0; i <3; i++){
+    console.log('enforcer 1 genned');
+
+    this.game.emit('ship/create', {
+      chassis: 'enforcer-x01',
+      x: x,
+      y: y,
+      ai: 'enforcer',
+      master: master
+    }); 
+  };
 };
 
 EventManager.prototype.scavGen = function(num) {
@@ -116,11 +141,8 @@ EventManager.prototype.scavGen = function(num) {
     }); 
     this.game.emit('ship/create', {
       chassis: this.game.rnd.pick(this.chassis['scavenger']),
-      // chassis: 'scavenger-x03',
       x: -5055,
       y: 4973,
-      // x: 2048,
-      // y: 2048,
       ai: 'scavenger',
       faction: 'fenris'
 
@@ -161,9 +183,10 @@ EventManager.prototype.spawnQueen = function(cycle, uuid){
   } else {
     //create overseers
     rando = this.game.rnd
-    console.log('cycle is ', cycle, 'spawn is ', spawnPosition.x, spawnPosition.y, 'rando is ', rando)
-    console.log(cycle*rando.s0+1)
-    // for(var i = 0; i < cycle*rando.s0+1; i++){
+    // console.log('cycle is ', cycle, 'spawn is ', spawnPosition.x, spawnPosition.y, 'rando is ', rando)
+    var randSpawn = cycle*(rando.s0+rando.s1)/1.25;
+    console.log(randSpawn)
+    for(var i = 0; i < randSpawn+1; i++){
       console.log('overseer created')
       this.game.emit('ship/create', {
         chassis: 'scavenger-x03',
@@ -174,7 +197,7 @@ EventManager.prototype.spawnQueen = function(cycle, uuid){
         y: spawnPosition.y,
         queen: uuid
       });
-    // }
+    }
   }
 };
 

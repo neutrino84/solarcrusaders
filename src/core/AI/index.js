@@ -11,7 +11,7 @@ function AI(manager, events) {
   this.timer = this.game.clock.events.loop(500, this.update, this);
   this.ships = {};
   this.consumed = {};
-  this.queenThreshold = 30;
+  this.queenThreshold = 250;
   this.next = 700;
   this.queenSpawnCycle = 0;
   this.events = events;
@@ -43,10 +43,6 @@ AI.prototype.create = function(type, ship, faction) {
   }
   return ai;
 };
-
-// AI.prototype.connectEventManager = function(eventManager) {
-//   this.eventManager = eventManager;
-// };
 
 AI.prototype.update = function() {
   var ship,
