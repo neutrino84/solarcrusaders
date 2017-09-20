@@ -14,15 +14,15 @@ function EventManager(game) {
 
   this.level = 1;
   this.ships = {
-    basic: 8,
-    pirate: 15,
-    enforcer: 0
+    basic: 6,
+    pirate: 16,
+    enforcer: 1
   };
 
   this.chassis = {
     basic : ['ubaidian-x01a','ubaidian-x01b','ubaidian-x01c','ubaidian-x01d','ubaidian-x01e','ubaidian-x01f'],
     pirate: ['pirate-x01','pirate-x02'],
-    squadron: ['squad-shield','squad-repair','squad-attack','squad-attack','squad-attack'],
+    squadron: ['squad-shield','squad-repair','squad-attack','squad-attack','squad-attack','squad-attack'],
     scavenger: ['scavenger-x01','scavenger-x02'],
     enforcer: ['enforcer-x02']
   };
@@ -81,7 +81,8 @@ EventManager.prototype.init = function() {
     this.shipGen(this.ships[a], a.toString())
   };
 
-  this.scavGen(0);
+  this.scavGen(14);
+  
 };
 
 EventManager.prototype.shipGen = function(num, ai){
@@ -89,12 +90,14 @@ EventManager.prototype.shipGen = function(num, ai){
 
   for(var i = 0; i<num; i++){
 
-  randomPostion = this.generateRandomPosition(2700); 
+  randomPostion = this.generateRandomPosition(10); 
 
     this.game.emit('ship/create', {
       chassis: this.game.rnd.pick(this.chassis[ai]),
-      x: randomPostion.x,
-      y: randomPostion.y,
+      // x: randomPostion.x,
+      // y: randomPostion.y,
+      x: 2048,
+      y: 2048,
       ai: ai
     });
   };

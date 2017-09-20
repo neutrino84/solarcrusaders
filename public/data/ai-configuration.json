@@ -4,7 +4,7 @@
     "disengage": 7680,
     "friendly": ["basic","user","squadron","enforcer"],
     "position": {
-      "radius": 4096,
+      "radius": 5096,
       "x": 2048,
       "y": 2048
     },
@@ -12,7 +12,7 @@
       "health": 0.25
     },
     "sensor": {
-      "aim": 1.5,
+      "aim": 1,
       "range": 4096
     }
   },
@@ -21,7 +21,7 @@
     "disengage": 9216,
     "friendly": ["pirate"],
     "position": {
-      "radius": 1012,
+      "radius": 5012,
       "x": 2048,
       "y": 2048
     },
@@ -29,7 +29,7 @@
       "health": 0.2
     },
     "sensor": {
-      "aim": 1.2,
+      "aim": 1,
       "range": 4096
     }
   },
@@ -80,7 +80,7 @@
       "health": 0.00
     },
     "sensor": {
-      "aim": 1.25,
+      "aim": 1.0,
       "range": 10096
     }
   },
@@ -97,7 +97,7 @@
       "health": 0.1
     },
     "sensor": {
-      "aim": 1.25,
+      "aim": 1.0,
       "range": 4096
     }
   }

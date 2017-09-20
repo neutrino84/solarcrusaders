@@ -281,11 +281,13 @@ ShipManager.prototype._disabled = function(data) {
   var ship = this.ships[data.uuid],
       socket = this.socket,
       clock = this.clock,
-      chassis = ship.data.chassis,
       scav = /^(scavenger)/,
-      isScavenger = scav.test(chassis),
-      game = this.game;
+      game = this.game, chassis, isScavenger;
+      
   if(ship !== undefined) {
+    chassis = ship.data.chassis;
+    isScavenger = scav.test(chassis);
+
     ship.selector.hostileHighlightStop();
     ship.selector.hostileEngagedStop();
     ship.disable();
@@ -321,13 +323,16 @@ ShipManager.prototype._disabled = function(data) {
 };
 
 ShipManager.prototype._enabled = function(data) {
-  var ship = this.ships[data.uuid];
+  var ship = this.ships[data.uuid],
+      scav = /^(scavenger)/;
   if(ship !== undefined) {
     ship.enable(data);
-  };
-  for(var i = 0; i < ship.events.events.length; i++){
-    if(ship.events.events[i].callback.name === 'alphaFader'){
-      ship.events.remove(ship.events.events[i]);  
+    if(scav.test(ship.data.chassis)){
+      for(var i = 0; i < ship.events.events.length; i++){
+        if(ship.events.events[i].callback.name === 'alphaFader'){
+          ship.events.remove(ship.events.events[i]);  
+        }
+      };
     }
   };
 };

@@ -44,8 +44,7 @@ SoundManager.prototype.preload = function() {
 
   load.audio('beam-disintegrator','sounds/beamWeapons/scavBeams/Disintegrator1.1.mp3');
 
-  load.audio('basicBeam','sounds/beamWeapons/ubadianBeams/basicBeam.mp3');
-  load.audio('capitalBeam','sounds/beamWeapons/ubadianBeams/capitalBeam.mp3');
+  load.audio('beam-basic','sounds/beamWeapons/ubadianBeams/capitalBeam.mp3');
 
   // load.audio('damage-a', 'sounds/explosions/damage-a.mp3');
   // load.audio('damage-b', 'sounds/explosions/damage-b.mp3');
@@ -155,8 +154,7 @@ SoundManager.prototype.create = function() {
   this.game.sound.add('beam-harvester4', 1);
   this.game.sound.add('beam-harvester5', 1);
   
-  this.game.sound.add('basicBeam', 6);
-  this.game.sound.add('capitalBeam', 6);
+  this.game.sound.add('beam-basic', 4);
 
   this.game.sound.add('explosion-a', 6);
   this.game.sound.add('explosion-b', 6);
@@ -329,7 +327,6 @@ SoundManager.prototype._fire = function(data) {
           // each spawn gets a slightly different volume
           game.clock.events.create(launcher.delay, false, data.spawn,
             function(key, volume, rate) {
-              
               this.game.sound.play(key, volume, false, rate, false);
             }, this, [sound, v, r]
           );
@@ -350,8 +347,8 @@ SoundManager.prototype.generateSystemSound = function(sound){
 
 SoundManager.prototype.generateBackgroundMusic = function(){
   var num = Math.floor((Math.random() * 3)+1);
-  console.log('background'+num)
-  this.game.sound.play('background'+num, 0.8, true);
+  // console.log('background'+num)
+  // this.game.sound.play('background'+num, 0.8, true);
 };
 
 SoundManager.prototype.generateThrusterSound = function(){

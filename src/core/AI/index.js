@@ -2,8 +2,8 @@
 var Basic = require('./Basic'),
     Pirate = require('./Pirate'),
     Squadron = require('./Squadron'),
-    Scavenger = require('./Scavenger');
-    // eventManager = require('../EventManager');
+    Scavenger = require('./Scavenger'),
+    Enforcer = require('./Enforcer');
 
 function AI(manager, events) {
   this.manager = manager;
@@ -33,6 +33,9 @@ AI.prototype.create = function(type, ship, faction) {
       break;
     case 'squadron':
       ai = new Squadron(ship);
+      break;
+    case 'enforcer':
+      ai = new Enforcer(ship);
       break;
     default:
       ai = null;

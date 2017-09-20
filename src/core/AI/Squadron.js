@@ -303,8 +303,8 @@ Squadron.prototype.regroup = function(distance) {
 
   this.disengage();
   
-  if(distance > 2800) {
-    ship.chassis === 'squad-repair' ? ship.activate('booster-advanced') : ship.activate('booster');
+  if(distance > 1800) {
+    ship.activate('booster');
   }
   ship.movement.plot({ x: position.x - ship.movement.position.x, y: position.y - ship.movement.position.y })
 };
