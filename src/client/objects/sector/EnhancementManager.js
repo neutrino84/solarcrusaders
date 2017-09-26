@@ -20,6 +20,9 @@ EnhancementManager.prototype._started = function(data) {
     switch(data.enhancement) {
       case 'heal':
         ship.repair.start();
+        ship.hud.show();
+        ship.hud.timer && ship.events.remove(ship.hud.timer);
+        ship.hud.timer = ship.events.add(3000, ship.hud.hide, ship.hud);
         break;
       case 'booster':
         ship.engineCore.start();

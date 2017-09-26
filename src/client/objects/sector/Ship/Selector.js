@@ -194,7 +194,7 @@ Selector.prototype.create = function() {
 
   //shield circle
   if(this.data.chassis === 'squad-shield'){
-    this.shieldBlueCircle = new engine.Circle(halfWidth, halfHeight, 400);
+    this.shieldBlueCircle = new engine.Circle(halfWidth, halfHeight, 600);
     this.shieldBlue = new engine.Graphics(); 
     this.shieldBlue.lineStyle(2, 0x0000ef, 1.5);
     this.shieldBlue.drawCircle(this.shieldBlueCircle.x, this.shieldBlueCircle.y, this.shieldBlueCircle.radius);
@@ -272,24 +272,49 @@ Selector.prototype.hostileHighlightStop = function() {
 };
 
 Selector.prototype.hostileEngaged = function() {
-  var dbl = 0.785398*2;
   if(!this.reticleRedAnimating || (this.reticleRedAnimating && !this.reticleRedAnimating.isRunning)) {
     this.reticleRedAnimating = this.game.tweens.create(this.reticleRed);
     this.reticleRedAnimating.to({ alpha: 1.75 }, 500);
-    // console.log(this.reticleRedAnimating)
-    // this.reticleRedAnimating.target.pivot.set(-this.ship.width/2, -this.ship.height/2);
-    // this.reticleRedAnimating.to({ rotation: dbl }, 500);
     this.reticleRedAnimating.loop(true)
     this.reticleRedAnimating.yoyo(true, 500);
     this.reticleRedAnimating.start();
     this.highlightAnimating && this.highlightAnimating.stop();
   }
 };
+Selector.prototype.shieldBlueStart = function() {
+    if(this.shieldBlue){
+      this.shieldBlue.alpha = 1;
+      this.shieldBlue.graphicsData[0].shape.radius = 350;
+      console.log(this.shieldBlue, this.shieldBlue.scale)
+      this.ship.events.loop(10, expand = function(){
+        console.log('yo! ', this.shieldBlue.graphicsData[0].shape.radius)
+        this.shieldBlue.graphicsData[0].shape.radius += this.poop;
+        // this.shieldBlue.update()
+      }, this)
+      this.shieldBlueAnimating = this.game.tweens.create(this.shieldBlue);
+      // console.log(this.shieldBlueAnimating.target)
+      // var radius = this.shieldBlueAnimating.target.graphicsData[0].shape.radius;
+      // var lineWidth = this.shieldBlueAnimating.target.graphicsData[0].lineWidth;\
+      this.shieldBlueAnimating.to({ alpha: 0}, 2000);
+      this.shieldBlueAnimating.loop(true)
+      this.shieldBlueAnimating.yoyo(true, 500);
+      this.shieldBlueAnimating.start();
+    }
+};
+
+// Selector.prototype.shieldBlueExpand = function(num) {
+//   console.log('here', num)
+//   this.shieldBlue.alpha = 1;
+//   this.shieldBlue.graphicsData[0].shape.radius = num
+// };
 
 Selector.prototype.shieldBlueStop = function() {
     if(this.shieldBlue){
       this.shieldBlue.alpha = 0;
-    }
+    };
+    if(this.shieldBlueAnimating){
+      this.shieldBlueAnimating.stop();
+    };
 };
 
 Selector.prototype.hostileEngagedStop = function() {

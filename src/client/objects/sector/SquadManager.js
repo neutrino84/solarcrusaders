@@ -80,8 +80,7 @@ SquadManager.prototype.detectUnfriendlies = function(){
   var ships = this.ships,
       player = this.player,
       unfriendlies = this.player.unfriendlies,
-      ascending = function(a, b) { return a-b }, 
-      regex = /(mol-)|(vul-)/,
+      ascending = function(a, b) { return a-b },
       t, distance, targets, previous, counter;
   if(player.disabled){return}
 
@@ -101,13 +100,7 @@ SquadManager.prototype.detectUnfriendlies = function(){
           continue
         };
         if(ship.data.friendlies && ship.data.friendlies.indexOf('user') < 0 && distance < 800){
-          if(regex.test(t)){
-            this.player.unfriendlies[5000+counter] = ship;
-            counter++
-          } else {
             this.player.unfriendlies[distance] = ship;
-          };
-
         let colorMatrix = new pixi.filters.ColorMatrixFilter();
         ship.chassis.filters = [colorMatrix];
         colorMatrix.hue(140, false);
@@ -130,7 +123,7 @@ SquadManager.prototype.detectUnfriendlies = function(){
   targets = Object.keys(this.player.unfriendlies);
   if(targets && !targets.length){return}
 
-
+  console.log(player.targetCount)
   target = this.player.unfriendlies[targets.sort(ascending)[player.targetCount]]
   if(target && target !== this.player.previous && !target.disabled) {
     player.acquired = target
@@ -175,16 +168,26 @@ SquadManager.prototype.engageHostile = function(){
 
 SquadManager.prototype.shieldUp = function(data) {
   var ship = this.manager.ships[data.uuid];
-  // console.log('in squad manager, shieldUp. data.active is ', data.active)
+
   if(data.active){
-    if(ship.selector.shieldBlue) {ship.selector.shieldBlue.alpha = 1}; 
+    if(ship.selector.shieldBlue) {
+      ship.selector.shieldBlueStart()
+      // ship.events.loop(500, expand = function(){
+      //   ship.selector.shieldBlueExpand(this.poopoo);
+      //   this.poopoo += 100;
+      // }, this)
+    }; 
   } else {
-    console.log('IN HERE')
     if (ship.selector.shieldBlue) {
-      ship.selector.shieldBlue.alpha = 0
-      // ship.selector.shieldBlueStop();
+      ship.selector.shieldBlueStop();
     }; 
   }
+};
+
+SquadManager.prototype.shieldmaidenActivate = function() {
+  var player = this.player;
+  console.log('in squad manager, shieldmaidenActivated!')
+  this.socket.emit('squad/shieldmaidenActivate', {player_uuid: player.uuid})
 };
 
 SquadManager.prototype.regroup = function() {

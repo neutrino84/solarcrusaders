@@ -411,8 +411,13 @@ Ship.prototype.activate = function(name) {
       available = enhancements.available,
       enhancement = available[name],
       stats, active, update, cost;
-
+      if(this.chassis === 'squad-attack'){
+      console.log('diddly')
+    }
   if(enhancement) {
+    if(this.chassis === 'squad-attack'){
+      console.log(enhancement, ' activated')
+    }
     cost = this.energy + enhancement.cost;
 
     if(!enhancement.activated && cost >= 0) {

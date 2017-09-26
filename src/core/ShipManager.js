@@ -12,16 +12,15 @@ function ShipManager(game) {
   this.sockets = game.sockets;
 
   this.ships = {};
-
-  // ai manager
-  // this.ai = new AI(this);
 };
 
 ShipManager.prototype.constructor = ShipManager;
 
 ShipManager.prototype.init = function(eventManager) {
-  this.ai = new AI(this, eventManager);
+
   this.eventManager = eventManager;
+  this.ai = new AI(this, eventManager);
+
   // internal
   this.game.on('ship/add', this.add, this);
   this.game.on('ship/remove', this.remove, this);
@@ -34,6 +33,7 @@ ShipManager.prototype.init = function(eventManager) {
   this.sockets.on('ship/enhancement/start', this.enhancement, this);
 
   this.sockets.on('squad/engageHostile', this.squad_engage, this);
+  this.sockets.on('squad/shieldmaidenActivate', this.squad_shieldmaidenActivate, this);
   this.sockets.on('squad/regroup', this.squad_regroup, this);
   this.sockets.on('squad/shield', this.squad_shield, this);
 
@@ -64,23 +64,15 @@ ShipManager.prototype.create = function(data, user) {
       enforcership = /^(enforcer)/,
       chassis = data.chassis,
       rndPosition;
-  if(squadship.test(chassis)){
-    // console.log('DATA IS ', data)
-  } 
-  // if(user){
-  //   rndPosition = this.eventManager.generateRandomPosition(2000);
-  //   data.x = rndPosition.x;
-  //   data.y = rndPosition.y;
-    //^ this is putting the user in a slightly more random position (not center), but it's kind of jarring...
-  // };
   ship = new Ship(this, data, user);
   ship.init(function() {
     game.emit('ship/add', ship);
   });
-  // if(scavship.test(chassis)){console.log(chassis)}
-
   if(data.master && squadship.test(chassis)){
     this.ships[data.master].squadron[ship.uuid] = ship;
+    if(chassis === 'squad-shield'){
+      this.sockets.send('squad/shieldMaidenConnect', data.master)
+    }
   }
   if(ship.data.chassis === 'scavenger-x04'){
     ship.data.brood = {};
@@ -159,14 +151,25 @@ ShipManager.prototype.attack = function(socket, args) {
 };
 
 ShipManager.prototype.squad_engage = function(socket, args){
-  var ships = this.ships;
+  var ships = this.ships, target;
 
     for (var s in ships){
       ship = ships[s];
 
       if(ship.chassis === 'squad-attack' && ship.master === args[1].player_id && ships[args[1].target_id]){
-        var target = ships[args[1].target_id];
+        target = ships[args[1].target_id];
         ship.ai.engage(target, 'attack');
+      };
+    };
+};
+
+ShipManager.prototype.squad_shieldmaidenActivate = function(socket, args){
+  var ships = this.ships;
+    for (var s in ships){
+      ship = ships[s];
+
+      if(ship.chassis === 'squad-shield' && ship.master === args[1].player_uuid){
+        ship.ai.shieldmaidenActivate();
       };
     };
 };
@@ -191,7 +194,6 @@ ShipManager.prototype.squad_shield = function(socket, args){
   var ships = this.ships,
       player = ships[args[1].uuid],
       distance;
-      console.log('in shipmanager core - squad-shield')
     for (var s in ships){
       ship = ships[s];
       var a = /^(squad-shield)/,
@@ -202,61 +204,6 @@ ShipManager.prototype.squad_shield = function(socket, args){
       };
     };
 };
-
-// ShipManager.prototype.spawnQueen = function(position, uuid){
-//   console.log(position)
-//   var ships = this.ships,
-//       cycle = this.ai.queenSpawnCycle,
-//       spawnPosition = {}, masterShip, rando;
-
-//   if(position === 'bottom'){
-//     spawnPosition.x = -5055;
-//   } else if(position === 'top'){
-//     spawnPosition.x = 5411;
-//     spawnPosition.y = -5354;
-//   };
-//   if(uuid){
-//     masterShip = ships[uuid];
-//   };
-
-//   if(!uuid){
-//     //create queen
-//     this.create({
-//       name: 'Fenris',
-//       chassis: 'scavenger-x04',
-//       throttle: 1.0,
-//       ai: 'scavenger',
-//       credits: 5000,
-//       reputation: -1000,
-//       x: spawnPosition.x,
-//       y: spawnPosition.y,
-//       toporbot: position,
-//       squadron: {}
-//     });
-
-//     this.sockets.send('global/sound/spawn', 'queenSpawn');
-//   } 
-  // else {
-  //   console.log('queen --> overseer')
-  //   //create overseers
-  //   rando = this.game.rnd
-  //   for(var i = 0; i < cycle*rando.s0+1; i++){
-  //     console.log('overseer created')
-  //     this.create({
-  //       name: 'overseer',
-  //       chassis: 'scavenger-x03',
-  //       throttle: 1.0,
-  //       ai: 'scavenger',
-  //       credits: 2000,
-  //       reputation: -650,
-  //       x: spawnPosition.x,
-  //       y: spawnPosition.y,
-  //       master: uuid
-  //     });
-  //   }
-  // }
-
-// };
 
 ShipManager.prototype.enhancement = function(socket, args) {
   var ships = this.ships,

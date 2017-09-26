@@ -12,6 +12,7 @@ function Squadron(ship, home) {
   this.shieldDestination = null;
   this.shielding = false;
   this.repairing = null;
+  this.originalValues = {};
 
   this.settings = client.AIConfiguration[this.type];
 
@@ -208,18 +209,7 @@ Squadron.prototype.repair = function() {
   if(this.target && !this.target.disabled) {
     target = this.target;
     this.repairing = target;
-    // console.log('this.repairing is ', this.repairing)
 
-
-    // size = target.data.size * settings.sensor.aim;
-    // offset.copyFrom(target.movement.position);
-    // offset.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
-
-    if(target !== master){
-      // console.log('repairing squad ship, health is ', this.repairing.data.health)
-    }
-
-    // attack
     ship.attack({
       uuid: ship.uuid,
       target: target.uuid,
@@ -246,6 +236,38 @@ Squadron.prototype.disengage = function() {
   }
 };
 
+Squadron.prototype.shieldmaidenActivate = function() {
+  var ships = this.manager.ships,
+      ship = this.ship,
+      master = ships[this.master],
+      position = ship.movement.position;
+      masterPosition = master.movement.position,
+      a = /^(squad-shield)/,
+      t = ship.chassis;
+  if(a.test(t) && !this.shielding){
+    this.shielding = true;
+    this.originalValues["shield-speed"] = this.ship.movement.data.speed
+    this.ship.movement.data.speed = 15;
+    this.manager.game.sockets.ioserver.emit('squad/shieldUp', {uuid: ship.uuid, active: true})
+    this.game.clock.events.add(8000, this.shieldmaidenDeactivate, this)
+  }
+};
+
+Squadron.prototype.shieldmaidenDeactivate = function() {
+  var ships = this.manager.ships,
+      ship = this.ship,
+      master = ships[this.master],
+      position = ship.movement.position;
+      masterPosition = master.movement.position,
+      a = /^(squad-shield)/,
+      t = ship.chassis;
+  if(a.test(t)){
+    this.ship.movement.data.speed = this.originalValues["shield-speed"];
+    this.shielding = false;
+    this.manager.game.sockets.ioserver.emit('squad/shieldUp', {uuid: ship.uuid, active: false})
+  }
+}
+
 Squadron.prototype.shield = function(data) {
   var ships = this.manager.ships,
       ship = this.ship,
@@ -256,7 +278,6 @@ Squadron.prototype.shield = function(data) {
       a = /^(squad-shield)/,
       t = ship.chassis, 
       destination = new engine.Point();
-  // console.log('in squadron AI, preshield check')
   if(a.test(t)){
     if(data){
       if(this.shielding){
@@ -288,7 +309,7 @@ Squadron.prototype.shieldCheck = function() {
       t = ship.chassis, 
       destination = new engine.Point();
   if(!this.shielding){return false}
-  shield.setTo(position.x, position.y, 400)
+  shield.setTo(position.x, position.y, 600)
   if(shield.contains(masterPosition.x, masterPosition.y)){
     return true
   }
@@ -299,11 +320,14 @@ Squadron.prototype.regroup = function(distance) {
   var ships = this.manager.ships,
       ship = this.ship,
       master = ships[this.master],
-      position = master.movement.position;
+      position = master.movement.position,
+      circle = new engine.Circle();
 
+  circle.setTo(ship.movement.position.x, ship.movement.position.y, 600);
+      
   this.disengage();
-  
-  if(distance > 1800) {
+
+  if(!circle.contains(position)){
     ship.activate('booster');
   }
   ship.movement.plot({ x: position.x - ship.movement.position.x, y: position.y - ship.movement.position.y })

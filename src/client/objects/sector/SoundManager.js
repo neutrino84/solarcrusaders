@@ -22,15 +22,16 @@ SoundManager.prototype.preload = function() {
   var game = this.game,
       load = game.load;
 
-      console.log('soundmanager preload')
 
   load.audio('background1', 'sounds/background_music/eerie1.mp3');
   load.audio('background2', 'sounds/background_music/eerie2.mp3');
   load.audio('background3', 'sounds/background_music/Spacetheme1.mp3');    
 
   load.audio('pulse-basic', 'sounds/pulses/basic.mp3');
-  // load.audio('pulse-nucleon', 'sounds/pulses/nucleon.mp3');
-  // load.audio('pulse-vulcan', 'sounds/pulses/vulcan.mp3');
+  load.audio('pulse-quantum', 'sounds/pulses/quantum.mp3');
+  load.audio('pulse-tarkin', 'sounds/pulses/tarkin.mp3');
+  load.audio('pulse-bazuko', 'sounds/pulses/bazuko.mp3');
+
   // load.audio('plasma-basic', 'sounds/plasmas/basic.mp3');
   // load.audio('laser-basic', 'sounds/lasers/basic.mp3');
   // load.audio('laser-light', 'sounds/lasers/light.mp3');
@@ -114,6 +115,9 @@ SoundManager.prototype.create = function() {
 
   // generate sound pools
   this.game.sound.add('pulse-basic', 6);
+  this.game.sound.add('pulse-quantum', 6);
+  this.game.sound.add('pulse-tarkin', 6);
+  this.game.sound.add('pulse-bazuko', 6);
   // this.game.sound.add('pulse-nucleon', 6);
   // this.game.sound.add('pulse-vulcan', 6);
   // this.game.sound.add('plasma-basic', 6);
@@ -292,7 +296,6 @@ SoundManager.prototype._fire = function(data) {
       volume = 0.0,
       harvesterNum = Math.floor((Math.random() * 5)+1), 
       v, r;
-      // console.log(launcher.data.sound, launcher.data.volume)
   if(data.spawn>0) {
     distance = engine.Point.distance(ship, player);
     volume = global.Math.max(1-(distance/8192), 0);
@@ -304,14 +307,7 @@ SoundManager.prototype._fire = function(data) {
       for(var i=0; i<created.length; i++) {
         // thin out and apply sound
         launcher = created[i];
-
-        // console.log(launcher)
-        // debugger
-        // if(launcher.data.sound === 'beam-harvester'){
-        //   sound = 'beam-harvester'+harvesterNum
-        //   console.log(sound)
-        // } else {
-          sound = launcher.data.sound;
+        sound = launcher.data.sound;
         // }
         volume *= launcher.data.volume;
         variation = launcher.data.variation;
@@ -413,10 +409,8 @@ SoundManager.prototype.generateSquadSound = function(sound){
         case 'engage':
           num = Math.floor((Math.random() * 2)+1)
           if(num === 2){
-            console.log('INSIDE1')
             this.game.sound.play('engagingTarget', volume, false);
           } else if (num === 1){
-            console.log('INSIDE2')
             this.game.sound.play('targetEngaged', volume, false);
           }
           break
@@ -432,8 +426,6 @@ SoundManager.prototype.generateSquadSound = function(sound){
 };
 
 SoundManager.prototype.generateSpawnSound = function(data){
-  console.log('Playing ', data, 'spawn sound')
-  // this.generateSound(data, 0.2, false);
   this.game.sound.play(data, 0.2, false);
   this.game.camera.shake(5000);
 };

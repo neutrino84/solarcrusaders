@@ -261,6 +261,15 @@
 	"sourceSize": {"w":208,"h":208},
 	"pivot": {"x":0.5,"y":0.5}
 },
+"shieldmaiden.png":
+{
+	"frame": {"x":626,"y":399,"w":48,"h":48},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
+	"sourceSize": {"w":48,"h":48},
+	"pivot": {"x":0.5,"y":0.5}
+},
 "squad-attack.png":
 {
 	"frame": {"x":966,"y":3,"w":54,"h":54},
@@ -439,6 +448,6 @@
 	"format": "RGBA8888",
 	"size": {"w":1024,"h":1024},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:07f477fa86960a90a4bed71ee578263d:f6412cc40423632913b21446028fea7d:a973cd4a72d4c90ced76930eac7fdc63$"
+	"smartupdate": "$TexturePacker:SmartUpdate:d91e445b221455c3260a9772d327414c:734d1aa2bbde9e2ce17c698fb8a1f204:a973cd4a72d4c90ced76930eac7fdc63$"
 }
 }

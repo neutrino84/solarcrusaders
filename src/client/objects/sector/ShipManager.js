@@ -108,6 +108,9 @@ ShipManager.prototype.create = function(data, sync) {
   //save squadron to master ship
   if(this.player && ship.data.masterShip && ship.data.masterShip === this.player.uuid){
     this.player.squadron[ship.uuid] = ship;
+    if(ship.data.chassis === 'squad-shield'){
+      this.game.emit('ship/player/shieldmaiden', 'shieldmaiden')
+    }
   }
 
   if(ship.data.chassis === 'scavenger-x04'){
@@ -200,6 +203,12 @@ ShipManager.prototype._sync = function(data) {
 
 ShipManager.prototype._player = function(ship) {
   this.player = ship;
+
+  this.player.unfriendlies = {};
+  this.player.targetCount = 0;
+  this.player.targetlistCooldown = false;
+  this.player.previous;
+  this.player.squadron = {};
   this.game.camera.follow(ship);
 };
 

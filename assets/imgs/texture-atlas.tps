@@ -255,6 +255,7 @@
             <key type="filename">icons/enhancement-heal.png</key>
             <key type="filename">icons/enhancement-piercing.png</key>
             <key type="filename">icons/enhancement-shield.png</key>
+            <key type="filename">icons/enhancement-shieldmaiden.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -500,6 +501,7 @@
             <filename>ships/scavengers/scavenger-x04.png</filename>
             <filename>ships/enforcers/enforcer-x01.png</filename>
             <filename>ships/enforcers/enforcer-x02.png</filename>
+            <filename>icons/enhancement-shieldmaiden.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

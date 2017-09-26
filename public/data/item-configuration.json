@@ -98,7 +98,7 @@
         "projection": 0.1,
         "delay": 20,
         "spread": 32,
-        "damage": 10.0,
+        "damage": 8.0,
         "length": 1024,
         "aoe": 1.1,
         "spawn": 1,
@@ -133,6 +133,87 @@
         "spawn": 1,
         "durability": 1000.0,
         "sound": "pulse-basic",
+        "volume": 0.6,
+        "variation": 0.05
+      },
+      "quantum": {
+        "name": "Basic Pulse",
+        "type": "pulse",
+        "subtype": "basic",
+        "sprite": "turret-a",
+        "texture": "laser-green",
+        "glow": "0x12def9",
+        "emitter": ["0xFFFFFF", "0x12def9"],
+        "icon": "item-laser-a",
+        "range": 784,
+        "projection": 0.1,
+        "delay": 16,
+        "spread": 20,
+        "damage": 1.4,
+        "offset": {
+          "min": 0.92,
+          "max": 0.98
+        },
+        "cooldown": 0,
+        "length": 32,
+        "aoe": 1.0,
+        "spawn": 1,
+        "durability": 1000.0,
+        "sound": "pulse-quantum",
+        "volume": 0.6,
+        "variation": 0.2
+      },
+      "tarkin": {
+        "name": "Basic Pulse",
+        "type": "pulse",
+        "subtype": "basic",
+        "sprite": "turret-a",
+        "texture": "laser-yellow",
+        "glow": "0x12def9",
+        "emitter": ["0xFFFFFF", "0x12def9"],
+        "icon": "item-laser-a",
+        "range": 734,
+        "projection": 0.1,
+        "delay": 16,
+        "spread": 14,
+        "damage": 1.85,
+        "offset": {
+          "min": 0.92,
+          "max": 0.98
+        },
+        "cooldown": 0,
+        "length": 32,
+        "aoe": 1.085,
+        "spawn": 1,
+        "durability": 1000.0,
+        "sound": "pulse-tarkin",
+        "volume": 0.6,
+        "variation": 0.05
+      },
+      "bazuko": {
+        "name": "Basic Pulse",
+        "type": "pulse",
+        "subtype": "basic",
+        "sprite": "turret-a",
+        "texture": "laser-purple",
+        "glow": "0x12def9",
+        "emitter": ["0xFFFFFF", "0x12def9"],
+        "icon": "item-laser-a",
+        "range": 650,
+        "projection": 0.2,
+        "delay": 16,
+        "spread": 10,
+        "damage": 2.05,
+        "offset": {
+          "min": 0.92,
+          "max": 0.98
+        },
+        "cooldown": 0,
+        "length": 32,
+        "aoe": 1.1,
+        "spawn": 1,
+        "durability": 1000.0,
+        "sound": "pulse-bazuko",
         "volume": 0.6,
         "variation": 0.05
       }
@@ -212,7 +293,7 @@
         "active": 3,
         "stats": {
           "heal": {
-            "value": 15.0
+            "value": 13.0
           }
         },
         "sound": {

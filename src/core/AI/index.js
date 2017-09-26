@@ -12,7 +12,7 @@ function AI(manager, events) {
   this.ships = {};
   this.consumed = {};
   this.queenThreshold = 250;
-  this.next = 700;
+  this.next = 800;
   this.queenSpawnCycle = 0;
   this.events = events;
 };

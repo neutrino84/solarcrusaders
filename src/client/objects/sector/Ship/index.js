@@ -72,6 +72,13 @@ Ship.prototype.boot = function() {
   // set player
   if(this.isPlayer) {
     // this.hud.show();
+    // console.log('INDEX. PLAYER IS ', this, 'player.squadron is ', this.squadron)
+    // for(var a in this.squadron){
+    //   if (squadron[a].data.chassis === 'squad-shield'){
+    //     console.log('I HAVE A SHIELDMAIDEN!')
+    //     this.game.emit('ship/player/shieldmaiden', 'shieldmaiden');
+    //   }
+    // }
     this.game.emit('ship/player', this);
   }
 };

@@ -25,10 +25,13 @@ function HotkeyManager(game) {
   this.isHealing = false;
   this.isPiercing = false;
   this.detecting = false;
+  this.shieldmaidenCooldown = false;
 
   this.game.on('ship/player', this._player, this);
   this.game.on('ship/enhancement/cooled', this._cooled, this);
   this.game.on('hotkeys/refresh', this.refresh, this);
+  // this.game.on('hotkeys/refresh', this.refresh, this);
+  this.game.on('hotkey/shieldmaiden', this._link, this)
 };
 
 HotkeyManager.prototype.constructor = HotkeyManager;
@@ -43,86 +46,103 @@ HotkeyManager.prototype.create = function(manager) {
 
 };
 
-HotkeyManager.prototype.listener = function() {
+HotkeyManager.prototype.listener = function(hotkey) {
   var player = this.player,
   	  hotkeys = this.hotkeys,
-      key;
+      key, shieldmaiden;
+      // this.hotkeys[hotkey] === 'shieldmaiden'
+  if(hotkey){
+    shieldmaiden = hotkey.toString();
+    this.game.input.on('keypress', function(event, key){
+      if(key === shieldmaiden){
+        // this.squadManager.shieldmaidenActivate();
+        if(this.shieldmaidenCooldown){return}
+        this.game.emit('ship/player/shieldmaidenActivate', 'shieldmaidenActivate');
+        this.shieldmaidenCooldown = true;
+        this.game.clock.events.add(5000, function(){
+          this.shieldmaidenCooldown = false;
+        }, this);  
+      };
+    }, this)
+  };
   if(player){
   	this.game.input.on('keypress', function(event, key){
   	//enhancements
-	   if(hotkeys['enhancements'][key]){
+  	  if(hotkeys['enhancements'][key]){
+    		if(hotkeys['enhancements'][key] === 'booster' && this.isBoosting){return};
+    		if(hotkeys['enhancements'][key] === 'heal' && this.isHealing){return};
+    		if(hotkeys['enhancements'][key] === 'shield' && this.isShielded){return};
+        if(hotkeys['enhancements'][key] === 'piercing' && this.isPiercing){return};
+        if(hotkeys['enhancements'][key] === 'detect' && this.detecting){return};
 
-  		if(hotkeys['enhancements'][key] === 'booster' && this.isBoosting){return};
-  		if(hotkeys['enhancements'][key] === 'heal' && this.isHealing){return};
-  		if(hotkeys['enhancements'][key] === 'shield' && this.isShielded){return};
-      if(hotkeys['enhancements'][key] === 'piercing' && this.isPiercing){return};
-      if(hotkeys['enhancements'][key] === 'detect' && this.detecting){return};
+  	    this.game.emit('ship/enhancement/start', {
+  	      uuid: player.uuid,
+  	      enhancement: hotkeys['enhancements'][key],
+  	      subtype: 'basic'
+  	    });
 
-	    this.game.emit('ship/enhancement/start', {
-	      uuid: player.uuid,
-	      enhancement: hotkeys['enhancements'][key],
-	      subtype: 'basic'
-	    });
+        switch(hotkeys['enhancements'][key]) {
+          case 'heal':
+            this.isHealing = true;
+            break;
+          case 'booster':
+            this.isBoosting = true;
+            break;
+          case 'shield':
+            this.isShielded = true;
+            break;
+          case 'piercing':
+            this.isPiercing = true;
+            break;
+          case 'detect':
+            this.detecting = true;
+            break;
+        }
+  	  };
+    //squadron
 
-      switch(hotkeys['enhancements'][key]) {
-        case 'heal':
-          this.isHealing = true;
-          break;
-        case 'booster':
-          this.isBoosting = true;
-          break;
-        case 'shield':
-          this.isShielded = true;
-          break;
-        case 'piercing':
-          this.isPiercing = true;
-          break;
-        case 'detect':
-          this.detecting = true;
-          break;
+      if(key.toLowerCase() === 'c'){
+        this.squadManager.closestHostile();
       };
-	   } 
-     //squadron hotkeys ~ need to refactor to use a squadmanager instead of shipmanager
-        if(key.toLowerCase() === 'c'){
-           this.squadManager.closestHostile();
-        };
-        if(key.toLowerCase() === 'e'){
-             this.squadManager.engageHostile();
-        };
-        if(key.toLowerCase() === 'r'){
-          console.log(this.player.movement._position)
-             this.squadManager.regroup();
-        };
-        if(key.toLowerCase() === 's'){
-             // this.squadManager.regroup();
-             this.game.emit('shieldDestination', true);
-             this.player.events.add(3000, function(){
-               this.game.emit('shieldDestination', false);
-             }, this); 
-        };
-        if(key.toLowerCase() === 'd'){
-             this.squadManager.detectUnfriendlies();
-             if(this.detecting){return};
-             this.game.emit('ship/enhancement/start', {
-               uuid: player.uuid,
-               enhancement: hotkeys['enhancements'][5],
-               subtype: 'basic'
-             });
-             this.detecting = true;
-             this.game.clock.events.add(10000, function(){
-               this.detecting = false;
-             }, this);  
-        };
-        if(key.toLowerCase() === '8'){
-             this.playerManager.upgradeSystem('weapon');
-        };
-        if(key.toLowerCase() === '9'){
-         // console.log('in hotkey')
-             this.playerManager.upgradeSystem('armor');
-        };
-        if(key.toLowerCase() === '0'){
-             this.playerManager.upgradeSystem('engine');
-        };
+      if(key.toLowerCase() === 'e'){
+        this.squadManager.engageHostile();
+      };
+      if(key.toLowerCase() === 'r'){
+        this.squadManager.regroup();
+      };
+      if(key.toLowerCase() === 's'){
+           // this.squadManager.regroup();
+           this.game.emit('shieldDestination', true);
+           this.player.events.add(3000, function(){
+             this.game.emit('shieldDestination', false);
+           }, this); 
+      };
+      if(key.toLowerCase() === 'd'){
+           this.squadManager.detectUnfriendlies();
+           if(this.detecting){return};
+           this.game.emit('ship/enhancement/start', {
+             uuid: player.uuid,
+             enhancement: hotkeys['enhancements'][5],
+             subtype: 'basic'
+           });
+           this.detecting = true;
+           this.game.clock.events.add(10000, function(){
+             this.detecting = false;
+           }, this);  
+      };
+      // if(key.toLowerCase() === '8'){
+      //      this.playerManager.upgradeSystem('weapon');
+      // };
+      // if(key.toLowerCase() === '8'){
+      //      this.playerManager.upgradeSystem('weapon');
+      // };
+      // if(key.toLowerCase() === '9'){
+      //      this.playerManager.upgradeSystem('armor');
+      // };
+      // if(key.toLowerCase() === '0'){
+      //      this.playerManager.upgradeSystem('engine');
+      // };
+    //
     }, this);
   };
 };
@@ -162,6 +182,15 @@ HotkeyManager.prototype._player = function(ship){
 
   //turn on listener
   this.listener();
+};
+
+HotkeyManager.prototype._link = function(hotkey){
+  console.log('in link. hotley is ', hotkey)
+  this.hotkeys['squadron'][hotkey] = 'shieldmaiden'
+
+
+  //turn on listener
+  this.listener(hotkey);
 };
 
 HotkeyManager.prototype.shutdown = function() {

@@ -615,7 +615,7 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "basic"
+            "subtype": "tarkin"
           }
         },
         {
@@ -630,7 +630,7 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "basic"
+            "subtype": "tarkin"
           }
         },
         {
@@ -645,22 +645,7 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "basic"
-          }
-        },
-        {
-          "type": ["projectile"],
-          "pivot": {
-            "x": 20,
-            "y": 16
-          },
-          "position": {
-            "x": 43,
-            "y": 35
-          },
-          "default": {
-            "type": "rocket",
-            "subtype": "basic"
+            "subtype": "tarkin"
           }
         }
       ]
@@ -760,7 +745,7 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "basic"
+            "subtype": "quantum"
           }
         },
         {
@@ -775,7 +760,7 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "basic"
+            "subtype": "quantum"
           }
         },
         {
@@ -790,7 +775,7 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "basic"
+            "subtype": "quantum"
           }
         }
               ]
@@ -945,7 +930,22 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "basic"
+            "subtype": "bazuko"
+          }
+        },
+        {
+          "type": ["pulse"],
+          "pivot": {
+            "x": 20,
+            "y": 16
+          },
+          "position": {
+            "x": 19,
+            "y": 26
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "tarkin"
           }
         }
         ]
