@@ -233,23 +233,41 @@ Scavenger.prototype.disengage = function() {
 
 Scavenger.prototype.attack = function(){
     if(!this.target){return}
+
     var a = /^(scavenger)/,
-        chassis = this.target.data.chassis;
-    // console.log(a.test(t))
+        chassis = this.target.data.chassis,
+        target = this.target,
+        ship = this.ship;
+        settings = this.settings,
+        offset = this.offset,
+        rnd = this.game.rnd,
+        target, size;
+        
     if(a.test(chassis)){
-      this.target = null; return
+      target = null; return
     }
     
-    if(this.ship.chassis === 'scavenger-x03' || this.ship.chassis === 'scavenger-x04'){
-      if(this.target && !this.target.disabled){
-        // console.log('attacking ', this.target.chassis)
-      Basic.prototype.attack.call(this)
-      this.attacking = true;
-      } else if(this.target && this.target.disabled) {
+    if(ship.chassis === 'scavenger-x03' || ship.chassis === 'scavenger-x04'){
+      if(target && !target.disabled){
+        Basic.prototype.attack.call(this)
+        this.attacking = true;
+      } else if(target && target.disabled) {
         this.disengage();
       }
-    } else if(this.target && this.target.disabled && this.target.durability > 0 ){
-    Basic.prototype.attack.call(this)
+    } else if(target.disabled && target.durability > 0 ){
+      size = target.data.size * settings.sensor.aim;
+      offset.copyFrom(target.movement.position);
+      offset.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
+
+      // attack
+      ship.attack({
+        uuid: ship.uuid,
+        target: target.uuid,
+        targ: {
+          x: offset.x,
+          y: offset.y
+        }
+      });
     } else if(this.target && !this.target.disabled) {
       this.disengage();
     };

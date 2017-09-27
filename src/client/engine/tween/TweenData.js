@@ -4,12 +4,6 @@ var Easing = require('./Easing'),
 function TweenData(parent) {
   this.parent = parent;
   this.game = parent.game;
-
-  if(parent){
-  console.log('tween parent.game.parent.parent.data.ai is ', parent)
-
-  // console.log('tween parent.game.parent.parent.data.ai is ', parent.game.parent.parent.data.ai)
-  }
   this.vStart = {};
   this.vStartCache = {};
   this.vEnd = {};
@@ -165,7 +159,6 @@ TweenData.prototype = {
     for(var property in this.vEnd) {
       var start = this.vStart[property];
       var end = this.vEnd[property];
-      // console.log(this.vStart[property], ' --> ', this.vEnd[property])
       if(Array.isArray(end)) {
         this.parent.target[property] = this.interpolationFunction.call(this.interpolationContext, end, this.value);
       } else {

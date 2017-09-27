@@ -159,6 +159,7 @@ Ship.prototype.attack = function(data, rtt) {
       hardpoints = this.hardpoints,
       runtime, hardpoint, compensated,
       target = data.targ,
+      target_uuid = data.target,
       distance,
       rtt = rtt || 0;
 
@@ -175,15 +176,14 @@ Ship.prototype.attack = function(data, rtt) {
       runtime = distance * hardpoint.data.projection + hardpoint.data.delay;
 
       // time collisions
-      game.clock.events.add(runtime, this.attacked, this, target, slot);
+      game.clock.events.add(runtime, this.attacked, this, target, slot, target_uuid);
     }
   }
-
   // broadcast atack
   sockets.send('ship/attack', data);
 };
 
-Ship.prototype.attacked = function(target, slot) {
+Ship.prototype.attacked = function(target, slot, target_uuid) {
   var ship, ships,
       manager = this.manager;
   if(manager != undefined) {
@@ -191,14 +191,16 @@ Ship.prototype.attacked = function(target, slot) {
     for(var s in ships) {
       ship = ships[s];
 
+      //*** shouldn't this check to see if you're in a damageable area before calling hit? 
+        //  right now it's calling hit on all ships
       if(ship.game && ship != this) {
-        ship.hit(this, target, slot);
+        ship.hit(this, target, slot, target_uuid);
       }
     }
   }
 };
 
-Ship.prototype.hit = function(attacker, target, slot) {
+Ship.prototype.hit = function(attacker, target, slot, target_uuid) {
   var updates = [],
       sockets = this.sockets,
       movement = this.movement,
@@ -220,6 +222,9 @@ Ship.prototype.hit = function(attacker, target, slot) {
     //     targ: target
     //   });
     // }
+    if(attacker.hardpoints[0].subtype === 'harvester' && this.uuid !== target_uuid){
+      return
+    }
 
     //prevent friendly fire dmg to squadron
     if(this.master === attacker.uuid || attacker.hardpoints[0].subtype === 'repair' && data.health >= (this.config.stats.health)){return}  
@@ -292,7 +297,7 @@ Ship.prototype.hit = function(attacker, target, slot) {
         });
       }
 
-      if(attacker.hardpoints[0].subtype === 'harvester'){
+      if(attacker.hardpoints[0].subtype === 'harvester' ){
         if(this.durability > 0){
           this.durability = this.durability - attacker.hardpoints[0].data.damage;
         };
@@ -411,13 +416,7 @@ Ship.prototype.activate = function(name) {
       available = enhancements.available,
       enhancement = available[name],
       stats, active, update, cost;
-      if(this.chassis === 'squad-attack'){
-      console.log('diddly')
-    }
   if(enhancement) {
-    if(this.chassis === 'squad-attack'){
-      console.log(enhancement, ' activated')
-    }
     cost = this.energy + enhancement.cost;
 
     if(!enhancement.activated && cost >= 0) {

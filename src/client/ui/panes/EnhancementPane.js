@@ -280,20 +280,6 @@ EnhancementPane.prototype._player = function(player) {
       containers[i].addPanel(button);
     }
   }
-  // console.log(player, player.squadron)
-  // for(var a in player.squadron){
-  //   console.log(player.squadron[a])
-  //   console.log(player.squadron[a].data.chassis)
-  //   if (player.squadron[a].data.chassis === 'squad-shield'){
-  //     shieldmaiden = true
-  //     console.log('I HAVE A SHIELDMAIDEN!')
-  //   }
-  // };
-  // if(shieldmaiden){
-  //   shieldmaidenButton = this.create()
-  //   containers[enhancements.length].addPanel(shieldmaidenButton)
-  // };
-
   this.invalidate();
 };
 
@@ -303,42 +289,6 @@ EnhancementPane.prototype._extraIcons = function(icon) {
       containers = this.containers,
       buttons = this.buttons,
       player = this.player;
-
-  // clear buttons
-  // for(var b in buttons) {
-  //   button = buttons[b];
-  //   button.destroy({
-  //     children: false,
-  //     texture: true,
-  //     baseTexture: false
-  //   });
-  // }
-  console.log('in enhancement pane, icon is ', icon)
-
-  // create buttons
-  // for(var i=0; i<enhancements.length; i++) {
-  //   enhancement = enhancements[i];
-
-  //   if(enhancement) {
-  //     button = this.create(enhancement);
-  //     button.id = enhancement;
-  //     button.bg.on('inputUp', this._select, this);
-  //     button.start();
-
-  //     buttons[enhancement] = button;
-
-  //     containers[i].addPanel(button);
-  //   }
-  // }
-  // console.log(player, player.squadron)
-  // for(var a in player.squadron){
-  //   console.log(player.squadron[a])
-  //   console.log(player.squadron[a].data.chassis)
-  //   if(player.squadron[a].data.chassis === 'squad-shield'){
-  //     shieldmaiden = true
-  //     console.log('I HAVE A SHIELDMAIDEN!')
-  //   }
-  // };
   if(icon === 'shieldmaiden'){
     shieldmaidenButton = this.create();
     shieldmaidenButton.id = icon;

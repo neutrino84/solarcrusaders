@@ -289,11 +289,11 @@
     "heal": {
       "basic": {
         "cost": -30,
-        "cooldown": 12,
+        "cooldown": 18,
         "active": 3,
         "stats": {
           "heal": {
-            "value": 13.0
+            "value": 10.0
           }
         },
         "sound": {

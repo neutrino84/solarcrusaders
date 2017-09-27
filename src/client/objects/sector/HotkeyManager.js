@@ -148,9 +148,7 @@ HotkeyManager.prototype.listener = function(hotkey) {
 };
 
 HotkeyManager.prototype.refresh = function() {
-  console.log(this.isHealing, this.isBoosting, this.isShielded, this.isPiercing)
   this.isHealing = this.isBoosting = this.isShielded = this.isPiercing = false;
-  console.log(this.isHealing, this.isBoosting, this.isShielded, this.isPiercing)
 };
 
 HotkeyManager.prototype._cooled = function(data){
@@ -185,10 +183,7 @@ HotkeyManager.prototype._player = function(ship){
 };
 
 HotkeyManager.prototype._link = function(hotkey){
-  console.log('in link. hotley is ', hotkey)
   this.hotkeys['squadron'][hotkey] = 'shieldmaiden'
-
-
   //turn on listener
   this.listener(hotkey);
 };

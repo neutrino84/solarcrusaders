@@ -154,32 +154,15 @@ Selector.prototype.create = function() {
     this.reticle.drawRect(0, 0, ship.width*2, ship.height*2); 
   }
   this.reticle.pivot.set(halfWidth, halfHeight);
-  // this.reticle.position.set(ship.width/0.95, ship.height/0.95);
-  // if(this.ship.data.chassis === 'ubaidian-x01a'){
-  //   console.log('first: ', ship.width/2 +5, 'second: ', (ship.height/2 -50))
-  // }
   this.reticle.position.set(this.valuesTable[this.ship.data.chassis]['ret1'], this.valuesTable[this.ship.data.chassis]['ret2']);
-
-  // this.reticle.position.set(ship.width/2 +5, ship.height/2 -50);
-
   this.reticle.blendMode = engine.BlendMode.ADD;
   this.reticle.rotation = global.Math.PI / 4;
   this.reticle.alpha = 0.0;
-
-  // this.reticleRed = new engine.Graphics(); 
-  // this.reticleRed.lineStyle(1, 0xcc1111, 1.0);
-  // this.reticleRed.drawRect(0, 0, ship.width, ship.height);
-  // this.reticleRed.pivot.set(halfWidth, halfHeight);
-  // this.reticleRed.position.set(halfWidth + 5, halfHeight + 5);
-  // this.reticleRed.alpha = 0;
 
   this.reticleRed = new engine.Graphics(); 
   this.reticleRed.lineStyle(2, 0xcc1111, 1.0);
   this.reticleRed.drawRect(0, 0, ship.width + 40, ship.height + 40);
   this.reticleRed.pivot.set(halfWidth +2, halfHeight + 5);
-  // if(this.ship.data.chassis === 'ubaidian-x01a'){
-  //   console.log('first: ', halfWidth/2 +5, 'second: ', (halfHeight/2 +5))
-  // }
   this.reticleRed.position.set(this.valuesTable[this.ship.data.chassis]['red1'], this.valuesTable[this.ship.data.chassis]['red2']);
   this.reticleRed.alpha = 0;
 
@@ -236,10 +219,6 @@ Selector.prototype.detectorHighlight = function() {
     }, this);
     this.detectorAnimating.start();
   }
-      this.reticle.pivot.set(this.reticle.pivot.x,this.reticle.pivot.y+1)
-      if(this.ship.data.chassis === 'scavengers-x03c'){
-        console.log(this.reticle.rotation, this.reticle.pivot.x, this.reticle.pivot.y)
-      }
 };
 
 Selector.prototype.highlight = function() {
@@ -283,30 +262,15 @@ Selector.prototype.hostileEngaged = function() {
 };
 Selector.prototype.shieldBlueStart = function() {
     if(this.shieldBlue){
-      this.shieldBlue.alpha = 1;
-      this.shieldBlue.graphicsData[0].shape.radius = 350;
-      console.log(this.shieldBlue, this.shieldBlue.scale)
-      this.ship.events.loop(10, expand = function(){
-        console.log('yo! ', this.shieldBlue.graphicsData[0].shape.radius)
-        this.shieldBlue.graphicsData[0].shape.radius += this.poop;
-        // this.shieldBlue.update()
-      }, this)
+      this.shieldBlue.alpha = 2;
       this.shieldBlueAnimating = this.game.tweens.create(this.shieldBlue);
-      // console.log(this.shieldBlueAnimating.target)
       // var radius = this.shieldBlueAnimating.target.graphicsData[0].shape.radius;
-      // var lineWidth = this.shieldBlueAnimating.target.graphicsData[0].lineWidth;\
-      this.shieldBlueAnimating.to({ alpha: 0}, 2000);
+      this.shieldBlueAnimating.to({ alpha: 0.2}, 1000);
       this.shieldBlueAnimating.loop(true)
-      this.shieldBlueAnimating.yoyo(true, 500);
+      this.shieldBlueAnimating.yoyo(true, 100);
       this.shieldBlueAnimating.start();
     }
 };
-
-// Selector.prototype.shieldBlueExpand = function(num) {
-//   console.log('here', num)
-//   this.shieldBlue.alpha = 1;
-//   this.shieldBlue.graphicsData[0].shape.radius = num
-// };
 
 Selector.prototype.shieldBlueStop = function() {
     if(this.shieldBlue){

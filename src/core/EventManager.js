@@ -14,9 +14,9 @@ function EventManager(game) {
 
   this.level = 1;
   this.ships = {
-    basic: 0,
-    pirate: 0,
-    enforcer: 0
+    basic: 5,
+    pirate: 13,
+    enforcer: 2
   };
 
   this.chassis = {
@@ -82,7 +82,7 @@ EventManager.prototype.init = function() {
     this.shipGen(this.ships[a], a.toString())
   };
 
-  this.scavGen(8);
+  this.scavGen(14);
   
 };
 
@@ -182,7 +182,6 @@ EventManager.prototype.spawnQueen = function(cycle, uuid){
 
   if(!uuid){
     //create queen
-    console.log('spawn is ', spawnPosition.x, spawnPosition.y)
     this.game.emit('ship/create', {
       chassis: 'scavenger-x04',
       ai: 'scavenger',
@@ -197,11 +196,8 @@ EventManager.prototype.spawnQueen = function(cycle, uuid){
   } else {
     //create overseers
     rando = this.game.rnd
-    // console.log('cycle is ', cycle, 'spawn is ', spawnPosition.x, spawnPosition.y, 'rando is ', rando)
     var randSpawn = cycle*(rando.s0+rando.s1)/1.25;
-    console.log(randSpawn)
     for(var i = 0; i < randSpawn+1; i++){
-      console.log('overseer created')
       this.game.emit('ship/create', {
         chassis: 'scavenger-x03',
         ai: 'scavenger',
