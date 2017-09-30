@@ -56,7 +56,7 @@ Panel.prototype.invalidate = function(valid, view) {
   this.isViewValid =  view || false;
   this.cachedWidth = -1;
   this.cachedHeight = -1;
-  
+
   for(var i=0; i<this.panels.length; i++) {
     this.panels[i].invalidate(valid, view);
   }

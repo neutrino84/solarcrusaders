@@ -113,7 +113,6 @@ Scavenger.prototype.scanner = function() {
           ship.movement.plot({ x: position.x - ship.movement.position.x, y: position.y - ship.movement.position.y}, distance/10)
         } else {
           Basic.prototype.scanner.call(this);
-          console.log('here~~, target is ', this.target)
         }
       } 
       break;
@@ -237,7 +236,7 @@ Scavenger.prototype.attack = function(){
     var a = /^(scavenger)/,
         chassis = this.target.data.chassis,
         target = this.target,
-        ship = this.ship;
+        ship = this.ship,
         settings = this.settings,
         offset = this.offset,
         rnd = this.game.rnd,

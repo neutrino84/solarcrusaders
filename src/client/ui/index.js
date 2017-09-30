@@ -31,14 +31,14 @@ UI.prototype.create = function() {
   });
 
   // add elements
-  this.root.addPanel(this.bottom);
   this.root.addPanel(this.shipyard);
+  this.root.addPanel(this.bottom);
 
   // invalidate
   this.root.invalidate();
 
   // add root to stage
-  this.game.stage.addChild(this.root);
+  this.game.world.ui.addChild(this.root);
 };
 
 UI.prototype.refresh = function() {

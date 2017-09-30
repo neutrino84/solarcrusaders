@@ -30,7 +30,7 @@ function ShipManager(game, state) {
   this.subGroup = new engine.Group(game);
   this.shipsGroup = new engine.Group(game);
   this.fxGroup = new engine.Group(game);
-  this.trajectoryGroup = new engine.Group(game);
+  // this.trajectoryGroup = new engine.Group(game);
 
   // create emitters
   this.explosionEmitter = new ExplosionEmitter(this.game);
@@ -46,7 +46,7 @@ function ShipManager(game, state) {
   this.game.particles.add(this.fireEmitter);
 
   // add ships to world
-  this.game.world.add(this.trajectoryGroup);
+  // this.game.world.add(this.trajectoryGroup);
   this.game.world.add(this.subGroup);
   this.game.world.add(this.shipsGroup);
   this.game.world.add(this.fxGroup);
@@ -57,8 +57,8 @@ function ShipManager(game, state) {
   this.game.world.add(this.glowEmitter);
   this.game.world.add(this.indicator);
 
-  this.trajectoryGraphics = new engine.Graphics(game);
-  this.trajectoryGroup.addChild(this.trajectoryGraphics);
+  // this.trajectoryGraphics = new engine.Graphics(game);
+  // this.trajectoryGroup.addChild(this.trajectoryGraphics);
 
   // networking
   // this.socket.on('ship/test', this._test.bind(this));
@@ -162,14 +162,18 @@ ShipManager.prototype.destroy = function() {
   game.particles.remove(this.flashEmitter);
   game.particles.remove(this.glowEmitter);
   game.particles.remove(this.shockwaveEmitter);
+  game.particles.remove(this.explosionEmitter);
 
-  game.world.remove(this.trajectoryGroup);
-  game.world.remove(this.shockwaveEmitter);
+  // game.world.remove(this.trajectoryGroup);
+  game.world.remove(this.subGroup);
   game.world.remove(this.shipsGroup);
   game.world.remove(this.fxGroup);
+  game.world.remove(this.fireEmitter);
   game.world.remove(this.explosionEmitter);
   game.world.remove(this.flashEmitter);
+  game.world.remove(this.shockwaveEmitter);
   game.world.remove(this.glowEmitter);
+  game.world.remove(this.indicator);
 
   this.removeAll();
 

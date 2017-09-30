@@ -122,6 +122,7 @@ Squadron.prototype.update = function() {
       masterHealth = master.data.health / master.config.stats.health,
       p1, p2, size, health, masterHealth, squadShip;
 
+
   // retreat due to damage
   if(health < settings.escape.health) {
     this.retreat = true;
