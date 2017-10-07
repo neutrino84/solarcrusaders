@@ -114,7 +114,7 @@ Ship.prototype.refresh = function(data) {
     // show hud screen
     defender.hud.show();
     defender.hud.timer && defender.events.remove(defender.hud.timer);
-    defender.hud.timer = defender.events.add(3000, defender.hud.hide, defender.hud);
+    defender.hud.timer = defender.events.add(2000, defender.hud.hide, defender.hud);
 
     if(defender.isPlayer && attacker.data.hardpoints[0].subtype !== 'repair') {
       this.game.camera.shake();
@@ -175,8 +175,8 @@ Ship.prototype.disable = function() {
   this.chassis.tint = 0x333333;
   this.hud.disable();
   if(this.data.chassis === 'squad-shield'){
-    this.selector.shieldBlue.alpha = 0;
-  };
+    this.selector.shieldBlueStop();
+  }
   this.selector.disable();
   this.engineCore.stop();
   this.engineCore.show(false);
