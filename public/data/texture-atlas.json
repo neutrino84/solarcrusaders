@@ -207,6 +207,15 @@
 	"sourceSize": {"w":40,"h":40},
 	"pivot": {"x":0.5,"y":0.5}
 },
+"item-system-targeting.png":
+{
+	"frame": {"x":918,"y":177,"w":32,"h":32},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+	"sourceSize": {"w":32,"h":32},
+	"pivot": {"x":0.5,"y":0.5}
+},
 "pirate-x01.png":
 {
 	"frame": {"x":635,"y":332,"w":64,"h":64},
@@ -448,6 +457,6 @@
 	"format": "RGBA8888",
 	"size": {"w":1024,"h":1024},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:d91e445b221455c3260a9772d327414c:734d1aa2bbde9e2ce17c698fb8a1f204:a973cd4a72d4c90ced76930eac7fdc63$"
+	"smartupdate": "$TexturePacker:SmartUpdate:4a0645411b63157950fd03cf4001f5a8:7ff4ca02b4f151a8c9a80d9157ef8621:a973cd4a72d4c90ced76930eac7fdc63$"
 }
 }

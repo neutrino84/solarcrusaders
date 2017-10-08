@@ -281,6 +281,23 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">icons/item-system-targeting.png</key>
+            <key type="filename">turrets/turret-a.png</key>
+            <key type="filename">turrets/turret-b.png</key>
+            <key type="filename">turrets/turret-cap-general.png</key>
+            <key type="filename">turrets/turret-cap-ubaidian.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>8,8,16,16</rect>
+                <key>scale9Paddings</key>
+                <rect>8,8,16,16</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">objects/asteroid-x01.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -434,22 +451,6 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">turrets/turret-a.png</key>
-            <key type="filename">turrets/turret-b.png</key>
-            <key type="filename">turrets/turret-cap-general.png</key>
-            <key type="filename">turrets/turret-cap-ubaidian.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>8,8,16,16</rect>
-                <key>scale9Paddings</key>
-                <rect>8,8,16,16</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
         </map>
         <key>fileList</key>
         <array>
@@ -502,6 +503,7 @@
             <filename>ships/enforcers/enforcer-x01.png</filename>
             <filename>ships/enforcers/enforcer-x02.png</filename>
             <filename>icons/shieldmaiden.png</filename>
+            <filename>icons/item-system-targeting.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
