@@ -335,9 +335,9 @@ SoundManager.prototype._fire = function(data) {
 SoundManager.prototype.generateSystemSound = function(sound){
   var systemSFX = ['reactor-online','sensors-online','weapons-systems-online','repairs-completed']
   if(sound){
-    this.game.sound.play(sound, 0.2, false);
+    // this.game.sound.play(sound, 0.2, false);
   } else {
-    this.game.sound.play(this.game.rnd.pick(systemSFX), 0.2, false)
+    // this.game.sound.play(this.game.rnd.pick(systemSFX), 0.2, false)
   }
 };
 

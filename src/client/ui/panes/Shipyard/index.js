@@ -8,7 +8,7 @@ var Panel = require('../../Panel'),
 function Shipyard(game) {
   Pane.call(this, game, {
     constraint: Layout.CENTER,
-    padding: [125, 100, 100, 100],
+    padding: [100, 100, 100, 100],
     layout: {
       type: 'stack'
     }
@@ -26,7 +26,7 @@ function Shipyard(game) {
   });
   this.shipPanels = new Pane(this.game, {
     constraint: Layout.CENTER,
-    height: 100,
+    height: 200,
     layout: {
       type: 'list',
       columns: 3,
@@ -48,7 +48,7 @@ function Shipyard(game) {
   }), textPane = new Pane(this.game, {
     constraint: Layout.TOP,
     width: this.game.width/2,
-    height: 50,
+    height: 175,
     layout: {
       type: 'stack'
     },
@@ -63,12 +63,12 @@ function Shipyard(game) {
     layout: {
       type: 'flow',
       ax: Layout.LEFT, 
-      ay: Layout.BOTTOM,
+      ay: Layout.CENTER,
       direction: Layout.VERTICAL, 
-      gap: 4
+      gap: 13
     },
     bg: {
-      fillAlpha: 0.2,
+      fillAlpha: 0.1,
       color: 0xff00bb
     }
   });
@@ -280,17 +280,17 @@ Shipyard.prototype.stats = function(){
   this.shipStats['ubaidian-x01a'][1].text = '       speed - 30               '
   this.shipStats['ubaidian-x01a'][2].text = '       health - 100             '
   this.shipStats['ubaidian-x01a'][3].text = '       energy - 200             '
-  this.shipStats['ubaidian-x01a'][4].text = '       capacity - 1000                                                        '
-  this.shipStats['ubaidian-x01a'][5].text = '       healing - 0.5/sec                                                      '
-  this.shipStats['ubaidian-x01a'][6].text = '       armor - 0.03                                                           '
+  this.shipStats['ubaidian-x01a'][4].text = '       capacity - 1000          '
+  this.shipStats['ubaidian-x01a'][5].text = '       healing - 0.5/sec        '
+  this.shipStats['ubaidian-x01a'][6].text = '       armor - 0.03             '
 
-  this.shipStats['ubaidian-x01b'][0].text = '       ubaidian-x01b "hammer-head"                                              '
-  this.shipStats['ubaidian-x01b'][1].text = '       speed - 29                                                             '
-  this.shipStats['ubaidian-x01b'][2].text = '       health - 200                                                           '
-  this.shipStats['ubaidian-x01b'][3].text = '       energy - 190                                                           '
-  this.shipStats['ubaidian-x01b'][4].text = '       capacity - 1000                                                        '
-  this.shipStats['ubaidian-x01b'][5].text = '       healing - 0.21/sec                                                      '
-  this.shipStats['ubaidian-x01b'][6].text = '       armor - 0.01                                                           '
+  this.shipStats['ubaidian-x01b'][0].text = '       ubaidian-x01b "hammer-head"'
+  this.shipStats['ubaidian-x01b'][1].text = '       speed - 29                 '
+  this.shipStats['ubaidian-x01b'][2].text = '       health - 200               '
+  this.shipStats['ubaidian-x01b'][3].text = '       energy - 190               '
+  this.shipStats['ubaidian-x01b'][4].text = '       capacity - 1000            '
+  this.shipStats['ubaidian-x01b'][5].text = '       healing - 0.21/sec         '
+  this.shipStats['ubaidian-x01b'][6].text = '       armor - 0.01               '
 
   // this.shipStats['x02-0'].text = '       ubaidian-x01b "hammer-head"                                              '
   // this.shipStats['x02_1'].text = '       speed - 29                                                             '
@@ -328,15 +328,21 @@ Shipyard.prototype.stats = function(){
     if(this.bg.panels[i].id === 'statsPane'){
       var statsPane = this.bg.panels[i];
       // statsPane.addPanel(spacer)
-      // statsPane.addPanel(spacer)
-      statsPane.addPanel(this.shipStats['ubaidian-x01a'][0])
-      statsPane.addPanel(this.shipStats['ubaidian-x01a'][1])
-      statsPane.addPanel(this.shipStats['ubaidian-x01a'][2])
-      statsPane.addPanel(this.shipStats['ubaidian-x01a'][3])
-      statsPane.addPanel(this.shipStats['ubaidian-x01a'][4])
-      statsPane.addPanel(this.shipStats['ubaidian-x01a'][5])
-      statsPane.addPanel(this.shipStats['ubaidian-x01a'][6])
-      statsPane.alpha = 0;
+      statsPane.addPanel(spacer)
+      statsPane.addPanel(spacer)
+      statsPane.addPanel(spacer)
+      statsPane.addPanel(spacer)
+      statsPane.addPanel(spacer)
+      statsPane.addPanel(spacer)
+      statsPane.addPanel(spacer)
+      // statsPane.addPanel(this.shipStats['ubaidian-x01a'][0])
+      // statsPane.addPanel(this.shipStats['ubaidian-x01a'][1])
+      // statsPane.addPanel(this.shipStats['ubaidian-x01a'][2])
+      // statsPane.addPanel(this.shipStats['ubaidian-x01a'][3])
+      // statsPane.addPanel(this.shipStats['ubaidian-x01a'][4])
+      // statsPane.addPanel(this.shipStats['ubaidian-x01a'][5])
+      // statsPane.addPanel(this.shipStats['ubaidian-x01a'][6])
+      statsPane.alpha = -1;
     }
   }
   this.invalidate();
@@ -352,12 +358,12 @@ Shipyard.prototype.fill = function() {
     button.start();
     containers[i].addPanel(button);
   }
-  for(var i = 0; i < this.bg.panels.length; i++){
-    if(this.bg.panels[i].id === 'statsPane'){
-      console.log(this.bg.panels[i])
-      this.bg.panels[i].alpha = 1;
-    }
-  }
+  // for(var i = 0; i < this.bg.panels.length; i++){
+  //   if(this.bg.panels[i].id === 'statsPane'){
+  //     console.log(this.bg.panels[i])
+  //     this.bg.panels[i].alpha = 1;
+  //   }
+  // }
 
   // buttons[enhancement] = button;
 
@@ -387,21 +393,37 @@ Shipyard.prototype._select = function(button) {
     if(this.bg.panels[i].id === 'statsPane'){
       var statsPane = this.bg.panels[i];
 
-        // console.log('ayoooooo', this.shipStats[ship])
+        console.log('ayoooooo', ship, this.shipStats[ship])
         // statsPane.addPanel(spacer)
         // statsPane.addPanel(spacer)
       // for(var i = 0; i < this.shipStats[ship.toString()].length; i++){
       //   statsPane.addPanel(this.shipStats['ubaidian_x01a'][i])
       // }
-      for(var i in this.shipStats[ship]){
-        // statsPane.addPanel(this.shipStats[ship][i])
-      }
+      // for(var i in this.shipStats[ship]){
+      //   console.log(this.shipStats[ship][i].text)
+      //   statsPane.addPanel(this.shipStats[ship][i])
+      // }
+      // this.invalidate();
+      console.log('pre 1', statsPane)
+      // for(var i = 0; i < statsPane.panels.length; i++){
+        statsPane.removeAll()
+      // }
+            console.log('pre ', statsPane)
+
+      statsPane.addPanel(this.shipStats[ship][0])
+      statsPane.addPanel(this.shipStats[ship][1])
+      statsPane.addPanel(this.shipStats[ship][2])
+      statsPane.addPanel(this.shipStats[ship][3])
+      statsPane.addPanel(this.shipStats[ship][4])
+      statsPane.addPanel(this.shipStats[ship][5])
+      statsPane.addPanel(this.shipStats[ship][6])
+      console.log('post ', statsPane)
+      statsPane.invalidate();
 
 
 
 
-
-      statsPane.alpha = 1;
+      statsPane.alpha = statsPane.alpha * -1;
       // console.log(this.bg.panels[i])
       // this.bg.panels[i].visible = !this.bg.panels[i].visible
       // this.bg.panels[i].alpha = this.bg.panels[i].alpha * -1;
