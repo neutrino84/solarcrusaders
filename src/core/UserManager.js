@@ -44,9 +44,9 @@ UserManager.prototype.connect = function(socket) {
     } else if(data && socket && session) {
       winston.info('[UserManager] Creating user in game');
       user = new User(this.game, data, socket);
-      user.init(function() {
-        this.game.emit('user/add', user);
-      }, this);
+      // user.init(function() {
+      //   this.game.emit('user/add', user);
+      // }, this);
     } else {
       winston.info('[UserManager] User data error');
       socket.disconnect(true);

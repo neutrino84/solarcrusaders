@@ -222,7 +222,7 @@
     "class": "destroyer",
     "moniker": "hammer-head",
     "stats": {
-      "capacity": 3000,
+      "capacity": 1100,
       "health": 200,
       "heal": 0.21,
       "armor": 0.01,
@@ -337,7 +337,7 @@
     "class": "destroyer",
     "moniker": "star-fire",
     "stats": {
-      "capacity": 1000,
+      "capacity": 800,
       "health": 120,
       "heal": 0.5,
       "armor": 0.02,
@@ -439,7 +439,7 @@
     "class": "destroyer",
     "moniker": "pig-nose",
     "stats": {
-      "capacity": 1000,
+      "capacity": 1800,
       "health": 150,
       "heal": 0.5,
       "armor": 0.01,
@@ -656,7 +656,7 @@
     "class": "destroyer",
     "moniker": "blue-hawk",
     "stats": {
-      "capacity": 1000,
+      "capacity": 700,
       "health": 100,
       "heal": 0.4,
       "armor": 0.01,
