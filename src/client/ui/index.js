@@ -45,12 +45,13 @@ UI.prototype.create = function() {
   // add root to stage
   this.game.world.ui.addChild(this.root);
 
-  console.log(this.root)
-  // this.game.world.ui.visible = false;
-  let brightnessMatrix = new pixi.filters.ColorMatrixFilter();
-  this.root.filters = [brightnessMatrix];
-  brightnessMatrix.brightness(0)
-  console.log(this.root)
+  // console.log(this.game.world)
+  // this.game.world.foreground.alpha = 0;
+  // this.game.world.background.alpha = 0;
+  // let brightnessMatrix = new pixi.filters.ColorMatrixFilter();
+  // this.root.filters = [brightnessMatrix];
+  // brightnessMatrix.brightness(0)
+  // console.log(this.root)
 
   // ship.chassis.filters = [colorMatrix];
   // colorMatrix.hue(140, false);

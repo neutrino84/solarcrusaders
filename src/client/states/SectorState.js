@@ -18,7 +18,7 @@ function SectorState(game) {
   this.game = game;
   this.auth = game.auth;
 
-  this.game.on('user/shipSelected', this.createPlayer, this);
+  this.game.on('user/shipSelected', this.playerCreated, this);
 };
 
 SectorState.prototype = Object.create(engine.State.prototype);
@@ -106,33 +106,24 @@ SectorState.prototype.create = function() {
   this.game.world.size(0, 0, 4096, 4096);
   this.game.world.scale.set(.6, .6);
 
-  // adjust camera
-  this.game.camera.focus(2048, 2048);
-
   // create sector
   this.createAsteroids();
   this.createSpace();
   this.createSnow();
   if(this.game.auth.user){
     this.createManagers(); 
+  } else {
+    this.game.camera.focus(2048, 2048); 
   }
-
   // create ui
   this.ui.create();
 
   
-
   this.netManager = new NetManager(this.game, this);
 };
 
-SectorState.prototype.createPlayer = function(){
-  console.log('makin player, this.game is ', this.game)
-  // this.game.emit('user/backgroundmusic')
+SectorState.prototype.playerCreated = function(){
     this.createManagers();
-  // create SoundManager
-  // this.soundManager.create();
-
-  
 };
 
 SectorState.prototype.createSpace = function() {

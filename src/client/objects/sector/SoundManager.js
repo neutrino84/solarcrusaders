@@ -336,15 +336,15 @@ SoundManager.prototype._fire = function(data) {
 SoundManager.prototype.generateSystemSound = function(sound){
   var systemSFX = ['reactor-online','sensors-online','weapons-systems-online','repairs-completed']
   if(sound){
-    // this.game.sound.play(sound, 0.2, false);
+    this.game.sound.play(sound, 0.2, false);
   } else {
-    // this.game.sound.play(this.game.rnd.pick(systemSFX), 0.2, false)
+    this.game.sound.play(this.game.rnd.pick(systemSFX), 0.2, false)
   }
 };
 
 SoundManager.prototype.generateBackgroundMusic = function(){
   var num = Math.floor((Math.random() * 3)+1);
-  // this.game.sound.play('background'+num, 0.6, true);
+  this.game.sound.play('background'+num, 0.6, true);
 };
 
 SoundManager.prototype.generateThrusterSound = function(){
