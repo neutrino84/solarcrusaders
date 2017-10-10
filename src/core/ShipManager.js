@@ -37,10 +37,16 @@ ShipManager.prototype.init = function(eventManager) {
   this.sockets.on('squad/regroup', this.squad_regroup, this);
   this.sockets.on('squad/shield', this.squad_shield, this);
 
+  this.sockets.on('user/shipSelected', this.test, this)
+// this.game.on('user/shipSelected', this.test, this)
   // update data interval
   this.game.clock.events.loop(1000, this.update, this);
 
   // this.ai.connectEventManager(eventManager)
+};
+
+ShipManager.prototype.test = function(ship) {
+  // console.log('wOOOKAY. ship is ', ship)
 };
 
 ShipManager.prototype.add = function(ship) {

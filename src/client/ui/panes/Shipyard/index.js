@@ -6,6 +6,20 @@ var Panel = require('../../Panel'),
     Layout = require('../../Layout');
 
 function Shipyard(game) {
+  this.socket = game.net.socket;
+  var w = window,
+      d = document,
+      e = d.documentElement,
+      g = d.getElementsByTagName('body')[0],
+      x = w.innerWidth || e.clientWidth || g.clientWidth,
+      y = w.innerHeight|| e.clientHeight|| g.clientHeight, textHeight;
+  console.log(x + ' × ' + y);
+  if(y < 850){
+    textHeight = 100;
+  } else {
+    textHeight = 175;
+  }
+
   Pane.call(this, game, {
     constraint: Layout.CENTER,
     padding: [100, 100, 100, 100],
@@ -48,7 +62,7 @@ function Shipyard(game) {
   }), textPane = new Pane(this.game, {
     constraint: Layout.TOP,
     width: this.game.width/2,
-    height: 175,
+    height: textHeight,
     layout: {
       type: 'stack'
     },
@@ -292,13 +306,7 @@ Shipyard.prototype.stats = function(){
   // ubaidian_x01f.visible = false;
   // console.log(this.bg.panels)
 
-  var w = window,
-      d = document,
-      e = d.documentElement,
-      g = d.getElementsByTagName('body')[0],
-      x = w.innerWidth || e.clientWidth || g.clientWidth,
-      y = w.innerHeight|| e.clientHeight|| g.clientHeight;
-  console.log(x + ' × ' + y);
+  
 
   for(var i = 0; i < this.bg.panels.length; i++){
     if(this.bg.panels[i].id === 'statsPane'){
@@ -318,8 +326,9 @@ Shipyard.prototype.fill = function() {
   for(var i = 0; i < 6; i++){
     button = this.create(ships[i]);
     button.id = ships[i];
-    button.bg.on('inputOver', this._select, this);
-    button.bg.on('inputOut', this._unselect, this);
+    button.bg.on('inputOver', this._hover, this);
+    button.bg.on('inputOut', this._unhover, this);
+    button.bg.on('inputDown', this._select, this);
     button.start();
     containers[i].addPanel(button);
   }
@@ -381,7 +390,7 @@ Shipyard.prototype.fill = function() {
     }
   };
 };
-Shipyard.prototype._select = function(button) {
+Shipyard.prototype._hover = function(button) {
   var ships = this.shipPanels.panels,
       ship = button.parent.id,
       spacer = new Label(this.game, {
@@ -424,7 +433,17 @@ Shipyard.prototype._select = function(button) {
   }
 };
 
-Shipyard.prototype._unselect = function(button) {
+Shipyard.prototype._select= function(button){
+  console.log(button.parent.id, ' selected', this)
+
+  this.socket.emit('user/shipSelected', button.parent.id, this.game.auth.socket.id)
+  this.game.emit('user/shipSelected')
+  // this.parent.removePanel(this);
+  this.destroy()
+  // this.invalidate()
+};
+
+Shipyard.prototype._unhover = function(button) {
   var ships = this.shipPanels.panels,
       ship = button.parent.id;
 

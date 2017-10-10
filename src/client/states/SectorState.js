@@ -17,6 +17,8 @@ var engine = require('engine'),
 function SectorState(game) {
   this.game = game;
   this.auth = game.auth;
+
+  this.game.on('user/shipSelected', this.createPlayer, this);
 };
 
 SectorState.prototype = Object.create(engine.State.prototype);
@@ -109,17 +111,28 @@ SectorState.prototype.create = function() {
 
   // create sector
   this.createAsteroids();
-  this.createManagers();
   this.createSpace();
   this.createSnow();
+  if(this.game.auth.user){
+    this.createManagers(); 
+  }
 
   // create ui
   this.ui.create();
 
-  // create SoundManager
-  this.soundManager.create();
+  
 
-  this.game.emit('game/backgroundmusic')
+  this.netManager = new NetManager(this.game, this);
+};
+
+SectorState.prototype.createPlayer = function(){
+  console.log('makin player, this.game is ', this.game)
+  // this.game.emit('user/backgroundmusic')
+    this.createManagers();
+  // create SoundManager
+  // this.soundManager.create();
+
+  
 };
 
 SectorState.prototype.createSpace = function() {
@@ -146,6 +159,8 @@ SectorState.prototype.createManagers = function() {
   this.stationManager = new StationManager(game, this);
   this.shipManager = new ShipManager(game, this);
   this.squadManager = new SquadManager(game, this);
+  this.soundManager.create();
+  this.game.emit('game/backgroundmusic')
 
   this.squadManager.create(this);
   // this.playerManager.create(this);

@@ -7,6 +7,8 @@ function UserManager(game) {
   this.model = game.model;
   this.sockets = game.sockets;
 
+  this.staging = {};
+
   this.users = {};
 };
 
@@ -22,7 +24,19 @@ UserManager.prototype.init = function() {
 
   // user messaging
   this.game.on('user/add', this.add, this);
+
+  
+  this.sockets.on('user/shipSelected', this.shipSelected, this);
 };
+
+UserManager.prototype.shipSelected = function(socket, args){
+  console.log('in user manager test, ship is ', args[1], args[2])
+  if(this.staging[args[2]]){
+    this.staging[args[2]].chassis = args[1]
+  }
+  console.log('got  here!!!', this.staging)
+  this.create(this.staging[args[2]])
+}
 
 UserManager.prototype.add = function(user) {
   this.users[user.uuid] = user;
@@ -36,14 +50,31 @@ UserManager.prototype.connect = function(socket) {
   var user,
       session = socket.request.session,
       data = session ? session.user : false;
+      // console.log('in connect, data is ', data, 'session is ', session, 'socket is ', socket)
   if(data) {
     if(this.exists(data)) {
       winston.info('[UserManager] User already exists in game');
       user = this.users[data.uuid];
       user.reconnected(socket);
     } else if(data && socket && session) {
-      winston.info('[UserManager] Creating user in game');
-      user = new User(this.game, data, socket);
+      //will have to adjust this step for when they relogged in but haven't yet chosen a ship
+      // console.log('user.uuid is ', session.user.uuid)
+      if(!this.staging[socket.id]){
+        this.staging[socket.id] = {
+          data : data,
+          socket : socket,
+          chassis : 0
+        } 
+        console.log(this.staging[socket.id].socket.id)
+      }
+
+      // if(this.staging.indexOf(session.user.uuid) < 0){
+      //   this.staging.push(session.user.uuid)
+      // }
+
+      // winston.info('[UserManager] Creating user in game');
+      // this.test();
+      // user = new User(this.game, data, socket);
       // user.init(function() {
       //   this.game.emit('user/add', user);
       // }, this);
@@ -56,6 +87,15 @@ UserManager.prototype.connect = function(socket) {
     socket.disconnect(true);
   }
 };
+
+UserManager.prototype.create = function(data){
+  console.log('moley',data)
+  winston.info('[UserManager] Creating user in game');
+  user = new User(this.game, data.data, data.socket, data.chassis);
+  user.init(function() {
+    this.game.emit('user/add', user);
+  }, this);
+}
 
 UserManager.prototype.disconnect = function(socket) {
   var session = socket.request.session,

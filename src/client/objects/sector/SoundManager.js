@@ -8,6 +8,7 @@ function SoundManager(game) {
   this.game.on('ship/player', this._player, this);
   
   this.game.on('ship/enhancement/started', this.generateEnhancementSound, this);
+
 };
 
 SoundManager.prototype.constructor = SoundManager;

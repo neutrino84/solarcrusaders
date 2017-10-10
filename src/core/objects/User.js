@@ -4,7 +4,7 @@ var async = require('async'),
     Latency = require('../../utils/Latency'),
     EventEmitter = require('eventemitter3');
 
-function User(game, data, socket) {
+function User(game, data, socket, chassis) {
   this.game = game;
   this.model = game.model;
   this.socket = socket;
@@ -16,6 +16,8 @@ function User(game, data, socket) {
   this.stations = [];
 
   this.uuid = this.data.uuid;
+
+  this.chassis = chassis;
 };
 
 User.prototype.constructor = User;
@@ -31,7 +33,8 @@ User.prototype.init = function(callback, context) {
     // connect demo ship
 
     game.emit('ship/create', {
-      chassis: this.game.rnd.pick(chassis),
+      // chassis: this.game.rnd.pick(chassis),
+      chassis: this.chassis,
       x: 2048,
       y: 2048,
       uuid: this.uuid,

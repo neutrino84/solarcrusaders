@@ -28,6 +28,11 @@ function SectorManager(game) {
 SectorManager.prototype.constructor = SectorManager;
 
 SectorManager.prototype.init = function() {
+
+
+
+  console.log('got to sector manager init')
+  
   this.stationManager.init();
   this.shipManager.init(this.eventManager);
   this.userManager.init();
@@ -41,9 +46,17 @@ SectorManager.prototype.init = function() {
   this.game.on('station/data', this.queue('stations'), this);
   this.game.on('user/data', this.queue('users'), this);
 
+  // this.game.on('user/shipSelected', this.test, this);
+
+
+// this.sockets.on('user/shipSelected', this.test, this);
   // queue
   this.game.clock.events.loop(50, this.queued, this);
 };
+
+SectorManager.prototype.test = function(){
+  console.log('HOLY SHIT SECTOR MANAGER')
+}
 
 SectorManager.prototype.update = function() {
   var sockets = this.sockets,
