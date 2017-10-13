@@ -81,8 +81,11 @@ Movement.prototype.update = function() {
   // update ship position
   ship.position.set(position.x + direction.x, position.y + direction.y);
 
+  // if(ship.docked){
+  //   console.log('mafucker docked!!!!') 
+  // }
   // update rotation
-  if(!ship.disabled && velocity > 0 && speed > 0) {
+  if(!ship.disabled && !ship.docked && velocity > 0 && speed > 0) {
     a1 = position.y - ship.position.y;
     a2 = position.x - ship.position.x;
 

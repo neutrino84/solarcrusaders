@@ -28,6 +28,7 @@ function Ship(manager, data, user) {
   };
   if(user){
   this.squadron = data.squadron
+  this.docked = true;
   };
   // if(data.battalion){
   //   this.battalion = data.battalion

@@ -118,12 +118,13 @@ SectorState.prototype.create = function() {
   // create ui
   this.ui.create();
 
-  
-  this.netManager = new NetManager(this.game, this);
 };
 
 SectorState.prototype.playerCreated = function(){
     this.createManagers();
+    console.log(this.stationManager.findStation('ubadian-station-x01'))
+    
+    // this.game.world.scale.set(.3, .3);
 };
 
 SectorState.prototype.createSpace = function() {

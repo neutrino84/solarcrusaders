@@ -13,12 +13,12 @@ function Shipyard(game) {
       g = d.getElementsByTagName('body')[0],
       x = w.innerWidth || e.clientWidth || g.clientWidth,
       y = w.innerHeight|| e.clientHeight|| g.clientHeight, textHeight;
-  console.log(x + ' × ' + y);
+
   if(y < 850){
     textHeight = 100;
   } else {
     textHeight = 175;
-  }
+  };
 
   Pane.call(this, game, {
     constraint: Layout.CENTER,
@@ -152,7 +152,6 @@ Shipyard.prototype = Object.create(Pane.prototype);
 Shipyard.prototype.constructor = Shipyard;
 
 Shipyard.prototype.create = function(ship) {
-  // console.log('got to create function, this.bg is ', this.bg)
   var game = this.game,
   label = new Label(game, {
     constraint: Layout.USE_PS_SIZE,
@@ -225,7 +224,6 @@ Shipyard.prototype.stats = function(){
       bg: false
     });
   }
-  // console.log('this.shipStats is ', this.shipStats)
   var spacer = new Label(this.game, {
       constraint: Layout.STRETCH,
       text: {
@@ -289,24 +287,6 @@ Shipyard.prototype.stats = function(){
   this.shipStats['ubaidian-x01f'][5].text = '       recharge - 1.2/sec'
   this.shipStats['ubaidian-x01f'][6].text = '       capacity - 700'
   this.shipStats['ubaidian-x01f'][7].text = '       armor - 0.01'
-
-  // this.shipStats['x03_0'].text = '       ubaidian-x03a "star-fire"                                              '
-  // this.shipStats['x03_1'].text = '       speed - 30                                                             '
-  // this.shipStats['x03_2'].text = '       health - 120                                                           '
-  // this.shipStats['x03_3'].text = '       energy - 130                                                           '
-  // this.shipStats['x03_4'].text = '       capacity - 1000                                                        '
-  // this.shipStats['x03_5'].text = '       healing - 0.5/sec                                                      '
-  // this.shipStats['x03_6'].text = '       armor - 0.02                                                           '
-
-  // ubaidian_x01d.text = 'ubaidian-x01d'
-  // ubaidian_x01d.visible = false;
-  // ubaidian_x01e.text = 'ubaidian-x01e'
-  // ubaidian_x01e.visible = false;
-  // ubaidian_x01f.text = 'ubaidian-x01f'
-  // ubaidian_x01f.visible = false;
-  // console.log(this.bg.panels)
-
-  
 
   for(var i = 0; i < this.bg.panels.length; i++){
     if(this.bg.panels[i].id === 'statsPane'){
@@ -377,7 +357,6 @@ Shipyard.prototype.fill = function() {
       }
     }
   });
-  console.log(containers)
   selectLabel.text = 'select';
   selectButton.label = selectLabel;
   selectButton.label.visible = true;
@@ -434,13 +413,9 @@ Shipyard.prototype._hover = function(button) {
 };
 
 Shipyard.prototype._select= function(button){
-  console.log(button.parent.id, ' selected', this)
-
   this.socket.emit('user/shipSelected', button.parent.id, this.game.auth.socket.id)
   this.game.emit('user/shipSelected')
-  // this.parent.removePanel(this);
   this.destroy()
-  // this.invalidate()
 };
 
 Shipyard.prototype._unhover = function(button) {

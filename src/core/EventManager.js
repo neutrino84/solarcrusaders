@@ -13,10 +13,15 @@ function EventManager(game) {
   this.sockets = game.sockets;
 
   this.level = 1;
+  // this.ships = {
+  //   basic: 4,
+  //   pirate: 11,
+  //   enforcer: 1
+  // };
   this.ships = {
-    basic: 4,
-    pirate: 11,
-    enforcer: 1
+    basic: 0,
+    pirate: 0,
+    enforcer: 0
   };
 
   this.chassis = {

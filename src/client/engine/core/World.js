@@ -22,7 +22,7 @@ World.prototype.boot = function() {
   this.foreground = new Group(this.game);
   this.main.add(this.background);
   this.main.add(this.foreground);
-  
+
   // create camera
   this.camera = new Camera(this.game, 0, 0, this.game.width, this.game.height);
   this.game.camera = this.camera;

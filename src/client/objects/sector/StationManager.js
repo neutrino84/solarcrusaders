@@ -18,8 +18,12 @@ function StationManager(game, state) {
   this.game.on('auth/disconnect', this.disconnect, this);
   this.game.on('sector/sync', this.sync, this);
 
+  this.game.on('station/find', this.findStation, this);
+
   // add to world
   this.game.world.foreground.add(this.stationsGroup);
+
+  this.happened = false;
 }
 
 StationManager.prototype.constructor = StationManager;
@@ -48,6 +52,7 @@ StationManager.prototype.create = function(data) {
   }
 };
 
+
 StationManager.prototype.sync = function(data) {
   var game = this.game,
       netManager = this.state.netManager,
@@ -58,7 +63,18 @@ StationManager.prototype.sync = function(data) {
     sync = stations[s];
     station = this.stations[sync.uuid];
 
+
     if(station) {
+      if(station.key == 'ubadian-station-x01' && !this.happened){
+        this.happened = true;
+        this.game.world.scale.set(1, 1);
+        // this.game.camera.follow(station);
+        // this.game.clock.events.add(1000, function(){
+        //   this.game.emit('')
+        // }, this);
+      }
+
+
       station.plot(sync);
 
       // if(this.game.rnd.frac() > 0.9) {
@@ -86,6 +102,22 @@ StationManager.prototype.sync = function(data) {
   }
 };
 
+StationManager.prototype.findStation = function(key){
+  var stations = this.stations,
+      location = 'popo'; 
+  // this.game.clock.events.add(100, function(){
+  //     console.log(key, this.stations)
+  // for(var a in this.stations){
+  //   console.log(stations[a].key)
+  //   if(stations[a].key === key){
+  //     console.log('wtf',stations[a]);
+  //   } 
+  // }
+
+  // }, this);  
+  return location
+  // ubadian-station-x01'
+};
 StationManager.prototype.remove = function(data) {
   var stations = this.stations,
       station = stations[data.uuid];

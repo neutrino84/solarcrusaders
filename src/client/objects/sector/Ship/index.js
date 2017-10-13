@@ -25,6 +25,8 @@ function Ship(manager, data) {
 
   // defaults
   this.rotation = data.rotation 
+  this.docked = false;
+
   // + global.Math.PI;
   this.pivot.set(this.width/2, this.height/2);
 
@@ -71,14 +73,6 @@ Ship.prototype.boot = function() {
 
   // set player
   if(this.isPlayer) {
-    // this.hud.show();
-    // console.log('INDEX. PLAYER IS ', this, 'player.squadron is ', this.squadron)
-    // for(var a in this.squadron){
-    //   if (squadron[a].data.chassis === 'squad-shield'){
-    //     console.log('I HAVE A SHIELDMAIDEN!')
-    //     this.game.emit('ship/player/shieldmaiden', 'shieldmaiden');
-    //   }
-    // }
     this.game.emit('ship/player', this);
   }
 };
@@ -89,6 +83,9 @@ Ship.prototype.refresh = function(data) {
       ships = this.manager.ships,
       targetingComputer = this.targetingComputer;
 
+  if(data.docked){
+    this.docked = true;
+  }
   if(data.shielded){
     this.shieldGenerator.startShieldField();
   } 
@@ -151,7 +148,7 @@ Ship.prototype.update = function() {
     this.engineCore.update(multiplier);
   }
 
-  engine.Sprite.prototype.update.call(this);
+  // engine.Sprite.prototype.update.call(this);
 };
 
 Ship.prototype.enable = function(data) {

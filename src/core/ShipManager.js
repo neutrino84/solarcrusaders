@@ -6,10 +6,12 @@ var uuid = require('uuid'),
     Utils = require('../utils'),
     Generator = require('../utils/Generator');
 
-function ShipManager(game) {
+function ShipManager(game, sectorManager) {
   this.game = game;
   this.model = game.model;
   this.sockets = game.sockets;
+
+  this.sectorManager = sectorManager;
 
   this.ships = {};
 };
@@ -37,16 +39,8 @@ ShipManager.prototype.init = function(eventManager) {
   this.sockets.on('squad/regroup', this.squad_regroup, this);
   this.sockets.on('squad/shield', this.squad_shield, this);
 
-  this.sockets.on('user/shipSelected', this.test, this)
-// this.game.on('user/shipSelected', this.test, this)
   // update data interval
   this.game.clock.events.loop(1000, this.update, this);
-
-  // this.ai.connectEventManager(eventManager)
-};
-
-ShipManager.prototype.test = function(ship) {
-  // console.log('wOOOKAY. ship is ', ship)
 };
 
 ShipManager.prototype.add = function(ship) {
@@ -282,6 +276,12 @@ ShipManager.prototype.sync = function() {
     movement = ship.movement;
     movement.update();
     position = movement.position;
+
+    if(ship.docked){
+      movement.position = this.sectorManager.stationManager.getPosition();
+      movement.plot(this.sectorManager.stationManager.getPosition());
+    }
+
     data = {
       uuid: ship.uuid,
       pos: { x: position.x, y: position.y },
@@ -298,7 +298,6 @@ ShipManager.prototype.update = function() {
       updates = [];
   for(var s in ships) {
     ship = ships[s];
-    
     if(!ship.disabled) {
       stats = ship.config.stats;
       update = { uuid: ship.uuid };
@@ -320,6 +319,10 @@ ShipManager.prototype.update = function() {
       // push deltas
       if(delta !== undefined) {
         updates.push(update);
+      }
+      if(ship.docked){
+        update.docked = true;
+        updates.push(update)
       }
     }
   }

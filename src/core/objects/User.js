@@ -4,7 +4,7 @@ var async = require('async'),
     Latency = require('../../utils/Latency'),
     EventEmitter = require('eventemitter3');
 
-function User(game, data, socket, chassis) {
+function User(game, data, socket, chassis, startingPosition) {
   this.game = game;
   this.model = game.model;
   this.socket = socket;
@@ -18,6 +18,8 @@ function User(game, data, socket, chassis) {
   this.uuid = this.data.uuid;
 
   this.chassis = chassis;
+
+  this.startingPosition = startingPosition;
 };
 
 User.prototype.constructor = User;
@@ -27,16 +29,16 @@ User.prototype.init = function(callback, context) {
       game = this.game,
       data = this.data,
       socket = this.socket,
-      ships = this.ships,
-      chassis = ['ubaidian-x01a','ubaidian-x01b','ubaidian-x01c','ubaidian-x01d','ubaidian-x01e','ubaidian-x01f']
+      ships = this.ships;
+      // chassis = ['ubaidian-x01a','ubaidian-x01b','ubaidian-x01c','ubaidian-x01d','ubaidian-x01e','ubaidian-x01f']
   if(data.isNewRecord()) {
     // connect demo ship
 
     game.emit('ship/create', {
       // chassis: this.game.rnd.pick(chassis),
       chassis: this.chassis,
-      x: 2048,
-      y: 2048,
+      x: this.startingPosition.x,
+      y: this.startingPosition.y,
       uuid: this.uuid,
       squadron: {}
     }, this);

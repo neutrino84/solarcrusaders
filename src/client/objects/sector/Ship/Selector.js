@@ -264,7 +264,6 @@ Selector.prototype.shieldBlueStart = function() {
     if(this.shieldBlue){
       this.shieldBlue.alpha = 2;
       this.shieldBlueAnimating = this.game.tweens.create(this.shieldBlue);
-      // var radius = this.shieldBlueAnimating.target.graphicsData[0].shape.radius;
       this.shieldBlueAnimating.to({ alpha: 0.2}, 1000);
       this.shieldBlueAnimating.loop(true)
       this.shieldBlueAnimating.yoyo(true, 100);

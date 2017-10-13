@@ -31,15 +31,13 @@ UI.prototype.create = function() {
     bg: false
   });
 
-  console.log('in UI preload')
-
   // add elements
   if(!this.game.auth.user){
     this.shipyard = new Shipyard(this.game); 
     this.root.addPanel(this.shipyard);
   }
   this.root.addPanel(this.bottom);
-  this.root.addPanel(this.leaderBoard);
+  // this.root.addPanel(this.leaderBoard);
 
   // invalidate
   this.root.invalidate();

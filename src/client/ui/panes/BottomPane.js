@@ -6,7 +6,6 @@ var engine = require('engine'),
     ProgressBar = require('../components/ProgressBar');
 
 function BottomPane(game) {
-   console.log('got to bottomPane constructor')
   Pane.call(this, game, {
     constraint: Layout.BOTTOM,
     padding: [4],

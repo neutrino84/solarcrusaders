@@ -247,6 +247,7 @@ Squadron.prototype.shieldmaidenActivate = function() {
       a = /^(squad-shield)/,
       t = ship.chassis;
   if(a.test(t) && !this.shielding){
+    console.log('WOOOOOOOOOOOOOOOOOOOO')
     this.shielding = true;
     this.originalValues["shield-speed"] = this.ship.movement.data.speed
     this.ship.movement.data.speed = 15;

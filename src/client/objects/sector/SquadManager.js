@@ -26,15 +26,11 @@ function SquadManager(game) {
   this.game.on('ship/player', this._player, this);
   this.game.on('squad/regroup', this.regroup, this);
   this.game.on('squad/shieldUp', this.shieldUp, this);
-
-  //^ needs to be a private message listener from player (this came from front-end ship index.js)
-  // ship.user.socket.emit? 
 };
 
 SquadManager.prototype.constructor = SquadManager;
 
 SquadManager.prototype.create = function(sectorState) {
-  // this.config = this.game.cache.getJSON('item-configuration', false);
   this.manager = sectorState.shipManager;
   this.ships = this.manager.ships;
 };
@@ -50,19 +46,12 @@ SquadManager.prototype.closestHostile = function(){
   for(var s in ships){
     var ship = ships[s];
     ship.selector.hostileHighlightStop();
-    // if(ship.disabled){
-    //   console.log(ship.data.chassis, ' cached tint: ', ship.chassis.cachedTint, ' current tint: ', ship.chassis.tint)
-    //   ship.chassis.tint = 0x333333;
-    //   console.log('current tint: ', ship.chassis.tint)
-    //   continue
-    // }
     if(!ship.disabled && ship.targetingComputer.targetShip === player && ship.data.chassis !== 'squad-repair' || !ship.disabled && Object.values(player.squadron).indexOf(ship.targetingComputer.targetShip) > -1 && ship.data.chassis !== 'squad-repair'){ 
         distance = engine.Point.distance(ship, player);
         if(distance < 17000 && ship.data.chassis !== 'squad-repair'){
           hostiles[distance] = ship;
         };
         if(ship.disabled){
-          console.log('HOSTILE  ship disabled. ship is ', ship)
           continue
         };
     };
@@ -170,7 +159,7 @@ SquadManager.prototype.shieldUp = function(data) {
   var ship = this.manager.ships[data.uuid];
 
   if(data.active){
-    if(ship.selector.shieldBlue) {
+    if(ship.selector.shieldBlue && ship.data.chassis == 'squad-shield') {
       ship.selector.shieldBlueStart()
       // ship.events.loop(500, expand = function(){
       //   ship.selector.shieldBlueExpand(this.poopoo);
@@ -186,7 +175,6 @@ SquadManager.prototype.shieldUp = function(data) {
 
 SquadManager.prototype.shieldmaidenActivate = function() {
   var player = this.player;
-  console.log('in squad manager, shieldmaidenActivated!')
   this.socket.emit('squad/shieldmaidenActivate', {player_uuid: player.uuid})
 };
 

@@ -20,8 +20,8 @@ function SectorManager(game) {
 
   // instance managers
   this.stationManager = new StationManager(game);
-  this.shipManager = new ShipManager(game);
-  this.userManager = new UserManager(game);
+  this.shipManager = new ShipManager(game, this);
+  this.userManager = new UserManager(game, this);
   this.eventManager = new EventManager(game);
 };
 
@@ -54,10 +54,6 @@ SectorManager.prototype.init = function() {
   this.game.clock.events.loop(50, this.queued, this);
 };
 
-SectorManager.prototype.test = function(){
-  console.log('HOLY SHIT SECTOR MANAGER')
-}
-
 SectorManager.prototype.update = function() {
   var sockets = this.sockets,
       users = this.userManager.all(),
@@ -71,6 +67,10 @@ SectorManager.prototype.update = function() {
     stations: stations
   });
 };
+
+// SectorManager.prototype.placePlayerShip = function(){
+//   console.log(this.stationManager.sync('ubadian-station-x01')); 
+// };
 
 SectorManager.prototype.data = function(socket, args) {
   var uuids = args[1],
