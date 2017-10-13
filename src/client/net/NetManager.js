@@ -17,11 +17,6 @@ function NetManager(game) {
   this.socket.on('sector/sync', this._sync.bind(this));
   this.socket.on('sector/data', this._data.bind(this));
 
-  // this.socket.on('ship/enhancement/started',this._started.bind(this));
-  // this.socket.on('ship/enhancement/stopped', this._stopped.bind(this));
-
-  console.log('in front end netmanagre constructor')
-
   // ship
   this.connect('user/shipSelected');
   this.connect('ship/attack');

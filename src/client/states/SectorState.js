@@ -19,6 +19,9 @@ function SectorState(game) {
   this.auth = game.auth;
 
   this.game.on('user/shipSelected', this.playerCreated, this);
+
+  this.scaleX = 1;
+  this.scaleY = 1;
 };
 
 SectorState.prototype = Object.create(engine.State.prototype);
@@ -95,6 +98,7 @@ SectorState.prototype.create = function() {
       mouse.mouseWheelCallback = function(event) {
         var delta = event.deltaY / sensitivity,
             scale = engine.Math.clamp(this.world.scale.x - delta, 0.5, 1.0);
+            // console.log(scale)
         if(self.game.paused) { return; }
         if(self.zoom && self.zoom.isRunning) {
           self.zoom.stop();
@@ -104,13 +108,14 @@ SectorState.prototype.create = function() {
 
   // set world
   this.game.world.size(0, 0, 4096, 4096);
-  this.game.world.scale.set(.6, .6);
+  this.game.world.scale.set(1, 1);
 
   // create sector
   this.createAsteroids();
   this.createSpace();
-  this.createSnow();
+  // this.createSnow();
   if(this.game.auth.user){
+    // this.game.world.scale.set(.6, .6);
     this.createManagers(); 
   } else {
     this.game.camera.focus(2048, 2048); 
@@ -121,10 +126,25 @@ SectorState.prototype.create = function() {
 };
 
 SectorState.prototype.playerCreated = function(){
-    this.createManagers();
-    console.log(this.stationManager.findStation('ubadian-station-x01'))
+    var game = this.game;
+
+    this.createManagers('firstIteration');
     
-    // this.game.world.scale.set(.3, .3);
+    game.clock.events.add(1500, function(){
+      game.clock.events.loop(100, zoomOut = function(){
+        this.scaleX = this.scaleX - 0.01;
+        this.scaleY = this.scaleY - 0.01;
+        game.world.scale.set(this.scaleX, this.scaleY)
+        if(this.scaleX <= 0.8){
+          for(var i = 0; i < game.clock.events.events.length; i++){
+            if(game.clock.events.events[i].callback.name === 'zoomOut'){
+              game.clock.events.remove(game.clock.events.events[i]); 
+              console.log(this.scaleX)
+            }
+          };
+        }
+      }, this)
+    }, this)
 };
 
 SectorState.prototype.createSpace = function() {
@@ -142,14 +162,18 @@ SectorState.prototype.createSpace = function() {
   this.game.world.foreground.add(this.nebula);
 };
 
-SectorState.prototype.createManagers = function() {
+SectorState.prototype.createManagers = function(first) {
   var game = this.game;
 
   this.netManager = new NetManager(game, this);
   this.inputManager = new InputManager(game, this);
   this.hotkeyManager = new HotkeyManager(game, this);
   this.stationManager = new StationManager(game, this);
-  this.shipManager = new ShipManager(game, this);
+  if(first){
+    this.shipManager = new ShipManager(game, this, first);
+  } else {
+    this.shipManager = new ShipManager(game, this);
+  }
   this.squadManager = new SquadManager(game, this);
   this.soundManager.create();
   this.game.emit('game/backgroundmusic')

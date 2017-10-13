@@ -118,21 +118,21 @@ EventManager.prototype.squadGen = function(master){
     chassis2 = this.game.rnd.pick(this.chassis['squadron'])
   };
 
-  this.game.emit('ship/create', {
-    // chassis: chassis1,
-    chassis: 'squad-shield',
-    x: randomPostion.x,
-    y: randomPostion.y,
-    ai: 'squadron',
-    master: master
-  });
-  this.game.emit('ship/create', {
-    chassis: this.game.rnd.pick(this.chassis['squadron2']),
-    x: randomPostion2.x,
-    y: randomPostion2.y,
-    ai: 'squadron',
-    master: master
-  });
+  // this.game.emit('ship/create', {
+  //   // chassis: chassis1,
+  //   chassis: 'squad-shield',
+  //   x: randomPostion.x,
+  //   y: randomPostion.y,
+  //   ai: 'squadron',
+  //   master: master
+  // });
+  // this.game.emit('ship/create', {
+  //   chassis: this.game.rnd.pick(this.chassis['squadron2']),
+  //   x: randomPostion2.x,
+  //   y: randomPostion2.y,
+  //   ai: 'squadron',
+  //   master: master
+  // });
 };
 
 EventManager.prototype.enforcerGen = function(x, y, master){

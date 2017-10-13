@@ -102,22 +102,6 @@ StationManager.prototype.sync = function(data) {
   }
 };
 
-StationManager.prototype.findStation = function(key){
-  var stations = this.stations,
-      location = 'popo'; 
-  // this.game.clock.events.add(100, function(){
-  //     console.log(key, this.stations)
-  // for(var a in this.stations){
-  //   console.log(stations[a].key)
-  //   if(stations[a].key === key){
-  //     console.log('wtf',stations[a]);
-  //   } 
-  // }
-
-  // }, this);  
-  return location
-  // ubadian-station-x01'
-};
 StationManager.prototype.remove = function(data) {
   var stations = this.stations,
       station = stations[data.uuid];

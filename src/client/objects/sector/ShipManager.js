@@ -9,13 +9,17 @@ var engine = require('engine'),
     FireEmitter = require('./emitters/FireEmitter'),
     Indicator = require('./misc/Indicator');
 
-function ShipManager(game, state) {
+function ShipManager(game, state, first) {
   this.game = game;
   this.state = state;
   this.clock = game.clock;
   this.net = game.net;
   this.socket = game.net.socket;
   this.enhancementManager = new EnhancementManager(this);
+
+  if(first){
+    this.firstIteration = true;
+  }
 
   // player
   this.player = null;
@@ -206,7 +210,24 @@ ShipManager.prototype._sync = function(data) {
 };
 
 ShipManager.prototype._player = function(ship) {
-  this.player = ship;
+  if(this.firstIteration){
+    console.log('firstIteration = ', this.firstIteration)
+    this.player = ship;
+    ship.alpha = 0
+    ship.events.loop(100, fadeIn = function(){
+      ship.alpha += 0.05
+      if(ship.alpha >= 1){
+        for(var i = 0; i < ship.events.events.length; i++){
+          if(ship.events.events[i].callback.name === 'fadeIn'){
+            ship.events.remove(ship.events.events[i]);  
+            console.log(ship.events)
+          }
+        }
+      }
+    }, this);
+  } else {
+    this.player = ship;
+  }
 
   this.player.unfriendlies = {};
   this.player.targetCount = 0;
@@ -214,6 +235,24 @@ ShipManager.prototype._player = function(ship) {
   this.player.previous;
   this.player.squadron = {};
   this.game.camera.follow(ship);
+};
+
+ShipManager.prototype.fadeInPlayerShip = function() {
+  console.log('git UUUUU')
+  if(this.player){
+    console.log('git here', this.player)
+    this.player.chassis.alpha = 0
+    this.player.events.loop(100, function(){
+      this.player.chassis.alpha += 0.1
+    }, this)
+    // if(chassis === 'scavenger-x04') {
+    //   for(var i = 0; i < ship.events.events.length; i++){
+    //     if(ship.events.events[i].callback.name === 'growlTimer'){
+    //       ship.events.remove(ship.events.events[i]);  
+    //     }
+    //   }
+    // };
+  }
 };
 
 ShipManager.prototype._attack = function(data) {
