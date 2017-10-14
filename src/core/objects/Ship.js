@@ -186,7 +186,10 @@ Ship.prototype.attack = function(data, rtt) {
 
 Ship.prototype.attacked = function(target, slot, target_uuid) {
   var ship, ships,
+      stations = this.game.sectorManager.stationManager.stations,
       manager = this.manager;
+      console.log(stations)
+      debugger
   if(manager != undefined) {
     ships = manager.ships;
     for(var s in ships) {
@@ -197,8 +200,12 @@ Ship.prototype.attacked = function(target, slot, target_uuid) {
       if(ship.game && ship != this) {
         ship.hit(this, target, slot, target_uuid);
       }
-    }
-  }
+    };
+    for(var st in stations){
+      // console.log('station is ', stations[st])
+        stations[st].hit(this, target, slot);
+    };
+  };
 };
 
 Ship.prototype.hit = function(attacker, target, slot, target_uuid) {
