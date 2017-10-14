@@ -185,6 +185,12 @@ Ship.prototype.explode = function() {
   this.explosion.start();
 };
 
+Ship.prototype.showHud = function(duration) {
+  this.hud.show();
+  this.hud.timer && this.events.remove(this.hud.timer);
+  this.hud.timer = this.events.add(duration, this.hud.hide, this.hud);
+};
+
 Ship.prototype.destroy = function(options) {
   // remove timers
   this.events.destroy();

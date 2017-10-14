@@ -174,7 +174,7 @@ Shipyard.prototype.create = function(ship) {
     },
     icon: {
       key: 'texture-atlas',
-      frame: ship + '.png',
+      frame: ship + '-hires.png',
       width: 128,
       height: 128,
       bg: {
@@ -203,6 +203,8 @@ Shipyard.prototype.create = function(ship) {
 
   return button;
 };
+
+// add bg-slide-ubaidian-256.png
 
 Shipyard.prototype.stats = function(){
   this.shipStats = {
@@ -379,6 +381,7 @@ Shipyard.prototype._hover = function(button) {
         },
         bg: false
       }); 
+  this.game.emit('shipyard/hover', 'selectionSFX1')
   for(var i = 0; i < ships.length-2; i++){
     if(ships[i].children[1].id !== ship){
       ships[i].alpha = ships[i].alpha - 0.7;
@@ -414,6 +417,7 @@ Shipyard.prototype._hover = function(button) {
 
 Shipyard.prototype._select= function(button){
   this.socket.emit('user/shipSelected', button.parent.id, this.game.auth.socket.id)
+  this.game.emit('shipyard/hover', 'selectionSFX2')
   this.game.emit('user/shipSelected')
   this.destroy()
 };

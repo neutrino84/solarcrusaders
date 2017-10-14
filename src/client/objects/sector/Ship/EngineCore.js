@@ -63,7 +63,7 @@ EngineCore.prototype.create = function() {
 
 EngineCore.prototype.start = function() {
   this.isBoosting = true;
-  this.clamp = 1.25;
+  // this.clamp = 1.25;
 };
 
 EngineCore.prototype.stop = function() {
@@ -99,14 +99,18 @@ EngineCore.prototype.update = function(multiplier) {
     scale = config[g].scale;
     
     // update glow
-    glows[g].scale.set(
-      multiplier * scale.endX + scale.startX + flicker,
-      multiplier * scale.endY + scale.startY + flicker);
+    if(!ship.docked){
+      glows[g].scale.set(
+        multiplier * scale.endX + scale.startX + flicker,
+        multiplier * scale.endY + scale.startY + flicker);
+    }
 
     // update highlight
     highlight = highlights[g];
     highlight.alpha = multiplier;
-    highlight.scale.set(multiplier/2, multiplier/2);
+    if(!ship.docked){
+      highlight.scale.set(multiplier/2, multiplier/2); 
+    }
       
     if(this.isBoosting) {
       position = game.world.worldTransform.applyInverse(ship.worldTransform.apply(glows[g].position))

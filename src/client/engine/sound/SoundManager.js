@@ -97,6 +97,7 @@ SoundManager.prototype.add = function(key, limit) {
       pooling = this._pooling,
       context = this.context,
       data = game.cache.getSoundData(key);
+      
   if(context && data) {
     pooling[key] = [];
 

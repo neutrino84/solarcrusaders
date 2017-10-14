@@ -98,7 +98,6 @@ SectorState.prototype.create = function() {
       mouse.mouseWheelCallback = function(event) {
         var delta = event.deltaY / sensitivity,
             scale = engine.Math.clamp(this.world.scale.x - delta, 0.5, 1.0);
-            // console.log(scale)
         if(self.game.paused) { return; }
         if(self.zoom && self.zoom.isRunning) {
           self.zoom.stop();
@@ -123,13 +122,16 @@ SectorState.prototype.create = function() {
   // create ui
   this.ui.create();
 
+  // shipyard selection SFX
+  this.game.sound.add('selectionSFX1', 2);
+  this.game.sound.add('selectionSFX2', 1);
 };
 
 SectorState.prototype.playerCreated = function(){
     var game = this.game;
 
     this.createManagers('firstIteration');
-    
+
     game.clock.events.add(1500, function(){
       game.clock.events.loop(100, zoomOut = function(){
         this.scaleX = this.scaleX - 0.01;
@@ -138,8 +140,8 @@ SectorState.prototype.playerCreated = function(){
         if(this.scaleX <= 0.8){
           for(var i = 0; i < game.clock.events.events.length; i++){
             if(game.clock.events.events[i].callback.name === 'zoomOut'){
-              game.clock.events.remove(game.clock.events.events[i]); 
-              console.log(this.scaleX)
+              game.clock.events.remove(game.clock.events.events[i]);
+              this.shipManager.undock();
             }
           };
         }

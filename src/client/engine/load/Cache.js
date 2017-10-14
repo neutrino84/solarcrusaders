@@ -258,6 +258,7 @@ Cache.prototype = {
   },
 
   getItem: function(key, cache, property) {
+    
     if(!this.checkKey(cache, key)) {
       console.warn('Cache: Key "' + key + '" not found in Cache.');
     } else {

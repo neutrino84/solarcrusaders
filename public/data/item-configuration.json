@@ -290,10 +290,10 @@
       "basic": {
         "cost": -30,
         "cooldown": 18,
-        "active": 3,
+        "active": 7,
         "stats": {
           "heal": {
-            "value": 10.0
+            "value": 7.0
           }
         },
         "sound": {

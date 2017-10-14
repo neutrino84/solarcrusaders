@@ -23,7 +23,6 @@ SoundManager.prototype.preload = function() {
   var game = this.game,
       load = game.load;
 
-
   load.audio('background1', 'sounds/background_music/eerie1.mp3');
   load.audio('background2', 'sounds/background_music/eerie2.mp3');
   load.audio('background3', 'sounds/background_music/Spacetheme1.mp3');    
@@ -106,6 +105,14 @@ SoundManager.prototype.preload = function() {
 
   load.audio('ShieldMaidenInbound','sounds/squadCallbacks/ShieldMaidenInbound.mp3');
   load.audio('ShieldMaidenOnline','sounds/squadCallbacks/ShieldMaidenOnline.mp3');
+
+  //SELECTION
+  load.audio('selectionSFX1', 'sounds/misc/selectionSFX1.mp3');
+  load.audio('selectionSFX2', 'sounds/misc/selectionSFX2.mp3');
+
+
+  this.game.on('shipyard/hover', this._selection, this);
+  
 };
 
 SoundManager.prototype.create = function() {
@@ -113,6 +120,9 @@ SoundManager.prototype.create = function() {
   this.shipManager = this.manager.shipManager;
   this.ships = this.shipManager.ships;
   this.config = this.game.cache.getJSON('item-configuration', false);
+
+
+  this.game.on('shipyard/hover', this._selection, this);
 
   // generate sound pools
   this.game.sound.add('pulse-basic', 6);
@@ -210,6 +220,10 @@ SoundManager.prototype.create = function() {
   this.game.on('global/sound/spawn', this.generateSpawnSound, this);
 
   this.game.on('squad/sound', this.generateSquadSound, this);
+};
+
+SoundManager.prototype._selection = function(sound){
+  this.game.sound.play(sound, 0.2, false);
 };
 
 SoundManager.prototype._enhance = function(data) {
@@ -344,7 +358,7 @@ SoundManager.prototype.generateSystemSound = function(sound){
 
 SoundManager.prototype.generateBackgroundMusic = function(){
   var num = Math.floor((Math.random() * 3)+1);
-  // this.game.sound.play('background'+num, 0.6, true);
+  this.game.sound.play('background'+num, 0.6, true);
 };
 
 SoundManager.prototype.generateThrusterSound = function(){
@@ -444,12 +458,10 @@ SoundManager.prototype.generateExplosionSound = function(data){
   if(player && player === ship){
     sound = bigExplosion;
     volume = 0.75;
-    console.log(sound)
   };
   if(player && player !== ship) {   
     distance = engine.Point.distance(ship, player);    
     volume = global.Math.max(1 - (distance / 5000), 0);
-    console.log(data.data.size)
     if(data.data.size >= 64) {
       sound = bigExplosion
       if(volume >.6){volume = .6}

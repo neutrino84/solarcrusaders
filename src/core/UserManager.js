@@ -80,7 +80,6 @@ UserManager.prototype.connect = function(socket) {
 
 UserManager.prototype.create = function(data){
   winston.info('[UserManager] Creating user in game');
-  console.log('user session data is ', data)
   user = new User(this.game, data.data, data.socket, data.chassis, data.startingPosition);
   user.init(function() {
     this.game.emit('user/add', user);

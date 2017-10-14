@@ -22,19 +22,23 @@ EnhancementManager.prototype._started = function(data) {
         ship.repair.start();
         ship.hud.show();
         ship.hud.timer && ship.events.remove(ship.hud.timer);
-        ship.hud.timer = ship.events.add(3000, ship.hud.hide, ship.hud);
+        ship.hud.timer = ship.events.add(4000, ship.hud.hide, ship.hud);
         break;
       case 'booster':
         ship.engineCore.start();
+        ship.showHud(4000);
         break;
       case 'shield':
         ship.shieldGenerator.start();
+        ship.showHud(2000);
         break;
       case 'piercing':
         ship.targetingComputer.enhance(data.enhancement, true);
+        ship.showHud(2000);
         break;
       case 'detect':
         ship.targetingComputer.enhance(data.enhancement, true);
+        ship.showHud(2000);
         break;
     }
   }

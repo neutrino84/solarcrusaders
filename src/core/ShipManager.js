@@ -34,6 +34,7 @@ ShipManager.prototype.init = function(eventManager) {
   this.sockets.on('ship/attack', this.attack, this);
   this.sockets.on('ship/enhancement/start', this.enhancement, this);
 
+  this.sockets.on('player/undock', this.player_undock, this);
   this.sockets.on('squad/engageHostile', this.squad_engage, this);
   this.sockets.on('squad/shieldmaidenActivate', this.squad_shieldmaidenActivate, this);
   this.sockets.on('squad/regroup', this.squad_regroup, this);
@@ -203,6 +204,12 @@ ShipManager.prototype.squad_shield = function(socket, args){
         ship.ai.shield(args[1].destination);
       };
     };
+};
+
+ShipManager.prototype.player_undock = function(socket, args){
+  var ships = this.ships,
+      player = ships[args[1]];
+    player.docked = false;
 };
 
 ShipManager.prototype.enhancement = function(socket, args) {

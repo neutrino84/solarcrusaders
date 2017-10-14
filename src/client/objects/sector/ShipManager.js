@@ -124,6 +124,10 @@ ShipManager.prototype.create = function(data, sync) {
   return ship;
 };
 
+ShipManager.prototype.undock = function() {
+  this.player.locked = false;
+};
+
 ShipManager.prototype.remove = function(data) {
   var game = this.game,
       camera = game.camera,
@@ -211,16 +215,15 @@ ShipManager.prototype._sync = function(data) {
 
 ShipManager.prototype._player = function(ship) {
   if(this.firstIteration){
-    console.log('firstIteration = ', this.firstIteration)
     this.player = ship;
     ship.alpha = 0
+    ship.locked = true;
     ship.events.loop(100, fadeIn = function(){
       ship.alpha += 0.05
       if(ship.alpha >= 1){
         for(var i = 0; i < ship.events.events.length; i++){
           if(ship.events.events[i].callback.name === 'fadeIn'){
-            ship.events.remove(ship.events.events[i]);  
-            console.log(ship.events)
+            ship.events.remove(ship.events.events[i]);
           }
         }
       }
@@ -235,24 +238,6 @@ ShipManager.prototype._player = function(ship) {
   this.player.previous;
   this.player.squadron = {};
   this.game.camera.follow(ship);
-};
-
-ShipManager.prototype.fadeInPlayerShip = function() {
-  console.log('git UUUUU')
-  if(this.player){
-    console.log('git here', this.player)
-    this.player.chassis.alpha = 0
-    this.player.events.loop(100, function(){
-      this.player.chassis.alpha += 0.1
-    }, this)
-    // if(chassis === 'scavenger-x04') {
-    //   for(var i = 0; i < ship.events.events.length; i++){
-    //     if(ship.events.events[i].callback.name === 'growlTimer'){
-    //       ship.events.remove(ship.events.events[i]);  
-    //     }
-    //   }
-    // };
-  }
 };
 
 ShipManager.prototype._attack = function(data) {
@@ -307,8 +292,7 @@ ShipManager.prototype._secondary = function(data) {
       end = this.game.input.mousePointer,
       position = this.game.world.worldTransform.applyInverse(end),
       destination = { x: end.x - start.x, y: end.y - start.y };
-
-  if(ship) {
+  if(ship && !ship.locked) {
     if(data.shield){
       indicator.show(position);
       socket.emit('squad/shield', {
@@ -317,6 +301,10 @@ ShipManager.prototype._secondary = function(data) {
       })
     }
     else if(data.type === 'start') {
+      if(ship.docked){
+        ship.docked = false;
+        socket.emit('player/undock', ship.uuid)
+      }
       indicator.show(position);
       game.emit('ship/plot');
       socket.emit('ship/plot', {

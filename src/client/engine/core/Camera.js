@@ -25,12 +25,12 @@ Camera.FOLLOW_SMOOTH = 1;
 Camera.prototype.constructor = Camera;
 
 Camera.prototype.shake = function(duration) {
-  // this.shaking = 0.0;
-  // this.tween && this.tween.stop();
-  // this.tween = this.game.tweens.create(this);
-  // this.tween.to({ shaking: 1.0 }, (duration || 250) / 2);
-  // this.tween.yoyo(true);
-  // this.tween.start();
+  this.shaking = 0.0;
+  this.tween && this.tween.stop();
+  this.tween = this.game.tweens.create(this);
+  this.tween.to({ shaking: 1.0 }, (duration || 250) / 2);
+  this.tween.yoyo(true);
+  this.tween.start();
 };
 
 Camera.prototype.pan = function(x, y) {
