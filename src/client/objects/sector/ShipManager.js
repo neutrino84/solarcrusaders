@@ -103,7 +103,7 @@ ShipManager.prototype.create = function(data, sync) {
   container.add(ship);
 
   // boot
-  ship.boot();
+  ship.create();
 
   return ship;
 };

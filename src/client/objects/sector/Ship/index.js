@@ -15,13 +15,14 @@ function Ship(manager, data) {
 
   this.name = data.name;
   this.manager = manager;
+  this.game = manager.game;
   this.data = data;
   
   // config data
   this.config = data.config.ship;
 
   // layer chassis
-  this.chassis = new engine.Sprite(manager.game, 'texture-atlas', data.chassis + '.png');
+  this.chassis = new engine.Sprite(this.game, 'texture-atlas', data.chassis + '.png');
 
   // defaults
   this.rotation = data.rotation + global.Math.PI;
@@ -45,7 +46,7 @@ function Ship(manager, data) {
 Ship.prototype = Object.create(engine.Sprite.prototype);
 Ship.prototype.constructor = Ship;
 
-Ship.prototype.boot = function() {
+Ship.prototype.create = function() {
   // add chassis
   this.addChild(this.chassis);
 
@@ -91,11 +92,6 @@ Ship.prototype.refresh = function(data) {
     // send hit to targeting computer
     targetingComputer.hit(defender, data);
 
-    // show selector damage
-    defender.selector.damage();
-    defender.selector.timer && defender.events.remove(defender.selector.timer);
-    defender.selector.timer = defender.events.add(500, defender.selector.reset, defender.selector);
-
     // show hud screen
     defender.hud.show();
     defender.hud.timer && defender.events.remove(defender.hud.timer);
@@ -105,12 +101,6 @@ Ship.prototype.refresh = function(data) {
       this.game.camera.shake();
     }
   };
-
-  if(data.durability) {
-    if(data.durability < this.config.stats.durability) {
-      this.alpha = (data.durability / this.config.stats.durability);
-    }
-  }
 
   // update hud
   this.hud.data(data);
@@ -122,7 +112,7 @@ Ship.prototype.update = function() {
       speed = this.config.stats.speed,
       multiplier = velocity/speed;
 
-  this.events.update(this.game.clock.time);
+  // update systems
   this.movement.update();
   this.targetingComputer.update();
   this.hud.update();
@@ -135,6 +125,9 @@ Ship.prototype.update = function() {
   } else {
     this.engineCore.update(multiplier);
   }
+
+  // update timers
+  this.events.update(this.game.clock.time);
 
   engine.Sprite.prototype.update.call(this);
 };
