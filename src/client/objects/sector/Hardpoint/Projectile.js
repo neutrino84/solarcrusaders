@@ -32,12 +32,12 @@ function Projectile(parent) {
   this.projectile.alpha = 0.0;
 };
 
-Projectile.prototype.start = function(destination, distance, spawn, index, slot) {
+Projectile.prototype.start = function(destination, distance, spawn, index, slot, total) {
   this.elapsed = 0;
   this.duration = distance * this.data.projection;
   this.length = this.data.length;
   this.runtime = this.duration;
-  this.delay = this.data.delay + (this.runtime * ((index) / (spawn+1))) + ((slot * (this.runtime)/(slot+1)) * this.game.rnd.frac());
+  this.delay = this.data.delay + (this.duration * ((index) / (spawn+1))) + (this.parent.ship.data.rate * this.game.rnd.realInRange(0.0, 1.0) * (slot/total));
   this.started = this.clock.time + this.delay;
 
   this.isRunning = true;

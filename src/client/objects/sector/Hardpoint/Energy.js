@@ -38,12 +38,12 @@ function Energy(parent) {
   this.glow.blendMode = engine.BlendMode.ADD;
 };
 
-Energy.prototype.start = function(destination, distance, spawn, index) {
+Energy.prototype.start = function(destination, distance, spawn, index, slot, total) {
   this.elapsed = 0;
   this.length = this.data.length;
   this.duration = distance * this.data.projection;
   this.runtime = this.duration + this.length;
-  this.delay = this.data.delay;
+  this.delay = this.data.delay + (this.parent.ship.data.rate * this.game.rnd.realInRange(0.0, 1.0) * (slot/total));
   this.started = this.clock.time + this.delay;
 
   this.ship = null;
