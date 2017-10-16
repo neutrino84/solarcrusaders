@@ -13,7 +13,7 @@ function EventManager(game) {
   this.sockets = game.sockets;
 
   this.level = 1;
-  this.ships = {
+  this.inventory = {
     basic: 0,
     pirate: 0
   };
@@ -67,34 +67,34 @@ EventManager.prototype.disabled = function(object) {
   if(object.ai) {
     switch(object.ai.type) {
       case 'basic':
-        this.ships.basic--;
+        this.inventory.basic--;
         break;
       case 'pirate':
-        this.ships.pirate--;
+        this.inventory.pirate--;
         break;
     }
   }
 };
 
 EventManager.prototype.update = function() {
-  // if(this.ships.pirate < 2 && this.game.rnd.frac() > 0.75) {
-  //   this.ships.pirate++;
-  //   this.game.emit('ship/create', {
-  //     x: 2048,
-  //     y: 2048,
-  //     chassis: 'general-x01',
-  //     ai: 'pirate'
-  //   });
-  // }
-  // if(this.ships.basic < 3 && this.game.rnd.frac() > 0.75) {
-  //   this.ships.basic++;
-  //   this.game.emit('ship/create', {
-  //     x: 2048,
-  //     y: 2048,
-  //     chassis: 'ubaidian-x04',
-  //     ai: 'basic'
-  //   });
-  // }
+  if(this.inventory.pirate < 0) {
+    this.inventory.pirate++;
+    this.game.emit('ship/create', {
+      x: 2048,
+      y: 2048,
+      chassis: 'general-x0' + global.Math.ceil(global.Math.random() * 3),
+      ai: 'pirate'
+    });
+  }
+  if(this.inventory.basic < 0) {
+    this.inventory.basic++;
+    this.game.emit('ship/create', {
+      x: 2048,
+      y: 2048,
+      chassis: 'ubaidian-x0' + global.Math.ceil(global.Math.random() * 7),
+      ai: 'basic'
+    });
+  }
 };
 
 EventManager.prototype.generateRandomPosition = function(size) {
