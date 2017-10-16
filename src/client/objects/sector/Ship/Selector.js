@@ -1,5 +1,6 @@
 
-var engine = require('engine');
+var engine = require('engine'),
+    OutlineFilter = require('../../../fx/filters/OutlineFilter');
 
 function Selector(ship) {
   this.ship = ship;
@@ -12,11 +13,11 @@ Selector.prototype.constructor = Selector;
 
 Selector.prototype.create = function() {
   var ship = this.ship,
-      size = ship.isPlayer ? 10 : 6,
+      size = ship.isPlayer ? 12 : 10,
       radius = ship.data.size,
       halfWidth = ship.width/2,
       halfHeight = ship.height/2,
-      color = ship.data.ai && ship.data.ai === 'pirate' ? 0xcc3333 : 0x3366cc;
+      color = ship.data.ai && ship.data.ai === 'pirate' ? 0xcc3333 : 0x0066ff;
 
   // add selector highlight
   this.alpha = ship.isPlayer ? 0.6 : 0.2;
@@ -27,9 +28,9 @@ Selector.prototype.create = function() {
   // create selection
   this.graphics = new engine.Graphics();
   this.graphics.lineStyle(size, color, 1.0);
-  this.graphics.drawCircle(this.hit.x, this.hit.y, this.hit.radius);
+  this.graphics.drawCircle(this.hit.x, this.hit.y, this.hit.radius * 2);
   this.graphics.pivot.set(halfWidth, halfHeight);
-  this.graphics.position.set(halfWidth + (size/2), halfHeight + (size/2));
+  this.graphics.position.set(halfWidth, halfHeight);
   this.graphics.blendMode = engine.BlendMode.ADD;
   this.graphics.alpha = this.alpha;
 
@@ -46,6 +47,17 @@ Selector.prototype.create = function() {
   // add selector
   this.ship.addChildAt(this.graphics, 0);
   // this.ship.addChildAt(this.reticle, 0);
+
+  // add outline
+  if(this.ship.isPlayer) {
+    this.outlineFilter = new OutlineFilter(2.0, 0x0066ff);
+    this.outlineFilter.blendMode = engine.BlendMode.ADD;
+
+    this.sprite = new engine.Sprite(this.game, 'texture-atlas', ship.data.chassis + '.png');
+    this.sprite.filters = [this.outlineFilter];
+
+    this.ship.addChild(this.sprite);
+  }
 };
 
 Selector.prototype.highlight = function() {
