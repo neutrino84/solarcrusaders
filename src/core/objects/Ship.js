@@ -283,7 +283,10 @@ Ship.prototype.disable = function() {
 
   // broadcast
   this.game.emit('ship/disabled', {
-    uuid: this.uuid
+    uuid: this.uuid,
+    ai: {
+      type: this.ai ? this.ai.type : null
+    }
   });
 };
 
