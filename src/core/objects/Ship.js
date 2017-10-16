@@ -193,7 +193,6 @@ Ship.prototype.hit = function(attacker, target, slot) {
       ai = this.ai,
       durability = this.durability,
       hardpoint = attacker.hardpoints[slot],
-      piercing = attacker.enhancements.active.piercing,
       compensated = movement.compensated(),
       distance = compensated.distance(target),
       ratio = distance / (this.size * hardpoint.data.aoe),
@@ -212,7 +211,6 @@ Ship.prototype.hit = function(attacker, target, slot) {
     critical = this.game.rnd.rnd() <= attacker.critical;
     damage = global.Math.max(0, hardpoint.data.damage * (1-ratio) * (1-this.armor));
     damage += critical ? damage : 0;
-    damage *= piercing ? piercing.damage : 1.0;
     health = data.health-damage;
 
     // update damage

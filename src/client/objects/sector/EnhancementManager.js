@@ -27,9 +27,6 @@ EnhancementManager.prototype._started = function(data) {
       case 'shield':
         ship.shieldGenerator.start();
         break;
-      case 'piercing':
-        ship.targetingComputer.enhance(data.enhancement, true);
-        break;
     }
   }
 };
@@ -46,9 +43,6 @@ EnhancementManager.prototype._stopped = function(data) {
         break;
       case 'shield':
         ship.shieldGenerator.stop();
-        break;
-      case 'piercing':
-        ship.targetingComputer.enhance(data.enhancement, false);
         break;
     }
   }

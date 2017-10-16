@@ -76,10 +76,6 @@ Hardpoint.prototype.fire = function(targ) {
       }
     };
 
-    if(this.parent.enhancements.piercing) {
-      spawn += 1;
-    }
-
     for(var i=0; i<spawn; i++) {
       if(cache.length) {
         launcher = cache.pop();

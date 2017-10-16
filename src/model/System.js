@@ -17,7 +17,7 @@ var System = schema.define('system', {
 });
 
 System.TYPES = ['reactor', 'pilot', 'engine', 'shield', 'targeting', 'repair', 'teleport', 'scanner', 'cloak'];
-System.ENHANCEMENTS = ['heal', 'shield', 'piercing', 'booster'];
+System.ENHANCEMENTS = ['heal', 'shield', 'booster'];
 
 System.validatesPresenceOf('name');
 System.validatesPresenceOf('stats');

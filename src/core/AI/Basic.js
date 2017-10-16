@@ -131,10 +131,6 @@ Basic.prototype.engage = function(target) {
     this.disengager = this.game.clock.events.add(settings.disengage, this.disengage, this);
   }
 
-  if(this.game.rnd.frac() < 0.5) {
-    ship.activate('piercing');
-  }
-
   // engage countermeasures
   if(this.game.rnd.frac() < 0.10) {
     ship.activate('booster');
