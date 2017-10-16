@@ -5,7 +5,6 @@ var engine = require('engine'),
     Space = require('../fx/Space'),
     Planet = require('../fx/Planet'),
     NebulaCluster = require('../fx/NebulaCluster'),
-    Snow = require('../fx/Snow'),
     InputManager = require('../objects/sector/InputManager'),
     ShipManager = require('../objects/sector/ShipManager'),
     StationManager = require('../objects/sector/StationManager'),
@@ -38,7 +37,6 @@ SectorState.prototype.preload = function() {
   // load background
   this.game.load.image('space', 'imgs/game/space/sector-a.jpg');
   this.game.load.image('nebula', 'imgs/game/space/nebula-a.jpg');
-  this.game.load.image('snow', 'imgs/game/space/snow.jpg');
 
   this.game.load.image('planet', 'imgs/game/planets/eamon-alpha.jpg');
   this.game.load.image('clouds', 'imgs/game/planets/clouds.jpg');
@@ -50,7 +48,8 @@ SectorState.prototype.preload = function() {
   // load strip graphics
   this.game.load.image('laser-blue', 'imgs/game/fx/laser-blue.png');
   this.game.load.image('laser-red', 'imgs/game/fx/laser-red.png');
-  this.game.load.image('laser-energy', 'imgs/game/fx/laser-energy.png');
+  this.game.load.image('energy-blue', 'imgs/game/fx/energy-blue.png');
+  this.game.load.image('energy-red', 'imgs/game/fx/energy-red.png');
 
   // load texture atlas
   this.game.load.atlasJSONHash('texture-atlas', 'imgs/game/texture-atlas.png', 'data/texture-atlas.json');
@@ -71,7 +70,7 @@ SectorState.prototype.create = function() {
       mouse.capture = true;
       mouse.mouseWheelCallback = function(event) {
         var delta = event.deltaY / sensitivity,
-            scale = engine.Math.clamp(this.world.scale.x - delta, 0.34, 1.0);
+            scale = engine.Math.clamp(this.world.scale.x - delta, 0.28, 1.0);
         if(self.game.paused) { return; }
         if(self.zoom && self.zoom.isRunning) {
           self.zoom.stop();
@@ -81,7 +80,7 @@ SectorState.prototype.create = function() {
 
   // set world
   this.game.world.size(0, 0, 4096, 4096);
-  this.game.world.scale.set(0.34, 0.34);
+  this.game.world.scale.set(0.28, 0.28);
 
   // adjust camera
   this.game.camera.focus(2048, 2048);
@@ -90,7 +89,6 @@ SectorState.prototype.create = function() {
   this.createAsteroids();
   this.createManagers();
   this.createSpace();
-  this.createSnow();
 
   // create ui
   this.ui.create();
@@ -122,11 +120,6 @@ SectorState.prototype.createManagers = function() {
   this.hotkeyManager = new HotkeyManager(game, this);
   this.stationManager = new StationManager(game, this);
   this.shipManager = new ShipManager(game, this);
-};
-
-SectorState.prototype.createSnow = function() {
-  this.snow = new Snow(this.game, this.game.width, this.game.height);
-  this.game.world.front.add(this.snow);
 };
 
 SectorState.prototype.createAsteroids = function() {
@@ -178,7 +171,6 @@ SectorState.prototype.update = function() {
 SectorState.prototype.resize = function(width, height) {
   this.ui && this.ui.resize(width, height);
   this.space && this.space.resize(width, height);
-  this.snow && this.snow.resize(width, height);
 };
 
 // paused = function() {};
