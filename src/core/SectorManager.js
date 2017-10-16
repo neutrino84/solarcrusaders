@@ -51,6 +51,9 @@ SectorManager.prototype.update = function() {
       ships = this.shipManager.sync(),
       stations = this.stationManager.sync();
 
+  // update events
+  this.eventManager.update();
+
   // syncronize all
   sockets.send('sector/sync', {
     users: users,
