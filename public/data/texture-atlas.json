@@ -47,7 +47,7 @@
 },
 "asteroid-x06.png":
 {
-	"frame": {"x":852,"y":259,"w":57,"h":59},
+	"frame": {"x":786,"y":259,"w":57,"h":59},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":57,"h":59},
@@ -92,7 +92,7 @@
 },
 "enhancement-piercing.png":
 {
-	"frame": {"x":911,"y":294,"w":48,"h":48},
+	"frame": {"x":845,"y":259,"w":48,"h":48},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
@@ -101,7 +101,7 @@
 },
 "enhancement-shield.png":
 {
-	"frame": {"x":852,"y":320,"w":48,"h":48},
+	"frame": {"x":895,"y":294,"w":48,"h":48},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
@@ -171,15 +171,6 @@
 	"sourceSize": {"w":64,"h":64},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"general-x03.png":
-{
-	"frame": {"x":341,"y":196,"w":64,"h":64},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
-	"sourceSize": {"w":64,"h":64},
-	"pivot": {"x":0.5,"y":0.5}
-},
 "icon-target.png":
 {
 	"frame": {"x":977,"y":228,"w":40,"h":40},
@@ -227,7 +218,7 @@
 },
 "turret-glow.png":
 {
-	"frame": {"x":929,"y":162,"w":64,"h":64},
+	"frame": {"x":341,"y":196,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -236,7 +227,7 @@
 },
 "turret-rocket-a.png":
 {
-	"frame": {"x":911,"y":228,"w":64,"h":64},
+	"frame": {"x":929,"y":162,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -263,7 +254,7 @@
 },
 "ubaidian-x03.png":
 {
-	"frame": {"x":670,"y":222,"w":64,"h":64},
+	"frame": {"x":911,"y":228,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -272,7 +263,7 @@
 },
 "ubaidian-x04.png":
 {
-	"frame": {"x":786,"y":259,"w":64,"h":64},
+	"frame": {"x":670,"y":222,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -313,6 +304,6 @@
 	"format": "RGBA8888",
 	"size": {"w":1024,"h":1024},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:0b35d65bf58b276849d1295da55afed7:e46122db1a79a6730407b7a1e0717b56:a973cd4a72d4c90ced76930eac7fdc63$"
+	"smartupdate": "$TexturePacker:SmartUpdate:3084908076f7feac5db6e0216961beb7:1a8f2a1d7d70f8e4d5f562002aaa9369:a973cd4a72d4c90ced76930eac7fdc63$"
 }
 }

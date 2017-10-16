@@ -225,7 +225,6 @@
             </struct>
             <key type="filename">fx/engine-highlight.png</key>
             <key type="filename">fx/turret-glow.png</key>
-            <key type="filename">ships/general/general-x03.png</key>
             <key type="filename">turrets/turret-rocket-a.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -437,7 +436,6 @@
             <filename>ships/ubaidian/ubaidian-x05.png</filename>
             <filename>ships/ubaidian/ubaidian-x06.png</filename>
             <filename>ships/ubaidian/ubaidian-x07.png</filename>
-            <filename>ships/general/general-x03.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
