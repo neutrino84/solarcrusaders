@@ -133,7 +133,7 @@ Hud.prototype.update = function() {
 
     this.scale.set(inverse, inverse);
     this.rotation = -ship.rotation;
-    this.container.y = -(ship.data.size/inverse+8);
+    this.container.y = -((ship.data.size*2)/inverse+8);
   }
 };
 
