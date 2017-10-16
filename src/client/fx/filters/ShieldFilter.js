@@ -13,7 +13,7 @@ function ShieldFilter(game, sprite) {
   this.matrix = new pixi.Matrix();
   this.padding = 4;
 
-  this.uniforms.scale = sprite.texture.width/320.0;
+  this.uniforms.scale = 24.0;
   this.uniforms.mapSampler = sprite.texture;
   this.uniforms.filterMatrix = this.matrix.toArray(true);
   this.uniforms.time = 0.0;
