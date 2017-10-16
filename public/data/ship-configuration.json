@@ -16,7 +16,7 @@
       "durability": 1000,
       "critical": 0.025
     },
-    "enhancements": ["heal", "booster", "shield", "piercing"],
+    "enhancements": ["heal", "booster", "shield"],
     "engine": {
       "glows": [
         {
@@ -104,7 +104,7 @@
       "durability": 1000,
       "critical": 0.025
     },
-    "enhancements": ["heal", "booster", "shield", "piercing"],
+    "enhancements": ["heal", "booster", "shield"],
     "engine": {
       "glows": [
         {
@@ -203,20 +203,34 @@
       "durability": 1000,
       "critical": 0.05
     },
-    "enhancements": ["heal", "booster", "shield", "piercing"],
+    "enhancements": ["heal", "booster", "shield"],
     "engine": {
       "glows": [
         {
-          "tint": "0xeef1e8",
+          "tint": "0x3399FF",
           "scale": {
-            "startX": 0.08,
-            "endX": 0.18,
-            "startY": 0.22,
-            "endY": 0.88
+            "startX": 0.02,
+            "endX": 0.04,
+            "startY": 0.02,
+            "endY": 0.06
           },
           "position": {
-            "x": 36,
-            "y": 32
+            "x": 42,
+            "y": 43
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "0x3399FF",
+          "scale": {
+            "startX": 0.02,
+            "endX": 0.04,
+            "startY": 0.02,
+            "endY": 0.06
+          },
+          "position": {
+            "x": 42,
+            "y": 20
           },
           "rotation": 0
         }
@@ -266,7 +280,7 @@
       "durability": 1000,
       "critical": 0.05
     },
-    "enhancements": ["heal", "booster", "shield", "piercing"],
+    "enhancements": ["heal", "booster", "shield"],
     "engine": {
       "glows": [
         {
@@ -318,22 +332,36 @@
       "durability": 1000,
       "critical": 0.025
     },
-    "enhancements": ["heal", "booster", "shield", "piercing"],
+    "enhancements": ["heal", "booster", "shield"],
     "engine": {
       "glows": [
         {
-          "tint": "0xeef1e8",
+          "tint": "0x3399FF",
           "scale": {
             "startX": 0.12,
-            "endX": 0.32,
-            "startY": 0.58,
-            "endY": 1.88
+            "endX": 0.12,
+            "startY": 0.12,
+            "endY": 0.12
           },
           "position": {
-            "x": 90,
-            "y": 63
+            "x": 89,
+            "y": 47
           },
-          "rotation": 0
+          "rotation": 10
+        },
+        {
+          "tint": "0x3399FF",
+          "scale": {
+            "startX": 0.12,
+            "endX": 0.12,
+            "startY": 0.12,
+            "endY": 0.12
+          },
+          "position": {
+            "x": 89,
+            "y": 80
+          },
+          "rotation": -10
         }
       ]
     },
@@ -375,151 +403,6 @@
       ]
     }
   },
-  "ubaidian-x06": {
-    "race": "ubaidian",
-    "class": "destroyer",
-    "stats": {
-      "capacity": 1000,
-      "health": 100,
-      "heal": 0.2,
-      "armor": 0.0,
-      "speed": 24.0,
-      "rate": 512,
-      "evasion": 0.1,
-      "energy": 200,
-      "recharge": 1,
-      "size": 64,
-      "durability": 1000,
-      "critical": 0.025
-    },
-    "enhancements": ["heal", "booster", "shield", "piercing"],
-    "engine": {
-      "glows": [
-        {
-          "tint": "0xeef1e8",
-          "scale": {
-            "startX": 0.12,
-            "endX": 0.32,
-            "startY": 0.58,
-            "endY": 1.88
-          },
-          "position": {
-            "x": 98,
-            "y": 63
-          },
-          "rotation": 0
-        }
-      ]
-    },
-    "targeting": {
-      "hardpoints": [
-        {
-          "type": ["energy", "pulse"],
-          "position": {
-            "x": 80,
-            "y": 49
-          },
-          "default": {
-            "type": "pulse",
-            "subtype": "basic"
-          }
-        },
-        {
-          "type": ["energy", "pulse"],
-          "position": {
-            "x": 98,
-            "y": 64
-          },
-          "default": {
-            "type": "pulse",
-            "subtype": "basic"
-          }
-        },
-        {
-          "type": ["energy", "pulse"],
-          "position": {
-            "x": 80,
-            "y": 79
-          },
-          "default": {
-            "type": "pulse",
-            "subtype": "basic"
-          }
-        }
-      ]
-    }
-  },
-  "ubaidian-x07": {
-    "race": "ubaidian",
-    "class": "destroyer",
-    "stats": {
-      "capacity": 1000,
-      "health": 100,
-      "heal": 0.2,
-      "armor": 0.0,
-      "speed": 28.0,
-      "rate": 1024,
-      "evasion": 0.1,
-      "energy": 200,
-      "recharge": 1,
-      "size": 64,
-      "durability": 1000,
-      "critical": 0.025
-    },
-    "enhancements": ["heal", "booster", "shield", "piercing"],
-    "engine": {
-      "glows": [
-        {
-          "tint": "0xeef1e8",
-          "scale": {
-            "startX": 0.24,
-            "endX": 0.34,
-            "startY": 0.24,
-            "endY": 1.24
-          },
-          "position": {
-            "x": 78,
-            "y": 64
-          },
-          "rotation": 0
-        }
-      ]
-    },
-    "targeting": {
-      "hardpoints": [
-        {
-          "position": {
-            "x": 59,
-            "y": 39
-          },
-          "default": {
-            "type": "rocket",
-            "subtype": "basic"
-          }
-        },
-        {
-          "position": {
-            "x": 33,
-            "y": 63
-          },
-          "default": {
-            "type": "rocket",
-            "subtype": "basic"
-          }
-        },
-        {
-          "position": {
-            "x": 59,
-            "y": 88
-          },
-          "default": {
-            "type": "rocket",
-            "subtype": "basic"
-          }
-        }
-      ]
-    }
-  },
   "general-x01": {
     "race": "general",
     "class": "destroyer",
@@ -537,7 +420,7 @@
       "durability": 500,
       "critical": 0.005
     },
-    "enhancements": ["heal", "booster", "shield", "piercing"],
+    "enhancements": ["heal", "booster", "shield"],
     "engine": {
       "glows": [
         {
@@ -603,7 +486,7 @@
       "durability": 500,
       "critical": 0.01
     },
-    "enhancements": ["heal", "booster", "shield", "piercing"],
+    "enhancements": ["heal", "booster", "shield"],
     "engine": {
       "glows": [
         {

@@ -209,8 +209,6 @@
             <key type="filename">ships/ubaidian/ubaidian-x03.png</key>
             <key type="filename">ships/ubaidian/ubaidian-x04.png</key>
             <key type="filename">ships/ubaidian/ubaidian-x05.png</key>
-            <key type="filename">ships/ubaidian/ubaidian-x06.png</key>
-            <key type="filename">ships/ubaidian/ubaidian-x07.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -434,8 +432,6 @@
             <filename>fx/explosion-e.png</filename>
             <filename>ships/general/general-x01.png</filename>
             <filename>ships/ubaidian/ubaidian-x05.png</filename>
-            <filename>ships/ubaidian/ubaidian-x06.png</filename>
-            <filename>ships/ubaidian/ubaidian-x07.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
