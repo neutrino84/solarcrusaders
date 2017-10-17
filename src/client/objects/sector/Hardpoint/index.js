@@ -4,7 +4,6 @@ var engine = require('engine'),
     Energy = require('./Energy'),
     Projectile = require('./Projectile'),
     Pulse = require('./Pulse'),
-    Plasma = require('./Plasma'),
     Missile = require('./Missile'),
     OutlineFilter = require('../../../fx/filters/OutlineFilter');
 
@@ -27,7 +26,6 @@ function Hardpoint(parent, config, data, slot, total) {
     rocket: Projectile,
     energy: Energy,
     pulse: Pulse,
-    plasma: Plasma,
     missile: Missile
   };
 
