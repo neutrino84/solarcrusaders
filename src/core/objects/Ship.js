@@ -276,9 +276,6 @@ Ship.prototype.disable = function() {
   //   this.respawn = this.game.clock.events.add(Ship.RESPAWN_TIME, this.enable, this);
   // }
 
-  // blast close
-  // this.blast();
-
   // broadcast
   this.game.emit('ship/disabled', {
     uuid: this.uuid,
@@ -287,22 +284,6 @@ Ship.prototype.disable = function() {
     }
   });
 };
-
-// Ship.prototype.blast = function() {
-//   var ship, ships, distance, end, start,
-//       manager = this.manager;
-//   if(manager != undefined) {
-//     ships = manager.ships;
-
-//     for(var s in ships) {
-//       ship = ships[s];
-
-//       if(ship.game && !ship.disabled && ship != this) {
-//         ship.movement.destabalize(this);
-//       }
-//     }
-//   }
-// };
 
 Ship.prototype.enable = function() {
   // re-enable
