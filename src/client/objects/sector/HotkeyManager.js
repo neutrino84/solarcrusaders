@@ -1,125 +1,66 @@
-var engine = require('engine'),
-    Ship = require('./Ship'),
-    ShipManager = require('./ShipManager'),
-    EnhancementManager = require('./EnhancementManager'),
-    ExplosionEmitter = require('./emitters/ExplosionEmitter'),
-    FlashEmitter = require('./emitters/FlashEmitter'),
-    GlowEmitter = require('./emitters/GlowEmitter'),
-    ShockwaveEmitter = require('./emitters/ShockwaveEmitter'),
-    FireEmitter = require('./emitters/FireEmitter'),
-    Indicator = require('./misc/Indicator');
-
+var engine = require('engine');
 
 function HotkeyManager(game) {
   this.game = game;
-  this.clock = game.clock;
-  this.net = game.net;
-  this.socket = game.net.socket;
-  this.hotkeys = {
-  	'enhancements' : {},
-  	'squadron' : {}
+
+  this.registered = {
+    'down': {},
+    'up': {},
+    'press': {}
   };
 
-  this.isBoosting = false;
-  this.isShielded = false;
-  this.isHealing = false;
-  this.isPiercing = false;
+  // add messaging
+  this.game.on('/hotkey/register', this.register, this);
 
-  this.game.on('ship/player', this._player, this);
+  // add callbacks
+  this.game.input.keyboard.addCallbacks(this, this.onDown, this.onUp, this.onPress);
 };
 
 HotkeyManager.prototype.constructor = HotkeyManager;
 
-HotkeyManager.prototype.init = function() { 
-};
-
-HotkeyManager.prototype.create = function(manager) {
-  this.config = this.game.cache.getJSON('item-configuration', false);
-  this.manager = manager;
-  this.shipManager = manager.shipManager;
-  this.ships = this.shipManager.ships;
-};
-
-HotkeyManager.prototype.listener = function() {
-  var player = this.player,
-  	  hotkeys = this.hotkeys,
-      key;
-  if(player){
-  	this.game.input.on('keypress', function(event, key){
-  	//enhancements
-	   if(hotkeys['enhancements'][key]){
-
-  		if(hotkeys['enhancements'][key] === 'booster' && this.isBoosting){return};
-  		if(hotkeys['enhancements'][key] === 'heal' && this.isHealing){return};
-  		if(hotkeys['enhancements'][key] === 'shield' && this.isShielded){return};
-      if(hotkeys['enhancements'][key] === 'piercing' && this.isPiercing){return};
-
-	    this.game.emit('ship/enhancement/start', {
-	      uuid: player.uuid,
-	      enhancement: hotkeys['enhancements'][key],
-	      subtype: 'basic'
-	    });
-
-      switch(hotkeys['enhancements'][key]) {
-        case 'heal':
-          this.isHealing = true;
-          break;
-        case 'booster':
-          this.isBoosting = true;
-          break;
-        case 'shield':
-          this.isShielded = true;
-          break;
-        case 'piercing':
-          this.isPiercing = true;
-          break;
-      }
-
-	   } 
-     if(hotkeys['squadron'][key]){
-        //squadron hotkeys
-     }
-    }, this);
-
-    this.game.on('ship/enhancement/cancelled', this._cooled, this);
-  };
-};
-
-HotkeyManager.prototype._cooled = function(data){
-  if(data.uuid === this.player.uuid){
-    switch(data.enhancement) {
-      case 'heal':
-        this.isHealing = false;
-        break;
-      case 'booster':
-        this.isBoosting = false;
-        break;
-      case 'shield':
-        this.isShielded = false;
-        break;
-      case 'piercing':
-        this.isPiercing = false;
-        break;
-    }
+HotkeyManager.prototype.register = function(type, char, callback, context, args) {
+  this.registered[type][char] = {
+    callback: callback,
+    context: context,
+    args: args
   }
 };
 
-HotkeyManager.prototype._player = function(ship){
-  this.player = ship,
-  console.log(ship)
-  this.enhancements = ship.config.enhancements;
-  for(var e in this.enhancements){
-  	var key = parseInt(e)+1;
-  	// console.log(key)
-  	this.hotkeys['enhancements'][key] = this.enhancements[e];
+HotkeyManager.prototype.onDown = function(event, char) {
+  var registered = this.registered['down'][char] || {},
+      callback = registered.callback,
+      context = registered.context,
+      args = registered.args;
+  if(callback) {
+    args.unshift(char);
+    callback.apply(context, args);
   }
-
-  //turn on listener
-  this.listener();
 };
 
-HotkeyManager.prototype.shutdown = function() {
-  //.. properly destroy
+HotkeyManager.prototype.onUp = function(event, char) {
+  var registered = this.registered['up'][char] || {},
+      callback = registered.callback,
+      context = registered.context,
+      args = registered.args;
+  if(callback) {
+    args.unshift(char);
+    callback.apply(context, args);
+  }
+};
+
+HotkeyManager.prototype.onPress = function(event, char) {
+  var registered = this.registered['press'][char] || {},
+      callback = registered.callback,
+      context = registered.context,
+      args = registered.args;
+  if(callback) {
+    args.unshift(char);
+    callback.apply(context, args);
+  }
+};
+
+HotkeyManager.prototype.destroy = function() {
+  //..
 };
 
 module.exports = HotkeyManager;
