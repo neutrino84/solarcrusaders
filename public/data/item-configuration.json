@@ -2,26 +2,25 @@
   "hardpoint": {
     "energy": {
       "basic": {
-        "name": "Type 1 Laser",
+        "name": "Basic Laser",
         "type": "energy",
         "subtype": "basic",
         "sprite": "turret-a",
         "texture": "energy-blue",
         "glow": {
           "tint": "0x6699ff",
-          "size": 4.0,
+          "size": 2.0,
           "sprite": "turret-glow.png"
         },
         "emitter": ["0x2c85dd", "0x6699ff"],
         "icon": "item-laser-a",
-        "cooldown": 0,
-        "range": 2048,
+        "range": 1024,
         "projection": 0.04,
         "delay": 0,
         "spread": 32,
         "damage": 1.0,
         "length": 512,
-        "aoe": 4.0,
+        "aoe": 1.0,
         "spawn": 1,
         "durability": 1000.0,
         "sound": "laser-basic",
@@ -39,16 +38,15 @@
         "glow": "0x8888FF",
         "emitter": ["0xFFFFFF", "0x12def9"],
         "icon": "item-laser-a",
-        "range": 2560,
+        "range": 2048,
         "projection": 0.08,
-        "delay": 2,
+        "delay": 0,
         "spread": 16,
         "damage": 1.0,
         "offset": {
           "min": 0.0,
           "max": 0.5
         },
-        "cooldown": 0,
         "length": 24,
         "aoe": 1.0,
         "spawn": 1,
@@ -57,25 +55,24 @@
         "volume": 1.0,
         "variation": 0.05
       },
-      "ruby": {
-        "name": "Ruby Pulse",
+      "plasma": {
+        "name": "Plasma Pulse",
         "type": "pulse",
-        "subtype": "ruby",
+        "subtype": "plasma",
         "sprite": "turret-a",
         "texture": "laser-red",
-        "glow": "0xf91212",
-        "emitter": ["0xFFFFFF", "0xf91212"],
+        "glow": "0xFF8888",
+        "emitter": ["0xFFFFFF", "0xf9dede"],
         "icon": "item-laser-a",
-        "range": 2560,
-        "projection": 0.08,
-        "delay": 2,
+        "range": 2048,
+        "projection": 0.10,
+        "delay": 0,
         "spread": 16,
         "damage": 1.0,
         "offset": {
-          "min": 0.5,
-          "max": 1.0
+          "min": 0.0,
+          "max": 0.5
         },
-        "cooldown": 0,
         "length": 24,
         "aoe": 1.0,
         "spawn": 1,
@@ -87,62 +84,35 @@
     },
     "rocket": {
       "basic": {
-        "name": "Type 1 Launcher",
+        "name": "Basic Rocket",
         "type": "rocket",
         "subtype": "basic",
         "sprite": "turret-b",
         "texture": "turret-rocket-a.png",
         "icon": "item-rocket-a",
-        "cooldown": 0,
         "range": 4096,
         "projection": 0.6,
         "delay": 64,
         "spread": 128,
         "damage": 4.0,
         "length": 256,
-        "aoe": 4.0,
+        "aoe": 2.0,
         "spawn": 1,
         "durability": 1000.0
       }
     },
-    "plasma": {
-      "basic": {
-        "name": "Type 1 Plasma",
-        "type": "plasma",
-        "subtype": "basic",
-        "sprite": "turret-a",
-        "texture": "turret-rocket-a.png",
-        "glow": "0xFFFFFF",
-        "emitter": ["0xffffcc", "0xffff9c"],
-        "icon": "item-laser-a",
-        "cooldown": 0,
-        "range": 5632,
-        "projection": 0.34,
-        "delay": 128,
-        "spread": 88,
-        "damage": 4.0,
-        "length": 4.0,
-        "aoe": 4.0,
-        "spawn": 1,
-        "durability": 1000,
-        "sound": "plasma-basic",
-        "volume": 0.5,
-        "variation": 0.1
-      }
-    },
     "missile": {
       "basic": {
-        "name": "Type 1 Missile",
+        "name": "Basic Missile",
         "type": "missile",
         "subtype": "basic",
         "sprite": "turret-b",
         "texture": "turret-rocket-a.png",
         "icon": "item-rocket-a",
-        "cooldown": 0,
         "glow": "0x00d2ff",
         "range": 4096,
         "projection": 0.34,
-        "delay": 756,
+        "delay": 64,
         "spread": 18,
         "damage": 8.0,
         "length": 1024,
@@ -197,18 +167,6 @@
         "sound": {
           "name": "shield-basic",
           "volume": 1.0
-        }
-      }
-    },
-    "piercing": {
-      "basic": {
-        "cost": -10,
-        "cooldown": 12,
-        "active": 2,
-        "stats": {
-          "critical": {
-            "value": 4.0
-          }
         }
       }
     }
