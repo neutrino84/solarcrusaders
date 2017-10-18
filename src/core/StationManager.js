@@ -16,6 +16,7 @@ StationManager.prototype.init = function() {
   // listen to messaging
   this.game.on('station/add', this.add, this);
   this.game.on('station/create', this.create, this);
+  this.game.on('ship/attacked', this.attacked, this);
 };
 
 StationManager.prototype.add = function(station) {
@@ -52,7 +53,8 @@ StationManager.prototype.data = function(uuids) {
         race: station.race,
         size: station.size,
         health: station.health,
-        heal: station.heal
+        heal: station.heal,
+        armor: station.armor
       });
     }
   }
@@ -82,6 +84,16 @@ StationManager.prototype.sync = function() {
     synced.push(data);
   }
   return synced;
+};
+
+StationManager.prototype.attacked = function(attacker, target, slot) {
+  var stations, station,
+      game = this.game,
+      stations = this.stations;
+    for(var s in stations) {
+      station = stations[s];
+      station.hit(attacker, target, slot);
+    }
 };
 
 module.exports = StationManager;

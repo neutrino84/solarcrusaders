@@ -19,7 +19,10 @@ function StationManager(game, state) {
   this.game.on('sector/sync', this.sync, this);
 
   // add to world
-  this.game.world.foreground.add(this.stationsGroup);
+  this.game.world.add(this.stationsGroup);
+
+  // update data interval
+  this.game.clock.events.loop(1000, this.update, this);
 }
 
 StationManager.prototype.constructor = StationManager;
@@ -40,7 +43,7 @@ StationManager.prototype.create = function(data) {
   stations[data.uuid] = station;
 
   // display
-  container.addAt(station, 0);
+  container.addAt(station);
 
   // focus if no player ship
   if(!user.ship) {
@@ -83,6 +86,36 @@ StationManager.prototype.sync = function(data) {
       model = netManager.getStationData(sync.uuid);
       model && this.create(model);
     }
+  }
+};
+
+StationManager.prototype.update = function() {
+  var game = this.game,
+      stations = this.stations,
+      station, delta, update, stats,
+      updates = [];
+  for(var s in stations) {
+    station = stations[s];
+    
+    if(!station.disabled) {
+      stats = station.config.stats;
+      update = { uuid: station.uuid };
+
+      // update health
+      if(station.health < stats.health) {
+        delta = station.heal;
+        station.health = global.Math.min(stats.health, station.health + delta);
+        update.health = engine.Math.roundTo(station.health, 1);
+      }
+
+      // push deltas
+      if(delta !== undefined) {
+        updates.push(update);
+      }
+    }
+  }
+  if(updates.length > 0) {
+    game.emit('station/data', updates);
   }
 };
 

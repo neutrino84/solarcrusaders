@@ -12,7 +12,7 @@ function Orbit(parent) {
   this.spin = this.data.spin;
 
   this.position = new engine.Point();
-  this.orbit = new engine.Circle(this.data.x/4, this.data.y/4, this.data.radius);
+  this.orbit = new engine.Circle(this.data.x, this.data.y, this.data.radius);
   this.circumference = this.orbit.circumference();
   
   this.center = {

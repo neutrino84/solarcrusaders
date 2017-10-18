@@ -216,6 +216,7 @@ Ship.prototype.attack = function(data, rtt) {
 
 Ship.prototype.attacked = function(target, slot) {
   var ship, ships,
+      game = this.game,
       manager = this.manager;
   if(manager != undefined) {
     ships = manager.ships;
@@ -226,6 +227,8 @@ Ship.prototype.attacked = function(target, slot) {
         ship.hit(this, target, slot);
       }
     }
+
+    game.emit('ship/attacked', this, target, slot);
   }
 };
 

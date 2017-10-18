@@ -14,6 +14,9 @@ function Station(manager, data) {
   this.uuid = this.data.uuid;
   this.chassis = this.data.chassis;
 
+  // disabled state
+  this.disabled = false;
+
   // station configuration
   this.config = client.StationConfiguration[this.data.chassis];
 
@@ -31,8 +34,69 @@ Station.prototype.save = function(callback) {
   //..
 };
 
-Station.prototype.attacked = function(target, slot) {
+Station.prototype.hit = function(attacker, target, slot) {
+  var updates = {
+        ship: [],
+        station: []
+      },
+      game = this.game,
+      sockets = this.sockets,
+      orbit = this.orbit,
+      hardpoint = attacker.hardpoints[slot],
+      position = orbit.position,
+      distance = position.distance({ x: target.x, y: target.y }),
+      ratio = distance / (this.size * hardpoint.data.aoe),
+      damage, health, critical;
+  if(ratio < 1.0) {
 
+    // calc damage
+    critical = game.rnd.rnd() <= attacker.critical;
+    damage = global.Math.max(0, hardpoint.data.damage * (1-ratio) * (1-this.armor));
+    damage += critical ? damage : 0;
+    health = this.health-damage;
+
+    // update damage
+    if(!this.disabled && health > 0) {
+      // update health
+      this.health = health;
+      
+      // update station
+      updates['station'].push({
+        uuid: this.uuid,
+        attacker: attacker.uuid,
+        health: this.health,
+        damage: damage,
+        critical: critical
+      });
+
+      // update attacker
+      updates['ship'].push({
+        uuid: attacker.uuid,
+        hardpoint: {
+          ship: this.uuid,
+          slot: hardpoint.slot,
+          target: target,
+          damage: damage
+        }
+      });
+    } else {
+      // disengage attacker
+      attacker.ai && attacker.ai.disengage();
+
+      // disable station
+      if(!this.disabled) {
+        this.disable();
+      }
+    }
+
+    // broadcast
+    if(updates['ship'].length) {
+      game.emit('ship/data', updates['ship']);
+    }
+    if(updates['station'].length) {
+      game.emit('station/data', updates['station']);
+    }
+  }
 };
 
 Station.prototype.disable = function() {
@@ -115,6 +179,17 @@ Object.defineProperty(Station.prototype, 'size', {
 
   set: function(value) {
     this.data.size = value;
+  }
+});
+
+
+Object.defineProperty(Station.prototype, 'armor', {
+  get: function() {
+    return this.data.armor;
+  },
+
+  set: function(value) {
+    this.data.armor = value;
   }
 });
 

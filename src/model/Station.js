@@ -21,7 +21,8 @@ var Station = schema.define('station', {
   health:     { type: schema.Double },
   heal:       { type: schema.Double },
   size:       { type: schema.Double },
-  speed:      { type: schema.Double }
+  speed:      { type: schema.Double },
+  armor:      { type: schema.Double }
 });
 
 Station.validatesLengthOf('name', { min: 2, max: 32 });
@@ -36,6 +37,7 @@ Station.validatesNumericalityOf('health');
 Station.validatesNumericalityOf('heal');
 Station.validatesNumericalityOf('size');
 Station.validatesNumericalityOf('speed');
+Station.validatesNumericalityOf('armor');
 Station.validatesNumericalityOf('period');
 Station.validatesNumericalityOf('throttle');
 
@@ -53,6 +55,7 @@ Station.prototype.init = function() {
     if(!this.speed) { this.speed = stats.speed; }
     if(!this.rotation) { this.rotation = stats.rotation; }
     if(!this.spin) { this.spin = stats.spin; }
+    if(!this.armor) { this.armor = stats.armor; }
   }
 };
 
