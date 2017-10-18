@@ -69,63 +69,101 @@ ButtonIcon.prototype.alert = function(value) {
   Button.prototype.alert.call(this, value);
 };
 
-ButtonIcon.prototype.disabled = function(value) {
-  Button.prototype.disabled.call(this, value);
-
+ButtonIcon.prototype.disable = function(value) {
+  this._disabled = value;
+  
+  if(this._disabled) {
+    this.stop();
+  } else {
+    this.start();
+  }
+  
   this._inputOut();
 };
 
 ButtonIcon.prototype._inputUp = function() {
-  Button.prototype._inputUp.call(this);
+  var bg = this.bg,
+      image = this.image,
+      settings = this.settings,
+      highlight = this.highlight;
 
-  this.image.tint = this.settings.icon.tint.up;
-  this.image.view.alpha = this.settings.icon.alpha.up;
+  image.tint = settings.icon.tint.up;
+  image.view.alpha = settings.icon.alpha.up;
 
-  if(this.highlight) {
-    this.highlight.alpha = this.settings.highlight.alpha.up;
+  if(highlight) {
+    highlight.alpha = settings.highlight.alpha.up;
   }
+
+  bg.alpha = settings.bg.alpha.up;
+
+  this.emit('inputUp');
 };
 
 ButtonIcon.prototype._inputDown = function() {
-  Button.prototype._inputDown.call(this);
+  var bg = this.bg,
+      image = this.image,
+      settings = this.settings,
+      highlight = this.highlight;
 
-  this.image.tint = this.settings.icon.tint.down;
-  this.image.view.alpha = this.settings.icon.alpha.down;
+  image.tint = settings.icon.tint.down;
+  image.view.alpha = settings.icon.alpha.down;
 
-  if(this.highlight) {
-    this.highlight.alpha = this.settings.highlight.alpha.down;
+  if(highlight) {
+    highlight.alpha = settings.highlight.alpha.down;
   }
+
+  bg.alpha = settings.bg.alpha.down;
+
+  this.emit('inputDown');
 };
 
 ButtonIcon.prototype._inputOver = function() {
-  Button.prototype._inputOver.call(this);
+  var bg = this.bg,
+      image = this.image,
+      settings = this.settings,
+      highlight = this.highlight;
 
-  this.image.tint = this.settings.icon.tint.over;
-  this.image.view.alpha = this.settings.icon.alpha.over;
+  image.tint = settings.icon.tint.over;
+  image.view.alpha = settings.icon.alpha.over;
 
-  if(this.highlight) {
-    this.highlight.alpha = this.settings.highlight.alpha.over;
+  if(highlight) {
+    highlight.alpha = settings.highlight.alpha.over;
   }
+
+  bg.alpha = settings.bg.alpha.over;
+
+  this.emit('inputOver');
 };
 
 ButtonIcon.prototype._inputOut = function() {
-  Button.prototype._inputOut.call(this);
+  var bg = this.bg,
+      image = this.image,
+      settings = this.settings,
+      highlight = this.highlight;
 
   if(this._disabled) {
-    this.image.tint = this.settings.icon.tint.disabled;
-    this.image.view.alpha = this.settings.icon.alpha.disabled;
+    image.tint = settings.icon.tint.disabled;
+    image.view.alpha = settings.icon.alpha.disabled;
 
-    if(this.highlight) {
-      this.highlight.alpha = this.settings.highlight.alpha.disabled;
+    if(highlight) {
+      highlight.alpha = settings.highlight.alpha.disabled;
     }
   } else {
-    this.image.tint = this.settings.icon.tint.enabled;
-    this.image.view.alpha = this.settings.icon.alpha.enabled;
+    image.tint = settings.icon.tint.enabled;
+    image.view.alpha = settings.icon.alpha.enabled;
 
-    if(this.highlight) {
-      this.highlight.alpha = this.settings.highlight.alpha.enabled;
+    if(highlight) {
+      highlight.alpha = settings.highlight.alpha.enabled;
     }
   }
+
+  if(this._disabled) {
+    bg.alpha = settings.bg.alpha.disabled;
+  } else {
+    bg.alpha = settings.bg.alpha.enabled;
+  }
+
+  this.emit('inputOut');
 };
 
 module.exports = ButtonIcon;
