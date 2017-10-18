@@ -106,7 +106,7 @@ EngineCore.prototype.update = function(multiplier) {
     // update highlight
     highlight = highlights[g];
     highlight.alpha = multiplier;
-    highlight.scale.set(multiplier, multiplier);
+    highlight.scale.set(multiplier/2.0, multiplier/2.0);
       
     if(this.isBoosting) {
       position = game.world.worldTransform.applyInverse(ship.worldTransform.apply(glows[g].position))
