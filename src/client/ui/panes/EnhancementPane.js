@@ -5,6 +5,7 @@ var engine = require('engine'),
     Layout = require('../Layout'),
     Pane = require('../components/Pane'),
     Label = require('../components/Label'),
+    EnhancementButton = require('./EnhancementButton'),
     FlowLayout = require('../layouts/FlowLayout'),
     BorderLayout = require('../layouts/BorderLayout'),
     BackgroundView = require('../views/BackgroundView'),
@@ -14,24 +15,40 @@ var engine = require('engine'),
 
 function EnhancementPane(game, settings) {
   Pane.call(this, game, {
-    constraint: Layout.CENTER,
+    constraint: Layout.BOTTOM,
     layout: {
       type: 'flow',
       ax: Layout.CENTER, 
       ay: Layout.BOTTOM,
       direction: Layout.HORIZONTAL, 
-      gap: 4
+      gap: 2
     },
     bg: false
   });
 
-  this.containers = [];
   this.buttons = {};
+  this.placeholders = [];
+
   this.config = this.game.cache.getJSON('item-configuration')['enhancement'];
 
-  // generate containers
+  this.game.on('ship/player', this._player, this);
+  this.game.on('ship/enhancement/started', this._started, this);
+  this.game.on('ship/enhancement/stopped', this._stopped, this);
+  this.game.on('ship/enhancement/cooled', this._cooled, this);
+};
+
+EnhancementPane.prototype = Object.create(Pane.prototype);
+EnhancementPane.prototype.constructor = EnhancementPane;
+
+EnhancementPane.MAXIMUM = 4;
+
+EnhancementPane.prototype.create = function(enhancement, key) {
+  var game = this.game,
+      placeholders = this.placeholders;
+
+  // generate placeholders
   for(var i=0; i<EnhancementPane.MAXIMUM; i++) {
-    this.containers.push(
+    this.placeholders.push(
       new Pane(this.game, {
         constraint: Layout.CENTER,
         width: 34,
@@ -45,170 +62,74 @@ function EnhancementPane(game, settings) {
         }
       })
     );
-    this.addPanel(this.containers[i]);
+    this.addPanel(this.placeholders[i]);
   }
-
-  this.game.on('ship/player', this._player, this);
-  this.game.on('ship/enhancement/started', this._started, this);
-  this.game.on('ship/enhancement/stopped', this._stopped, this);
-  this.game.on('ship/enhancement/cooled', this._cooled, this);
 };
 
-EnhancementPane.prototype = Object.create(Pane.prototype);
-EnhancementPane.prototype.constructor = EnhancementPane;
-
-EnhancementPane.MAXIMUM = 10;
-
-// EnhancementPane.prototype.reset = function() {
-//   var button,
-//       buttons = this.buttons,
-//       content = this.content;
-//   for(var b in buttons) {
-//     buttons[b].stop();
-//     content.removePanel(buttons[b]);
-//   }
-// };
-
-EnhancementPane.prototype.create = function(enhancement, key) {
-  var game = this.game,
-      label = new Label(game, {
-        constraint: Layout.USE_PS_SIZE,
-        text: {
-          fontName: 'medium'
-        },
-        bg: false
-      }),
-      button = new ButtonIcon(game, {
-        padding: [0, 0, 2, 0],
-        bg: {
-          color: 0x009999,
-          alpha: {
-            enabled: 0.5,
-            disabled: 1.0,
-            over: 0.85,
-            down: 0.85,
-            up: 0.85
-          }
-        },
-        icon: {
-          key: 'texture-atlas',
-          frame: 'enhancement-' + enhancement + '.png',
-          width: 34,
-          height: 34,
-          bg: {
-            fillAlpha: 1.0,
-            color: 0x000000
-          },
-          alpha: {
-            enabled: 1.0,
-            disabled: 0.5,
-            over: 1.0,
-            down: 1.0,
-            up: 0.9
-          },
-          tint: {
-            enabled: 0xFFFFFF,
-            disabled: 0xFF0000,
-            over: 0xFFFFFF,
-            down: 0xFFFFFF,
-            up: 0xFFFFFF
-          }
-        }
-      });
-
-  button.label = label;
-  button.label.visible = false;
-  button.addPanel(label);
-
-  return button;
-};
-
-EnhancementPane.prototype._select = function(button) {
+EnhancementPane.prototype.selected = function(button) {
   var game = this.game,
       player = this.player;
-  
-  // disable
-  button.parent.disabled(true);
+
+  // disable button
+  button.disable(true);
   
   // send event
   game.emit('ship/enhancement/start', {
     uuid: player.uuid,
-    enhancement: button.parent.id
+    enhancement: button.name
   });
 };
 
 EnhancementPane.prototype._started = function(data) {
-  var config = this.config[data.enhancement],
+  var game = this.game,
+      player = this.player,
+      config = this.config[data.enhancement],
       button = this.buttons[data.enhancement];
-
-  if(this.player && button && data.uuid === this.player.uuid) {
-    // disable
-    button.disabled(true);
-    button.count = global.parseInt(config['basic'].cooldown);
-    button.label.text = button.count;
-    button.label.visible = true;
-    button.invalidate(false, true);
-
-    // timer
-    button.timer && this.game.clock.events.remove(this.timer);
-    button.timer = this.game.clock.events.repeat(1000, button.count,
-      function() {
-        button.label.text = (--button.count).toString();
-        button.invalidate(false, true);
-      });
+  if(player && button && data.uuid === player.uuid) {
+    button.cooldown(config['basic'].cooldown);
   }
 };
 
 EnhancementPane.prototype._stopped = function(data) {
-  if(!this.player || data.uuid !== this.player.uuid) { return; }
-
-  // cancel timer
-  this.timer && this.game.clock.events.remove(this.timer);
+  var game = this.game,
+      player = this.player,
+      button = this.buttons[data.enhancement];
+  if(player && data.uuid === player.uuid) {
+    button.stopped();
+  }
 };
 
 EnhancementPane.prototype._cooled = function(data) {
-  if(!this.player || data.uuid !== this.player.uuid) { return; }
-
-  var button = this.buttons[data.enhancement];
-      button.disabled(false);
-      button.label.visible = false;
-
-  // cancel timer
-  this.timer && this.game.clock.events.remove(this.timer);
+  var game = this.game,
+      player = this.player,
+      button = this.buttons[data.enhancement];
+  if(player && data.uuid === player.uuid) {
+    button.cooled();
+  }
 };
 
 EnhancementPane.prototype._player = function(player) {
-  var enhancement, button, container,
+  var enhancement, button,
       enhancements = player.data.enhancements,
-      containers = this.containers,
-      buttons = this.buttons;
+      game = this.game,
+      buttons = this.buttons,
+      placeholders = this.placeholders;
 
   // set player object
   this.player = player;
-
-  // clear buttons
-  for(var b in buttons) {
-    button = buttons[b];
-    button.destroy({
-      children: false,
-      texture: true,
-      baseTexture: false
-    });
-  }
   
   // create buttons
   for(var i=0; i<enhancements.length; i++) {
     enhancement = enhancements[i];
 
     if(enhancement) {
-      button = this.create(enhancement);
-      button.id = enhancement;
-      button.bg.on('inputUp', this._select, this);
+      button = new EnhancementButton(game);
+      button.create(enhancement);
       button.start();
-
+      button.on('selected', this.selected, this);
       buttons[enhancement] = button;
 
-      containers[i].addPanel(button);
+      placeholders[i].addPanel(button);
     }
   }
 
