@@ -5,8 +5,6 @@ function Squadron(ship, home) {
   Basic.call(this, ship);
 
   this.type = 'squadron';
-  this.master = ship.master;
-
   this.settings = {
     disengage: 9216,
     friendly: ['user', 'basic', 'squadron'],
@@ -20,12 +18,32 @@ function Squadron(ship, home) {
       health: 0.01,
     },
     sensor: {
-      aim: 1.25,
+      aim: 0.5,
       range: 4096
     }
   };
 };
 
 Squadron.prototype = Object.create(Basic.prototype);
+
+Squadron.prototype.plot = function(){
+  var rnd = this.game.rnd,
+      ship = this.ship,
+      settings = this.settings,
+      offset = this.offset,
+      master = ship.master,
+      p1 = ship.movement.position,
+      p2, size, distance;
+
+  // plot destination
+  if(!this.retreat && this.target) {
+    size = this.target.data.size * 4;
+    offset.copyFrom(this.target.movement.position);
+    offset.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
+    ship.movement.plot({ x: this.offset.x-p1.x, y: this.offset.y-p1.y }, this.throttle);
+  } else {
+    ship.movement.magnitude /= 1.8;
+  };
+};
 
 module.exports = Squadron;

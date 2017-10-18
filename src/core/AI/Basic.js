@@ -19,7 +19,7 @@ function Basic(ship) {
 
   this.settings = {
     disengage: 7680,
-    friendly: ['basic', 'user', 'scavenger'],
+    friendly: ['basic', 'user', 'squadron'],
     position: {
       radius: 2048,
       x: 2048,
@@ -102,7 +102,7 @@ Basic.prototype.scanner = function() {
   targets = Object.keys(priority.enemy);
 
   if(this.game.rnd.frac() > 0.5) {
-    targets.sort(ascending)
+    targets.sort(ascending);
   }
 
   targets.length && this.engage(priority.enemy[targets[0]]);
