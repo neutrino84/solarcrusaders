@@ -66,7 +66,9 @@ NetManager.prototype._data = function(data) {
       users = data.users,
       ships = data.ships,
       stations = data.stations;
-
+  if(data.stations){
+    console.log('in netManager _data, data.stations ', data.stations)
+  }
   if(this.game.cache.checkJSONKey('ship-configuration') &&
       this.game.cache.checkJSONKey('station-configuration') &&
       this.game.cache.checkJSONKey('item-configuration')) {

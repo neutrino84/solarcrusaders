@@ -6,6 +6,7 @@ var uuid = require('uuid'),
 function StationManager(game) {
   this.game = game;
   this.model = game.model;
+  this.sockets = game.sockets;
 
   this.stations = {};
 };
@@ -16,6 +17,7 @@ StationManager.prototype.init = function() {
   // listen to messaging
   this.game.on('station/add', this.add, this);
   this.game.on('station/create', this.create, this);
+  this.game.on('station/data', this.data.bind(this));
 };
 
 StationManager.prototype.add = function(station) {
@@ -57,6 +59,9 @@ StationManager.prototype.data = function(uuids) {
     }
     // console.log(station)
   }
+  this.sockets.emit('station/data', {
+    type: 'sync', stations: stations
+  });
   return stations;
 };
 

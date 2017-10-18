@@ -20,6 +20,8 @@ function StationManager(game, state) {
 
   this.game.on('station/find', this.findStation, this);
 
+  this.game.on('station/data', this.test, this);
+
   // add to world
   this.game.world.foreground.add(this.stationsGroup);
 
@@ -27,6 +29,10 @@ function StationManager(game, state) {
 }
 
 StationManager.prototype.constructor = StationManager;
+
+StationManager.prototype.test = function(data) {
+  console.log('in station manager.test - data is ', data)
+}
 
 StationManager.prototype.create = function(data) {
   var game = this.game,
@@ -63,7 +69,7 @@ StationManager.prototype.sync = function(data) {
     sync = stations[s];
     station = this.stations[sync.uuid];
 
-
+    // console.log('in station manager, sync function. netManager is ', this.netManager)
     if(station) {
       if(station.key == 'ubadian-station-x01' && !this.happened){
         this.happened = true;
@@ -73,8 +79,7 @@ StationManager.prototype.sync = function(data) {
         //   this.game.emit('')
         // }, this);
       }
-
-
+      
       station.plot(sync);
 
       // if(this.game.rnd.frac() > 0.9) {

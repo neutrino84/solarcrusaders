@@ -42,13 +42,21 @@ Station.prototype.boot = function() {
 
   // create hud
   this.hud.create();
+  this.hud.show();
   // this.hud.show();
 
+  this.game.on('station/data', this.test, this);
   // subscribe to updates
   this.data.on('data', this.refresh, this);
 };
 
+Station.prototype.test = function(data) {
+  console.log('in station test')
+  // this.hud.data(data);
+};
+
 Station.prototype.refresh = function(data) {
+  console.log('in station refresh')
   this.hud.data(data);
 };
 
@@ -66,6 +74,7 @@ Station.prototype.update = function() {
     this.rotation = rotation;
     this.cap.rotation = -rotation*8;
   }
+  // console.log('in station update. data is ', data)
 
   // update
   this.hud.update();

@@ -2,6 +2,7 @@ var engine = require('engine'),
     pixi = require('pixi'),
     UI = require('../ui'),
     NetManager = require('../net/NetManager'),
+    StationNetManager = require('../net/StationNetManager'),
     Space = require('../fx/Space'),
     Planet = require('../fx/Planet'),
     NebulaCluster = require('../fx/NebulaCluster'),
@@ -168,6 +169,7 @@ SectorState.prototype.createManagers = function(first) {
   var game = this.game;
 
   this.netManager = new NetManager(game, this);
+  // this.stationNetManager = new StationNetManager(game, this);
   this.inputManager = new InputManager(game, this);
   this.hotkeyManager = new HotkeyManager(game, this);
   this.stationManager = new StationManager(game, this);

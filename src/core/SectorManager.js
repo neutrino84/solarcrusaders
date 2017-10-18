@@ -88,6 +88,9 @@ SectorManager.prototype.data = function(socket, args) {
 };
 
 SectorManager.prototype.queue = function(key) {
+  if(key == 'stations'){
+    console.log('queued up some stations')
+  }
   return function(updates) {
     this.updates[key] = this.updates[key].concat(updates);
   }

@@ -6,6 +6,7 @@ function Station(manager, data) {
   this.manager = manager;
   this.game = manager.game;
   this.sockets = manager.sockets;
+
   this.model = manager.model;
 
   this.data = new this.model.Station(data);
@@ -33,6 +34,102 @@ Station.prototype.save = function(callback) {
 
 Station.prototype.attacked = function(target, slot) {
 
+};
+
+Station.prototype.hit = function(attacker, target, slot) {
+  var updates = [],
+      sockets = this.sockets,
+      orbit = this.orbit,
+      data = this.data,
+      ai = this.ai,
+      hardpoint = attacker.hardpoints[slot],
+      piercing = attacker.enhancements.active.piercing,
+      // compensated = orbit.compensated(),
+      distance = orbit.position.distance({x: target.x/4, y: target.y/4}),
+      ratio = distance / (this.size * hardpoint.data.aoe),
+      damage, health, critical;
+      // console.log('target is ', target)
+      // if(this.chassis === 'ubadian-station-x01'){
+        // console.log(ratio)
+        // console.log('ubaidan station distance: ', distance)
+      // }
+      orbit.compensated();
+  if(ratio < 0.4) {
+
+    console.log('inside! this.sockets is')
+    // debugger
+    // // test data
+    if(!attacker.ai && this.ai) {
+      sockets.emit('ship/test', {
+        uuid: this.uuid,
+        compensated: compensated,
+        targ: target
+      });
+    }
+
+    // calc damage
+    // critical = this.game.rnd.rnd() <= attacker.critical;
+    damage = global.Math.max(0, hardpoint.data.damage * (1-ratio));
+    // damage += critical ? damage : 0;
+    // damage *= piercing ? piercing.damage : 1;
+
+    health = data.health - damage;
+
+    // console.log('statio health is ', health)
+    // update damage
+    if(!this.disabled && health > 0) {
+      // update health
+      data.health = health;
+      updates.push({
+        uuid: this.uuid,
+        attacker: attacker.uuid,
+        health: data.health,
+        damage: damage
+      });
+      
+      // update attacker
+      attacker.credits = global.Math.floor(attacker.credits + damage + (ai && ai.type === 'pirate' ? damage : 0));
+      updates.push({
+        uuid: attacker.uuid,
+        credits: attacker.credits,
+        hardpoint: {
+          station: this.uuid,
+          slot: hardpoint.slot,
+          target: target,
+          damage: damage
+        }
+      });
+    } else {
+        // disengage attacker
+        attacker.ai && attacker.ai.disengage();
+
+        // disable ship
+        if(!this.disabled) {
+          this.disable();
+
+          if(!attacker.ai || attacker.master){
+            if(attacker.master){
+              master = attacker.master
+            }
+          }
+          attacker.reputation = global.Math.floor(attacker.reputation + (this.reputation * -0.05));
+          attacker.credits = global.Math.floor(attacker.credits + this.credits);
+          updates.push({
+            uuid: attacker.uuid,
+            reputation: attacker.reputation,
+            credits : attacker.credits
+          });
+        }
+      };
+
+    // broadcast
+    if(updates.length) {
+      console.log('in back end station about to emir, updates is ', updates)
+      this.sockets.emit('station/data', {
+        type: 'update', stations: updates
+      });
+    }
+  }
 };
 
 Station.prototype.disable = function() {

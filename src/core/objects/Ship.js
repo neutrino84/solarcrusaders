@@ -188,8 +188,6 @@ Ship.prototype.attacked = function(target, slot, target_uuid) {
   var ship, ships,
       stations = this.game.sectorManager.stationManager.stations,
       manager = this.manager;
-      console.log(stations)
-      debugger
   if(manager != undefined) {
     ships = manager.ships;
     for(var s in ships) {
