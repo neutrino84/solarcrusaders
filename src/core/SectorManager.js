@@ -29,10 +29,6 @@ SectorManager.prototype.constructor = SectorManager;
 
 SectorManager.prototype.init = function() {
 
-
-
-  console.log('got to sector manager init')
-  
   this.stationManager.init();
   this.shipManager.init(this.eventManager);
   this.userManager.init();
@@ -46,10 +42,6 @@ SectorManager.prototype.init = function() {
   this.game.on('station/data', this.queue('stations'), this);
   this.game.on('user/data', this.queue('users'), this);
 
-  // this.game.on('user/shipSelected', this.test, this);
-
-
-// this.sockets.on('user/shipSelected', this.test, this);
   // queue
   this.game.clock.events.loop(50, this.queued, this);
 };
@@ -68,9 +60,9 @@ SectorManager.prototype.update = function() {
   });
 };
 
-// SectorManager.prototype.placePlayerShip = function(){
-//   console.log(this.stationManager.sync('ubadian-station-x01')); 
-// };
+SectorManager.prototype.test = function(data){
+  console.log('in sector manager.test- data is ', data); 
+};
 
 SectorManager.prototype.data = function(socket, args) {
   var uuids = args[1],

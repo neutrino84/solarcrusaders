@@ -55,8 +55,7 @@ Station.prototype.hit = function(attacker, target, slot) {
       // }
       orbit.compensated();
   if(ratio < 0.4) {
-
-    console.log('inside! this.sockets is')
+    
     // debugger
     // // test data
     if(!attacker.ai && this.ai) {
@@ -124,10 +123,7 @@ Station.prototype.hit = function(attacker, target, slot) {
 
     // broadcast
     if(updates.length) {
-      console.log('in back end station about to emir, updates is ', updates)
-      this.sockets.emit('station/data', {
-        type: 'update', stations: updates
-      });
+      this.game.emit('station/data', updates);
     }
   }
 };

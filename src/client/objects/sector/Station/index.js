@@ -26,6 +26,8 @@ function Station(manager, data) {
   this.events = new engine.Timer(this.game, false);
 
   this.hud = new Hud(this);
+
+  this.ohHay = 1;
 };
 
 Station.prototype = Object.create(engine.Sprite.prototype);
@@ -42,21 +44,16 @@ Station.prototype.boot = function() {
 
   // create hud
   this.hud.create();
-  this.hud.show();
-  // this.hud.show();
 
-  this.game.on('station/data', this.test, this);
+  this.events.start();
   // subscribe to updates
   this.data.on('data', this.refresh, this);
 };
 
-Station.prototype.test = function(data) {
-  console.log('in station test')
-  // this.hud.data(data);
-};
-
 Station.prototype.refresh = function(data) {
-  console.log('in station refresh')
+  this.hud.show();
+  this.hud.timer && this.events.remove(this.hud.timer);
+  this.hud.timer = this.events.add(2000, this.hud.hide, this.hud);
   this.hud.data(data);
 };
 
@@ -74,7 +71,8 @@ Station.prototype.update = function() {
     this.rotation = rotation;
     this.cap.rotation = -rotation*8;
   }
-  // console.log('in station update. data is ', data)
+
+  this.events.update(this.game.clock.time);
 
   // update
   this.hud.update();

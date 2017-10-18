@@ -200,7 +200,6 @@ Ship.prototype.attacked = function(target, slot, target_uuid) {
       }
     };
     for(var st in stations){
-      // console.log('station is ', stations[st])
         stations[st].hit(this, target, slot);
     };
   };

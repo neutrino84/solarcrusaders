@@ -8,17 +8,51 @@ var Panel = require('../../Panel'),
 function Shipyard(game) {
   this.socket = game.net.socket;
   var w = window,
-      d = document,
-      e = d.documentElement,
-      g = d.getElementsByTagName('body')[0],
-      x = w.innerWidth || e.clientWidth || g.clientWidth,
-      y = w.innerHeight|| e.clientHeight|| g.clientHeight, textHeight;
+      d = document;
+  //     e = d.documentElement,
+  //     g = d.getElementsByTagName('body')[0],
+  //     x = w.innerWidth || e.clientWidth || g.clientWidth,
+  //     y = w.innerHeight|| e.clientHeight|| g.clientHeight, textHeight;
+  this.textHeight = 175;
+  this.shipContainersSize = 128;
 
-  if(y < 850){
-    textHeight = 100;
-  } else {
-    textHeight = 175;
+
+  this.resizeDynamic();
+  
+
+  w.onresize = function(){
+    var w = window,
+        d = document,
+        e = d.documentElement,
+        g = d.getElementsByTagName('body')[0],
+        x = w.innerWidth || e.clientWidth || g.clientWidth,
+        y = w.innerHeight|| e.clientHeight|| g.clientHeight;
+    console.log('in window local- x: ', x, ' y: ', y)
+    if(x < 1026 || y < 800){
+      this.textHeight = 100;
+      if(x < 900 || y < 800){
+        this.shipContainersSize = 110;
+        if(x < 860){
+          this.shipContainersSize = 80;
+        }
+      }
+    } else {
+      this.textHeight = 175;
+    };
   };
+  
+  // if(x < 800 || y < 800){
+  //   textHeight = 100;
+  //   if(x < 1026){
+  //     this.shipContainersSize = 100;
+  //     if(x < 860){
+  //       this.shipContainersSize = 80;
+  //     }
+  //   }
+  // } else {
+  //   textHeight = 175;
+  // };
+
 
   Pane.call(this, game, {
     constraint: Layout.CENTER,
@@ -62,7 +96,7 @@ function Shipyard(game) {
   }), textPane = new Pane(this.game, {
     constraint: Layout.TOP,
     width: this.game.width/2,
-    height: textHeight,
+    height: this.textHeight,
     layout: {
       type: 'stack'
     },
@@ -121,8 +155,8 @@ function Shipyard(game) {
   for(var i=0; i<6; i++) {
     this.containers.push(
       new Pane(this.game, {
-        width: 128,
-        height: 128,
+        width: this.shipContainersSize,
+        height: this.shipContainersSize,
         layout: {
           type: 'stack'
         },
@@ -175,8 +209,8 @@ Shipyard.prototype.create = function(ship) {
     icon: {
       key: 'texture-atlas',
       frame: ship + '-hires.png',
-      width: 128,
-      height: 128,
+      width: this.shipContainersSize,
+      height: this.shipContainersSize,
       bg: {
         fillAlpha: 0.0,
         color: 0x000000
@@ -440,7 +474,27 @@ Shipyard.prototype._unhover = function(button) {
       statsPane.invalidate();
     }
   };
+};
 
+Shipyard.prototype.resizeDynamic = function() {
+  var w = window,
+      d = document,
+      e = d.documentElement,
+      g = d.getElementsByTagName('body')[0],
+      x = w.innerWidth || e.clientWidth || g.clientWidth,
+      y = w.innerHeight|| e.clientHeight|| g.clientHeight;
+  console.log('x: ', x, ' y: ', y)
+  if(x < 1026 || y < 800){
+    this.textHeight = 100;
+    if(x < 900 || y < 800){
+      this.shipContainersSize = 110;
+      if(x < 860){
+        this.shipContainersSize = 80;
+      }
+    }
+  } else {
+    this.textHeight = 175;
+  };
 };
 
 Shipyard.prototype.show = function() {

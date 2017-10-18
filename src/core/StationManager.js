@@ -76,15 +76,6 @@ StationManager.prototype.sync = function(chassis) {
       orbit = station.orbit;
       orbit.update();
       position = orbit.position;
-      // if(chassis && chassis == 'ubadian-station-x01' && station.chassis == 'ubadian-station-x01'){
-      //   // console.log(orbit.position)
-      //   var adjustedPosition = new engine.Point(orbit.position.x, orbit.position.y);
-      //   adjustedPosition.x = adjustedPosition.x * 4;
-      //   adjustedPosition.y = adjustedPosition.y * 4;
-      //   console.log(adjustedPosition)
-      //   // debugger
-      //   return adjustedPosition
-      // }
       data = {
         uuid: station.uuid,
         pos: { x: position.x, y: position.y },
@@ -105,12 +96,10 @@ StationManager.prototype.getPosition = function(){
   for(var s in this.stations){
     station = stations[s];
     if(station && station.chassis == 'ubadian-station-x01'){
-      orbit = station.orbit;
-      position = orbit.position;
-      adjustedPosition = new engine.Point(orbit.position.x, orbit.position.y);
+      position = station.orbit.position;
+      adjustedPosition = new engine.Point(position.x, position.y);
       adjustedPosition.x = adjustedPosition.x * 4;
       adjustedPosition.y = adjustedPosition.y * 4;
-      // console.log('adj pos is ', adjustedPosition)
       return adjustedPosition
     }
   }
