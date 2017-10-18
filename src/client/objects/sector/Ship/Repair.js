@@ -1,6 +1,7 @@
 
 var engine = require('engine'),
-    pixi = require('pixi');
+    pixi = require('pixi'),
+    OutlineFilter = require('../../../fx/filters/OutlineFilter');
 
 function Repair(parent) {
   this.parent = parent;
@@ -10,33 +11,18 @@ function Repair(parent) {
 Repair.prototype.constructor = Repair;
 
 Repair.prototype.create = function() {
-  this.sprite = new engine.Sprite(this.game, 'texture-atlas', this.parent.data.chassis + '.png');
-  this.sprite.blendMode = engine.BlendMode.ADD;
-  this.sprite.tint = 0x00FF00;
-  this.sprite.alpha = 0.0;
+  this.outlineFilter = new OutlineFilter(0.5, 0x33ff33);
+  this.outlineSprite = new engine.Sprite(this.game, 'texture-atlas', this.parent.data.chassis + '.png');
+  this.outlineSprite.blendMode = engine.BlendMode.ADD;
+  this.outlineSprite.filters = [this.outlineFilter];
 };
 
 Repair.prototype.start = function() {
-  this.sprite.alpha = 0.4;
-
-  this.tween && this.tween.stop(true);
-  this.tween = this.game.tweens.create(this.sprite);
-  this.tween.to({ alpha: 0.2 }, 1000, engine.Easing.Quadratic.InOut);
-  this.tween.yoyo(true, 250);
-  this.tween.repeat();
-  this.tween.on('complete', this.remove, this);
-  this.tween.start();
-
-  this.parent.addChild(this.sprite);
+  this.parent.addChild(this.outlineSprite);
 };
 
 Repair.prototype.stop = function() {
-  this.tween && this.tween.stop(true);
-  this.parent.removeChild(this.sprite);
-};
-
-Repair.prototype.remove = function() {
-  this.parent.removeChild(this.sprite);
+  this.parent.removeChild(this.outlineSprite);
 };
 
 Repair.prototype.destroy = function() {

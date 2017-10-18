@@ -1,7 +1,7 @@
 
 var pixi = require('pixi'),
     engine = require('engine'),
-    OutlineFilter = require('../../../fx/filters/OutlineFilter')
+    OutlineFilter = require('../../../fx/filters/OutlineFilter'),
     ShieldFilter = require('../../../fx/filters/ShieldFilter');
 
 function ShieldGenerator(parent) {

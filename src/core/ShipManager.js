@@ -48,10 +48,10 @@ ShipManager.prototype.remove = function(ship) {
   }
 };
 
-ShipManager.prototype.create = function(data, user) {
+ShipManager.prototype.create = function(data, user, master) {
   var self = this, ship,
       game = this.game;
-  ship = new Ship(this, data, user);
+  ship = new Ship(this, data, user, master);
   ship.init(function() {
     game.emit('ship/add', ship);
   });
@@ -62,7 +62,7 @@ ShipManager.prototype.plot = function(socket, args) {
       data = args[1],
       ship = this.ships[data.uuid];
   if(ship && ship.user && ship.user.uuid === user.uuid) {
-    ship.movement.plot(data.destination);
+    ship.plot(data.coordinates);
   }
 };
 
