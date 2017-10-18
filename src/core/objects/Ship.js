@@ -7,12 +7,13 @@ var async = require('async'),
     Movement = require('./Movement'),
     Utils = require('../../utils');
 
-function Ship(manager, data, user) {
+function Ship(manager, data, user, master) {
   this.manager = manager;
   this.game = manager.game;
   this.sockets = manager.sockets;
   this.model = manager.model;
   this.user = user;
+  this.master = master;
   
   this.data = new this.model.Ship(data);
   this.data.init();
@@ -34,6 +35,7 @@ function Ship(manager, data, user) {
   this.ai = manager.ai.create(data.ai, this);
 
   // create metadata
+  this.squadron = {};
   this.hardpoints = {};
   this.enhancements = {
     active: {
@@ -64,6 +66,7 @@ Ship.prototype.init = function(callback) {
         self.createRelationships();
         self.createEnhancements();
         self.createHardpoints();
+        self.createSquadron();
       };
   if(data.isNewRecord()) {
     initialize();
@@ -132,6 +135,47 @@ Ship.prototype.createHardpoints = function() {
     // cache to local object
     harpoints[i] = new Hardpoint(this, type, subtype, i);
     serialized.hardpoints.push(harpoints[i].toObject());
+  }
+};
+
+Ship.prototype.createSquadron = function() {
+  var name,
+      game = this.game,
+      master = this.master,
+      user = this.user,
+      squadron = this.config.squadron;
+  if(user) {
+    for(var i=0; i<squadron.length; i++) {
+      name = squadron[i];
+      game.emit('ship/create', {
+        chassis: name,
+        x: 2048,
+        y: 2048,
+        ai: 'squadron'
+      }, null, this);
+    }
+  }
+  if(master) {
+    master.squadron[this.uuid] = this;
+  }
+};
+
+Ship.prototype.plot = function(coordinates) {
+  var movement = this.movement,
+      squadron = this.squadron,
+      squad;
+  
+  // plot ship
+  movement.plot({
+    x: coordinates.x - movement.position.x,
+    y: coordinates.y - movement.position.y });
+
+  // plot squadron
+  for(var s in squadron) {
+    squad = squadron[s];
+    squad.movement.plot({
+      x: coordinates.x - squad.movement.position.x,
+      y: coordinates.y - squad.movement.position.y });
   }
 };
 
