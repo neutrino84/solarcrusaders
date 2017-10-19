@@ -66,28 +66,28 @@ EventManager.prototype.init = function() {
   //   radius: 50
   // });
 
-  this.game.emit('station/create', {
-    default: true,
-    chassis: 'scavenger-x01',
-    x: 3550*1.5, 
-    y: -3550*1.5,
-    radius: 0
-  });
+  // this.game.emit('station/create', {
+  //   default: true,
+  //   chassis: 'scavenger-x01',
+  //   x: 3550*1.5, 
+  //   y: -3550*1.5,
+  //   radius: 0
+  // });
 
-  this.game.emit('station/create', {
-    default: true,
-    chassis: 'scavenger-x01',
-    x: -3550*1.5, 
-    y: 3550*1.5,
-    radius: 0
-  });
+  // this.game.emit('station/create', {
+  //   default: true,
+  //   chassis: 'scavenger-x01',
+  //   x: -3550*1.5, 
+  //   y: 3550*1.5,
+  //   radius: 0
+  // });
 
   //generate ships
   for(var a in this.ships){
     this.shipGen(this.ships[a], a.toString())
   };
 
-  this.scavGen(24);
+  // this.scavGen(24);
   
 };
 

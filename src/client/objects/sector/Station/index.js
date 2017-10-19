@@ -1,6 +1,7 @@
 
 var engine = require('engine'),
-    Hud = require('../../../ui/components/HudStation');
+    Hud = require('../../../ui/components/HudStation'),
+    Explosion = require('./StationExplosion');
 
 function Station(manager, data) {
   engine.Sprite.call(this, manager.game, data.chassis);
@@ -18,8 +19,10 @@ function Station(manager, data) {
   this.destination = new engine.Point();
 
   // core ship classes
+  console.log('1', this.position, data)
   this.rotation = this.rot = data.rotation;
   this.position.set(this.data.x, this.data.y);
+  console.log('2', this.position, data)
   this.pivot.set(this.width/2, this.height/2);
 
   // timer events
@@ -27,7 +30,7 @@ function Station(manager, data) {
 
   this.hud = new Hud(this);
 
-  this.ohHay = 1;
+  this.explosion = new Explosion(this);
 };
 
 Station.prototype = Object.create(engine.Sprite.prototype);
@@ -58,7 +61,7 @@ Station.prototype.refresh = function(data) {
 };
 
 Station.prototype.update = function() {
-  // calculate movement]
+  // calculate movement
   if(!this.destination.isZero()) {
     var elapsed = this.game.clock.elapsed,
         d1 = this.destination.distance(this.position),
@@ -68,16 +71,17 @@ Station.prototype.update = function() {
         destination = engine.Point.interpolate(this.position, this.destination, interpolate1, this.vector),
         rotation = engine.Math.linearInterpolation([this.rotation, this.rotation+this.spin], interpolate2);
     this.position.set(destination.x, destination.y);
+    console.log(this.position)
     this.rotation = rotation;
     this.cap.rotation = -rotation*8;
   }
 
-  this.events.update(this.game.clock.time);
+  // this.events.update(this.game.clock.time);
 
   // update
   this.hud.update();
 
-  engine.Sprite.prototype.update.call(this);
+  // engine.Sprite.prototype.update.call(this);
 };
 
 Station.prototype.plot = function(data) {
@@ -85,6 +89,22 @@ Station.prototype.plot = function(data) {
   this.rot = data.rot;
   this.spin = data.spn;
   this.destination.copyFrom(data.pos);
+};
+
+Station.prototype.disable = function() {
+  this.disabled = true;
+  console.log('station is ', this)
+  this.tint = 0x333333;
+  this.hud.disable();
+
+  // this.engineCore.stop();
+  // this.engineCore.show(false);
+  // this.shieldGenerator.stop();
+  // this.repair.stop();
+};
+
+Station.prototype.explode = function() {
+  this.explosion.start();
 };
 
 Station.prototype.destroy = function(options) {

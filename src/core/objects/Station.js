@@ -53,18 +53,18 @@ Station.prototype.hit = function(attacker, target, slot) {
         // console.log(ratio)
         // console.log('ubaidan station distance: ', distance)
       // }
-      orbit.compensated();
-  if(ratio < 0.4) {
+      // orbit.compensated();
+  if(ratio < 0.7) {
     
     // debugger
     // // test data
-    if(!attacker.ai && this.ai) {
-      sockets.emit('ship/test', {
-        uuid: this.uuid,
-        compensated: compensated,
-        targ: target
-      });
-    }
+    // if(!attacker.ai && this.ai) {
+    //   sockets.emit('ship/test', {
+    //     uuid: this.uuid,
+    //     compensated: compensated,
+    //     targ: target
+    //   });
+    // }
 
     // calc damage
     // critical = this.game.rnd.rnd() <= attacker.critical;
@@ -102,7 +102,7 @@ Station.prototype.hit = function(attacker, target, slot) {
         // disengage attacker
         attacker.ai && attacker.ai.disengage();
 
-        // disable ship
+        // disable station
         if(!this.disabled) {
           this.disable();
 
@@ -129,11 +129,12 @@ Station.prototype.hit = function(attacker, target, slot) {
 };
 
 Station.prototype.disable = function() {
+
   // disable
   this.disabled = true;
 
   // broadcast
-  this.sockets.emit('station/disabled', {
+  this.game.emit('station/disabled', {
     uuid: this.uuid
   });
 };

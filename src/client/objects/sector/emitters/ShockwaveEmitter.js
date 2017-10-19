@@ -42,10 +42,15 @@ ShockwaveEmitter.prototype.rocket = function() {
   this.setTint(global.parseInt(colors[0]), global.parseInt(colors[1]), 400);
 };
 
-ShockwaveEmitter.prototype.explosion = function(ship) {
-  var movement = ship.movement,
-      speed = movement._speed * 2,
-      vector = movement._vector;
+ShockwaveEmitter.prototype.explosion = function(object) {
+  var movement = object.movement, speed;
+      if(movement){
+        speed = movement._speed * 2,
+        vector = movement._vector;
+      } else {
+        speed = object.speed,
+        vector = object.vector;
+      };
 
   this.blendMode = engine.BlendMode.NORMAL;
 

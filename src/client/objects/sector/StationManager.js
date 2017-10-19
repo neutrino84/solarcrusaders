@@ -1,6 +1,11 @@
 
 var engine = require('engine'),
-    Station = require('./Station');
+    Station = require('./Station'),
+    ExplosionEmitter = require('./emitters/ExplosionEmitter'),
+    FlashEmitter = require('./emitters/FlashEmitter'),
+    GlowEmitter = require('./emitters/GlowEmitter'),
+    ShockwaveEmitter = require('./emitters/ShockwaveEmitter'),
+    FireEmitter = require('./emitters/FireEmitter');
 
 function StationManager(game, state) {
   this.game = game;
@@ -14,16 +19,35 @@ function StationManager(game, state) {
   // stations
   this.stations = {};
 
+  // create emitters
+  this.explosionEmitter = new ExplosionEmitter(this.game);
+  this.flashEmitter = new FlashEmitter(this.game);
+  this.glowEmitter = new GlowEmitter(this.game);
+  this.shockwaveEmitter = new ShockwaveEmitter(this.game);
+  this.fireEmitter = new FireEmitter(this.game);
+
+  this.game.particles.add(this.explosionEmitter);
+  this.game.particles.add(this.flashEmitter);
+  this.game.particles.add(this.glowEmitter);
+  this.game.particles.add(this.shockwaveEmitter);
+  this.game.particles.add(this.fireEmitter);
+
+
   // listen to messaging
   this.game.on('auth/disconnect', this.disconnect, this);
   this.game.on('sector/sync', this.sync, this);
 
   this.game.on('station/find', this.findStation, this);
-
-  this.game.on('station/data', this.test, this);
+  this.game.on('station/disabled', this._disabled, this);
 
   // add to world
   this.game.world.foreground.add(this.stationsGroup);
+
+  this.game.world.foreground.add(this.fireEmitter);
+  this.game.world.foreground.add(this.explosionEmitter);
+  this.game.world.foreground.add(this.flashEmitter);
+  this.game.world.foreground.add(this.shockwaveEmitter);
+  this.game.world.foreground.add(this.glowEmitter);
 
   this.happened = false;
 }
@@ -56,6 +80,23 @@ StationManager.prototype.create = function(data) {
   if(!user.ship) {
     //..
   }
+};
+
+StationManager.prototype._disabled = function(data) {
+  var station = this.stations[data.uuid],
+      socket = this.socket,
+      clock = this.clock,
+      game = this.game, chassis;
+      console.log(' de heck.. station disabled!', data)
+  if(station !== undefined) {
+    chassis = station.data.chassis;
+
+    console.log(chassis, 'station disabled!')
+    station.disable();
+    station.explode();
+
+    // this.game.emit('station/sound/death', station);
+  };
 };
 
 
@@ -127,6 +168,9 @@ StationManager.prototype.removeAll = function() {
 StationManager.prototype.destroy = function() {
   this.game.removeListener('auth/disconnect', this.disconnect);
   this.game.removeListener('sector/sync', this.sync);
+
+  this.game.removeListener('station/find', this.findStation);
+  this.game.removeListener('station/disabled', this._disabled);
 
   this.removeAll();
 

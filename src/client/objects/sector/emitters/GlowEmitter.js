@@ -28,17 +28,22 @@ GlowEmitter.prototype.mini = function(ship) {
   this.setTint(0xFFFFFF, 0x000000, 1000);
 };
 
-GlowEmitter.prototype.explosion = function(ship) {
-  var movement = ship.movement,
+GlowEmitter.prototype.explosion = function(object) {
+  var movement = object.movement, speed;
+    if(movement){
       speed = movement._speed * 2,
       vector = movement._vector;
+    } else {
+      speed = object.speed,
+      vector = object.vector;
+    };
 
   this.lifespan = 2000;
 
   this.setVelocity(speed * 2, speed * 2);
   this.setVector(vector.x, vector.y);
 
-  this.setScale(1.0, ship.data.size * 1.5, 1000);
+  this.setScale(1.0, object.data.size * 1.5, 1000);
   this.setAlpha(1.0, 0.0, 2000);
   this.setTint(0xFFFFFF, 0x999999, 2000);
 };

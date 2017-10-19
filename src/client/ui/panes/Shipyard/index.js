@@ -27,7 +27,7 @@ function Shipyard(game) {
         g = d.getElementsByTagName('body')[0],
         x = w.innerWidth || e.clientWidth || g.clientWidth,
         y = w.innerHeight|| e.clientHeight|| g.clientHeight;
-    console.log('in window local- x: ', x, ' y: ', y)
+    console.log('in window local- x: ', x, ' y: ', y, this)
     if(x < 1026 || y < 800){
       this.textHeight = 100;
       if(x < 900 || y < 800){
@@ -40,7 +40,7 @@ function Shipyard(game) {
       this.textHeight = 175;
     };
   };
-  
+
   // if(x < 800 || y < 800){
   //   textHeight = 100;
   //   if(x < 1026){

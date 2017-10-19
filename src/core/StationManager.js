@@ -17,7 +17,7 @@ StationManager.prototype.init = function() {
   // listen to messaging
   this.game.on('station/add', this.add, this);
   this.game.on('station/create', this.create, this);
-  this.game.on('station/data', this.data.bind(this));
+  this.game.on('station/disabled', this.disabled, this);
 };
 
 StationManager.prototype.add = function(station) {
@@ -103,6 +103,10 @@ StationManager.prototype.getPosition = function(){
       return adjustedPosition
     }
   }
+};
+
+StationManager.prototype.disabled = function(data) {
+  this.sockets.send('station/disabled', data);
 };
 
 module.exports = StationManager;

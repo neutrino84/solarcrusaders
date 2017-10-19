@@ -333,8 +333,6 @@ ShipManager.prototype._disabled = function(data) {
     ship.disable();
     ship.explode();
     this.game.emit('ship/sound/death', ship);
-    // ship.selector.hostileHighlightStop();
-    // ship.selector.hostileEngagedStop();
     if(ship.isPlayer) {
       this.autofire && clock.events.remove(this.autofire);
     };

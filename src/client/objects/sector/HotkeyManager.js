@@ -95,6 +95,7 @@ HotkeyManager.prototype.listener = function(hotkey) {
             this.isPiercing = true;
             break;
           case 'detect':
+          console.log('position is ', this.player.movement.position)
             this.detecting = true;
             break;
         }
@@ -102,6 +103,8 @@ HotkeyManager.prototype.listener = function(hotkey) {
     //squadron
 
       if(key.toLowerCase() === 'c'){
+        console.log('position is ', this.player.movement._position)
+        debugger
         this.squadManager.closestHostile();
       };
       if(key.toLowerCase() === 'e'){

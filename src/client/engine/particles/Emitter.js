@@ -365,6 +365,7 @@ Emitter.prototype.setTint = function(startTint, endTint, rate, ease, yoyo) {
 };
 
 Emitter.prototype.at = function(object) {
+  console.log('emitter object ', object)
   if(object.center) {
     this.emitX = object.center.x;
     this.emitY = object.center.y;
