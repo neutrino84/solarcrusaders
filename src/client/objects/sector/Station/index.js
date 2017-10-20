@@ -5,7 +5,7 @@ var engine = require('engine'),
 
 function Station(manager, data) {
   engine.Sprite.call(this, manager.game, data.chassis);
-
+  console.log('station is ', this)
   this.name = data.name;
   this.manager = manager;
   this.data = data;
