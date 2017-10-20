@@ -2,11 +2,6 @@
 var engine = require('engine'),
     Ship = require('./Ship'),
     EnhancementManager = require('./EnhancementManager'),
-    ExplosionEmitter = require('./emitters/ExplosionEmitter'),
-    FlashEmitter = require('./emitters/FlashEmitter'),
-    GlowEmitter = require('./emitters/GlowEmitter'),
-    ShockwaveEmitter = require('./emitters/ShockwaveEmitter'),
-    FireEmitter = require('./emitters/FireEmitter'),
     Indicator = require('./misc/Indicator');
 
 function ShipManager(game, state) {
@@ -32,29 +27,11 @@ function ShipManager(game, state) {
   this.fxGroup = new engine.Group(game);
   this.trajectoryGroup = new engine.Group(game);
 
-  // create emitters
-  this.explosionEmitter = new ExplosionEmitter(this.game);
-  this.flashEmitter = new FlashEmitter(this.game);
-  this.glowEmitter = new GlowEmitter(this.game);
-  this.shockwaveEmitter = new ShockwaveEmitter(this.game);
-  this.fireEmitter = new FireEmitter(this.game);
-
-  this.game.particles.add(this.explosionEmitter);
-  this.game.particles.add(this.flashEmitter);
-  this.game.particles.add(this.glowEmitter);
-  this.game.particles.add(this.shockwaveEmitter);
-  this.game.particles.add(this.fireEmitter);
-
   // add ships to world
   this.game.world.add(this.trajectoryGroup);
   this.game.world.add(this.subGroup);
   this.game.world.add(this.shipsGroup);
   this.game.world.add(this.fxGroup);
-  this.game.world.add(this.fireEmitter);
-  this.game.world.add(this.explosionEmitter);
-  this.game.world.add(this.flashEmitter);
-  this.game.world.add(this.shockwaveEmitter);
-  this.game.world.add(this.glowEmitter);
   this.game.world.add(this.indicator);
 
   this.trajectoryGraphics = new engine.Graphics(game);
@@ -146,18 +123,9 @@ ShipManager.prototype.destroy = function() {
   game.removeListener('game/pause', this._pause);
   game.removeListener('game/resume', this._resume);
 
-  game.particles.remove(this.explosionEmitter);
-  game.particles.remove(this.flashEmitter);
-  game.particles.remove(this.glowEmitter);
-  game.particles.remove(this.shockwaveEmitter);
-
   game.world.remove(this.trajectoryGroup);
-  game.world.remove(this.shockwaveEmitter);
   game.world.remove(this.shipsGroup);
   game.world.remove(this.fxGroup);
-  game.world.remove(this.explosionEmitter);
-  game.world.remove(this.flashEmitter);
-  game.world.remove(this.glowEmitter);
 
   this.removeAll();
 
