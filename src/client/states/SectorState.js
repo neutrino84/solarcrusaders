@@ -10,6 +10,11 @@ var engine = require('engine'),
     StationManager = require('../objects/sector/StationManager'),
     SoundManager = require('../objects/sector/SoundManager'),
     HotkeyManager = require('../objects/sector/HotkeyManager'),
+    ExplosionEmitter = require('../objects/sector/emitters/ExplosionEmitter'),
+    FlashEmitter = require('../objects/sector/emitters/FlashEmitter'),
+    GlowEmitter = require('../objects/sector/emitters/GlowEmitter'),
+    ShockwaveEmitter = require('../objects/sector/emitters/ShockwaveEmitter'),
+    FireEmitter = require('../objects/sector/emitters/FireEmitter'),
     Asteroid = require('../objects/sector/misc/Asteroid');
     
 function SectorState(game) {
@@ -70,7 +75,7 @@ SectorState.prototype.create = function() {
       mouse.capture = true;
       mouse.mouseWheelCallback = function(event) {
         var delta = event.deltaY / sensitivity,
-            scale = engine.Math.clamp(this.world.scale.x - delta, 0.28, 1.0);
+            scale = engine.Math.clamp(this.world.scale.x - delta, 0.28, 0.6);
         if(self.game.paused) { return; }
         if(self.zoom && self.zoom.isRunning) {
           self.zoom.stop();
@@ -89,6 +94,7 @@ SectorState.prototype.create = function() {
   this.createAsteroids();
   this.createManagers();
   this.createSpace();
+  this.createEmitters();
 
   // create ui
   this.ui.create();
@@ -132,6 +138,26 @@ SectorState.prototype.createAsteroids = function() {
 
     game.world.foreground.add(asteroid);
   }
+};
+
+SectorState.prototype.createEmitters = function() {
+  this.explosionEmitter = new ExplosionEmitter(this.game);
+  this.flashEmitter = new FlashEmitter(this.game);
+  this.glowEmitter = new GlowEmitter(this.game);
+  this.shockwaveEmitter = new ShockwaveEmitter(this.game);
+  this.fireEmitter = new FireEmitter(this.game);
+
+  this.game.particles.add(this.explosionEmitter);
+  this.game.particles.add(this.flashEmitter);
+  this.game.particles.add(this.glowEmitter);
+  this.game.particles.add(this.shockwaveEmitter);
+  this.game.particles.add(this.fireEmitter);
+
+  this.game.world.add(this.fireEmitter);
+  this.game.world.add(this.explosionEmitter);
+  this.game.world.add(this.flashEmitter);
+  this.game.world.add(this.shockwaveEmitter);
+  this.game.world.add(this.glowEmitter);
 };
 
 SectorState.prototype.focus = function() {}

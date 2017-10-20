@@ -5,6 +5,7 @@ function Explosion(ship) {
   this.ship = ship;
   this.game = ship.game;
   this.events = ship.events;
+  this.state = ship.manager.state;
 
   this.temp = new engine.Point();
 
@@ -24,21 +25,21 @@ Explosion.prototype.start = function() {
       ship = this.ship,
       hit = this.hit,
       rnd = this.game.rnd,
-      manager = ship.manager;
+      state = this.state;
 
-  manager.shockwaveEmitter.explosion(ship);
-  manager.shockwaveEmitter.at({ center: ship.position });
-  manager.shockwaveEmitter.explode(2);
+  state.shockwaveEmitter.explosion();
+  state.shockwaveEmitter.at({ center: ship.position });
+  state.shockwaveEmitter.explode(2);
 
-  manager.glowEmitter.explosion(ship);
-  manager.glowEmitter.at({ center: ship.position });
-  manager.glowEmitter.explode(3);
+  state.glowEmitter.explosion(ship.size * 2.0);
+  state.glowEmitter.at({ center: ship.position });
+  state.glowEmitter.explode(3);
 
   events.repeat(50, 100, function() {
     if(rnd.frac() > 0.25) {
-      manager.explosionEmitter.explosion(ship);
-      manager.explosionEmitter.at({ center: hit.random(false, temp) });
-      manager.explosionEmitter.explode(2);
+      state.explosionEmitter.explosion(ship.size);
+      state.explosionEmitter.at({ center: hit.random(false, temp) });
+      state.explosionEmitter.explode(2);
     }
   });
 

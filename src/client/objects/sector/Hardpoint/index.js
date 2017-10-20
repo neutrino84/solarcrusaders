@@ -10,7 +10,8 @@ var engine = require('engine'),
 function Hardpoint(parent, config, data, slot, total) {
   this.parent = parent;
   this.game = parent.game;
-  this.manager = parent.manager,
+  this.manager = parent.manager;
+  this.state = parent.manager.state;
   this.ship = parent.ship;
   this.config = config;
   this.data = data;
@@ -100,28 +101,25 @@ Hardpoint.prototype.fire = function(targ) {
 
 Hardpoint.prototype.hit = function(ship, target) {
   var launcher,
-      rnd = this.game.rnd,
       actives = this.actives,
       length = actives.length;
-      vector = ship.movement._vector,
-      speed = ship.movement._speed;
 
   for(var i=0; i<length; i++) {
     launcher = actives[i];
     launcher.hit && launcher.hit(ship, target);
   }
 
-  this.manager.explosionEmitter.medium(ship);
-  this.manager.explosionEmitter.at({ center: target });
-  this.manager.explosionEmitter.explode(1);
+  this.state.explosionEmitter.medium(ship);
+  this.state.explosionEmitter.at({ center: target });
+  this.state.explosionEmitter.explode(1);
 
-  this.manager.explosionEmitter.small(ship);
-  this.manager.explosionEmitter.at({ center: target });
-  this.manager.explosionEmitter.explode(1);
+  this.state.explosionEmitter.small(ship);
+  this.state.explosionEmitter.at({ center: target });
+  this.state.explosionEmitter.explode(1);
   
-  this.manager.flashEmitter.attack();
-  this.manager.flashEmitter.at({ center: target });
-  this.manager.flashEmitter.explode(1);
+  this.state.flashEmitter.attack();
+  this.state.flashEmitter.at({ center: target });
+  this.state.flashEmitter.explode(1);
 
   this.game.emit('ship/hardpoint/hit', {
     ship: ship,

@@ -10,11 +10,7 @@ function ExplosionEmitter(game) {
 ExplosionEmitter.prototype = Object.create(engine.Emitter.prototype);
 ExplosionEmitter.prototype.constructor = ExplosionEmitter;
 
-ExplosionEmitter.prototype.small = function(ship) {
-  var movement = ship.movement,
-      speed = movement._speed,
-      vector = movement._vector;
-
+ExplosionEmitter.prototype.small = function() {
   this.lifespan = 500;
 
   this.blendMode = engine.BlendMode.ADD;
@@ -22,19 +18,12 @@ ExplosionEmitter.prototype.small = function(ship) {
   this.minRotation = -96;
   this.maxRotation = 96;
 
-  this.setVelocity(speed * 2, speed * 2);
-  this.setVector(vector.x, vector.y);
-
   this.setScale(0.25, 0.75, 250);
   this.setAlpha(1.0, 0.0, 500);
   this.setTint(0xFF8888, 0xFF6666, 250);
 };
 
-ExplosionEmitter.prototype.medium = function(ship) {
-  var movement = ship.movement,
-      speed = movement._speed,
-      vector = movement._vector;
-
+ExplosionEmitter.prototype.medium = function() {
   this.lifespan = 1000;
 
   this.blendMode = engine.BlendMode.NORMAL;
@@ -42,19 +31,12 @@ ExplosionEmitter.prototype.medium = function(ship) {
   this.minRotation = -96;
   this.maxRotation = 96;
 
-  this.setVelocity(speed * 2, speed * 2);
-  this.setVector(vector.x, vector.y);
-
   this.setScale(0.25, 2.25, 1000);
   this.setAlpha(1.0, 0.0, 1000);
   this.setTint(0xFF8888, 0x666666, 750);
 };
 
-ExplosionEmitter.prototype.explosion = function(ship) {
-  var movement = ship.movement,
-      speed = movement._speed,
-      vector = movement._vector;
-
+ExplosionEmitter.prototype.explosion = function(size) {
   this.lifespan = 1024;
 
   this.blendMode = engine.BlendMode.ADD;
@@ -62,28 +44,18 @@ ExplosionEmitter.prototype.explosion = function(ship) {
   this.minRotation = -64;
   this.maxRotation = 64;
 
-  this.setVelocity(speed * 2, speed * 2);
-  this.setVector(vector.x, vector.y);
-
-  this.setScale(1.0, ship.data.size/36, 1024);
+  this.setScale(1.0, size, 1024);
   this.setAlpha(1.0, 0.0, 1024);
   this.setTint(0xFF3333, 0x333333, 512);
 };
 
-ExplosionEmitter.prototype.smulder = function(ship) {
-  var movement = ship.movement,
-      speed = movement._speed,
-      vector = movement._vector;
-
+ExplosionEmitter.prototype.smulder = function() {
   this.lifespan = 1000;
 
   this.blendMode = engine.BlendMode.NORMAL;
 
   this.minRotation = -180;
   this.maxRotation = 180;
-
-  this.setVelocity(speed * 2, speed * 2);
-  this.setVector(vector.x, vector.y);
 
   this.setScale(0.25, 2, 1000);
   this.setAlpha(0.5, 0.0, 1000);

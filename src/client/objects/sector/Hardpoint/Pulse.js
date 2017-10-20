@@ -6,6 +6,7 @@ function Pulse(parent) {
   this.parent = parent;
   this.game = parent.game;
   this.manager = parent.manager;
+  this.state = parent.manager.state;
   this.data = parent.data;
   this.clock  = parent.game.clock;
 
@@ -122,9 +123,9 @@ Pulse.prototype.update = function() {
       this.strip.alpha = 1-f2;
 
       // emit particles
-      this.manager.fireEmitter.pulse(this.data.emitter);
-      this.manager.fireEmitter.at({ center: this.destination });
-      this.manager.fireEmitter.explode(1);
+      this.state.fireEmitter.pulse(this.data.emitter);
+      this.state.fireEmitter.at({ center: this.destination });
+      this.state.fireEmitter.explode(1);
     }
 
     if(this.elapsed >= this.length) {

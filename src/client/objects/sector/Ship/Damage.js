@@ -17,12 +17,12 @@ Damage.prototype.create = function() {
 Damage.prototype.critical = function() {
   var events = this.events,
       parent = this.parent,
-      manager = parent.manager;
+      state = parent.state;
 
   events.repeat(20, 5, function() {
-    manager.flashEmitter.critical();
-    manager.flashEmitter.at({ center: parent });
-    manager.flashEmitter.explode(2);
+    state.flashEmitter.critical();
+    state.flashEmitter.at({ center: parent });
+    state.flashEmitter.explode(2);
   });
 };
 

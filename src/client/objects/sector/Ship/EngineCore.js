@@ -3,6 +3,7 @@ var engine = require('engine');
 
 function EngineCore(ship, config) {
   this.ship = ship;
+  this.state = ship.manager.state;
   this.game = ship.game;
   this.config = config;
 
@@ -86,6 +87,7 @@ EngineCore.prototype.update = function(multiplier) {
   var game = this.game,
       glows = this.glows,
       ship = this.ship,
+      state = this.state,
       highlights = this.highlights,
       config = this.config.glows,
       length = config.length,
@@ -110,9 +112,9 @@ EngineCore.prototype.update = function(multiplier) {
       
     if(this.isBoosting) {
       position = game.world.worldTransform.applyInverse(ship.worldTransform.apply(glows[g].position))
-      ship.manager.fireEmitter.boost([config[g].tint, 0x333333]);
-      ship.manager.fireEmitter.at({ center: position });
-      ship.manager.fireEmitter.explode(1);
+      state.fireEmitter.boost([config[g].tint, 0x333333]);
+      state.fireEmitter.at({ center: position });
+      state.fireEmitter.explode(1);
     }
   }
 };

@@ -5,9 +5,9 @@ var pixi = require('pixi'),
 function Projectile(parent) {
   this.parent = parent;
   this.game = parent.game;
-  this.ship = parent.ship;
   this.data = parent.data;
   this.manager = parent.manager;
+  this.state = parent.manager.state;
   this.clock  = parent.game.clock;
   this.spread = {
     x: global.Math.random() * this.data.spread - this.data.spread / 2,
@@ -58,13 +58,13 @@ Projectile.prototype.explode = function() {
   if(!this.hasExploded) {
     this.hasExploded = true;
 
-    this.manager.explosionEmitter.rocket();
-    this.manager.explosionEmitter.at({ center: this.projectile.position });
-    this.manager.explosionEmitter.explode(2);
+    this.state.explosionEmitter.rocket();
+    this.state.explosionEmitter.at({ center: this.projectile.position });
+    this.state.explosionEmitter.explode(2);
 
-    this.manager.shockwaveEmitter.rocket();
-    this.manager.shockwaveEmitter.at({ center: this.projectile.position });
-    this.manager.shockwaveEmitter.explode(1);
+    this.state.shockwaveEmitter.rocket();
+    this.state.shockwaveEmitter.at({ center: this.projectile.position });
+    this.state.shockwaveEmitter.explode(1);
   }
 };
 
@@ -96,9 +96,9 @@ Projectile.prototype.update = function() {
     this.projectile.rotation = this.target.angle(this.destination);
 
     if(f1 < 0.5) {
-      this.manager.fireEmitter.rocket();
-      this.manager.fireEmitter.at({ center: this.projectile.position });
-      this.manager.fireEmitter.explode(1);
+      this.manager.state.fireEmitter.rocket();
+      this.manager.state.fireEmitter.at({ center: this.projectile.position });
+      this.manager.state.fireEmitter.explode(1);
     }
 
     if(this.elapsed > this.runtime) {
@@ -113,7 +113,7 @@ Projectile.prototype.destroy = function() {
 
   this.projectile.destroy();
 
-  this.parent = this.ship = this.game = this.manager =
+  this.parent = this.game = this.manager =
     this.data = this.clock = this._start =
     this._end = this.destination = this.origin =
     this.target = this.offset = undefined;

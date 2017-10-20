@@ -6,6 +6,7 @@ function Energy(parent) {
   this.parent = parent;
   this.game = parent.game;
   this.manager = parent.manager;
+  this.state = parent.manager.state;
   this.data = parent.data;
   this.clock  = this.game.clock;
 
@@ -147,9 +148,9 @@ Energy.prototype.update = function() {
     } else {
       this._start.copyFrom(this.destination);
 
-      this.manager.fireEmitter.energy(this.data.emitter);
-      this.manager.fireEmitter.at({ center: this.destination });
-      this.manager.fireEmitter.explode(1);
+      this.state.fireEmitter.energy(this.data.emitter);
+      this.state.fireEmitter.at({ center: this.destination });
+      this.state.fireEmitter.explode(1);
     }
 
     if(this.elapsed > this.length) {

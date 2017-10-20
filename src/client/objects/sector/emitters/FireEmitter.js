@@ -35,9 +35,6 @@ FireEmitter.prototype.pulse = function(colors) {
   
   this.lifespan = 200;
 
-  this.setVector(0, 0);
-  this.setVelocity(0, 0);
-  
   this.setScale(0.25, 0.75, 200);
   this.setAlpha(1.0, 0.0, 200);
 
@@ -48,9 +45,6 @@ FireEmitter.prototype.laser = function(colors) {
   colors = colors || ['0xFFFFFF', '0xFF0000'];
 
   this.lifespan = 150;
-
-  this.setVelocity(0, 0);
-  this.setVector(0, 0);
 
   this.setScale(0.25, 0.5, 150);
   this.setAlpha(1.0, 0.0, 150);
@@ -65,9 +59,6 @@ FireEmitter.prototype.rocket = function(colors) {
 
   this.lifespan = 300;
 
-  this.setVelocity(0, 0);
-  this.setVector(0, 0);
-
   this.setScale(0.28, 0.32, 300);
   this.setAlpha(1.0, 0.0, 300);
 
@@ -79,9 +70,6 @@ FireEmitter.prototype.plasma = function(colors) {
 
   this.lifespan = 1200;
 
-  this.setVelocity(0, 0);
-  this.setVector(0, 0);
-
   this.setScale(1.0, 0.4, 800);
   this.setAlpha(1.0, 0.0, 1200);
   this.setTint(global.parseInt(colors[0]), global.parseInt(colors[1]), 400);
@@ -92,9 +80,6 @@ FireEmitter.prototype.missile = function(colors) {
 
   this.lifespan = 300;
 
-  this.setVelocity(0, 0);
-  this.setVector(0, 0);
-
   this.setScale(0.26, 0.24, 300);
   this.setAlpha(1.0, 0.0, 300);
   this.setTint(global.parseInt(colors[0]), global.parseInt(colors[1]), 100);
@@ -104,9 +89,6 @@ FireEmitter.prototype.boost = function(colors) {
   colors = colors || ['0xFFFFFF', '0xF4F4F4'];
 
   this.lifespan = 500;
-
-  this.setVelocity(0, 0);
-  this.setVector(0, 0);
 
   this.setScale(0.4, 0.6, 200);
   this.setAlpha(1.0, 0.0, 500);
