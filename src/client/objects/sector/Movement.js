@@ -5,53 +5,24 @@ function Movement(parent) {
   this.parent = parent;
   this.game = parent.game;
 
-  this._speed = 0;
-  this._velocity = 0;
-
-  this._destination = new engine.Point();
-  this._position = new engine.Point();
-  this._vector = new engine.Point();
-  this._direction = new engine.Point();
-
+  this.speed = 0;
   this.velocity = 0;
 
-  // this._move = this.game.clock.throttle(this.move, 100, this);
-  // this._test = this.game.clock.throttle(function() {
-
-  // }, 2000, this);
+  this.vector = new engine.Point();
+  this._position = new engine.Point();
+  this._destination = new engine.Point();
+  this._direction = new engine.Point();
 }
 
 Movement.prototype.constructor = Movement;
 
-// Movement.prototype.move = function() {
-//   var ship = this.parent,
-//       vector = this._vector,
-//       temp = this._temp,
-//       manager = ship.manager,
-//       start = manager.shipsGroup.worldTransform.apply(ship.position, temp),
-//       end = this.game.input.mousePointer,
-//       destination = { x: end.x - start.x, y: end.y - start.y };
-
-//   // normalize destination
-//   temp.copyFrom(destination).normalize();
-
-//   // plot vector to server
-//   if((engine.Math.floorTo(vector.x, 2) !== engine.Math.floorTo(temp.x, 2)) || (
-//       engine.Math.floorTo(vector.y, 2) !== engine.Math.floorTo(temp.y, 2))) {
-//     manager.socket.emit('ship/plot', {
-//       uuid: ship.uuid,
-//       destination: destination
-//     });
-//   }
-// };
-
 Movement.prototype.update = function() {
   var position = this._position,
       destination = this._destination,
-      vector = this._vector,
+      vector = this.vector,
       direction = this._direction,
-      speed = this._speed,
-      velocity = this._velocity,
+      speed = this.speed,
+      velocity = this.velocity,
       ship = this.parent,
       distance, a1, a2;
 
@@ -64,10 +35,6 @@ Movement.prototype.update = function() {
   if(speed * 2.0 < distance) {
     velocity *= 2.0;
   }
-
-  // if(distance > 0.0 && speed === 0) {
-  //   velocity = distance/2.0;
-  // }
   
   // calculate vector
   vector.set(destination.x - position.x, destination.y - position.y);
@@ -99,26 +66,15 @@ Movement.prototype.update = function() {
 };
 
 Movement.prototype.plot = function(data) {
-  var ship = this.parent,
-      clock = this.game.clock,
-      time = clock.time,
-      frames = clock.frames,
-      fps = ship.isPlayer && frames > 180 ? clock.fps : 60,
-      a1, a2,
-      distance;
-
   this._destination.copyFrom(data.pos);
-  this._speed = data.spd;
-  this._velocity = (data.spd / (1/10)) * (1/60);
-
-  // set velocity
-  this.velocity = this._velocity * 6;
+  this.speed = data.spd;
+  this.velocity = (data.spd / (1/10)) * (1/60);
 };
 
 Movement.prototype.destroy = function() {
   this.parent = this.game =
     this._destination = this._origin = this._position =
-    this._vector = this._direction = undefined;
+    this.vector = this._direction = undefined;
 };
 
 module.exports = Movement;
