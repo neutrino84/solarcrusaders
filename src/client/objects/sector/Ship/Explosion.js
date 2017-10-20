@@ -28,21 +28,21 @@ Explosion.prototype.start = function() {
 
   manager.shockwaveEmitter.explosion(ship);
   manager.shockwaveEmitter.at({ center: ship.position });
-  // manager.shockwaveEmitter.explode(2);
   manager.shockwaveEmitter.explode(1);
+  // manager.shockwaveEmitter.explode(2);
 
   manager.glowEmitter.explosion(ship);
   manager.glowEmitter.at({ center: ship.position });
-  // manager.glowEmitter.explode(3);
   manager.glowEmitter.explode(1.3);
+  // manager.glowEmitter.explode(3);
 
-  events.repeat(50, 100, function() {
-    if(rnd.frac() > 0.35) {
-      manager.explosionEmitter.explosion(ship);
-      manager.explosionEmitter.at({ center: hit.random(false, temp) });
-      manager.explosionEmitter.explode(2);
-    }
-  });
+  // events.repeat(50, 100, function() {
+  //   if(rnd.frac() > 0.35) {
+  //     manager.explosionEmitter.explosion(ship);
+  //     manager.explosionEmitter.at({ center: hit.random(false, temp) });
+  //     manager.explosionEmitter.explode(2);
+  //   }
+  // });
 
   // this.game.emit('fx/shockwave', {
   //   object: ship,

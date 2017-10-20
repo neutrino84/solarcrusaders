@@ -127,7 +127,7 @@ Emitter.prototype.makeParticles = function(keys, frames, quantity) {
     if(Array.isArray(frames)) {
       frame = this.game.rnd.pick(frames);
     }
-
+    
     // create particle
     particle = new Particle(this, key, frame);
     particle.anchor.copy(this.particleAnchor);
@@ -365,7 +365,6 @@ Emitter.prototype.setTint = function(startTint, endTint, rate, ease, yoyo) {
 };
 
 Emitter.prototype.at = function(object) {
-  console.log('emitter object ', object)
   if(object.center) {
     this.emitX = object.center.x;
     this.emitY = object.center.y;

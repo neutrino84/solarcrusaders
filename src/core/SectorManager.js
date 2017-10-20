@@ -60,10 +60,6 @@ SectorManager.prototype.update = function() {
   });
 };
 
-SectorManager.prototype.test = function(data){
-  console.log('in sector manager.test- data is ', data); 
-};
-
 SectorManager.prototype.data = function(socket, args) {
   var uuids = args[1],
       ships = this.shipManager.data(uuids.ships),
@@ -80,9 +76,6 @@ SectorManager.prototype.data = function(socket, args) {
 };
 
 SectorManager.prototype.queue = function(key) {
-  if(key == 'stations'){
-    console.log('queued up some stations')
-  }
   return function(updates) {
     this.updates[key] = this.updates[key].concat(updates);
   }

@@ -1,7 +1,7 @@
 
 var engine = require('engine'),
     Hud = require('../../../ui/components/HudStation'),
-    Explosion = require('./StationExplosion');
+    Explosion = require('../Ship/Explosion');
 
 function Station(manager, data) {
   engine.Sprite.call(this, manager.game, data.chassis);
@@ -19,17 +19,15 @@ function Station(manager, data) {
   this.destination = new engine.Point();
 
   // core ship classes
-  console.log('1', this.position, data)
   this.rotation = this.rot = data.rotation;
   this.position.set(this.data.x, this.data.y);
-  console.log('2', this.position, data)
   this.pivot.set(this.width/2, this.height/2);
 
   // timer events
   this.events = new engine.Timer(this.game, false);
 
   this.hud = new Hud(this);
-
+  // this.explosion = new Explosion(this.manager.state.shipManager.player);
   this.explosion = new Explosion(this);
 };
 
@@ -45,12 +43,18 @@ Station.prototype.boot = function() {
   // add cap
   this.addChild(this.cap);
 
+
+  this.explosion.create();
+
   // create hud
   this.hud.create();
 
   this.events.start();
   // subscribe to updates
   this.data.on('data', this.refresh, this);
+
+  // get the explosion bug out of the way
+  this.explode();
 };
 
 Station.prototype.refresh = function(data) {
@@ -66,12 +70,15 @@ Station.prototype.update = function() {
     var elapsed = this.game.clock.elapsed,
         d1 = this.destination.distance(this.position),
         d2 = this.rotation-(this.rotation+this.spin),
-        interpolate1 = (elapsed * (this.speed / 200)) / d1;
-        interpolate2 = (elapsed * (this.spin / 200)) / d2;
-        destination = engine.Point.interpolate(this.position, this.destination, interpolate1, this.vector),
+        interpolate1 = (elapsed * (this.speed / 200)) / d1,
+        interpolate2 = (elapsed * (this.spin / 200)) / d2,
+        destination = engine.Point.interpolate(this.position, this.destination, interpolate1, this.vector), rotation;
+        if(!this.disabled){
         rotation = engine.Math.linearInterpolation([this.rotation, this.rotation+this.spin], interpolate2);
+        } else {
+          rotation = this.rotation;
+        }
     this.position.set(destination.x, destination.y);
-    console.log(this.position)
     this.rotation = rotation;
     this.cap.rotation = -rotation*8;
   }
@@ -93,8 +100,9 @@ Station.prototype.plot = function(data) {
 
 Station.prototype.disable = function() {
   this.disabled = true;
-  console.log('station is ', this)
   this.tint = 0x333333;
+  this.cap.tint = 0x333333;
+  this.hud.hide();
   this.hud.disable();
 
   // this.engineCore.stop();

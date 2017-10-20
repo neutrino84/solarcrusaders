@@ -112,7 +112,6 @@ Ship.prototype.refresh = function(data) {
     defender.hud.show();
     defender.hud.timer && defender.events.remove(defender.hud.timer);
     defender.hud.timer = defender.events.add(2000, defender.hud.hide, defender.hud);
-    console.log(defender.hud.timer, data)
 
     if(defender.isPlayer && attacker.data.hardpoints[0].subtype !== 'repair') {
       this.game.camera.shake();

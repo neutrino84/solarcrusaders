@@ -104,7 +104,7 @@ HotkeyManager.prototype.listener = function(hotkey) {
 
       if(key.toLowerCase() === 'c'){
         console.log('position is ', this.player.movement._position)
-        debugger
+        // debugger
         this.squadManager.closestHostile();
       };
       if(key.toLowerCase() === 'e'){

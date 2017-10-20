@@ -57,7 +57,6 @@ StationManager.prototype.data = function(uuids) {
         heal: station.heal
       });
     }
-    // console.log(station)
   }
   this.sockets.emit('station/data', {
     type: 'sync', stations: stations
@@ -106,6 +105,11 @@ StationManager.prototype.getPosition = function(){
 };
 
 StationManager.prototype.disabled = function(data) {
+  var stations = this.stations, station, orbit;
+  
+  station = this.stations[data.uuid];
+  station.orbit.pause();
+
   this.sockets.send('station/disabled', data);
 };
 

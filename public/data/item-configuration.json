@@ -305,11 +305,11 @@
     "booster": {
       "basic": {
         "cost": -30,
-        "cooldown": 10,
-        "active": 2,
+        "cooldown": 12,
+        "active": 4,
         "stats": {
           "speed": {
-            "value": 2
+            "value": 1.8
           },
           "evasion": {
             "value": 0.5

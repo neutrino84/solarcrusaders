@@ -21,6 +21,8 @@ function Orbit(parent) {
   }
 };
 
+Orbit.CLOCK_RATE = 100;
+
 Orbit.prototype.constructor = Orbit;
 
 Orbit.prototype.update = function() {
@@ -29,8 +31,32 @@ Orbit.prototype.update = function() {
   this.rotation += this.spin;
 };
 
-Orbit.prototype.compensated = function(rtt) {
+Orbit.prototype.pause = function() {
+  this.stored = {
+    period: this.period,
+    rotation: this.rotation,
+    throttle: this.throttle
+  };
+  this.throttle = 0; 
+};
 
+Orbit.prototype.compensated = function(rtt) {
+  // var rtt = rtt || 0,
+  //     position = this.position,
+  //     last = this.last,
+  //     relative = this.relative,
+  //     direction = this.direction,
+  //     modifier = (this.game.clock.time - this.time + rtt) / Movement.CLOCK_RATE;
+
+  // if(this.magnitude > Movement.STOP_THRESHOLD) {
+  //   relative.set(last.x, last.y);
+  //   relative.interpolate(position, modifier, relative);
+  //   relative.subtract(this.speed * direction.x, this.speed * direction.y);
+  // } else {
+  //   relative.set(position.x, position.y);
+  // }
+
+  // return relative;
 };
 
 Orbit.prototype.destroy = function() {

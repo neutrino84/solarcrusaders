@@ -57,7 +57,6 @@ Movement.prototype.update = function() {
 
   // ship position to point
   position.set(ship.position.x, ship.position.y);
-
   // calculate distance
   distance = position.distance(destination);
 

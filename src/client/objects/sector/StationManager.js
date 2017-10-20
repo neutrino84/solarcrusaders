@@ -13,8 +13,6 @@ function StationManager(game, state) {
   this.socket = game.net.socket;
   this.stationsGroup = new engine.Group(game);
 
-  this.trajectoryGraphics = new engine.Graphics(game);
-  this.stationsGroup.addChild(this.trajectoryGraphics);
 
   // stations
   this.stations = {};
@@ -33,6 +31,13 @@ function StationManager(game, state) {
   this.game.particles.add(this.fireEmitter);
 
 
+  this.trajectoryGroup = new engine.Group(game);
+  this.trajectoryGraphics = new engine.Graphics(game);
+
+  this.stationsGroup.addChild(this.trajectoryGraphics);
+  // networking
+  // this.socket.on('station/test', this._test.bind(this));
+
   // listen to messaging
   this.game.on('auth/disconnect', this.disconnect, this);
   this.game.on('sector/sync', this.sync, this);
@@ -42,7 +47,7 @@ function StationManager(game, state) {
 
   // add to world
   this.game.world.foreground.add(this.stationsGroup);
-
+  this.game.world.foreground.add(this.trajectoryGroup);
   this.game.world.foreground.add(this.fireEmitter);
   this.game.world.foreground.add(this.explosionEmitter);
   this.game.world.foreground.add(this.flashEmitter);
@@ -50,12 +55,19 @@ function StationManager(game, state) {
   this.game.world.foreground.add(this.glowEmitter);
 
   this.happened = false;
+
+  this.syncedX = 0;
+  this.syncedY = 0;
+  // this.game.clock.events.loop(1500, this._test, this);
 }
 
 StationManager.prototype.constructor = StationManager;
 
-StationManager.prototype.test = function(data) {
-  console.log('in station manager.test - data is ', data)
+StationManager.prototype.findStation = function(uuid) {
+  var stations = this.stations,
+      station = stations[uuid];
+  // console.log('findStation de is ', station)
+  return station.destination
 }
 
 StationManager.prototype.create = function(data) {
@@ -87,15 +99,14 @@ StationManager.prototype._disabled = function(data) {
       socket = this.socket,
       clock = this.clock,
       game = this.game, chassis;
-      console.log(' de heck.. station disabled!', data)
+
   if(station !== undefined) {
     chassis = station.data.chassis;
-
-    console.log(chassis, 'station disabled!')
+    
     station.disable();
     station.explode();
 
-    // this.game.emit('station/sound/death', station);
+    game.emit('station/sound/destroyed', station);
   };
 };
 
@@ -112,6 +123,12 @@ StationManager.prototype.sync = function(data) {
 
     // console.log('in station manager, sync function. netManager is ', this.netManager)
     if(station) {
+      // console.log('in station manager sync. data is ', data.stations[0].pos.x)
+      // game.emit('station/test', data.stations[0].pos.x, data.stations[0].pos.y)
+      // this._test(data.stations[0].pos.x, data.stations[0].pos.y)
+      this.syncedX = data.stations[0].pos.x;
+      this.syncedY = data.stations[0].pos.y;
+
       if(station.key == 'ubadian-station-x01' && !this.happened){
         this.happened = true;
         this.game.world.scale.set(1, 1);
@@ -163,6 +180,41 @@ StationManager.prototype.removeAll = function() {
   for(var s in stations) {
     this.remove(stations[s]);
   }
+};
+
+StationManager.prototype._test = function(target) {
+  // console.log('in station test. data is ', data)
+  var stations = this.stations, station;
+
+  for(var a in stations){
+    if(stations[a].data.chassis == 'ubadian-station-x01'){
+      station = stations[a];
+      // console.log('testing')
+      this.trajectoryGraphics.lineStyle(0);
+      this.trajectoryGraphics.beginFill(0x3AA699, 1.0);
+      this.trajectoryGraphics.drawCircle(station.position.x, station.position.y, 18);
+      this.trajectoryGraphics.endFill();
+
+      this.trajectoryGraphics.lineStyle(0);
+      this.trajectoryGraphics.beginFill(0xCC9933, 1.0);
+      this.trajectoryGraphics.drawCircle(this.syncedX, this.syncedY, 10);
+      this.trajectoryGraphics.endFill();
+
+      this.trajectoryGraphics.lineStyle(0);
+      this.trajectoryGraphics.beginFill(0x996633, 1.0);
+      this.trajectoryGraphics.drawCircle(this.target.x, this.target.y, 6);
+      this.trajectoryGraphics.endFill();
+    }
+  }
+      // position = new engine.Point(station.position.x, station.position.y),
+      // compensated = new engine.Point(data.compensated.x, data.compensated.y);
+
+
+
+  // this.trajectoryGraphics.lineStyle(0);
+  // this.trajectoryGraphics.beginFill(0x996633, 1.0);
+  // this.trajectoryGraphics.drawCircle(compensated.x, compensated.y, 6);
+  // this.trajectoryGraphics.endFill();
 };
 
 StationManager.prototype.destroy = function() {

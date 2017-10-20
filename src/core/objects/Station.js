@@ -44,27 +44,14 @@ Station.prototype.hit = function(attacker, target, slot) {
       ai = this.ai,
       hardpoint = attacker.hardpoints[slot],
       piercing = attacker.enhancements.active.piercing,
-      // compensated = orbit.compensated(),
+      compensated = orbit.compensated(),
       distance = orbit.position.distance({x: target.x/4, y: target.y/4}),
       ratio = distance / (this.size * hardpoint.data.aoe),
       damage, health, critical;
-      // console.log('target is ', target)
-      // if(this.chassis === 'ubadian-station-x01'){
         // console.log(ratio)
-        // console.log('ubaidan station distance: ', distance)
-      // }
-      // orbit.compensated();
-  if(ratio < 0.7) {
-    
-    // debugger
-    // // test data
-    // if(!attacker.ai && this.ai) {
-    //   sockets.emit('ship/test', {
-    //     uuid: this.uuid,
-    //     compensated: compensated,
-    //     targ: target
-    //   });
-    // }
+  if(ratio < 0.5) {
+    // sockets.emit('hit!')
+    // console.log('hit!')
 
     // calc damage
     // critical = this.game.rnd.rnd() <= attacker.critical;
@@ -74,7 +61,6 @@ Station.prototype.hit = function(attacker, target, slot) {
 
     health = data.health - damage;
 
-    // console.log('statio health is ', health)
     // update damage
     if(!this.disabled && health > 0) {
       // update health

@@ -13,16 +13,16 @@ function EventManager(game) {
   this.sockets = game.sockets;
 
   this.level = 1;
-  // this.ships = {
-  //   basic: 4,
-  //   pirate: 11,
-  //   enforcer: 1
-  // };
   this.ships = {
-    basic: 0,
-    pirate: 0,
-    enforcer: 0
+    basic: 8,
+    pirate: 16,
+    enforcer: 2
   };
+  // this.ships = {
+  //   basic: 0,
+  //   pirate: 4,
+  //   enforcer: 0
+  // };
 
   this.chassis = {
     basic : ['ubaidian-x01a','ubaidian-x01b','ubaidian-x01c','ubaidian-x01d','ubaidian-x01e','ubaidian-x01f'],
@@ -58,36 +58,28 @@ EventManager.prototype.init = function() {
   });
 
   // create scavenger nests
-  // this.game.emit('station/create', {
-  //   default: true,
-  //   chassis: 'ubadian-station-x01',
-  //   x: 2850, 
-  //   y: 2850,
-  //   radius: 50
-  // });
+  this.game.emit('station/create', {
+    default: true,
+    chassis: 'scavenger-x01',
+    x: 3550*1.5, 
+    y: -3550*1.5,
+    radius: 0
+  });
 
-  // this.game.emit('station/create', {
-  //   default: true,
-  //   chassis: 'scavenger-x01',
-  //   x: 3550*1.5, 
-  //   y: -3550*1.5,
-  //   radius: 0
-  // });
-
-  // this.game.emit('station/create', {
-  //   default: true,
-  //   chassis: 'scavenger-x01',
-  //   x: -3550*1.5, 
-  //   y: 3550*1.5,
-  //   radius: 0
-  // });
+  this.game.emit('station/create', {
+    default: true,
+    chassis: 'scavenger-x01',
+    x: -3550*1.5, 
+    y: 3550*1.5,
+    radius: 0
+  });
 
   //generate ships
   for(var a in this.ships){
     this.shipGen(this.ships[a], a.toString())
   };
 
-  // this.scavGen(24);
+  this.scavGen(24);
   
 };
 
