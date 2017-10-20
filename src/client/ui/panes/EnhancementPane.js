@@ -40,7 +40,7 @@ function EnhancementPane(game, settings) {
 EnhancementPane.prototype = Object.create(Pane.prototype);
 EnhancementPane.prototype.constructor = EnhancementPane;
 
-EnhancementPane.MAXIMUM = 4;
+EnhancementPane.MAXIMUM = 6;
 
 EnhancementPane.prototype.create = function(enhancement, key) {
   var game = this.game,
