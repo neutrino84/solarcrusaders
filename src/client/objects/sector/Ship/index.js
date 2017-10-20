@@ -15,6 +15,7 @@ function Ship(manager, data) {
 
   this.name = data.name;
   this.manager = manager;
+  this.state = manager.state;
   this.game = manager.game;
   this.data = data;
   
@@ -78,27 +79,31 @@ Ship.prototype.create = function() {
 
 Ship.prototype.refresh = function(data) {
   var ship, attacker, defender,
+      game = this.game,
       damage = this.damage,
       ships = this.manager.ships,
+      stations = this.state.stationManager.stations,
       targetingComputer = this.targetingComputer;
 
   // critical hit
   data.critical && damage.critical();
 
+  // 
   if(data.hardpoint) {
     attacker = ships[data.uuid];
-    defender = ships[data.hardpoint.ship];
+    defender = ships[data.hardpoint.ship] || stations[data.hardpoint.station];
 
-    // send hit to targeting computer
-    targetingComputer.hit(defender, data);
+    if(defender) {
+      targetingComputer.hit(defender, data);
 
-    // show hud screen
-    defender.hud.show();
-    defender.hud.timer && defender.events.remove(defender.hud.timer);
-    defender.hud.timer = defender.events.add(10000, defender.hud.hide, defender.hud);
+      // show hud screen
+      defender.hud.show();
+      defender.hud.timer && defender.events.remove(defender.hud.timer);
+      defender.hud.timer = defender.events.add(10000, defender.hud.hide, defender.hud);
 
-    if(defender.isPlayer) {
-      this.game.camera.shake();
+      if(defender.isPlayer) {
+        game.camera.shake();
+      }
     }
   };
 
@@ -173,7 +178,7 @@ Ship.prototype.destroy = function(options) {
   // children destroy themselves
   engine.Sprite.prototype.destroy.call(this, options);
 
-  this.manager = this.config =
+  this.manager = this.state = this.config =
     this.movement = this.circle = this.hud =
     this.selector = this.data = this.targetingComputer =
     this.repair = this.engineCore = undefined;

@@ -58,8 +58,8 @@ Station.prototype.update = function() {
     var elapsed = this.game.clock.elapsed,
         d1 = this.destination.distance(this.position),
         d2 = this.rotation-(this.rotation+this.spin),
-        interpolate1 = (elapsed * (this.speed / 200)) / d1;
-        interpolate2 = (elapsed * (this.spin / 200)) / d2;
+        interpolate1 = (elapsed * (this.speed / 200)) / d1,
+        interpolate2 = (elapsed * (this.spin / 200)) / d2,
         destination = engine.Point.interpolate(this.position, this.destination, interpolate1, this.vector),
         rotation = engine.Math.linearInterpolation([this.rotation, this.rotation+this.spin], interpolate2);
     this.position.set(destination.x, destination.y);

@@ -73,7 +73,7 @@ Station.prototype.hit = function(attacker, target, slot) {
       updates['ship'].push({
         uuid: attacker.uuid,
         hardpoint: {
-          ship: this.uuid,
+          station: this.uuid,
           slot: hardpoint.slot,
           target: target,
           damage: damage
