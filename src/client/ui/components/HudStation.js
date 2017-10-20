@@ -16,7 +16,7 @@ function HudStation(station, settings) {
     },
     healthBar: {
       width: 100,
-      height: 2,
+      height: 3,
       progress: {
         color: 0x66ff66,
         fillAlpha: 0.5,
@@ -105,7 +105,7 @@ HudStation.prototype.update = function() {
   // keep
   // orientation
   if(this.visible) {
-    scale = this.game.world.foreground.scale.x;
+    scale = this.game.world.scale.x;
     inverse = (1.0+scale)/scale;
 
     this.scale.set(inverse, inverse);
