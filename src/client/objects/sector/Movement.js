@@ -7,20 +7,21 @@ function Movement(parent) {
 
   this.speed = 0;
   this.velocity = 0;
+  this.throttle = 0;
 
   this.vector = new engine.Point();
-  this._position = new engine.Point();
-  this._destination = new engine.Point();
-  this._direction = new engine.Point();
+  this.position = new engine.Point();
+  this.destination = new engine.Point();
+  this.direction = new engine.Point();
 }
 
 Movement.prototype.constructor = Movement;
 
 Movement.prototype.update = function() {
-  var position = this._position,
-      destination = this._destination,
+  var position = this.position,
+      destination = this.destination,
       vector = this.vector,
-      direction = this._direction,
+      direction = this.direction,
       speed = this.speed,
       velocity = this.velocity,
       ship = this.parent,
@@ -45,11 +46,14 @@ Movement.prototype.update = function() {
     x: vector.x * velocity,
     y: vector.y * velocity }, 0.25, direction);
 
+  // calculate throttle
+  this.throttle = direction.getMagnitude() * 6 / speed;
+
   // update ship position
   ship.position.set(position.x + direction.x, position.y + direction.y);
 
   // update rotation
-  if(!ship.disabled && velocity > 0 && speed > 0) {
+  if(!ship.disabled && velocity > 0) {
     a1 = position.y - ship.position.y;
     a2 = position.x - ship.position.x;
 
@@ -66,15 +70,15 @@ Movement.prototype.update = function() {
 };
 
 Movement.prototype.plot = function(data) {
-  this._destination.copyFrom(data.pos);
+  this.destination.copyFrom(data.pos);
   this.speed = data.spd;
   this.velocity = (data.spd / (1/10)) * (1/60);
 };
 
 Movement.prototype.destroy = function() {
   this.parent = this.game =
-    this._destination = this._origin = this._position =
-    this.vector = this._direction = undefined;
+    this.destination = this.position =
+    this.vector = this.direction = undefined;
 };
 
 module.exports = Movement;

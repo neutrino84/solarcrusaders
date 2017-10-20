@@ -112,11 +112,6 @@ Ship.prototype.refresh = function(data) {
 };
 
 Ship.prototype.update = function() {
-  var time = this.game.time,
-      velocity = this.movement.velocity,
-      speed = this.config.stats.speed,
-      multiplier = velocity/speed;
-
   // update systems
   this.movement.update();
   this.targetingComputer.update();
@@ -125,10 +120,10 @@ Ship.prototype.update = function() {
 
   // update disabled state
   if(this.disabled) {
-    this.engineCore.update(0);
+    this.engineCore.update();
     this.explosion.update();
   } else {
-    this.engineCore.update(multiplier);
+    this.engineCore.update();
   }
 
   // update timers

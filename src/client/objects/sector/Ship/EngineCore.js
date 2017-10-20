@@ -83,7 +83,7 @@ EngineCore.prototype.show = function(show) {
   }
 };
 
-EngineCore.prototype.update = function(multiplier) {
+EngineCore.prototype.update = function() {
   var game = this.game,
       glows = this.glows,
       ship = this.ship,
@@ -92,14 +92,11 @@ EngineCore.prototype.update = function(multiplier) {
       config = this.config.glows,
       length = config.length,
       flicker = EngineCore.flicker[game.clock.frames % 6],
-      scale, highlight, position;
-
-  // set brightness
-  multiplier = engine.Math.clamp(multiplier, 0.25, this.clamp);
-  
+      scale, highlight, position
+      multiplier = ship.movement.throttle;
   for(var g=0; g<length; g++) {
     scale = config[g].scale;
-    
+
     // update glow
     glows[g].scale.set(
       multiplier * scale.endX + scale.startX + flicker,
@@ -107,8 +104,8 @@ EngineCore.prototype.update = function(multiplier) {
 
     // update highlight
     highlight = highlights[g];
-    highlight.alpha = multiplier;
-    highlight.scale.set(multiplier/2.0, multiplier/2.0);
+    highlight.alpha = 1.0;
+    highlight.scale.set(multiplier, multiplier);
       
     if(this.isBoosting) {
       position = game.world.worldTransform.applyInverse(ship.worldTransform.apply(glows[g].position))
