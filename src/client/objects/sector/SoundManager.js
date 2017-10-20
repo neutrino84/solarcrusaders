@@ -36,6 +36,8 @@ SoundManager.prototype.preload = function() {
 };
 
 SoundManager.prototype.create = function() {
+  return;
+  
   this.manager = this.game.states.current;
   this.shipManager = this.manager.shipManager;
   this.ships = this.shipManager.ships;

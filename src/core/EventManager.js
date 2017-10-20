@@ -38,7 +38,7 @@ EventManager.prototype.init = function() {
     chassis: 'ubadian-station-x01',
     x: 2048,
     y: 2048,
-    radius: 512
+    radius: 1280
   });
 };
 
@@ -77,21 +77,21 @@ EventManager.prototype.disabled = function(object) {
 };
 
 EventManager.prototype.update = function() {
-  if(this.inventory.pirate < 0) {
+  if(this.inventory.pirate < 3) {
     this.inventory.pirate++;
     this.game.emit('ship/create', {
       x: 2048,
       y: 2048,
-      chassis: 'general-x0' + global.Math.ceil(global.Math.random() * 3),
+      chassis: 'general-x0' + global.Math.ceil(global.Math.random() * 2),
       ai: 'pirate'
     });
   }
-  if(this.inventory.basic < 0) {
+  if(this.inventory.basic < 3) {
     this.inventory.basic++;
     this.game.emit('ship/create', {
       x: 2048,
       y: 2048,
-      chassis: 'ubaidian-x0' + global.Math.ceil(global.Math.random() * 7),
+      chassis: 'ubaidian-x0' + global.Math.ceil(global.Math.random() * 5),
       ai: 'basic'
     });
   }
