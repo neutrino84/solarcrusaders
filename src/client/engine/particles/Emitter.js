@@ -295,9 +295,9 @@ Emitter.prototype.setAlpha = function(min, max, rate, ease, yoyo) {
 
     data = tween.generateData(60);
     data.reverse();
-
     game.cache.addBinary(key, data);
 
+    // store
     this.alphaData = data;
   }
 };
@@ -326,8 +326,10 @@ Emitter.prototype.setScale = function(min, max, rate, ease, yoyo) {
 
     data = tween.generateData(60);
     data.reverse();
+    game.cache.addBinary(key, data);
 
-    this.scaleData = game.cache.addBinary(key, data);
+    // store
+    this.scaleData = data;
   }
 };
 
@@ -358,9 +360,10 @@ Emitter.prototype.setTint = function(startTint, endTint, rate, ease, yoyo) {
       tints.push({ t: Color.interpolateColor(startTint, endTint, 100, data[i].step)});
     }
     tints.reverse();
+    game.cache.addBinary(key, tints);
 
     // store
-    this.tintData = game.cache.addBinary(key, tints);
+    this.tintData = data;
   }
 };
 
