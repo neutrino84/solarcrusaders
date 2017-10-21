@@ -10,7 +10,7 @@ function Explosion(ship) {
   this.temp = new engine.Point();
 
   // create hit area
-  this.hit = new engine.Circle(this.ship.width/2, this.ship.height/2, this.ship.data.size/2);
+  this.hit = new engine.Circle(this.ship.x, this.ship.y, this.ship.data.size/2);
 };
 
 Explosion.prototype.constructor = Explosion;
@@ -27,19 +27,19 @@ Explosion.prototype.start = function() {
       rnd = this.game.rnd,
       state = this.state;
 
-  state.shockwaveEmitter.explosion();
-  state.shockwaveEmitter.at({ center: ship.position });
-  state.shockwaveEmitter.explode(2);
+  state.glowEmitter.explosion(ship.data.size/2);
+  state.glowEmitter.at({ center: ship.movement.position });
+  state.glowEmitter.explode(2);
 
-  state.glowEmitter.explosion(ship.size * 2.0);
-  state.glowEmitter.at({ center: ship.position });
-  state.glowEmitter.explode(3);
+  state.shockwaveEmitter.explosion(ship.data.size/8);
+  state.shockwaveEmitter.at({ center: ship.movement.position });
+  state.shockwaveEmitter.explode(1);
 
-  events.repeat(50, 100, function() {
-    if(rnd.frac() > 0.25) {
-      state.explosionEmitter.explosion(ship.size);
-      state.explosionEmitter.at({ center: hit.random(false, temp) });
-      state.explosionEmitter.explode(2);
+  events.repeat(20, 30, function() {
+    if(rnd.frac() > 0.24) {
+      state.explosionEmitter.explosion();
+      state.explosionEmitter.at({ center: hit.random(undefined, temp) });
+      state.explosionEmitter.explode(rnd.frac() > 0.5 ? 1 : 2);
     }
   });
 

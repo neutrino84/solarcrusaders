@@ -4,9 +4,9 @@ var engine = require('engine');
 function ShockwaveEmitter(game) {
   engine.Emitter.call(this, game, 0, 0, 500);
 
-  this.vector = new engine.Point();
+  this.blendMode = engine.BlendMode.ADD;
 
-  this.makeParticles('texture-atlas', 'explosion-c.png');
+  this.makeParticles('texture-atlas', ['explosion-c.png']);
 };
 
 ShockwaveEmitter.prototype = Object.create(engine.Emitter.prototype);
@@ -14,8 +14,6 @@ ShockwaveEmitter.prototype.constructor = ShockwaveEmitter;
 
 ShockwaveEmitter.prototype.shockwave = function(colors) {
   colors = colors || ['0xFFFFFF', '0xf4f4f4'];
-  
-  this.blendMode = engine.BlendMode.ADD;
 
   this.lifespan = 1800;
 
@@ -28,10 +26,6 @@ ShockwaveEmitter.prototype.shockwave = function(colors) {
 };
 
 ShockwaveEmitter.prototype.rocket = function() {
-  var colors = ['0xFF8888', '0xFFFFFF'];
-  
-  this.blendMode = engine.BlendMode.ADD;
-
   this.lifespan = 400;
 
   this.setVelocity(0, 0);
@@ -39,15 +33,13 @@ ShockwaveEmitter.prototype.rocket = function() {
 
   this.setScale(0.25, 2.0, 400);
   this.setAlpha(1.0, 0.0, 400);
-  this.setTint(global.parseInt(colors[0]), global.parseInt(colors[1]), 400);
+  this.setTint(0xFF8888, 0xFFFFFF, 400);
 };
 
-ShockwaveEmitter.prototype.explosion = function() {
-  this.blendMode = engine.BlendMode.NORMAL;
-
+ShockwaveEmitter.prototype.explosion = function(size) {
   this.lifespan = 1200;
 
-  this.setScale(6.0, 12.0, 1200);
+  this.setScale(size/1.5, size, 1200);
   this.setAlpha(1.0, 0.0, 1200);
   this.setTint(0xFFFFFF, 0x6699CC, 600);
 };

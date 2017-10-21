@@ -36,17 +36,20 @@ ExplosionEmitter.prototype.medium = function() {
   this.setTint(0xFF8888, 0x666666, 750);
 };
 
-ExplosionEmitter.prototype.explosion = function(size) {
+ExplosionEmitter.prototype.explosion = function() {
   this.lifespan = 1024;
 
   this.blendMode = engine.BlendMode.ADD;
 
-  this.minRotation = -64;
-  this.maxRotation = 64;
+  this.minRotation = -96;
+  this.maxRotation = 96;
 
-  this.setScale(1.0, size, 1024);
+  this.setVelocity(this.game.rnd.realInRange(-80, 80), this.game.rnd.realInRange(-80, 80));
+  this.setVector(this.game.rnd.frac(), this.game.rnd.frac());
+
+  this.setScale(0.2, 1.0, 1024);
   this.setAlpha(1.0, 0.0, 1024);
-  this.setTint(0xFF3333, 0x333333, 512);
+  this.setTint(0xFF8888, 0x552222, 1024);
 };
 
 ExplosionEmitter.prototype.smulder = function() {
