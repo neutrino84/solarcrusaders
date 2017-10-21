@@ -18,7 +18,7 @@ Selector.prototype.create = function() {
       color = ship.data.ai && ship.data.ai === 'pirate' ? 0xcc3333 : 0x0066ff;
 
   // add selector highlight
-  this.alpha = ship.isPlayer ? 0.6 : 0.4;
+  this.alpha = ship.isPlayer ? 0.6 : (ship.data.ai === 'basic' ? 0.1 : 0.4);
 
   // create hit area
   this.hit = new engine.Circle(halfWidth, halfHeight, radius);
