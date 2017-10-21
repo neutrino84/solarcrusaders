@@ -52,7 +52,6 @@ Movement.prototype.update = function() {
   }
 
   if(this.magnitude > Movement.STOP_THRESHOLD) {
-    this.throttle = global.Math.min(this.magnitude/Movement.THROTTLE_THRESHOLD, 1.0);
     this.speed = parent.speed * this.throttle;
 
     vector.set(destination.x, destination.y);
@@ -128,10 +127,11 @@ Movement.prototype.destabalize = function(ship) {
   }
 };
 
-Movement.prototype.plot = function(destination, magnitude) {
+Movement.prototype.plot = function(destination, throttle) {
   if(!this.parent.disabled) {
     this.destination.copyFrom(destination);
-    this.magnitude = magnitude ? magnitude : this.destination.getMagnitude();
+    this.magnitude = this.destination.getMagnitude();
+    this.throttle = global.Math.min(this.magnitude/Movement.THROTTLE_THRESHOLD, 1.0);
   }
 };
 
