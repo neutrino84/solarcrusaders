@@ -154,8 +154,8 @@ SectorState.prototype.createEmitters = function() {
   this.game.particles.add(this.fireEmitter);
 
   this.game.world.add(this.fireEmitter);
-  this.game.world.add(this.explosionEmitter);
   this.game.world.add(this.flashEmitter);
+  this.game.world.add(this.explosionEmitter);
   this.game.world.add(this.shockwaveEmitter);
   this.game.world.add(this.glowEmitter);
 };
