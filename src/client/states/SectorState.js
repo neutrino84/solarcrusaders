@@ -75,7 +75,7 @@ SectorState.prototype.create = function() {
       mouse.capture = true;
       mouse.mouseWheelCallback = function(event) {
         var delta = event.deltaY / sensitivity,
-            scale = engine.Math.clamp(this.world.scale.x - delta, 0.34, 0.8);
+            scale = engine.Math.clamp(this.world.scale.x - delta, 0.34, 1.0);
         if(self.game.paused) { return; }
         if(self.zoom && self.zoom.isRunning) {
           self.zoom.stop();
