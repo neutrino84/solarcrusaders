@@ -2,7 +2,7 @@
   "ubadian-station-x01": {
     "race": "ubaidian",
     "stats": {
-      "health": 100,
+      "health": 2000,
       "heal": 2.0,
       "speed": 2.5,
       "size": 192,
@@ -14,7 +14,7 @@
   "scavenger-x01": {
     "race": "scavenger",
     "stats": {
-      "health": 200,
+      "health": 2000,
       "heal": 2.0,
       "speed": 2.5,
       "size": 192,

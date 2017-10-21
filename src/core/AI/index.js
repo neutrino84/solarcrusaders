@@ -8,13 +8,14 @@ var Basic = require('./Basic'),
 function AI(manager, events) {
   this.manager = manager;
   this.game = manager.game;
+  this.events = events;
   this.timer = this.game.clock.events.loop(500, this.update, this);
   this.ships = {};
   this.consumed = {};
-  this.queenThreshold = 250;
-  this.next = 800;
+  this.queenThreshold = 300;
+  this.next = 900;
   this.queenSpawnCycle = 0;
-  this.events = events;
+
 };
 
 AI.prototype.constructor = AI;
@@ -67,11 +68,12 @@ AI.prototype.queenCheck = function(durability, uuid){
   }
   
   if(this.queenThreshold < 1){
+    if(this.queenSpawnCycle > 15){return}
     this.events.spawnQueen(this.queenSpawnCycle);
     this.queenThreshold = this.next;
     this.next = this.next + 500;
     this.queenSpawnCycle++
-    if(this.queenThreshold > 2500){
+    if(this.queenThreshold > 3500){
       this.queenThreshold = 300;
       this.next = 400;
       this.queenSpawnCycle = 0;

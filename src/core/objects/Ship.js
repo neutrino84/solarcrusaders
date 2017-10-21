@@ -349,12 +349,6 @@ Ship.prototype.disable = function() {
   // disengage ai
   this.ai && this.ai.disengage();
   
-  // respawn time
-  // if(!this.ai) {
-  //   this.respawn = this.game.clock.events.add(9000, this.enable, this);
-  // } else {
-  //   this.respawn = this.game.clock.events.add(12000, this.enable, this);
-  // };
   this.respawn = this.game.clock.events.add(this.ai ? this.ai.settings.respawn : Ship.RESPAWN_TIME, this.enable, this)
 
   // blast close
@@ -364,6 +358,12 @@ Ship.prototype.disable = function() {
   this.game.emit('ship/disabled', {
     uuid: this.uuid
   });
+  if(this.chassis === 'scavenger-x04' || this.chassis === 'scavenger-x03'){
+    console.log('queen/overseer dead')
+    this.game.clock.events.add(10000, function(){
+      this.game.emit('ship/remove', this)
+    }, this)
+  }
 };
 
 Ship.prototype.blast = function() {
@@ -482,7 +482,7 @@ Ship.prototype.destroy = function() {
   for(var e in available) {
     available[e].destroy();
   }
-
+  console.log(this.chassis, 'DESTROYED')
   this.ai && this.ai.destroy();
 
   this.sockets.send('ship/removed', {

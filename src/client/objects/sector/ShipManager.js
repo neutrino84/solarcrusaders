@@ -133,6 +133,7 @@ ShipManager.prototype.remove = function(data) {
       camera = game.camera,
       ships = this.ships,
       ship = ships[data.uuid];
+      console.log('front end remove', data)
   if(ship !== undefined) {
     if(camera.target === ship) {
       camera.unfollow();
@@ -238,6 +239,14 @@ ShipManager.prototype._player = function(ship) {
   this.player.previous;
   this.player.squadron = {};
   this.game.camera.follow(ship);
+
+  var queenCount = 0;
+  var overseerCount = 0;
+  for(var a in this.ships){
+    if(this.ships[a].chassis == "scavenger-x04"){this.queenCount ++}
+    if(this.ships[a].chassis == "scavenger-x03"){this.overseerCount ++}
+  }
+  console.log('there are ', queenCount, ' queens and ', overseerCount, ' overseers out there')
 };
 
 ShipManager.prototype._attack = function(data) {

@@ -1,7 +1,7 @@
 
 var Application = require('./src/Application'),
     app = global.app = new Application(),
-    debugArgIdx, debugArgs = ['--debug', '--debug-brk'];
+    debugArgIdx, debugArgs = ['--inspect', '--inspect-brk'];
 
 app.init();
 app.start();

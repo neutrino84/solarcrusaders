@@ -152,7 +152,15 @@ Ship.prototype.update = function() {
 };
 
 Ship.prototype.enable = function(data) {
+  if(this.chassis == "ubaidian-x01a"){
+    console.log('yooo. pre alpha is ', this.alpha)
+  }
+  // console.log(this.alpha)
   this.alpha = 1.0;
+
+  if(this.chassis == "ubaidian-x01a"){
+    console.log('yooo. post alpha is ', this.alpha, this)
+  }
   this.disabled = false;
   this.chassis.tint = 0xFFFFFF;
   this.hud.enable();

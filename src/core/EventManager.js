@@ -14,13 +14,13 @@ function EventManager(game) {
 
   this.level = 1;
   this.ships = {
-    basic: 8,
-    pirate: 16,
-    enforcer: 2
+    basic: 10,
+    pirate: 20,
+    enforcer: 3
   };
   // this.ships = {
   //   basic: 0,
-  //   pirate: 4,
+  //   pirate: 0,
   //   enforcer: 0
   // };
 
@@ -79,7 +79,7 @@ EventManager.prototype.init = function() {
     this.shipGen(this.ships[a], a.toString())
   };
 
-  this.scavGen(24);
+  this.scavGen(20);
   
 };
 
