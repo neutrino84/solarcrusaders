@@ -83,6 +83,7 @@ Ship.prototype.refresh = function(data) {
       damage = this.damage,
       ships = this.manager.ships,
       stations = this.state.stationManager.stations,
+      selector = this.selector,
       targetingComputer = this.targetingComputer;
 
   // critical hit
@@ -96,13 +97,15 @@ Ship.prototype.refresh = function(data) {
     if(defender) {
       targetingComputer.hit(defender, data);
 
-      // show hud screen
-      defender.hud.show();
-      defender.hud.timer && defender.events.remove(defender.hud.timer);
-      defender.hud.timer = defender.events.add(10000, defender.hud.hide, defender.hud);
-
+      if(attacker.isPlayer && defender.data.ai === 'basic') {
+        defender.selector && defender.selector.warn();
+      }
       if(defender.isPlayer) {
         game.camera.shake();
+      } else {
+        defender.hud.show();
+        defender.hud.timer && defender.events.remove(defender.hud.timer);
+        defender.hud.timer = defender.events.add(3000, defender.hud.hide, defender.hud);
       }
     }
   };
