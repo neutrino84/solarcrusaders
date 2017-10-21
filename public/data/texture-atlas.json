@@ -20,7 +20,7 @@
 },
 "asteroid-x03.png":
 {
-	"frame": {"x":2,"y":320,"w":120,"h":88},
+	"frame": {"x":540,"y":132,"w":120,"h":88},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":120,"h":88},
@@ -38,7 +38,7 @@
 },
 "asteroid-x05.png":
 {
-	"frame": {"x":540,"y":132,"w":117,"h":125},
+	"frame": {"x":662,"y":132,"w":117,"h":125},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":117,"h":125},
@@ -47,7 +47,7 @@
 },
 "asteroid-x06.png":
 {
-	"frame": {"x":857,"y":132,"w":57,"h":59},
+	"frame": {"x":913,"y":162,"w":57,"h":59},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":57,"h":59},
@@ -74,7 +74,7 @@
 },
 "enhancement-booster.png":
 {
-	"frame": {"x":916,"y":162,"w":48,"h":48},
+	"frame": {"x":606,"y":222,"w":48,"h":48},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
@@ -83,7 +83,7 @@
 },
 "enhancement-heal.png":
 {
-	"frame": {"x":966,"y":162,"w":48,"h":48},
+	"frame": {"x":972,"y":162,"w":48,"h":48},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
@@ -92,7 +92,7 @@
 },
 "enhancement-piercing.png":
 {
-	"frame": {"x":857,"y":193,"w":48,"h":48},
+	"frame": {"x":972,"y":212,"w":48,"h":48},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
@@ -101,7 +101,7 @@
 },
 "enhancement-shield.png":
 {
-	"frame": {"x":907,"y":212,"w":48,"h":48},
+	"frame": {"x":781,"y":198,"w":48,"h":48},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
@@ -146,7 +146,7 @@
 },
 "explosion-e.png":
 {
-	"frame": {"x":124,"y":320,"w":16,"h":16},
+	"frame": {"x":899,"y":223,"w":16,"h":16},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
@@ -173,7 +173,7 @@
 },
 "icon-target.png":
 {
-	"frame": {"x":957,"y":212,"w":40,"h":40},
+	"frame": {"x":831,"y":198,"w":40,"h":40},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":40},
@@ -182,34 +182,16 @@
 },
 "turret-a.png":
 {
-	"frame": {"x":124,"y":338,"w":16,"h":16},
+	"frame": {"x":873,"y":198,"w":24,"h":24},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
-	"sourceSize": {"w":16,"h":16},
+	"spriteSourceSize": {"x":0,"y":0,"w":24,"h":24},
+	"sourceSize": {"w":24,"h":24},
 	"pivot": {"x":0.5,"y":0.5}
 },
 "turret-b.png":
 {
-	"frame": {"x":124,"y":356,"w":16,"h":16},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
-	"sourceSize": {"w":16,"h":16},
-	"pivot": {"x":0.5,"y":0.5}
-},
-"turret-cap-general.png":
-{
-	"frame": {"x":999,"y":212,"w":16,"h":16},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
-	"sourceSize": {"w":16,"h":16},
-	"pivot": {"x":0.5,"y":0.5}
-},
-"turret-cap-ubaidian.png":
-{
-	"frame": {"x":999,"y":230,"w":16,"h":16},
+	"frame": {"x":873,"y":224,"w":16,"h":16},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
@@ -227,7 +209,7 @@
 },
 "turret-rocket-a.png":
 {
-	"frame": {"x":659,"y":132,"w":64,"h":64},
+	"frame": {"x":540,"y":222,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -254,7 +236,7 @@
 },
 "ubaidian-x03.png":
 {
-	"frame": {"x":725,"y":132,"w":64,"h":64},
+	"frame": {"x":781,"y":132,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -263,7 +245,7 @@
 },
 "ubaidian-x04.png":
 {
-	"frame": {"x":791,"y":132,"w":64,"h":64},
+	"frame": {"x":847,"y":132,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -278,6 +260,15 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
 	"sourceSize": {"w":128,"h":128},
 	"pivot": {"x":0.5,"y":0.5}
+},
+"ubaidian-x06.png":
+{
+	"frame": {"x":2,"y":320,"w":128,"h":128},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
+	"sourceSize": {"w":128,"h":128},
+	"pivot": {"x":0.5,"y":0.5}
 }},
 "meta": {
 	"app": "http://www.codeandweb.com/texturepacker",
@@ -286,6 +277,6 @@
 	"format": "RGBA8888",
 	"size": {"w":1024,"h":1024},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:a1f54d2f9599f96fe9bef9855f4b63d5:1c75cbec21e74813c60710f9ec126e14:a973cd4a72d4c90ced76930eac7fdc63$"
+	"smartupdate": "$TexturePacker:SmartUpdate:2e3fecff18edd208cfb049bba7be4f9a:6489a2f2352920381ab33df52fb07dda:a973cd4a72d4c90ced76930eac7fdc63$"
 }
 }

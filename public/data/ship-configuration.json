@@ -65,7 +65,7 @@
         {
           "position": {
             "x": 53,
-            "y": 34
+            "y": 35
           },
           "default": {
             "type": "pulse",
@@ -75,7 +75,7 @@
         {
           "position": {
             "x": 53,
-            "y": 94
+            "y": 93
           },
           "default": {
             "type": "pulse",
