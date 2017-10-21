@@ -32,6 +32,7 @@ function Hardpoint(parent, config, data, slot, total) {
 
   this.target = new engine.Point();
   this.origin = new engine.Point();
+  this.vector = new engine.Point();
 
   this.cap = new engine.Sprite(this.game, 'texture-atlas', 'turret-cap-' + this.ship.config.race + '.png');
 
@@ -101,27 +102,37 @@ Hardpoint.prototype.fire = function(targ) {
 
 Hardpoint.prototype.hit = function(ship, target) {
   var launcher,
+      game = this.game,
       actives = this.actives,
+      state = this.state,
+      s = this.ship,
+      vector = this.vector.copyFrom(target),
+      direction = ship.movement.direction,
+      rnd = game.rnd,
       length = actives.length;
 
+  // send hit to launchers
   for(var i=0; i<length; i++) {
     launcher = actives[i];
     launcher.hit && launcher.hit(ship, target);
   }
 
-  this.state.explosionEmitter.medium(ship);
-  this.state.explosionEmitter.at({ center: target });
-  this.state.explosionEmitter.explode(1);
+  s.events.repeat(50, 2, function() {
+    vector.add(direction.x * 3, direction.y * 3);
+    state.explosionEmitter.small();
+    state.explosionEmitter.at({ center: vector });
+    state.explosionEmitter.explode(1);
+  });
 
-  this.state.explosionEmitter.small(ship);
-  this.state.explosionEmitter.at({ center: target });
-  this.state.explosionEmitter.explode(1);
+  state.explosionEmitter.medium();
+  state.explosionEmitter.at({ center: vector });
+  state.explosionEmitter.explode(1);
   
-  this.state.flashEmitter.attack();
-  this.state.flashEmitter.at({ center: target });
-  this.state.flashEmitter.explode(1);
+  state.flashEmitter.attack();
+  state.flashEmitter.at({ center: vector });
+  state.flashEmitter.explode(1);
 
-  this.game.emit('ship/hardpoint/hit', {
+  game.emit('ship/hardpoint/hit', {
     ship: ship,
     target: target
   });

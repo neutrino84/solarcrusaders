@@ -13,14 +13,19 @@ function Station(manager, data) {
   // config data
   this.config = data.config.station;
 
-  // destination
-  this.vector = new engine.Point();
-  this.destination = new engine.Point();
-
   // core ship classes
   this.rotation = this.rot = data.rotation;
   this.position.set(this.data.x, this.data.y);
   this.pivot.set(this.width/2, this.height/2);
+
+  // destination
+  this.vector = new engine.Point();
+  this.destination = new engine.Point();
+  this.direction = new engine.Point();
+  this.movement = {
+    direction: this.direction,
+    position: this.position
+  };
 
   // timer events
   this.events = new engine.Timer(this.game, false);
@@ -44,6 +49,9 @@ Station.prototype.boot = function() {
   this.hud.create();
   this.hud.show();
 
+  // start events
+  this.events.start();
+
   // subscribe to updates
   this.data.on('data', this.refresh, this);
 };
@@ -62,9 +70,11 @@ Station.prototype.update = function() {
         interpolate2 = (elapsed * (this.spin / 200)) / d2,
         destination = engine.Point.interpolate(this.position, this.destination, interpolate1, this.vector),
         rotation = engine.Math.linearInterpolation([this.rotation, this.rotation+this.spin], interpolate2);
+    this.direction.set(this.destination.x - destination.x, this.destination.y - destination.y);
     this.position.set(destination.x, destination.y);
     this.rotation = rotation;
     this.cap.rotation = -rotation*8;
+    this.events.update(this.game.clock.time);
   }
 
   // update
