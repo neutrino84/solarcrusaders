@@ -47,7 +47,7 @@ Movement.prototype.update = function() {
     y: vector.y * velocity }, 0.25, direction);
 
   // calculate throttle
-  this.throttle = direction.getMagnitude() * 6 / speed;
+  this.throttle = speed > 0 ? direction.getMagnitude() * 6 / speed : 0;
 
   // update ship position
   ship.position.set(position.x + direction.x, position.y + direction.y);

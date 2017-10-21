@@ -93,7 +93,7 @@ EngineCore.prototype.update = function() {
       length = config.length,
       flicker = EngineCore.flicker[game.clock.frames % 6],
       scale, highlight, position
-      multiplier = ship.movement.throttle;
+      multiplier = engine.Math.clamp(ship.movement.throttle, 0.0, this.clamp);
   for(var g=0; g<length; g++) {
     scale = config[g].scale;
 
