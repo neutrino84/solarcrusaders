@@ -7,7 +7,8 @@ function StationManager(game) {
   this.game = game;
   this.model = game.model;
 
-  this.stations = {};
+  // global stations
+  this.game.stations = {};
 };
 
 StationManager.prototype.constructor = StationManager;
@@ -20,8 +21,8 @@ StationManager.prototype.init = function() {
 };
 
 StationManager.prototype.add = function(station) {
-  if(this.stations[station.uuid] === undefined) {
-    this.stations[station.uuid] = station;
+  if(this.game.stations[station.uuid] === undefined) {
+    this.game.stations[station.uuid] = station;
   }
 };
 
@@ -36,18 +37,18 @@ StationManager.prototype.data = function(uuids) {
   var station,
       stations = [];
   for(var u in uuids) {
-    station = this.stations[uuids[u]];
+    station = this.game.stations[uuids[u]];
     if(station) {
       stations.push({
         uuid: station.uuid,
         name: station.data.name,
-        x: station.orbit.position.x,
-        y: station.orbit.position.y,
-        throttle: station.orbit.throttle,
-        rotation: station.orbit.rotation,
-        spin: station.orbit.spin,
-        period: station.orbit.period,
-        speed: station.speed * station.orbit.throttle,
+        x: station.movement.position.x,
+        y: station.movement.position.y,
+        throttle: station.movement.throttle,
+        rotation: station.movement.rotation,
+        spin: station.movement.spin,
+        period: station.movement.period,
+        speed: station.speed * station.movement.throttle,
         radius: station.radius,
         chassis: station.chassis,
         race: station.race,
@@ -62,22 +63,22 @@ StationManager.prototype.data = function(uuids) {
 };
 
 StationManager.prototype.sync = function() {
-  var data, station, orbit,
-      stations = this.stations,
+  var data, station, movement,
+      stations = this.game.stations,
       synced = [];
   for(var s in stations) {
     station = stations[s];
 
     if(station) {
-      orbit = station.orbit;
-      orbit.update();
-      position = orbit.position;
+      movement = station.movement;
+      movement.update();
+      position = movement.position;
       data = {
         uuid: station.uuid,
         pos: { x: position.x, y: position.y },
-        spd: station.speed * orbit.throttle,
-        rot: orbit.rotation,
-        spn: orbit.spin
+        spd: station.speed * movement.throttle,
+        rot: movement.rotation,
+        spn: movement.spin
       };
     }
 
@@ -89,7 +90,7 @@ StationManager.prototype.sync = function() {
 StationManager.prototype.attacked = function(attacker, target, slot) {
   var stations, station,
       game = this.game,
-      stations = this.stations;
+      stations = this.game.stations;
     for(var s in stations) {
       station = stations[s];
       station.hit(attacker, target, slot);

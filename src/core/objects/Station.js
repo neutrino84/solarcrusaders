@@ -21,7 +21,7 @@ function Station(manager, data) {
   this.config = client.StationConfiguration[this.data.chassis];
 
   // station orbit movement
-  this.orbit = new Orbit(this);
+  this.movement = new Orbit(this);
 };
 
 Station.prototype.constructor = Station;
@@ -41,9 +41,9 @@ Station.prototype.hit = function(attacker, target, slot) {
       },
       game = this.game,
       sockets = this.sockets,
-      orbit = this.orbit,
+      movement = this.movement,
       hardpoint = attacker.hardpoints[slot],
-      position = orbit.position,
+      position = movement.position,
       distance = position.distance({ x: target.x, y: target.y }),
       ratio = distance / (this.size * hardpoint.data.aoe),
       damage, health, critical;

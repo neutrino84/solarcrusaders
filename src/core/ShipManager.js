@@ -11,7 +11,8 @@ function ShipManager(game) {
   this.model = game.model;
   this.sockets = game.sockets;
 
-  this.ships = {};
+  // global ships
+  this.game.ships = {};
 
   // ai manager
   this.ai = new AI(this);
@@ -36,15 +37,15 @@ ShipManager.prototype.init = function() {
 };
 
 ShipManager.prototype.add = function(ship) {
-  if(this.ships[ship.uuid] === undefined) {
-    this.ships[ship.uuid] = ship;
+  if(this.game.ships[ship.uuid] === undefined) {
+    this.game.ships[ship.uuid] = ship;
   }
 };
 
 ShipManager.prototype.remove = function(ship) {
-  var s = this.ships[ship.uuid];
+  var s = this.game.ships[ship.uuid];
   if(s !== undefined) {
-    delete this.ships[ship.uuid] && s.destroy();
+    delete this.game.ships[ship.uuid] && s.destroy();
   }
 };
 
@@ -60,14 +61,14 @@ ShipManager.prototype.create = function(data, user, master) {
 ShipManager.prototype.plot = function(socket, args) {
   var user = socket.request.session.user,
       data = args[1],
-      ship = this.ships[data.uuid];
+      ship = this.game.ships[data.uuid];
   if(ship && ship.user && ship.user.uuid === user.uuid) {
     ship.plot(data.coordinates);
   }
 };
 
 ShipManager.prototype.attack = function(socket, args) {
-  var ships = this.ships,
+  var ships = this.game.ships,
       sockets = this.sockets,
       user = socket.request.session.user,
       data = args[1],
@@ -78,7 +79,7 @@ ShipManager.prototype.attack = function(socket, args) {
 };
 
 ShipManager.prototype.enhancement = function(socket, args) {
-  var ships = this.ships,
+  var ships = this.game.ships,
       sockets = this.sockets,
       user = socket.request.session.user,
       path = args[0],
@@ -99,7 +100,7 @@ ShipManager.prototype.data = function(uuids) {
   var ship,
       ships = [];
   for(var u in uuids) {
-    ship = this.ships[uuids[u]];
+    ship = this.game.ships[uuids[u]];
     if(ship) {
       ships.push({
         uuid: ship.uuid,
@@ -138,7 +139,7 @@ ShipManager.prototype.data = function(uuids) {
 
 ShipManager.prototype.sync = function() {
   var data, ship, position, movement,
-      ships = this.ships,
+      ships = this.game.ships,
       synced = [];
   for(var s in ships) {
     ship = ships[s];
@@ -156,7 +157,7 @@ ShipManager.prototype.sync = function() {
 };
 
 ShipManager.prototype.update = function() {
-  var ships = this.ships,
+  var ships = this.game.ships,
       ship, delta, update, stats,
       updates = [];
   for(var s in ships) {

@@ -286,7 +286,7 @@ Ship.prototype.hit = function(attacker, target, slot) {
       });
 
       // defend
-      ai && ai.engage(attacker);
+      ai && ai.attacked(attacker);
     } else {
       // disengage attacker
       attacker.ai && attacker.ai.disengage();

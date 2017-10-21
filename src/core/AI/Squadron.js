@@ -25,24 +25,37 @@ function Squadron(ship, home) {
 };
 
 Squadron.prototype = Object.create(Basic.prototype);
+Squadron.prototype.constructor = Squadron;
+
+Squadron.prototype.attacked = function() {
+
+};
+
+Squadron.prototype.scanner = function() {
+
+};
 
 Squadron.prototype.plot = function(){
   var rnd = this.game.rnd,
       ship = this.ship,
       settings = this.settings,
       offset = this.offset,
+      target = this.target,
       master = ship.master,
       p1 = ship.movement.position,
       p2, size, distance;
 
   // plot destination
-  if(!this.retreat && this.target) {
-    size = this.target.data.size * 4;
-    offset.copyFrom(this.target.movement.position);
+  if(target) {
+    size = target.data.size * 4;
+    offset.copyFrom(target.movement.position);
     offset.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
-    ship.movement.plot({ x: this.offset.x-p1.x, y: this.offset.y-p1.y }, this.throttle);
+    ship.movement.plot({ x: offset.x-p1.x, y: offset.y-p1.y }, this.throttle);
   } else {
-    ship.movement.magnitude /= 1.8;
+    size = master.data.size * 4;
+    offset.copyFrom(master.movement.position);
+    offset.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
+    ship.movement.plot({ x: offset.x-p1.x, y: offset.y-p1.y });
   };
 };
 

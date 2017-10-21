@@ -6,7 +6,6 @@ function Basic(ship) {
 
   this.ship = ship;
   this.game = ship.game;
-  this.manager = ship.manager;
 
   this.timer = null;
   this.target = null;
@@ -63,7 +62,7 @@ Basic.prototype.update = function() {
   }
 
   // target ships
-  if(this.target == null && rnd.frac() < 0.5) {
+  if(this.target == null && rnd.frac() > 0.75) {
     this.scanner();
   }
 
@@ -74,7 +73,7 @@ Basic.prototype.update = function() {
 Basic.prototype.scanner = function() {
   var targets, scan, target,
       sensor = this.sensor,
-      ships = this.manager.ships,
+      ships = this.game.ships,
       priority = {
         enemy: {},
         friendly: {}
@@ -113,6 +112,10 @@ Basic.prototype.friendly = function(target) {
   if(target.ai && settings.friendly.indexOf(target.ai.type) >= 0) { return true; }
   if(target.user && settings.friendly.indexOf('user') >= 0) { return true; }
   return false;
+};
+
+Basic.prototype.attacked = function(target) {
+  this.engage(target);
 };
 
 Basic.prototype.engage = function(target) {
@@ -190,7 +193,7 @@ Basic.prototype.plot = function(){
     offset.copyFrom(this.target.movement.position);
     offset.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
     ship.movement.plot({ x: this.offset.x-p1.x, y: this.offset.y-p1.y }, this.throttle);
-  } else if(rnd.frac() > 0.75 || this.retreat) {
+  } else if(this.retreat) {
     p2 = this.getHomePosition();
     ship.movement.plot({ x: p2.x-p1.x, y: p2.y-p1.y });
   };
@@ -206,7 +209,7 @@ Basic.prototype.getHomePosition = function() {
 Basic.prototype.destroy = function() {
   this.disengager && this.game.clock.events.remove(this.disengager);
   this.attacker && this.game.clock.events.remove(this.attacker);
-  this.ship = this.game = this.manager = this.offset =
+  this.ship = this.game = this.offset =
     this.timer = this.target = this.aim = undefined;
 };
 
