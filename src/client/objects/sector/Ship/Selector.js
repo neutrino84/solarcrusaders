@@ -17,7 +17,7 @@ Selector.prototype.create = function() {
       radius = ship.data.size,
       halfWidth = ship.width/2,
       halfHeight = ship.height/2,
-      color, alpha, thickness;
+      color, alpha, thickness, fill;
 
   // configure
   switch(ship.data.ai) {
@@ -25,21 +25,25 @@ Selector.prototype.create = function() {
       color = 0xcccc33;
       alpha = 0.0;
       thickness = 8.0;
+      fill = 0.0;
       break;
     case 'pirate':
       color = 0xcc3333;
       alpha = 0.6;
       thickness = 4.0;
+      fill = 0.0;
       break;
     case 'squadron':
       color = 0x0066ff;
       alpha = 0.8;
       thickness = 8.0;
+      fill = 0.2;
       break;
     default:
       color = 0x0066ff;
       alpha = 0.8;
       thickness = 8.0;
+      fill = 0.2;
       break;
   }
 
@@ -52,7 +56,9 @@ Selector.prototype.create = function() {
   // create selection
   this.graphics = new engine.Graphics();
   this.graphics.lineStyle(thickness, color, 1.0);
+  this.graphics.beginFill(color, fill);
   this.graphics.drawCircle(this.hit.x, this.hit.y, this.hit.radius * 1.34);
+  this.graphics.endFill();
   this.graphics.pivot.set(halfWidth, halfHeight);
   this.graphics.position.set(halfWidth, halfHeight);
   this.graphics.blendMode = engine.BlendMode.ADD;
