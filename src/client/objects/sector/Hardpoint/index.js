@@ -34,14 +34,11 @@ function Hardpoint(parent, config, data, slot, total) {
   this.origin = new engine.Point();
   this.vector = new engine.Point();
 
-  this.cap = new engine.Sprite(this.game, 'texture-atlas', 'turret-cap-' + this.ship.config.race + '.png');
-
   this.sprite = new engine.Sprite(this.game, 'texture-atlas', data.sprite + '.png');
   this.sprite.position.set(config.position.x, config.position.y);
-  this.sprite.pivot.set(8, 8);
+  this.sprite.pivot.set(12, 12);
   
   this.ship.addChild(this.sprite);
-  this.sprite.addChild(this.cap);
 };
 
 Hardpoint.prototype.constructor = Hardpoint;

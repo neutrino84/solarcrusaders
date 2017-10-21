@@ -34,7 +34,7 @@ function Pulse(parent) {
 
   this.glow = new engine.Sprite(this.game, 'texture-atlas', 'turret-glow.png');
   this.glow.pivot.set(32, 32);
-  this.glow.position.set(-2, 8);
+  this.glow.position.set(6, 12);
   this.glow.tint = global.parseInt(this.data.glow);
   this.glow.blendMode = engine.BlendMode.ADD;
 };
@@ -52,6 +52,7 @@ Pulse.prototype.start = function(destination, distance, spawn, index, slot, tota
 
   // reset strip alpha
   this.strip.alpha = 1.0;
+  this.glow.alpha = 1.0;
 
   // create randomness
   this.glow.rotation = this.game.rnd.realInRange(0, global.Math.PI);
@@ -97,7 +98,6 @@ Pulse.prototype.update = function() {
       f1 = 1-(-this.elapsed/this.delay);
 
       this.glow.scale.set(this.scale * f1, this.scale * f1);
-      this.glow.alpha = 1.0 * f1;
       return;
     } else {
       f3 = this.elapsed/this.runtime;
