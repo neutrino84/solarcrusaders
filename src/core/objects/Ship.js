@@ -169,14 +169,6 @@ Ship.prototype.plot = function(coordinates) {
   movement.plot({
     x: coordinates.x - movement.position.x,
     y: coordinates.y - movement.position.y });
-
-  // plot squadron
-  for(var s in squadron) {
-    squad = squadron[s];
-    squad.movement.plot({
-      x: coordinates.x - squad.movement.position.x,
-      y: coordinates.y - squad.movement.position.y });
-  }
 };
 
 Ship.prototype.attack = function(data, rtt) {
@@ -185,12 +177,12 @@ Ship.prototype.attack = function(data, rtt) {
   var attacker = this,
       game = this.game,
       sockets = this.sockets,
-      ships = this.manager.ships,
+      squadron = this.squadron,
       movement = this.movement,
       hardpoints = this.hardpoints,
       runtime, hardpoint, compensated,
       target = data.targ,
-      distance,
+      distance, squad,
       rtt = rtt || 0;
 
   // get updated data
@@ -239,11 +231,15 @@ Ship.prototype.hit = function(attacker, target, slot) {
       data = this.data,
       ai = this.ai,
       durability = this.durability,
+      squadron = attacker.squadron,
       hardpoint = attacker.hardpoints[slot],
       compensated = movement.compensated(),
       distance = compensated.distance(target),
       ratio = distance / (this.size * hardpoint.data.aoe),
       damage, health, critical;
+
+  // test proximity
+  // for a hit
   if(ratio < 1.0) {
     // // test data
     // if(!attacker.ai && this.ai) {
@@ -284,6 +280,12 @@ Ship.prototype.hit = function(attacker, target, slot) {
           damage: damage
         }
       });
+
+      // attacker squadron
+      for(var s in squadron) {
+        squad = squadron[s];
+        squad.ai.engage(this);
+      }
 
       // defend
       ai && ai.attacked(attacker);

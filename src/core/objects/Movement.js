@@ -131,7 +131,7 @@ Movement.prototype.plot = function(destination, throttle) {
   if(!this.parent.disabled) {
     this.destination.copyFrom(destination);
     this.magnitude = this.destination.getMagnitude();
-    this.throttle = global.Math.min(this.magnitude/Movement.THROTTLE_THRESHOLD, 1.0);
+    this.throttle = throttle ? throttle : global.Math.min(this.magnitude/Movement.THROTTLE_THRESHOLD, 1.0);
   }
 };
 

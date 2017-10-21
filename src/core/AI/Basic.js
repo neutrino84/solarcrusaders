@@ -9,7 +9,6 @@ function Basic(ship) {
 
   this.timer = null;
   this.target = null;
-  this.throttle = null;
 
   this.retreat = false;
 
@@ -62,7 +61,7 @@ Basic.prototype.update = function() {
   }
 
   // target ships
-  if(this.target == null && rnd.frac() > 0.75) {
+  if(this.target == null && rnd.frac() > 0.8) {
     this.scanner();
   }
 
@@ -119,7 +118,8 @@ Basic.prototype.attacked = function(target) {
 };
 
 Basic.prototype.engage = function(target) {
-  var settings = this.settings,
+  var game = this.game,
+      settings = this.settings,
       ship = this.ship,
       health = ship.data.health / ship.config.stats.health;
 
@@ -127,17 +127,18 @@ Basic.prototype.engage = function(target) {
   if(this.target == null && !this.friendly(target)) {
     this.target = target;
 
-    this.attacker && this.game.clock.events.remove(this.attacker);
-    this.attacker = this.game.clock.events.loop(ship.data.rate, this.attack, this);
+    this.attacker && game.clock.events.remove(this.attacker);
+    this.attacker = game.clock.events.loop(ship.data.rate, this.attack, this);
 
-    this.disengager && this.game.clock.events.remove(this.disengager);
-    this.disengager = this.game.clock.events.add(settings.disengage, this.disengage, this);
+    this.disengager && game.clock.events.remove(this.disengager);
+    this.disengager = game.clock.events.add(settings.disengage, this.disengage, this);
   }
 
   // engage countermeasures
-  if(this.game.rnd.frac() < 0.10) {
-    ship.activate('booster');
-
+  if(game.rnd.frac() > 0.94) {
+    if(health < 0.8) {
+      ship.activate('booster');
+    }
     if(health < 0.5) {
       ship.activate('shield');
     }
@@ -192,7 +193,7 @@ Basic.prototype.plot = function(){
     size = this.target.data.size * 4;
     offset.copyFrom(this.target.movement.position);
     offset.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
-    ship.movement.plot({ x: this.offset.x-p1.x, y: this.offset.y-p1.y }, this.throttle);
+    ship.movement.plot({ x: this.offset.x-p1.x, y: this.offset.y-p1.y });
   } else if(!this.retreat) {
     p2 = this.getHomePosition();
     ship.movement.plot({ x: p2.x-p1.x, y: p2.y-p1.y });

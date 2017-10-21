@@ -41,22 +41,30 @@ Squadron.prototype.plot = function(){
       settings = this.settings,
       offset = this.offset,
       target = this.target,
+      fence = this.fence,
       master = ship.master,
       p1 = ship.movement.position,
       p2, size, distance;
 
   // plot destination
-  if(target) {
-    size = target.data.size * 4;
+  if(target && fence < 768) {
+    distance = target.movement.position.distance(ship.movement.position);
+    size = target.data.size * 6;
     offset.copyFrom(target.movement.position);
     offset.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
-    ship.movement.plot({ x: offset.x-p1.x, y: offset.y-p1.y }, this.throttle);
-  } else {
+    ship.movement.plot({ x: offset.x-p1.x, y: offset.y-p1.y }, engine.Math.clamp(distance/256, 0.4, 1.0));
+  } else if(rnd.frac() > 0.5) {
     size = master.data.size * 4;
     offset.copyFrom(master.movement.position);
     offset.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
-    ship.movement.plot({ x: offset.x-p1.x, y: offset.y-p1.y });
+    ship.movement.plot({ x: offset.x-p1.x, y: offset.y-p1.y }, engine.Math.clamp(fence/1024, 0.4, 1.0));
   };
 };
+
+Object.defineProperty(Squadron.prototype, 'fence', {
+  get: function() {
+    return this.ship.master.movement.position.distance(this.ship.movement.position);
+  }
+});
 
 module.exports = Squadron;
