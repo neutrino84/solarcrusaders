@@ -12,11 +12,11 @@
       "evasion": 0.06,
       "energy": 200,
       "recharge": 1,
-      "size": 64,
+      "size": 62,
       "durability": 1000,
       "critical": 0.025
     },
-    "squadron": ["ubaidian-x04"],
+    "squadron": ["ubaidian-x04", "ubaidian-x03"],
     "enhancements": ["heal", "booster", "shield"],
     "engine": {
       "glows": [
@@ -98,7 +98,7 @@
       "evasion": 0.02,
       "energy": 200,
       "recharge": 1,
-      "size": 64,
+      "size": 72,
       "durability": 1000,
       "critical": 0.025
     },
@@ -194,7 +194,7 @@
       "evasion": 0.2,
       "energy": 100,
       "recharge": 1,
-      "size": 32,
+      "size": 38,
       "durability": 1000,
       "critical": 0.05
     },
@@ -266,13 +266,13 @@
       "heal": 0.1,
       "armor": 0.0,
       "speed": 42.0,
-      "rate": 1024,
+      "rate": 2048,
       "evasion": 0.25,
       "energy": 100,
       "recharge": 1,
-      "size": 32,
+      "size": 34,
       "durability": 1000,
-      "critical": 0.05
+      "critical": 0.25
     },
     "squadron": [""],
     "enhancements": ["heal", "booster", "shield"],
@@ -322,7 +322,7 @@
       "evasion": 0.1,
       "energy": 200,
       "recharge": 1,
-      "size": 64,
+      "size": 62,
       "durability": 1000,
       "critical": 0.025
     },
@@ -410,7 +410,7 @@
       "recharge": 1,
       "size": 32,
       "durability": 500,
-      "critical": 0.005
+      "critical": 0.01
     },
     "squadron": [""],
     "enhancements": ["heal", "booster", "shield"],
@@ -474,7 +474,7 @@
       "evasion": 0.08,
       "energy": 100,
       "recharge": 1,
-      "size": 32,
+      "size": 36,
       "durability": 500,
       "critical": 0.01
     },
