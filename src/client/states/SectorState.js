@@ -75,7 +75,7 @@ SectorState.prototype.create = function() {
       mouse.capture = true;
       mouse.mouseWheelCallback = function(event) {
         var delta = event.deltaY / sensitivity,
-            scale = engine.Math.clamp(this.world.scale.x - delta, 0.28, 0.6);
+            scale = engine.Math.clamp(this.world.scale.x - delta, 0.34, 0.8);
         if(self.game.paused) { return; }
         if(self.zoom && self.zoom.isRunning) {
           self.zoom.stop();
@@ -85,7 +85,7 @@ SectorState.prototype.create = function() {
 
   // set world
   this.game.world.size(0, 0, 4096, 4096);
-  this.game.world.scale.set(0.28, 0.28);
+  this.game.world.scale.set(0.34, 0.34);
 
   // adjust camera
   this.game.camera.focus(2048, 2048);
