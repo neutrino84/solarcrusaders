@@ -159,7 +159,7 @@ SquadManager.prototype.shieldUp = function(data) {
   var ship = this.manager.ships[data.uuid];
 
   if(data.active){
-    if(ship.selector.shieldBlue && ship.data.chassis == 'squad-shield') {
+    if(ship.selector.shieldBlue && ship.data.chassis == 'squad-shield' && !ship.disabled) {
       ship.selector.shieldBlueStart()
       // ship.events.loop(500, expand = function(){
       //   ship.selector.shieldBlueExpand(this.poopoo);

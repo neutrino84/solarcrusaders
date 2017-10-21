@@ -348,7 +348,7 @@ Ship.prototype.disable = function() {
 
   // disengage ai
   this.ai && this.ai.disengage();
-  
+
   this.respawn = this.game.clock.events.add(this.ai ? this.ai.settings.respawn : Ship.RESPAWN_TIME, this.enable, this)
 
   // blast close
@@ -360,7 +360,7 @@ Ship.prototype.disable = function() {
   });
   if(this.chassis === 'scavenger-x04' || this.chassis === 'scavenger-x03'){
     console.log('queen/overseer dead')
-    this.game.clock.events.add(10000, function(){
+    this.game.clock.events.add(12000, function(){
       this.game.emit('ship/remove', this)
     }, this)
   }

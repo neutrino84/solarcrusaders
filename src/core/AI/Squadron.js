@@ -246,7 +246,7 @@ Squadron.prototype.shieldmaidenActivate = function() {
       masterPosition = master.movement.position,
       a = /^(squad-shield)/,
       t = ship.chassis;
-  if(a.test(t) && !this.shielding){
+  if(a.test(t) && !this.shielding && !this.disabled){
     this.shielding = true;
     this.originalValues["shield-speed"] = this.ship.movement.data.speed
     this.ship.movement.data.speed = 15;
