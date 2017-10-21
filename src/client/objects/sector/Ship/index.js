@@ -36,8 +36,8 @@ function Ship(manager, data) {
   this.hud = new Hud(this);
   this.movement = new Movement(this);
   this.damage = new Damage(this);
-  this.engineCore = new EngineCore(this, this.config.engine);
   this.targetingComputer = new TargetingComputer(this, this.config.targeting);
+  this.engineCore = new EngineCore(this, this.config.engine);
   this.shieldGenerator = new ShieldGenerator(this, this.config.shields);
   this.repair = new Repair(this);
   this.explosion = new Explosion(this);
@@ -52,8 +52,8 @@ Ship.prototype.create = function() {
   this.addChild(this.chassis);
 
   // create main systems
-  this.engineCore.create();
   this.targetingComputer.create();
+  this.engineCore.create();
   this.shieldGenerator.create();
   this.repair.create();
   this.hud.create();
