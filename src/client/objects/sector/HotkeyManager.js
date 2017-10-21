@@ -30,10 +30,9 @@ HotkeyManager.prototype.onDown = function(event, char) {
   var registered = this.registered['down'][char] || {},
       callback = registered.callback,
       context = registered.context,
-      args = registered.args;
-  if(callback) {
-    args.unshift(char);
-    callback.apply(context, args);
+      args = registered.args || [];
+  if(callback && context) {
+    callback.call(context, event, char);
   }
 };
 
@@ -41,10 +40,9 @@ HotkeyManager.prototype.onUp = function(event, char) {
   var registered = this.registered['up'][char] || {},
       callback = registered.callback,
       context = registered.context,
-      args = registered.args;
-  if(callback) {
-    args.unshift(char);
-    callback.apply(context, args);
+      args = registered.args || [];
+  if(callback && context) {
+    callback.call(context, event, char);
   }
 };
 
@@ -52,10 +50,9 @@ HotkeyManager.prototype.onPress = function(event, char) {
   var registered = this.registered['press'][char] || {},
       callback = registered.callback,
       context = registered.context,
-      args = registered.args;
-  if(callback) {
-    args.unshift(char);
-    callback.apply(context, args);
+      args = registered.args || [];
+  if(callback && context) {
+    callback.call(context, event, char);
   }
 };
 

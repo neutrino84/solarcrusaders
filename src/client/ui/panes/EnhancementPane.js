@@ -27,6 +27,7 @@ function EnhancementPane(game, settings) {
   });
 
   this.buttons = {};
+  this.indexes = [];
   this.placeholders = [];
 
   this.config = this.game.cache.getJSON('item-configuration')['enhancement'];
@@ -48,6 +49,7 @@ EnhancementPane.prototype.create = function(enhancement, key) {
 
   // generate placeholders
   for(var i=0; i<EnhancementPane.MAXIMUM; i++) {
+    this.game.emit('/hotkey/register', 'press', i, this.hotkey, this);
     this.placeholders.push(
       new Pane(this.game, {
         constraint: Layout.CENTER,
@@ -63,6 +65,14 @@ EnhancementPane.prototype.create = function(enhancement, key) {
       })
     );
     this.addPanel(this.placeholders[i]);
+  }
+};
+
+EnhancementPane.prototype.hotkey = function(event, char) {
+  var enhancement = this.indexes[char-1],
+      button = this.buttons[enhancement];
+  if(button) {
+    this.selected(button);
   }
 };
 
@@ -113,6 +123,7 @@ EnhancementPane.prototype._player = function(player) {
       enhancements = player.data.enhancements,
       game = this.game,
       buttons = this.buttons,
+      indexes = this.indexes,
       placeholders = this.placeholders;
 
   // set player object
@@ -129,6 +140,10 @@ EnhancementPane.prototype._player = function(player) {
       button.on('selected', this.selected, this);
       buttons[enhancement] = button;
 
+      // save index
+      indexes.push(enhancement);
+
+      // add to ui
       placeholders[i].addPanel(button);
     }
   }
