@@ -232,7 +232,7 @@ Ship.prototype.hit = function(attacker, target, slot, target_uuid) {
     }
 
     //prevent friendly fire dmg to squadron
-    if(this.master === attacker.uuid || attacker.hardpoints[0].subtype === 'repair' && data.health >= (this.config.stats.health)){return}  
+    // if(this.master === attacker.uuid || attacker.hardpoints[0].subtype === 'repair' && data.health >= (this.config.stats.health)){return}  
 
 
     // calc damage

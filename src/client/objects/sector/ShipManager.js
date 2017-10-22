@@ -133,7 +133,6 @@ ShipManager.prototype.remove = function(data) {
       camera = game.camera,
       ships = this.ships,
       ship = ships[data.uuid];
-      console.log('front end remove', data)
   if(ship !== undefined) {
     if(camera.target === ship) {
       camera.unfollow();

@@ -180,13 +180,30 @@ EnhancementPane.prototype._select = function(button) {
   });
 };
 
+EnhancementPane.prototype._selectExtraIcon = function(key) {
+  var game = this.game,
+      player = this.player;
+
+  if(key.parent.id == 'shieldmaiden'){
+    this._started('shieldmaidenActivate') 
+  }
+  // disable
+  // button.parent.disabled(true);
+  
+  // send event
+  // game.emit('ship/enhancement/start', {
+  //   uuid: player.uuid,
+  //   enhancement: button.parent.id
+  // });
+};
+
 EnhancementPane.prototype._started = function(data) {
-  var config = this.config[data.enhancement],
-      button = this.buttons[data.enhancement];
+  var config = this.config[data.enhancement], button;
+    if(data.enhancement){
+      button = this.buttons[data.enhancement]
+    };
 
   if(data === 'shieldmaidenActivate' && this.buttons['shieldmaiden']){
-
-
     button = this.buttons['shieldmaiden'];
     button.disabled(true);
     button.count = 5;
@@ -209,9 +226,7 @@ EnhancementPane.prototype._started = function(data) {
       });
 
     return
-  }
-
-  if(this.player && button && data.uuid === this.player.uuid) {
+  } else if(this.player && button && data.uuid === this.player.uuid) {
     // disable
     button.disabled(true);
     button.count = global.parseInt(config['basic'].cooldown);
@@ -292,11 +307,10 @@ EnhancementPane.prototype._extraIcons = function(icon) {
   if(icon === 'shieldmaiden'){
     shieldmaidenButton = this.create();
     shieldmaidenButton.id = icon;
-    shieldmaidenButton.bg.on('inputUp', this._started('shieldmaidenActivate'), this);
+    shieldmaidenButton.bg.on('inputUp', this._selectExtraIcon, this);
     shieldmaidenButton.start();
 
     buttons[icon] = shieldmaidenButton;
-
 
     containers[enhancements.length].addPanel(shieldmaidenButton)
 

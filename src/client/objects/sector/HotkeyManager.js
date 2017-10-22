@@ -55,8 +55,9 @@ HotkeyManager.prototype.listener = function(hotkey) {
     shieldmaiden = hotkey.toString();
     this.game.input.on('keypress', function(event, key){
       if(key === shieldmaiden){
-        // this.squadManager.shieldmaidenActivate();
+        console.log(this.shieldmaidenCooldown)
         if(this.shieldmaidenCooldown){return}
+          console.log('inside SM hotkey')
         this.game.emit('ship/player/shieldmaidenActivate', 'shieldmaidenActivate');
         this.shieldmaidenCooldown = true;
         this.game.clock.events.add(5000, function(){

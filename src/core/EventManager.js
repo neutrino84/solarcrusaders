@@ -105,9 +105,6 @@ EventManager.prototype.squadGen = function(master){
       randomPostion2 = this.generateRandomPosition(2700),
       rando = this.game.rnd.s0;
 
-      console.log(rando)
-      // var randSpawn = cycle*(rando.s0+rando.s1)/1.25;
-
   if(chassis1 === 'squad-shield'){
     chassis2 = this.game.rnd.pick(this.chassis['squadron2'])
   } else {
@@ -116,8 +113,7 @@ EventManager.prototype.squadGen = function(master){
 
   if(rando > 0.5){
     this.game.emit('ship/create', {
-      // chassis: chassis1,
-      chassis: 'squad-shield',
+      chassis: chassis1,
       x: randomPostion.x,
       y: randomPostion.y,
       ai: 'squadron',
