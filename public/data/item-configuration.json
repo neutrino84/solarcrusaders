@@ -45,7 +45,7 @@
         "damage": 1.0,
         "offset": {
           "min": 0.0,
-          "max": 0.5
+          "max": 1.0
         },
         "length": 32,
         "aoe": 1.0,
@@ -59,7 +59,7 @@
         "name": "Plasma Pulse",
         "type": "pulse",
         "subtype": "plasma",
-        "sprite": "turret-a",
+        "sprite": "turret-b",
         "texture": "laser-red",
         "glow": "0xFF8888",
         "emitter": ["0xFFFFFF", "0xf9dede"],

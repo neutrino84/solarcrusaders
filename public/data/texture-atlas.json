@@ -146,7 +146,7 @@
 },
 "explosion-e.png":
 {
-	"frame": {"x":899,"y":223,"w":16,"h":16},
+	"frame": {"x":873,"y":224,"w":16,"h":16},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
@@ -191,11 +191,11 @@
 },
 "turret-b.png":
 {
-	"frame": {"x":873,"y":224,"w":16,"h":16},
+	"frame": {"x":899,"y":223,"w":24,"h":24},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
-	"sourceSize": {"w":16,"h":16},
+	"spriteSourceSize": {"x":0,"y":0,"w":24,"h":24},
+	"sourceSize": {"w":24,"h":24},
 	"pivot": {"x":0.5,"y":0.5}
 },
 "turret-glow.png":
@@ -277,6 +277,6 @@
 	"format": "RGBA8888",
 	"size": {"w":1024,"h":1024},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:2e3fecff18edd208cfb049bba7be4f9a:6489a2f2352920381ab33df52fb07dda:a973cd4a72d4c90ced76930eac7fdc63$"
+	"smartupdate": "$TexturePacker:SmartUpdate:3a8a7172490baaa6540d2b300b651c4d:6917511d8c377f894a16a2d1e0db5b3d:a973cd4a72d4c90ced76930eac7fdc63$"
 }
 }
