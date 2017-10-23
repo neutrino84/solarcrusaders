@@ -44,25 +44,12 @@ ExplosionEmitter.prototype.explosion = function() {
   this.minRotation = -96;
   this.maxRotation = 96;
 
-  this.setVelocity(this.game.rnd.realInRange(-80, 80), this.game.rnd.realInRange(-80, 80));
+  this.setVelocity(this.game.rnd.realInRange(-64, 64), this.game.rnd.realInRange(-64, 64));
   this.setVector(this.game.rnd.frac(), this.game.rnd.frac());
 
-  this.setScale(0.2, 1.0, 1024);
+  this.setScale(0.2, 1.2, 1024);
   this.setAlpha(1.0, 0.0, 1024);
   this.setTint(0xFF8888, 0x552222, 1024);
-};
-
-ExplosionEmitter.prototype.smulder = function() {
-  this.lifespan = 1000;
-
-  this.blendMode = engine.BlendMode.NORMAL;
-
-  this.minRotation = -180;
-  this.maxRotation = 180;
-
-  this.setScale(0.25, 2, 1000);
-  this.setAlpha(0.5, 0.0, 1000);
-  this.setTint(0x333333, 0x666666, 1000);
 };
 
 ExplosionEmitter.prototype.rocket = function() {

@@ -27,16 +27,22 @@ Explosion.prototype.start = function() {
       rnd = this.game.rnd,
       state = this.state;
 
-  state.glowEmitter.explosion(ship.data.size/2);
+  state.glowEmitter.explosion(ship.data.size);
   state.glowEmitter.at({ center: ship.movement.position });
-  state.glowEmitter.explode(2);
+  state.glowEmitter.explode(1);
+
+  events.repeat(20, 50, function() {
+    state.glowEmitter.burst(ship.data.size);
+    state.glowEmitter.at({ center: ship.movement.position });
+    state.glowEmitter.explode(1);
+  });
 
   state.shockwaveEmitter.explosion(ship.data.size/8);
   state.shockwaveEmitter.at({ center: ship.movement.position });
   state.shockwaveEmitter.explode(1);
 
-  events.repeat(20, 30, function() {
-    if(rnd.frac() > 0.24) {
+  events.repeat(30, 50, function() {
+    if(rnd.frac() > 0.2) {
       state.explosionEmitter.explosion();
       state.explosionEmitter.at({ center: hit.random(undefined, temp) });
       state.explosionEmitter.explode(rnd.frac() > 0.5 ? 1 : 2);
