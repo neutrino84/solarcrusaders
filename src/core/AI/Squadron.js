@@ -6,7 +6,7 @@ function Squadron(ship, home) {
 
   this.type = 'squadron';
   this.settings = {
-    disengage: 9216,
+    disengage: 20480,
     friendly: ['user', 'basic', 'squadron'],
     position: {
       radius: 512,
@@ -47,7 +47,7 @@ Squadron.prototype.plot = function(){
       p2, size, distance;
 
   // plot destination
-  if(target && fence < 768) {
+  if(target && fence < 1024) {
     distance = target.movement.position.distance(ship.movement.position);
     size = target.data.size * 6;
     offset.copyFrom(target.movement.position);
