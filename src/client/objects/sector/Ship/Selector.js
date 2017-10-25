@@ -22,7 +22,7 @@ Selector.prototype.create = function() {
   // configure
   switch(ship.data.ai) {
     case 'basic':
-      color = 0xcccc33;
+      color = 0xffff00;
       alpha = 0.0;
       thickness = 8.0;
       fill = 0.0;
