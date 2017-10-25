@@ -359,7 +359,6 @@ Ship.prototype.disable = function() {
     uuid: this.uuid
   });
   if(this.chassis === 'scavenger-x04' || this.chassis === 'scavenger-x03'){
-    console.log('queen/overseer dead')
     this.game.clock.events.add(12000, function(){
       this.game.emit('ship/remove', this)
     }, this)

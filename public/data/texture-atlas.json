@@ -20,7 +20,7 @@
 },
 "asteroid-x03.png":
 {
-	"frame": {"x":783,"y":262,"w":120,"h":88},
+	"frame": {"x":801,"y":262,"w":120,"h":88},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":120,"h":88},
@@ -126,7 +126,7 @@
 	"sourceSize": {"w":48,"h":48},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"enhancement-piercing.png":
+"enhancement-overload.png":
 {
 	"frame": {"x":546,"y":262,"w":48,"h":48},
 	"rotated": false,
@@ -135,9 +135,18 @@
 	"sourceSize": {"w":48,"h":48},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"enhancement-shield.png":
+"enhancement-piercing.png":
 {
 	"frame": {"x":597,"y":262,"w":48,"h":48},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
+	"sourceSize": {"w":48,"h":48},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"enhancement-shield.png":
+{
+	"frame": {"x":648,"y":262,"w":48,"h":48},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
@@ -200,7 +209,7 @@
 },
 "general-x02.png":
 {
-	"frame": {"x":823,"y":594,"w":64,"h":64},
+	"frame": {"x":957,"y":611,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -227,7 +236,7 @@
 },
 "pirate-x01.png":
 {
-	"frame": {"x":957,"y":593,"w":64,"h":64},
+	"frame": {"x":823,"y":594,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -236,7 +245,7 @@
 },
 "pirate-x02.png":
 {
-	"frame": {"x":906,"y":315,"w":104,"h":104},
+	"frame": {"x":783,"y":353,"w":104,"h":104},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":104,"h":104},
@@ -254,7 +263,7 @@
 },
 "scavenger-x02.png":
 {
-	"frame": {"x":957,"y":660,"w":64,"h":64},
+	"frame": {"x":957,"y":678,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -263,7 +272,7 @@
 },
 "scavenger-x03.png":
 {
-	"frame": {"x":783,"y":353,"w":104,"h":104},
+	"frame": {"x":890,"y":390,"w":104,"h":104},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":104,"h":104},
@@ -279,27 +288,54 @@
 	"sourceSize": {"w":208,"h":208},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"shieldmaiden.png":
-{
-	"frame": {"x":648,"y":262,"w":48,"h":48},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
-	"sourceSize": {"w":48,"h":48},
-	"pivot": {"x":0.5,"y":0.5}
-},
 "squad-attack.png":
 {
-	"frame": {"x":965,"y":422,"w":54,"h":54},
+	"frame": {"x":965,"y":497,"w":54,"h":54},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":54,"h":54},
 	"sourceSize": {"w":54,"h":54},
 	"pivot": {"x":0.5,"y":0.5}
 },
+"squad-closest-hostile.png":
+{
+	"frame": {"x":699,"y":262,"w":48,"h":48},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
+	"sourceSize": {"w":48,"h":48},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"squad-engage-target.png":
+{
+	"frame": {"x":750,"y":262,"w":48,"h":48},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
+	"sourceSize": {"w":48,"h":48},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"squad-regroup.png":
+{
+	"frame": {"x":735,"y":744,"w":48,"h":48},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
+	"sourceSize": {"w":48,"h":48},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"squad-repair-overdrive.png":
+{
+	"frame": {"x":668,"y":772,"w":48,"h":48},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
+	"sourceSize": {"w":48,"h":48},
+	"pivot": {"x":0.5,"y":0.5}
+},
 "squad-repair.png":
 {
-	"frame": {"x":965,"y":479,"w":54,"h":54},
+	"frame": {"x":965,"y":554,"w":54,"h":54},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":54,"h":54},
@@ -308,11 +344,47 @@
 },
 "squad-shield.png":
 {
-	"frame": {"x":965,"y":536,"w":54,"h":54},
+	"frame": {"x":806,"y":728,"w":54,"h":54},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":54,"h":54},
 	"sourceSize": {"w":54,"h":54},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"squad-shieldDestination.png":
+{
+	"frame": {"x":933,"y":745,"w":48,"h":48},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
+	"sourceSize": {"w":48,"h":48},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"squad-shieldDestination_hollow.png":
+{
+	"frame": {"x":863,"y":768,"w":48,"h":48},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
+	"sourceSize": {"w":48,"h":48},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"squad-shieldDestination_yellow.png":
+{
+	"frame": {"x":786,"y":785,"w":48,"h":48},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
+	"sourceSize": {"w":48,"h":48},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"squad-shieldUp.png":
+{
+	"frame": {"x":719,"y":795,"w":48,"h":48},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
+	"sourceSize": {"w":48,"h":48},
 	"pivot": {"x":0.5,"y":0.5}
 },
 "turret-a.png":
@@ -425,7 +497,7 @@
 },
 "ubaidian-x01c.png":
 {
-	"frame": {"x":890,"y":422,"w":72,"h":72},
+	"frame": {"x":924,"y":315,"w":72,"h":72},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":72,"h":72},
@@ -520,6 +592,6 @@
 	"format": "RGBA8888",
 	"size": {"w":1024,"h":1024},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:d5fc457852f3e111cb4ee686b75b10ce:74b466e68eb01373c9b976d2944aaf48:a973cd4a72d4c90ced76930eac7fdc63$"
+	"smartupdate": "$TexturePacker:SmartUpdate:350c3b49828addeb67397776fc3ec758:4f64517c0ca0dca8c08d68256d0e1dc9:a973cd4a72d4c90ced76930eac7fdc63$"
 }
 }

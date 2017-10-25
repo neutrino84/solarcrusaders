@@ -279,9 +279,17 @@
             <key type="filename">icons/enhancement-booster.png</key>
             <key type="filename">icons/enhancement-detect.png</key>
             <key type="filename">icons/enhancement-heal.png</key>
+            <key type="filename">icons/enhancement-overload.png</key>
             <key type="filename">icons/enhancement-piercing.png</key>
             <key type="filename">icons/enhancement-shield.png</key>
-            <key type="filename">icons/shieldmaiden.png</key>
+            <key type="filename">icons/squad-closest-hostile.png</key>
+            <key type="filename">icons/squad-engage-target.png</key>
+            <key type="filename">icons/squad-regroup.png</key>
+            <key type="filename">icons/squad-repair-overdrive.png</key>
+            <key type="filename">icons/squad-shieldDestination.png</key>
+            <key type="filename">icons/squad-shieldDestination_hollow.png</key>
+            <key type="filename">icons/squad-shieldDestination_yellow.png</key>
+            <key type="filename">icons/squad-shieldUp.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -509,7 +517,6 @@
             <filename>ships/scavengers/scavenger-x04.png</filename>
             <filename>ships/enforcers/enforcer-x01.png</filename>
             <filename>ships/enforcers/enforcer-x02.png</filename>
-            <filename>icons/shieldmaiden.png</filename>
             <filename>icons/item-system-targeting.png</filename>
             <filename>ships/ubaidian/highRes/ubaidian-x01a-hires.png</filename>
             <filename>ships/ubaidian/highRes/ubaidian-x01b-hires.png</filename>
@@ -518,6 +525,15 @@
             <filename>ships/ubaidian/highRes/ubaidian-x01e-hires.png</filename>
             <filename>ships/ubaidian/highRes/ubaidian-x01f-hires.png</filename>
             <filename>icons/bg-slide-ubaidian-256.png</filename>
+            <filename>icons/enhancement-overload.png</filename>
+            <filename>icons/squad-closest-hostile.png</filename>
+            <filename>icons/squad-regroup.png</filename>
+            <filename>icons/squad-repair-overdrive.png</filename>
+            <filename>icons/squad-shieldDestination.png</filename>
+            <filename>icons/squad-shieldUp.png</filename>
+            <filename>icons/squad-engage-target.png</filename>
+            <filename>icons/squad-shieldDestination_hollow.png</filename>
+            <filename>icons/squad-shieldDestination_yellow.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

@@ -112,7 +112,7 @@ SectorState.prototype.create = function() {
   // create sector
   this.createAsteroids();
   this.createSpace();
-  // this.createSnow();
+  this.createSnow();
   if(this.game.auth.user){
     // this.game.world.scale.set(.6, .6);
     this.createManagers(); 

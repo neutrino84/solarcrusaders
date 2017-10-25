@@ -37,7 +37,7 @@ EnhancementManager.prototype._started = function(data) {
         ship.showHud(2000);
         break;
       case 'detect':
-        ship.targetingComputer.enhance(data.enhancement, true);
+        this.manager.state.squadManager.detectHostiles();
         ship.showHud(2000);
         break;
     }

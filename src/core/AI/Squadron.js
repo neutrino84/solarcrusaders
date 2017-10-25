@@ -12,6 +12,7 @@ function Squadron(ship, home) {
   this.shieldDestination = null;
   this.shielding = false;
   this.repairing = null;
+  this.locked = null;
   this.originalValues = {};
 
   this.settings = client.AIConfiguration[this.type];
@@ -120,6 +121,8 @@ Squadron.prototype.update = function() {
       master = this.manager.ships[ship.master],
       health = ship.data.health / ship.config.stats.health,
       p1, p2, size, health, masterHealth, squadShip;
+      
+  if(this.locked){ return }
 
   if(master){
     masterHealth = master.data.health / master.config.stats.health
@@ -137,11 +140,11 @@ Squadron.prototype.update = function() {
   };
 
   if(this.shieldDestination){
-    this.shield();
+    this.shield_destination();
   }
   if(this.shielding && this.ship.disabled){
     this.shielding = false;
-    this.manager.game.sockets.ioserver.emit('squad/shieldUp', {uuid: ship.uuid, active: false})
+    this.manager.game.sockets.ioserver.emit('squad/shieldUpIn', {uuid: ship.uuid, active: false})
   }
 
   if(this.ship.chassis === 'squad-repair'){
@@ -234,7 +237,7 @@ Squadron.prototype.disengage = function() {
   this.attacker && this.game.clock.events.remove(this.attacker);
   if(this.shielding){
     this.shielding = false;
-    this.manager.game.sockets.ioserver.emit('squad/shieldUp', {uuid: ship.uuid, active: false})
+    this.manager.game.sockets.ioserver.emit('squad/shieldUpIn', {uuid: ship.uuid, active: false})
   }
 };
 
@@ -250,7 +253,7 @@ Squadron.prototype.shieldmaidenActivate = function() {
     this.shielding = true;
     this.originalValues["shield-speed"] = this.ship.movement.data.speed
     this.ship.movement.data.speed = 15;
-    this.manager.game.sockets.ioserver.emit('squad/shieldUp', {uuid: ship.uuid, active: true})
+    this.manager.game.sockets.ioserver.emit('squad/shieldUpIn', {uuid: ship.uuid, active: true})
     this.game.clock.events.add(8000, this.shieldmaidenDeactivate, this)
   }
 };
@@ -266,11 +269,11 @@ Squadron.prototype.shieldmaidenDeactivate = function() {
   if(a.test(t)){
     this.ship.movement.data.speed = this.originalValues["shield-speed"];
     this.shielding = false;
-    this.manager.game.sockets.ioserver.emit('squad/shieldUp', {uuid: ship.uuid, active: false})
+    this.manager.game.sockets.ioserver.emit('squad/shieldUpIn', {uuid: ship.uuid, active: false})
   }
 }
 
-Squadron.prototype.shield = function(data) {
+Squadron.prototype.shield_destination = function(data) {
   var ships = this.manager.ships,
       ship = this.ship,
       master = ships[this.master],
@@ -283,17 +286,22 @@ Squadron.prototype.shield = function(data) {
   if(a.test(t)){
     if(data){
       if(this.shielding){
+        console.log('SHIELD DEST OFF')
         this.shielding = false;
-        this.manager.game.sockets.ioserver.emit('squad/shieldUp', {uuid: ship.uuid, active: false})
+        this.manager.game.sockets.ioserver.emit('squad/shieldUpIn', {uuid: ship.uuid, active: false})
       }
+      console.log('SHIELD DEST ON')
       this.shieldDestination = {x: data.x, y: data.y}
     }
     // ship.activate('booster');
     destination.setTo(this.shieldDestination.x, this.shieldDestination.y);
     distance = (destination).distance(position);
+    console.log('111')
     if(distance < 95){
-      this.manager.game.sockets.ioserver.emit('squad/shieldUp', {uuid: ship.uuid, active: true})
+    console.log('222')
+      this.manager.game.sockets.ioserver.emit('squad/shieldUpIn', {uuid: ship.uuid, active: true})
       this.shielding = true;
+      this.locked = true;
     }
     this.ship.movement.throttle = distance/2;
     ship.movement.plot({x: this.shieldDestination.x - this.ship.movement.position.x, y: this.shieldDestination.y - this.ship.movement.position.y}, this.ship.movement.throttle)

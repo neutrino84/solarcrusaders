@@ -591,7 +591,7 @@
             "startX": 0.1,
             "endX": 0.35,
             "startY": 0.1,
-            "endY": 3.8
+            "endY": 2
           },
           "position": {
             "x": 58,
@@ -906,7 +906,7 @@
             "startX": 0.1,
             "endX": 0.2,
             "startY": 0.5,
-            "endY": 1.5
+            "endY": 0.8
           },
           "position": {
             "x": 33,
@@ -1304,7 +1304,7 @@
     "class": "battleship",
     "stats": {
       "capacity": 3000,
-      "health": 250,
+      "health": 300,
       "heal": 0.25,
       "armor": 0.2,
       "speed": 20.0,
@@ -1617,7 +1617,7 @@
     "class": "queen",
     "stats": {
       "capacity": 1000,
-      "health": 450,
+      "health": 475,
       "heal": 0.2,
       "armor": 0.1,
       "speed": 11.0,

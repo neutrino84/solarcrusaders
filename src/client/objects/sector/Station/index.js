@@ -55,6 +55,8 @@ Station.prototype.boot = function() {
 
   // get the explosion bug out of the way
   this.explode();
+
+  this.hud.hide();
 };
 
 Station.prototype.refresh = function(data) {
@@ -83,7 +85,7 @@ Station.prototype.update = function() {
     this.cap.rotation = -rotation*8;
   }
 
-  // this.events.update(this.game.clock.time);
+  this.events.update(this.game.clock.time);
 
   // update
   this.hud.update();

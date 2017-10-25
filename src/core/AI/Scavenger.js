@@ -101,8 +101,7 @@ Scavenger.prototype.scanner = function() {
         return }
       if(ship.queen){
         queen = ships[ship.queen]
-        // console.log(queen)
-      // debugger
+        
         if(!queen.disabled){
           position = queen.movement.position;
           size = queen.data.size * 1.5;
@@ -114,6 +113,34 @@ Scavenger.prototype.scanner = function() {
         } else {
           Basic.prototype.scanner.call(this);
         }
+      } else {
+
+        //QUEEN IS DESTROYED
+        if(this.target == null) {
+          for(var s in ships) {
+            scan = ships[s];
+            p2 = scan.movement.position;
+            if(scan.disabled) { continue; }
+            if(sensor.contains(p2.x, p2.y)) {
+              distance = p2.distance(ship.movement.position);
+              if(!this.friendly(scan)) {
+                priority.enemy[distance] = scan;
+              } else {
+                priority.friendly[distance] = scan;
+              }
+            }
+          }
+
+          // find enemies
+          targets = Object.keys(priority.enemy);
+
+          // targets.length && this.engage();
+          this.target = priority.enemy[targets.sort(ascending)[0]];
+          this.attacker && this.game.clock.events.remove(this.attacker);
+          this.attacker = this.game.clock.events.loop(ship.data.rate, this.attack, this);
+          this.disengager && this.game.clock.events.remove(this.disengager);
+          this.disengager = this.game.clock.events.add(settings.disengage, this.disengage, this);
+        }
       } 
       break;
 
@@ -122,9 +149,7 @@ Scavenger.prototype.scanner = function() {
         for(var s in ships) {
           scan = ships[s];
           p2 = scan.movement.position;
-          // if(scan.chassis === 'ubaidian-x01d'){console.log(scan)}
           if(scan.disabled) { continue; }
-          // console.log('sensor is ', sensor)
           if(sensor.contains(p2.x, p2.y)) {
             distance = p2.distance(ship.movement.position);
             if(!this.friendly(scan)) {
@@ -137,14 +162,11 @@ Scavenger.prototype.scanner = function() {
 
         // find enemies
         targets = Object.keys(priority.enemy);
-        // targets.length && this.engage(priority.enemy[targets.sort(ascending)[0]]);
 
         // targets.length && this.engage();
         this.target = priority.enemy[targets.sort(ascending)[0]];
-        // if(this.target){console.log('scanning, target is ', this.target.chassis)}
         this.attacker && this.game.clock.events.remove(this.attacker);
         this.attacker = this.game.clock.events.loop(ship.data.rate, this.attack, this);
-
         this.disengager && this.game.clock.events.remove(this.disengager);
         this.disengager = this.game.clock.events.add(settings.disengage, this.disengage, this);
       }
@@ -162,20 +184,19 @@ Scavenger.prototype.update = function() {
       rnd = this.game.rnd,
       queen,
       p1, p2, size, health, queenHealth;
-  if(this.ship.chassis === 'scavenger-x04'){
-    // console.log('in update. target is ', this.target.chassis)
-  }
-
+      
   if(ship.queen){
     queen = this.manager.ships[ship.queen];
-    if(!queen.disabled && queen.ai.target && !this.attacking){
-      // this.engage(queen.ai.target) 
+    if(queen && !queen.disabled && queen.ai.target && !this.attacking){
       this.target = queen.ai.target
       this.attacker && this.game.clock.events.remove(this.attacker);
       this.attacker = this.game.clock.events.loop(ship.data.rate, this.attack, this);
 
       this.disengager && this.game.clock.events.remove(this.disengager);
       this.disengager = this.game.clock.events.add(settings.disengage, this.disengage, this);
+    } else {
+      ship.queen = null;
+      this.update()
     }
   };
 
@@ -187,7 +208,7 @@ Scavenger.prototype.update = function() {
   }
 
   // target ships
-  if(rnd.frac() < 0.6) {
+  if(rnd.frac() < 0.7) {
     this.scanner();
   };
 

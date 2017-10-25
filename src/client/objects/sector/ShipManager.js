@@ -112,10 +112,18 @@ ShipManager.prototype.create = function(data, sync) {
   //save squadron to master ship
   if(this.player && ship.data.masterShip && ship.data.masterShip === this.player.uuid){
     this.player.squadron[ship.uuid] = ship;
+
     if(ship.data.chassis === 'squad-shield'){
-      this.game.emit('ship/player/shieldmaiden', 'shieldmaiden')
+      this.game.emit('ship/player/squadSync', 'shieldship')
+    }
+    if(ship.data.chassis === 'squad-attack'){
+      this.game.emit('ship/player/squadSync', 'attackship')
+    }
+    if(ship.data.chassis === 'squad-repair'){
+      this.game.emit('ship/player/squadSync', 'repairship')
     }
   }
+
 
   if(ship.data.chassis === 'scavenger-x04'){
     game.emit('ship/sound/growl', ship);
@@ -239,13 +247,6 @@ ShipManager.prototype._player = function(ship) {
   this.player.squadron = {};
   this.game.camera.follow(ship);
 
-  var queenCount = 0;
-  var overseerCount = 0;
-  for(var a in this.ships){
-    if(this.ships[a].chassis == "scavenger-x04"){this.queenCount ++}
-    if(this.ships[a].chassis == "scavenger-x03"){this.overseerCount ++}
-  }
-  console.log('there are ', queenCount, ' queens and ', overseerCount, ' overseers out there')
 };
 
 ShipManager.prototype._attack = function(data) {
@@ -280,10 +281,10 @@ ShipManager.prototype._primary = function(data) {
   var clock = this.clock,
       ship = this.player;
   if(ship) {
-    if(!ship.disabled && data.type === 'start') {
+    if(!ship.disabled && ship.targetingComputer && data.type === 'start') {
       this.autofire && clock.events.remove(this.autofire);
       this.autofire = clock.events.loop(20, function() {
-        ship.targetingComputer.fire();
+          ship.targetingComputer.fire();
       });
     } else {
       this.autofire && clock.events.remove(this.autofire);
@@ -303,7 +304,8 @@ ShipManager.prototype._secondary = function(data) {
   if(ship && !ship.locked) {
     if(data.shield){
       indicator.show(position);
-      socket.emit('squad/shield', {
+      console.log('data.shield')
+      socket.emit('squad/shieldDestination', {
         uuid: ship.uuid,
         destination: {x: position.x, y: position.y }
       })

@@ -55,9 +55,6 @@ function StationManager(game, state) {
   this.game.world.foreground.add(this.glowEmitter);
 
   this.happened = false;
-
-  this.syncedX = 0;
-  this.syncedY = 0;
   // this.game.clock.events.loop(1500, this._test, this);
 }
 

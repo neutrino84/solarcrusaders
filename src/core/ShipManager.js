@@ -38,7 +38,8 @@ ShipManager.prototype.init = function(eventManager) {
   this.sockets.on('squad/engageHostile', this.squad_engage, this);
   this.sockets.on('squad/shieldmaidenActivate', this.squad_shieldmaidenActivate, this);
   this.sockets.on('squad/regroup', this.squad_regroup, this);
-  this.sockets.on('squad/shield', this.squad_shield, this);
+  this.sockets.on('squad/shieldDestination', this.squad_shield_destination, this);
+  this.sockets.on('squad/shieldDestinationDeactivate', this.squad_shield_destination_deactivate, this);
 
   // update data interval
   this.game.clock.events.loop(1000, this.update, this);
@@ -191,7 +192,7 @@ ShipManager.prototype.squad_regroup = function(socket, args){
     };
 };
 
-ShipManager.prototype.squad_shield = function(socket, args){
+ShipManager.prototype.squad_shield_destination = function(socket, args){
   var ships = this.ships,
       player = ships[args[1].uuid],
       distance;
@@ -199,9 +200,24 @@ ShipManager.prototype.squad_shield = function(socket, args){
       ship = ships[s];
       var a = /^(squad-shield)/,
           t = ship.chassis;
-
       if(a.test(t) && ship.master === player.uuid && !ship.disabled){
-        ship.ai.shield(args[1].destination);
+        console.log('INSIDE')
+        ship.ai.shield_destination(args[1].destination);
+      };
+    };
+};
+
+ShipManager.prototype.squad_shield_destination_deactivate = function(socket, args){
+  var ships = this.ships,
+      player = ships[args[1].uuid],
+      distance;
+    for (var s in ships){
+      ship = ships[s];
+      var a = /^(squad-shield)/,
+          t = ship.chassis;
+      if(a.test(t) && ship.master === player.uuid && !ship.disabled){
+        console.log('INSIDE')
+        ship.ai.shield_destination(args[1].destination);
       };
     };
 };

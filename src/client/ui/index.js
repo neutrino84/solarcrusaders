@@ -4,6 +4,7 @@ var Panel = require('../ui/Panel'),
     Layout = require('../ui/Layout'),
     pixi = require('pixi'),
     Shipyard = require('../ui/panes/Shipyard'),
+    SquadPane = require('../ui/panes/SquadPane'),
     BottomPane = require('../ui/panes/BottomPane'),
     LeaderBoardPane = require('../ui/panes/LeaderBoardPane');
 
@@ -71,7 +72,16 @@ UI.prototype.create = function() {
   //     };
   //   }
   // })
+
+  // this.game.on('ship/player/attackship', this._squadKeys, this)
+  // this._squadKeys();
 };
+
+// UI.prototype._squadKeys = function() {
+//   this.squadPane = new SquadPane(this.game); 
+//   this.root.addPanel(this.squadPane);
+//   this.root.invalidate();
+// };
 
 UI.prototype.refresh = function() {
   this.root.invalidate(true);

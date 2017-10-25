@@ -11,8 +11,9 @@ function Selection(game) {
   this.world.static.on('inputUp', this._onInput, this);
   this.world.static.on('inputDown', this._onInput, this);
 
-  this.game.on('shieldDestination', this._shield, this);
+  
   this.shieldCheck = false;
+  this.game.on('squad/shieldDestination', this._shield, this);
 };
 
 Selection.prototype.constructor = Selection;
@@ -38,9 +39,13 @@ Selection.prototype._onInput = function(world, pointer) {
   }
 };
 
-Selection.prototype._shield = function(data) {
-  console.log('in selection/input manager, data is ', data)
-  this.shieldCheck = data;
+Selection.prototype._shield = function() {
+  this.shieldCheck = true
+  console.log('shield on')
+  this.game.clock.events.add(3000, function(){
+    console.log('shield off')
+    this.shieldCheck = false;
+  }, this)
 };
 
 Selection.prototype.destroy = function() {

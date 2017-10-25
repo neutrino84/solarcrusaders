@@ -23,9 +23,15 @@ function SquadManager(game) {
   // squad target
   this.acquired = null;
 
+// this.game.on('squad/shieldDestination', this._shield, this);
   this.game.on('ship/player', this._player, this);
   this.game.on('squad/regroup', this.regroup, this);
-  this.game.on('squad/shieldUp', this.shieldUp, this);
+  this.game.on('squad/shieldUp', this.shieldUpOut, this);
+  this.game.on('squad/shieldUpIn', this.shieldUpIn, this);
+  // this.game.on('squad/shieldDestination', this.shieldDestination, this);
+  this.game.on('squad/closestHostile', this.closestHostile, this)
+  this.game.on('squad/engageTarget', this.engageHostile, this)
+  this.game.on('squad/detectHostiles', this.detectHostiles, this)
 };
 
 SquadManager.prototype.constructor = SquadManager;
@@ -65,7 +71,7 @@ SquadManager.prototype.closestHostile = function(){
   }
 };
 
-SquadManager.prototype.detectUnfriendlies = function(){
+SquadManager.prototype.detectHostiles = function(){
   var ships = this.ships,
       player = this.player,
       unfriendlies = this.player.unfriendlies,
@@ -112,7 +118,6 @@ SquadManager.prototype.detectUnfriendlies = function(){
   targets = Object.keys(this.player.unfriendlies);
   if(targets && !targets.length){return}
 
-  console.log(player.targetCount)
   target = this.player.unfriendlies[targets.sort(ascending)[player.targetCount]]
   if(target && target !== this.player.previous && !target.disabled) {
     player.acquired = target
@@ -142,26 +147,26 @@ SquadManager.prototype.engageHostile = function(){
       available = true;
     };
   };
-  if(player.acquired && available){
+  if(player.acquired && available && !player.acquired.disabled){
     for(var s in ships){
     var ship = ships[s];
     ship.selector.hostileEngagedStop();
     ship.selector.hostileHighlightStop();
   }
-  if(!player.acquired.disabled && available)
+  if(!player.acquired.data.disabled && available)
+  console.log(player.acquired, player.acquired.disabled)
    player.acquired.selector.hostileEngaged();
     this.game.emit('squad/sound','engage');
     this.socket.emit('squad/engageHostile', {player_id: player.uuid, target_id : player.acquired.uuid });
   };
 };
 
-SquadManager.prototype.shieldUp = function(data) {
+SquadManager.prototype.shieldUpIn = function(data) {
   var ship = this.manager.ships[data.uuid];
-  console.log('on here')
+
+  console.log('in shieldUpIn')
   if(data.active){
-    console.log(ship, ship.disabled)
     if(ship.selector.shieldBlue && ship.data.chassis == 'squad-shield' && !ship.disabled) {
-      console.log('ya wtf', ship, ship.disabled)
       ship.selector.shieldBlueStart()
       // ship.events.loop(500, expand = function(){
       //   ship.selector.shieldBlueExpand(this.poopoo);
@@ -175,8 +180,9 @@ SquadManager.prototype.shieldUp = function(data) {
   }
 };
 
-SquadManager.prototype.shieldmaidenActivate = function() {
+SquadManager.prototype.shieldUpOut = function() {
   var player = this.player;
+  console.log('about to emit shieldupOut socket message')
   this.socket.emit('squad/shieldmaidenActivate', {player_uuid: player.uuid})
 };
 

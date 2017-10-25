@@ -63,7 +63,7 @@
   	  "health": 0.01
   	},
   	"sensor": {
-  	  "aim": 0.01,
+  	  "aim": 0.6,
   	  "range": 7000
   	}
   },
@@ -80,7 +80,7 @@
       "health": 0.00
     },
     "sensor": {
-      "aim": 1.0,
+      "aim": 0.9,
       "range": 10096
     }
   },
@@ -97,7 +97,7 @@
       "health": 0.1
     },
     "sensor": {
-      "aim": 1.0,
+      "aim": 0.9,
       "range": 4096
     }
   }
