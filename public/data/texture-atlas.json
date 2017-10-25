@@ -47,7 +47,7 @@
 },
 "asteroid-x06.png":
 {
-	"frame": {"x":913,"y":162,"w":57,"h":59},
+	"frame": {"x":847,"y":132,"w":57,"h":59},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":57,"h":59},
@@ -83,7 +83,7 @@
 },
 "enhancement-heal.png":
 {
-	"frame": {"x":972,"y":162,"w":48,"h":48},
+	"frame": {"x":906,"y":162,"w":48,"h":48},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
@@ -92,7 +92,7 @@
 },
 "enhancement-piercing.png":
 {
-	"frame": {"x":972,"y":212,"w":48,"h":48},
+	"frame": {"x":847,"y":193,"w":48,"h":48},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
@@ -146,7 +146,7 @@
 },
 "explosion-e.png":
 {
-	"frame": {"x":873,"y":224,"w":16,"h":16},
+	"frame": {"x":906,"y":132,"w":16,"h":16},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
@@ -173,7 +173,7 @@
 },
 "icon-target.png":
 {
-	"frame": {"x":831,"y":198,"w":40,"h":40},
+	"frame": {"x":956,"y":162,"w":40,"h":40},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":40},
@@ -182,7 +182,7 @@
 },
 "turret-a.png":
 {
-	"frame": {"x":873,"y":198,"w":24,"h":24},
+	"frame": {"x":998,"y":162,"w":24,"h":24},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":24,"h":24},
@@ -191,7 +191,16 @@
 },
 "turret-b.png":
 {
-	"frame": {"x":899,"y":223,"w":24,"h":24},
+	"frame": {"x":998,"y":188,"w":24,"h":24},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":24,"h":24},
+	"sourceSize": {"w":24,"h":24},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"turret-c.png":
+{
+	"frame": {"x":990,"y":214,"w":24,"h":24},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":24,"h":24},
@@ -207,13 +216,13 @@
 	"sourceSize": {"w":64,"h":64},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"turret-rocket-a.png":
+"turret-projectile-a.png":
 {
-	"frame": {"x":540,"y":222,"w":64,"h":64},
+	"frame": {"x":956,"y":204,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
-	"sourceSize": {"w":64,"h":64},
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+	"sourceSize": {"w":32,"h":32},
 	"pivot": {"x":0.5,"y":0.5}
 },
 "ubaidian-x01.png":
@@ -236,7 +245,7 @@
 },
 "ubaidian-x03.png":
 {
-	"frame": {"x":781,"y":132,"w":64,"h":64},
+	"frame": {"x":540,"y":222,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -245,7 +254,7 @@
 },
 "ubaidian-x04.png":
 {
-	"frame": {"x":847,"y":132,"w":64,"h":64},
+	"frame": {"x":781,"y":132,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -277,6 +286,6 @@
 	"format": "RGBA8888",
 	"size": {"w":1024,"h":1024},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:3a8a7172490baaa6540d2b300b651c4d:6917511d8c377f894a16a2d1e0db5b3d:a973cd4a72d4c90ced76930eac7fdc63$"
+	"smartupdate": "$TexturePacker:SmartUpdate:fe60e6ea3b9be61d2344273ee7a7f6d5:340e9466c70a941b06faa3c2080f794c:a973cd4a72d4c90ced76930eac7fdc63$"
 }
 }

@@ -224,7 +224,7 @@
             </struct>
             <key type="filename">fx/engine-highlight.png</key>
             <key type="filename">fx/turret-glow.png</key>
-            <key type="filename">turrets/turret-rocket-a.png</key>
+            <key type="filename">turrets/turret-projectile-a.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -397,6 +397,19 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">turrets/turret-c.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>6,6,12,12</rect>
+                <key>scale9Paddings</key>
+                <rect>6,6,12,12</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
         </map>
         <key>fileList</key>
         <array>
@@ -421,7 +434,6 @@
             <filename>fx/explosion-c.png</filename>
             <filename>objects/asteroid-x05.png</filename>
             <filename>objects/asteroid-x06.png</filename>
-            <filename>turrets/turret-rocket-a.png</filename>
             <filename>icons/enhancement-heal.png</filename>
             <filename>fx/turret-glow.png</filename>
             <filename>ships/ubaidian/ubaidian-x01.png</filename>
@@ -430,6 +442,8 @@
             <filename>ships/general/general-x01.png</filename>
             <filename>ships/ubaidian/ubaidian-x05.png</filename>
             <filename>ships/ubaidian/ubaidian-x06.png</filename>
+            <filename>turrets/turret-c.png</filename>
+            <filename>turrets/turret-projectile-a.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
