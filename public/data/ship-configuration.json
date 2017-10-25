@@ -190,7 +190,7 @@
       "heal": 0.1,
       "armor": 0.0,
       "speed": 38.0,
-      "rate": 1024,
+      "rate": 256,
       "evasion": 0.2,
       "energy": 100,
       "recharge": 1,
@@ -198,7 +198,7 @@
       "durability": 1000,
       "critical": 0.05
     },
-    "squadron": [""],
+    "squadron": [],
     "enhancements": ["heal", "booster", "shield"],
     "engine": {
       "glows": [
@@ -240,17 +240,17 @@
             "y": 15
           },
           "default": {
-            "type": "pulse",
-            "subtype": "basic"
-          }
-        },
-        {
-          "position": {
-            "x": 29,
-            "y": 47
-          },
-          "default": {
-            "type": "pulse",
+             "type": "projectile",
+             "subtype": "basic"
+           }
+         },
+         {
+           "position": {
+             "x": 29,
+             "y": 47
+           },
+           "default": {
+            "type": "projectile",
             "subtype": "basic"
           }
         }
@@ -274,7 +274,7 @@
       "durability": 1000,
       "critical": 0.25
     },
-    "squadron": [""],
+    "squadron": [],
     "enhancements": ["heal", "booster", "shield"],
     "engine": {
       "glows": [
@@ -412,7 +412,7 @@
       "durability": 500,
       "critical": 0.01
     },
-    "squadron": [""],
+    "squadron": [],
     "enhancements": ["heal", "booster", "shield"],
     "engine": {
       "glows": [
@@ -478,7 +478,7 @@
       "durability": 500,
       "critical": 0.01
     },
-    "squadron": [""],
+    "squadron": [],
     "enhancements": ["heal", "booster", "shield"],
     "engine": {
       "glows": [
