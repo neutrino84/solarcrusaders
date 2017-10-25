@@ -41,7 +41,7 @@ Explosion.prototype.start = function() {
   state.shockwaveEmitter.at({ center: ship.movement.position });
   state.shockwaveEmitter.explode(1);
 
-  events.repeat(30, 50, function() {
+  events.repeat(50, 50, function() {
     if(rnd.frac() > 0.2) {
       state.explosionEmitter.explosion();
       state.explosionEmitter.at({ center: hit.random(undefined, temp) });
