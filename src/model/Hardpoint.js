@@ -22,7 +22,7 @@ var Hardpoint = schema.define('hardpoint', {
   durability:  { type: schema.Double, default: 1000.0 }
 });
 
-Hardpoint.TYPES = ['energy', 'rocket', 'pulse'];
+Hardpoint.TYPES = ['energy', 'projectile', 'pulse'];
 
 Hardpoint.validatesPresenceOf('name');
 Hardpoint.validatesPresenceOf('type');

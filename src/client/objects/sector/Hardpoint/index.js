@@ -24,7 +24,7 @@ function Hardpoint(parent, config, data, slot, total) {
   this.rotation = 0;
 
   this.types = {
-    rocket: Projectile,
+    projectile: Projectile,
     energy: Energy,
     pulse: Pulse,
     missile: Missile

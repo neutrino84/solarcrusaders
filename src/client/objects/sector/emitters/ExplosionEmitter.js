@@ -52,20 +52,17 @@ ExplosionEmitter.prototype.explosion = function() {
   this.setTint(0xFF8888, 0x552222, 1024);
 };
 
-ExplosionEmitter.prototype.rocket = function() {
+ExplosionEmitter.prototype.projectile = function() {
   this.blendMode = engine.BlendMode.ADD;
 
   this.lifespan = 400;
 
-  this.minRotation = -32;
-  this.maxRotation = 32;
+  this.minRotation = 0;
+  this.maxRotation = 0;
 
-  this.setVelocity(this.game.rnd.realInRange(-32, 32), this.game.rnd.realInRange(-32, 32));
-  this.setVector(this.game.rnd.frac(), this.game.rnd.frac());
-
-  this.setScale(0.5, 2.0, 150);
+  this.setScale(0.5, 1.0, 400);
   this.setAlpha(1.0, 0.0, 400);
-  this.setTint(0xFF3333, 0x333333, 150);
+  this.setTint(0xFF3333, 0x333333, 400);
 };
 
 ExplosionEmitter.prototype.plasma = function() {

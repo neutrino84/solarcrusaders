@@ -6,6 +6,7 @@ function Projectile(parent) {
   this.parent = parent;
   this.game = parent.game;
   this.data = parent.data;
+  this.ship = parent.ship;
   this.manager = parent.manager;
   this.state = parent.manager.state;
   this.clock  = parent.game.clock;
@@ -18,39 +19,53 @@ function Projectile(parent) {
   this.elapsed = 0;
   this.length = 0;
   this.duration = 0;
+  this.offset = 0;
 
   this.isDone = true;
   this.isRunning = false;
+  this.hasExploded = false;
 
-  this.target = new engine.Point();
+  this.temp = new engine.Point();
   this.origin = new engine.Point();
   this.destination = new engine.Point();
 
   this.projectile = new engine.Sprite(this.game, 'texture-atlas', this.data.texture);
-  this.projectile.scale.set(0.8, 0.8);
-  this.projectile.pivot.set(32, 32);
-  this.projectile.alpha = 0.0;
+  this.projectile.scale.set(1.0, 1.0);
+  this.projectile.pivot.set(16, 16);
+  this.projectile.blendMode = engine.BlendMode.ADD;
+
+  this.glow = new engine.Sprite(this.game, 'texture-atlas', 'explosion-d.png');
+  this.glow.pivot.set(64, 64);
+  this.glow.position.set(16, 16);
+  this.glow.scale.set(0.5, 0.5);
+  this.glow.tint = global.parseInt(this.data.glow);
+  this.glow.blendMode = engine.BlendMode.ADD;
+
+  this.projectile.addChild(this.glow);
 };
 
 Projectile.prototype.start = function(destination, distance, spawn, index, slot, total) {
   this.elapsed = 0;
-  this.duration = distance * this.data.projection;
   this.length = this.data.length;
-  this.runtime = this.duration;
-  this.delay = this.data.delay + (this.duration * ((index) / (spawn+1))) + (this.parent.ship.data.rate * this.game.rnd.realInRange(0.0, 1.0) * (slot/total));
+  this.duration = distance * this.data.projection;
+  this.runtime = this.duration + this.length;
+  this.offset = this.game.rnd.realInRange(this.data.offset.min, this.data.offset.max);
+  this.delay = this.data.delay + (this.parent.ship.data.rate*this.offset*slot/total)
   this.started = this.clock.time + this.delay;
 
   this.isRunning = true;
   this.hasExploded = false;
 
-  this.destination.set(destination.x + this.spread.x, destination.y + this.spread.y);
+  this.destination.copyFrom(destination);
+  this.destination.add(this.spread.x, this.spread.y)
+  this.origin.copyFrom(this.parent.updateTransform());
+  this.glow.alpha = 0.0;
 
   this.manager.fxGroup.addChild(this.projectile);
 };
 
 Projectile.prototype.stop = function() {
   this.isRunning = false;
-  this.projectile.alpha = 0.0;
   this.manager.fxGroup.removeChild(this.projectile);
 };
 
@@ -58,13 +73,9 @@ Projectile.prototype.explode = function() {
   if(!this.hasExploded) {
     this.hasExploded = true;
 
-    this.state.explosionEmitter.rocket();
+    this.state.explosionEmitter.projectile();
     this.state.explosionEmitter.at({ center: this.projectile.position });
-    this.state.explosionEmitter.explode(2);
-
-    this.state.shockwaveEmitter.rocket();
-    this.state.shockwaveEmitter.at({ center: this.projectile.position });
-    this.state.shockwaveEmitter.explode(1);
+    this.state.explosionEmitter.explode(1);
   }
 };
 
@@ -78,30 +89,24 @@ Projectile.prototype.update = function() {
       f2 = 1-(-this.elapsed/this.delay);
 
       this.origin.copyFrom(this.parent.updateTransform());
-
-      this.projectile.position.x = this.origin.x;
-      this.projectile.position.y = this.origin.y;
-      this.projectile.rotation = this.origin.angle(this.destination);
-      this.projectile.alpha = f2;
+      this.projectile.position.copy(this.origin);
+      this.projectile.rotation = this.destination.angle(this.origin);
+      this.projectile.alpha = 0.0;
 
       return;
     }
 
-    f1 = this.elapsed/this.runtime;
+    f1 = this.elapsed/this.duration;
 
-    this.origin.interpolate(this.destination, engine.Easing.Quadratic.In(f1), this.target);
+    this.origin.interpolate(this.destination, f1, this.temp);
 
-    this.projectile.position.x = this.target.x;
-    this.projectile.position.y = this.target.y;
-    this.projectile.rotation = this.target.angle(this.destination);
+    this.projectile.position.copy(this.temp);
+    this.projectile.rotation = this.destination.angle(this.temp);
+    this.projectile.alpha = 0.5 * f1 + 0.5;
+    this.glow.alpha = f1;
 
-    if(f1 < 0.5) {
-      this.manager.state.fireEmitter.rocket();
-      this.manager.state.fireEmitter.at({ center: this.projectile.position });
-      this.manager.state.fireEmitter.explode(1);
-    }
-
-    if(this.elapsed > this.runtime) {
+    // stop once done
+    if(this.elapsed > this.duration) {
       this.explode();
       this.stop();
     }
@@ -113,10 +118,9 @@ Projectile.prototype.destroy = function() {
 
   this.projectile.destroy();
 
-  this.parent = this.game = this.manager =
-    this.data = this.clock = this._start =
-    this._end = this.destination = this.origin =
-    this.target = this.offset = undefined;
+  this.game = this.parent = this.ship = this.manager =
+    this.data = this.clock = this.destination = this.origin =
+    this.temp = undefined;
 };
 
 module.exports = Projectile;
