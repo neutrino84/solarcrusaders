@@ -150,8 +150,7 @@ Pulse.prototype.destroy = function() {
 
   this.parent = this.game =
     this.data = this.clock = this.manager =
-    this.destination = this.origin =
-    this.target = undefined;
+    this.destination = this.origin = undefined;
 };
 
 module.exports = Pulse;
