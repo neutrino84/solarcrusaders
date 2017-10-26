@@ -55,6 +55,7 @@ SoundManager.prototype.preload = function() {
   load.audio('shield-basic', 'sounds/enhancements/shield-basic.mp3');
   load.audio('piercing-basic', 'sounds/enhancements/piercing-basic.mp3');
   load.audio('detect', 'sounds/enhancements/detect.mp3');
+  load.audio('detectClosest','sounds/squadCallbacks/detectClosest.mp3');
 
   load.audio('thruster1', 'sounds/thrusters/medium1.mp3');
   load.audio('thruster2', 'sounds/thrusters/medium2.mp3');
@@ -92,6 +93,8 @@ SoundManager.prototype.preload = function() {
   load.audio('reactor-online', 'sounds/system/reactorOnline.mp3');
   load.audio('repairs-completed', 'sounds/system/repairsCompleted.mp3');
 
+
+
   //SQUAD CALLBACKS
   load.audio('copyThatCommander','sounds/squadCallbacks/copyThatCommander.mp3');
   load.audio('copyThatCommander2','sounds/squadCallbacks/copyThatCommander2.mp3');
@@ -108,7 +111,7 @@ SoundManager.prototype.preload = function() {
 
   //SELECTION
   load.audio('selectionSFX1', 'sounds/misc/selectionSFX1.mp3');
-  load.audio('selectionSFX2', 'sounds/misc/selectionSFX2.mp3');
+  load.audio('selectionSFX2', 'sounds/misc/selectionSFX2_echo.mp3');
 
 
   this.game.on('shipyard/hover', this._selection, this);
@@ -153,6 +156,8 @@ SoundManager.prototype.create = function() {
    this.game.sound.add('shield-basic', 3);
    this.game.sound.add('piercing-basic', 3);
    this.game.sound.add('detect', 2);
+   this.game.sound.add('detectClosest', 2);
+
 
   
 
@@ -417,7 +422,7 @@ SoundManager.prototype.generateQueenGrowl = function(ship){
 };
 
 SoundManager.prototype.generateSquadSound = function(sound){
-  var volume = 0.2,
+  var volume = 0.25,
       num;
       switch(sound) {
         case 'engage':
@@ -433,6 +438,9 @@ SoundManager.prototype.generateSquadSound = function(sound){
           if(num){
             this.game.sound.play('returningToFormation', volume, false);
           }
+          break;
+        case 'closestHostile':
+            this.game.sound.play('closestHostile', volume, false);
           break;
         default:
           break;
