@@ -7,7 +7,6 @@ function Font(game, settings) {
   this.game = game;
   this.config = Font.FONT_CONFIG[settings.name];
   this.settings = settings;
-  this.value = '';
 
   // store data
   this.keys = [];
