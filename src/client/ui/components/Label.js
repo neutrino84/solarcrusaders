@@ -18,10 +18,15 @@ function Label(game, settings) {
   // create view
   this.view = new TextView(game, settings.font);
 
-  // set preferred size
-  this.setPreferredSize(
-    settings.width || this.view.width,
-    settings.height || this.view.height);
+  // set default text
+  this.text = settings.text || '';
+
+  // this.view.texture = this.view.font.texture;
+
+  // // set preferred size
+  // this.setPreferredSize(
+  //   settings.width || this.view.width,
+  //   settings.height || this.view.height);
 
   // add text view
   this.addView(this.view);
