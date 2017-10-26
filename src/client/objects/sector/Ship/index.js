@@ -26,6 +26,7 @@ function Ship(manager, data) {
   // defaults
   this.rotation = data.rotation 
   this.docked = false;
+  this.shielded = false;
 
   // + global.Math.PI;
   this.pivot.set(this.width/2, this.height/2);
@@ -86,11 +87,14 @@ Ship.prototype.refresh = function(data) {
   if(data.docked){
     this.docked = true;
   }
-  if(data.shielded){
+  if(data.shielded ){
+    console.log('shieldField to begin')
+    this.shielded = true;
     this.shieldGenerator.startShieldField();
   } 
-  else {
+  else if(this.shielded){
     this.shieldGenerator.stopShieldField();
+    this.shielded = false;
   };
 
   // critical hit
@@ -152,15 +156,7 @@ Ship.prototype.update = function() {
 };
 
 Ship.prototype.enable = function(data) {
-  if(this.chassis == "ubaidian-x01a"){
-    console.log('yooo. pre alpha is ', this.alpha)
-  }
-  // console.log(this.alpha)
   this.alpha = 1.0;
-
-  if(this.chassis == "ubaidian-x01a"){
-    console.log('yooo. post alpha is ', this.alpha, this)
-  }
   this.disabled = false;
   this.chassis.tint = 0xFFFFFF;
   this.hud.enable();

@@ -11,7 +11,7 @@ function Squadron(ship, home) {
   this.attacking = false;
   this.shieldDestination = null;
   this.shielding = false;
-  this.repairing = null;
+  this.repairing = false;
   this.locked = null;
   this.originalValues = {};
 
@@ -121,8 +121,8 @@ Squadron.prototype.update = function() {
       master = this.manager.ships[ship.master],
       health = ship.data.health / ship.config.stats.health,
       p1, p2, size, health, masterHealth, squadShip;
-      
-  if(this.locked){ return }
+
+  // if(this.locked){ return }
 
   if(master){
     masterHealth = master.data.health / master.config.stats.health
@@ -139,7 +139,7 @@ Squadron.prototype.update = function() {
     this.scanner();
   };
 
-  if(this.shieldDestination){
+  if(this.shieldDestination && !this.locked){
     this.shield_destination();
   }
   if(this.shielding && this.ship.disabled){
@@ -234,6 +234,7 @@ Squadron.prototype.disengage = function() {
   this.attacking = false;
   this.shieldDestination = null;
   this.repairing = null;
+  this.locked = false;
   this.attacker && this.game.clock.events.remove(this.attacker);
   if(this.shielding){
     this.shielding = false;
@@ -285,26 +286,37 @@ Squadron.prototype.shield_destination = function(data) {
       destination = new engine.Point();
   if(a.test(t)){
     if(data){
-      if(this.shielding){
-        console.log('SHIELD DEST OFF')
-        this.shielding = false;
-        this.manager.game.sockets.ioserver.emit('squad/shieldUpIn', {uuid: ship.uuid, active: false})
-      }
-      console.log('SHIELD DEST ON')
+      // if(this.shielding){
+      //   console.log('SHIELD DEST OFF')
+      //   this.shielding = false;
+      //   this.manager.game.sockets.ioserver.emit('squad/shieldUpIn', {uuid: ship.uuid, active: false})
+      // }
       this.shieldDestination = {x: data.x, y: data.y}
     }
     // ship.activate('booster');
     destination.setTo(this.shieldDestination.x, this.shieldDestination.y);
     distance = (destination).distance(position);
-    console.log('111')
     if(distance < 95){
-    console.log('222')
       this.manager.game.sockets.ioserver.emit('squad/shieldUpIn', {uuid: ship.uuid, active: true})
       this.shielding = true;
       this.locked = true;
     }
     this.ship.movement.throttle = distance/2;
     ship.movement.plot({x: this.shieldDestination.x - this.ship.movement.position.x, y: this.shieldDestination.y - this.ship.movement.position.y}, this.ship.movement.throttle)
+  };
+};
+
+Squadron.prototype.shield_destination_deactivate = function() {
+  var ships = this.manager.ships,
+      ship = this.ship,
+      master = ships[this.master];
+
+  if(a.test(t)){
+    console.log('in deactivate')
+    this.shielding = false;
+    this.locked = false;
+    this.shieldDestination = null;
+    this.manager.game.sockets.ioserver.emit('squad/shieldUpIn', {uuid: ship.uuid, active: false})
   };
 };
 

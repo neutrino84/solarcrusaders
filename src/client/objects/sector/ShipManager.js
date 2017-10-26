@@ -82,6 +82,7 @@ function ShipManager(game, state, first) {
   this.game.on('ship/removed', this._removed, this);
   this.game.on('ship/disabled', this._disabled, this);
   this.game.on('ship/enabled', this._enabled, this);
+  this.game.on('squad/shieldDestinationDeactivate', this._destinationDeactivate, this);
 };
 
 ShipManager.prototype.constructor = ShipManager;
@@ -254,7 +255,13 @@ ShipManager.prototype._attack = function(data) {
   if(ship != this.player) {
     ship.targetingComputer.attack(data);
   }
-}
+};
+
+ShipManager.prototype._destinationDeactivate = function() {
+  var player = this.player;
+  console.log('ship manager, about to deactivate')
+  this.socket.emit('squad/shieldDestinationDeactivate', player.uuid)
+};
 
 ShipManager.prototype._test = function(data) {
   var ship = this.ships[data.uuid],

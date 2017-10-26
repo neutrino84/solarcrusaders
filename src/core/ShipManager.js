@@ -209,15 +209,16 @@ ShipManager.prototype.squad_shield_destination = function(socket, args){
 
 ShipManager.prototype.squad_shield_destination_deactivate = function(socket, args){
   var ships = this.ships,
-      player = ships[args[1].uuid],
-      distance;
+      player = ships[args[1]];
+      console.log('squad_shield_destination_deactivate    args 1 is : ', args[1])
+      // distance;
     for (var s in ships){
       ship = ships[s];
       var a = /^(squad-shield)/,
           t = ship.chassis;
       if(a.test(t) && ship.master === player.uuid && !ship.disabled){
-        console.log('INSIDE')
-        ship.ai.shield_destination(args[1].destination);
+        console.log('INSIDE DEACTIVATE')
+        ship.ai.shield_destination_deactivate();
       };
     };
 };

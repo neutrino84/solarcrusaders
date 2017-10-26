@@ -147,7 +147,6 @@ SquadPane.prototype.create = function(icon, key) {
 };
 
 SquadPane.prototype._hotkeySelect = function(key){
-  console.log('in hotkey select, key is ', key)
   if(this.buttons[key]){
     this._select(this.buttons[key].bg) 
   };
@@ -166,7 +165,6 @@ SquadPane.prototype._select = function(button_bg) {
       }
 
       if(!button.label.visible){
-        console.log(button)
         button.disabled(true);
         button.count = 5;
         button.label.text = button.count;
@@ -195,8 +193,6 @@ SquadPane.prototype._shieldDestination = function(key) {
 
       button = this.buttons[key];
 
-  
-
   if(!button.label.visible){
     button.disabled(true);
     button.count = 5;
@@ -219,7 +215,7 @@ SquadPane.prototype._shieldDestination = function(key) {
     if(!this.shieldDestinationActive){
       this.game.emit('squad/shieldDestination');
     } else {
-      this.socket.emit('squad/shieldDestinationDeactivate', )
+      this.game.emit('squad/shieldDestinationDeactivate')
     }
   };
   this.shieldDestinationActive = !this.shieldDestinationActive;
@@ -263,7 +259,6 @@ SquadPane.prototype._player = function(player) {
 
 SquadPane.prototype._squadIcons = function(icon) {
   var buttons = this.buttons, containers = this.containers, closestHostileButton;
-  console.log(icon)
   // var button, container,
   //     enhancements = this.player.data.enhancements,
   //     containers = this.containers,
