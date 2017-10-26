@@ -4,7 +4,9 @@ var Panel = require('../ui/Panel'),
     Layout = require('../ui/Layout'),
     
     Shipyard = require('../ui/panes/Shipyard'),
-    BottomPane = require('../ui/panes/BottomPane');
+    BottomPane = require('../ui/panes/BottomPane'),
+
+    LeaderBoardPane = require('../ui/panes/LeaderBoardPane');
 
 function UI(game) {
   this.game = game;
@@ -19,6 +21,8 @@ UI.prototype.preload = function() {
 UI.prototype.create = function() {
   this.shipyard = new Shipyard(this.game);
   this.bottom = new BottomPane(this.game);
+  this.leaderboard = new LeaderBoardPane(this.game);
+  this.leaderboard.create();
 
   this.root = new Pane(this.game, {
     width: this.game.width,
@@ -33,6 +37,7 @@ UI.prototype.create = function() {
   // add elements
   this.root.addPanel(this.bottom);
   this.root.addPanel(this.shipyard);
+  this.root.addPanel(this.leaderboard);
 
   // invalidate
   this.root.invalidate();

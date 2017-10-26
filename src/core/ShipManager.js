@@ -112,7 +112,7 @@ ShipManager.prototype.data = function(uuids) {
         speed: ship.speed * ship.movement.throttle,
         user: ship.user ? ship.user.uuid : null,
         ai: ship.ai ? ship.ai.type : null,
-        username: ship.user ? ship.user.data.username : null,
+        username: ship.user ? ship.user.data.username : ship.data.name,
         disabled: ship.disabled,
         size: ship.size,
         credits: ship.data.credits,

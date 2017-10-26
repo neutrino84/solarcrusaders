@@ -1,198 +1,92 @@
 var engine = require('engine' ),
     Layout = require('../Layout'),
     Pane = require('../components/Pane'),
-    Label = require('../components/Label'),
-    Image = require('../components/Image'),
-    Panel = require('../Panel');
+    LeaderBoardRow = require('./LeaderBoardRow');
 
-function LeaderboardPane(game, settings) {
+function LeaderBoardPane(game, settings) {
   Pane.call(this, game, {
-    padding: [9],
+    constraint: Layout.TOP,
+    padding: [4],
     layout: {
+      type: 'flow',
       ax: Layout.RIGHT,
       ay: Layout.TOP,
       direction: Layout.VERTICAL,
       gap: 0
     },
-    bg: {
-      fillAlpha: 0.0,
-      borderSize: 0.0
-    },
     usersPane: {
-      padding: [0],
-      layout: {},
-      bg: {
-        fillAlpha: 0.0,
+      layout: {
+        type: 'flow',
+        ax: Layout.RIGHT,
+        ay: Layout.TOP,
+        direction: Layout.VERTICAL,
+        gap: 0
       }
     },
     currentUserPane: {
-      padding: [0],
-      layout: {},
-      bg: {
-        fillAlpha: 0.0,
-      }
-    },
-    userRowPane: {
-      padding: [6],
       layout: {
-        type: 'border',
-        gap: [0, 0]
-      },
-      bg: {
-        fillAlpha: 0.0
-      }
-    },
-    userRowLabel: {
-      padding: [0],
-      text: {
-        fontName: 'full',
-        tint: 0x66aaff
-      },
-      bg: {
-        fillAlpha: 0.0,
-        borderAlpha: 0.0
+        type: 'flow',
+        ax: Layout.RIGHT,
+        ay: Layout.TOP,
+        direction: Layout.VERTICAL,
+        gap: 0
       }
     }
   });
 
-  // this.uuid = 0;
-  this.max = 9;
-  this.ships = [];
+  // leaderboard rows
   this.rows = [];
 
-  this.infoUsersPane = new Pane(game, this.settings.usersPane);
-  this.infoCurrentUserPane = new Pane(game, this.settings.currentUserPane);
-
-  // connect to messaging
-  this.game.on('ship/added', this.addPlayer, this);
-  this.game.on('ship/removed', this.removePlayer, this);
-
-  this.initialize();
+  // subscribe to messaging
+  this.game.on('ship/player', this.refresh, this);
+  this.game.clock.events.loop(5000, this.refresh, this);
 };
 
-LeaderboardPane.prototype = Object.create(Pane.prototype);
-LeaderboardPane.prototype.constructor = LeaderboardPane;
+LeaderBoardPane.MAXIMUM_USERS = 9;
 
-LeaderboardPane.prototype.initialize = function() {
-  var self = this,
-      game = this.game;
+LeaderBoardPane.prototype = Object.create(Pane.prototype);
+LeaderBoardPane.prototype.constructor = LeaderBoardPane;
 
-  this.addPanel(Layout.STRETCH, this.infoUsersPane);
-  this.addPanel(Layout.STRETCH, this.infoCurrentUserPane);
+LeaderBoardPane.prototype.create = function() {
+  var game = this.game,
+      settings = this.settings;
 
-  this.playerRow = drawRow('   ', true);
-  for(var i=0; i<this.max; i++) {
-    drawRow((i+1) + ') ', false);
-  }
+  this.usersPane = new Pane(game, settings.usersPane);
+  this.currentUserPane = new Pane(game, settings.currentUserPane);
 
-  function drawRow(number, isPlayer) {
-    var panel = isPlayer ? self.infoCurrentUserPane : self.infoUsersPane,
-        row = new Pane(game, self.settings.userRowPane),
-        userNumber = new Label(game, number, self.settings.userRowLabel),
-        userName = new Label(game, '', self.settings.userRowLabel),
-        userScore = new Label(game, '', self.settings.userRowLabel);
-
-    row.addPanel(Layout.LEFT, userNumber);
-    row.addPanel(Layout.CENTER, userName);
-    row.addPanel(Layout.RIGHT, userScore);
-
-    row.userNumber = userNumber;
-    row.userName = userName;
-    row.userScore = userScore;
-
-    panel.addPanel(Layout.STRETCH, row);
-
-    if(!isPlayer) {
-      self.rows.push(row);
-    }
-
-    return row;
-  }
+  this.addPanel(this.usersPane);
+  this.addPanel(this.currentUserPane);
 };
 
-LeaderboardPane.prototype.draw = function() {
-  this.sort();
-  this.redraw();
-};
+LeaderBoardPane.prototype.refresh = function() {
+  var data, row,
+      game = this.game,
+      rows = this.rows,
+      usersPane = this.currentUserPane,
+      currentUserPane = this.currentUserPane,
+      arr = Object.values(game.data.ships),
+      ships = arr.sort(function(a, b) {
+        return b.credits - a.credits;
+      });
 
-LeaderboardPane.prototype.addPlayer = function(ship) {
-  var auth = this.game.auth,
-      ships = this.ships
+  // populate rows
+  for(var i=0; i<LeaderBoardPane.MAXIMUM_USERS; i++) {
+    data = ships[i];
+    row = rows[i];
 
-  if(ship.user === auth.user.uuid) {
-    this.player = ship;
-  }
-
-  ship.on('data', this.draw, this);
-  ships.push(ship);
-
-  this.draw();
-};
-
-LeaderboardPane.prototype.removePlayer = function(ship) {
-  var ships = this.ships;
-
-  for(var i=0; i<ships.length; i++) {
-    if(ship.uuid === ships[i].uuid) {
-      ships[i].removeListener('data', this.draw);
-      ships.splice(i, 1);
-      break;
-    }
-  }
-
-  this.draw();
-};
-
-LeaderboardPane.prototype.sort = function() {
-  this.ships.sort(function(a, b) {
-    return b.credits - a.credits;
-  });
-};
-
-LeaderboardPane.prototype.redraw = function() {
-  var self = this,
-      playerRow = this.playerRow,
-      player = this.player,
-      ship, row, isUserRanked = false;
-
-  for(var i=0; i<this.max; i++) {
-    ship = this.ships[i];
-    row = this.rows[i];
-    if(ship) {
-      if(ship == player) {
-        isUserRanked = true;
-        draw(row, ship, 0x09FF7A);
-      } else {
-        draw(row, ship, 0xFFFFFF);
+    if(data) {
+      if(row == undefined) {
+        row = new LeaderBoardRow(game);
+        row.create();
+        rows.push(row);
+        usersPane.addPanel(row);
       }
-    } else {
-      draw(row);
+      row.refresh(data.username, data.credits);
     }
   }
 
-  if(isUserRanked) {
-    playerRow.visible = false;
-  } else {
-    playerRow.visible = true;
-    draw(playerRow, player, 0x09FF7A);
-  }
-
-  function draw(row, ship, color) {
-    var right, color;
-    if(ship) {
-      right = 128 * (4 / (ship.username.length == 0 ? 4 : ship.username.length));
-      row.userName.tint =
-        row.userScore.tint =
-        row.userNumber.tint = color;
-      row.userName.padding.right = right;
-      row.userName.text = ship.username;
-      row.userScore.text = ship.credits;
-      row.visible = true;
-    } else {
-      row.visible = false;
-    }
-    self.invalidate(true);
-  }
+  // rebuild
+  this.invalidate();
 };
 
-module.exports = LeaderboardPane;
+module.exports = LeaderBoardPane;

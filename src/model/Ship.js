@@ -2,6 +2,7 @@
 var client = require('client'),
     uuid = require('uuid'),
     db = require('../database'),
+    Generator = require('../utils/Generator'),
     Faction = require('./Faction'),
     schema = db.schema;
 
@@ -75,6 +76,7 @@ Ship.prototype.init = function() {
     config = client.ShipConfiguration[this.chassis],
     stats = config.stats;
     
+    if(!this.name) { this.name = Generator.getName(config.race); }
     if(!this.throttle) { this.throttle = 1.0; }
     if(!this.race) { this.race = config.race; }
     if(!this.class) { this.class = config.class; }

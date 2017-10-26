@@ -5,7 +5,7 @@ var uuid = require('uuid'),
         'tu', 'nos', 'vos', 'is', 'ea', 'id', 'suus',
         'meus', 'ipse', 'a', 'um', 'pro', 'nam', 'nunc',
         'ita', 'ous', 'galle', 'nte'],
-      hederaa: [
+      general: [
         'ma', 'kima', 'mala', 'ma', 'su', 'lu', 'am',
         'ayu', 'minu', 'ghu', 'dru', 'innu', 'sag', 'ga', 'ka'],
       mechan: [
@@ -37,26 +37,16 @@ var Generator = {
           parts.splice(2, 0, ' ');
         }
         break;
-      case 'hederaa':
-        parts.splice(1, 0, '\'');
-        break;
       case 'mechan':
         if(parts.length >= 3) {
           parts.splice(2, 0, '-');
         }
         break;
+      default:
+        parts.splice(1, 0, '\'');
+        break;
     }
     return parts.join('');
-  },
-
-  getUsername: function() {
-    var races = Object.keys(syllables),
-        race = races[Generator.rfloor(races.length)],
-        name = Generator.getName(race);
-    if(name.length > 8) {
-      name = name.slice(0, 8 + Generator.rfloor(global.Math.max(name.length/2 - 8, 0)));
-    }
-    return name.replace(/[^a-zA-Z]+/g, '');
   }
 };
 

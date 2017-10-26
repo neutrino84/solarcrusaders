@@ -8,6 +8,13 @@ function NetManager(game) {
   this.game = game;
   this.socket = game.net.socket;
 
+  // global data
+  this.game.data = {
+    users: {},
+    ships: {},
+    stations: {}
+  };
+
   this.users = {};
   this.ships = {};
   this.stations = {};
@@ -38,15 +45,15 @@ NetManager.prototype.connect = function(ns) {
 };
 
 NetManager.prototype.getUserData = function(uuid) {
-  return this.users[uuid];
+  return this.game.data.users[uuid];
 };
 
 NetManager.prototype.getShipData = function(uuid) {
-  return this.ships[uuid];
+  return this.game.data.ships[uuid];
 };
 
 NetManager.prototype.getStationData = function(uuid) {
-  return this.stations[uuid];
+  return this.game.data.stations[uuid];
 };
 
 NetManager.prototype._data = function(data) {
@@ -63,11 +70,11 @@ NetManager.prototype._data = function(data) {
     for(var u in users) {
       user = users[u];
 
-      if(data.type === 'sync' && this.users[user.uuid] === undefined) {
+      if(data.type === 'sync' && this.game.data.users[user.uuid] === undefined) {
         this.syncronizing = false;
-        this.users[user.uuid] = new UserData(this.game, user);
-      } else if(this.users[user.uuid]) {
-        this.users[user.uuid].update(user);
+        this.game.data.users[user.uuid] = new UserData(this.game, user);
+      } else if(this.game.data.users[user.uuid]) {
+        this.game.data.users[user.uuid].update(user);
       }
     }
 
@@ -75,11 +82,11 @@ NetManager.prototype._data = function(data) {
     for(var s in ships) {
       ship = ships[s];
 
-      if(data.type === 'sync' && this.ships[ship.uuid] === undefined) {
+      if(data.type === 'sync' && this.game.data.ships[ship.uuid] === undefined) {
         this.syncronizing = false;
-        this.ships[ship.uuid] = new ShipData(this.game, ship);
-      } else if(this.ships[ship.uuid]) {
-        this.ships[ship.uuid].update(ship);
+        this.game.data.ships[ship.uuid] = new ShipData(this.game, ship);
+      } else if(this.game.data.ships[ship.uuid]) {
+        this.game.data.ships[ship.uuid].update(ship);
       }
     }
 
@@ -87,11 +94,11 @@ NetManager.prototype._data = function(data) {
     for(var s in stations) {
       station = stations[s];
 
-      if(data.type === 'sync' && this.stations[station.uuid] === undefined) {
+      if(data.type === 'sync' && this.game.data.stations[station.uuid] === undefined) {
         this.syncronizing = false;
-        this.stations[station.uuid] = new StationData(this.game, station);
+        this.game.data.stations[station.uuid] = new StationData(this.game, station);
       } else if(this.stations[station.uuid]) {
-        this.stations[station.uuid].update(station);
+        this.game.data.stations[station.uuid].update(station);
       }
     }
   }
@@ -112,7 +119,7 @@ NetManager.prototype._sync = function(data) {
   for(var u in users) {
     user = users[u];
 
-    if(this.users[user.uuid] === undefined) {
+    if(this.game.data.users[user.uuid] === undefined) {
       uuids.users.push(user.uuid);
     }
   }
@@ -121,7 +128,7 @@ NetManager.prototype._sync = function(data) {
   for(var s in ships) {
     ship = ships[s];
 
-    if(this.ships[ship.uuid] === undefined) {
+    if(this.game.data.ships[ship.uuid] === undefined) {
       uuids.ships.push(ship.uuid);
     }
   }
@@ -130,7 +137,7 @@ NetManager.prototype._sync = function(data) {
   for(var s in stations) {
     station = stations[s];
 
-    if(this.stations[station.uuid] === undefined) {
+    if(this.game.data.stations[station.uuid] === undefined) {
       uuids.stations.push(station.uuid);
     }
   }
