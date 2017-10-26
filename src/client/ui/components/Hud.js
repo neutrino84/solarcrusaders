@@ -2,7 +2,6 @@
 var pixi = require('pixi'),
     engine = require('engine'),
     Pane = require('./Pane'),
-    Label = require('./Label'),
     ProgressBar = require('./ProgressBar'),
     Layout = require('../Layout'),
     Class = engine.Class;

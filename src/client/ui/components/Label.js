@@ -1,24 +1,26 @@
 
 var engine = require('engine'),
+    Layout = require('../Layout'),
     Pane = require('./Pane'),
     TextView = require('../views/TextView'),
     Class = engine.Class;
 
 function Label(game, settings) {
   Pane.call(this, game, Class.mixin(settings, {
-    color: 0xFFFFFF,
-    align: 'left',
-    string: '',
-    bg: false,
-    text: {}
+    constraint: Layout.USE_PS_SIZE,
+    font: {
+      name: 'medium',
+      color: 0xffffff
+    },
+    bg: false
   }));
   
-  this.label = new TextView(game, this.settings.string, this.settings.text);
-  this.label.tint = this.settings.color;
+  // create view
+  this.view = new TextView(game, settings.font);
 
-  this.setPreferredSize(this.label.width, this.label.height);
-  
-  this.addView(this.label);
+  // set preferred size
+  this.setPreferredSize(settings.width || this.view.width, settings.height || this.view.height);
+  this.addView(this.view);
 };
 
 Label.prototype = Object.create(Pane.prototype);
@@ -26,32 +28,39 @@ Label.prototype.constructor = Label;
 
 Object.defineProperty(Label.prototype, 'blendMode', {
   get: function() {
-    return this.label.blendMode;
+    return this.view.blendMode;
   },
 
   set: function(value) {
-    this.label.blendMode = value;
+    this.view.blendMode = value;
   }
 });
 
 Object.defineProperty(Label.prototype, 'tint', {
   get: function() {
-    return this.label.tint;
+    return this.view.tint;
   },
 
   set: function(value) {
-    this.label.tint = value;
+    this.view.tint = value;
   }
 });
 
 Object.defineProperty(Label.prototype, 'text', {
   get: function() {
-    return this.label.font.text;
+    return this.view.font.text;
   },
 
   set: function(value) {
-    this.label.font.text = value.toString();
-    this.setPreferredSize(this.label.width, this.label.height);
+    var view = this.view,
+        settings = this.settings;
+
+    // update text and texture
+    view.font.text = value.toString();
+    view.texture = view.font.texture;
+
+    // update preferred size
+    this.setPreferredSize(settings.width || view.width, settings.height || view.height);
   }
 });
 

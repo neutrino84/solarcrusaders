@@ -29,8 +29,8 @@ function Tooltip(game, string, component, settings) {
         blendMode: engine.BlendMode.NORMAL,
         radius: 0.0
       },
-      text: {
-        fontName: 'medium',
+      font: {
+        name: 'medium',
         tint: 0xCCCCCC
       }
     },

@@ -10,8 +10,8 @@ function ProgressBar(game, settings) {
       color: 0x000000
     },
     // label: {
-    //   text: {
-    //     fontName: 'small'
+    //   font: {
+    //     name: 'small'
     //   },
     //   bg: false
     // },

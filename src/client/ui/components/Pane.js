@@ -21,15 +21,6 @@ function Pane(game, settings) {
       type: 'stack'
     },
     bg: false
-    // layout: {
-    //   type: 'flow',
-    //   ax: Layout.LEFT,
-    //   ay: Layout.TOP,
-    //   direction: Layout.VERTICAL,
-    //   gap: 0,
-    //   columns: 3,
-    //   stretch: true
-    // },
   });
 
   // layout

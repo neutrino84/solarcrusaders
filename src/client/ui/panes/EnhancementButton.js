@@ -20,7 +20,8 @@ EnhancementButton.prototype = Object.create(Pane.prototype);
 EnhancementButton.prototype.constructor = EnhancementButton;
 
 EnhancementButton.prototype.create = function(enhancement) {
-  var game = this.game;
+  var game = this.game,
+      settings = this.settings;
 
   // button name
   this.name = enhancement;
@@ -28,8 +29,8 @@ EnhancementButton.prototype.create = function(enhancement) {
   // add countdown
   this.label = new Label(game, {
     constraint: Layout.USE_PS_SIZE,
-    text: {
-      fontName: 'medium'
+    font: {
+      name: 'medium'
     },
     bg: {
       fillAlpha: 0.4,

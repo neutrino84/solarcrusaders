@@ -50,8 +50,10 @@ LoadingState.prototype.create = function() {
 
   this.status = new Label(game, {
     margin: [0],
-    string: 'preparing to load game',
-    text: { fontName: 'small' }
+    font: {
+      name: 'small',
+      text: 'preparing to load game'
+    }
   });
 
   this.root = new Pane(game, {
