@@ -87,7 +87,7 @@
   },
   "ubaidian-x02": {
     "race": "ubaidian",
-    "class": "destroyer",
+    "class": "battleship",
     "stats": {
       "capacity": 1000,
       "health": 400,
@@ -183,7 +183,7 @@
   },
   "ubaidian-x03": {
     "race": "ubaidian",
-    "class": "destroyer",
+    "class": "cruiser",
     "stats": {
       "capacity": 1000,
       "health": 100,
@@ -259,7 +259,7 @@
   },
   "ubaidian-x04": {
     "race": "ubaidian",
-    "class": "destroyer",
+    "class": "frigate",
     "stats": {
       "capacity": 1000,
       "health": 80,
@@ -397,7 +397,7 @@
   },
   "general-x01": {
     "race": "general",
-    "class": "destroyer",
+    "class": "frigate",
     "stats": {
       "capacity": 500,
       "health": 50,
@@ -463,7 +463,7 @@
   },
   "general-x02": {
     "race": "general",
-    "class": "destroyer",
+    "class": "cruiser",
     "stats": {
       "capacity": 500,
       "health": 50,
