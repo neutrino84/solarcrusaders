@@ -9,11 +9,6 @@ function Pirate(ship, home) {
   this.settings = {
     disengage: 9216,
     friendly: ['pirate'],
-    position: {
-      radius: 512,
-      x: ship.movement.position.x,
-      y: ship.movement.position.y
-    },
     bounds: false,
     escape: {
       health: 0.2,

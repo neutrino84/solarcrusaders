@@ -9,7 +9,6 @@ function Basic(ship) {
 
   this.timer = null;
   this.target = null;
-
   this.retreat = false;
 
   this.sensor = new engine.Circle();
@@ -18,11 +17,6 @@ function Basic(ship) {
   this.settings = {
     disengage: 7680,
     friendly: ['basic', 'user', 'squadron'],
-    position: {
-      radius: 2048,
-      x: 2048,
-      y: 2048
-    },
     bounds: 4096,
     escape: {
       health: 0.25,
@@ -41,6 +35,7 @@ Basic.prototype.update = function() {
       sensor = this.sensor,
       offset = this.offset,
       settings = this.settings,
+      home = this.getHomePosition(),
       rnd = this.game.rnd,
       p1, p2, size, health;
 
@@ -56,7 +51,7 @@ Basic.prototype.update = function() {
   }
 
   // check bounds
-  if(settings.bounds && p1.distance(settings.position) > settings.bounds) {
+  if(settings.bounds && p1.distance(home) > settings.bounds) {
     this.retreat = true;
   }
 
@@ -201,10 +196,7 @@ Basic.prototype.plot = function(){
 };
 
 Basic.prototype.getHomePosition = function() {
-  var position = this.settings.position,
-      sensor = this.sensor;
-      sensor.setTo(position.x, position.y, position.radius);
-  return sensor.random();
+  return new engine.Point(2048, 2048);
 };
 
 Basic.prototype.destroy = function() {

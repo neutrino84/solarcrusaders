@@ -8,11 +8,6 @@ function Squadron(ship, home) {
   this.settings = {
     disengage: 20480,
     friendly: ['user', 'basic', 'squadron'],
-    position: {
-      radius: 512,
-      x: ship.movement.position.x,
-      y: ship.movement.position.y
-    },
     bounds: false,
     escape: {
       health: 0.01,
@@ -53,7 +48,7 @@ Squadron.prototype.plot = function(){
     offset.copyFrom(target.movement.position);
     offset.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
     ship.movement.plot({ x: offset.x-p1.x, y: offset.y-p1.y }, engine.Math.clamp(distance/256, 0.4, 1.0));
-  } else if(rnd.frac() > 0.5) {
+  } else if(master && master.data && rnd.frac() > 0.5) {
     size = master.data.size * 4;
     offset.copyFrom(master.movement.position);
     offset.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
@@ -63,7 +58,9 @@ Squadron.prototype.plot = function(){
 
 Object.defineProperty(Squadron.prototype, 'fence', {
   get: function() {
-    return this.ship.master.movement.position.distance(this.ship.movement.position);
+    var ship = this.ship,
+        movement = ship.movement;
+    return ship.master.movement.position.distance(movement.position);
   }
 });
 
