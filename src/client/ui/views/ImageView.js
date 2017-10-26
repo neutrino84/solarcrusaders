@@ -1,24 +1,25 @@
 
-var engine = require('engine'),
-    Sprite = engine.Sprite;
+var engine = require('engine');
 
 function ImageView(game, key, frame) {
-  Sprite.call(this, game, key, frame);
+  engine.Sprite.call(this, game, key, frame);
 };
 
-// multiple inheritence
-ImageView.prototype = Object.create(Sprite.prototype);
+ImageView.prototype = Object.create(engine.Sprite.prototype);
 ImageView.prototype.constructor = ImageView;
 
 ImageView.prototype.paint = function() {
   var parent = this.parent,
-      settings = this.settings,
+      position = this.position,
       padding = parent.padding,
       margin = parent.margin,
       left = margin.left,
       top = margin.top;
   
-  this.position.set(margin.left + padding.left, margin.top + padding.top);
+  // reposition
+  position.set(
+  	margin.left + padding.left,
+  	margin.top + padding.top);
 };
 
 module.exports = ImageView;

@@ -1,12 +1,10 @@
 
-var engine = require('engine'),
-    Graphics = engine.Graphics,
-    Class = engine.Class;
+var engine = require('engine');
 
 function BackgroundView(game, settings) {
-  Graphics.call(this, game);
+  engine.Graphics.call(this, game);
 
-  this.settings = Class.mixin(settings, {
+  this.settings = engine.Class.mixin(settings, {
     color: 0x000000,
     fillAlpha: 1.0,
     radius: 0,
@@ -17,7 +15,7 @@ function BackgroundView(game, settings) {
   });
 
   // modify values
-  this.modifier = settings.modifier || { left: 0.0, top: 0.0, width: 1.0, height: 1.0 };
+  this.modifier = this.settings.modifier || { left: 0.0, top: 0.0, width: 1.0, height: 1.0 };
 
   // fill and blend mode
   this.fillAlpha = this.settings.fillAlpha;
@@ -25,7 +23,7 @@ function BackgroundView(game, settings) {
 };
 
 // multiple inheritence
-BackgroundView.prototype = Object.create(Graphics.prototype);
+BackgroundView.prototype = Object.create(engine.Graphics.prototype);
 BackgroundView.prototype.constructor = BackgroundView;
 
 BackgroundView.prototype.paint = function() {
