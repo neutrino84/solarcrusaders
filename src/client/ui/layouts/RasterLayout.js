@@ -81,7 +81,7 @@ RasterLayout.prototype.doLayout = function(target) {
           }
         }
 
-        child.location(x, y);
+        child.reposition(x, y);
       }
     }
   }

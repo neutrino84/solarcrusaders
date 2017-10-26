@@ -73,13 +73,13 @@ BorderLayout.prototype.doLayout = function(target) {
         case Layout.CENTER: center = child; break;
         case Layout.TOP :
           var ps = child.getPreferredSize();
-          child.location(left, top);
+          child.reposition(left, top);
           child.resize(right - left, ps.height);
           top += ps.height + this.vgap;
           break;
         case Layout.BOTTOM:
           var ps = child.getPreferredSize();
-          child.location(left, bottom - ps.height);
+          child.reposition(left, bottom - ps.height);
           child.resize(right - left, ps.height);
           bottom -= ps.height + this.vgap;
           break;
@@ -92,20 +92,20 @@ BorderLayout.prototype.doLayout = function(target) {
 
   if(east != undefined) {
     d = east.getPreferredSize();
-    east.location(right - d.width, top);
+    east.reposition(right - d.width, top);
     east.resize(d.width, bottom - top);
     right -= d.width + this.hgap;
   }
 
   if(west != undefined) {
     d = west.getPreferredSize();
-    west.location(left, top);
+    west.reposition(left, top);
     west.resize(d.width, bottom - top);
     left += d.width + this.hgap;
   }
 
   if(center != undefined) {
-    center.location(left, top);
+    center.reposition(left, top);
     center.resize(right - left, bottom - top);
   }
 };

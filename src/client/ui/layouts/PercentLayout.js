@@ -66,7 +66,7 @@ PercentLayout.prototype.doLayout = function(target) {
         yy = top + ~~((ph - hh) / 2);
       }
 
-      child.location(loc, yy);
+      child.reposition(loc, yy);
       child.resize(ns, hh);
     } else {
       ns = ((length - 1) == i) ? target.size.height - bottom - loc : (
@@ -82,7 +82,7 @@ PercentLayout.prototype.doLayout = function(target) {
         xx = left + ~~((pw - ww)/2);
       }
 
-      child.location(xx, loc);
+      child.reposition(xx, loc);
       child.resize(ww, ns);
     }
 

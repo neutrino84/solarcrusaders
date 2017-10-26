@@ -66,7 +66,7 @@ FlowLayout.prototype.doLayout = function(target) {
             offset = psSize.height - d.height;
           }
 
-          a.location(px, py + offset);
+          a.reposition(px, py + offset);
           px += (d.width + this.gap);
         } else {
           if(constraint === Layout.STRETCH) {
@@ -77,7 +77,7 @@ FlowLayout.prototype.doLayout = function(target) {
             offset = psSize.width - d.width;
           }
 
-          a.location(px + offset, py);
+          a.reposition(px + offset, py);
           py += d.height + this.gap;
         }
 

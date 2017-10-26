@@ -38,10 +38,10 @@ StackLayout.prototype.doLayout = function(target) {
       if(constraint == Layout.USE_PS_SIZE) {
         ps = child.getPreferredSize();
         child.resize(ps.width, ps.height);
-        child.location(left + ~~((ww - ps.width )/2), top + ~~((hh - ps.height)/2));
+        child.reposition(left + ~~((ww - ps.width )/2), top + ~~((hh - ps.height)/2));
       } else {
         child.resize(ww, hh);
-        child.location(left, top);
+        child.reposition(left, top);
       }
     }
   }

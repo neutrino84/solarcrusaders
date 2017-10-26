@@ -159,14 +159,10 @@ Panel.prototype.resize = function(width, height) {
   return this;
 };
 
-Panel.prototype.location = function(xx, yy) {
+Panel.prototype.reposition = function(xx, yy) {
   if(xx != this.x || this.y != yy) {
     this.position.x = xx;
     this.position.y = yy;
-
-    if(this.relocated != null) {
-      this.relocated(xx, yy);
-    }
   }
 };
 

@@ -71,7 +71,7 @@ ListLayout.prototype.doLayout = function(target) {
         py += d.height + gy;
       }
 
-      a.location(px, py);
+      a.reposition(px, py);
       a.resize(d.width, d.height);
 
       px += d.width + gx;
