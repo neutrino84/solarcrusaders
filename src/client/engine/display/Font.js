@@ -103,11 +103,13 @@ Font.prototype.update = function() {
       keys = this.keys,
       frames = this.frames,
       renderer = this.game.renderer,
-      longest = this.getLongestLine(),
       spacing = character.spacing,
       offset = character.offset,
       len = lines.length,
-      cx = 0, cy = 0;
+      longest, cx = 0, cy = 0;
+
+  // get longest line
+  longest = this.getLongestLine();
 
   // resize render texture
   texture.resize(longest * character.width, len * character.height + ((len * spacing.y) - spacing.y));

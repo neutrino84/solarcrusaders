@@ -19,7 +19,11 @@ function Label(game, settings) {
   this.view = new TextView(game, settings.font);
 
   // set preferred size
-  this.setPreferredSize(settings.width || this.view.width, settings.height || this.view.height);
+  this.setPreferredSize(
+    settings.width || this.view.width,
+    settings.height || this.view.height);
+
+  // add text view
   this.addView(this.view);
 };
 
@@ -60,7 +64,9 @@ Object.defineProperty(Label.prototype, 'text', {
     view.texture = view.font.texture;
 
     // update preferred size
-    this.setPreferredSize(settings.width || view.width, settings.height || view.height);
+    this.setPreferredSize(
+      settings.width || view.width,
+      settings.height || view.height);
   }
 });
 

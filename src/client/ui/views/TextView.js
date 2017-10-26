@@ -8,7 +8,6 @@ function TextView(game, settings) {
   this.font.text = settings.text || '';
 };
 
-// multiple inheritence
 TextView.prototype = Object.create(engine.Sprite.prototype);
 TextView.prototype.constructor = TextView;
 
