@@ -348,7 +348,7 @@ Ship.prototype.enable = function() {
   this.movement.position.copyFrom(this.ai ? this.ai.getHomePosition() : this.manager.generateRandomPosition(1024));
 
   // broadcast
-  this.sockets.send('ship/enabled', {
+  this.game.emit('ship/enabled', {
     uuid: this.uuid,
     pos: {
       x: this.movement.position.x,
