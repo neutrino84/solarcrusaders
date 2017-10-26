@@ -26,11 +26,11 @@ SectorState.prototype = Object.create(engine.State.prototype);
 SectorState.prototype.constructor = engine.State;
 
 SectorState.prototype.init = function(args) {
-  // instanciate ui
+  // create ui
   this.ui = new UI(this.game);
   this.soundManager = new SoundManager(this.game);
 
-  // this.scrollLock = false;
+  // disable visibility checks
   this.game.stage.disableVisibilityChange = true;
 };
 
@@ -164,33 +164,7 @@ SectorState.prototype.focus = function() {}
 
 SectorState.prototype.blur = function() {};
 
-SectorState.prototype.update = function() {
-  // var game = this.game,
-  //     camera = game.camera,
-  //     keyboard = game.input.keyboard,
-  //     x = 0, y = 0,
-  //     amount = 1024;
-
-  // if(!this.scrollLock) {
-  //   if(keyboard.isDown(engine.Keyboard.A) || keyboard.isDown(engine.Keyboard.LEFT)) {
-  //     x = -amount;
-  //   }
-  //   if(keyboard.isDown(engine.Keyboard.D) || keyboard.isDown(engine.Keyboard.RIGHT)) {
-  //     x = amount;
-  //   }
-  //   if(keyboard.isDown(engine.Keyboard.W) || keyboard.isDown(engine.Keyboard.UP)) {
-  //     y = -amount;
-  //   }
-  //   if(keyboard.isDown(engine.Keyboard.S) || keyboard.isDown(engine.Keyboard.DOWN)) {
-  //     y = amount;
-  //   }
-  // } else {
-  //   x = y = 0;
-  // }
-
-  // apply velocity
-  // camera.offset.setTo(x, y);
-};
+SectorState.prototype.update = function() {};
 
 // SectorState.prototype.preRender = function() {};
 
