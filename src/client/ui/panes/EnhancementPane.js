@@ -10,7 +10,6 @@ var engine = require('engine'),
     BorderLayout = require('../layouts/BorderLayout'),
     BackgroundView = require('../views/BackgroundView'),
     ButtonIcon = require('../components/ButtonIcon'),
-    Tooltip = require('../components/Tooltip'),
     Class = engine.Class;
 
 function EnhancementPane(game, settings) {
