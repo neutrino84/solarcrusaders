@@ -8,14 +8,12 @@ function LeaderBoardRow(game, settings) {
     constraint: Layout.STRETCH,
     padding: [0],
     layout: {
-      type: 'flow',
-      ax: Layout.RIGHT,
-      ay: Layout.TOP,
-      direction: Layout.HORIZONTAL,
-      gap: 0
+      type: 'border',
+      gap: [0, 0]
     },
     usernameLabel: {
-      width: 128,
+      constraint: Layout.LEFT,
+      width: 156,
       padding: [2],
       font: {
         name: 'full',
@@ -23,6 +21,7 @@ function LeaderBoardRow(game, settings) {
       }
     },
     scoreLabel: {
+      constraint: Layout.RIGHT,
       padding: [2],
       font: {
         name: 'full',
