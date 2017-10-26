@@ -3,35 +3,26 @@ var engine = require('engine'),
     SectorState = require('./SectorState'),
     Layout = require('../ui/Layout'),
     Pane = require('../ui/components/Pane'),
-    Image = require('../ui/components/Image'),
     ProgressBar = require('../ui/components/ProgressBar'),
     Label = require('../ui/components/Label');
 
-function LoadingState() {};
+function LoadingState(game) {};
 
 LoadingState.prototype = Object.create(engine.State.prototype);
 LoadingState.prototype.constructor = engine.State;
 
 LoadingState.prototype.preload = function() {
-  this.game.load.image('loading', 'imgs/game/splash.png');
   this.game.load.image('small', 'imgs/game/fonts/small.png');
 };
 
 LoadingState.prototype.create = function() {
-  var game = this.game,
-      sectorState = new SectorState(game);
-
   // load game
-  game.states.add('sector', sectorState);
-  game.states.start('sector');
+  this.game.states.add('sector', new SectorState(this.game));
+  this.game.states.start('sector');
 
-  this.image = new Image(game, {
-    margin: [10],
-    key: 'loading'
-  });
-
-  this.progress = new ProgressBar(game, {
-    width: 162,
+  // loading progress indicator
+  this.progress = new ProgressBar(this.game, {
+    width: 256,
     height: 8,
     margin: [10],
     bg: {
@@ -48,17 +39,18 @@ LoadingState.prototype.create = function() {
     }
   });
 
-  this.status = new Label(game, {
-    margin: [0],
+  // loading status label
+  this.status = new Label(this.game, {
+    constraint: undefined,
     font: {
-      name: 'small',
-      text: 'preparing to load game'
+      name: 'small'
     }
   });
 
-  this.root = new Pane(game, {
-    width: game.width,
-    height: game.height,
+  // create root pane
+  this.root = new Pane(this.game, {
+    width: this.game.width,
+    height: this.game.height,
     layout: {
       type: 'flow',
       ax: Layout.CENTER,
@@ -69,7 +61,6 @@ LoadingState.prototype.create = function() {
   });
 
   // add ui elements
-  this.root.addPanel(this.image);
   this.root.addPanel(this.progress);
   this.root.addPanel(this.status);
 
@@ -77,13 +68,16 @@ LoadingState.prototype.create = function() {
   this.root.invalidate();
 
   // add event listeners
-  game.load.on('loadstart', this.loadingStart, this);
-  game.load.on('loadcomplete', this.loadingComplete, this);
-  game.load.on('filecomplete', this.loadingProgressBar, this);
+  this.game.load.on('loadstart', this.loadingStart, this);
+  this.game.load.on('loadcomplete', this.loadingComplete, this);
+  this.game.load.on('filecomplete', this.loadingProgressBar, this);
 };
 
 LoadingState.prototype.loadingStart = function() {
-  // add gui to stage
+  this.status.text = 'preparing to load game';
+  this.root.invalidate();
+  
+  // add root to stage
   this.game.stage.addChild(this.root);
 };
 
@@ -97,19 +91,7 @@ LoadingState.prototype.loadingProgressBar = function() {
 };
 
 LoadingState.prototype.loadingComplete = function() {
-  // fade out animation
-  // this.image.visible = false;
-  // this.progress.visible = false;
-  // this.status.visible = false;
-
-  this.tween = this.game.tweens.create(this.root);
-  this.tween.to({ alpha: 0.0 }, 250);
-  this.tween.delay(0);
-  this.tween.start();
-  this.tween.once('complete', function() {
-    this.game.states.current.show && this.game.states.current.show();
-    this.game.stage.removeChild(this.root);
-  }, this);
+  this.game.stage.removeChild(this.root);
 };
 
 LoadingState.prototype.resize = function(width, height) {
