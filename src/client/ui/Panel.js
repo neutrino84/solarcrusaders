@@ -53,7 +53,7 @@ Panel.prototype.addView = function(view) {
 
 Panel.prototype.invalidate = function(valid, view) {
   this.isLayoutValid = valid || false;
-  this.isViewValid =  view || false;
+  this.isViewValid = view || false;
   this.cachedWidth = -1;
   this.cachedHeight = -1;
   
