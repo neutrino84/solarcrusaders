@@ -37,16 +37,15 @@ var Ship = schema.define('ship', {
 });
 
 Ship.CLASSES = [
-  'mining',           // 1 light socket
-  'frigate',          // 1 light socket
-  'transport',        // 1 light socket
-  'corvette',         // 1 light socket
-  'stealth',          // 1 light socket
-  'cruiser',          // 2 light socket
-  'destroyer',        // 2 light socket, 1 heavy socket
-  'battledestroyer',  // 2 heavy socket, 1 light socket
-  'battleship',       // 2 light socket, 2 heavy socket
-  'battlecarrier'     // 4 heavy socket
+  'mining',           // 1 socket
+  'frigate',          // 1 socket
+  'transport',        // 1 socket
+  'corvette',         // 1 socket
+  'stealth',          // 1 socket
+  'cruiser',          // 2 socket
+  'destroyer',        // 3 socket
+  'battleship',       // 4 socket
+  'battlecarrier'     // 4 socket
 ];
 
 Ship.validatesLengthOf('name', { min: 2, max: 64 });
