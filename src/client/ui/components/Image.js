@@ -9,7 +9,10 @@ var engine = require('engine'),
 function Image(game, settings) {
   Pane.call(this, game, Class.mixin(settings, {
     constraint: Layout.USE_PS_SIZE,
-    key: 'texture-atlas'
+    key: 'texture-atlas',
+    layout: {
+      type: 'none'
+    }
   }));
 
   this.view = new ImageView(game, this.settings.key, this.settings.frame);
@@ -30,6 +33,13 @@ function Image(game, settings) {
 
 Image.prototype = Object.create(Pane.prototype);
 Image.prototype.constructor = Image;
+
+Image.prototype.doLayout = function() {
+  // position
+  this.view.position.set(
+    this.margin.left + this.padding.left,
+    this.margin.top + this.padding.top);
+};
 
 // Object.defineProperty(Image.prototype, 'blendMode', {
 //   set: function(value) {

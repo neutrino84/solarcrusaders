@@ -8,18 +8,24 @@ var engine = require('engine'),
 function Label(game, settings) {
   Pane.call(this, game, Class.mixin(settings, {
     constraint: Layout.USE_PS_SIZE,
+    layout: {
+      type: 'none'
+    },
     font: {
       name: 'medium',
       color: 0xffffff
-    },
-    bg: false
+    }
   }));
   
   // create view
-  this.view = new TextView(game, settings.font);
+  this.view = new TextView(game, this.settings.font);
+  this.view.scale.set(this.settings.font.scale || 1.0, this.settings.font.scale || 1.0);
+  this.view.tint = this.settings.font.color || 0xffffff;
 
-  // set default text
-  this.text = settings.text || '';
+  // update preferred size
+  this.setPreferredSize(
+    this.settings.width || this.view.width,
+    this.settings.height || this.view.height);
 
   // add text view
   this.addView(this.view);
@@ -27,6 +33,13 @@ function Label(game, settings) {
 
 Label.prototype = Object.create(Pane.prototype);
 Label.prototype.constructor = Label;
+
+Label.prototype.doLayout = function() {
+  // position
+  this.view.position.set(
+    this.margin.left + this.padding.left,
+    this.margin.top + this.padding.top);
+};
 
 Object.defineProperty(Label.prototype, 'blendMode', {
   get: function() {
@@ -59,7 +72,6 @@ Object.defineProperty(Label.prototype, 'text', {
 
     // update text and texture
     view.font.text = value.toString();
-    view.texture = view.font.texture;
 
     // update preferred size
     this.setPreferredSize(
