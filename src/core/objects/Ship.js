@@ -100,7 +100,10 @@ Ship.prototype.save = function(callback) {
 };
 
 Ship.prototype.createRelationships = function() {
-  this.user && this.user.ships.push(this);
+  if(this.user) {
+    this.user.ship = this;
+    this.user.data.ship = this.uuid;
+  }
 };
 
 Ship.prototype.createEnhancements = function() {
@@ -347,7 +350,7 @@ Ship.prototype.enable = function() {
   this.movement.magnitude = 0;
   this.movement.position.copyFrom(this.ai ? this.ai.getHomePosition() : this.manager.generateRandomPosition(1024));
 
-  // broadcast
+  // boradcast
   this.game.emit('ship/enabled', {
     uuid: this.uuid,
     pos: {

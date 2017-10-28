@@ -7,7 +7,7 @@ function UserManager(game) {
   this.model = game.model;
   this.sockets = game.sockets;
 
-  this.users = {};
+  this.game.users = {};
 };
 
 UserManager.prototype.constructor = UserManager;
@@ -15,6 +15,7 @@ UserManager.prototype.constructor = UserManager;
 UserManager.prototype.init = function() {
   // auth request
   this.sockets.on('auth/connect', this.connect, this);
+  this.sockets.on('user/ship', this.ship, this);
 
   // auth messaging
   this.game.on('auth/disconnect', this.disconnect, this);
@@ -25,27 +26,28 @@ UserManager.prototype.init = function() {
 };
 
 UserManager.prototype.add = function(user) {
-  this.users[user.uuid] = user;
+  this.game.users[user.uuid] = user;
 };
 
 UserManager.prototype.remove = function(user) {
-  delete this.users[user.uuid];
+  delete this.game.users[user.uuid];
 };
 
 UserManager.prototype.connect = function(socket) {
   var user,
+      game = this.game,
       session = socket.request.session,
       data = session ? session.user : false;
   if(data) {
     if(this.exists(data)) {
       winston.info('[UserManager] User already exists in game');
-      user = this.users[data.uuid];
+      user = this.game.users[data.uuid];
       user.reconnected(socket);
     } else if(data && socket && session) {
       winston.info('[UserManager] Creating user in game');
-      user = new User(this.game, data, socket);
+      user = new User(game, data, socket);
       user.init(function() {
-        this.game.emit('user/add', user);
+        game.emit('user/add', user);
       }, this);
     } else {
       winston.info('[UserManager] User data error');
@@ -58,16 +60,30 @@ UserManager.prototype.connect = function(socket) {
 };
 
 UserManager.prototype.disconnect = function(socket) {
-  var session = socket.request.session,
-      user = this.users[session.user.uuid];
-      user && user.disconnected();
+  var game = this.game,
+      session = socket.request.session,
+  user = game.users[session.user.uuid];
+  user && user.disconnected();
+};
+
+UserManager.prototype.ship = function(socket, args) {
+  var game = this.game,
+      session = socket.request.session,
+      user = game.users[session.user.uuid],
+      data = args[1];
+  user && game.emit('ship/create', {
+    chassis: data.name,
+    x: 2048,
+    y: 2048
+  }, user);
 };
 
 UserManager.prototype.all = function(uuids) {
   var user,
-      users = [];
-  for(var u in this.users) {
-    user = this.users[u];
+      users = [],
+      game = this.game;
+  for(var u in game.users) {
+    user = game.users[u];
     users.push({
       uuid: user.uuid,
       name: user.data.name,
@@ -79,9 +95,10 @@ UserManager.prototype.all = function(uuids) {
 
 UserManager.prototype.data = function(uuids) {
   var user,
-      users = [];
+      users = [],
+      game = this.game;
   for(var u in uuids) {
-    user = this.users[uuids[u]];
+    user = game.users[uuids[u]];
     if(user) {
       users.push({
         uuid: user.uuid,
@@ -94,21 +111,22 @@ UserManager.prototype.data = function(uuids) {
 };
 
 UserManager.prototype.update = function() {
-  var users = this.users,
+  var game = this.game,
+      users = game.users,
       user, delta, update, stats,
       updates = [];
   for(var s in users) {
     user = users[s];
   }
   if(updates.length > 0) {
-    this.game.emit('user/data', {
+    game.emit('user/data', {
       type: 'update', users: updates
     });
   }
 };
 
 UserManager.prototype.exists = function(user) {
-  return user && this.users[user.uuid] && this.users[user.uuid].socket ? true : false;
+  return user && this.game.users[user.uuid] && this.game.users[user.uuid].socket ? true : false;
 };
 
 module.exports = UserManager;

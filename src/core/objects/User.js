@@ -12,9 +12,8 @@ function User(game, data, socket) {
   this.latency = new Latency(this);
   this.data = new this.model.User(data);
 
-  this.ships = [];
-  this.stations = [];
-
+  this.ship = null;
+  this.station = null;
   this.uuid = this.data.uuid;
 };
 
@@ -24,8 +23,7 @@ User.prototype.init = function(callback, context) {
   var self = this,
       game = this.game,
       data = this.data,
-      socket = this.socket,
-      ships = this.ships;
+      socket = this.socket;
   if(data.isNewRecord()) {
     // connect demo ship
     game.emit('ship/create', {
@@ -98,13 +96,8 @@ User.prototype.disconnected = function() {
 };
 
 User.prototype.destroy = function() {
-  var ship,
-      ships = this.ships;
-
   // remove ships
-  for(var s in ships) {
-    this.game.emit('ship/remove', ships[s]);
-  }
+  this.game.emit('ship/remove', this.ship);
 
   // remove from manager
   this.game.emit('auth/remove', this);
@@ -113,8 +106,9 @@ User.prototype.destroy = function() {
   this.latency.destroy();
 
   // cleanup
-  this.game = this.latency = this.stations =
-    this.model = this.socket = undefined;
+  this.game = this.latency = this.ship =
+    this.station = this.model =
+    this.socket = undefined;
 };
 
 module.exports = User;
