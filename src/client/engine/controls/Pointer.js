@@ -155,6 +155,9 @@ Pointer.prototype = {
       //  No buttons property (like Safari on OSX when using a trackpad)
       if(down) {
         this.leftButton.start(event);
+        if(event.which === Mouse.BACK_BUTTON) {
+          this.rightButton.start(event);
+        }
       } else {
         this.leftButton.stop(event);
         this.rightButton.stop(event);
