@@ -11,7 +11,6 @@ var User = schema.define('user', {
   ship:       { type: schema.UUID },
   status:     { type: schema.String, default: 'offline' },
   role:       { type: schema.String, default: 'guest' },
-  edition:    { type: schema.String, default: 'none' },
   name:       { type: schema.String },
   username:   { type: schema.String },
   userslug:   { type: schema.String, index: true, unique: true },
@@ -37,7 +36,6 @@ User.validatesUniquenessOf('email', { message: 'email already registered' });
 
 User.validatesInclusionOf('role', { in: ['guest', 'user', 'moderator', 'admin'] });
 User.validatesInclusionOf('status', { in: ['online', 'offline'] });
-User.validatesInclusionOf('edition', { in: ['none', 'lieutenant', 'commander', 'captain'] });
 
 User.validatesNumericalityOf('credits', { int: true });
 User.validatesNumericalityOf('reputation', { int: true });
