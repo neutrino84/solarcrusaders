@@ -32,6 +32,7 @@ function SquadManager(game) {
   this.game.on('squad/closestHostile', this.closestHostile, this)
   this.game.on('squad/engageTarget', this.engageHostile, this)
   this.game.on('squad/detectHostiles', this.detectHostiles, this)
+  this.game.on('hotkey/squad/detectHostiles', this.detectHostiles, this)
 };
 
 SquadManager.prototype.constructor = SquadManager;
@@ -67,6 +68,7 @@ SquadManager.prototype.closestHostile = function(){
   if(targets && !targets.length){return}
   player.acquired = hostiles[targets.sort(ascending)[0]];
   if(!player.acquired.disabled){
+    this.game.emit('squad/sound','closestHostile');
     player.acquired.selector.hostileHighlight();
   }
 };
@@ -78,6 +80,10 @@ SquadManager.prototype.detectHostiles = function(){
       ascending = function(a, b) { return a-b },
       t, distance, targets, previous, counter;
   if(player.disabled){return}
+
+  console.log('player is ', player)
+
+  
 
   for(var s in ships){
     var ship = ships[s];
@@ -126,6 +132,7 @@ SquadManager.prototype.detectHostiles = function(){
     player.acquired = this.player.unfriendlies[targets.sort(ascending)[player.targetCount]]
   };
   player.acquired && player.acquired.selector.hostileHighlight();
+  console.log(player.acquired)
   player.targetCount++
   player.previous = player.acquired; 
 
@@ -154,7 +161,7 @@ SquadManager.prototype.engageHostile = function(){
     ship.selector.hostileHighlightStop();
   }
   if(!player.acquired.data.disabled && available)
-  console.log(player.acquired, player.acquired.disabled)
+  console.log(player.acquired, player.acquired.data.disabled)
    player.acquired.selector.hostileEngaged();
     this.game.emit('squad/sound','engage');
     this.socket.emit('squad/engageHostile', {player_id: player.uuid, target_id : player.acquired.uuid });
@@ -164,7 +171,6 @@ SquadManager.prototype.engageHostile = function(){
 SquadManager.prototype.shieldUpIn = function(data) {
   var ship = this.manager.ships[data.uuid];
 
-  console.log('in shieldUpIn')
   if(data.active){
     if(ship.selector.shieldBlue && ship.data.chassis == 'squad-shield' && !ship.disabled) {
       ship.selector.shieldBlueStart()
@@ -182,7 +188,6 @@ SquadManager.prototype.shieldUpIn = function(data) {
 
 SquadManager.prototype.shieldUpOut = function() {
   var player = this.player;
-  console.log('about to emit shieldupOut socket message')
   this.socket.emit('squad/shieldmaidenActivate', {player_uuid: player.uuid})
 };
 

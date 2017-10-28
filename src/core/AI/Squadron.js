@@ -104,7 +104,8 @@ Squadron.prototype.engage = function(target, type){
     if(this.game.rnd.frac() < 0.10) {
       // ship.activate('booster');
 
-      if(health < 0.5) {
+      if(health < 0.6) {
+        console.log('SQUAD SHIP ACTIVATED SHIELD')
         ship.activate('shield');
       }
       // if(health < 0.5) {

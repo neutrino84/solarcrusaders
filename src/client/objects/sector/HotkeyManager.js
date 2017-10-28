@@ -74,7 +74,10 @@ HotkeyManager.prototype.listener = function(hotkey) {
     		if(hotkeys['enhancements'][key] === 'heal' && this.isHealing){return};
     		if(hotkeys['enhancements'][key] === 'shield' && this.isShielded){return};
         if(hotkeys['enhancements'][key] === 'piercing' && this.isPiercing){return};
-        if(hotkeys['enhancements'][key] === 'detect' && this.detecting){return};
+        if(hotkeys['enhancements'][key] === 'detect' && this.detecting){
+          console.log('got here')
+          this.game.emit('squad/detectHostiles');
+        };
 
   	    this.game.emit('ship/enhancement/start', {
   	      uuid: player.uuid,
@@ -117,10 +120,6 @@ HotkeyManager.prototype.listener = function(hotkey) {
       if(key.toLowerCase() === 'w'){
         this.game.emit('hotkey/squad/shieldDestination', 'shieldDestination')
         // this.game.emit('squad/shieldDestination', true)
-
-
-
-
 
            // this.game.emit('shieldDestination', true);
            // this.player.events.add(3000, function(){

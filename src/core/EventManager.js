@@ -14,9 +14,9 @@ function EventManager(game) {
 
   this.level = 1;
   this.ships = {
-    basic: 10,
-    pirate: 26,
-    enforcer: 2
+    basic: 13,
+    pirate: 33,
+    enforcer: 3
   };
   // this.ships = {
   //   basic: 0,
@@ -26,7 +26,7 @@ function EventManager(game) {
 
   this.chassis = {
     basic : ['ubaidian-x01a','ubaidian-x01b','ubaidian-x01c','ubaidian-x01d','ubaidian-x01e','ubaidian-x01f'],
-    pirate: ['pirate-x01','pirate-x02'],
+    pirate: ['pirate-x01','pirate-x01','pirate-x02'],
     squadron: ['squad-shield','squad-repair','squad-attack','squad-attack','squad-attack','squad-attack'],
     squadron2: ['squad-repair','squad-attack'],
     scavenger: ['scavenger-x01','scavenger-x02'],

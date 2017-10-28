@@ -225,6 +225,8 @@ SoundManager.prototype.create = function() {
   this.game.on('global/sound/spawn', this.generateSpawnSound, this);
 
   this.game.on('squad/sound', this.generateSquadSound, this);
+  this.game.on('squad/shieldDestination', this.generateSquadSound, this);
+  this.game.on('squad/shieldDestinationDeactivate', this.generateSquadSound, this);
 };
 
 SoundManager.prototype._selection = function(sound){
@@ -363,7 +365,7 @@ SoundManager.prototype.generateSystemSound = function(sound){
 
 SoundManager.prototype.generateBackgroundMusic = function(){
   var num = Math.floor((Math.random() * 3)+1);
-  this.game.sound.play('background'+num, 0.6, true);
+  // this.game.sound.play('background'+num, 0.6, true);
 };
 
 SoundManager.prototype.generateThrusterSound = function(){
@@ -440,7 +442,16 @@ SoundManager.prototype.generateSquadSound = function(sound){
           }
           break;
         case 'closestHostile':
-            this.game.sound.play('closestHostile', volume, false);
+            console.log('insert closestHostile sound here')
+            this.game.sound.play('detectClosest', volume, false);
+          break;
+        case 'shieldDestination':
+            console.log('insert shieldDestination sound here')
+            // this.game.sound.play('shieldDestination', volume, false);
+          break;
+        case 'shieldDestinationDeactivate':
+            console.log('insert shieldDestinationDeactivate sound here')
+            // this.game.sound.play('shieldDestination', volume, false);
           break;
         default:
           break;

@@ -213,9 +213,9 @@ SquadPane.prototype._shieldDestination = function(key) {
         }
     });
     if(!this.shieldDestinationActive){
-      this.game.emit('squad/shieldDestination');
+      this.game.emit('squad/shieldDestination', 'shieldDestination');
     } else {
-      this.game.emit('squad/shieldDestinationDeactivate')
+      this.game.emit('squad/shieldDestinationDeactivate', 'shieldDestinationDeactivate')
     }
   };
   this.shieldDestinationActive = !this.shieldDestinationActive;

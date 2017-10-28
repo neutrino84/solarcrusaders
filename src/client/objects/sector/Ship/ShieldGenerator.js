@@ -23,7 +23,6 @@ ShieldGenerator.prototype.create = function() {
 };
 
 ShieldGenerator.prototype.start = function() {
-  console.log('shield tween starting')
   this.tween && this.tween.stop(true);
   this.tween = this.game.tweens.create(this.shieldSprite);
   this.tween.to({ alpha: 0.0 }, 500, engine.Easing.Quadratic.InOut);
@@ -33,7 +32,6 @@ ShieldGenerator.prototype.start = function() {
 };
 
 ShieldGenerator.prototype.startShieldField = function() {
-  console.log('shield field starting')
   this.tween && this.tween.stop(true);
   this.tween = this.game.tweens.create(this.shieldSprite);
   this.tween.to({ alpha: 0.0 }, 500, engine.Easing.Quadratic.InOut);
@@ -51,7 +49,6 @@ ShieldGenerator.prototype.stopShieldField = function() {
 };
 
 ShieldGenerator.prototype.remove = function() {
-  console.log('removing')
   this.shieldSprite.alpha = 1.0;
   this.parent.removeChild(this.shieldSprite);
 

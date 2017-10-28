@@ -97,10 +97,6 @@ Hud.prototype.create = function() {
   // } else {  
   this.pivot.set(this.cachedWidth/2, this.cachedHeight/2);  
   this.position.set(this.ship.width/2, this.ship.height/2);
-  if(ship.data.chassis == 'scavenger-x04'){
-  this.pivot.set(104, 104);  
-  this.position.set(104, 104);
-  }
 
   this.visible = false;
   this.alpha = 0.0;
