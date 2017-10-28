@@ -43,7 +43,8 @@ LoadingState.prototype.create = function() {
   this.status = new Label(this.game, {
     constraint: undefined,
     font: {
-      name: 'small'
+      name: 'small',
+      text: 'preparing to load game'
     }
   });
 
@@ -74,9 +75,6 @@ LoadingState.prototype.create = function() {
 };
 
 LoadingState.prototype.loadingStart = function() {
-  this.status.text = 'preparing to load game';
-  this.root.invalidate();
-  
   // add root to stage
   this.game.stage.addChild(this.root);
 };
