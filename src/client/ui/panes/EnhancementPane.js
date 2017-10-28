@@ -52,8 +52,8 @@ EnhancementPane.prototype.create = function(enhancement, key) {
     this.placeholders.push(
       new Pane(this.game, {
         constraint: Layout.CENTER,
-        width: 34,
-        height: 36,
+        width: 38,
+        height: 40,
         layout: {
           type: 'stack'
         },
@@ -133,10 +133,10 @@ EnhancementPane.prototype._player = function(player) {
     enhancement = enhancements[i];
 
     if(enhancement) {
-      button = new EnhancementButton(game);
-      button.create(enhancement);
+      button = new EnhancementButton(game, enhancement);
+      button.create();
       button.start();
-      button.on('selected', this.selected, this);
+      button.on('inputUp', this.selected, this);
       buttons[enhancement] = button;
 
       // save index
