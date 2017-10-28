@@ -106,9 +106,9 @@ StateManager.prototype.clearCurrentState = function() {
     if(this._clearWorld) {
       this.game.world.shutdown();
 
-      if(this._clearCache === true) {
-        this.game.cache.destroy();
-      }
+      // if(this._clearCache === true) {
+      //   this.game.cache.destroy();
+      // }
     }
   }
 };
