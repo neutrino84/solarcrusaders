@@ -131,7 +131,7 @@ SectorState.prototype.createManagers = function() {
 SectorState.prototype.createAsteroids = function() {
   var game = this.game,
       steroid,
-      amount = 48;
+      amount = 64;
   for(var i=0; i<amount; i++) {
     asteroid = new Asteroid(this.game);
     asteroid.position.set(2048 / 4, 2048 / 4);
