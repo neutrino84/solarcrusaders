@@ -2,6 +2,7 @@
   "ubaidian-x01": {
     "race": "ubaidian",
     "class": "destroyer",
+    "name": "Spectrum",
     "stats": {
       "capacity": 1000,
       "health": 100,
@@ -88,6 +89,7 @@
   "ubaidian-x02": {
     "race": "ubaidian",
     "class": "battleship",
+    "name": "Firebrand",
     "stats": {
       "capacity": 1000,
       "health": 400,
@@ -184,6 +186,7 @@
   "ubaidian-x03": {
     "race": "ubaidian",
     "class": "cruiser",
+    "name": "Relentless",
     "stats": {
       "capacity": 1000,
       "health": 100,
@@ -260,6 +263,7 @@
   "ubaidian-x04": {
     "race": "ubaidian",
     "class": "frigate",
+    "name": "Tyrant",
     "stats": {
       "capacity": 1000,
       "health": 80,
@@ -312,6 +316,7 @@
   "ubaidian-x05": {
     "race": "ubaidian",
     "class": "destroyer",
+    "name": "Pelican",
     "stats": {
       "capacity": 1000,
       "health": 100,
@@ -398,6 +403,7 @@
   "general-x01": {
     "race": "general",
     "class": "frigate",
+    "name": "Orion",
     "stats": {
       "capacity": 500,
       "health": 50,
@@ -464,6 +470,7 @@
   "general-x02": {
     "race": "general",
     "class": "cruiser",
+    "name": "Calypso",
     "stats": {
       "capacity": 500,
       "health": 50,
