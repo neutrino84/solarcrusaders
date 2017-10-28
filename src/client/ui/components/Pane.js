@@ -54,6 +54,9 @@ function Pane(game, settings) {
         this.settings.layout.ax, this.settings.layout.ay,
         this.settings.layout.direction, this.settings.layout.gap);
       break;
+    case 'none':
+      this.layout = this;
+      break;
     default:
       throw Error('Pane requres a layout type');
       break;
