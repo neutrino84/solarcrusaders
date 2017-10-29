@@ -889,7 +889,7 @@
       "heal": 0.25,
       "armor": 0.1,
       "speed": 30.0,
-      "rate": 400,
+      "rate": 80,
       "evasion": 0.3,
       "energy": 200,
       "recharge": 1,
@@ -930,7 +930,7 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "bazuko"
+            "subtype": "nucleon"
           }
         },
         {
@@ -945,7 +945,7 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "tarkin"
+            "subtype": "nucleon"
           }
         }
         ]
