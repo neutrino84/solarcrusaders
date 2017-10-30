@@ -6,7 +6,7 @@ function Camera(game, x, y, width, height) {
   this.game = game;
   this.world = game.world;
 
-  this.step = 0.1;
+  this.step = 0.05;
   this.target = null;
   this.shaking = 0.0;
   this.smooth = false;
@@ -16,7 +16,7 @@ function Camera(game, x, y, width, height) {
   this.position = new Point();
   this.view = new Rectangle(x, y, width, height);
 
-  this.style = Camera.FOLLOW_LOCKON;
+  this.style = Camera.FOLLOW_SMOOTH;
 };
 
 Camera.FOLLOW_LOCKON = 0;
