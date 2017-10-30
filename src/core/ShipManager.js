@@ -1,10 +1,8 @@
 
 var uuid = require('uuid'),
     engine = require('engine'),
-    Ship = require('./objects/Ship'),
     AI = require('./AI'),
-    Utils = require('../utils'),
-    Generator = require('../utils/Generator');
+    Ship = require('./objects/Ship');
 
 function ShipManager(game) {
   this.game = game;
@@ -16,6 +14,10 @@ function ShipManager(game) {
 
   // ai manager
   this.ai = new AI(this);
+
+  // ship spawn
+  this.circle = new engine.Circle();
+  this.point = new engine.Point();
 };
 
 ShipManager.prototype.constructor = ShipManager;
@@ -37,8 +39,23 @@ ShipManager.prototype.init = function() {
 };
 
 ShipManager.prototype.add = function(ship) {
-  if(this.game.ships[ship.uuid] === undefined) {
-    this.game.ships[ship.uuid] = ship;
+  var game = this.game,
+      circle = this.circle,
+      point = this.point,
+      station;
+  if(game.ships[ship.uuid] === undefined) {
+    // ship station
+    station = ship.station;
+
+    // create random point around station
+    circle.setTo(station.movement.position.x, station.movement.position.y, station.data.size);
+    circle.random(false, point);
+
+    // update ship position
+    ship.movement.position.copyFrom(point);
+
+    // add ship to world
+    game.ships[ship.uuid] = ship;
   }
 };
 
@@ -112,6 +129,7 @@ ShipManager.prototype.data = function(uuids) {
         speed: ship.speed * ship.movement.throttle,
         user: ship.user ? ship.user.uuid : null,
         ai: ship.ai ? ship.ai.type : null,
+        station: ship.data.station,
         username: ship.user ? ship.user.data.username : ship.data.name,
         disabled: ship.disabled,
         size: ship.size,

@@ -13,7 +13,8 @@ Faction.RACES = [
   'ubaidian',
   'hederaa',
   'seeker',
-  'mechan'
+  'mechan',
+  'general'
 ];
 
 Faction.validatesPresenceOf('name');

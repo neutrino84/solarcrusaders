@@ -14,6 +14,7 @@ function Ship(manager, data, user, master) {
   this.model = manager.model;
   this.user = user;
   this.master = master;
+  this.station = undefined;
   
   this.data = new this.model.Ship(data);
   this.data.init();
@@ -152,8 +153,6 @@ Ship.prototype.createSquadron = function() {
       name = squadron[i];
       game.emit('ship/create', {
         chassis: name,
-        x: 2048,
-        y: 2048,
         ai: 'squadron'
       }, null, this);
     }

@@ -72,9 +72,7 @@ UserManager.prototype.ship = function(socket, args) {
       user = game.users[session.user.uuid],
       data = args[1];
   user && game.emit('ship/create', {
-    chassis: data.name,
-    x: 2048,
-    y: 2048
+    chassis: data.name
   }, user);
 };
 

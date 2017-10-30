@@ -8,6 +8,7 @@ var client = require('client'),
 
 var Ship = schema.define('ship', {
   uuid:       { type: schema.UUID, default: uuid.v4 },
+  station:    { type: schema.UUID },
   name:       { type: schema.String },
   chassis:    { type: schema.String },
   class:      { type: schema.String },

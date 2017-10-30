@@ -47,8 +47,10 @@ SectorState.prototype.preload = function() {
   this.game.load.image('clouds', 'imgs/game/planets/clouds.jpg');
 
   // load stations
-  this.game.load.image('ubadian-station-x01', 'imgs/game/stations/ubaidian-x01.png');
-  this.game.load.image('ubadian-station-x01-cap', 'imgs/game/stations/ubaidian-cap-x01.png');
+  this.game.load.image('ubaidian-x01', 'imgs/game/stations/ubaidian-x01.png');
+  this.game.load.image('ubaidian-x01-cap', 'imgs/game/stations/ubaidian-cap-x01.png');
+  this.game.load.image('general-x01', 'imgs/game/stations/general-x01.png');
+  this.game.load.image('general-x01-cap', 'imgs/game/stations/general-cap-x01.png');
 
   // load strip graphics
   this.game.load.image('laser-blue', 'imgs/game/fx/laser-blue.png');

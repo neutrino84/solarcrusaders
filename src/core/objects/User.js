@@ -27,9 +27,7 @@ User.prototype.init = function(callback, context) {
   if(data.isNewRecord()) {
     // connect demo ship
     game.emit('ship/create', {
-      chassis: 'ubaidian-x01',
-      x: 2048,
-      y: 2048
+      chassis: 'ubaidian-x01'
     }, this);
 
     // update client

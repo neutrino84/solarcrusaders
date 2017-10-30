@@ -53,13 +53,15 @@ Pirate.prototype.scanner = function() {
   }
 
   // scan nearby stations
-  for(var s in stations) {
-    scan = stations[s];
-    p2 = scan.movement.position;
+  if(this.game.rnd.frac() > 0.6) {
+    for(var s in stations) {
+      scan = stations[s];
+      p2 = scan.movement.position;
 
-    if(scan.disabled) { continue; }
-    if(sensor.contains(p2.x, p2.y)) {
-      station = scan;
+      if(scan.disabled) { continue; }
+      if(sensor.contains(p2.x, p2.y)) {
+        station = scan;
+      }
     }
   }
 

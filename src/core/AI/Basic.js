@@ -181,17 +181,20 @@ Basic.prototype.plot = function(){
       settings = this.settings,
       offset = this.offset,
       p1 = ship.movement.position,
-      p2, size;
+      p2, size, station;
 
   // plot destination
   if(!this.retreat && this.target) {
     size = this.target.data.size * 4;
     offset.copyFrom(this.target.movement.position);
     offset.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
-    ship.movement.plot({ x: this.offset.x-p1.x, y: this.offset.y-p1.y });
-  } else if(!this.retreat) {
-    p2 = this.getHomePosition();
-    ship.movement.plot({ x: p2.x-p1.x, y: p2.y-p1.y });
+    ship.movement.plot({ x: offset.x-p1.x, y: offset.y-p1.y });
+  } else {
+    station = ship.station;
+    size = ship.station.size;
+    offset.copyFrom(station.movement.position);
+    offset.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
+    ship.movement.plot({ x: offset.x-p1.x, y: offset.y-p1.y });
   };
 };
 
