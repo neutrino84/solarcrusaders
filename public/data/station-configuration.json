@@ -1,14 +1,27 @@
 {
-  "ubadian-station-x01": {
+  "ubaidian-x01": {
     "race": "ubaidian",
     "stats": {
       "health": 1000,
       "heal": 0.0,
-      "speed": 2.5,
+      "speed": 5,
       "size": 320,
       "radius": 768,
       "rotation": 0.0,
       "spin": 0.01,
+      "armor": 0.0
+    }
+  },
+  "general-x01": {
+    "race": "general",
+    "stats": {
+      "health": 250,
+      "heal": 0.0,
+      "speed": 10,
+      "size": 256,
+      "radius": 768,
+      "rotation": 0.0,
+      "spin": 0.02,
       "armor": 0.0
     }
   }
