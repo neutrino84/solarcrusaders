@@ -889,7 +889,7 @@
       "heal": 0.25,
       "armor": 0.1,
       "speed": 30.0,
-      "rate": 80,
+      "rate": 300,
       "evasion": 0.3,
       "energy": 200,
       "recharge": 1,
@@ -1012,7 +1012,7 @@
     "class": "shield",
     "stats": {
       "capacity": 3000,
-      "health": 100,
+      "health": 300,
       "heal": 0.35,
       "armor": 0.1,
       "speed": 30.0,

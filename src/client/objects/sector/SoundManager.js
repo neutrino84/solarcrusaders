@@ -73,6 +73,9 @@ SoundManager.prototype.preload = function() {
   load.audio('capital-explosion-b','sounds/explosions/actionExplosion.mp3');
   load.audio('capital-explosion-c','sounds/explosions/explosionBig100.mp3');
 
+  load.audio('squadshipDeath','sounds/explosions/shieldmaidenDeath.v2.mp3');
+  load.audio('shieldUp','sounds/squadSounds/shieldUpBetterStill.mp3');
+
   load.audio('queenDeath','sounds/explosions/queenDeath.mp3');
   load.audio('overseerDeath','sounds/explosions/overseerDeath3.mp3');
   load.audio('harvesterDeath1','sounds/explosions/collectorDeath.mp3');
@@ -187,6 +190,9 @@ SoundManager.prototype.create = function() {
   this.game.sound.add('capital-explosion-b', 6);
   this.game.sound.add('capital-explosion-c', 6);
 
+  this.game.sound.add('shieldmaidenDeath', 2);
+  this.game.sound.add('shieldUp', 2);
+
   this.game.sound.add('dangerAlert', 1);
 
   this.game.sound.add('queenSpawn', 1);
@@ -296,6 +302,10 @@ SoundManager.prototype._disabled = function(data) {
       };
       if(ship.data.chassis === 'scavenger-x03'){
         sound = 'overseerDeath';
+      };
+      if(ship.data.chassis === 'squad-shield' || ship.data.chassis === 'squad-attack' || ship.data.chassis === 'squad-repair'){
+        sound = 'squadshipDeath';
+        volume = 0.28;
       };
       if(ship.data.chassis === 'scavenger-x02' || ship.data.chassis === 'scavenger-x01'){
         num = Math.floor((Math.random() * 2)+1);
@@ -429,6 +439,7 @@ SoundManager.prototype.generateSquadSound = function(sound){
       switch(sound) {
         case 'engage':
           num = Math.floor((Math.random() * 2)+1)
+          volume = 0.185;
           if(num === 2){
             this.game.sound.play('engagingTarget', volume, false);
           } else if (num === 1){
@@ -445,12 +456,19 @@ SoundManager.prototype.generateSquadSound = function(sound){
             console.log('insert closestHostile sound here')
             this.game.sound.play('detectClosest', volume, false);
           break;
+        case 'shieldUp':
+          num = Math.floor((Math.random() * 3))
+          // if(num){
+
+            this.game.sound.play('shieldUp', volume, false);
+          // }
+          break;
         case 'shieldDestination':
             console.log('insert shieldDestination sound here')
             // this.game.sound.play('shieldDestination', volume, false);
           break;
         case 'shieldDestinationDeactivate':
-            console.log('insert shieldDestinationDeactivate sound here')
+            console.log('insert shieldDestinationDeactivate sound here' )
             // this.game.sound.play('shieldDestination', volume, false);
           break;
         default:

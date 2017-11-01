@@ -232,7 +232,7 @@ Ship.prototype.hit = function(attacker, target, slot, target_uuid) {
     }
 
     //prevent friendly fire dmg to squadron
-    // if(this.master === attacker.uuid || attacker.hardpoints[0].subtype === 'repair' && data.health >= (this.config.stats.health)){return}  
+    if(this.master === attacker.uuid || attacker.hardpoints[0].subtype === 'repair' && data.health >= (this.config.stats.health)){return}  
 
 
     // calc damage
@@ -247,14 +247,22 @@ Ship.prototype.hit = function(attacker, target, slot, target_uuid) {
     if(this.squadron && this.shieldCheck(this.uuid)){
         damage = damage*0.65;
         shielded = true;
-        // --> tells front end to show the shield filter
     };
-
-    if(attacker.hardpoints[0].subtype === 'repair' && data.health < (this.config.stats.health)){
-      health = data.health + rawDamage;
-    } else if(attacker.hardpoints[0].subtype !== 'repair'){
+    if(attacker.hardpoints[0].subtype === 'repair'){
+      if(data.health < this.config.stats.health){
+        health = data.health + rawDamage
+      } else {
+        health = data.health
+      }
+    } else {
       health = data.health - damage;
-    };
+    }
+
+    // if(attacker.hardpoints[0].subtype === 'repair' && data.health < (this.config.stats.health)){
+    //   health = data.health + rawDamage;
+    // } else if(attacker.hardpoints[0].subtype !== 'repair'){
+    //   health = data.health - damage;
+    // };
 
     durability = this.durability;
 

@@ -20,6 +20,11 @@ function SquadManager(game) {
   // player
   this.player = null;
 
+  //soundTimer
+  this.soundTimer = {};
+
+
+  this.ok = true;
   // squad target
   this.acquired = null;
 
@@ -163,7 +168,17 @@ SquadManager.prototype.engageHostile = function(){
   if(!player.acquired.data.disabled && available)
   console.log(player.acquired, player.acquired.data.disabled)
    player.acquired.selector.hostileEngaged();
-    this.game.emit('squad/sound','engage');
+   console.log('this.ok is', this.ok)
+   // this.soundTimer['hostileEngaged'] 
+   player.events.add(12000, function(){
+    console.log('soundTimer off')
+    this.ok = true;
+    this.soundTimer['hostileEngaged'] = null;
+   }, this)
+   if(this.ok){
+      this.game.emit('squad/sound','engage');
+      this.ok = false;
+   }
     this.socket.emit('squad/engageHostile', {player_id: player.uuid, target_id : player.acquired.uuid });
   };
 };
@@ -173,6 +188,9 @@ SquadManager.prototype.shieldUpIn = function(data) {
 
   if(data.active){
     if(ship.selector.shieldBlue && ship.data.chassis == 'squad-shield' && !ship.disabled) {
+      console.log('emitting shield up')
+      this.game.emit('squad/sound','shieldUp')
+
       ship.selector.shieldBlueStart()
       // ship.events.loop(500, expand = function(){
       //   ship.selector.shieldBlueExpand(this.poopoo);
