@@ -75,7 +75,7 @@ SquadManager.prototype.closestHostile = function(){
   if(!player.acquired.disabled){
     this.game.emit('squad/sound','closestHostile');
     player.acquired.selector.hostileHighlight();
-  }
+  };
 };
 
 SquadManager.prototype.detectHostiles = function(){
@@ -85,11 +85,6 @@ SquadManager.prototype.detectHostiles = function(){
       ascending = function(a, b) { return a-b },
       t, distance, targets, previous, counter;
   if(player.disabled){return}
-
-  console.log('player is ', player)
-
-  
-
   for(var s in ships){
     var ship = ships[s];
     ship.selector.hostileHighlightStop();
@@ -137,7 +132,6 @@ SquadManager.prototype.detectHostiles = function(){
     player.acquired = this.player.unfriendlies[targets.sort(ascending)[player.targetCount]]
   };
   player.acquired && player.acquired.selector.hostileHighlight();
-  console.log(player.acquired)
   player.targetCount++
   player.previous = player.acquired; 
 
@@ -166,12 +160,8 @@ SquadManager.prototype.engageHostile = function(){
     ship.selector.hostileHighlightStop();
   }
   if(!player.acquired.data.disabled && available)
-  console.log(player.acquired, player.acquired.data.disabled)
    player.acquired.selector.hostileEngaged();
-   console.log('this.ok is', this.ok)
-   // this.soundTimer['hostileEngaged'] 
    player.events.add(12000, function(){
-    console.log('soundTimer off')
     this.ok = true;
     this.soundTimer['hostileEngaged'] = null;
    }, this)
@@ -188,7 +178,6 @@ SquadManager.prototype.shieldUpIn = function(data) {
 
   if(data.active){
     if(ship.selector.shieldBlue && ship.data.chassis == 'squad-shield' && !ship.disabled) {
-      console.log('emitting shield up')
       this.game.emit('squad/sound','shieldUp')
 
       ship.selector.shieldBlueStart()

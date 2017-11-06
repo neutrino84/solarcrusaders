@@ -17,7 +17,7 @@ function BottomPane(game) {
       ax: Layout.CENTER, 
       ay: Layout.BOTTOM,
       direction: Layout.HORIZONTAL, 
-      gap: 100
+      gap: 75
     }
   });
 

@@ -291,10 +291,14 @@ Selector.prototype.selected = function(){
 
 Selector.prototype.disable = function() {
   this.graphics.visible = false;
+  this.reticle.visible = false;
+  this.reticleRed.visible = false;
 };
 
 Selector.prototype.enable = function() {
   this.graphics.visible = true;
+  this.reticle.visible = true;
+  this.reticleRed.visible = true;
 };
 
 Selector.prototype.update = function() {

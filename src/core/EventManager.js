@@ -14,9 +14,9 @@ function EventManager(game) {
 
   this.level = 1;
   this.ships = {
-    basic: 13,
-    pirate: 33,
-    enforcer: 3
+    basic: 1,
+    pirate: 4,
+    enforcer: 0
   };
   // this.ships = {
   //   basic: 0,
@@ -25,10 +25,10 @@ function EventManager(game) {
   // };
 
   this.chassis = {
-    // basic : ['ubaidian-x01a','ubaidian-x01b','ubaidian-x01c','ubaidian-x01d','ubaidian-x01e','ubaidian-x01f'],
-    basic : ['ubaidian-x01a','ubaidian-x01b','ubaidian-x01d','ubaidian-x01f'],
-    pirate: ['pirate-x01','pirate-x01','pirate-x02','ubaidian-x01c','ubaidian-x01e'],
-    // pirate: ['pirate-x01','pirate-x01','pirate-x02'],
+    basic : ['ubaidian-x01a','ubaidian-x01b','ubaidian-x01c','ubaidian-x01d','ubaidian-x01e','ubaidian-x01f'],
+    // basic : ['ubaidian-x01a','ubaidian-x01b','ubaidian-x01d','ubaidian-x01f'],
+    // pirate: ['pirate-x01','pirate-x01','pirate-x02','ubaidian-x01c','ubaidian-x01e'],
+    pirate: ['pirate-x01','pirate-x01','pirate-x02'],
     squadron: ['squad-shield','squad-repair','squad-attack','squad-attack','squad-attack','squad-attack'],
     squadron2: ['squad-repair','squad-attack'],
     scavenger: ['scavenger-x01','scavenger-x02'],
@@ -115,7 +115,7 @@ EventManager.prototype.squadGen = function(master){
 
   // if(rando > 0.3){
     this.game.emit('ship/create', {
-      chassis: 'squad-shield',
+      chassis: 'squad-attack',
       x: randomPostion.x,
       y: randomPostion.y,
       ai: 'squadron',
@@ -123,20 +123,20 @@ EventManager.prototype.squadGen = function(master){
     });
 
     this.game.emit('ship/create', {
-      chassis: 'squad-repair',
+      chassis: 'squad-attack',
       x: randomPostion.x,
       y: randomPostion.y,
       ai: 'squadron',
       master: master
     });
 
-    this.game.emit('ship/create', {
-      chassis: 'squad-repair',
-      x: randomPostion.x,
-      y: randomPostion.y,
-      ai: 'squadron',
-      master: master
-    });
+    // this.game.emit('ship/create', {
+    //   chassis: 'squad-shield',
+    //   x: randomPostion.x,
+    //   y: randomPostion.y,
+    //   ai: 'squadron',
+    //   master: master
+    // });
   // };
   // if(rando > 0.7) {
     // this.game.emit('ship/create', {

@@ -13,7 +13,7 @@ function SoundManager(game) {
 
 SoundManager.prototype.constructor = SoundManager;
 
-SoundManager.MINIMUM_VOLUME = 0.2;
+SoundManager.MINIMUM_VOLUME = 0.1;
 
 SoundManager.prototype.init = function() {
   //..
@@ -190,7 +190,7 @@ SoundManager.prototype.create = function() {
   this.game.sound.add('capital-explosion-b', 6);
   this.game.sound.add('capital-explosion-c', 6);
 
-  this.game.sound.add('shieldmaidenDeath', 2);
+  this.game.sound.add('squadshipDeath', 2);
   this.game.sound.add('shieldUp', 2);
 
   this.game.sound.add('dangerAlert', 1);
@@ -305,7 +305,8 @@ SoundManager.prototype._disabled = function(data) {
       };
       if(ship.data.chassis === 'squad-shield' || ship.data.chassis === 'squad-attack' || ship.data.chassis === 'squad-repair'){
         sound = 'squadshipDeath';
-        volume = 0.28;
+        volume = volume*0.25
+        console.log(volume)
       };
       if(ship.data.chassis === 'scavenger-x02' || ship.data.chassis === 'scavenger-x01'){
         num = Math.floor((Math.random() * 2)+1);

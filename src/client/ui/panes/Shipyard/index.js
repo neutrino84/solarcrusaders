@@ -326,7 +326,6 @@ Shipyard.prototype.stats = function(){
   for(var i = 0; i < this.bg.panels.length; i++){
     if(this.bg.panels[i].id === 'statsPane'){
       var statsPane = this.bg.panels[i];
-      // statsPane.alpha = -1;
       statsPane.alpha = -1;
     }
   }

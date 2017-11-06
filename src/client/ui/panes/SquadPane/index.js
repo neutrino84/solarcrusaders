@@ -88,17 +88,45 @@ SquadPane.prototype.create = function(icon, key) {
           fontName: 'medium'
         },
         bg: false
-      }), button, iconMatrix = {
-        closestHostile : 'squad-closest-hostile.png',
-        engageTarget : 'squad-engage-target.png',
-        repairOverdrive : 'squad-repair-overdrive.png',
-        regroup : 'squad-regroup.png',
-        shieldUp : 'squad-shieldUp.png',
-        shieldDestination_green : 'squad-shieldDestination.png',
-        shieldDestination_yellow : 'squad-shieldDestination_yellow.png',
-        shieldDestination : 'squad-shieldDestination_hollow.png'
-      };
-      // detect : 'enhancement-detect.png'
+      }), 
+      hotkey = new Label(game, {
+        constraint: Layout.USE_PS_SIZE,
+        text: {
+          fontName: 'medium'
+        },
+        bg: false,
+        margin: [0, 0, 52, 0]
+      }),
+      iconMatrix = {
+        closestHostile : {
+          frame: 'squad-closest-hostile.png',
+          hotkey: 'C'
+        },
+        engageTarget : {
+          frame: 'squad-engage-target.png',
+          hotkey: 'E'
+        },
+        repairOverdrive : {
+          frame: 'squad-repair-overdrive.png',
+          hotkey: 'V'
+        },
+        regroup : {
+          frame: 'squad-regroup.png',
+          hotkey: 'R'
+        },
+        shieldUp : {
+          frame: 'squad-shieldUp.png',
+          hotkey: 'S'
+        },
+        // shieldDestination_green : 'squad-shieldDestination.png',
+        // shieldDestination_yellow : 'squad-shieldDestination_yellow.png',
+        shieldDestination : {
+          frame: 'squad-shieldDestination_hollow.png',
+          hotkey: 'W'
+        }
+      }, button;
+
+      //INSTEAD OF REPLACING BUTTONICONS FOR SHIELD DESTINATION, JUST CYCLE THROUGH THEM ON TOP OF EACHOTHER W VISIBILITY!
 
       button = new ButtonIcon(game, {
         padding: [0, 0, 2, 0],
@@ -114,7 +142,7 @@ SquadPane.prototype.create = function(icon, key) {
         },
         icon: {
           key: 'texture-atlas',
-          frame: iconMatrix[icon],
+          frame: iconMatrix[icon].frame,
           width: 34,
           height: 34,
           bg: {
@@ -138,10 +166,13 @@ SquadPane.prototype.create = function(icon, key) {
         }
       });
      
-
   button.label = label;
+  button.hotkey = hotkey;
+  button.hotkey.text = iconMatrix[icon].hotkey;
+  button.hotkey.alpha = -1;
   button.label.visible = false;
   button.addPanel(label);
+  button.addPanel(hotkey);
 
   return button;
 };
@@ -186,13 +217,23 @@ SquadPane.prototype._select = function(button_bg) {
       };
 };
 
+SquadPane.prototype._hover = function(button) {
+  button.parent.hotkey.invalidate()
+  button.parent.hotkey.alpha = button.parent.hotkey.alpha*-1;
+};
+
+SquadPane.prototype._unhover = function(button) {
+  button.parent.hotkey.alpha = button.parent.hotkey.alpha*-1;
+};
+
+
 SquadPane.prototype._shieldDestination = function(key) {
   var game = this.game,
-      player = this.player;
-      // key = button_bg.parent.id, button;
-
+      player = this.player,
       button = this.buttons[key];
 
+  if(!button){return}
+    
   if(!button.label.visible){
     button.disabled(true);
     button.count = 5;
@@ -269,6 +310,8 @@ SquadPane.prototype._squadIcons = function(icon) {
     regroupButton = this.create('regroup');
     regroupButton.id = 'regroup'
     regroupButton.bg.on('inputUp', this._select, this);
+    regroupButton.bg.on('inputOver', this._hover, this);
+    regroupButton.bg.on('inputOut', this._unhover, this);
     regroupButton.start();
 
     this.buttons['regroup'] = regroupButton;
@@ -292,6 +335,8 @@ SquadPane.prototype._squadIcons = function(icon) {
         closestHostileButton = this.create('closestHostile');
         closestHostileButton.id = 'closestHostile';
         closestHostileButton.bg.on('inputUp', this._select, this);
+        closestHostileButton.bg.on('inputOver', this._hover, this);
+        closestHostileButton.bg.on('inputOut', this._unhover, this);
         closestHostileButton.start();
 
         this.buttons['closestHostile'] = closestHostileButton;
@@ -301,6 +346,8 @@ SquadPane.prototype._squadIcons = function(icon) {
         engageTargetButton = this.create('engageTarget');
         engageTargetButton.id = 'engageTarget'
         engageTargetButton.bg.on('inputUp', this._select, this);
+        engageTargetButton.bg.on('inputOver', this._hover, this);
+        engageTargetButton.bg.on('inputOut', this._unhover, this);
         engageTargetButton.start();
 
         this.buttons['engageTarget'] = engageTargetButton;
@@ -312,6 +359,8 @@ SquadPane.prototype._squadIcons = function(icon) {
         shieldUpButton = this.create('shieldUp');
         shieldUpButton.id = 'shieldUp'
         shieldUpButton.bg.on('inputUp', this._select, this);
+        shieldUpButton.bg.on('inputOver', this._hover, this);
+        shieldUpButton.bg.on('inputOut', this._unhover, this);
         shieldUpButton.start();
 
         this.buttons['shieldUp'] = shieldUpButton;
@@ -321,6 +370,8 @@ SquadPane.prototype._squadIcons = function(icon) {
         shieldDestinationButton = this.create('shieldDestination');
         shieldDestinationButton.id = 'shieldDestination'
         shieldDestinationButton.bg.on('inputUp', this._select, this);
+        shieldDestinationButton.bg.on('inputOver', this._hover, this);
+        shieldDestinationButton.bg.on('inputOut', this._unhover, this);
         shieldDestinationButton.start();
 
         this.buttons['shieldDestination'] = shieldDestinationButton;
@@ -332,6 +383,8 @@ SquadPane.prototype._squadIcons = function(icon) {
         repairOverdriveButton = this.create('repairOverdrive');
         repairOverdriveButton.id = 'repairOverdrive'
         repairOverdriveButton.bg.on('inputUp', this._select, this);
+        repairOverdriveButton.bg.on('inputOver', this._hover, this);
+        repairOverdriveButton.bg.on('inputOut', this._unhover, this);
         repairOverdriveButton.start();
 
         this.buttons['repairOverdrive'] = repairOverdriveButton;

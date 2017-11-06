@@ -50,8 +50,6 @@ function EnhancementPane(game, settings) {
   }
 
   this.game.on('ship/player', this._player, this);
-  // this.game.on('ship/player/squadSync', this._extraIcons, this);
-  // this.game.on('ship/player/shieldmaidenActivate', this._started, this);
   this.game.on('ship/enhancement/started', this._started, this);
   this.game.on('ship/enhancement/stopped', this._stopped, this);
   this.game.on('ship/enhancement/cooled', this._cooled, this);
@@ -80,7 +78,24 @@ EnhancementPane.prototype.create = function(enhancement, key) {
           fontName: 'medium'
         },
         bg: false
-      }), button;
+      }),
+      hotkey = new Label(game, {
+        constraint: Layout.USE_PS_SIZE,
+        text: {
+          fontName: 'full'
+        },
+        bg: false,
+        margin: [0, 0, 52, 0]
+      }),
+      hotkeyMatrix = {
+        booster : 'b',
+        shield : 's',
+        piercing : 'p',
+        heal : 'h',
+        detect : 'd'
+      }, 
+      button;
+      
       if(enhancement){
         button = new ButtonIcon(game, {
           padding: [0, 0, 2, 0],
@@ -119,49 +134,19 @@ EnhancementPane.prototype.create = function(enhancement, key) {
             }
           }
         });
-      } else {
-        button = new ButtonIcon(game, {
-          padding: [0, 0, 2, 0],
-          bg: {
-            color: 0x009999,
-            alpha: {
-              enabled: 0.5,
-              disabled: 1.0,
-              over: 0.85,
-              down: 0.85,
-              up: 0.85
-            }
-          },
-          icon: {
-            key: 'texture-atlas',
-            frame: 'shieldmaiden.png',
-            width: 34,
-            height: 34,
-            bg: {
-              fillAlpha: 1.0,
-              color: 0x000000
-            },
-            alpha: {
-              enabled: 1.0,
-              disabled: 0.5,
-              over: 1.0,
-              down: 1.0,
-              up: 0.9
-            },
-            tint: {
-              enabled: 0xFFFFFF,
-              disabled: 0xFF0000,
-              over: 0xFFFFFF,
-              down: 0xFFFFFF,
-              up: 0xFFFFFF
-            }
-          }
-        });
-      }
+      };
 
   button.label = label;
   button.label.visible = false;
+  button.hotkey = hotkey;
+  if(enhancement == 'detect'){
+    button.hotkey.text = key + ', D';
+  } else {
+    button.hotkey.text = key;
+  }
+  button.hotkey.alpha = -1;
   button.addPanel(label);
+  button.addPanel(hotkey);
 
   return button;
 };
@@ -180,21 +165,13 @@ EnhancementPane.prototype._select = function(button) {
   });
 };
 
-EnhancementPane.prototype._selectExtraIcon = function(key) {
-  var game = this.game,
-      player = this.player;
+EnhancementPane.prototype._hover = function(button) {
+  button.parent.hotkey.invalidate()
+  button.parent.hotkey.alpha = button.parent.hotkey.alpha*-1;
+};
 
-  if(key.parent.id == 'shieldmaiden'){
-    this._started('shieldmaidenActivate') 
-  }
-  // disable
-  // button.parent.disabled(true);
-  
-  // send event
-  // game.emit('ship/enhancement/start', {
-  //   uuid: player.uuid,
-  //   enhancement: button.parent.id
-  // });
+EnhancementPane.prototype._unhover = function(button) {
+  button.parent.hotkey.alpha = button.parent.hotkey.alpha*-1;
 };
 
 EnhancementPane.prototype._started = function(data) {
@@ -203,30 +180,7 @@ EnhancementPane.prototype._started = function(data) {
       button = this.buttons[data.enhancement]
     };
 
-  if(data === 'shieldmaidenActivate' && this.buttons['shieldmaiden']){
-    button = this.buttons['shieldmaiden'];
-    button.disabled(true);
-    button.count = 5;
-    button.label.text = button.count;
-    button.label.visible = true;
-    button.invalidate(false, true);
-
-    //need to figure out how to make this not clickable if it's on cooldown
-    this.socket.emit('squad/shieldmaidenActivate', {player_uuid: this.player.uuid})
-    // timer
-    button.timer && this.game.clock.events.remove(this.timer);
-    button.timer = this.game.clock.events.repeat(1000, button.count,
-      function() {
-        button.label.text = (--button.count).toString();
-        button.invalidate(false, true);
-        if(button.count === 0){
-          button.disabled(false);
-          button.label.visible = false;
-        }
-      });
-
-    return
-  } else if(this.player && button && data.uuid === this.player.uuid) {
+  if(this.player && button && data.uuid === this.player.uuid) {
     // disable
     button.disabled(true);
     button.count = global.parseInt(config['basic'].cooldown);
@@ -285,9 +239,11 @@ EnhancementPane.prototype._player = function(player) {
     enhancement = enhancements[i];
 
     if(enhancement) {
-      button = this.create(enhancement);
+      button = this.create(enhancement, i+1);
       button.id = enhancement;
       button.bg.on('inputUp', this._select, this);
+      button.bg.on('inputOver', this._hover, this);
+      button.bg.on('inputOut', this._unhover, this);
       button.start();
 
       buttons[enhancement] = button;
