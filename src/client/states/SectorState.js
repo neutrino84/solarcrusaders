@@ -6,6 +6,7 @@ var engine = require('engine'),
     Planet = require('../fx/Planet'),
     NebulaCluster = require('../fx/NebulaCluster'),
     Snow = require('../fx/Snow'),
+    MiniMap = require('../fx/MiniMap'),
     InputManager = require('../objects/sector/InputManager'),
     ShipManager = require('../objects/sector/ShipManager'),
     StationManager = require('../objects/sector/StationManager'),
@@ -155,10 +156,13 @@ SectorState.prototype.createSpace = function() {
 
   this.planet = new Planet(this.game);
 
+  this.miniMap = new MiniMap(this.game);
+
   this.nebula = new NebulaCluster(this.game);
   this.nebula.position.set(-256, 1024);
   this.nebula.create(3);
 
+  this.game.stage.addChild(this.miniMap.shipGroup)
   this.game.world.static.add(this.space);
   this.game.world.background.add(this.planet);
   this.game.world.foreground.add(this.nebula);

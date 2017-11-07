@@ -63,17 +63,17 @@ Ship.prototype.test = function(){
   this.ship.y += this.ship.direction.y;
 };
 
-Ship.prototype._renderWebGL = function(renderer) {
-  if(this.needUpdate){
-    this.test();
-    this.update();
-  }
-  if(this.glDirty) {
-    this.dirty = true;
-    this.glDirty = false;
-  }
-  renderer.setObjectRenderer(renderer.plugins[this.objectRenderer]);
-  renderer.plugins[this.objectRenderer].render(this);
-};
+// Ship.prototype._renderWebGL = function(renderer) {
+//   if(this.needUpdate){
+//     this.test();
+//     this.update();
+//   }
+//   if(this.glDirty) {
+//     this.dirty = true;
+//     this.glDirty = false;
+//   }
+//   renderer.setObjectRenderer(renderer.plugins[this.objectRenderer]);
+//   renderer.plugins[this.objectRenderer].render(this);
+// };
 
 module.exports = Ship;

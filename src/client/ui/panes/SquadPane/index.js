@@ -200,6 +200,9 @@ SquadPane.prototype._select = function(button_bg) {
         button.count = 5;
         button.label.text = button.count;
         button.label.visible = true;
+        if(button.hotkey.alpha > 0){
+          button.hotkey.alpha = -1;
+        }
         button.invalidate(false, true);
 
         // timer
@@ -233,7 +236,7 @@ SquadPane.prototype._shieldDestination = function(key) {
       button = this.buttons[key];
 
   if(!button){return}
-    
+
   if(!button.label.visible){
     button.disabled(true);
     button.count = 5;

@@ -95,7 +95,7 @@ EnhancementPane.prototype.create = function(enhancement, key) {
         detect : 'd'
       }, 
       button;
-      
+
       if(enhancement){
         button = new ButtonIcon(game, {
           padding: [0, 0, 2, 0],
@@ -186,6 +186,11 @@ EnhancementPane.prototype._started = function(data) {
     button.count = global.parseInt(config['basic'].cooldown);
     button.label.text = button.count;
     button.label.visible = true;
+
+    if(button.hotkey.alpha > 0){
+      button.hotkey.alpha = -1;
+    };
+    
     button.invalidate(false, true);
 
     // timer
