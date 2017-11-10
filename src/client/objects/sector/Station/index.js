@@ -54,7 +54,7 @@ Station.prototype.boot = function() {
   this.data.on('data', this.refresh, this);
 
   // get the explosion bug out of the way
-  this.explode();
+  // this.explode();
 
   this.hud.hide();
 };

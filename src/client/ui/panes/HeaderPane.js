@@ -74,6 +74,10 @@ function HeaderPane(game, settings) {
   // game.clock.events.loop(500, this._updateInfo, this);
 };
 
+HeaderPane.prototype.fadeIn = function() {
+  // this.alpha
+};
+
 HeaderPane.prototype = Object.create(Pane.prototype);
 HeaderPane.prototype.constructor = HeaderPane;
 

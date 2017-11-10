@@ -451,8 +451,23 @@ Shipyard.prototype._select= function(button){
   this.socket.emit('user/shipSelected', button.parent.id, this.game.auth.socket.id)
   this.game.emit('shipyard/hover', 'selectionSFX2')
   this.game.emit('user/shipSelected')
-  this.parent.panels[0].alpha = 1;
-  this.destroy()
+  // this.parent.panels[0].alpha = 1;
+  var scope = this;
+  this.alpha = 0;
+  this.game.clock.events.loop(100, fadeInHeader = function(){
+    console.log('oh', scope.parent.panels)
+    scope.parent.panels[0].alpha += 0.025;
+    // scope.alpha -= 0.1;
+    if(scope.parent.panels[0].alpha >= 1){
+      for(var i = 0; i < this.game.clock.events.events.length; i++){
+        if(scope.game.clock.events.events[i].callback.name === 'fadeInHeader'){
+          scope.game.clock.events.remove(scope.game.clock.events.events[i]);
+        }
+      }
+      scope.destroy()
+    }
+  }, this);
+
 };
 
 Shipyard.prototype._unhover = function(button) {

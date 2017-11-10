@@ -107,7 +107,7 @@ MiniMapPane.prototype._sync = function(data) {
     ship = this.ships[sync.uuid];
     type = null;
 
-    if(ship) {
+    if(ship && !ship.disabled) {
       if(ship === this.player){
         this.mapSettings.user.ship.x = ship.x;
         this.mapSettings.user.ship.y = ship.y;

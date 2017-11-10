@@ -305,8 +305,6 @@ SoundManager.prototype._disabled = function(data) {
       };
       if(ship.data.chassis === 'squad-shield' || ship.data.chassis === 'squad-attack' || ship.data.chassis === 'squad-repair'){
         sound = 'squadshipDeath';
-        // volume = volume*0.25
-        console.log(volume)
       };
       if(ship.data.chassis === 'scavenger-x02' || ship.data.chassis === 'scavenger-x01'){
         num = Math.floor((Math.random() * 2)+1);

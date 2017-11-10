@@ -31,9 +31,16 @@ Explosion.prototype.start = function() {
   manager.shockwaveEmitter.explode(1);
   // manager.shockwaveEmitter.explode(2);
 
+
+  var explosionValue = rnd.frac()+0.075
+
   manager.glowEmitter.explosion(ship);
   manager.glowEmitter.at({ center: ship.position });
-  manager.glowEmitter.explode(1.3);
+  manager.glowEmitter.explode(explosionValue);
+
+
+
+
   // manager.glowEmitter.explode(3);
 
   // events.repeat(50, 100, function() {
