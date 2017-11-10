@@ -14,8 +14,8 @@ function EventManager(game) {
 
   this.level = 1;
   this.ships = {
-    basic: 7,
-    pirate: 15,
+    basic: 11,
+    pirate: 21,
     enforcer: 1
   };
   // this.ships = {

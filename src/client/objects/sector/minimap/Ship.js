@@ -12,7 +12,8 @@ function Ship(game, shipSettings, settings) {
   }
 
   this.settings = settings;
-  this.thickness = 2;
+
+  this.thickness = this.ship.size * (2/90);
 
   this.lineStyle(0);
   this.beginFill(this.color, 0.9);

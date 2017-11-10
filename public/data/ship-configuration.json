@@ -101,7 +101,7 @@
       "evasion": 0.2,
       "energy": 200,
       "recharge": 1.2,
-      "size": 64,
+      "size": 72,
       "durability": 64,
       "critical": 0.01
     },
@@ -231,7 +231,7 @@
       "evasion": 0.2,
       "energy": 190,
       "recharge": 1,
-      "size": 64,
+      "size": 72,
       "durability": 64,
       "critical": 0.01
     },
@@ -346,7 +346,7 @@
       "evasion": 0.2,
       "energy": 130,
       "recharge": 1.7,
-      "size": 64,
+      "size": 72,
       "durability": 64,
       "critical": 0.01
     },
@@ -448,7 +448,7 @@
       "evasion": 0.2,
       "energy": 220,
       "recharge": 0.9,
-      "size": 64,
+      "size": 72,
       "durability": 64,
       "critical": 0.01
     },
@@ -578,7 +578,7 @@
       "evasion": 0.2,
       "energy": 200,
       "recharge": 1,
-      "size": 64,
+      "size": 72,
       "durability": 64,
       "critical": 0.01
     },
@@ -665,7 +665,7 @@
       "evasion": 0.2,
       "energy": 190,
       "recharge": 1.2,
-      "size": 64,
+      "size": 72,
       "durability": 64,
       "critical": 0.01
     },
@@ -893,7 +893,7 @@
       "evasion": 0.3,
       "energy": 200,
       "recharge": 1,
-      "size": 128,
+      "size": 54,
       "durability": 128,
       "critical": 0.01
     },
@@ -964,7 +964,7 @@
       "evasion": 0.3,
       "energy": 200,
       "recharge": 1,
-      "size": 90,
+      "size": 54,
       "durability": 128,
       "critical": 0.01
     },
@@ -1004,7 +1004,7 @@
             "subtype": "repair"
           }
         }
-        ]
+      ]
     }
   },
   "squad-shield": {
@@ -1020,7 +1020,7 @@
       "evasion": 0.3,
       "energy": 400,
       "recharge": 1,
-      "size": 90,
+      "size": 54,
       "durability": 128,
       "critical": 0.01
     },

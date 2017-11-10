@@ -84,7 +84,8 @@ function ShipManager(game, state, first) {
   this.game.on('ship/enabled', this._enabled, this);
   this.game.on('squad/shieldDestinationDeactivate', this._destinationDeactivate, this);
 
-  this.game.clock.events.loop(10, this._sendMapData, this)
+  // this.game.clock.events.loop(10, this._sendMapData, this)
+  this.game.clock.events.loop(5000, this._sendMapDataShips, this)
 };
 
 ShipManager.prototype.constructor = ShipManager;
@@ -99,16 +100,16 @@ ShipManager.prototype._sendMapData = function(){
       if(distance < 2000){
         data.push(ships[a])
       }
-      // data = {
-      //   ship : ships[a],
-      //   distance : distance
-      // }; 
     }
   }
   // data.push(player)
   if(data.length){
     this.game.emit('mapData', player, data) 
   }
+};
+
+ShipManager.prototype._sendMapDataShips = function(){
+    this.game.emit('shipsDump', this.ships) 
 };
 
 ShipManager.prototype.create = function(data, sync) {
