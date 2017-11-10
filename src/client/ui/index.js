@@ -6,6 +6,8 @@ var Panel = require('../ui/Panel'),
     Shipyard = require('../ui/panes/Shipyard'),
     SquadPane = require('../ui/panes/SquadPane'),
     BottomPane = require('../ui/panes/BottomPane'),
+    MiniMapPane = require('../ui/panes/MiniMapPane'),
+    HeaderPane = require('../ui/panes/HeaderPane'),
     LeaderBoardPane = require('../ui/panes/LeaderBoardPane');
 
 function UI(game) {
@@ -20,7 +22,13 @@ UI.prototype.preload = function() {
 
 UI.prototype.create = function() {
   this.bottom = new BottomPane(this.game);
+  this.header = new HeaderPane(this.game);
   // this.leaderBoard = new LeaderBoardPane(this.game);
+
+  // miniMap pane added to canvas
+  // this.miniMapPanel = new MiniMapPane(this.game);
+
+    // new FlowLayout(Layout.LEFT, Layout.TOP, Layout.HORIZONTAL, 6));
 
   this.root = new Pane(this.game, {
     width: this.game.width,
@@ -31,14 +39,22 @@ UI.prototype.create = function() {
     },
     bg: false
   });
+  this.root.addPanel(this.header);
+  this.header.id = 'header';
+  this.header.alpha = 0;
 
   // add elements
   if(!this.game.auth.user){
     this.shipyard = new Shipyard(this.game); 
     this.root.addPanel(this.shipyard);
   }
+  // this.miniMapPane = new MiniMapPane(this.game);
+  // this.root.addPanel(this.miniMapPane);
+  
   this.root.addPanel(this.bottom);
   // this.root.addPanel(this.leaderBoard);
+  //added miniMap pane
+  // this.miniMapPanel.addPanel(Layout.NONE, this.miniMapPane);
 
   // invalidate
   this.root.invalidate();

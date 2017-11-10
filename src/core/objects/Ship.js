@@ -489,7 +489,6 @@ Ship.prototype.destroy = function() {
   for(var e in available) {
     available[e].destroy();
   }
-  console.log(this.chassis, 'DESTROYED')
   this.ai && this.ai.destroy();
 
   this.sockets.send('ship/removed', {

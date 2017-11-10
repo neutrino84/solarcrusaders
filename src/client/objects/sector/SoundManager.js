@@ -73,7 +73,7 @@ SoundManager.prototype.preload = function() {
   load.audio('capital-explosion-b','sounds/explosions/actionExplosion.mp3');
   load.audio('capital-explosion-c','sounds/explosions/explosionBig100.mp3');
 
-  load.audio('squadshipDeath','sounds/explosions/shieldmaidenDeath.v2.mp3');
+  load.audio('squadshipDeath','sounds/explosions/squadShipExplosion3.mp3');
   load.audio('shieldUp','sounds/squadSounds/shieldUpBetterStill.mp3');
 
   load.audio('queenDeath','sounds/explosions/queenDeath.mp3');
@@ -305,7 +305,7 @@ SoundManager.prototype._disabled = function(data) {
       };
       if(ship.data.chassis === 'squad-shield' || ship.data.chassis === 'squad-attack' || ship.data.chassis === 'squad-repair'){
         sound = 'squadshipDeath';
-        volume = volume*0.25
+        // volume = volume*0.25
         console.log(volume)
       };
       if(ship.data.chassis === 'scavenger-x02' || ship.data.chassis === 'scavenger-x01'){
@@ -376,7 +376,7 @@ SoundManager.prototype.generateSystemSound = function(sound){
 
 SoundManager.prototype.generateBackgroundMusic = function(){
   var num = Math.floor((Math.random() * 3)+1);
-  // this.game.sound.play('background'+num, 0.6, true);
+  this.game.sound.play('background'+num, 0.6, true);
 };
 
 SoundManager.prototype.generateThrusterSound = function(){

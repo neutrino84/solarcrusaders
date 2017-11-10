@@ -83,9 +83,33 @@ function ShipManager(game, state, first) {
   this.game.on('ship/disabled', this._disabled, this);
   this.game.on('ship/enabled', this._enabled, this);
   this.game.on('squad/shieldDestinationDeactivate', this._destinationDeactivate, this);
+
+  this.game.clock.events.loop(10, this._sendMapData, this)
 };
 
 ShipManager.prototype.constructor = ShipManager;
+
+ShipManager.prototype._sendMapData = function(){
+  var player = this.player,
+      ships = this.ships, 
+      data = [], distance;
+  for(var a in ships){
+    if(!ships[a].disabled && !ships[a] !== player){
+      distance = engine.Point.distance(player, ships[a]);
+      if(distance < 2000){
+        data.push(ships[a])
+      }
+      // data = {
+      //   ship : ships[a],
+      //   distance : distance
+      // }; 
+    }
+  }
+  // data.push(player)
+  if(data.length){
+    this.game.emit('mapData', player, data) 
+  }
+};
 
 ShipManager.prototype.create = function(data, sync) {
   var game = this.game,
@@ -115,12 +139,15 @@ ShipManager.prototype.create = function(data, sync) {
     this.player.squadron[ship.uuid] = ship;
 
     if(ship.data.chassis === 'squad-shield'){
+      ship.data.ai = 'squadron';
       this.game.emit('ship/player/squadSync', 'shieldship')
     }
     if(ship.data.chassis === 'squad-attack'){
+      ship.data.ai = 'squadron'
       this.game.emit('ship/player/squadSync', 'attackship')
     }
     if(ship.data.chassis === 'squad-repair'){
+      ship.data.ai = 'squadron'
       this.game.emit('ship/player/squadSync', 'repairship')
     }
   }
@@ -259,7 +286,6 @@ ShipManager.prototype._attack = function(data) {
 
 ShipManager.prototype._destinationDeactivate = function() {
   var player = this.player;
-  console.log('ship manager, about to deactivate')
   this.socket.emit('squad/shieldDestinationDeactivate', player.uuid)
 };
 

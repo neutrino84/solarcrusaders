@@ -22,12 +22,12 @@ function BottomPane(game) {
   });
 
   this.enhancementPane = new EnhancementPane(game);
+  this.squadPane = new SquadPane(game);
   
-  this.addPanel(this.enhancementPane);
   // this.addPanel(this.squadIcons);
   // this.socket.on('player/hasSquadron', this._squadPane, this)
   // this._squadPane();
-  this.squadPane = new SquadPane(game);
+  this.addPanel(this.enhancementPane);
   this.addPanel(this.squadPane);
 };
 

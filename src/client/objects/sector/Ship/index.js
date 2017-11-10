@@ -16,6 +16,8 @@ function Ship(manager, data) {
   this.name = data.name;
   this.manager = manager;
   this.data = data;
+  // console.log('ship init', data.ai)
+  // console.log('ship init', data)
   
   // config data
   this.config = data.config.ship;

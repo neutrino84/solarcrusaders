@@ -12,7 +12,7 @@ function MiniMap(game) {
   engine.Shader.call(this, game, this.spaceTexture);
 
   var fieldSize = 4096;
-  var divider = 2;
+  var divider = 6;
   var size = game.width < game.height ? game.width/divider : game.height/divider;
   
   this.settings = {
@@ -21,8 +21,8 @@ function MiniMap(game) {
     },
     size: size,
     fieldSize: fieldSize,
-    zoom: 10,
-    margin: [8, 8],
+    zoom: 5,
+    margin: [10, 10],
     divider: divider,
     user: {
       ship: {
@@ -33,8 +33,8 @@ function MiniMap(game) {
   };
 
   this._width = this._height = this.settings.size;
-  // this.position.set(this.settings.margin[0], this.settings.margin[1]);
-  this.paint();
+  this.position.set(this.settings.margin[0], this.settings.margin[1]);
+  // this.paint();
 
   this.others = [];
   this.neutrals = [];
@@ -50,6 +50,10 @@ function MiniMap(game) {
 
 MiniMap.prototype = Object.create(engine.Shader.prototype);
 MiniMap.prototype.constructor = MiniMap;
+
+MiniMap.prototype._mapTest = function(data){
+  // console.log('in maptest, data is ', data.ship.data.chassis, data.distance)
+};
 
 MiniMap.prototype._drawShips = function() {
   var scope = this;
@@ -88,8 +92,8 @@ MiniMap.prototype._getUsers = function() {
     for(var i = 0; i < count; i++) {
       group.push({
           ship: {
-              x: scope.settings.user.ship.x + engine.Math.getRandomInt(-300, 300),
-              y: scope.settings.user.ship.y + engine.Math.getRandomInt(-300, 300),
+            x: scope.settings.user.ship.x + engine.Math.getRandomInt(-300, 300),
+            y: scope.settings.user.ship.y + engine.Math.getRandomInt(-300, 300),
           },
           color: color
       });
@@ -97,44 +101,47 @@ MiniMap.prototype._getUsers = function() {
   }
 };
 
+
+
 MiniMap.prototype.apply = function(renderer, shader) {
+  console.log('in apply', renderer, shader)
   shader.uniforms.translationMatrix = this.worldTransform.toArray(true);
   renderer.bindTexture(this._texture, 0);
 };
 
-MiniMap.prototype._test = function() {
-  if(this.shipGroup.children.length > 0) {
-    var index = engine.Math.getRandomInt(0, this.shipGroup.children.length - 1);
-    this.removeShip( index );
-  }
+// MiniMap.prototype._test = function() {
+//   if(this.shipGroup.children.length > 0) {
+//     var index = engine.Math.getRandomInt(0, this.shipGroup.children.length - 1);
+//     this.removeShip( index );
+//   }
 
-  if(engine.Math.getRandomInt(0, 10) > 6 || this.shipGroup.children.length < 8){
-    var ship = {
-      ship: {
-        x: this.settings.user.ship.x + engine.Math.getRandomInt(-300, 300),
-        y: this.settings.user.ship.y + engine.Math.getRandomInt(-300, 300)
-      },
-      color: this.settings.colors[Object.keys(this.settings.colors)[engine.Math.getRandomInt(0, 2)]]
-    };
-    this._drawShip(ship);
-  }
-};
+//   if(engine.Math.getRandomInt(0, 10) > 6 || this.shipGroup.children.length < 8){
+//     var ship = {
+//       ship: {
+//         x: this.settings.user.ship.x + engine.Math.getRandomInt(-300, 300),
+//         y: this.settings.user.ship.y + engine.Math.getRandomInt(-300, 300)
+//       },
+//       color: this.settings.colors[Object.keys(this.settings.colors)[engine.Math.getRandomInt(0, 2)]]
+//     };
+//     this._drawShip(ship);
+//   }
+// };
 
 MiniMap.prototype.removeShip = function(index) {
   this.shipGroup.remove( this.shipGroup.children[index]);
 };
 
 MiniMap.prototype.paint = function(top, left, bottom, right) {
-   var ax = this.settings.layout.ax,
-       ay = this.settings.layout.ay,
-       width = this._width,
-       height = this._height;
-   this.settings.margin[0] =
-     ax == Layout.RIGHT ? game.width - width :
-       ax == Layout.CENTER ? (game.width - width) / 2 : this.settings.margin[0];
-   this.settings.margin[1] =
-     ay == Layout.BOTTOM ? game.height - height :
-       ay == Layout.CENTER ? (game.height - height) / 2 : this.settings.margin[1];
+   // var ax = this.settings.layout.ax,
+   //     ay = this.settings.layout.ay,
+   //     width = this._width,
+   //     height = this._height;
+   // this.settings.margin[0] =
+   //   ax == Layout.RIGHT ? game.width - width :
+   //     ax == Layout.CENTER ? (game.width - width) / 2 : this.settings.margin[0];
+   // this.settings.margin[1] =
+   //   ay == Layout.BOTTOM ? game.height - height :
+   //     ay == Layout.CENTER ? (game.height - height) / 2 : this.settings.margin[1];
    this.position.set(this.settings.margin[0], this.settings.margin[1]);
 };
 
@@ -142,7 +149,7 @@ MiniMap.prototype.resize = function(width, height) {
   this.settings.size = width < height ? width / this.settings.divider : height / this.settings.divider;
   this._width = this._height = this.settings.size;
 
-  this.paint();
+  // this.paint();
 
   for(var i = 0; i < this.shipGroup.children.length; i++){
     this.shipGroup.children[i].update();

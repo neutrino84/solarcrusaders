@@ -360,7 +360,8 @@ Emitter.prototype.setTint = function(startTint, endTint, rate, ease, yoyo) {
     tints.reverse();
 
     // store
-    this.tintData = game.cache.addBinary(key, tints);
+    // this.tintData = game.cache.addBinary(key, tints);
+    this.tintData = tints;
   }
 };
 
