@@ -158,17 +158,16 @@ SquadManager.prototype.engageHostile = function(){
     var ship = ships[s];
     ship.selector.hostileEngagedStop();
     ship.selector.hostileHighlightStop();
-  }
-  if(!player.acquired.data.disabled && available)
-   player.acquired.selector.hostileEngaged();
-   player.events.add(12000, function(){
-    this.ok = true;
-    this.soundTimer['hostileEngaged'] = null;
-   }, this)
-   if(this.ok){
-      this.game.emit('squad/sound','engage');
-      this.ok = false;
-   }
+    }
+    player.acquired.selector.hostileEngaged();
+     // player.events.add(12000, function(){
+     //  this.ok = true;
+     //  this.soundTimer['hostileEngaged'] = null;
+     // }, this)
+     // if(this.ok){
+        this.game.emit('squad/sound','engage');
+        // this.ok = false;
+     // }
     this.socket.emit('squad/engageHostile', {player_id: player.uuid, target_id : player.acquired.uuid });
   };
 };

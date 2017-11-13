@@ -455,7 +455,6 @@ Shipyard.prototype._select= function(button){
   var scope = this;
   this.alpha = 0;
   this.game.clock.events.loop(100, fadeInHeader = function(){
-    console.log('oh', scope.parent.panels)
     scope.parent.panels[0].alpha += 0.025;
     // scope.alpha -= 0.1;
     if(scope.parent.panels[0].alpha >= 1){

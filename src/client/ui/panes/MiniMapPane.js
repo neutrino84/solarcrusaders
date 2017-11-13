@@ -67,9 +67,10 @@ function MiniMapPane(game, settings) {
 
   this._drawShips();
 
-  this.game.on('mapData', this._mapData, this)
+  // this.game.on('mapData', this._mapData, this)
   this.game.on('shipsDump', this._shipsRefresh, this)
   this.game.on('sector/sync', this._sync, this);
+
   this.game.on('ship/player', this._player, this);
 };
 
@@ -146,8 +147,9 @@ MiniMapPane.prototype._mapData = function(player, data) {
       ubaidian = /^(ubaidian)/,
       scav = /^(scavenger)/, type,
       ai;
-  // this.mapSettings.user.ship.x = player.position.x;
-  // this.mapSettings.user.ship.y = player.position.y;
+  this.mapSettings.user.ship.x = player.position.x;
+  this.mapSettings.user.ship.y = player.position.y;
+
 
   this.catalogue = {
     squadron : [],
@@ -167,11 +169,14 @@ MiniMapPane.prototype._mapData = function(player, data) {
       type = 'pirates'
     } else if (scav.test(data[i].data.chassis)){
       type = 'scavengers'
+    } else {
+      type = 'others'
     }
     this.catalogue[type].push({
       ship: {
         x: data[i].position.x,
-        y: data[i].position.y
+        y: data[i].position.y,
+        size : data[i].data.size
       },
       color: this.mapSettings.colors[type]
     })
