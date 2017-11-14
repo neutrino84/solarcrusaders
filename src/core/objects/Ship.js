@@ -199,9 +199,9 @@ Ship.prototype.attacked = function(target, slot, target_uuid) {
         ship.hit(this, target, slot, target_uuid);
       }
     };
-    for(var st in stations){
-        stations[st].hit(this, target, slot);
-    };
+    // for(var st in stations){
+    //     stations[st].hit(this, target, slot);
+    // };
   };
 };
 
@@ -303,7 +303,7 @@ Ship.prototype.hit = function(attacker, target, slot, target_uuid) {
         this.disable();
 
         // update attacker reputation
-        attacker.reputation = global.Math.floor(attacker.reputation + (this.reputation * -0.05));
+        // attacker.reputation = global.Math.floor(attacker.reputation + (this.reputation * -0.05));
         updates.push({
           uuid: attacker.uuid,
           reputation: attacker.reputation

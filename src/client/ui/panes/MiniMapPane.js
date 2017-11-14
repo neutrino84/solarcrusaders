@@ -21,8 +21,7 @@ function MiniMapPane(game, settings) {
   this.modifier = { left: 0.0, top: 0.0, width: 1.0, height: 1.0 };
 
   var divider = 4;
-  // console.log(game.height, divider, size)
-  // debugger
+
   var size = game.width < game.height ? game.width/divider : game.height/divider;
 
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -68,13 +67,14 @@ function MiniMapPane(game, settings) {
   this._drawShips();
 
   // this.game.on('mapData', this._mapData, this)
+
   this.game.on('shipsDump', this._shipsRefresh, this)
   this.game.on('sector/sync', this._sync, this);
 
   this.game.on('ship/player', this._player, this);
 };
 
-// multiple inheritence
+
 MiniMapPane.prototype = Object.create(Graphics.prototype);
 MiniMapPane.prototype.constructor = MiniMapPane;
 
@@ -141,49 +141,49 @@ MiniMapPane.prototype._sync = function(data) {
   this._drawShips(); 
 };
 
-MiniMapPane.prototype._mapData = function(player, data) {
-  var scope = this, 
-      pirate = /^(pirate)/,
-      ubaidian = /^(ubaidian)/,
-      scav = /^(scavenger)/, type,
-      ai;
-  this.mapSettings.user.ship.x = player.position.x;
-  this.mapSettings.user.ship.y = player.position.y;
+// MiniMapPane.prototype._mapData = function(player, data) {
+//   var scope = this, 
+//       pirate = /^(pirate)/,
+//       ubaidian = /^(ubaidian)/,
+//       scav = /^(scavenger)/, type,
+//       ai;
+//   this.mapSettings.user.ship.x = player.position.x;
+//   this.mapSettings.user.ship.y = player.position.y;
 
 
-  this.catalogue = {
-    squadron : [],
-    pirates : [],
-    neutrals : [],
-    scavengers : [],
-    users : [],
-    others : []
-  }
-  for(var i = 0; i < data.length; i++){
-    // data[i].data.ai = ai;
-    if(data[i].data.masterShip && data[i].data.masterShip == player.uuid){
-      type = 'squadron'
-    } else if(ubaidian.test(data[i].data.chassis)){
-      type = 'neutrals'
-    } else if (pirate.test(data[i].data.chassis)){
-      type = 'pirates'
-    } else if (scav.test(data[i].data.chassis)){
-      type = 'scavengers'
-    } else {
-      type = 'others'
-    }
-    this.catalogue[type].push({
-      ship: {
-        x: data[i].position.x,
-        y: data[i].position.y,
-        size : data[i].data.size
-      },
-      color: this.mapSettings.colors[type]
-    })
-  }
-  this._removeShips();
-  this._drawShips();
-};
+//   this.catalogue = {
+//     squadron : [],
+//     pirates : [],
+//     neutrals : [],
+//     scavengers : [],
+//     users : [],
+//     others : []
+//   }
+//   for(var i = 0; i < data.length; i++){
+//     // data[i].data.ai = ai;
+//     if(data[i].data.masterShip && data[i].data.masterShip == player.uuid){
+//       type = 'squadron'
+//     } else if(ubaidian.test(data[i].data.chassis)){
+//       type = 'neutrals'
+//     } else if (pirate.test(data[i].data.chassis)){
+//       type = 'pirates'
+//     } else if (scav.test(data[i].data.chassis)){
+//       type = 'scavengers'
+//     } else {
+//       type = 'others'
+//     }
+//     this.catalogue[type].push({
+//       ship: {
+//         x: data[i].position.x,
+//         y: data[i].position.y,
+//         size : data[i].data.size
+//       },
+//       color: this.mapSettings.colors[type]
+//     })
+//   }
+//   this._removeShips();
+//   this._drawShips();
+// };
 
 MiniMapPane.prototype._drawShips = function() {
   var scope = this;
