@@ -15,11 +15,13 @@ UserManager.prototype.constructor = UserManager;
 UserManager.prototype.init = function() {
   // auth request
   this.sockets.on('auth/connect', this.connect, this);
-  this.sockets.on('user/ship', this.ship, this);
 
   // auth messaging
   this.game.on('auth/disconnect', this.disconnect, this);
   this.game.on('auth/remove', this.remove, this);
+
+  // listen for user ship selection
+  this.game.on('user/ship', this.ship, this);
 
   // user messaging
   this.game.on('user/add', this.add, this);
@@ -36,23 +38,19 @@ UserManager.prototype.remove = function(user) {
 UserManager.prototype.connect = function(socket) {
   var user,
       game = this.game,
+      users = game.users,
       session = socket.request.session,
-      data = session ? session.user : false;
-  if(data) {
-    if(this.exists(data)) {
-      winston.info('[UserManager] User already exists in game');
-      user = this.game.users[data.uuid];
-      user.reconnected(socket);
-    } else if(data && socket && session) {
-      winston.info('[UserManager] Creating user in game');
-      user = new User(game, data, socket);
-      user.init(function() {
-        game.emit('user/add', user);
-      }, this);
-    } else {
-      winston.info('[UserManager] User data error');
-      socket.disconnect(true);
-    }
+      data = session ? session.user : undefined;
+  if(data && users[data.uuid] && users[data.uuid].socket) {
+    winston.info('[UserManager] User already exists in game');
+    user = users[data.uuid];
+    user.reconnected(socket);
+  } else if(data && socket) {
+    winston.info('[UserManager] Creating user in game');
+    user = new User(game, data, socket);
+    user.init(function() {
+      game.emit('user/add', user);
+    }, this);
   } else {
     winston.info('[UserManager] User data error');
     socket.disconnect(true);
@@ -101,7 +99,8 @@ UserManager.prototype.data = function(uuids) {
       users.push({
         uuid: user.uuid,
         name: user.data.name,
-        username: user.data.username
+        username: user.data.username,
+        credits: user.credits
       });
     }
   }
@@ -121,10 +120,6 @@ UserManager.prototype.update = function() {
       type: 'update', users: updates
     });
   }
-};
-
-UserManager.prototype.exists = function(user) {
-  return user && this.game.users[user.uuid] && this.game.users[user.uuid].socket ? true : false;
 };
 
 module.exports = UserManager;
