@@ -1,5 +1,6 @@
 
-var uuid = require('uuid'),
+var winston = require('winston'),
+    uuid = require('uuid'),
     engine = require('engine'),
     AI = require('./AI'),
     Ship = require('./objects/Ship');
@@ -60,25 +61,30 @@ ShipManager.prototype.add = function(ship) {
 };
 
 ShipManager.prototype.remove = function(ship) {
-  var s = this.game.ships[ship.uuid];
-  if(s !== undefined) {
-    delete this.game.ships[ship.uuid] && s.destroy();
+  if(this.game.ships[ship.uuid]) {
+    this.game.ships[ship.uuid].destroy();
+    this.game.ships[ship.uuid] = undefined;
+  } else {
+    winston.warn('ship could not be removed and destroyed');
   }
 };
 
 ShipManager.prototype.create = function(data, user, master) {
-  var self = this, ship,
-      game = this.game;
-  ship = new Ship(this, data, user, master);
+  var self = this,
+      game = this.game,
+      ship = new Ship(this, data, user, master);
+  
+  // initialize ship
   ship.init(function() {
     game.emit('ship/add', ship);
   });
 };
 
 ShipManager.prototype.plot = function(socket, args) {
-  var user = socket.request.session.user,
+  var game = this.game,
+      user = socket.request.session.user,
       data = args[1],
-      ship = this.game.ships[data.uuid];
+      ship = game.ships[data.uuid];
   if(ship && ship.user && ship.user.uuid === user.uuid) {
     ship.plot(data.coordinates);
   }
@@ -115,9 +121,10 @@ ShipManager.prototype.enhancement = function(socket, args) {
 
 ShipManager.prototype.data = function(uuids) {
   var ship,
-      ships = [];
+      ships = [],
+      game = this.game;
   for(var u in uuids) {
-    ship = this.game.ships[uuids[u]];
+    ship = game.ships[uuids[u]];
     if(ship) {
       ships.push({
         uuid: ship.uuid,
@@ -128,12 +135,14 @@ ShipManager.prototype.data = function(uuids) {
         rotation: ship.movement.rotation,
         speed: ship.speed * ship.movement.throttle,
         user: ship.user ? ship.user.uuid : null,
+        master: ship.master ? ship.master.uuid : null,
+        owner: ship.owner ? ship.owner.uuid : null,
         ai: ship.ai ? ship.ai.type : null,
-        station: ship.data.station,
+        station: ship.station ? ship.station.uuid : null,
         username: ship.user ? ship.user.data.username : ship.data.name,
         disabled: ship.disabled,
         size: ship.size,
-        credits: ship.data.credits,
+        credits: ship.data.credits.toFixed(0),
         reputation: ship.data.reputation,
         kills: ship.data.kills,
         disables: ship.data.disables,
@@ -161,15 +170,18 @@ ShipManager.prototype.sync = function() {
       synced = [];
   for(var s in ships) {
     ship = ships[s];
-    movement = ship.movement;
-    movement.update();
-    position = movement.position;
-    data = {
-      uuid: ship.uuid,
-      pos: { x: position.x, y: position.y },
-      spd: ship.speed * movement.throttle
-    };
-    synced.push(data);
+
+    if(ship) {
+      movement = ship.movement;
+      movement.update();
+      position = movement.position;
+      data = {
+        uuid: ship.uuid,
+        pos: { x: position.x, y: position.y },
+        spd: ship.speed * movement.throttle
+      };
+      synced.push(data);
+    }
   }
   return synced;
 };

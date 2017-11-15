@@ -12,13 +12,13 @@ function EventManager(game) {
   this.sockets = game.sockets;
 
   this.ships = {
-    basic: 0,
-    pirate: 0
+    basic: [],
+    pirate: []
   };
 
   this.stations = {
-    basic: null,
-    pirate: null
+    basic: [],
+    pirate: []
   };
 };
 
@@ -52,12 +52,29 @@ EventManager.prototype.start = function() {
     race: 'general',
     x: 0,
     y: 0,
-    radius: 512
+    radius: 256
   });
+
+  // create pirate ships
+  for(var i=0; i<0; i++) {
+    this.game.emit('ship/create', {
+      chassis: 'general-x0' + global.Math.ceil(global.Math.random() * 2),
+      ai: 'pirate'
+    });
+  }
+
+  // create ubaidian ships
+  for(var i=0; i<0; i++) {
+    this.game.emit('ship/create', {
+      chassis: 'ubaidian-x0' + global.Math.ceil(global.Math.random() * 5),
+      ai: 'basic'
+    });
+  }
 };
 
 EventManager.prototype.add = function(object) {
-  var stations = this.stations;
+  var game = this.game,
+      stations = this.stations;
 
   if(object instanceof User) {
 
@@ -72,6 +89,7 @@ EventManager.prototype.add = function(object) {
         case 'pirate':
           object.station = stations.pirate;
           object.data.station = stations.pirate.uuid;
+          break;
         default:
           break;
       }
@@ -91,34 +109,29 @@ EventManager.prototype.add = function(object) {
   }
 };
 
-EventManager.prototype.disabled = function(object) {
-  if(object.ai) {
-    switch(object.ai.type) {
+EventManager.prototype.disabled = function(data) {
+  if(data.ai) {
+    switch(data.ai.type) {
       case 'basic':
-        this.ships.basic--;
+        this.game.emit('ship/create', {
+          chassis: 'ubaidian-x0' + global.Math.ceil(global.Math.random() * 5),
+          ai: 'basic'
+        });
         break;
       case 'pirate':
-        this.ships.pirate--;
+        this.game.emit('ship/create', {
+          chassis: 'general-x0' + global.Math.ceil(global.Math.random() * 2),
+          ai: 'pirate'
+        });
+        break;
+      default:
         break;
     }
   }
 };
 
 EventManager.prototype.update = function() {
-  if(this.ships.pirate < 2) {
-    this.ships.pirate++;
-    this.game.emit('ship/create', {
-      chassis: 'general-x0' + global.Math.ceil(global.Math.random() * 2),
-      ai: 'pirate'
-    });
-  }
-  if(this.ships.basic < 0) {
-    this.ships.basic++;
-    this.game.emit('ship/create', {
-      chassis: 'ubaidian-x0' + global.Math.ceil(global.Math.random() * 5),
-      ai: 'basic'
-    });
-  }
+
 };
 
 module.exports = EventManager;
