@@ -4,6 +4,7 @@ var engine = require('engine'),
     NetManager = require('../net/NetManager'),
     Space = require('../fx/Space'),
     Planet = require('../fx/Planet'),
+    Snow = require('../fx/Snow'),
     NebulaCluster = require('../fx/NebulaCluster'),
     InputManager = require('../objects/sector/InputManager'),
     ShipManager = require('../objects/sector/ShipManager'),
@@ -16,7 +17,7 @@ var engine = require('engine'),
     ShockwaveEmitter = require('../objects/sector/emitters/ShockwaveEmitter'),
     FireEmitter = require('../objects/sector/emitters/FireEmitter'),
     Asteroid = require('../objects/sector/misc/Asteroid');
-    
+
 function SectorState(game) {
   this.game = game;
   this.auth = game.auth;
@@ -40,11 +41,13 @@ SectorState.prototype.preload = function() {
   this.soundManager.preload();
 
   // load background
+  this.game.load.image('snow', 'imgs/game/space/snow.jpg');
   this.game.load.image('space', 'imgs/game/space/sector-a.jpg');
-  this.game.load.image('nebula', 'imgs/game/space/nebula-a.jpg');
+  this.game.load.image('nebula', 'imgs/game/space/noise.jpg');
 
-  this.game.load.image('planet', 'imgs/game/planets/eamon-alpha.jpg');
   this.game.load.image('clouds', 'imgs/game/planets/clouds.jpg');
+  this.game.load.image('planet', 'imgs/game/planets/talus.jpg');
+  this.game.load.image('highlight', 'imgs/game/planets/talus-highlight.jpg');
 
   // load stations
   this.game.load.image('ubaidian-x01', 'imgs/game/stations/ubaidian-x01.png');
@@ -87,7 +90,7 @@ SectorState.prototype.create = function() {
 
   // set world
   this.game.world.size(0, 0, 4096, 4096);
-  this.game.world.scale.set(0.34, 0.34);
+  this.game.world.scale.set(0.38, 0.38);
 
   // adjust camera
   this.game.camera.focus(2048, 2048);
@@ -111,13 +114,26 @@ SectorState.prototype.createSpace = function() {
 
   this.planet = new Planet(this.game);
 
+  this.snow = new Snow(this.game, this.game.width, this.game.height);
+
   this.nebula = new NebulaCluster(this.game);
-  this.nebula.position.set(-256, 1024);
-  this.nebula.create(3);
+  this.nebula.position.set(1024 - 128, 1024 - 128);
+  this.nebula.create(12, 0.00006, 0.0, [0.2, 0.6, 0.8]);
+
+  this.neb1 = new NebulaCluster(this.game);
+  this.neb1.position.set(256, 256);
+  this.neb1.create(4, 0.00034, 256, [0.8, 0.2, 0.2]);
+
+  this.neb2 = new NebulaCluster(this.game);
+  this.neb2.position.set(128, 128);
+  this.neb2.create(4, 0.00034, 256, [1.0, 0.8, 0.2]);
 
   this.game.world.static.add(this.space);
+  this.game.world.static.add(this.snow);
+  this.game.world.background.add(this.nebula);
   this.game.world.background.add(this.planet);
-  this.game.world.foreground.add(this.nebula);
+  this.game.world.add(this.neb1);
+  this.game.world.add(this.neb2);
 };
 
 SectorState.prototype.createManagers = function() {
@@ -133,7 +149,7 @@ SectorState.prototype.createManagers = function() {
 SectorState.prototype.createAsteroids = function() {
   var game = this.game,
       steroid,
-      amount = 64;
+      amount = 32;
   for(var i=0; i<amount; i++) {
     asteroid = new Asteroid(this.game);
     asteroid.position.set(2048 / 4, 2048 / 4);
