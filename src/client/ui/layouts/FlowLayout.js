@@ -35,6 +35,7 @@ FlowLayout.prototype.calcPreferredSize = function(target) {
   } else {
     dim.height += add;
   }
+
   return dim;
 };
 
@@ -46,8 +47,8 @@ FlowLayout.prototype.doLayout = function(target) {
       lastOne = null,
       ew = target.size.width - l - target.right,
       eh = target.size.height - t - target.bottom,
-      px = ((this.ax == Layout.RIGHT) ? ew - psSize.width : ((this.ax == Layout.CENTER) ? ~~((ew - psSize.width) / 2) : 0)) + l,
-      py = ((this.ay == Layout.BOTTOM) ? eh - psSize.height : ((this.ay == Layout.CENTER) ? ~~((eh - psSize.height) / 2) : 0)) + t;
+      px = (this.ax == Layout.RIGHT ? ew - psSize.width : (this.ax == Layout.CENTER ? ~~((ew - psSize.width) / 2) : 0)) + l,
+      py = (this.ay == Layout.BOTTOM ? eh - psSize.height : (this.ay == Layout.CENTER ? ~~((eh - psSize.height) / 2) : 0)) + t;
 
   for(var i=0; i<target.panels.length; i++) {
     a = target.panels[i];

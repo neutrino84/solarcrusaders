@@ -146,7 +146,7 @@ TweenData.prototype = {
       }
     }
 
-    var ms = (this.parent.frameBased) ? this.game.time.physicsElapsedMS : this.game.clock.elapsedMS;
+    var ms = this.game.clock.elapsedMS;
     if(this.parent.reverse) {
       this.dt -= ms * this.parent.timeScale;
       this.dt = Math.max(this.dt, 0);

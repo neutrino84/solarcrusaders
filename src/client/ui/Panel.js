@@ -195,9 +195,11 @@ Panel.prototype.getPreferredSize = function() {
 };
 
 Panel.prototype.destroy = function(options) {
+  var parent = this.parent,
+      panels = this.panels;
+
   // remove panel
-  this.parent && this.parent.panels &&
-    this.parent.removePanel(this);
+  parent && parent.panels && parent.removePanel(this);
 
   // destroy sub-panels and views
   var arr = this.panels.concat(this.views),
@@ -206,12 +208,11 @@ Panel.prototype.destroy = function(options) {
     arr[i].destroy(options);
   }
 
+  // remove references
+  this.layout = undefined;
+
   // destroy group
   engine.Group.prototype.destroy.call(this, options);
-
-  // remove references
-  this.layout = this.constraint =
-    this.margin = this.padding = undefined;
 };
 
 Object.defineProperty(Panel.prototype, 'top', {

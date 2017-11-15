@@ -6,26 +6,23 @@ var engine = require('engine' ),
 function LeaderBoardRow(game, settings) {
   Pane.call(this, game, {
     constraint: Layout.STRETCH,
-    padding: [0],
     layout: {
       type: 'border',
       gap: [0, 0]
     },
     usernameLabel: {
-      constraint: Layout.LEFT,
       width: 156,
-      padding: [2],
+      constraint: Layout.LEFT,
       font: {
         name: 'full',
-        tint: 0x66aaff
+        color: 0xd0d0d0
       }
     },
     scoreLabel: {
       constraint: Layout.RIGHT,
-      padding: [2],
       font: {
         name: 'full',
-        tint: 0xffffff
+        color: 0xd0d0d0
       }
     }
   });
@@ -48,8 +45,15 @@ LeaderBoardRow.prototype.create = function() {
 };
 
 LeaderBoardRow.prototype.refresh = function(username, score) {
-  this.usernameLabel.text = username;
+  this.usernameLabel.text = username.toUpperCase();
   this.scoreLabel.text = score;
 };
+
+Object.defineProperty(LeaderBoardRow.prototype, 'tint', {
+  set: function(value) {
+    this.usernameLabel.tint = value;
+    this.scoreLabel.tint = value;
+  }
+});
 
 module.exports = LeaderBoardRow;
