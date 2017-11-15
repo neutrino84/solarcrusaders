@@ -13,19 +13,19 @@ GlowEmitter.prototype = Object.create(engine.Emitter.prototype);
 GlowEmitter.prototype.constructor = GlowEmitter;
 
 GlowEmitter.prototype.explosion = function(size) {
-  this.lifespan = 1600;
+  this.lifespan = 2800;
 
-  this.setScale(size/8, size*2, 600);
-  this.setAlpha(1.0, 0.0, 1600);
-  this.setTint(0xFFFFFF, 0xF4F4F4, 300);
+  this.setScale(size/24, size*1.2, 800);
+  this.setAlpha(1.0, 0.0, 2800);
+  this.setTint(0x000000, 0xffffff, 400);
 };
 
 GlowEmitter.prototype.burst = function(size) {
   this.lifespan = 1200;
 
-  this.setScale(size/12, size/6, 500);
-  this.setAlpha(1.0, 0.0, 1200);
-  this.setTint(0x180808, 0x442828, 500);
+  this.setScale(size/4.8, size/24, 1200);
+  this.setAlpha(0.2, 0.0, 1200);
+  this.setTint(0x000000, 0xff6633, 400);
 };
 
 module.exports = GlowEmitter;

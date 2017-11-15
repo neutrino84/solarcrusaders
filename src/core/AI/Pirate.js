@@ -5,7 +5,6 @@ function Pirate(ship, home) {
   Basic.call(this, ship);
 
   this.type = 'pirate';
-
   this.settings = {
     disengage: 9216,
     friendly: ['pirate'],
@@ -15,7 +14,7 @@ function Pirate(ship, home) {
     },
     sensor: {
       aim: 0.5,
-      range: 4096
+      range: 1024
     }
   };
 };

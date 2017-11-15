@@ -13,7 +13,7 @@ FireEmitter.prototype = Object.create(engine.Emitter.prototype);
 FireEmitter.prototype.constructor = FireEmitter;
 
 FireEmitter.prototype.energy = function(colors) {
-  var colors = colors || ['0xFFFFFF', '0xFF0000'],
+  var colors = colors || ['0xffffff', '0xFF0000'],
       rnd = this.game.rnd;
 
   this.lifespan = 300;
@@ -28,7 +28,7 @@ FireEmitter.prototype.energy = function(colors) {
 };
 
 FireEmitter.prototype.pulse = function(colors) {
-  var colors = colors || ['0xFFFFFF', '0xf0000'];
+  var colors = colors || ['0xffffff', '0xf0000'];
   
   this.lifespan = 200;
 
@@ -38,7 +38,7 @@ FireEmitter.prototype.pulse = function(colors) {
 };
 
 FireEmitter.prototype.laser = function(colors) {
-  colors = colors || ['0xFFFFFF', '0xff0000'];
+  colors = colors || ['0xffffff', '0xff0000'];
 
   this.lifespan = 150;
 
@@ -48,7 +48,7 @@ FireEmitter.prototype.laser = function(colors) {
 };
 
 FireEmitter.prototype.boost = function(colors) {
-  colors = colors || ['0xFFFFFF', '0xf4f4f4'];
+  colors = colors || ['0xffffff', '0xffffff'];
 
   this.lifespan = 500;
 
