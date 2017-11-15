@@ -14,7 +14,7 @@ function Squadron(ship, home) {
     },
     sensor: {
       aim: 0.5,
-      range: 4096
+      range: 1024
     }
   };
 };
@@ -39,20 +39,22 @@ Squadron.prototype.plot = function(){
       fence = this.fence,
       master = ship.master,
       p1 = ship.movement.position,
-      p2, size, distance;
+      p2 = master.movement.position,
+      size, distance;
 
   // plot destination
-  if(target && fence < 1024) {
+  if(target && fence < 2048) {
+    // plot heading towards target
     distance = target.movement.position.distance(ship.movement.position);
     size = target.data.size * 6;
     offset.copyFrom(target.movement.position);
     offset.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
+    ship.movement.formation = null;
     ship.movement.plot({ x: offset.x-p1.x, y: offset.y-p1.y }, engine.Math.clamp(distance/256, 0.4, 1.0));
-  } else if(master && master.data && rnd.frac() > 0.5) {
-    size = master.data.size * 4;
-    offset.copyFrom(master.movement.position);
-    offset.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
-    ship.movement.plot({ x: offset.x-p1.x, y: offset.y-p1.y }, engine.Math.clamp(fence/1024, 0.4, 1.0));
+  } else if(master && master.movement && rnd.frac() > 0.5) {
+    // get back in formation
+    ship.movement.formation = master.formation;
+    ship.movement.plot({ x: p2.x-p1.x, y: p2.y-p1.y });
   };
 };
 
