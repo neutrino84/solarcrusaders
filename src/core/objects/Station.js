@@ -13,6 +13,7 @@ function Station(manager, data) {
 
   this.uuid = this.data.uuid;
   this.chassis = this.data.chassis;
+  this.race = this.data.race;
 
   // disabled state
   this.disabled = false;
@@ -36,12 +37,14 @@ Station.prototype.save = function(callback) {
 
 Station.prototype.hit = function(attacker, target, slot) {
   var updates = {
+        user: [],
         ship: [],
         station: []
       },
       game = this.game,
       sockets = this.sockets,
       movement = this.movement,
+      race = this.data.race,
       hardpoint = attacker.hardpoints[slot],
       position = movement.position,
       distance = position.distance({ x: target.x, y: target.y }),
@@ -70,8 +73,10 @@ Station.prototype.hit = function(attacker, target, slot) {
       });
 
       // update attacker
+      attacker.credits = attacker.credits + (race === 'general' ? damage : 0);
       updates['ship'].push({
         uuid: attacker.uuid,
+        credits: attacker.credits.toFixed(0),
         hardpoint: {
           station: this.uuid,
           slot: hardpoint.slot,
@@ -79,6 +84,15 @@ Station.prototype.hit = function(attacker, target, slot) {
           damage: damage
         }
       });
+
+      // update attacker user
+      if(attacker.user) {
+        attacker.user.credits = attacker.credits;
+        updates['user'].push({
+          uuid: attacker.user.uuid,
+          credits: attacker.credits.toFixed(0)
+        });
+      }
     } else {
       // disengage attacker
       attacker.ai && attacker.ai.disengage();
@@ -95,6 +109,9 @@ Station.prototype.hit = function(attacker, target, slot) {
     }
     if(updates['station'].length) {
       game.emit('station/data', updates['station']);
+    }
+    if(updates['user'].length) {
+      game.emit('user/data', updates['user']);
     }
   }
 };
