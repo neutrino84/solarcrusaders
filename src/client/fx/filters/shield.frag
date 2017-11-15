@@ -91,8 +91,8 @@ void main(void) {
         n += 1.0 * abs(snoise(vec3(p, time)));
   
   float rn = 1.0 - n;
-        rn *= pow(rn, 10.0);
-        rn += (0.1 * sin(time * 2.5) + 0.2);
+        rn *= pow(rn, 1.5);
+        rn += (0.1 * sin(time * 2.0) + 0.2);
         rn *= tex.a;
 
   gl_FragColor = vec4(rn/2.0, rn/1.5, rn, rn);
