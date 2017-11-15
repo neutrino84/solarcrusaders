@@ -24,10 +24,7 @@ LoadingState.prototype.create = function() {
   this.progress = new ProgressBar(this.game, {
     width: 256,
     height: 8,
-    margin: [10],
-    bg: {
-      color: 0x333333
-    },
+    bg: { color: 0x282828 },
     progress: {
       color: 0xffffff,
       modifier: {
@@ -36,12 +33,14 @@ LoadingState.prototype.create = function() {
         width: 0.0,
         height: 1.0
       }
-    }
+    },
+    difference: false
   });
 
   // loading status label
   this.status = new Label(this.game, {
     constraint: undefined,
+    padding: [10],
     font: {
       name: 'small',
       text: 'preparing to load game'
@@ -83,7 +82,7 @@ LoadingState.prototype.loadingProgressBar = function() {
   var loaded = arguments[3],
       total = arguments[4],
       file = arguments[1];
-  this.progress.change('width', loaded/total);
+  this.progress.percentage('width', loaded/total);
   this.status.text = file;
   this.root.invalidate();
 };
