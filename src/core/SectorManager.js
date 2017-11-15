@@ -50,7 +50,6 @@ SectorManager.prototype.init = function() {
 
 SectorManager.prototype.update = function() {
   var sockets = this.sockets,
-      users = [], //this.userManager.all(),
       ships = this.shipManager.sync(),
       stations = this.stationManager.sync();
 
@@ -59,7 +58,6 @@ SectorManager.prototype.update = function() {
 
   // syncronize all
   sockets.send('sector/sync', {
-    users: users,
     ships: ships,
     stations: stations
   });
