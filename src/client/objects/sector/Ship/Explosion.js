@@ -31,17 +31,29 @@ Explosion.prototype.start = function() {
   state.glowEmitter.at({ center: ship.movement.position });
   state.glowEmitter.explode(1);
 
-  events.repeat(20, 50, function() {
+  for(var i=0; i<24; i++) {
+    state.flashEmitter.explosion();
+    state.flashEmitter.at({ center: ship.movement.position });
+    state.flashEmitter.explode(1);
+  }
+
+  events.repeat(20, 40, function() {
     state.glowEmitter.burst(ship.data.size);
     state.glowEmitter.at({ center: ship.movement.position });
     state.glowEmitter.explode(1);
+
+    if(rnd.frac() > 0.8) {
+      state.flashEmitter.explosion();
+      state.flashEmitter.at({ center: ship.movement.position });
+      state.flashEmitter.explode(1);
+    }
   });
 
   state.shockwaveEmitter.explosion(ship.data.size/8);
   state.shockwaveEmitter.at({ center: ship.movement.position });
   state.shockwaveEmitter.explode(1);
 
-  events.repeat(50, 50, function() {
+  events.repeat(40, 100, function() {
     if(rnd.frac() > 0.2) {
       state.explosionEmitter.explosion();
       state.explosionEmitter.at({ center: hit.random(undefined, temp) });

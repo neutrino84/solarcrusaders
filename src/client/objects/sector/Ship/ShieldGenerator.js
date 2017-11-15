@@ -12,11 +12,11 @@ function ShieldGenerator(parent) {
 ShieldGenerator.prototype.constructor = ShieldGenerator;
 
 ShieldGenerator.prototype.create = function() {
-  this.outlineSprite = new engine.Sprite(this.game, 'texture-atlas', this.parent.data.chassis + '.png');
   this.shieldSprite = new engine.Sprite(this.game, 'texture-atlas', this.parent.data.chassis + '.png');
+  this.outlineSprite = new engine.Sprite(this.game, 'texture-atlas', this.parent.data.chassis + '.png');
 
   this.shieldFilter = new ShieldFilter(this.game, this.shieldSprite);
-  this.outlineFilter = new OutlineFilter(0.5, 0x6699ff);
+  this.outlineFilter = new OutlineFilter(1.0, 0x99ccff);
 
   this.outlineSprite.filters = [this.outlineFilter];
   this.shieldSprite.filters = [this.shieldFilter];

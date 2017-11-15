@@ -22,7 +22,7 @@ Damage.prototype.critical = function() {
   events.repeat(20, 5, function() {
     state.flashEmitter.critical();
     state.flashEmitter.at({ center: parent });
-    state.flashEmitter.explode(2);
+    state.flashEmitter.explode(1);
   });
 };
 

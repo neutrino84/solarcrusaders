@@ -18,6 +18,14 @@ function Ship(manager, data) {
   this.state = manager.state;
   this.game = manager.game;
   this.data = data;
+
+  // convenience vars
+  this.uuid = data.uuid;
+  this.user = data.user;
+  this.master = data.master;
+  this.owner = data.owner;
+  this.username = data.username;
+  this.target = null;
   
   // config data
   this.config = data.config.ship;
@@ -72,8 +80,12 @@ Ship.prototype.create = function() {
 
   // set player
   if(this.isPlayer) {
-    this.hud.show();
     this.game.emit('ship/player', this);
+  }
+
+  // hud display
+  if(this.isPlayer || this.isPlayerOwned) {
+    this.hud.show();
   }
 };
 
@@ -97,12 +109,22 @@ Ship.prototype.refresh = function(data) {
     if(defender) {
       targetingComputer.hit(defender, data);
 
-      if(attacker.isPlayer && defender.data.ai === 'basic') {
+      // show targeted
+      if(attacker.isPlayer && defender.data.ai === 'pirate') {
+        defender.selector.targeted();
+      }
+
+      // friendly fire warning
+      if(attacker.user && !defender.isPlayerOwned && defender.data.ai !== 'pirate') {
         defender.selector && defender.selector.warn();
       }
+
+      // camera shake and hud
       if(defender.isPlayer) {
         game.camera.shake();
-      } else {
+      }
+
+      if(!defender.isPlayer) {
         defender.hud.show();
         defender.hud.timer && defender.events.remove(defender.hud.timer);
         defender.hud.timer = defender.events.add(3000, defender.hud.hide, defender.hud);
@@ -177,14 +199,20 @@ Ship.prototype.destroy = function(options) {
   engine.Sprite.prototype.destroy.call(this, options);
 
   this.manager = this.state = this.config =
-    this.movement = this.circle = this.hud =
-    this.selector = this.data = this.targetingComputer =
+    this.movement = this.hud = this.selector = 
+    this.data = this.targetingComputer =
     this.repair = this.engineCore = undefined;
 };
 
 Object.defineProperty(Ship.prototype, 'isPlayer', {
   get: function() {
-    return this.user !== undefined && this.game.auth.user.uuid === this.user;
+    return this.user && this.game.auth.user.uuid === this.user;
+  }
+});
+
+Object.defineProperty(Ship.prototype, 'isPlayerOwned', {
+  get: function() {
+    return this.owner && this.game.auth.user.uuid === this.owner;
   }
 });
 
