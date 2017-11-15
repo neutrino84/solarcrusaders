@@ -10,9 +10,11 @@ function Button(game, settings) {
   Pane.call(this, game, Class.mixin(settings, {
     label: false,
     bg: {
+      color: 0x000000,
+      fillAlpha: 1.0,
       alpha: {
         enabled: 1.0,
-        disabled: 1.0,
+        disabled: 0.5,
         over: 1.0,
         down: 1.0,
         up: 1.0
@@ -20,7 +22,7 @@ function Button(game, settings) {
     }
   }));
 
-  this.alerting = false;
+  // states
   this.disabled = false;
 
   // input handler
@@ -32,10 +34,6 @@ function Button(game, settings) {
   this.bg.on('inputDown', this._inputDown, this);
   this.bg.on('inputUp', this._inputUp, this);
 
-  this.bg.alpha = this.disabled ? 
-    this.settings.bg.alpha.disabled :
-    this.settings.bg.alpha.enabled;
-
   if(this.settings.label) {
     this.label = new Label(game, this.settings.label);
     this.addPanel(this.label);
@@ -46,6 +44,7 @@ Button.prototype = Object.create(Pane.prototype);
 Button.prototype.constructor = Button;
 
 Button.prototype.start = function() {
+  this.bg.alpha = this.settings.bg.alpha.up;
   this.bg.inputEnabled = true;
 };
 
@@ -53,19 +52,13 @@ Button.prototype.stop = function() {
   this.bg.inputEnabled = false;
 };
 
-Button.prototype.alert = function(value) {
-  this.alerting = value;
-};
-
 Button.prototype.disable = function(value) {
   this.disabled = value;
-
   if(this.disabled) {
     this.stop();
   } else {
     this.start();
   }
-
   this._inputOut();
 };
 
