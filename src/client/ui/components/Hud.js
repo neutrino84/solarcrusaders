@@ -19,7 +19,7 @@ function Hud(ship, settings) {
       progress: {
         color: 0x66ff66,
         fillAlpha: 0.5,
-        blendMode: engine.BlendMode.ADD,
+        // blendMode: engine.BlendMode.ADD,
         modifier: {
           left: 0.0,
           top: 0.0,
@@ -38,7 +38,7 @@ function Hud(ship, settings) {
       progress: {
         color: 0xffff66,
         fillAlpha: 0.5,
-        blendMode: engine.BlendMode.ADD,
+        // blendMode: engine.BlendMode.ADD,
         modifier: {
           left: 0.0,
           top: 0.0,
@@ -65,6 +65,7 @@ function Hud(ship, settings) {
   }));
 
   this.ship = ship;
+  this.visible = false;
 
   this.container = new Pane(this.game, this.settings.container);
   this.energyBar = new ProgressBar(this.game, this.settings.energyBar);
@@ -80,12 +81,8 @@ Hud.prototype = Object.create(Pane.prototype);
 Hud.prototype.constructor = Hud;
 
 Hud.prototype.create = function() {
-  var game = this.game,
-      ship = this.ship,
-      stats = ship.config.stats,
-      data = ship.data;
-
-  this.ship = ship;
+  var stats = this.ship.config.stats,
+      data = this.ship.data;
 
   this.healthBar.percentage(data.health / stats.health);
   this.energyBar.percentage(data.energy / stats.energy);
@@ -95,29 +92,15 @@ Hud.prototype.create = function() {
   this.pivot.set(this.cachedWidth/2, this.cachedHeight/2);
   this.position.set(this.ship.width/2, this.ship.height/2);
 
-  this.visible = false;
-  this.alpha = 0.0;
-
   this.ship.addChild(this);
 };
 
 Hud.prototype.show = function() {
   this.visible = true;
-  this.animating && this.animating.isRunning && this.animating.stop(false);
-  this.animating = this.game.tweens.create(this);
-  this.animating.to({ alpha: 1.0 }, 250);
-  this.animating.on('complete', this.update, this);
-  this.animating.start();
 };
 
 Hud.prototype.hide = function() {
-  this.animating && this.animating.isRunning && this.animating.stop(false);
-  this.animating = this.game.tweens.create(this);
-  this.animating.to({ alpha: 0.0 }, 250);
-  this.animating.on('complete', function() {
     this.visible = false;
-  }, this);
-  this.animating.start();
 };
 
 Hud.prototype.update = function() {
@@ -141,38 +124,29 @@ Hud.prototype.data = function(data) {
       healthBar = this.healthBar,
       energyBar = this.energyBar;
   if(this.visible) {
-    data.health && healthBar.change('width', data.health / stats.health);
-    data.energy && energyBar.change('width', data.energy / stats.energy);
+    data.health && healthBar.percentage('width', data.health / stats.health);
+    data.energy && energyBar.percentage('width', data.energy / stats.energy);
   }
 };
 
 Hud.prototype.enable = function() {
-  this.healthBar.reset();
   this.healthBar.percentage('width', 1);
-
-  this.energyBar.reset();
   this.energyBar.percentage('width', 1);
 
-  this.ship.isPlayer && this.show();
+  this.show();
 };
 
 Hud.prototype.disable = function() {
-  this.healthBar.reset();
   this.healthBar.percentage('width', 0);
-
-  this.energyBar.reset();
   this.energyBar.percentage('width', 0);
 
   this.hide();
 };
 
 Hud.prototype.destroy = function(options) {
-  this.animating && this.animating.isRunning && this.animating.stop(false);
-  
-  Pane.prototype.destroy.call(this, options);
+  this.ship = undefined;
 
-  this.username = this.game = this.ship =
-    this.layout = this.settings = undefined;
+  Pane.prototype.destroy.call(this, options);
 };
 
 module.exports = Hud;

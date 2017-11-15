@@ -19,7 +19,7 @@ function HudStation(station, settings) {
       progress: {
         color: 0x66ff66,
         fillAlpha: 0.5,
-        blendMode: engine.BlendMode.ADD,
+        // blendMode: engine.BlendMode.ADD,
         modifier: {
           left: 0.0,
           top: 0.0,
@@ -46,6 +46,7 @@ function HudStation(station, settings) {
   }));
 
   this.station = station;
+  this.visible = false;
 
   this.container = new Pane(this.game, this.settings.container);
   this.healthBar = new ProgressBar(this.game, this.settings.healthBar);
@@ -59,14 +60,8 @@ HudStation.prototype = Object.create(Pane.prototype);
 HudStation.prototype.constructor = HudStation;
 
 HudStation.prototype.create = function() {
-  var game = this.game,
-      station = this.station,
-      stats = station.config.stats,
-      data = station.data;
-
-  this.station = station;
-  this.visible = false;
-  this.alpha = 0.0;
+  var stats = this.station.config.stats,
+      data = this.station.data;
 
   this.healthBar.percentage(data.health / stats.health);
 
@@ -80,21 +75,10 @@ HudStation.prototype.create = function() {
 
 HudStation.prototype.show = function() {
   this.visible = true;
-  this.animating && this.animating.isRunning && this.animating.stop(false);
-  this.animating = this.game.tweens.create(this);
-  this.animating.to({ alpha: 1.0 }, 250);
-  this.animating.on('complete', this.update, this);
-  this.animating.start();
 };
 
 HudStation.prototype.hide = function() {
-  this.animating && this.animating.isRunning && this.animating.stop(false);
-  this.animating = this.game.tweens.create(this);
-  this.animating.to({ alpha: 0.0 }, 250);
-  this.animating.on('complete', function() {
-    this.visible = false;
-  }, this);
-  this.animating.start();
+  this.visible = false;
 };
 
 HudStation.prototype.update = function() {
@@ -118,31 +102,24 @@ HudStation.prototype.data = function(data) {
       healthBar = this.healthBar,
       energyBar = this.energyBar;
   if(this.visible) {
-    data.health && healthBar.change('width', data.health/stats.health);
+    data.health && healthBar.percentage('width', data.health/stats.health);
   }
 };
 
 HudStation.prototype.enable = function() {
-  this.healthBar.reset();
   this.healthBar.percentage('width', 1);
-
-  this.station.isPlayer && this.show();
+  this.show();
 };
 
 HudStation.prototype.disable = function() {
-  this.healthBar.reset();
   this.healthBar.percentage('width', 0);
-
   this.hide();
 };
 
 HudStation.prototype.destroy = function(options) {
-  this.animating && this.animating.isRunning && this.animating.stop(false);
-  
-  Pane.prototype.destroy.call(this, options);
+  this.station = undefined;
 
-  this.username = this.game = this.station =
-    this.layout = this.settings = undefined;
+  Pane.prototype.destroy.call(this, options);
 };
 
 module.exports = HudStation;
