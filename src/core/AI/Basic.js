@@ -23,7 +23,7 @@ function Basic(ship) {
     },
     sensor: {
       aim: 0.5,
-      range: 4096
+      range: 1024
     }
   };
 };
@@ -42,6 +42,13 @@ Basic.prototype.update = function() {
   p1 = ship.movement.position;
   sensor.setTo(p1.x, p1.y, settings.sensor.range);
   health = ship.data.health / ship.config.stats.health;
+
+  // retreat random
+  if(rnd.frac() > 0.94) {
+    this.retreat = true;
+  } else {
+    this.retreat = false;
+  }
 
   // retreat due to damage
   if(health < settings.escape.health) {
