@@ -16,7 +16,6 @@ function Image(game, settings) {
   }));
 
   this.view = new ImageView(game, this.settings.key, this.settings.frame);
-
   if(this.settings.width || this.settings.height) {
     this.view.width = this.settings.width;
     this.view.height = this.settings.height;
@@ -33,6 +32,13 @@ function Image(game, settings) {
 
 Image.prototype = Object.create(Pane.prototype);
 Image.prototype.constructor = Image;
+
+// Image.prototype.calcPreferredSize = function() {
+//   return {
+//     width: this.settings.width || this.view.width,
+//     height: this.settings.height || this.view.height
+//   };
+// };
 
 Image.prototype.doLayout = function() {
   // position

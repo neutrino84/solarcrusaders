@@ -34,6 +34,13 @@ function Label(game, settings) {
 Label.prototype = Object.create(Pane.prototype);
 Label.prototype.constructor = Label;
 
+// Label.prototype.calcPreferredSize = function() {
+//   return {
+//     width: this.settings.width || this.view.width,
+//     height: this.settings.height || this.view.height
+//   };
+// };
+
 Label.prototype.doLayout = function() {
   // position
   this.view.position.set(
