@@ -9,36 +9,21 @@ function ProgressBar(game, settings) {
     bg: {
       color: 0x000000
     },
-    // label: {
-    //   font: {
-    //     name: 'small'
-    //   },
-    //   bg: false
-    // },
     progress: {
-      color: 0xffffff,
-      modifier: {
-        left: 0.0,
-        top: 0.0,
-        width: 1.0,
-        height: 1.0
-      }
+      color: 0xffffff
     },
     difference: {
       color: 0xff0000
     }
   }));
 
-  // progress modifer
-  this.modifier = this.settings.progress.modifier;
-
   // create progress bar
   this.progress = new BackgroundView(game, this.settings.progress);
-  this.progress.modifier = this.modifier;
+  this.progress.modifier = this.settings.progress.modifier;
 
   if(this.settings.difference) {
     this.difference = new BackgroundView(game, this.settings.difference);
-
+    this.difference.visible = false;
     this.addView(this.difference);
   }
 
@@ -56,36 +41,22 @@ ProgressBar.prototype.reset = function() {
 };
 
 ProgressBar.prototype.percentage = function(key, value) {
-  this.modifier[key] = value;
-  this.progress.paint();
-};
-
-ProgressBar.prototype.change = function(key, value) {
-  var width = this.settings[key],
-      current = this.modifier[key],
-      difference = this.difference,
+  var width = this.size.width,
+      current = this.progress.modifier[key],
       delta;
 
   // update change
   if(this.difference) {
     delta = current - value;
 
-    difference.modifier.left = value * width;
-    difference.modifier.width = delta;
-
-    difference.visible = true;
-    difference.alpha = 1.0;
-    difference.paint();
-  } else {
-    difference.visible = false;
+    this.difference.modifier.left = value * width;
+    this.difference.modifier.width = delta;
+    this.difference.visible = true;
+    this.difference.paint();
   }
 
-  // update percentage
-  this.percentage(key, value);
-};
-
-ProgressBar.prototype.paint = function() {
-  this.bg.paint();
+  this.progress.modifier[key] = value;
+  this.progress.paint();
 };
 
 module.exports = ProgressBar;
