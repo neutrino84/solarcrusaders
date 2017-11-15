@@ -224,7 +224,7 @@ Emitter.prototype.emitParticle = function() {
     if(this.tintData) {
       particle.setTintData(this.tintData);
     } else {
-      particle.tint = rnd.realInRange(this.minParticleTint, this.maxParticleTint);
+      particle.tint = this.startTint;
     }
 
     particle.blendMode = this.blendMode;
@@ -363,7 +363,7 @@ Emitter.prototype.setTint = function(startTint, endTint, rate, ease, yoyo) {
     game.cache.addBinary(key, tints);
 
     // store
-    this.tintData = data;
+    this.tintData = tints;
   }
 };
 
