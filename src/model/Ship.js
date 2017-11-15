@@ -8,6 +8,8 @@ var client = require('client'),
 
 var Ship = schema.define('ship', {
   uuid:       { type: schema.UUID, default: uuid.v4 },
+  master:     { type: schema.UUID },
+  owner:      { type: schema.UUID },
   station:    { type: schema.UUID },
   name:       { type: schema.String },
   chassis:    { type: schema.String },
@@ -21,7 +23,7 @@ var Ship = schema.define('ship', {
   reputation: { type: schema.Double, default: 0.0 },
   x:          { type: schema.Double, default: 2048.0 },
   y:          { type: schema.Double, default: 2048.0 },
-  throttle:   { type: schema.Double, default: 1.0 },
+  throttle:   { type: schema.Double, default: 0.0 },
   rotation:   { type: schema.Double, default: 0.0 },
   health:     { type: schema.Double },
   heal:       { type: schema.Double },
@@ -77,7 +79,7 @@ Ship.prototype.init = function() {
     stats = config.stats;
     
     if(!this.name) { this.name = Generator.getName(config.race); }
-    if(!this.throttle) { this.throttle = 1.0; }
+    if(!this.throttle) { this.throttle = 0.0; }
     if(!this.race) { this.race = config.race; }
     if(!this.class) { this.class = config.class; }
     if(!this.health) { this.health = stats.health; }

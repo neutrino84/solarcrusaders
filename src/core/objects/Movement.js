@@ -7,7 +7,9 @@ function Movement(parent) {
   this.data = parent.data;
 
   this.time = null;
-  this.magnitude = 0.0;
+  this.formation = null;
+  this.friction = null;
+  this.magnitude = 0;
   this.throttle = this.data.throttle;
   this.speed = this.data.speed;
   this.rotation = this.data.rotation;
@@ -15,45 +17,109 @@ function Movement(parent) {
   this.start = {
     x: global.parseFloat(this.data.x),
     y: global.parseFloat(this.data.y)
-  }
+  };
 
+  this.circle = new engine.Circle();
   this.last = new engine.Point(this.start.x, this.start.y);
   this.position = new engine.Point(this.start.x, this.start.y);
   this.destination = new engine.Point();
   this.vector = new engine.Point();
   this.direction = new engine.Point();
   this.relative = new engine.Point();
-  this.stabalization = new engine.Point();
 };
 
 Movement.CLOCK_RATE = 100;
-Movement.FRICTION = 1.05;
-Movement.STOP_THRESHOLD = 32.0;
-Movement.THROTTLE_THRESHOLD = 160.0;
+Movement.IDLE_TIMEOUT_MS = 6000;
+Movement.FRICTION_DISABLED = 0.98;
+Movement.FRICTION_IDLED = 0.96;
+Movement.FRICTION_THRESHOLD = 0.24;
+Movement.STOP_THRESHOLD = 32;
+Movement.THROTTLE_THRESHOLD = 256;
+Movement.FORMATION_STOP_THRESHOLD = 16;
+Movement.FORMATION_THROTTLE_THRESHOLD = 128;
+Movement.FORMATION_THROTTLE_MODIFIER = 64;
 
 Movement.prototype.constructor = Movement;
 
+Movement.prototype.stop = function() {
+  this.magnitude = 0;
+  this.throttle = 0;
+};
+
+Movement.prototype.plot = function(destination, throttle) {
+  if(!this.formation && !this.parent.disabled) {
+    // copy destination trajectory
+    this.destination.copyFrom(destination);
+    this.magnitude = this.destination.getMagnitude();
+    this.throttle = throttle ? throttle : engine.Math.clamp(this.magnitude/Movement.THROTTLE_THRESHOLD, 0.0, 1.0);
+    
+    // check if stopping
+    // and handle idle timer
+    this.timer && this.game.clock.events.remove(this.timer);
+    if(this.magnitude <= Movement.STOP_THRESHOLD) {
+      this.stop();
+    } else {
+      this.timer = this.game.clock.events.add(Movement.IDLE_TIMEOUT_MS, this.idled, this);
+    }
+  }
+};
+
+Movement.prototype.idled = function() {
+  this.friction = Movement.FRICTION_IDLED;
+};
+
 Movement.prototype.update = function() {
   var parent = this.parent,
-      destination = this.destination,
       last = this.last,
       position = this.position,
       vector = this.vector,
+      destination = this.destination,
       direction = this.direction,
+      formation = this.formation,
       evasion = parent.evasion,
-      maneuver, cross, dot, ev;
+      maneuver, cross, dot,
+      ev, throttle;
 
   // time compensation
   this.time = this.game.clock.time;
 
-  // magnitude friction
-  if(parent.disabled) {
-    this.magnitude /= Movement.FRICTION;
+  // check if in formation
+  if(formation) {
+    // get trajectory
+    destination.copyFrom(formation.position(parent.uuid));
+    destination.subtract(position.x, position.y);
+
+    // set magnitude and throttle
+    this.magnitude = destination.getMagnitude();
+    if(this.magnitude > Movement.FORMATION_STOP_THRESHOLD) {
+      // calculate optimal throttle
+      throttle = Movement.FORMATION_THROTTLE_THRESHOLD +
+        ((1-formation.movement.throttle) * Movement.FORMATION_THROTTLE_MODIFIER);
+
+      // set local throttle
+      this.throttle = engine.Math.clamp(this.magnitude/throttle, 0.0, 1.0);
+    } else {
+      this.stop();
+    }
   }
 
-  if(this.magnitude > Movement.STOP_THRESHOLD) {
-    this.speed = parent.speed * this.throttle;
+  // friction
+  if(parent.disabled) {
+    this.throttle *= Movement.FRICTION_DISABLED;
+  } else if(this.friction) {
+    if(this.throttle > Movement.FRICTION_THRESHOLD) {
+      this.throttle *= this.friction;
+    } else {
+      this.throttle = 0;
+    }
+  }
 
+  // update ship position
+  if(this.throttle > 0) {
+    // set movement speed
+    this.speed = parent.speed * this.throttle;
+    
+    // normalize vector
     vector.set(destination.x, destination.y);
     vector.normalize();
 
@@ -89,9 +155,9 @@ Movement.prototype.update = function() {
         this.speed * direction.y);
     }
   } else {
-    this.magnitude = 0.0;
-    this.throttle = 0.0;
-    this.speed = 0.0;
+    // set movement speed
+    this.speed = 0;
+    this.friction = null;
   }
 };
 
@@ -112,27 +178,6 @@ Movement.prototype.compensated = function(rtt) {
   }
 
   return relative;
-};
-
-Movement.prototype.destabalize = function(ship) {
-  var stabalization = this.stabalization,
-      end = this.position,
-      start = ship.movement.position,
-      size = ship.config.stats.size * 8,
-      distance = start.distance(end);
-  if(distance <= size) {
-    stabalization.set(end.x - start.x, end.y - start.y);
-    stabalization.divide(distance, distance);
-    stabalization.multiply(size, size);
-  }
-};
-
-Movement.prototype.plot = function(destination, throttle) {
-  if(!this.parent.disabled) {
-    this.destination.copyFrom(destination);
-    this.magnitude = this.destination.getMagnitude();
-    this.throttle = throttle ? throttle : global.Math.min(this.magnitude/Movement.THROTTLE_THRESHOLD, 1.0);
-  }
 };
 
 Movement.prototype.destroy = function() {
