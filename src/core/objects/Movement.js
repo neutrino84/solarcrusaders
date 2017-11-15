@@ -52,7 +52,7 @@ Movement.prototype.plot = function(destination, throttle) {
     this.destination.copyFrom(destination);
     this.magnitude = this.destination.getMagnitude();
     this.throttle = throttle ? throttle : engine.Math.clamp(this.magnitude/Movement.THROTTLE_THRESHOLD, 0.0, 1.0);
-    
+
     // check if stopping
     // and handle idle timer
     this.timer && this.game.clock.events.remove(this.timer);
