@@ -7,6 +7,8 @@ var engine = require('engine'),
 function NetManager(game) {
   this.game = game;
   this.socket = game.net.socket;
+  this.user = game.auth.user;
+  this.syncronizing = false;
 
   // global data
   this.game.data = {
@@ -14,11 +16,6 @@ function NetManager(game) {
     ships: {},
     stations: {}
   };
-
-  this.users = {};
-  this.ships = {};
-  this.stations = {};
-  this.syncronizing = false;
 
   // sector
   this.socket.on('sector/sync', this._sync.bind(this));
@@ -66,15 +63,20 @@ NetManager.prototype._data = function(data) {
       this.game.cache.checkJSONKey('station-configuration') &&
       this.game.cache.checkJSONKey('item-configuration')) {
 
-    // update ships
+    // update users
     for(var u in users) {
       user = users[u];
 
-      if(data.type === 'sync' && this.game.data.users[user.uuid] === undefined) {
-        this.syncronizing = false;
+      if(this.game.data.users[user.uuid] === undefined) {
         this.game.data.users[user.uuid] = new UserData(this.game, user);
       } else if(this.game.data.users[user.uuid]) {
         this.game.data.users[user.uuid].update(user);
+
+        if(user.uuid === this.user.uuid) {
+          for(var p in user) {
+            this.user[p] = user[p];
+          }
+        }
       }
     }
 
@@ -97,7 +99,7 @@ NetManager.prototype._data = function(data) {
       if(data.type === 'sync' && this.game.data.stations[station.uuid] === undefined) {
         this.syncronizing = false;
         this.game.data.stations[station.uuid] = new StationData(this.game, station);
-      } else if(this.stations[station.uuid]) {
+      } else if(this.game.data.stations[station.uuid]) {
         this.game.data.stations[station.uuid].update(station);
       }
     }
@@ -114,15 +116,6 @@ NetManager.prototype._sync = function(data) {
         ships: [],
         stations: []
       };
-
-  // detect users
-  for(var u in users) {
-    user = users[u];
-
-    if(this.game.data.users[user.uuid] === undefined) {
-      uuids.users.push(user.uuid);
-    }
-  }
 
   // detect ships
   for(var s in ships) {
@@ -146,7 +139,7 @@ NetManager.prototype._sync = function(data) {
   this.game.emit('sector/sync', data);
 
   // request new data
-  if(!this.syncronizing && (uuids.users.length > 0 || uuids.ships.length > 0 || uuids.stations.length > 0)) {
+  if(!this.syncronizing && (uuids.ships.length > 0 || uuids.stations.length > 0)) {
     this.syncronizing = true;
     this.socket.emit('sector/data', uuids);
   }

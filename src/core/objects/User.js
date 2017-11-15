@@ -23,7 +23,9 @@ User.prototype.init = function(callback, context) {
   var self = this,
       game = this.game,
       data = this.data,
-      socket = this.socket;
+      socket = this.socket,
+      latency = this.latency;
+
   if(data.isNewRecord()) {
     // connect demo ship
     game.emit('ship/create', {
@@ -32,6 +34,9 @@ User.prototype.init = function(callback, context) {
 
     // update client
     socket.emit('auth/sync', this.data.toStreamObject());
+
+    // update latency
+    latency.connect(socket);
 
     // call callback
     callback.call(context);
@@ -54,7 +59,7 @@ User.prototype.init = function(callback, context) {
         }
       }
 
-    // call callback
+      // call callback
       callback.call(context);
     });
   }
@@ -64,7 +69,7 @@ User.prototype.save = function(callback) {
   var self = this, ship,
       len = ships.length,
       series = [];
-  
+
   // save user
   series.push(function(next) {
     self.data.updateAttributes({
@@ -84,8 +89,14 @@ User.prototype.save = function(callback) {
 };
 
 User.prototype.reconnected = function(socket) {
+  // update socket
   this.socket = socket;
   this.socket.emit('auth/sync', this.data.toStreamObject());
+
+  // update latency
+  this.latency.connect(socket);
+
+  // restart user logout timer
   this.timeout && this.game.clock.events.remove(this.timeout);
 };
 
@@ -104,9 +115,19 @@ User.prototype.destroy = function() {
   this.latency.destroy();
 
   // cleanup
-  this.game = this.latency = this.ship =
-    this.station = this.model =
-    this.socket = undefined;
+  this.game = this.model = this.latency = this.ship =
+    this.station = this.data = this.socket = undefined;
 };
+
+
+Object.defineProperty(User.prototype, 'credits', {
+  get: function() {
+    return this.data.credits;
+  },
+
+  set: function(value) {
+    this.data.credits = value;
+  }
+});
 
 module.exports = User;
