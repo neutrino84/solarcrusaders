@@ -16,7 +16,9 @@ Socket.prototype.constructor = Socket;
 Socket.prototype.init = function(next) {
   var server = this.server,
       options = {
-        transports: ['websocket']
+        transports: ['websocket'],
+        pingInterval: 3000,
+        pingTimeout: 5000
       };
 
   // initialize socket server
@@ -44,8 +46,9 @@ Socket.prototype.send = function(path, data) {
   this.ioserver.emit(path, data);
 };
 
-Socket.prototype.receive = function(socket, args, err) {
-  this.emit(args[0], socket, args, err);
+Socket.prototype.receive = function(socket, args, next) {
+  this.emit(args[0], socket, args);
+  return next();
 };
 
 Socket.prototype.disconnecting = function(socket) {
