@@ -27,8 +27,8 @@ Snow.prototype.update = function() {
 
   this.alpha = (1 - game.world.scale.x);
 
-  this.tilePosition.x = -view.x * 8;
-  this.tilePosition.y = -view.y * 8;
+  this.tilePosition.x = -view.x * 3.0;
+  this.tilePosition.y = -view.y * 3.0;
 
   this.tileScale.x = tileScale;
   this.tileScale.y = tileScale;
