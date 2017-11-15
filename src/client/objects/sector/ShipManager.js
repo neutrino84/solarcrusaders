@@ -65,11 +65,6 @@ ShipManager.prototype.create = function(data, sync) {
       ships = this.ships,
       ship = new Ship(this, data);
 
-  // set data
-  ship.uuid = data.uuid;
-  ship.user = data.user;
-  ship.username = data.username;
-
   // set position
   ship.position.set(sync.pos.x, sync.pos.y);
 
