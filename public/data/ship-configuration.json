@@ -9,15 +9,15 @@
       "heal": 0.2,
       "armor": 0.0,
       "speed": 24.0,
-      "rate": 512,
-      "evasion": 0.10,
+      "rate": 312,
+      "evasion": 0.16,
       "energy": 200,
       "recharge": 1,
       "size": 62,
       "durability": 1000,
       "critical": 0.025
     },
-    "squadron": ["ubaidian-x04", "ubaidian-x03"],
+    "squadron": ["ubaidian-x04", "ubaidian-x04"],
     "enhancements": ["heal", "booster", "shield"],
     "engine": {
       "glows": [
@@ -104,7 +104,7 @@
       "durability": 1000,
       "critical": 0.025
     },
-    "squadron": ["ubaidian-x04"],
+    "squadron": [],
     "enhancements": ["heal", "booster", "shield"],
     "engine": {
       "glows": [
@@ -193,11 +193,11 @@
       "heal": 0.1,
       "armor": 0.0,
       "speed": 38.0,
-      "rate": 256,
+      "rate": 196,
       "evasion": 0.2,
       "energy": 100,
       "recharge": 1,
-      "size": 38,
+      "size": 48,
       "durability": 1000,
       "critical": 0.05
     },
@@ -269,12 +269,12 @@
       "health": 80,
       "heal": 0.1,
       "armor": 0.0,
-      "speed": 42.0,
+      "speed": 36.0,
       "rate": 2048,
       "evasion": 0.25,
       "energy": 100,
       "recharge": 1,
-      "size": 34,
+      "size": 48,
       "durability": 1000,
       "critical": 0.25
     },
@@ -324,14 +324,14 @@
       "armor": 0.0,
       "speed": 24.0,
       "rate": 512,
-      "evasion": 0.1,
+      "evasion": 0.12,
       "energy": 200,
       "recharge": 1,
       "size": 62,
       "durability": 1000,
       "critical": 0.025
     },
-    "squadron": ["ubaidian-x04"],
+    "squadron": [],
     "enhancements": ["heal", "booster", "shield"],
     "engine": {
       "glows": [
@@ -406,15 +406,15 @@
     "name": "Orion",
     "stats": {
       "capacity": 500,
-      "health": 50,
+      "health": 20,
       "heal": 0.1,
       "armor": 0.0,
-      "speed": 42.0,
+      "speed": 36.0,
       "rate": 1024,
       "evasion": 0.12,
       "energy": 100,
       "recharge": 1,
-      "size": 32,
+      "size": 48,
       "durability": 500,
       "critical": 0.01
     },
@@ -473,15 +473,15 @@
     "name": "Calypso",
     "stats": {
       "capacity": 500,
-      "health": 50,
+      "health": 30,
       "heal": 0.1,
       "armor": 0.0,
       "speed": 24.0,
-      "rate": 1024,
+      "rate": 768,
       "evasion": 0.08,
       "energy": 100,
       "recharge": 1,
-      "size": 36,
+      "size": 48,
       "durability": 500,
       "critical": 0.01
     },
