@@ -120,7 +120,7 @@ Ship.prototype.refresh = function(data) {
     defender.hud.timer = defender.events.add(2000, defender.hud.hide, defender.hud);
 
     if(defender.isPlayer && attacker.data.hardpoints[0].subtype !== 'repair') {
-      this.game.camera.shake();
+      // this.game.camera.shake();
     }
   };
 
@@ -167,9 +167,11 @@ Ship.prototype.enable = function(data) {
   this.position.set(data.pos.x, data.pos.y);
 
   if(this.isPlayer){
+    var soundArr = ['reactor-online', 'weapons-systems-online', 'repairs-completed']
     // this.game.emit('squad/regroup', this);
     this.game.emit('hotkeys/refresh', this);
-    this.game.emit('system/sound');
+    this.game.emit('system/sound', this.game.rnd.pick(soundArr));
+    this.game.emit('player/enabled');
   }
 };
 
@@ -185,6 +187,10 @@ Ship.prototype.disable = function() {
   this.engineCore.show(false);
   this.shieldGenerator.stop();
   this.repair.stop();
+
+  if(this.isPlayer){
+    this.game.emit('player/disabled');
+  }
 };
 
 Ship.prototype.explode = function() {
