@@ -123,7 +123,6 @@ Hud.prototype.create = function() {
 };
 
 Hud.prototype.show = function() {
-  console.log('show')
   this.visible = true;
   this.healthBar.visible = true;
   this.energyBar.visible = true;

@@ -166,7 +166,7 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "basic"
+            "subtype": "XP1123"
           }
         },
         {
@@ -181,7 +181,7 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "basic"
+            "subtype": "XP1123"
           }
         },
         {
@@ -196,7 +196,7 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "basic"
+            "subtype": "XP1123"
           }
         },
         {
