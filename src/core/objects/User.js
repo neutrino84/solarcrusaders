@@ -40,7 +40,8 @@ User.prototype.init = function(callback, context) {
       x: this.startingPosition.x,
       y: this.startingPosition.y,
       uuid: this.uuid,
-      squadron: {}
+      squadron: {},
+      credits: 200
     }, this);
 
 // 'ubaidian-x01d'

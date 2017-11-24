@@ -70,9 +70,29 @@ function Hud(ship, settings) {
   this.container = new Pane(this.game, this.settings.container);
   this.energyBar = new ProgressBar(this.game, this.settings.energyBar);
   this.healthBar = new ProgressBar(this.game, this.settings.healthBar);
+  this.scoreContainer = new Pane(this.game, {
+      width: 12,
+      height: 1,
+      constraint: Layout.CENTER,
+      layout: {
+        type: 'flow',
+        ax: Layout.CENTER, 
+        ay: Layout.TOP,
+        direction: Layout.VERTICAL, 
+        gap: 0
+      },
+      bg: false
+    });
+  
+  this.gains = {};
+  this.gainTimers = {};
+  this.lossTimer;
 
   this.container.addPanel(this.healthBar);
   this.container.addPanel(this.energyBar);
+
+  // this.scoreContainer.addPanel(this.score)
+  this.container.addPanel(this.scoreContainer)
 
   this.addPanel(this.container);
 };
@@ -93,8 +113,6 @@ Hud.prototype.create = function() {
 
   this.invalidate();
 
-  // this.pivot.set(this.cachedWidth/2, this.cachedHeight/2);
-  // } else {  
   this.pivot.set(this.cachedWidth/2, this.cachedHeight/2);  
   this.position.set(this.ship.width/2, this.ship.height/2);
 
@@ -105,12 +123,92 @@ Hud.prototype.create = function() {
 };
 
 Hud.prototype.show = function() {
+  console.log('show')
   this.visible = true;
+  this.healthBar.visible = true;
+  this.energyBar.visible = true;
   this.animating && this.animating.isRunning && this.animating.stop(false);
   this.animating = this.game.tweens.create(this);
   this.animating.to({ alpha: 1.0 }, 250);
   this.animating.on('complete', this.update, this);
   this.animating.start();
+};
+
+Hud.prototype.showCreditLoss = function() {
+
+  this.visible = true;
+
+  this.loss = new Label(this.game, {
+        constraint: Layout.USE_PS_SIZE,
+        align: 'center',
+        text: {
+          fontName: 'full'
+        },
+        bg: false
+      });
+
+  this.loss.tint = 0xff0000;
+  this.loss.text = this.ship.data.credits;
+  this.loss.visible = true;
+
+  this.scoreContainer.addPanel(this.loss)
+
+  this.lossTimer = this.game.clock.events.loop(100, function(){
+    this.loss.y -= 1
+    this.loss.alpha -= .033
+    if(this.loss.y <= -28){
+        this.loss.alpha = 0;
+        this.loss.y = 0;
+        this.loss.visible = false;
+        this.healthBar.visible = true;
+        this.energyBar.visible = true;
+        this.visible = false;
+        this.scoreContainer.removePanel(this.loss)
+        this.game.clock.events.remove(this.lossTimer)
+    };
+  }, this);
+};
+
+Hud.prototype.showCreditGain = function(credits, uuid) {
+  if(this.gains[uuid]){
+    this.gains[uuid] = null;
+  } 
+
+  this.gains[uuid] = new Label(this.game, {
+        constraint: Layout.USE_PS_SIZE,
+        align: 'center',
+        text: {
+          fontName: 'full'
+        },
+        bg: false
+      });
+
+  this.gains[uuid].tint = 0x32CD32;
+  this.gains[uuid].text = credits;
+  this.gains[uuid].visible = true;
+
+  this.scoreContainer.addPanel(this.gains[uuid])
+
+  this.visible = true;
+  this.alpha = 1;
+  this.healthBar.visible = false;
+  this.energyBar.visible = false;
+
+  this.gainTimers[uuid] && this.game.clock.events.remove(this.gainTimers[uuid])
+
+  this.gainTimers[uuid] = this.game.clock.events.loop(100, function(){
+    this.gains[uuid].y -= 1
+    this.gains[uuid].alpha -= .033
+    if(this.gains[uuid].y <= -28){
+        this.gains[uuid].alpha = 0;
+        this.gains[uuid].visible = false;
+        this.healthBar.visible = true;
+        this.energyBar.visible = true;
+        this.visible = false;
+        this.gains[uuid].destroy();
+        this.game.clock.events.remove(this.gainTimers[uuid])
+    };
+  }, this);
 };
 
 Hud.prototype.hide = function() {
@@ -119,6 +217,8 @@ Hud.prototype.hide = function() {
   this.animating.to({ alpha: 0.0 }, 250);
   this.animating.on('complete', function() {
     this.visible = false;
+    this.energyBar.visible = false;
+    this.healthBar.visible = false;
   }, this);
   this.animating.start();
 };

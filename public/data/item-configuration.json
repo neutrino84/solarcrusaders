@@ -243,6 +243,33 @@
         "sound": "pulse-bazuko",
         "volume": 0.6,
         "variation": 0.05
+      },
+      "XP1123": {
+        "name": "Basic Pulse",
+        "type": "pulse",
+        "subtype": "basic",
+        "sprite": "turret-a",
+        "texture": "laser-purple",
+        "glow": "0x12def9",
+        "emitter": ["0xFFFFFF", "0x12def9"],
+        "icon": "item-laser-a",
+        "range": 2650,
+        "projection": 0.2,
+        "delay": 16,
+        "spread": 10,
+        "damage": 13,
+        "offset": {
+          "min": 0.92,
+          "max": 0.98
+        },
+        "cooldown": 0,
+        "length": 32,
+        "aoe": 1.1,
+        "spawn": 1,
+        "durability": 1000.0,
+        "sound": "pulse-bazuko",
+        "volume": 0.6,
+        "variation": 0.05
       }
     },
     "rocket": {

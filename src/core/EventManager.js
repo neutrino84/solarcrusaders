@@ -13,16 +13,16 @@ function EventManager(game) {
   this.sockets = game.sockets;
 
   this.level = 1;
-  this.ships = {
-    basic: 11,
-    pirate: 21,
-    enforcer: 1
-  };
   // this.ships = {
-  //   basic: 0,
-  //   pirate: 3,
-  //   enforcer: 0
+  //   basic: 11,
+  //   pirate: 21,
+  //   enforcer: 2
   // };
+  this.ships = {
+    basic: 0,
+    pirate: 0,
+    enforcer: 0
+  };
 
   this.chassis = {
     basic : ['ubaidian-x01a','ubaidian-x01b','ubaidian-x01c','ubaidian-x01d','ubaidian-x01e','ubaidian-x01f'],
@@ -96,7 +96,8 @@ EventManager.prototype.shipGen = function(num, ai){
       chassis: this.game.rnd.pick(this.chassis[ai]),
       x: randomPostion.x,
       y: randomPostion.y,
-      ai: ai
+      ai: ai,
+      credits: 50
     });
   };
 };
@@ -119,7 +120,8 @@ EventManager.prototype.squadGen = function(master){
       x: randomPostion.x,
       y: randomPostion.y,
       ai: 'squadron',
-      master: master
+      master: master,
+      credits: 100
     });
 
     this.game.emit('ship/create', {
@@ -127,7 +129,8 @@ EventManager.prototype.squadGen = function(master){
       x: randomPostion.x,
       y: randomPostion.y,
       ai: 'squadron',
-      master: master
+      master: master,
+      credits: 100
     });
 
     // this.game.emit('ship/create', {
@@ -144,7 +147,8 @@ EventManager.prototype.squadGen = function(master){
     //   x: randomPostion2.x,
     //   y: randomPostion2.y,
     //   ai: 'squadron',
-    //   master: master
+    //   master: master,
+    //   credits: 100
     // });
   // };
 
@@ -153,14 +157,16 @@ EventManager.prototype.squadGen = function(master){
     //   x: randomPostion2.x,
     //   y: randomPostion2.y,
     //   ai: 'squadron',
-    //   master: master
+    //   master: master,
+    //   credits: 100
     // });
     // this.game.emit('ship/create', {
     //   chassis: 'squad-attack',
     //   x: randomPostion2.x,
     //   y: randomPostion2.y,
     //   ai: 'squadron',
-    //   master: master
+    //   master: master,
+    //   credits: 100
     // });
 };
 
@@ -171,7 +177,8 @@ EventManager.prototype.enforcerGen = function(x, y, master){
       x: x,
       y: y,
       ai: 'enforcer',
-      master: master
+      master: master,
+      credits: 100
     }); 
   };
 };
@@ -184,7 +191,8 @@ EventManager.prototype.scavGen = function(num) {
       x: 5411,
       y: -5354,
       ai: 'scavenger',
-      faction: 'vulothi'
+      faction: 'vulothi',
+      credits : 10
 
     }); 
     this.game.emit('ship/create', {
@@ -192,7 +200,8 @@ EventManager.prototype.scavGen = function(num) {
       x: -5055,
       y: 4973,
       ai: 'scavenger',
-      faction: 'fenris'
+      faction: 'fenris',
+      credits : 10
 
     }); 
   };
@@ -224,7 +233,8 @@ EventManager.prototype.spawnQueen = function(cycle, uuid){
       x: spawnPosition.x,
       y: spawnPosition.y,
       cycle: cycle,
-      brood: {}
+      brood: {},
+      credits: 700
     });
     this.sockets.send('global/sound/spawn', 'queenSpawn');
   } else {
@@ -239,7 +249,8 @@ EventManager.prototype.spawnQueen = function(cycle, uuid){
         reputation: -650,
         x: spawnPosition.x,
         y: spawnPosition.y,
-        queen: uuid
+        queen: uuid,
+        credits: 300
       });
     }
   }

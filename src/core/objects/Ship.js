@@ -232,7 +232,7 @@ Ship.prototype.hit = function(attacker, target, slot, target_uuid) {
     }
 
     //prevent friendly fire dmg to squadron
-    if(this.master === attacker.uuid || attacker.hardpoints[0].subtype === 'repair' && data.health >= (this.config.stats.health)){return}  
+    // if(this.master === attacker.uuid || attacker.hardpoints[0].subtype === 'repair' && data.health >= (this.config.stats.health)){return}  
 
 
     // calc damage
@@ -280,10 +280,12 @@ Ship.prototype.hit = function(attacker, target, slot, target_uuid) {
       });
 
       // update attacker
-      attacker.credits = global.Math.floor(attacker.credits + damage + (ai && ai.type === 'pirate' ? damage : 0));
+      // attacker.credits = global.Math.floor(attacker.credits + damage + (ai && ai.type === 'pirate' ? damage : 0));
+      // attacker.credits = global.Math.floor(attacker.credits + (damage * 0.8));
+
       updates.push({
         uuid: attacker.uuid,
-        credits: attacker.credits,
+        // credits: attacker.credits,
         hardpoint: {
           ship: this.uuid,
           slot: hardpoint.slot,
@@ -302,11 +304,25 @@ Ship.prototype.hit = function(attacker, target, slot, target_uuid) {
       if(!this.disabled) {
         this.disable();
 
+        var master;
+
         // update attacker reputation
         // attacker.reputation = global.Math.floor(attacker.reputation + (this.reputation * -0.05));
+
+        attacker.credits = attacker.credits + this.data.credits
+
+        if(attacker.master){
+          master = attacker.master;
+        }
+        // console.log('here2. this.data.credits is ', this.data.credits) 
+
         updates.push({
           uuid: attacker.uuid,
-          reputation: attacker.reputation
+          credits: attacker.credits,
+          reputation: attacker.reputation,
+          killed : this.uuid,
+          gains : this.data.credits,
+          master : master
         });
       }
 

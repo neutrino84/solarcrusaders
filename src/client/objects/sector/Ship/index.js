@@ -86,11 +86,22 @@ Ship.prototype.refresh = function(data) {
       ships = this.manager.ships,
       targetingComputer = this.targetingComputer;
 
+  // console.log(data)    
+  if(data.killed && this.isPlayer){
+    ships[data.killed].hud.showCreditLoss();
+    this.hud.showCreditGain(data.gains, data.killed)
+  }
+
+  if(data.killed && data.master && ships[data.master].isPlayer){
+    ships[data.killed].hud.showCreditLoss();
+    ships[data.master].hud.showCreditGain(data.gains, data.killed)
+  }
+
+
   if(data.docked){
     this.docked = true;
   }
   if(data.shielded ){
-    console.log('shieldField to begin')
     this.shielded = true;
     this.shieldGenerator.startShieldField();
   } 
@@ -117,7 +128,7 @@ Ship.prototype.refresh = function(data) {
     // show hud screen
     defender.hud.show();
     defender.hud.timer && defender.events.remove(defender.hud.timer);
-    defender.hud.timer = defender.events.add(2000, defender.hud.hide, defender.hud);
+    defender.hud.timer = defender.events.add(6000, defender.hud.hide, defender.hud);
 
     if(defender.isPlayer && attacker.data.hardpoints[0].subtype !== 'repair') {
       // this.game.camera.shake();
