@@ -15,7 +15,7 @@ function EventManager(game) {
   this.level = 1;
   this.ships = {
     basic: 6,
-    pirate: 14,
+    pirate: 18,
     enforcer: 1
   };
   // this.ships = {
@@ -28,7 +28,7 @@ function EventManager(game) {
     basic : ['ubaidian-x01a','ubaidian-x01b','ubaidian-x01c','ubaidian-x01d','ubaidian-x01e','ubaidian-x01f'],
     // basic : ['ubaidian-x01a','ubaidian-x01b','ubaidian-x01d','ubaidian-x01f'],
     // pirate: ['pirate-x01','pirate-x01','pirate-x02','ubaidian-x01c','ubaidian-x01e'],
-    pirate: ['pirate-x01','pirate-x01','pirate-x02'],
+    pirate: ['pirate-x01','pirate-x01','pirate-x01','pirate-x02'],
     squadron: ['squad-shield','squad-repair','squad-attack','squad-attack','squad-attack','squad-attack'],
     squadron2: ['squad-repair','squad-attack'],
     scavenger: ['scavenger-x01','scavenger-x02'],
@@ -142,14 +142,14 @@ EventManager.prototype.squadGen = function(master){
     // });
   // };
   // if(rando > 0.7) {
-    // this.game.emit('ship/create', {
-    //   chassis: 'squad-repair',
-    //   x: randomPostion2.x,
-    //   y: randomPostion2.y,
-    //   ai: 'squadron',
-    //   master: master,
-    //   credits: 100
-    // });
+    this.game.emit('ship/create', {
+      chassis: 'squad-repair',
+      x: randomPostion2.x,
+      y: randomPostion2.y,
+      ai: 'squadron',
+      master: master,
+      credits: 100
+    });
   // };
 
     // this.game.emit('ship/create', {

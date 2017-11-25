@@ -97,7 +97,7 @@
       "heal": 0.5,
       "armor": 0.03,
       "speed": 30.0,
-      "rate": 350,
+      "rate": 1350,
       "evasion": 0.2,
       "energy": 200,
       "recharge": 1.2,
@@ -166,7 +166,7 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "XP1123"
+            "subtype": "basic"
           }
         },
         {
@@ -181,7 +181,7 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "XP1123"
+            "subtype": "basic"
           }
         },
         {
@@ -196,7 +196,7 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "XP1123"
+            "subtype": "basic"
           }
         },
         {
@@ -657,10 +657,10 @@
     "moniker": "blue-hawk",
     "stats": {
       "capacity": 700,
-      "health": 100,
+      "health": 90,
       "heal": 0.4,
       "armor": 0.01,
-      "speed": 33.0,
+      "speed": 34.0,
       "rate": 350,
       "evasion": 0.2,
       "energy": 190,
@@ -718,36 +718,6 @@
     },
     "targeting": {
       "hardpoints": [
-        {
-          "type": ["energy", "pulse"],
-          "pivot": {
-            "x": 20,
-            "y": 16
-          },
-          "position": {
-            "x": 33,
-            "y": 22
-          },
-          "default": {
-            "type": "pulse",
-            "subtype": "basic"
-          }
-        },
-        {
-          "type": ["energy", "pulse"],
-          "pivot": {
-            "x": 20,
-            "y": 16
-          },
-          "position": {
-            "x": 18,
-            "y": 35
-          },
-          "default": {
-            "type": "pulse",
-            "subtype": "quantum"
-          }
-        },
         {
           "type": ["pulse"],
           "pivot": {

@@ -42,7 +42,7 @@
         "emitter": ["0x000000", "0xDB691D"],
         "icon": "item-laser-a",
         "cooldown": 0,
-        "range": 1900,
+        "range": 700,
         "projection": 0.1,
         "delay": 16,
         "spread": 20,
@@ -145,11 +145,11 @@
         "glow": "0x12def9",
         "emitter": ["0xFFFFFF", "0x12def9"],
         "icon": "item-laser-a",
-        "range": 784,
+        "range": 1084,
         "projection": 0.1,
         "delay": 16,
         "spread": 20,
-        "damage": 1.4,
+        "damage": 1.75,
         "offset": {
           "min": 0.92,
           "max": 0.98
