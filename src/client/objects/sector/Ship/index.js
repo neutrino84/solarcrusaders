@@ -128,7 +128,7 @@ Ship.prototype.refresh = function(data) {
     // show hud screen
     defender.hud.show();
     defender.hud.timer && defender.events.remove(defender.hud.timer);
-    defender.hud.timer = defender.events.add(6000, defender.hud.hide, defender.hud);
+    defender.hud.timer = defender.events.add(3000, defender.hud.hide, defender.hud);
 
     if(defender.isPlayer && attacker.data.hardpoints[0].subtype !== 'repair') {
       // this.game.camera.shake();

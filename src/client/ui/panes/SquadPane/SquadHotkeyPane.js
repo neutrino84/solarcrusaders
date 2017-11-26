@@ -12,7 +12,7 @@ var engine = require('engine'),
     Tooltip = require('../../components/Tooltip'),
     Class = engine.Class;
 
-function SquadPane(game, settings) {
+function SquadHotkeyPane(game, settings) {
   Pane.call(this, game, {
     constraint: Layout.LEFT,
     layout: {
@@ -31,12 +31,12 @@ function SquadPane(game, settings) {
   // this.socket = game.net.socket;
 
   // generate containers
-  for(var i=0; i<SquadPane.MAXIMUM; i++) {
+  for(var i=0; i<SquadHotkeyPane.MAXIMUM; i++) {
     this.containers.push(
       new Pane(this.game, {
         constraint: Layout.CENTER,
         width: 34,
-        height: 36,
+        height: 34,
         layout: {
           type: 'stack'
         },
@@ -65,12 +65,12 @@ function SquadPane(game, settings) {
   this.shieldDestinationActive = false;
 };
 
-SquadPane.prototype = Object.create(Pane.prototype);
-SquadPane.prototype.constructor = SquadPane;
+SquadHotkeyPane.prototype = Object.create(Pane.prototype);
+SquadHotkeyPane.prototype.constructor = SquadHotkeyPane;
 
-SquadPane.MAXIMUM = 6;
+SquadHotkeyPane.MAXIMUM = 6;
 
-// SquadPane.prototype.reset = function() {
+// SquadHotkeyPane.prototype.reset = function() {
 //   var button,
 //       buttons = this.buttons,
 //       content = this.content;
@@ -80,7 +80,7 @@ SquadPane.MAXIMUM = 6;
 //   }
 // };
 
-SquadPane.prototype.create = function(icon, key) {
+SquadHotkeyPane.prototype.create = function(icon, key) {
   var game = this.game,
       label = new Label(game, {
         constraint: Layout.USE_PS_SIZE,
@@ -177,13 +177,13 @@ SquadPane.prototype.create = function(icon, key) {
   return button;
 };
 
-SquadPane.prototype._hotkeySelect = function(key){
+SquadHotkeyPane.prototype._hotkeySelect = function(key){
   if(this.buttons[key]){
     this._select(this.buttons[key].bg) 
   };
 };
 
-SquadPane.prototype._select = function(button_bg) {
+SquadHotkeyPane.prototype._select = function(button_bg) {
   var game = this.game,
       player = this.player,
       key = button_bg.parent.id, button;
@@ -220,17 +220,17 @@ SquadPane.prototype._select = function(button_bg) {
       };
 };
 
-SquadPane.prototype._hover = function(button) {
+SquadHotkeyPane.prototype._hover = function(button) {
   button.parent.hotkey.invalidate()
   button.parent.hotkey.alpha = button.parent.hotkey.alpha*-1;
 };
 
-SquadPane.prototype._unhover = function(button) {
+SquadHotkeyPane.prototype._unhover = function(button) {
   button.parent.hotkey.alpha = button.parent.hotkey.alpha*-1;
 };
 
 
-SquadPane.prototype._shieldDestination = function(key) {
+SquadHotkeyPane.prototype._shieldDestination = function(key) {
   var game = this.game,
       player = this.player,
       button = this.buttons[key];
@@ -265,7 +265,7 @@ SquadPane.prototype._shieldDestination = function(key) {
   this.shieldDestinationActive = !this.shieldDestinationActive;
 };
 
-SquadPane.prototype._player = function(player) {
+SquadHotkeyPane.prototype._player = function(player) {
   var enhancement, button, container,
       squadShips = player.data.enhancements,
       containers = this.containers,
@@ -301,7 +301,7 @@ SquadPane.prototype._player = function(player) {
   this.invalidate();
 };
 
-SquadPane.prototype._squadIcons = function(icon) {
+SquadHotkeyPane.prototype._squadIcons = function(icon) {
   var buttons = this.buttons, containers = this.containers, closestHostileButton;
   // var button, container,
   //     enhancements = this.player.data.enhancements,
@@ -414,4 +414,4 @@ SquadPane.prototype._squadIcons = function(icon) {
   this.invalidate();
 };
 
-module.exports = SquadPane;
+module.exports = SquadHotkeyPane;

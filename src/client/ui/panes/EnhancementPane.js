@@ -36,7 +36,7 @@ function EnhancementPane(game, settings) {
       new Pane(this.game, {
         constraint: Layout.CENTER,
         width: 34,
-        height: 36,
+        height: 34,
         layout: {
           type: 'stack'
         },

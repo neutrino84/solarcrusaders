@@ -2,8 +2,10 @@
 var engine = require('engine'),
     Layout = require('../Layout'),
     Pane = require('../components/Pane'),
+    CreditsPane = require('./CreditsPane'),
     EnhancementPane = require('./EnhancementPane'),
-    SquadPane = require('./SquadPane'),
+    SquadIndicatorPane = require('./SquadPane/SquadIndicatorPane'),
+    SquadHotkeyPane = require('./SquadPane/SquadHotkeyPane'),
     ProgressBar = require('../components/ProgressBar');
 
 function BottomPane(game) {
@@ -21,14 +23,18 @@ function BottomPane(game) {
     }
   });
 
+  this.creditsPane = new CreditsPane(game);
+  this.squadIndicatorPane = new SquadIndicatorPane(game);
   this.enhancementPane = new EnhancementPane(game);
-  this.squadPane = new SquadPane(game);
+  this.squadHotkeyPane = new SquadHotkeyPane(game);
   
   // this.addPanel(this.squadIcons);
   // this.socket.on('player/hasSquadron', this._squadPane, this)
   // this._squadPane();
+  this.addPanel(this.creditsPane)
+  this.addPanel(this.squadIndicatorPane)
   this.addPanel(this.enhancementPane);
-  this.addPanel(this.squadPane);
+  this.addPanel(this.squadHotkeyPane);
 };
 
 BottomPane.prototype._squadPane = function(){

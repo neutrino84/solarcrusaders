@@ -142,14 +142,17 @@ ShipManager.prototype.create = function(data, sync) {
     if(ship.data.chassis === 'squad-shield'){
       ship.data.ai = 'squadron';
       this.game.emit('ship/player/squadSync', 'shieldship')
+      this.game.emit('squad/construct', 'squad-shield')
     }
     if(ship.data.chassis === 'squad-attack'){
       ship.data.ai = 'squadron'
       this.game.emit('ship/player/squadSync', 'attackship')
+      this.game.emit('squad/construct', 'squad-attack')
     }
     if(ship.data.chassis === 'squad-repair'){
       ship.data.ai = 'squadron'
       this.game.emit('ship/player/squadSync', 'repairship')
+      this.game.emit('squad/construct', 'squad-repair')
     }
   }
 
@@ -380,6 +383,19 @@ ShipManager.prototype._disabled = function(data) {
     if(ship.isPlayer) {
       this.autofire && clock.events.remove(this.autofire);
     };
+
+    if(chassis === 'scavenger-x04') {
+      for(var i = 0; i < ship.events.events.length; i++){
+        if(ship.events.events[i].callback.name === 'growlTimer'){
+          ship.events.remove(ship.events.events[i]);  
+        }
+      }
+    };
+
+    if(ship.data.masterShip && ship.data.masterShip === this.player.uuid){
+      this.game.emit('squad/disable', chassis)
+    }
+
     if(chassis === 'scavenger-x04') {
       for(var i = 0; i < ship.events.events.length; i++){
         if(ship.events.events[i].callback.name === 'growlTimer'){
@@ -409,6 +425,9 @@ ShipManager.prototype._enabled = function(data) {
       scav = /^(scavenger)/;
   if(ship !== undefined) {
     ship.enable(data);
+    if(ship.data.masterShip && ship.data.masterShip === this.player.uuid){
+      this.game.emit('squad/enable', ship.data.chassis)
+    }
     if(scav.test(ship.data.chassis)){
       for(var i = 0; i < ship.events.events.length; i++){
         if(ship.events.events[i].callback.name === 'alphaFader'){

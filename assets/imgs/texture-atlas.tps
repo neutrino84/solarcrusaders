@@ -250,32 +250,6 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">icons/bg-slide-ubaidian-256.png</key>
-            <key type="filename">ships/ubaidian/highRes/ubaidian-x01a-hires.png</key>
-            <key type="filename">ships/ubaidian/highRes/ubaidian-x01b-hires.png</key>
-            <key type="filename">ships/ubaidian/highRes/ubaidian-x01c-hires.png</key>
-            <key type="filename">ships/ubaidian/highRes/ubaidian-x01d-hires.png</key>
-            <key type="filename">ships/ubaidian/highRes/ubaidian-x01e-hires.png</key>
-            <key type="filename">ships/ubaidian/highRes/ubaidian-x01f-hires.png</key>
-            <key type="filename">ships/ubaidian/ubaidian-x01.png</key>
-            <key type="filename">ships/ubaidian/ubaidian-x01a.png</key>
-            <key type="filename">ships/ubaidian/ubaidian-x01b.png</key>
-            <key type="filename">ships/ubaidian/ubaidian-x01c.png</key>
-            <key type="filename">ships/ubaidian/ubaidian-x01d.png</key>
-            <key type="filename">ships/ubaidian/ubaidian-x01e.png</key>
-            <key type="filename">ships/ubaidian/ubaidian-x01f.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>64,64,128,128</rect>
-                <key>scale9Paddings</key>
-                <rect>64,64,128,128</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
             <key type="filename">icons/enhancement-booster.png</key>
             <key type="filename">icons/enhancement-detect.png</key>
             <key type="filename">icons/enhancement-heal.png</key>
@@ -438,6 +412,49 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">ships/ubaidian/highRes/ubaidian-x01a-hires.png</key>
+            <key type="filename">ships/ubaidian/highRes/ubaidian-x01b-hires.png</key>
+            <key type="filename">ships/ubaidian/highRes/ubaidian-x01c-hires.png</key>
+            <key type="filename">ships/ubaidian/highRes/ubaidian-x01d-hires.png</key>
+            <key type="filename">ships/ubaidian/highRes/ubaidian-x01e-hires.png</key>
+            <key type="filename">ships/ubaidian/highRes/ubaidian-x01f-hires.png</key>
+            <key type="filename">ships/ubaidian/ubaidian-x01.png</key>
+            <key type="filename">ships/ubaidian/ubaidian-x01a.png</key>
+            <key type="filename">ships/ubaidian/ubaidian-x01b.png</key>
+            <key type="filename">ships/ubaidian/ubaidian-x01c.png</key>
+            <key type="filename">ships/ubaidian/ubaidian-x01d.png</key>
+            <key type="filename">ships/ubaidian/ubaidian-x01e.png</key>
+            <key type="filename">ships/ubaidian/ubaidian-x01f.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>64,64,128,128</rect>
+                <key>scale9Paddings</key>
+                <rect>64,64,128,128</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">ships/ubaidian/squadron/indicators/squad-attack_upright.png</key>
+            <key type="filename">ships/ubaidian/squadron/indicators/squad-attack_upright_black.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>55,55,110,110</rect>
+                <key>scale9Paddings</key>
+                <rect>55,55,110,110</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">ships/ubaidian/squadron/indicators/squad-repair_upright.png</key>
+            <key type="filename">ships/ubaidian/squadron/indicators/squad-repair_upright_black.png</key>
+            <key type="filename">ships/ubaidian/squadron/indicators/squad-shield_upright.png</key>
+            <key type="filename">ships/ubaidian/squadron/indicators/squad-shield_upright_black.png</key>
             <key type="filename">ships/ubaidian/squadron/squad-attack.png</key>
             <key type="filename">ships/ubaidian/squadron/squad-repair.png</key>
             <key type="filename">ships/ubaidian/squadron/squad-shield.png</key>
@@ -524,7 +541,6 @@
             <filename>ships/ubaidian/highRes/ubaidian-x01d-hires.png</filename>
             <filename>ships/ubaidian/highRes/ubaidian-x01e-hires.png</filename>
             <filename>ships/ubaidian/highRes/ubaidian-x01f-hires.png</filename>
-            <filename>icons/bg-slide-ubaidian-256.png</filename>
             <filename>icons/enhancement-overload.png</filename>
             <filename>icons/squad-closest-hostile.png</filename>
             <filename>icons/squad-regroup.png</filename>
@@ -534,6 +550,12 @@
             <filename>icons/squad-engage-target.png</filename>
             <filename>icons/squad-shieldDestination_hollow.png</filename>
             <filename>icons/squad-shieldDestination_yellow.png</filename>
+            <filename>ships/ubaidian/squadron/indicators/squad-attack_upright.png</filename>
+            <filename>ships/ubaidian/squadron/indicators/squad-attack_upright_black.png</filename>
+            <filename>ships/ubaidian/squadron/indicators/squad-repair_upright_black.png</filename>
+            <filename>ships/ubaidian/squadron/indicators/squad-repair_upright.png</filename>
+            <filename>ships/ubaidian/squadron/indicators/squad-shield_upright_black.png</filename>
+            <filename>ships/ubaidian/squadron/indicators/squad-shield_upright.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

@@ -13,16 +13,16 @@ function EventManager(game) {
   this.sockets = game.sockets;
 
   this.level = 1;
-  this.ships = {
-    basic: 6,
-    pirate: 18,
-    enforcer: 1
-  };
   // this.ships = {
-  //   basic: 0,
-  //   pirate: 0,
-  //   enforcer: 0
+  //   basic: 6,
+  //   pirate: 18,
+  //   enforcer: 1
   // };
+  this.ships = {
+    basic: 0,
+    pirate: 0,
+    enforcer: 0
+  };
 
   this.chassis = {
     basic : ['ubaidian-x01a','ubaidian-x01b','ubaidian-x01c','ubaidian-x01d','ubaidian-x01e','ubaidian-x01f'],

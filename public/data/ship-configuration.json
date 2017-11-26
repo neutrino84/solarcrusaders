@@ -730,7 +730,7 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "quantum"
+            "subtype": "XP1123"
           }
         },
         {
@@ -745,7 +745,7 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "quantum"
+            "subtype": "XP1123"
           }
         }
               ]
@@ -855,7 +855,7 @@
     "class": "fighter",
     "stats": {
       "capacity": 3000,
-      "health": 100,
+      "health": 1,
       "heal": 0.25,
       "armor": 0.1,
       "speed": 30.0,

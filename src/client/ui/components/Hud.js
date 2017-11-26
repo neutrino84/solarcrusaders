@@ -137,7 +137,6 @@ Hud.prototype.show = function() {
 Hud.prototype.showCreditLoss = function() {
 
   this.visible = true;
-  // this.losses = [];
   this.losses['a'] = new Label(this.game, {
         constraint: Layout.USE_PS_SIZE,
         align: 'center',
@@ -339,6 +338,8 @@ Hud.prototype.showCreditGain = function(credits, uuid) {
               }, this);
       },this);
   },this);
+
+  this.game.emit('player/credits', credits);
 };
 
 Hud.prototype.hide = function() {
