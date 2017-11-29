@@ -13,16 +13,16 @@ function EventManager(game) {
   this.sockets = game.sockets;
 
   this.level = 1;
-  // this.ships = {
-  //   basic: 6,
-  //   pirate: 18,
-  //   enforcer: 1
-  // };
   this.ships = {
-    basic: 0,
-    pirate: 0,
-    enforcer: 0
+    basic: 4,
+    pirate: 10,
+    enforcer: 1
   };
+  // this.ships = {
+  //   basic: 0,
+  //   pirate: 2,
+  //   enforcer: 0
+  // };
 
   this.chassis = {
     basic : ['ubaidian-x01a','ubaidian-x01b','ubaidian-x01c','ubaidian-x01d','ubaidian-x01e','ubaidian-x01f'],
@@ -108,49 +108,61 @@ EventManager.prototype.squadGen = function(master){
       randomPostion2 = this.generateRandomPosition(2700),
       rando = this.game.rnd.frac();
 
-  // if(chassis1 === 'squad-shield'){
+  if(chassis1 === 'squad-shield'){
     chassis2 = this.game.rnd.pick(this.chassis['squadron2'])
-  // } else {
-  //   chassis2 = this.game.rnd.pick(this.chassis['squadron'])
-  // };
+  } else {
+    chassis2 = this.game.rnd.pick(this.chassis['squadron'])
+  };
 
-  // if(rando > 0.3){
+  if(rando > 0.6){
     this.game.emit('ship/create', {
-      chassis: 'squad-attack',
+      chassis: chassis1,
       x: randomPostion.x,
       y: randomPostion.y,
       ai: 'squadron',
-      master: master,
-      credits: 100
+      master: master
     });
 
     this.game.emit('ship/create', {
-      chassis: 'squad-attack',
+      chassis: chassis2,
       x: randomPostion.x,
       y: randomPostion.y,
       ai: 'squadron',
-      master: master,
-      credits: 100
+      master: master
     });
 
-    // this.game.emit('ship/create', {
-    //   chassis: 'squad-shield',
-    //   x: randomPostion.x,
-    //   y: randomPostion.y,
-    //   ai: 'squadron',
-    //   master: master
-    // });
-  // };
-  // if(rando > 0.7) {
     this.game.emit('ship/create', {
-      chassis: 'squad-repair',
+      chassis: chassis2,
+      x: randomPostion.x,
+      y: randomPostion.y,
+      ai: 'squadron',
+      master: master
+    });
+  } else if(rando > 0.3){
+    this.game.emit('ship/create', {
+      chassis: chassis1,
       x: randomPostion2.x,
       y: randomPostion2.y,
       ai: 'squadron',
-      master: master,
-      credits: 100
+      master: master
     });
-  // };
+
+    this.game.emit('ship/create', {
+      chassis: chassis2,
+      x: randomPostion2.x,
+      y: randomPostion2.y,
+      ai: 'squadron',
+      master: master
+    });
+  } else {
+    this.game.emit('ship/create', {
+      chassis: chassis1,
+      x: randomPostion2.x,
+      y: randomPostion2.y,
+      ai: 'squadron',
+      master: master
+    });
+  }
 
     // this.game.emit('ship/create', {
     //   chassis: 'squad-attack',
@@ -177,8 +189,7 @@ EventManager.prototype.enforcerGen = function(x, y, master){
       x: x,
       y: y,
       ai: 'enforcer',
-      master: master,
-      credits: 100
+      master: master
     }); 
   };
 };
@@ -191,25 +202,22 @@ EventManager.prototype.scavGen = function(num) {
       x: 5411,
       y: -5354,
       ai: 'scavenger',
-      faction: 'vulothi',
-      credits : 10
-
+      faction: 'vulothi'
     }); 
     this.game.emit('ship/create', {
       chassis: this.game.rnd.pick(this.chassis['scavenger']),
       x: -5055,
       y: 4973,
       ai: 'scavenger',
-      faction: 'fenris',
-      credits : 10
-
+      faction: 'fenris'
     }); 
   };
 };
 
 EventManager.prototype.spawnQueen = function(cycle, uuid){
   var ships = this.ships,
-      spawnPosition = {}, position, rando;
+      rando = this.game.rnd.frac(),
+      spawnPosition = {}, position;
   if(cycle % 2 === 0){
     spawnPosition.x = -5055;
     spawnPosition.y = 4973;
@@ -228,29 +236,22 @@ EventManager.prototype.spawnQueen = function(cycle, uuid){
     this.game.emit('ship/create', {
       chassis: 'scavenger-x04',
       ai: 'scavenger',
-      credits: 5000,
-      reputation: -1000,
       x: spawnPosition.x,
       y: spawnPosition.y,
       cycle: cycle,
-      brood: {},
-      credits: 700
+      brood: {}
     });
     this.sockets.send('global/sound/spawn', 'queenSpawn');
   } else {
     //create overseers
-    rando = this.game.rnd
-    var randSpawn = cycle*(rando.s0+rando.s1)/1.25;
-    for(var i = 0; i < randSpawn+1; i++){
+    for(var i = 0; i < (rando+1)*(cycle+1); i++){
       this.game.emit('ship/create', {
         chassis: 'scavenger-x03',
         ai: 'scavenger',
-        credits: 2000,
         reputation: -650,
         x: spawnPosition.x,
         y: spawnPosition.y,
-        queen: uuid,
-        credits: 300
+        queen: uuid
       });
     }
   }

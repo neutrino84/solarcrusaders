@@ -146,17 +146,19 @@ Hud.prototype.showCreditLoss = function() {
         bg: false
       });
 
+
   this.losses['a'].tint = 0xff0000;
   this.losses['a'].text = this.ship.data.credits;
   this.losses['a'].visible = true;
 
   this.scoreContainer.addPanel(this.losses['a'])
 
-  this.lossTimers['a'] && this.game.clock.events.remove(this.lossTimers['a'])
-  this.lossTimers['a'] = this.game.clock.events.loop(100, function(){
+  this.lossTimers['a'] && this.ship.events.remove(this.lossTimers['a'])
+  this.lossTimers['a'] = this.ship.events.loop(100, lossTimer_a = function(){
+    if(!this.losses['a']){return};
     this.losses['a'].y -= 1;
     this.losses['a'].alpha -= .033;
-    if(this.losses['a'] -28){
+    if(this.losses['a'] <= -28){
         this.losses['a'].y = 0;
         this.losses['a'].alpha = 0;
         this.losses['a'] = false;
@@ -164,11 +166,11 @@ Hud.prototype.showCreditLoss = function() {
         this.energyBar.visible = true;
         this.visible = false;
         this.losses['a'].destroy();
-        this.game.clock.events.remove(this.lossTimers['a'])
+        this.ship.events.remove(this.lossTimers['a'])
     };
   }, this);
 
-        this.game.clock.events.add(333, function(){
+        this.ship.events.add(333, function(){
             this.losses['b'] = new Label(this.game, {
                   constraint: Layout.USE_PS_SIZE,
                   align: 'center',
@@ -183,8 +185,8 @@ Hud.prototype.showCreditLoss = function() {
             this.losses['b'].alpha = 0.33;
             this.scoreContainer.addPanel(this.losses['b'])
 
-            this.lossTimers['b'] && this.game.clock.events.remove(this.lossTimers['b'])
-            this.lossTimers['b'] = this.game.clock.events.loop(100, function(){
+            this.lossTimers['b'] && this.ship.events.remove(this.lossTimers['b'])
+            this.lossTimers['b'] = this.ship.events.loop(100, lossTimer_b = function(){
               this.losses['b'].y -= 1;
               this.losses['b'].alpha -= .033;
               if(this.losses['b'].y <= -28){
@@ -195,11 +197,11 @@ Hud.prototype.showCreditLoss = function() {
                   this.energyBar.visible = true;
                   this.visible = false;
                   this.losses['b'].destroy();
-                  this.game.clock.events.remove(this.lossTimers['b'])
+                  this.ship.events.remove(this.lossTimers['b'])
               };
             }, this);
 
-            this.game.clock.events.add(333, function(){
+            this.ship.events.add(333, function(){
                     this.losses['c'] = new Label(this.game, {
                           constraint: Layout.USE_PS_SIZE,
                           align: 'center',
@@ -214,8 +216,8 @@ Hud.prototype.showCreditLoss = function() {
                     this.losses['c'].alpha = 0.15;
                     this.scoreContainer.addPanel(this.losses['c'])
 
-                    this.lossTimers['c'] && this.game.clock.events.remove(this.lossTimers['c'])
-                    this.lossTimers['c'] = this.game.clock.events.loop(100, function(){
+                    this.lossTimers['c'] && this.ship.events.remove(this.lossTimers['c'])
+                    this.lossTimers['c'] = this.ship.events.loop(100, lossTimer_c = function(){
                       this.losses['c'].y -= 1;
                       this.losses['c'].alpha -= .033;
                       if(this.losses['c'].y <= -28){
@@ -226,7 +228,7 @@ Hud.prototype.showCreditLoss = function() {
                           this.energyBar.visible = true;
                           this.visible = false;
                           this.losses['c'].destroy();
-                          this.game.clock.events.remove(this.lossTimers['c'])
+                          this.ship.events.remove(this.lossTimers['c'])
                       };
                     }, this);
             },this);
@@ -259,8 +261,9 @@ Hud.prototype.showCreditGain = function(credits, uuid) {
   this.gains[uuid]['a'].visible = true;
   this.scoreContainer.addPanel(this.gains[uuid]['a'])
 
-  this.gainTimers[uuid]['a'] && this.game.clock.events.remove(this.gainTimers[uuid]['a'])
-  this.gainTimers[uuid]['a'] = this.game.clock.events.loop(100, function(){
+  this.gainTimers[uuid]['a'] && this.ship.events.remove(this.gainTimers[uuid]['a'])
+
+  this.gainTimers[uuid]['a'] = this.ship.events.loop(100, function(){
     this.gains[uuid]['a'].y -= 1;
     this.gains[uuid]['a'].alpha -= .033;
     if(this.gains[uuid]['a'].y <= -28){
@@ -271,11 +274,12 @@ Hud.prototype.showCreditGain = function(credits, uuid) {
         this.energyBar.visible = true;
         this.visible = false;
         this.gains[uuid]['a'].destroy();
-        this.game.clock.events.remove(this.gainTimers[uuid]['a'])
+        this.ship.events.remove(this.gainTimers[uuid]['a'])
+
     };
   }, this);
 
-  this.game.clock.events.add(333, function(){
+  this.ship.events.add(333, function(){
       this.gains[uuid]['b'] = new Label(this.game, {
             constraint: Layout.USE_PS_SIZE,
             align: 'center',
@@ -290,8 +294,8 @@ Hud.prototype.showCreditGain = function(credits, uuid) {
       this.gains[uuid]['b'].alpha = 0.33;
       this.scoreContainer.addPanel(this.gains[uuid]['b'])
 
-      this.gainTimers[uuid]['b'] && this.game.clock.events.remove(this.gainTimers[uuid]['b'])
-      this.gainTimers[uuid]['b'] = this.game.clock.events.loop(100, function(){
+      this.gainTimers[uuid]['b'] && this.ship.events.remove(this.gainTimers[uuid]['b'])
+      this.gainTimers[uuid]['b'] = this.ship.events.loop(100, function(){
         this.gains[uuid]['b'].y -= 1;
         this.gains[uuid]['b'].alpha -= .033;
         if(this.gains[uuid]['b'].y <= -28){
@@ -302,11 +306,11 @@ Hud.prototype.showCreditGain = function(credits, uuid) {
             this.energyBar.visible = true;
             this.visible = false;
             this.gains[uuid]['b'].destroy();
-            this.game.clock.events.remove(this.gainTimers[uuid]['b'])
+            this.ship.events.remove(this.gainTimers[uuid]['b'])
         };
       }, this);
 
-      this.game.clock.events.add(333, function(){
+      this.ship.events.add(333, function(){
               this.gains[uuid]['c'] = new Label(this.game, {
                     constraint: Layout.USE_PS_SIZE,
                     align: 'center',
@@ -321,8 +325,8 @@ Hud.prototype.showCreditGain = function(credits, uuid) {
               this.gains[uuid]['c'].alpha = 0.15;
               this.scoreContainer.addPanel(this.gains[uuid]['c'])
 
-              this.gainTimers[uuid]['c'] && this.game.clock.events.remove(this.gainTimers[uuid]['c'])
-              this.gainTimers[uuid]['c'] = this.game.clock.events.loop(100, function(){
+              this.gainTimers[uuid]['c'] && this.ship.events.remove(this.gainTimers[uuid]['c'])
+              this.gainTimers[uuid]['c'] = this.ship.events.loop(100, function(){
                 this.gains[uuid]['c'].y -= 1;
                 this.gains[uuid]['c'].alpha -= .033;
                 if(this.gains[uuid]['c'].y <= -28){
@@ -333,12 +337,11 @@ Hud.prototype.showCreditGain = function(credits, uuid) {
                     this.energyBar.visible = true;
                     this.visible = false;
                     this.gains[uuid]['c'].destroy();
-                    this.game.clock.events.remove(this.gainTimers[uuid]['c'])
+                    this.ship.events.remove(this.gainTimers[uuid]['c'])
                 };
               }, this);
       },this);
   },this);
-
   this.game.emit('player/credits', credits);
 };
 

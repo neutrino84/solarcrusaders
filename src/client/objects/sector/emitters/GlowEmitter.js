@@ -44,8 +44,9 @@ GlowEmitter.prototype.explosion = function(object) {
   this.setVector(vector.x, vector.y);
 
   this.setScale(1.0, object.data.size * 1.5, 1000);
-  this.setAlpha(1.0, 0.0, 2000);
-  this.setTint(0xFFFFFF, 0x999999, 2000);
+  this.setAlpha(0.4, 0, 2000);
+  // this.setAlpha(0.0, 0.2, 2000);
+  this.setTint(0xFFffff, 0x999999, 2000);
 };
 
 module.exports = GlowEmitter;

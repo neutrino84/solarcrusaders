@@ -36,7 +36,8 @@ function MiniMapPane(game, settings) {
       other: 0x8A8A8A, 
       squadron : 0xffffff, 
       user: 0x00ffff,
-      scavengers: 0x9932CC
+      enforcers: 0xe26816,
+      scavengers: 0xdb57c3
     },
     user: {
       ship: {
@@ -58,16 +59,16 @@ function MiniMapPane(game, settings) {
     pirates : [],
     neutrals : [],
     scavengers : [],
+    enforcers : [],
     users : [],
     others : []
   }
 
   this.ships = {};
   this.player;
+  this.target;
 
   this._drawShips();
-
-  // this.game.on('mapData', this._mapData, this)
 
   this.game.on('shipsDump', this._shipsRefresh, this)
   this.game.on('sector/sync', this._sync, this);
@@ -75,6 +76,8 @@ function MiniMapPane(game, settings) {
   this.game.on('ship/player', this._player, this);
   this.game.on('player/disabled', this._fadeOut, this);
   this.game.on('player/enabled', this._fadeIn, this);
+
+  this.game.on('squad/engageHostile', this._target, this);
 };
 
 
@@ -89,6 +92,10 @@ MiniMapPane.prototype._player = function(ship) {
     this.player = ship;
 };
 
+MiniMapPane.prototype._target = function(uuid) {
+    this.target = uuid;
+};
+
 MiniMapPane.prototype._sync = function(data) {
   var game = this.game,
       ships = data.ships,
@@ -96,20 +103,24 @@ MiniMapPane.prototype._sync = function(data) {
       pirate = /^(pirate)/,
       ubaidian = /^(ubaidian)/,
       scav = /^(scavenger)/,
-      sync, ship, type;
+      enforcer = /^(enforcer)/,
+      sync, ship, type, targetted;
+
   this.catalogue = {
     squadron : [],
     pirates : [],
     neutrals : [],
     scavengers : [],
     users : [],
+    enforcers: [],
     others : []
   }
 
   for(var s=0; s<length; s++) {
     sync = ships[s];
     ship = this.ships[sync.uuid];
-    type = null;
+    type = null,
+    targetted = false;
 
     if(ship && !ship.disabled) {
       if(ship === this.player){
@@ -125,15 +136,36 @@ MiniMapPane.prototype._sync = function(data) {
         type = 'pirates'
       } else if (scav.test(ship.data.chassis)){
         type = 'scavengers'
+      } else if (enforcer.test(ship.data.chassis)){
+        type = 'enforcers'
       } else {
         type = 'others'
+      };
+
+      if(ship.uuid === this.target){
+        targetted = true;
       }
-      if(type){
+
+      if(ship.data.uuid === this.target){
+        targetted = true;
+      }
+
+      if(type && !targetted){
         this.catalogue[type].push({
           ship: {
             x: ship.position.x,
             y: ship.position.y,
             size : ship.data.size
+          },
+          color: this.mapSettings.colors[type]
+        })
+      } else if(type && targetted){
+        this.catalogue[type].push({
+          ship: {
+            x: ship.position.x,
+            y: ship.position.y,
+            size : ship.data.size,
+            targetted : true
           },
           color: this.mapSettings.colors[type]
         })
@@ -144,50 +176,6 @@ MiniMapPane.prototype._sync = function(data) {
   this._drawShips(); 
 };
 
-// MiniMapPane.prototype._mapData = function(player, data) {
-//   var scope = this, 
-//       pirate = /^(pirate)/,
-//       ubaidian = /^(ubaidian)/,
-//       scav = /^(scavenger)/, type,
-//       ai;
-//   this.mapSettings.user.ship.x = player.position.x;
-//   this.mapSettings.user.ship.y = player.position.y;
-
-
-//   this.catalogue = {
-//     squadron : [],
-//     pirates : [],
-//     neutrals : [],
-//     scavengers : [],
-//     users : [],
-//     others : []
-//   }
-//   for(var i = 0; i < data.length; i++){
-//     // data[i].data.ai = ai;
-//     if(data[i].data.masterShip && data[i].data.masterShip == player.uuid){
-//       type = 'squadron'
-//     } else if(ubaidian.test(data[i].data.chassis)){
-//       type = 'neutrals'
-//     } else if (pirate.test(data[i].data.chassis)){
-//       type = 'pirates'
-//     } else if (scav.test(data[i].data.chassis)){
-//       type = 'scavengers'
-//     } else {
-//       type = 'others'
-//     }
-//     this.catalogue[type].push({
-//       ship: {
-//         x: data[i].position.x,
-//         y: data[i].position.y,
-//         size : data[i].data.size
-//       },
-//       color: this.mapSettings.colors[type]
-//     })
-//   }
-//   this._removeShips();
-//   this._drawShips();
-// };
-
 MiniMapPane.prototype._drawShips = function() {
   var scope = this;
 
@@ -195,6 +183,7 @@ MiniMapPane.prototype._drawShips = function() {
   draw(this.catalogue.neutrals);
   draw(this.catalogue.others);
   draw(this.catalogue.squadron);
+  draw(this.catalogue.enforcers);
   draw(this.catalogue.scavengers);
 
 
@@ -225,7 +214,6 @@ MiniMapPane.prototype._fadeIn = function() {
           for(var i = 0; i < this.game.clock.events.events.length; i++){
             if(this.game.clock.events.events[i].callback.name === 'minimapFadeIn'){
               this.game.clock.events.remove(this.game.clock.events.events[i]);
-              console.log('got here. found FadeIn  1111111')
             }
           }
           this.game.emit('system/sound', 'sensors-online');
@@ -237,11 +225,10 @@ MiniMapPane.prototype._fadeIn = function() {
 };
 
 MiniMapPane.prototype._fadeOut = function() {
+  var lossTimer = /^(lossTimer)/;
 
-  console.log(this.game.clock.events.events)
   for(var i = 0; i < this.game.clock.events.events.length; i++){
-    if(this.game.clock.events.events[i].callback.name === 'minimapFadeIn'){
-      console.log('got here. found FadeIn')
+    if(this.game.clock.events.events[i].callback.name === 'minimapFadeIn' || lossTimer.test(this.game.clock.events.events[i].callback.name)){
       this.game.clock.events.remove(this.game.clock.events.events[i]);
     }
   }

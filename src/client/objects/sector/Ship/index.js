@@ -86,7 +86,6 @@ Ship.prototype.refresh = function(data) {
       ships = this.manager.ships,
       targetingComputer = this.targetingComputer;
 
-  // console.log(data)    
   if(data.killed && this.isPlayer){
     ships[data.killed].hud.showCreditLoss();
     this.hud.showCreditGain(data.gains, data.killed)
@@ -121,14 +120,16 @@ Ship.prototype.refresh = function(data) {
     targetingComputer.hit(defender, data);
 
     // show selector damage
-    defender.selector.damage();
-    defender.selector.timer && defender.events.remove(defender.selector.timer);
-    defender.selector.timer = defender.events.add(500, defender.selector.reset, defender.selector);
+    if(defender){
+      defender.selector.damage();
+      defender.selector.timer && defender.events.remove(defender.selector.timer);
+      defender.selector.timer = defender.events.add(500, defender.selector.reset, defender.selector);
 
-    // show hud screen
-    defender.hud.show();
-    defender.hud.timer && defender.events.remove(defender.hud.timer);
-    defender.hud.timer = defender.events.add(3000, defender.hud.hide, defender.hud);
+      // show hud screen
+      defender.hud.show();
+      defender.hud.timer && defender.events.remove(defender.hud.timer);
+      defender.hud.timer = defender.events.add(3000, defender.hud.hide, defender.hud);
+    }
 
     if(defender.isPlayer && attacker.data.hardpoints[0].subtype !== 'repair') {
       // this.game.camera.shake();
@@ -165,13 +166,13 @@ Ship.prototype.update = function() {
     this.engineCore.update(multiplier);
   }
 
-  // engine.Sprite.prototype.update.call(this);
 };
 
 Ship.prototype.enable = function(data) {
   this.alpha = 1.0;
   this.disabled = false;
   this.chassis.tint = 0xFFFFFF;
+  this.data.credits = this.config.stats.size
   this.hud.enable();
   this.selector.enable();
   this.engineCore.show(true);
@@ -179,7 +180,7 @@ Ship.prototype.enable = function(data) {
 
   if(this.isPlayer){
     var soundArr = ['reactor-online', 'weapons-systems-online', 'repairs-completed']
-    // this.game.emit('squad/regroup', this);
+    this.game.emit('squad/regroup', this);
     this.game.emit('hotkeys/refresh', this);
     this.game.emit('system/sound', this.game.rnd.pick(soundArr));
     this.game.emit('player/enabled');

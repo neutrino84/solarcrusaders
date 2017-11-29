@@ -30,12 +30,24 @@ function Ship(manager, data, user) {
   this.squadron = data.squadron
   this.docked = true;
   };
-  // if(data.battalion){
-  //   this.battalion = data.battalion
-  // };
+  this.data.targettedBy = null;
 
   // ship configuration
   this.config = client.ShipConfiguration[this.data.chassis];
+
+  this.data.credits = this.config.stats.size;
+  if(this.data.chassis === 'scavenger-x02' || this.data.chassis === 'scavenger-x01'){
+    this.data.credits = 25;
+  }
+  if(this.data.chassis === 'scavenger-x03'){
+    this.data.credits = 250;
+  }
+  if(this.data.chassis === 'scavenger-x04'){
+    this.data.credits = 575;
+  }
+  if(this.user){
+    this.data.credits = this.config.stats.size*2
+  }
 
   // disabled state
   this.disabled = false;
@@ -232,7 +244,7 @@ Ship.prototype.hit = function(attacker, target, slot, target_uuid) {
     }
 
     //prevent friendly fire dmg to squadron
-    // if(this.master === attacker.uuid || attacker.hardpoints[0].subtype === 'repair' && data.health >= (this.config.stats.health)){return}  
+    if(this.master === attacker.uuid || attacker.hardpoints[0].subtype === 'repair' && data.health >= (this.config.stats.health)){return}  
 
 
     // calc damage
@@ -258,12 +270,6 @@ Ship.prototype.hit = function(attacker, target, slot, target_uuid) {
       health = data.health - damage;
     }
 
-    // if(attacker.hardpoints[0].subtype === 'repair' && data.health < (this.config.stats.health)){
-    //   health = data.health + rawDamage;
-    // } else if(attacker.hardpoints[0].subtype !== 'repair'){
-    //   health = data.health - damage;
-    // };
-
     durability = this.durability;
 
     // update damage
@@ -278,10 +284,6 @@ Ship.prototype.hit = function(attacker, target, slot, target_uuid) {
         critical: critical,
         shielded: shielded
       });
-
-      // update attacker
-      // attacker.credits = global.Math.floor(attacker.credits + damage + (ai && ai.type === 'pirate' ? damage : 0));
-      // attacker.credits = global.Math.floor(attacker.credits + (damage * 0.8));
 
       updates.push({
         uuid: attacker.uuid,

@@ -13,16 +13,44 @@ function Ship(game, shipSettings, settings) {
 
   this.settings = settings;
 
-  this.thickness = this.ship.size * (2/90);
+  this.thickness = this.ship.size * (2/70);
 
-  this.lineStyle(0);
-  this.beginFill(this.color, 0.9);
-  this.drawCircle(0, 0, this.thickness);
-  this.endFill();
+  if(this.ship.targetted){
+    // this.beginFill(0xfffCCC, 1);
+    // console.log
+    this.lineStyle(1, this.color, 1.0);
+    // this.drawRect(0, 0, this.thickness*2.5, this.thickness*2.5);
+    this.drawRect(0, 0, this.thickness*2, this.thickness*2);
+    // this.endFill();
+    // console.log('this rect is ', this)
+  } else {
+    this.lineStyle(0);
+    this.beginFill(this.color, 0.9);
+    this.drawCircle(0, 0, this.thickness);
+    this.endFill();
+  }
+  
 
   this.needUpdate = true;
   // console.log(this.ship, this.settings)
+  if(this.ship.targetted){
+    // this.reticleRed = 15;
+
+    // this.reticleRed = new engine.Graphics(); 
+    // this.reticleRed.lineStyle(2, 0xcc1111, 1.0);
+    // this.reticleRed.drawRect(10, 10, 5, 5);
+    // this.reticleRed.alpha = 1;
+
+
+    // this.reticleRed.pivot.set(halfWidth +2, halfHeight + 5);
+    
+    // console.log('ship targetted! reticle is ', this.reticleRed)
+  }
+
+
   this.update();
+
+
 };
 
 Ship.prototype = Object.create(engine.Graphics.prototype);
@@ -45,6 +73,18 @@ Ship.prototype.update = function(){
 
   this.position.y = (this.settings.size / 2 + positionWithZoom[1] - userWithZoom[1]) ;
 
+  if(this.ship.targetted){
+    // this.reticleRed.position.x = userWithZoom[0]
+    // this.reticleRed.position.y = userWithZoom[1];
+    // console.log('this is ', this)
+    // console.log('parent is ', this.parent)
+
+    // halfWidth = ship.width/2,
+    this.position.x = this.position.x - this.thickness
+    this.position.y = this.position.y - this.thickness
+  }
+
+  // console.log('reticle is ', this.reticleRed)
 
   // this.position.x = this.settings.size / 2 ;
   // this.position.y = this.settings.size / 2 ;

@@ -157,9 +157,20 @@ ShipManager.prototype.squad_engage = function(socket, args){
 
     for (var s in ships){
       ship = ships[s];
+      if(ship.data.targettedBy === args[1].player_id){
+        // var updates = [];
+        // var update = { uuid: ship.uuid }
+        // ship.data.targettedBy = false;
+        // update.targettedBy = null;
+        // updates.push(update)
+        // if(updates.length > 0) {
+        //   this.game.emit('ship/data', updates);
+        // }
+      }
 
       if(ship.chassis === 'squad-attack' && ship.master === args[1].player_id && ships[args[1].target_id]){
         target = ships[args[1].target_id];
+        // target.data.targettedBy = args[1].player_id;
         ship.ai.engage(target, 'attack');
       };
     };
@@ -185,6 +196,11 @@ ShipManager.prototype.squad_regroup = function(socket, args){
       var a = /^(squad)/,
           t = ship.chassis;
 
+      if(ship.data.targettedBy === args[1].player_id){
+        console.log('this SHOULD work goddamit', ship)
+        ship.data.targettedBy = null;
+      }
+
       if(a.test(t) && ship.master === player.uuid && args[1].squad[ship.uuid] && !ship.disabled){
         distance = args[1].squad[ship.uuid];
         ship.ai.regroup(distance);
@@ -201,7 +217,7 @@ ShipManager.prototype.squad_shield_destination = function(socket, args){
       var a = /^(squad-shield)/,
           t = ship.chassis;
       if(a.test(t) && ship.master === player.uuid && !ship.disabled){
-        console.log('INSIDE')
+        // console.log('INSIDE')
         ship.ai.shield_destination(args[1].destination);
       };
     };
@@ -210,14 +226,14 @@ ShipManager.prototype.squad_shield_destination = function(socket, args){
 ShipManager.prototype.squad_shield_destination_deactivate = function(socket, args){
   var ships = this.ships,
       player = ships[args[1]];
-      console.log('squad_shield_destination_deactivate    args 1 is : ', args[1])
+      // console.log('squad_shield_destination_deactivate    args 1 is : ', args[1])
       // distance;
     for (var s in ships){
       ship = ships[s];
       var a = /^(squad-shield)/,
           t = ship.chassis;
       if(a.test(t) && ship.master === player.uuid && !ship.disabled){
-        console.log('INSIDE DEACTIVATE')
+        // console.log('INSIDE DEACTIVATE')
         ship.ai.shield_destination_deactivate();
       };
     };
@@ -331,14 +347,20 @@ ShipManager.prototype.update = function() {
         delta = ship.heal;
         ship.health = global.Math.min(stats.health, ship.health + delta);
         update.health = engine.Math.roundTo(ship.health, 1);
-      }
+      };
 
       // update energy
       if(ship.energy < stats.energy) {
         delta = ship.recharge;
         ship.energy = global.Math.min(stats.energy, ship.energy + delta);
         update.energy = engine.Math.roundTo(ship.energy, 1);
-      }
+      };
+
+      //update targettedBy
+      if(ship.data.targettedBy){
+        update.targettedBy = ship.data.targettedBy
+        updates.push(update)
+      };
 
       // push deltas
       if(delta !== undefined) {

@@ -180,8 +180,9 @@ Squadron.prototype.attack = function() {
       point = {};
 
   // attack sequence
-  if(this.target) {
+  if(this.target && this.target.data) {
     target = this.target;
+
 
     size = target.data.size * settings.sensor.aim;
     offset.copyFrom(target.movement.position);

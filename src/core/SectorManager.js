@@ -66,6 +66,8 @@ SectorManager.prototype.data = function(socket, args) {
       stations = this.stationManager.data(uuids.stations),
       users = this.userManager.data(uuids.users);
 
+      
+
   // relay data to user
   socket.emit('sector/data', {
     type: 'sync',
@@ -87,6 +89,13 @@ SectorManager.prototype.queued = function() {
       updates.stations.length > 0 ||
       updates.users.length > 0) {
 
+    // console.log('boobles . ', updates.ships)
+    for(var a in updates.ships){
+        // console.log('Supdate: ', updates.ships[a].targettedBy)
+        if(updates.ships[a].targettedBy){
+          // console.log('still: ', updates.ships[a].uuid)
+        }
+    }
     // send data
     this.sockets.send('sector/data', {
       type: 'update',

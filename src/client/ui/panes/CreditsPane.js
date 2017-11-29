@@ -17,11 +17,11 @@ function CreditsPane(game, settings) {
     constraint: Layout.CENTER,
     height: 15,
     width: 90,
-    padding: [0, 20, 4, 0],
+    padding: [0, 0, 0, 0],
     layout: {
       type: 'flow',
       ax: Layout.CENTER, 
-      ay: Layout.BOTTOM,
+      ay: Layout.TOP,
       direction: Layout.HORIZONTAL, 
       gap: 20
     },
@@ -45,25 +45,23 @@ function CreditsPane(game, settings) {
         bg: false
       });
 
-  this.creditValue = 0;
-
   this.creditsText.text = 'CREDITS'
-  this.creditsCount.text = this.creditValue;
+  // this.creditsCount.text = this.creditValue;
 
 
   this.addPanel(this.creditsText)
   this.addPanel(this.creditsCount)
 
-  this.game.on('player/credits', this._credits, this);
+  // this.game.on('player/credits', this._credits, this);
+  // this.game.on('player/credits/init', this._credits, this);
 };
 
 CreditsPane.prototype = Object.create(Pane.prototype);
 CreditsPane.prototype.constructor = CreditsPane;
 
-CreditsPane.prototype._credits = function(credits) {
-  console.log('credits gain is: ', credits)
-  this.creditValue = this.creditValue + credits;
-  this.creditsCount.text = this.creditValue;
+CreditsPane.prototype.updateCredits = function(credits) {
+  // this.creditValue = this.creditValue + credits;
+  this.creditsCount.text = credits;
 };
 
 module.exports = CreditsPane;

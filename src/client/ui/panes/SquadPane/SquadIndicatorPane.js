@@ -8,6 +8,7 @@ var engine = require('engine'),
     BorderLayout = require('../../layouts/BorderLayout'),
     BackgroundView = require('../../views/BackgroundView'),
     ButtonIcon = require('../../components/ButtonIcon'),
+    ProgressBar = require('../../components/ProgressBar'),
     Image = require('../../components/Image'),
     Tooltip = require('../../components/Tooltip'),
     Class = engine.Class;
@@ -25,8 +26,36 @@ function SquadIndicatorPane(game, settings) {
       direction: Layout.HORIZONTAL, 
       gap: 4
     },
-    bg: false
+    bg: false,
+    paymentTimerIndicator: {
+      width: 80,
+      height: 2,
+      progress: {
+        color: 0xffffff,
+        fillAlpha: 0.7,
+        blendMode: engine.BlendMode.ADD,
+        modifier: {
+          left: 0.0,
+          top: 0.0,
+          width: 1.0,
+          height: 1.0
+        }
+      },
+      bg: {
+        fillAlpha: 0.24,
+        color: 0xffffff
+      }
+    }
   });
+
+
+  this.paymentTimerIndicator = new ProgressBar(this.game, this.settings.paymentTimerIndicator);
+
+  this.paymentTimerIndicator.percentage('width', 0)
+  
+  // this.invalidate();
+
+  this.addPanel(this.paymentTimerIndicator)
 
   this.ship_containers = [];
   this.count = 0;
@@ -47,12 +76,9 @@ function SquadIndicatorPane(game, settings) {
     );
     this.addPanel(this.ship_containers[i])
   };
-  
-  this.squadShipTracking = {
-    'squad-attack' : 0,
-    'squad-shield' : 0,
-    'squad-repair' : 0
-  }
+
+  this.paymentClock = 0;
+  this.clockStarted = false;
 
   this.game.on('squad/construct', this._squadConstruct, this)
   this.game.on('squad/enable', this._squadEnable, this)
@@ -62,10 +88,29 @@ function SquadIndicatorPane(game, settings) {
 SquadIndicatorPane.prototype = Object.create(Pane.prototype);
 SquadIndicatorPane.prototype.constructor = SquadIndicatorPane;
 
+SquadIndicatorPane.prototype._payment = function(){
+  this.paymentTimerIndicator.change('width', this.paymentClock)
+}
+
 SquadIndicatorPane.prototype._squadConstruct = function(chassis){
   var game = this.game, 
       containers = this.ship_containers,
       ship, ship_negative;
+
+  if(!this.clockStarted){
+    this.clockStarted = true;
+    this.game.clock.events.loop(1250, function(){
+      this.paymentClock += (0.1/3);  
+      if(this.paymentClock >= .99999999){
+        this.paymentClock = 1;
+        this._payment();
+        this.paymentClock = 0;
+        this.game.emit('squad/payment')
+        return
+      }
+      this._payment()
+    }, this)
+  }
 
   ship = new Image(game, {
       key: 'texture-atlas',
@@ -104,7 +149,6 @@ SquadIndicatorPane.prototype._squadEnable = function(chassis) {
   for(var i = 0; i < this.ship_containers.length; i++){
     var container = this.ship_containers[i];
     if(container.panels.length && container.panels[1].id && container.panels[1].id === chassis && container.panels[1].visible === false){
-      console.log(container.panels[1].id)
       container.panels[1].visible = true;
       return
     };

@@ -12,6 +12,7 @@ var engine = require('engine'),
 function ShipManager(game, state, first) {
   this.game = game;
   this.state = state;
+  this.creditsPane = state.ui.bottom.creditsPane;
   this.clock = game.clock;
   this.net = game.net;
   this.socket = game.net.socket;
@@ -75,6 +76,8 @@ function ShipManager(game, state, first) {
   this.game.on('game/pause', this._pause, this);
   this.game.on('game/resume', this._resume, this);
 
+  this.game.on('player/credits', this._player_credits, this);
+
   this.game.on('ship/player', this._player, this);
   this.game.on('ship/primary', this._primary, this);
   this.game.on('ship/secondary', this._secondary, this);
@@ -83,6 +86,7 @@ function ShipManager(game, state, first) {
   this.game.on('ship/disabled', this._disabled, this);
   this.game.on('ship/enabled', this._enabled, this);
   this.game.on('squad/shieldDestinationDeactivate', this._destinationDeactivate, this);
+  this.game.on('squad/engageHostile', this._target, this);
 
   // this.game.clock.events.loop(10, this._sendMapData, this)
   this.game.clock.events.loop(5000, this._sendMapDataShips, this)
@@ -245,11 +249,6 @@ ShipManager.prototype._sync = function(data) {
       d = netManager.getShipData(sync.uuid);
       d && this.create(d, sync);
     }
-
-    // this.trajectoryGraphics.lineStyle(0);
-    // this.trajectoryGraphics.beginFill(0x0000FF, 0.5);
-    // this.trajectoryGraphics.drawCircle(ship.pos.x, ship.pos.y, 6);
-    // this.trajectoryGraphics.endFill();
   }
 };
 
@@ -268,17 +267,23 @@ ShipManager.prototype._player = function(ship) {
         }
       }
     }, this);
+    this._player_credits()
   } else {
     this.player = ship;
   }
-
   this.player.unfriendlies = {};
   this.player.targetCount = 0;
   this.player.targetlistCooldown = false;
   this.player.previous;
   this.player.squadron = {};
   this.game.camera.follow(ship);
+};
 
+ShipManager.prototype._player_credits = function(credits) {
+  if(credits){
+    // console.log('credits are ', credits, 'for a total of ', this.player.data.credits)
+  };
+  this.creditsPane.updateCredits(this.player.data.credits)
 };
 
 ShipManager.prototype._attack = function(data) {
@@ -291,6 +296,16 @@ ShipManager.prototype._attack = function(data) {
 ShipManager.prototype._destinationDeactivate = function() {
   var player = this.player;
   this.socket.emit('squad/shieldDestinationDeactivate', player.uuid)
+};
+ShipManager.prototype._target = function(uuid) {
+  var player = this.player,
+      ships = this.ships;
+  for(var a in ships){
+    if(ships[a].targettedBy && ships[a].targettedBy === player.uuid){
+      ships[a].targettedBy = null;
+    }
+  }
+  this.ships[uuid].targettedBy = player.uuid;
 };
 
 ShipManager.prototype._test = function(data) {

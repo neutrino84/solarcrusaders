@@ -68,7 +68,7 @@
   	}
   },
   "squadron": {
-  	"respawn": 6000,
+  	"respawn": 55000,
     "disengage": 12000,
     "friendly": ["user","squadron"],
     "position": {

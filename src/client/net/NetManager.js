@@ -67,6 +67,9 @@ NetManager.prototype._data = function(data) {
       users = data.users,
       ships = data.ships,
       stations = data.stations;
+
+      // console.log('data is ', data)
+
   if(this.game.cache.checkJSONKey('ship-configuration') &&
       this.game.cache.checkJSONKey('station-configuration') &&
       this.game.cache.checkJSONKey('item-configuration')) {
@@ -86,6 +89,9 @@ NetManager.prototype._data = function(data) {
     // update ships
     for(var s in ships) {
       ship = ships[s];
+
+      
+
 
       if(data.type === 'sync' && this.ships[ship.uuid] === undefined) {
         this.syncronizing = false;

@@ -855,7 +855,7 @@
     "class": "fighter",
     "stats": {
       "capacity": 3000,
-      "health": 1,
+      "health": 100,
       "heal": 0.25,
       "armor": 0.1,
       "speed": 30.0,
@@ -1367,7 +1367,7 @@
       "evasion": 0.2,
       "energy": 60,
       "recharge": 1,
-      "size": 96,
+      "size": 64,
       "durability": 96,
       "critical": 0.01
     },
@@ -1429,7 +1429,7 @@
       "evasion": 0.1,
       "energy": 100,
       "recharge": 1,
-      "size": 96,
+      "size": 64,
       "durability": 96,
       "critical": 0.01
     },
@@ -1512,7 +1512,7 @@
       "evasion": 0.1,
       "energy": 100,
       "recharge": 1,
-      "size": 120,
+      "size": 104,
       "durability": 120,
       "critical": 0.01
     },
@@ -1595,7 +1595,7 @@
       "evasion": 2,
       "energy": 100,
       "recharge": 1,
-      "size": 300,
+      "size": 208,
       "durability": 300,
       "critical": 0.01
     },

@@ -23,9 +23,13 @@ function SquadManager(game) {
   //soundTimer
   this.soundTimer = {};
 
+  this.squadSalaries = {
+    'squad-attack' : 20,
+    'squad-repair' : 15,
+    'squad-shield' : 15
+  };
 
-  this.ok = true;
-  // squad target
+
   this.acquired = null;
 
 // this.game.on('squad/shieldDestination', this._shield, this);
@@ -33,6 +37,9 @@ function SquadManager(game) {
   this.game.on('squad/regroup', this.regroup, this);
   this.game.on('squad/shieldUp', this.shieldUpOut, this);
   this.game.on('squad/shieldUpIn', this.shieldUpIn, this);
+
+  this.game.on('squad/payment', this._payment, this);
+
   // this.game.on('squad/shieldDestination', this.shieldDestination, this);
   this.game.on('squad/closestHostile', this.closestHostile, this)
   this.game.on('squad/engageTarget', this.engageHostile, this)
@@ -105,7 +112,6 @@ SquadManager.prototype.detectHostiles = function(){
         let colorMatrix = new pixi.filters.ColorMatrixFilter();
         ship.chassis.filters = [colorMatrix];
         colorMatrix.hue(140, false);
-        // colorMatrix.contrast(0.1);
         colorMatrix.grayscale(0.9);
         };
 
@@ -160,15 +166,9 @@ SquadManager.prototype.engageHostile = function(){
     ship.selector.hostileHighlightStop();
     }
     player.acquired.selector.hostileEngaged();
-     // player.events.add(12000, function(){
-     //  this.ok = true;
-     //  this.soundTimer['hostileEngaged'] = null;
-     // }, this)
-     // if(this.ok){
-        this.game.emit('squad/sound','engage');
-        // this.ok = false;
-     // }
-    this.socket.emit('squad/engageHostile', {player_id: player.uuid, target_id : player.acquired.uuid });
+    this.game.emit('squad/sound','engage');
+    this.game.emit('squad/engageHostile', player.acquired.uuid)
+    this.socket.emit('squad/engageHostile', {player_id: player.uuid, target_id : player.acquired.uuid});
   };
 };
 
@@ -180,10 +180,6 @@ SquadManager.prototype.shieldUpIn = function(data) {
       this.game.emit('squad/sound','shieldUp')
 
       ship.selector.shieldBlueStart()
-      // ship.events.loop(500, expand = function(){
-      //   ship.selector.shieldBlueExpand(this.poopoo);
-      //   this.poopoo += 100;
-      // }, this)
     }; 
   } else {
     if (ship.selector.shieldBlue) {
@@ -209,6 +205,8 @@ SquadManager.prototype.regroup = function() {
 
     ship.selector.hostileHighlightStop();
     ship.selector.hostileEngagedStop();
+
+    player.acquired = null;
 
     if(ship.data.masterShip === player.uuid && !ship.disabled){
       available = true;
@@ -240,6 +238,18 @@ SquadManager.prototype._player = function(ship) {
   this.player.targetlistCooldown = false;
   this.player.previous;
   this.player.squadron = {};
+};
+
+SquadManager.prototype._payment = function() {
+  var squad = this.player.squadron,
+      salaries = this.squadSalaries,
+      credits = 0;
+      for(var s in squad){
+        if(!squad[s].disabled){
+          credits -= salaries[squad[s].data.chassis]
+        }
+      }
+   this.game.emit('player/credits', credits)
 };
 
 module.exports = SquadManager;
