@@ -223,13 +223,13 @@
     "moniker": "hammer-head",
     "stats": {
       "capacity": 1100,
-      "health": 200,
-      "heal": 0.21,
+      "health": 140,
+      "heal": 0.2,
       "armor": 0.01,
       "speed": 29.0,
       "rate": 450,
       "evasion": 0.2,
-      "energy": 190,
+      "energy": 140,
       "recharge": 1,
       "size": 72,
       "durability": 64,
@@ -296,7 +296,7 @@
           },
           "default": {
             "type": "rocket",
-            "subtype": "basic"
+            "subtype": "silvertip"
           }
         },
         {
@@ -311,7 +311,7 @@
           },
           "default": {
             "type": "rocket",
-            "subtype": "basic"
+            "subtype": "silvertip"
           }
         },
         {
@@ -326,7 +326,7 @@
           },
           "default": {
             "type": "rocket",
-            "subtype": "basic"
+            "subtype": "silvertip"
           }
         }
               ]
@@ -730,7 +730,7 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "XP1123"
+            "subtype": "quantum"
           }
         },
         {
@@ -745,7 +745,7 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "XP1123"
+            "subtype": "quantum"
           }
         }
               ]

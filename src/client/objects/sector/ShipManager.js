@@ -305,7 +305,9 @@ ShipManager.prototype._target = function(uuid) {
       ships[a].targettedBy = null;
     }
   }
-  this.ships[uuid].targettedBy = player.uuid;
+  if(this.ships[uuid]){
+    this.ships[uuid].targettedBy = player.uuid 
+  }
 };
 
 ShipManager.prototype._test = function(data) {

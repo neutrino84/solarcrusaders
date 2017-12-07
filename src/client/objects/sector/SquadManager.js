@@ -200,6 +200,9 @@ SquadManager.prototype.regroup = function() {
       available = false,
       ship, distance;
 
+  //clear minimap target
+  this.game.emit('squad/engageHostile', null)
+
   for (var s in ships){
     var ship = ships[s];
 

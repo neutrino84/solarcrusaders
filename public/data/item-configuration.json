@@ -290,6 +290,24 @@
         "aoe": 2.5,
         "spawn": 1,
         "durability": 1000.0
+      },
+      "silvertip": {
+        "name": "Type 1 Launcher",
+        "type": "rocket",
+        "subtype": "basic",
+        "sprite": "turret-b",
+        "texture": "turret-rocket-a.png",
+        "icon": "item-rocket-a",
+        "cooldown": 100000,
+        "range": 1332,
+        "projection": 0.24,
+        "delay": 32,
+        "spread": 40,
+        "damage": 6.8,
+        "length": 256,
+        "aoe": 2.5,
+        "spawn": 1,
+        "durability": 1000.0
       }
     },
     "plasma": {
