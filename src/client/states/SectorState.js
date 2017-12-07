@@ -43,7 +43,7 @@ SectorState.prototype.preload = function() {
   // load background
   this.game.load.image('snow', 'imgs/game/space/snow.jpg');
   this.game.load.image('space', 'imgs/game/space/sector-a.jpg');
-  this.game.load.image('nebula', 'imgs/game/space/noise.jpg');
+  this.game.load.image('nebula', 'imgs/game/space/nebula-a.jpg');
 
   this.game.load.image('clouds', 'imgs/game/planets/clouds.jpg');
   this.game.load.image('planet', 'imgs/game/planets/talus.jpg');
