@@ -35,6 +35,7 @@ ShipManager.prototype.init = function(eventManager) {
   this.sockets.on('ship/enhancement/start', this.enhancement, this);
 
   this.sockets.on('player/undock', this.player_undock, this);
+  this.sockets.on('player/credits', this.player_credits, this);
   this.sockets.on('squad/engageHostile', this.squad_engage, this);
   this.sockets.on('squad/shieldmaidenActivate', this.squad_shieldmaidenActivate, this);
   this.sockets.on('squad/regroup', this.squad_regroup, this);
@@ -197,7 +198,6 @@ ShipManager.prototype.squad_regroup = function(socket, args){
           t = ship.chassis;
 
       if(ship.data.targettedBy === args[1].player_id){
-        console.log('this SHOULD work goddamit', ship)
         ship.data.targettedBy = null;
       }
 
@@ -217,7 +217,6 @@ ShipManager.prototype.squad_shield_destination = function(socket, args){
       var a = /^(squad-shield)/,
           t = ship.chassis;
       if(a.test(t) && ship.master === player.uuid && !ship.disabled){
-        // console.log('INSIDE')
         ship.ai.shield_destination(args[1].destination);
       };
     };
@@ -226,14 +225,12 @@ ShipManager.prototype.squad_shield_destination = function(socket, args){
 ShipManager.prototype.squad_shield_destination_deactivate = function(socket, args){
   var ships = this.ships,
       player = ships[args[1]];
-      // console.log('squad_shield_destination_deactivate    args 1 is : ', args[1])
-      // distance;
+
     for (var s in ships){
       ship = ships[s];
       var a = /^(squad-shield)/,
           t = ship.chassis;
       if(a.test(t) && ship.master === player.uuid && !ship.disabled){
-        // console.log('INSIDE DEACTIVATE')
         ship.ai.shield_destination_deactivate();
       };
     };
@@ -243,6 +240,14 @@ ShipManager.prototype.player_undock = function(socket, args){
   var ships = this.ships,
       player = ships[args[1]];
     player.docked = false;
+};
+
+ShipManager.prototype.player_credits = function(socket, args){
+  var ships = this.ships,
+      player = ships[args[1].player_uuid],
+      credits = args[1].credits;
+    player.data.credits += credits;
+      this.game.emit('ship/data', [{uuid: player.uuid, credits : player.data.credits}]);
 };
 
 ShipManager.prototype.enhancement = function(socket, args) {
@@ -341,7 +346,7 @@ ShipManager.prototype.update = function() {
     if(!ship.disabled) {
       stats = ship.config.stats;
       update = { uuid: ship.uuid };
-
+      
       // update health
       if(ship.health < stats.health) {
         delta = ship.heal;

@@ -30,18 +30,22 @@ void main(void) {
 
     planet = texture2D(uSampler, uv).rgb;
 
-    uv.x -= 0.02 * time;
-    uv.y -= 0.02 * time;
+    uv.x -= 0.01 * time;
+    uv.y -= 0.01 * time;
 
     clouds = texture2D(uClouds, uv).rgb;
-    clouds.b /= 2.6;
-    clouds.g /= 2.6;
+    clouds.b /= 2.0;
+    clouds.g /= 1.0;
     // clouds.b /= 0.0;
+
+    //this ones cool
+    //clouds.b /= 0.0
+    //clouds.g /= 1.6
     
     // textures
     color = mix(planet * planet, planet, 0.5);
     color *= 1.86 * pow(max(0.44, dot(pos, normalize(vec3(2.6, 0.0, 6.0)))), 7.6);
-    color += clouds * (clouds / 4.0);// * 0.5;
+    color += clouds * (clouds / 2.0);// * 0.5;
 
     alpha += 1.0;
   }

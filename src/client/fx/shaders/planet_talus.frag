@@ -34,8 +34,8 @@ void main(void) {
     uv.y -= 0.02 * time;
 
     clouds = texture2D(uClouds, uv).rgb;
-    clouds.b /= 2.6;
-    clouds.g /= 2.6;
+    clouds.b /= 1.0;
+    clouds.g /= 1.5;
     // clouds.b /= 0.0;
     
     // textures

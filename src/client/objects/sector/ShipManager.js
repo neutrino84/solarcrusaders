@@ -279,10 +279,14 @@ ShipManager.prototype._player = function(ship) {
   this.game.camera.follow(ship);
 };
 
-ShipManager.prototype._player_credits = function(credits) {
-  if(credits){
-    // console.log('credits are ', credits, 'for a total of ', this.player.data.credits)
-  };
+ShipManager.prototype._player_credits = function() {
+  // var tempCredits;
+  // if(credits){
+  //   tempCredits = this.player.data.credits + credits;
+  // } else {
+  //   tempCredits = this.player.data.credits;
+  // }
+  // this.creditsPane.updateCredits(tempCredits)
   this.creditsPane.updateCredits(this.player.data.credits)
 };
 
@@ -358,7 +362,6 @@ ShipManager.prototype._secondary = function(data) {
   if(ship && !ship.locked) {
     if(data.shield){
       indicator.show(position);
-      console.log('data.shield')
       socket.emit('squad/shieldDestination', {
         uuid: ship.uuid,
         destination: {x: position.x, y: position.y }

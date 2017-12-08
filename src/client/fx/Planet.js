@@ -5,7 +5,11 @@ var pixi = require('pixi'),
     Shader = require('pixi-gl-core').GLShader,
     Atmosphere = require('./Atmosphere');
 
-function Planet(game) {
+function Planet(game, texture) {
+
+  console.log(texture)
+  this.planetShader = texture;
+
   this.planetTexture = new pixi.Texture(engine.Shader.getRepeatTexture(game, 'planet')),
   this.cloudsTexture = new pixi.Texture(engine.Shader.getRepeatTexture(game, 'clouds'));
 
@@ -17,6 +21,8 @@ function Planet(game) {
 
   this.pivot.set(this.width/2, this.height/2);
   this.position.set(2048/6, 2048/6);
+
+  this.planetFragFile = '/shaders/planet.frag'
 };
 
 Planet.prototype = Object.create(engine.Shader.prototype);
@@ -26,14 +32,59 @@ Planet.prototype.apply = function(renderer, shader) {
   shader.uniforms.time = this.game.clock.totalElapsedSeconds();
   shader.uniforms.translationMatrix = this.worldTransform.toArray(true);
   shader.uniforms.uSampler = renderer.bindTexture(this.planetTexture, 0);
-  shader.uniforms.uClouds = renderer.bindTexture(this.cloudsTexture, 1);
+
+  if(this.planetShader === 'eamon-alpha' || this.planetShader === 'talus'){
+    shader.uniforms.uClouds = renderer.bindTexture(this.cloudsTexture, 1);
+    
+  }
+  //is there a way to pass something into the planet.frag?
 };
 
+
+
+
 Planet.prototype.getShader = function(gl) {
-  return new Shader(gl,
-    glslify(__dirname + '/shaders/planet.vert', 'utf8'),
-    glslify(__dirname + '/shaders/planet.frag', 'utf8')
-  );
+  console.log(this.planetShader)
+
+  switch(this.planetShader) {
+    case 'daigus':
+      return new Shader(gl,
+        glslify(__dirname + '/shaders/planet_daigus.vert', 'utf8'),
+        glslify(__dirname + '/shaders/planet_daigus.frag', 'utf8')
+      );
+      break
+    case 'eamon-alpha':
+      return new Shader(gl,
+        glslify(__dirname + '/shaders/planet.vert', 'utf8'),
+        glslify(__dirname + '/shaders/planet.frag', 'utf8')
+      );
+      break;
+    // case 'modo':
+    //   ai = new Scavenger(ship, faction);
+    //   break;
+    // case 'ichor':
+    //   ai = new Squadron(ship);
+    //   break;
+    case 'talus':
+      return new Shader(gl,
+        glslify(__dirname + '/shaders/planet_talus.vert', 'utf8'),
+        glslify(__dirname + '/shaders/planet_talus.frag', 'utf8')
+      );
+      break;
+    // case 'arkon':
+    //   ai = new Enforcer(ship);
+    //   break;
+    default:
+      return new Shader(gl,
+        glslify(__dirname + '/shaders/planet.vert', 'utf8'),
+        glslify(__dirname + '/shaders/planet.frag', 'utf8')
+      );
+      break;
+  }
+  // return new Shader(gl,
+  //   glslify(__dirname + '/shaders/planet.vert', 'utf8'),
+  //   glslify(__dirname + '/shaders/planet.frag', 'utf8')
+  // );
 };
 
 module.exports = Planet;

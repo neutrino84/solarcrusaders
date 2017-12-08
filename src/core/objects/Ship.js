@@ -229,7 +229,7 @@ Ship.prototype.hit = function(attacker, target, slot, target_uuid) {
       compensated = movement.compensated(),
       distance = compensated.distance(target),
       ratio = distance / (this.size * hardpoint.data.aoe),
-      damage, rawDamage, health, critical, shielded, durability;
+      damage, rawDamage, health, critical, shielded, durability, masterShip;
   if(ratio < 1.0) {
     // // test data
     // if(!attacker.ai && this.ai) {
@@ -306,26 +306,27 @@ Ship.prototype.hit = function(attacker, target, slot, target_uuid) {
       if(!this.disabled) {
         this.disable();
 
-        var master;
+        if(attacker.master && this.manager){
+          masterShip = this.manager.ships[attacker.master];
+          masterShip.credits = masterShip.credits + this.data.credits;
 
-        // update attacker reputation
-        // attacker.reputation = global.Math.floor(attacker.reputation + (this.reputation * -0.05));
-
-        attacker.credits = attacker.credits + this.data.credits
-
-        if(attacker.master){
-          master = attacker.master;
-        }
-        // console.log('here2. this.data.credits is ', this.data.credits) 
-
-        updates.push({
-          uuid: attacker.uuid,
-          credits: attacker.credits,
-          reputation: attacker.reputation,
+          updates.push({
+          uuid: masterShip.uuid,
+          credits: masterShip.credits,
+          reputation: masterShip.reputation,
           killed : this.uuid,
-          gains : this.data.credits,
-          master : master
+          gains : this.data.credits
         });
+        } else {
+          attacker.credits = attacker.credits + this.data.credits
+          updates.push({
+            uuid: attacker.uuid,
+            credits: attacker.credits,
+            reputation: attacker.reputation,
+            killed : this.uuid,
+            gains : this.data.credits
+          });
+        }
       }
 
       if(attacker.hardpoints[0].subtype === 'harvester' ){

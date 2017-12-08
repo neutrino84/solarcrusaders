@@ -246,13 +246,17 @@ SquadManager.prototype._player = function(ship) {
 SquadManager.prototype._payment = function() {
   var squad = this.player.squadron,
       salaries = this.squadSalaries,
+      player = this.player,
       credits = 0;
       for(var s in squad){
         if(!squad[s].disabled){
           credits -= salaries[squad[s].data.chassis]
         }
       }
-   this.game.emit('player/credits', credits)
+   this.socket.emit('player/credits', {player_uuid: player.uuid, credits : credits});
+   this.player.events.add(1000, function(){
+   this.game.emit('player/credits')
+    }, this);  
 };
 
 module.exports = SquadManager;

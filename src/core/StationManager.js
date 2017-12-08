@@ -8,7 +8,7 @@ function StationManager(game) {
   this.model = game.model;
   this.sockets = game.sockets;
 
-  this.stations = {};
+  this.game.stations = {};
 };
 
 StationManager.prototype.constructor = StationManager;
@@ -37,7 +37,7 @@ StationManager.prototype.data = function(uuids) {
   var station,
       stations = [];
   for(var u in uuids) {
-    station = this.stations[uuids[u]];
+    station = this.game.stations[uuids[u]];
     if(station) {
       stations.push({
         uuid: station.uuid,
@@ -54,7 +54,8 @@ StationManager.prototype.data = function(uuids) {
         race: station.race,
         size: station.size,
         health: station.health,
-        heal: station.heal
+        heal: station.heal,
+        armor: station.armor
       });
     }
   }

@@ -342,7 +342,7 @@ Hud.prototype.showCreditGain = function(credits, uuid) {
               }, this);
       },this);
   },this);
-  this.game.emit('player/credits', credits);
+  this.game.emit('player/credits');
 };
 
 Hud.prototype.hide = function() {

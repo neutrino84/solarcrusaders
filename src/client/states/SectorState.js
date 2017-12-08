@@ -48,7 +48,26 @@ SectorState.prototype.preload = function() {
   this.game.load.image('nebula', 'imgs/game/space/nebula-a.jpg');
   this.game.load.image('snow', 'imgs/game/space/snow.jpg');
 
-  this.game.load.image('planet', 'imgs/game/planets/eamon-alpha.jpg');
+
+  var planets = [
+  'daigus',
+  'eamon-alpha',
+  'modo',
+  'ichor',
+  'talus',
+  'arkon'
+  ]
+
+  this.planetTexture = this.game.rnd.pick(planets);
+
+  this.game.load.image('planet', ('imgs/game/planets/' + this.planetTexture + '.jpg'));
+  // this.game.load.image('planet1', 'imgs/game/planets/eamon-alpha.jpg');
+  //  this.game.load.image('planet2', 'imgs/game/planets/daigus.jpg');
+  //   this.game.load.image('planet3', 'imgs/game/planets/modo.jpg');
+  //    this.game.load.image('planet4', 'imgs/game/planets/ichor.jpg');
+  //     this.game.load.image('planet5', 'imgs/game/planets/talus.jpg');
+  //      this.game.load.image('planet6', 'imgs/game/planets/arkon.jpg');
+
   this.game.load.image('clouds', 'imgs/game/planets/clouds.jpg');
 
   // load stations
@@ -154,7 +173,7 @@ SectorState.prototype.createSpace = function() {
   this.space = new Space(this.game);
   this.space.cache();
 
-  this.planet = new Planet(this.game);
+  this.planet = new Planet(this.game, this.planetTexture);
 
   // this.miniMap = new MiniMap(this.game);
 

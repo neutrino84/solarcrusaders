@@ -16,8 +16,6 @@ function Ship(manager, data) {
   this.name = data.name;
   this.manager = manager;
   this.data = data;
-  // console.log('ship init', data.ai)
-  // console.log('ship init', data)
   
   // config data
   this.config = data.config.ship;
@@ -91,12 +89,6 @@ Ship.prototype.refresh = function(data) {
     this.hud.showCreditGain(data.gains, data.killed)
   }
 
-  if(data.killed && data.master && ships[data.master].isPlayer){
-    ships[data.killed].hud.showCreditLoss();
-    ships[data.master].hud.showCreditGain(data.gains, data.killed)
-  }
-
-
   if(data.docked){
     this.docked = true;
   }
@@ -151,7 +143,7 @@ Ship.prototype.update = function() {
       velocity = this.movement.velocity,
       speed = this.config.stats.speed,
       multiplier = velocity/speed;
-
+      
   this.events.update(this.game.clock.time);
   this.movement.update();
   this.targetingComputer.update();
