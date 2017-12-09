@@ -108,11 +108,8 @@ Ship.prototype.refresh = function(data) {
     attacker = ships[data.uuid];
     defender = ships[data.hardpoint.ship];
 
-    // send hit to targeting computer
-    targetingComputer.hit(defender, data);
-
-    // show selector damage
     if(defender){
+      targetingComputer.hit(defender, data);
       defender.selector.damage();
       defender.selector.timer && defender.events.remove(defender.selector.timer);
       defender.selector.timer = defender.events.add(500, defender.selector.reset, defender.selector);
