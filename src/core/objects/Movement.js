@@ -129,10 +129,7 @@ Movement.prototype.destabalize = function(ship) {
 };
 
 Movement.prototype.plot = function(destination, magnitude) {
-  if(this.parent.user){
-    console.log('IN MOVEMENT! this is, ', this, 'destination: ', destination, 'magnitude: ', magnitude)
-    
-  }
+  
   if(!this.parent.disabled) {
     this.destination.copyFrom(destination);
     this.magnitude = magnitude ? magnitude : this.destination.getMagnitude();

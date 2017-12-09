@@ -126,9 +126,7 @@ EventManager.prototype.squadGen = function(master){
   } else {
     chassis3 = this.game.rnd.pick(this.chassis['squadron'])
   }
-
-  console.log('in squad event manager, master is ', master)
-
+  
   this.game.emit('ship/create', {
     chassis: 'squad-attack',
     x: randomPostion.x,
