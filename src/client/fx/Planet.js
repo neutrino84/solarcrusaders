@@ -7,7 +7,6 @@ var pixi = require('pixi'),
 
 function Planet(game, texture) {
 
-  console.log(texture)
   this.planetShader = texture;
 
   this.planetTexture = new pixi.Texture(engine.Shader.getRepeatTexture(game, 'planet')),
@@ -44,8 +43,7 @@ Planet.prototype.apply = function(renderer, shader) {
 
 
 Planet.prototype.getShader = function(gl) {
-  console.log(this.planetShader)
-
+  
   switch(this.planetShader) {
     case 'daigus':
       return new Shader(gl,
