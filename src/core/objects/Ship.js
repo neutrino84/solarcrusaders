@@ -18,10 +18,10 @@ function Ship(manager, data, user) {
   
   
   this.data = new this.model.Ship(data);
-  if(user){
-  console.log(this, data)
+  // if(user){
+  // console.log(this, data)
     
-  }
+  // }
 
   this.data.init();
   this.uuid = this.data.uuid;

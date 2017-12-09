@@ -67,21 +67,13 @@ ShipManager.prototype.create = function(data, user) {
       enforcership = /^(enforcer)/,
       chassis = data.chassis,
       rndPosition;
-  if(user){
-  console.log('in ShipManager, data is ', data, 'user is ', user)
-    
-  }
 
   ship = new Ship(this, data, user);
   ship.init(function() {
     game.emit('ship/add', ship);
   });
 
-  if(chassis === 'squad-attack'){
-    console.log('ATTACK', data)
-  }
   if(data.master && squadship.test(chassis)){
-    console.log('data master exists!')
     this.ships[data.master].squadron[ship.uuid] = ship;
     if(chassis === 'squad-shield'){
       this.sockets.send('squad/shieldMaidenConnect', data.master)
