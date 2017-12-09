@@ -398,9 +398,15 @@ Ship.prototype.disable = function() {
   this.game.emit('ship/disabled', {
     uuid: this.uuid
   });
-  if(this.chassis === 'scavenger-x04' || this.chassis === 'scavenger-x03'){
-    this.game.clock.events.add(12000, function(){
-      this.game.emit('ship/remove', this)
+  if(this.chassis === 'scavenger-x04'){
+    this.game.clock.events.add(5000, function(){
+      this.game.emit('queen/death');
+      this.game.emit('ship/remove', this);
+    }, this)
+  } 
+  if(this.chassis === 'scavenger-x03'){
+    this.game.clock.events.add(5000, function(){
+      this.game.emit('ship/remove', this);
     }, this)
   }
 };

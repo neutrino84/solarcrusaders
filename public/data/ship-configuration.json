@@ -224,8 +224,8 @@
     "stats": {
       "capacity": 1100,
       "health": 140,
-      "heal": 0.2,
-      "armor": 0.01,
+      "heal": 0.075,
+      "armor": 0.25,
       "speed": 29.0,
       "rate": 950,
       "evasion": 0.2,
@@ -1587,7 +1587,7 @@
     "class": "queen",
     "stats": {
       "capacity": 1000,
-      "health": 475,
+      "health": 875,
       "heal": 0.2,
       "armor": 0.1,
       "speed": 11.0,

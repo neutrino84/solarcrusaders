@@ -14,9 +14,9 @@ function EventManager(game) {
 
   this.level = 1;
   this.ships = {
-    basic: 7,
-    pirate: 15,
-    enforcer: 1
+    basic: 10,
+    pirate: 19,
+    enforcer: 2
   };
   // this.ships = {
   //   basic: 0,
@@ -62,9 +62,9 @@ EventManager.prototype.init = function() {
   this.game.emit('station/create', {
     default: true,
     chassis: 'general-station-x01',
-    x: 0,
-    y: 0,
-    radius: 512
+    x: -3000,
+    y: 3000,
+    radius: 1024
   });
 
   // create scavenger nests
@@ -89,7 +89,7 @@ EventManager.prototype.init = function() {
     this.shipGen(this.ships[a], a.toString())
   };
 
-  this.scavGen(16);
+  this.scavGen(14);
   
 };
 
@@ -126,7 +126,7 @@ EventManager.prototype.squadGen = function(master){
   } else {
     chassis3 = this.game.rnd.pick(this.chassis['squadron'])
   }
-  
+
   this.game.emit('ship/create', {
     chassis: 'squad-attack',
     x: randomPostion.x,
@@ -245,9 +245,6 @@ EventManager.prototype.spawnQueen = function(cycle, uuid){
     spawnPosition.y = -5354;
     position = 'top';
   };
-  // if(uuid){
-  //   queen = ships[uuid];
-  // };
 
   if(!uuid){
     //create queen
@@ -262,7 +259,8 @@ EventManager.prototype.spawnQueen = function(cycle, uuid){
     this.sockets.send('global/sound/spawn', 'queenSpawn');
   } else {
     //create overseers
-    for(var i = 0; i < (rando+1)*(cycle+1); i++){
+    var overseerCount = this.game.rnd.pick([1,2,3])
+    for(var i = 0; i < overseerCount; i++){
       this.game.emit('ship/create', {
         chassis: 'scavenger-x03',
         ai: 'scavenger',

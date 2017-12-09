@@ -292,7 +292,7 @@ ShipManager.prototype._player_credits = function() {
 
 ShipManager.prototype._attack = function(data) {
   var ship = this.ships[data.uuid];
-  if(ship != this.player) {
+  if(ship && ship !== this.player) {
     ship.targetingComputer.attack(data);
   }
 };

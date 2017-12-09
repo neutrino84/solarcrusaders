@@ -94,47 +94,9 @@ ShipManager.prototype.create = function(data, user) {
     this.ships[data.master].battalion[ship.uuid] = ship;
   };
   if(user){
-    // console.log('THIS IS THE CULPRIT. data is ', data, user)
     this.eventManager.squadGen(user.ship.uuid);
   };
 };
-
-// ShipManager.prototype.create = function(data, user, position) {
-//   var self = this, ship,
-//       rnd = this.game.rnd,
-//       position = position || this.generateRandomPosition(user ? 2024 : 4048),
-//       data = Utils.extend({
-//         x: data.x || position.x,
-//         y: data.y || position.y,
-//         rotation: rnd.frac() * engine.Math.PI
-//       }, data), squadship = /^(squad)/,
-//       chassis = data.chassis;
-
-//   ship = new Ship(this, data);
-//   ship.user = user;
-//   ship.init(function(err) {
-//     self.game.emit('ship/add', ship);
-//   });
-//   if(ship.user){
-//     this.generateSquadronShips(ship.uuid);
-//   };
-//   if(ship.data.chassis === 'enforcers-x02'){
-//     // this.generateEnforcerShips(ship.uuid, data.x, data.y);
-//   };
-//   if(ship.data.chassis === 'scavengers-x04d'){
-//     this.spawnQueen(data.toporbot, ship.uuid);
-//   };
-//   if(ship.data.chassis === 'enforcers-x01' && data.master){
-//     this.ships[data.master].squadron[ship.uuid] = ship;
-//   };
-//   if(data.master && squadship.test(chassis)){
-//     this.ships[data.master].squadron[ship.uuid] = ship;
-//   }
-//   if(data.master && ship.data.chassis === 'scavengers-x03c'){
-//     this.ships[data.master].squadron[ship.uuid] = ship;
-//   }
-//   return ship;
-// };
 
 ShipManager.prototype.plot = function(socket, args) {
   var user = socket.request.session.user,
@@ -161,17 +123,7 @@ ShipManager.prototype.squad_engage = function(socket, args){
 
     for (var s in ships){
       ship = ships[s];
-      if(ship.data.targettedBy === args[1].player_id){
-        // var updates = [];
-        // var update = { uuid: ship.uuid }
-        // ship.data.targettedBy = false;
-        // update.targettedBy = null;
-        // updates.push(update)
-        // if(updates.length > 0) {
-        //   this.game.emit('ship/data', updates);
-        // }
-      }
-
+      
       if(ship.chassis === 'squad-attack' && ship.master === args[1].player_id && ships[args[1].target_id]){
         target = ships[args[1].target_id];
         // target.data.targettedBy = args[1].player_id;

@@ -303,9 +303,9 @@
         "projection": 0.24,
         "delay": 32,
         "spread": 40,
-        "damage": 5.8,
+        "damage": 5,
         "length": 256,
-        "aoe": 2.5,
+        "aoe": 2.25,
         "spawn": 4,
         "durability": 1000.0
       }

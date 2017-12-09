@@ -274,7 +274,7 @@ Scavenger.prototype.attack = function(){
       } else if(target && target.disabled) {
         this.disengage();
       }
-    } else if(target.disabled && target.durability > 0 ){
+    } else if(target.disabled && target.durability > 0 && target.data){
       size = target.data.size * settings.sensor.aim;
       offset.copyFrom(target.movement.position);
       offset.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));

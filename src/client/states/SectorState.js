@@ -136,7 +136,6 @@ SectorState.prototype.create = function() {
   this.createSpace();
   this.createSnow();
 
-  console.log(this.game.auth.user)
     // this.game.world.scale.set(.6, .6);
   if(this.game.auth.user.ship){
     this.createManagers(); 
@@ -193,8 +192,6 @@ SectorState.prototype.createSpace = function() {
 
 SectorState.prototype.createManagers = function(first) {
   var game = this.game;
-
-  console.log(this.ui)
 
   this.netManager = new NetManager(game, this);
   this.inputManager = new InputManager(game, this);

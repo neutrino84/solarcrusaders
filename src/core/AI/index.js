@@ -12,10 +12,12 @@ function AI(manager, events) {
   this.timer = this.game.clock.events.loop(500, this.update, this);
   this.ships = {};
   this.consumed = {};
-  this.queenThreshold = 10;
+  this.queenThreshold = 300;
   this.next = 900;
   this.queenSpawnCycle = 0;
+  this.queenCount = 0;
 
+  this.game.on('queen/death', this.queenDeath, this);
 };
 
 AI.prototype.constructor = AI;
@@ -67,12 +69,12 @@ AI.prototype.queenCheck = function(durability, uuid){
     this.queenThreshold = this.queenThreshold - durability;
   }
   
-  if(this.queenThreshold < 1){
-    if(this.queenSpawnCycle > 15){return}
+  if(this.queenThreshold < 1 && this.queenCount < 3){
     this.events.spawnQueen(this.queenSpawnCycle);
     this.queenThreshold = this.next;
     this.next = this.next + 500;
     this.queenSpawnCycle++
+    this.queenCount++
     if(this.queenThreshold > 3500){
       this.queenThreshold = 300;
       this.next = 400;
@@ -80,6 +82,10 @@ AI.prototype.queenCheck = function(durability, uuid){
     }
   };
 };
+
+AI.prototype.queenDeath = function(){
+  this.queenCount --
+}
 
 AI.prototype.destroy = function() {
   this.timer && this.game.clock.events.remove(this.timer);

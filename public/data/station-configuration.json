@@ -17,7 +17,7 @@
     "stats": {
       "health": 2000,
       "heal": 0.0,
-      "speed": 10,
+      "speed": 5,
       "size": 256,
       "radius": 768,
       "rotation": 0.0,
