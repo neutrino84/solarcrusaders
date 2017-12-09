@@ -267,7 +267,7 @@ ShipManager.prototype._player = function(ship) {
   //       }
   //     }
   //   }, this);
-  //   this._player_credits()
+    this._player_credits()
   // } else {
   //   this.player = ship;
   // }
@@ -354,8 +354,14 @@ ShipManager.prototype._secondary = function(data) {
   var game = this.game,
       ship = this.player,
       socket = this.socket,
-      indicator = this.indicator,
-      start = this.shipsGroup.worldTransform.apply(ship.position),
+      indicator = this.indicator;
+
+      if(!ship.position){
+        console.log('in ShipManager _secondary, players ship doesnt have a position. ship is ', ship)
+        return
+      }
+
+  var start = this.shipsGroup.worldTransform.apply(ship.position),
       end = this.game.input.mousePointer,
       position = this.game.world.worldTransform.applyInverse(end),
       destination = { x: end.x - start.x, y: end.y - start.y };
