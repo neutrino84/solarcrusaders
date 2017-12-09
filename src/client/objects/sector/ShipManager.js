@@ -342,7 +342,7 @@ ShipManager.prototype._primary = function(data) {
     if(!ship.disabled && ship.targetingComputer && data.type === 'start') {
       this.autofire && clock.events.remove(this.autofire);
       this.autofire = clock.events.loop(20, function() {
-          ship.targetingComputer.fire();
+          ship.targetingComputer && ship.targetingComputer.fire();
       });
     } else {
       this.autofire && clock.events.remove(this.autofire);
