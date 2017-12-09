@@ -75,6 +75,8 @@ SectorState.prototype.preload = function() {
   this.game.load.image('ubadian-station-x01-cap', 'imgs/game/stations/ubaidian-cap-x01.png');
   this.game.load.image('scavenger-x01', 'imgs/game/stations/scavenger-x01.png');
   this.game.load.image('scavenger-x01-cap', 'imgs/game/stations/scavenger-x01.png');
+  this.game.load.image('general-station-x01', 'imgs/game/stations/general-x01.png');
+  this.game.load.image('general-station-x01-cap', 'imgs/game/stations/general-cap-x01.png');
 
   // load strip graphics
   this.game.load.image('laser-blue', 'imgs/game/fx/laser-blue.png');
@@ -133,8 +135,10 @@ SectorState.prototype.create = function() {
   this.createAsteroids();
   this.createSpace();
   this.createSnow();
-  if(this.game.auth.user){
+
+  console.log(this.game.auth.user)
     // this.game.world.scale.set(.6, .6);
+  if(this.game.auth.user.ship){
     this.createManagers(); 
   } else {
     this.game.camera.focus(2048, 2048); 
@@ -152,21 +156,21 @@ SectorState.prototype.playerCreated = function(){
 
     this.createManagers('firstIteration');
 
-    game.clock.events.add(1500, function(){
-      game.clock.events.loop(100, zoomOut = function(){
-        this.scaleX = this.scaleX - 0.01;
-        this.scaleY = this.scaleY - 0.01;
-        game.world.scale.set(this.scaleX, this.scaleY)
-        if(this.scaleX <= 0.8){
-          for(var i = 0; i < game.clock.events.events.length; i++){
-            if(game.clock.events.events[i].callback.name === 'zoomOut'){
-              game.clock.events.remove(game.clock.events.events[i]);
-              this.shipManager.undock();
-            }
-          };
-        }
-      }, this)
-    }, this)
+    // game.clock.events.add(1500, function(){
+    //   game.clock.events.loop(100, zoomOut = function(){
+    //     this.scaleX = this.scaleX - 0.01;
+    //     this.scaleY = this.scaleY - 0.01;
+    //     game.world.scale.set(this.scaleX, this.scaleY)
+    //     if(this.scaleX <= 0.8){
+    //       for(var i = 0; i < game.clock.events.events.length; i++){
+    //         if(game.clock.events.events[i].callback.name === 'zoomOut'){
+    //           game.clock.events.remove(game.clock.events.events[i]);
+    //           // this.shipManager.undock();
+    //         }
+    //       };
+    //     }
+    //   }, this)
+    // }, this)
 };
 
 SectorState.prototype.createSpace = function() {
@@ -189,6 +193,8 @@ SectorState.prototype.createSpace = function() {
 
 SectorState.prototype.createManagers = function(first) {
   var game = this.game;
+
+  console.log(this.ui)
 
   this.netManager = new NetManager(game, this);
   this.inputManager = new InputManager(game, this);

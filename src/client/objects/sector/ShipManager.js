@@ -169,7 +169,7 @@ ShipManager.prototype.create = function(data, sync) {
 };
 
 ShipManager.prototype.undock = function() {
-  this.player.locked = false;
+  // this.player.locked = false;
 };
 
 ShipManager.prototype.remove = function(data) {
@@ -253,24 +253,24 @@ ShipManager.prototype._sync = function(data) {
 };
 
 ShipManager.prototype._player = function(ship) {
-  if(this.firstIteration){
+  // if(this.firstIteration){
     this.player = ship;
-    ship.alpha = 0
-    ship.locked = true;
-    ship.events.loop(100, fadeIn = function(){
-      ship.alpha += 0.05
-      if(ship.alpha >= 1){
-        for(var i = 0; i < ship.events.events.length; i++){
-          if(ship.events.events[i].callback.name === 'fadeIn'){
-            ship.events.remove(ship.events.events[i]);
-          }
-        }
-      }
-    }, this);
-    this._player_credits()
-  } else {
-    this.player = ship;
-  }
+  //   ship.alpha = 0
+  //   ship.locked = true;
+  //   ship.events.loop(100, fadeIn = function(){
+  //     ship.alpha += 0.05
+  //     if(ship.alpha >= 1){
+  //       for(var i = 0; i < ship.events.events.length; i++){
+  //         if(ship.events.events[i].callback.name === 'fadeIn'){
+  //           ship.events.remove(ship.events.events[i]);
+  //         }
+  //       }
+  //     }
+  //   }, this);
+  //   this._player_credits()
+  // } else {
+  //   this.player = ship;
+  // }
   this.player.unfriendlies = {};
   this.player.targetCount = 0;
   this.player.targetlistCooldown = false;
@@ -315,24 +315,24 @@ ShipManager.prototype._target = function(uuid) {
 };
 
 ShipManager.prototype._test = function(data) {
-  var ship = this.ships[data.uuid],
-      position = new engine.Point(ship.position.x, ship.position.y),
-      compensated = new engine.Point(data.compensated.x, data.compensated.y);
+  // var ship = this.ships[data.uuid],
+  //     position = new engine.Point(ship.position.x, ship.position.y),
+  //     compensated = new engine.Point(data.compensated.x, data.compensated.y);
 
-  this.trajectoryGraphics.lineStyle(0);
-  this.trajectoryGraphics.beginFill(0x336699, 1.0);
-  this.trajectoryGraphics.drawCircle(position.x, position.y, 24);
-  this.trajectoryGraphics.endFill();
+  // this.trajectoryGraphics.lineStyle(0);
+  // this.trajectoryGraphics.beginFill(0x336699, 1.0);
+  // this.trajectoryGraphics.drawCircle(position.x, position.y, 24);
+  // this.trajectoryGraphics.endFill();
 
-  this.trajectoryGraphics.lineStyle(0);
-  this.trajectoryGraphics.beginFill(0x669933, 1.0);
-  this.trajectoryGraphics.drawCircle(data.targ.x, data.targ.y, 14);
-  this.trajectoryGraphics.endFill();
+  // this.trajectoryGraphics.lineStyle(0);
+  // this.trajectoryGraphics.beginFill(0x669933, 1.0);
+  // this.trajectoryGraphics.drawCircle(data.targ.x, data.targ.y, 14);
+  // this.trajectoryGraphics.endFill();
 
-  this.trajectoryGraphics.lineStyle(0);
-  this.trajectoryGraphics.beginFill(0x996633, 1.0);
-  this.trajectoryGraphics.drawCircle(compensated.x, compensated.y, 6);
-  this.trajectoryGraphics.endFill();
+  // this.trajectoryGraphics.lineStyle(0);
+  // this.trajectoryGraphics.beginFill(0x996633, 1.0);
+  // this.trajectoryGraphics.drawCircle(compensated.x, compensated.y, 6);
+  // this.trajectoryGraphics.endFill();
 };
 
 ShipManager.prototype._primary = function(data) {
@@ -359,19 +359,20 @@ ShipManager.prototype._secondary = function(data) {
       end = this.game.input.mousePointer,
       position = this.game.world.worldTransform.applyInverse(end),
       destination = { x: end.x - start.x, y: end.y - start.y };
-  if(ship && !ship.locked) {
-    if(data.shield){
-      indicator.show(position);
-      socket.emit('squad/shieldDestination', {
-        uuid: ship.uuid,
-        destination: {x: position.x, y: position.y }
-      })
-    }
-    else if(data.type === 'start') {
-      if(ship.docked){
-        ship.docked = false;
-        socket.emit('player/undock', ship.uuid)
+  // if(ship && !ship.locked) {
+    if(ship) {
+      if(data.shield){
+        indicator.show(position);
+        socket.emit('squad/shieldDestination', {
+          uuid: ship.uuid,
+          destination: {x: position.x, y: position.y }
+        })
       }
+    else if(data.type === 'start') {
+      // if(ship.docked){
+      //   ship.docked = false;
+      //   socket.emit('player/undock', ship.uuid)
+      // }
       indicator.show(position);
       game.emit('ship/plot');
       socket.emit('ship/plot', {

@@ -127,78 +127,79 @@ EventManager.prototype.squadGen = function(master){
     chassis3 = this.game.rnd.pick(this.chassis['squadron'])
   }
 
+  console.log('in squad event manager, master is ', master)
 
-  // this.game.emit('ship/create', {
-  //   chassis: 'squad-attack',
-  //   x: randomPostion.x,
-  //   y: randomPostion.y,
-  //   ai: 'squadron',
-  //   master: master
-  // });
-  // this.game.emit('ship/create', {
-  //   chassis: 'squad-attack',
-  //   x: randomPostion.x,
-  //   y: randomPostion.y,
-  //   ai: 'squadron',
-  //   master: master
-  // });
-  // this.game.emit('ship/create', {
-  //   chassis: 'squad-attack',
-  //   x: randomPostion.x,
-  //   y: randomPostion.y,
-  //   ai: 'squadron',
-  //   master: master
-  // });
+  this.game.emit('ship/create', {
+    chassis: 'squad-attack',
+    x: randomPostion.x,
+    y: randomPostion.y,
+    ai: 'squadron',
+    master: master
+  });
+  this.game.emit('ship/create', {
+    chassis: 'squad-attack',
+    x: randomPostion.x,
+    y: randomPostion.y,
+    ai: 'squadron',
+    master: master
+  });
+  this.game.emit('ship/create', {
+    chassis: 'squad-attack',
+    x: randomPostion.x,
+    y: randomPostion.y,
+    ai: 'squadron',
+    master: master
+  });
 
 
-  if(rando > 0.6){
-    this.game.emit('ship/create', {
-      chassis: chassis1,
-      x: randomPostion.x,
-      y: randomPostion.y,
-      ai: 'squadron',
-      master: master
-    });
+  // if(rando > 0.6){
+  //   this.game.emit('ship/create', {
+  //     chassis: chassis1,
+  //     x: randomPostion.x,
+  //     y: randomPostion.y,
+  //     ai: 'squadron',
+  //     master: master
+  //   });
 
-    this.game.emit('ship/create', {
-      chassis: chassis2,
-      x: randomPostion.x,
-      y: randomPostion.y,
-      ai: 'squadron',
-      master: master
-    });
+  //   this.game.emit('ship/create', {
+  //     chassis: chassis2,
+  //     x: randomPostion.x,
+  //     y: randomPostion.y,
+  //     ai: 'squadron',
+  //     master: master
+  //   });
 
-    this.game.emit('ship/create', {
-      chassis: chassis3,
-      x: randomPostion.x,
-      y: randomPostion.y,
-      ai: 'squadron',
-      master: master
-    });
-  } else if(rando > 0.3){
-    this.game.emit('ship/create', {
-      chassis: chassis1,
-      x: randomPostion2.x,
-      y: randomPostion2.y,
-      ai: 'squadron',
-      master: master
-    });
-    this.game.emit('ship/create', {
-      chassis: chassis2,
-      x: randomPostion2.x,
-      y: randomPostion2.y,
-      ai: 'squadron',
-      master: master
-    });
-  } else {
-    this.game.emit('ship/create', {
-      chassis: chassis1,
-      x: randomPostion2.x,
-      y: randomPostion2.y,
-      ai: 'squadron',
-      master: master
-    });
-  }
+  //   this.game.emit('ship/create', {
+  //     chassis: chassis3,
+  //     x: randomPostion.x,
+  //     y: randomPostion.y,
+  //     ai: 'squadron',
+  //     master: master
+  //   });
+  // } else if(rando > 0.3){
+  //   this.game.emit('ship/create', {
+  //     chassis: chassis1,
+  //     x: randomPostion2.x,
+  //     y: randomPostion2.y,
+  //     ai: 'squadron',
+  //     master: master
+  //   });
+  //   this.game.emit('ship/create', {
+  //     chassis: chassis2,
+  //     x: randomPostion2.x,
+  //     y: randomPostion2.y,
+  //     ai: 'squadron',
+  //     master: master
+  //   });
+  // } else {
+  //   this.game.emit('ship/create', {
+  //     chassis: chassis1,
+  //     x: randomPostion2.x,
+  //     y: randomPostion2.y,
+  //     ai: 'squadron',
+  //     master: master
+  //   });
+  // }
 };
 
 EventManager.prototype.enforcerGen = function(x, y, master){

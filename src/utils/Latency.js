@@ -4,32 +4,35 @@ function Latency(user) {
   this.socket = user.socket;
   this.game = user.game;
 
-  this.elapsed = 0;
+  this.started = 0;
   this.rtt = 0;
-
-  // listen to response
-  this.game.on('drip', this.stop, this);
-  
-  // initiate ping/pong
-  this.timer = this.game.clock.events.loop(2000, this.start, this);
 };
+
+Latency.PING_INTERVAL = 3000;
 
 Latency.prototype.constructor = Latency;
 
-Latency.prototype.start = function() {
-  this.started = this.game.clock.time
-  this.socket.emit('drop');
+Latency.prototype.connect = function(socket) {
+  // update reference
+  this.socket = socket;
+  this.started = 0;
+  this.rtt = 0;
+
+  // listen to beacon
+  this.socket.on('beacon', this.beacon.bind(this));
+
+  // set ping timer
+  this.game.clock.events.loop(Latency.PING_INTERVAL, this.ping, this);
 };
 
-Latency.prototype.stop = function() {
-  this.elapsed = this.game.clock.time - this.started;
-  this.rtt = this.elapsed;
+Latency.prototype.ping = function(data) {
+  this.started = this.game.clock.time;
+  this.socket.emit('beacon');
 };
 
-Latency.prototype.destroy = function() {
-  this.game.removeListener('drip', this.stop, this);
-  this.timer && this.game.clock.events.remove(this.timer);
-  this.user = this.socket = this.game = undefined;
+Latency.prototype.beacon = function(data) {
+  this.rtt = this.game.clock.time - this.started;
+  this.started = this.game.clock.time;
 };
 
 module.exports = Latency;

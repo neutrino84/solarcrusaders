@@ -90,7 +90,7 @@ Ship.prototype.refresh = function(data) {
   }
 
   if(data.docked){
-    this.docked = true;
+    // this.docked = true;
   }
   if(data.shielded ){
     this.shielded = true;

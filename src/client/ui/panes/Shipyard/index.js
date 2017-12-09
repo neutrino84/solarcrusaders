@@ -448,7 +448,7 @@ Shipyard.prototype._hover = function(button) {
 };
 
 Shipyard.prototype._select= function(button){
-  this.socket.emit('user/shipSelected', button.parent.id, this.game.auth.socket.id)
+  this.socket.emit('user/ship', button.parent.id, this.game.auth.socket.id)
   this.game.emit('shipyard/hover', 'selectionSFX2')
   this.game.emit('user/shipSelected')
   // this.parent.panels[0].alpha = 1;

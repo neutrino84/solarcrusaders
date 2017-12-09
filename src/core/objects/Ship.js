@@ -8,13 +8,20 @@ var async = require('async'),
     Utils = require('../../utils');
 
 function Ship(manager, data, user) {
+
+
   this.manager = manager;
   this.game = manager.game;
   this.sockets = manager.sockets;
   this.model = manager.model;
   this.user = user;
   
+  
   this.data = new this.model.Ship(data);
+  if(user){
+  console.log(this, data)
+    
+  }
 
   this.data.init();
   this.uuid = this.data.uuid;
@@ -28,11 +35,13 @@ function Ship(manager, data, user) {
   };
   if(user){
   this.squadron = data.squadron
-  this.docked = true;
+  // this.docked = true;
   };
-  this.data.targettedBy = null;
+  // this.data.targettedBy = null;
 
   // ship configuration
+
+  // console.log(this.data, this.data.chassis)
   this.config = client.ShipConfiguration[this.data.chassis];
 
   this.data.credits = this.config.stats.size;
@@ -123,7 +132,11 @@ Ship.prototype.save = function(callback) {
 };
 
 Ship.prototype.createRelationships = function() {
-  this.user && this.user.ships.push(this);
+  // this.user && this.user.ships.push(this);
+  if(this.user){
+    this.user.ship = this;
+    this.user.data.ship = this.uuid; 
+  }
 };
 
 Ship.prototype.createEnhancements = function() {

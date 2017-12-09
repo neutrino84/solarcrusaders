@@ -6,8 +6,8 @@ var uuid = require('uuid'),
 function StationManager(game) {
   this.game = game;
   this.model = game.model;
-  this.sockets = game.sockets;
 
+  // global stations
   this.game.stations = {};
 };
 
@@ -17,12 +17,12 @@ StationManager.prototype.init = function() {
   // listen to messaging
   this.game.on('station/add', this.add, this);
   this.game.on('station/create', this.create, this);
-  this.game.on('station/disabled', this.disabled, this);
+  this.game.on('ship/attacked', this.attacked, this);
 };
 
 StationManager.prototype.add = function(station) {
-  if(this.stations[station.uuid] === undefined) {
-    this.stations[station.uuid] = station;
+  if(this.game.stations[station.uuid] === undefined) {
+    this.game.stations[station.uuid] = station;
   }
 };
 
@@ -42,13 +42,13 @@ StationManager.prototype.data = function(uuids) {
       stations.push({
         uuid: station.uuid,
         name: station.data.name,
-        x: station.orbit.position.x,
-        y: station.orbit.position.y,
-        throttle: station.orbit.throttle,
-        rotation: station.orbit.rotation,
-        spin: station.orbit.spin,
-        period: station.orbit.period,
-        speed: station.speed * station.orbit.throttle,
+        x: station.movement.position.x,
+        y: station.movement.position.y,
+        throttle: station.movement.throttle,
+        rotation: station.movement.rotation,
+        spin: station.movement.spin,
+        period: station.movement.period,
+        speed: station.speed * station.movement.throttle,
         radius: station.radius,
         chassis: station.chassis,
         race: station.race,
@@ -59,31 +59,27 @@ StationManager.prototype.data = function(uuids) {
       });
     }
   }
-  this.sockets.emit('station/data', {
-    type: 'sync', stations: stations
-  });
   return stations;
 };
 
-StationManager.prototype.sync = function(chassis) {
-  var data, station, orbit,
-      stations = this.stations,
+StationManager.prototype.sync = function() {
+  var data, station, movement,
+      stations = this.game.stations,
       synced = [];
   for(var s in stations) {
     station = stations[s];
 
     if(station) {
-      orbit = station.orbit;
-      orbit.update();
-      position = orbit.position;
+      movement = station.movement;
+      movement.update();
+      position = movement.position;
       data = {
         uuid: station.uuid,
         pos: { x: position.x, y: position.y },
-        spd: station.speed * orbit.throttle,
-        rot: orbit.rotation,
-        spn: orbit.spin
+        spd: station.speed * movement.throttle,
+        rot: movement.rotation,
+        spn: movement.spin
       };
-      
     }
 
     synced.push(data);
@@ -91,27 +87,25 @@ StationManager.prototype.sync = function(chassis) {
   return synced;
 };
 
-StationManager.prototype.getPosition = function(){
-  var stations = this.stations, station, orbit, adjustedPosition;
+StationManager.prototype.getPosition = function() {
+  var stations = this.stations, station, position;
   for(var s in this.stations){
     station = stations[s];
     if(station && station.chassis == 'ubadian-station-x01'){
-      position = station.orbit.position;
-      adjustedPosition = new engine.Point(position.x, position.y);
-      adjustedPosition.x = adjustedPosition.x * 4;
-      adjustedPosition.y = adjustedPosition.y * 4;
-      return adjustedPosition
+      position = station.movement.position;
+      return position;
     }
   }
 };
 
-StationManager.prototype.disabled = function(data) {
-  var stations = this.stations, station, orbit;
-  
-  station = this.stations[data.uuid];
-  station.orbit.pause();
-
-  this.sockets.send('station/disabled', data);
+StationManager.prototype.attacked = function(attacker, target, slot) {
+  var stations, station,
+      game = this.game,
+      stations = this.game.stations;
+    for(var s in stations) {
+      station = stations[s];
+      station.hit(attacker, target, slot);
+    }
 };
 
 module.exports = StationManager;

@@ -67,11 +67,21 @@ ShipManager.prototype.create = function(data, user) {
       enforcership = /^(enforcer)/,
       chassis = data.chassis,
       rndPosition;
+  if(user){
+  console.log('in ShipManager, data is ', data, 'user is ', user)
+    
+  }
+
   ship = new Ship(this, data, user);
   ship.init(function() {
     game.emit('ship/add', ship);
   });
+
+  if(chassis === 'squad-attack'){
+    console.log('ATTACK', data)
+  }
   if(data.master && squadship.test(chassis)){
+    console.log('data master exists!')
     this.ships[data.master].squadron[ship.uuid] = ship;
     if(chassis === 'squad-shield'){
       this.sockets.send('squad/shieldMaidenConnect', data.master)
@@ -92,7 +102,8 @@ ShipManager.prototype.create = function(data, user) {
     this.ships[data.master].battalion[ship.uuid] = ship;
   };
   if(user){
-    this.eventManager.squadGen(data.uuid);
+    // console.log('THIS IS THE CULPRIT. data is ', data, user)
+    this.eventManager.squadGen(user.ship.uuid);
   };
 };
 

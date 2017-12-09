@@ -5,6 +5,8 @@ var engine = require('engine'),
 function Squadron(ship, home) {
   Basic.call(this, ship);
 
+  console.log('squad ship is ', ship)
+
   this.ship = ship;
   this.type = 'squadron';
   this.master = ship.master;
