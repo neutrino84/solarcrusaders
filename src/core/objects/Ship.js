@@ -435,6 +435,8 @@ Ship.prototype.enable = function() {
   this.data.health = this.config.stats.health;
   this.data.energy = this.config.stats.energy;
   this.data.durability = this.config.stats.durability;
+  this.data.credits = this.config.stats.size
+
   this.alpha = 1.0;
 
   // reset

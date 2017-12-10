@@ -375,6 +375,7 @@ SoundManager.prototype.generateSystemSound = function(sound){
 SoundManager.prototype.generateBackgroundMusic = function(){
   var num = Math.floor((Math.random() * 3)+1);
   this.game.sound.play('background'+num, 0.6, true);
+  // console.log('music is background'+num)
 };
 
 SoundManager.prototype.generateThrusterSound = function(){

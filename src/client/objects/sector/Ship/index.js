@@ -161,7 +161,7 @@ Ship.prototype.enable = function(data) {
   this.alpha = 1.0;
   this.disabled = false;
   this.chassis.tint = 0xFFFFFF;
-  this.data.credits = this.config.stats.size
+  this.data.credits = this.config.stats.size;
   this.hud.enable();
   this.selector.enable();
   this.engineCore.show(true);
