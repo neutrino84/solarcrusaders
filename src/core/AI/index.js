@@ -12,7 +12,8 @@ function AI(manager, events) {
   this.timer = this.game.clock.events.loop(500, this.update, this);
   this.ships = {};
   this.consumed = {};
-  this.queenThreshold = 300;
+  // this.queenThreshold = 300;
+  this.queenThreshold = 100;
   this.next = 900;
   this.queenSpawnCycle = 0;
   this.queenCount = 0;

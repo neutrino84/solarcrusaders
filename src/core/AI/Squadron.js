@@ -75,7 +75,7 @@ Squadron.prototype.engage = function(target, type){
   health = ship.data.health / ship.config.stats.health;
     if(!type){return}
 
-    if(this.target === null && type === 'repair'){
+    if(!this.target && type === 'repair'){
       this.target = target;
 
       this.repairer && this.game.clock.events.remove(this.repairer);

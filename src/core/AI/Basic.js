@@ -126,7 +126,7 @@ Basic.prototype.engage = function(target) {
       health = ship.data.health / ship.config.stats.health;
 
   // finish attack
-  if(this.target == null && !this.friendly(target)) {
+  if(!this.target && !this.friendly(target)) {
     this.target = target;
 
     this.attacker && this.game.clock.events.remove(this.attacker);
@@ -228,7 +228,7 @@ Basic.prototype.plot = function(){
       p2, size;
 
   // plot destination
-  if(!this.retreat && this.target) {
+  if(!this.retreat && this.target && this.target.data) {
     size = this.target.data.size * 4;
     offset.copyFrom(this.target.movement.position);
     offset.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));

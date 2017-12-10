@@ -315,24 +315,24 @@ ShipManager.prototype._target = function(uuid) {
 };
 
 ShipManager.prototype._test = function(data) {
-  // var ship = this.ships[data.uuid],
-  //     position = new engine.Point(ship.position.x, ship.position.y),
-  //     compensated = new engine.Point(data.compensated.x, data.compensated.y);
+  var ship = this.ships[data.uuid],
+      position = new engine.Point(ship.position.x, ship.position.y),
+      compensated = new engine.Point(data.compensated.x, data.compensated.y);
 
-  // this.trajectoryGraphics.lineStyle(0);
-  // this.trajectoryGraphics.beginFill(0x336699, 1.0);
-  // this.trajectoryGraphics.drawCircle(position.x, position.y, 24);
-  // this.trajectoryGraphics.endFill();
+  this.trajectoryGraphics.lineStyle(0);
+  this.trajectoryGraphics.beginFill(0x336699, 1.0);
+  this.trajectoryGraphics.drawCircle(position.x, position.y, 24);
+  this.trajectoryGraphics.endFill();
 
-  // this.trajectoryGraphics.lineStyle(0);
-  // this.trajectoryGraphics.beginFill(0x669933, 1.0);
-  // this.trajectoryGraphics.drawCircle(data.targ.x, data.targ.y, 14);
-  // this.trajectoryGraphics.endFill();
+  this.trajectoryGraphics.lineStyle(0);
+  this.trajectoryGraphics.beginFill(0x669933, 1.0);
+  this.trajectoryGraphics.drawCircle(data.targ.x, data.targ.y, 14);
+  this.trajectoryGraphics.endFill();
 
-  // this.trajectoryGraphics.lineStyle(0);
-  // this.trajectoryGraphics.beginFill(0x996633, 1.0);
-  // this.trajectoryGraphics.drawCircle(compensated.x, compensated.y, 6);
-  // this.trajectoryGraphics.endFill();
+  this.trajectoryGraphics.lineStyle(0);
+  this.trajectoryGraphics.beginFill(0x996633, 1.0);
+  this.trajectoryGraphics.drawCircle(compensated.x, compensated.y, 6);
+  this.trajectoryGraphics.endFill();
 };
 
 ShipManager.prototype._primary = function(data) {
@@ -466,6 +466,7 @@ ShipManager.prototype._enabled = function(data) {
 };
 
 ShipManager.prototype._removed = function(ship) {
+  console.log('in shipManager removed() ship is ', ship)
   var tween,
       game = this.game,
       s = this.ships[ship.uuid];

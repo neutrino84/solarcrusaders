@@ -53,8 +53,16 @@ ShipManager.prototype.add = function(ship) {
 };
 
 ShipManager.prototype.remove = function(ship) {
-  var s = this.ships[ship.uuid];
+  console.log('in back end remove')
+  var ships = this.ships,
+      s = ships[ship.uuid];
+  for(var i in this.ships){
+    if(ships[i].ai && ships[i].ai.target === s){
+      ships[i].ai.target = null;
+    }
+  }
   if(s !== undefined) {
+    console.log('found the ship. ship is ', s)
     delete this.ships[ship.uuid] && s.destroy();
   }
 };
@@ -123,7 +131,7 @@ ShipManager.prototype.squad_engage = function(socket, args){
 
     for (var s in ships){
       ship = ships[s];
-      
+
       if(ship.chassis === 'squad-attack' && ship.master === args[1].player_id && ships[args[1].target_id]){
         target = ships[args[1].target_id];
         // target.data.targettedBy = args[1].player_id;

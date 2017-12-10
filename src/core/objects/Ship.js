@@ -245,13 +245,13 @@ Ship.prototype.hit = function(attacker, target, slot, target_uuid) {
       damage, rawDamage, health, critical, shielded, durability, masterShip;
   if(ratio < 1.0) {
     // // test data
-    // if(!attacker.ai && this.ai) {
-    //   sockets.send('ship/test', {
-    //     uuid: this.uuid,
-    //     compensated: compensated,
-    //     targ: target
-    //   });
-    // }
+    if(!attacker.ai && this.ai) {
+      sockets.send('ship/test', {
+        uuid: this.uuid,
+        compensated: compensated,
+        targ: target
+      });
+    }
     if(attacker.hardpoints[0].subtype === 'harvester' && this.uuid !== target_uuid){
       return
     }
@@ -536,8 +536,7 @@ Ship.prototype.destroy = function() {
   this.manager = this.game =
     this.data = this.user = this.sockets =
     this.config = this.timers =
-    this.enhancements = this.hardpoints =
-    this.data = undefined;
+    this.enhancements = this.hardpoints = undefined;
 };
 
 Object.defineProperty(Ship.prototype, 'credits', {

@@ -396,8 +396,8 @@ SoundManager.prototype.generateEnhancementSound = function(data){
       ship = this.ships[data.uuid],
       distance = 0.1,
       num = Math.floor((Math.random() * 3)+1);
-
-  if(player && ship && player !== ship) {   
+  if(!player){return}
+  if(player.x && ship && player !== ship) { 
     distance = engine.Point.distance(ship, player);    
     volume = global.Math.max(sound.volume - (distance / 2000), 0);
   };
@@ -525,6 +525,8 @@ SoundManager.prototype.generateExplosionSound = function(data){
 
 SoundManager.prototype._player = function(ship){
   this.player = ship;
+
+  console.log('player.x is ', this.player.x)
 
   this.game.clock.events.create(1100, false, 1, function(){
     this.generateBackgroundMusic();
