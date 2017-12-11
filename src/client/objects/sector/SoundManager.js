@@ -453,7 +453,6 @@ SoundManager.prototype.generateSquadSound = function(sound){
           }
           break;
         case 'closestHostile':
-            console.log('insert closestHostile sound here')
             this.game.sound.play('detectClosest', volume, false);
           break;
         case 'shieldUp':
@@ -464,11 +463,9 @@ SoundManager.prototype.generateSquadSound = function(sound){
           // }
           break;
         case 'shieldDestination':
-            console.log('insert shieldDestination sound here')
             // this.game.sound.play('shieldDestination', volume, false);
           break;
         case 'shieldDestinationDeactivate':
-            console.log('insert shieldDestinationDeactivate sound here' )
             // this.game.sound.play('shieldDestination', volume, false);
           break;
         default:

@@ -121,7 +121,7 @@ EventManager.prototype.squadGen = function(master){
   } else {
     chassis2 = this.game.rnd.pick(this.chassis['squadron'])
   };
-  if(chassis2 === 'squad-shield'){
+  if(chassis2 === 'squad-shield' || chassis1 === 'squad-shield'){
     chassis3 = this.game.rnd.pick(this.chassis['squadron2'])
   } else {
     chassis3 = this.game.rnd.pick(this.chassis['squadron'])
@@ -330,7 +330,7 @@ EventManager.prototype.update = function() {
 
 EventManager.prototype.generateRandomPosition = function(size) {
   var rnd = this.game.rnd,
-      size = size || rnd.between(1024, 2048),
+      size = size || rnd.between(1024, 3048),
       start = 2048 - (size/2),
       x = rnd.frac() * size,
       y = rnd.frac() * size;

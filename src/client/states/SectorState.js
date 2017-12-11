@@ -178,16 +178,40 @@ SectorState.prototype.createSpace = function() {
 
   this.planet = new Planet(this.game, this.planetTexture);
 
-  // this.miniMap = new MiniMap(this.game);
+  this.snow = new Snow(this.game, this.game.width, this.game.height);
+
+  // this.nebula = new NebulaCluster(this.game);
+  // this.nebula.position.set(-256, 1024);
+  // this.nebula.create(3);
+
+  // this.game.world.static.add(this.space);
+  // this.game.world.background.add(this.planet);
+  // this.game.world.foreground.add(this.nebula);
+
 
   this.nebula = new NebulaCluster(this.game);
-  this.nebula.position.set(-256, 1024);
-  this.nebula.create(3);
+  this.nebula.position.set(1024 - 128, 1024 - 128);
+  this.nebula.create(12, 0.00006, 0.0, [0.9, 0.3, 0.3]);
 
-  // this.game.stage.addChild(this.miniMap.shipGroup)
+  this.neb1 = new NebulaCluster(this.game);
+  this.neb1.position.set(256, 256);
+  this.neb1.create(4, 0.00034, 512, [0.0, 1, 0.0]);
+
+  this.neb2 = new NebulaCluster(this.game);
+  this.neb2.position.set(128, 128);
+  this.neb2.create(4, 0.00034, 256, [1.0, 0.8, 0.2]);
+
+  this.neb3 = new NebulaCluster(this.game);
+  this.neb3.position.set(528, 528);
+  this.neb3.create(4, 0.001, 256, [0.1, 0.3, 1]);
+
   this.game.world.static.add(this.space);
+  this.game.world.static.add(this.snow);
+  this.game.world.background.add(this.nebula);
   this.game.world.background.add(this.planet);
-  this.game.world.foreground.add(this.nebula);
+  this.game.world.add(this.neb1);
+  this.game.world.add(this.neb2);
+  this.game.world.add(this.neb3);
 };
 
 SectorState.prototype.createManagers = function(first) {

@@ -62,7 +62,6 @@ ShipManager.prototype.remove = function(ship) {
     }
   }
   if(s !== undefined) {
-    console.log('found the ship. ship is ', s)
     delete this.ships[ship.uuid] && s.destroy();
   }
 };

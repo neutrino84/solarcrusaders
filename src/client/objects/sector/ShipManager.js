@@ -66,7 +66,7 @@ function ShipManager(game, state, first) {
   this.trajectoryGroup.addChild(this.trajectoryGraphics);
 
   // networking
-  this.socket.on('ship/test', this._test.bind(this));
+  // this.socket.on('ship/test', this._test.bind(this));
 
   // subscribe to messages
   this.game.on('auth/disconnect', this._disconnect, this);
@@ -419,7 +419,7 @@ ShipManager.prototype._disabled = function(data) {
       }
     };
 
-    if(ship.data.masterShip && ship.data.masterShip === this.player.uuid){
+    if(ship.data.masterShip && this.player && ship.data.masterShip === this.player.uuid){
       this.game.emit('squad/disable', chassis)
     }
 
@@ -466,7 +466,6 @@ ShipManager.prototype._enabled = function(data) {
 };
 
 ShipManager.prototype._removed = function(ship) {
-  console.log('in shipManager removed() ship is ', ship)
   var tween,
       game = this.game,
       s = this.ships[ship.uuid];

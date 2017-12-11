@@ -224,9 +224,9 @@ Ship.prototype.attacked = function(target, slot, target_uuid) {
         ship.hit(this, target, slot, target_uuid);
       }
     };
-    // for(var st in stations){
-    //     stations[st].hit(this, target, slot);
-    // };
+    for(var st in stations){
+        stations[st].hit(this, target, slot);
+    };
   };
 };
 
@@ -319,16 +319,17 @@ Ship.prototype.hit = function(attacker, target, slot, target_uuid) {
       if(!this.disabled) {
         this.disable();
 
+
         if(attacker.master && this.manager){
           masterShip = this.manager.ships[attacker.master];
-          masterShip.credits = masterShip.credits + this.data.credits;
+          masterShip.credits = masterShip.credits + this.credits;
 
           updates.push({
           uuid: masterShip.uuid,
           credits: masterShip.credits,
           reputation: masterShip.reputation,
           killed : this.uuid,
-          gains : this.data.credits
+          gains : this.credits
         });
         } else {
           attacker.credits = attacker.credits + this.data.credits
@@ -337,7 +338,14 @@ Ship.prototype.hit = function(attacker, target, slot, target_uuid) {
             credits: attacker.credits,
             reputation: attacker.reputation,
             killed : this.uuid,
-            gains : this.data.credits
+            gains : this.credits
+          });
+        }
+        if(this.user){
+          this.credits =  Math.floor(this.credits/2); 
+            updates.push({
+            uuid: this.uuid,
+            credits: this.credits
           });
         }
       }
@@ -435,7 +443,9 @@ Ship.prototype.enable = function() {
   this.data.health = this.config.stats.health;
   this.data.energy = this.config.stats.energy;
   this.data.durability = this.config.stats.durability;
-  this.data.credits = this.config.stats.size
+  if(!this.user){
+    this.data.credits = this.config.stats.size
+  }
 
   this.alpha = 1.0;
 

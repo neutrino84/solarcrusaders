@@ -89,6 +89,10 @@ Ship.prototype.refresh = function(data) {
     this.hud.showCreditGain(data.gains, data.killed)
   }
 
+  if(data.credits && this.isPlayer){
+    this.game.emit('player/credits')
+  };
+
   if(data.docked){
     // this.docked = true;
   }
@@ -107,7 +111,7 @@ Ship.prototype.refresh = function(data) {
   if(data.hardpoint) {
     attacker = ships[data.uuid];
     defender = ships[data.hardpoint.ship];
-
+    
     if(defender){
       targetingComputer.hit(defender, data);
       defender.selector.damage();
@@ -118,12 +122,14 @@ Ship.prototype.refresh = function(data) {
       defender.hud.show();
       defender.hud.timer && defender.events.remove(defender.hud.timer);
       defender.hud.timer = defender.events.add(3000, defender.hud.hide, defender.hud);
+    
+      if(defender.isPlayer && attacker.data.hardpoints[0].subtype !== 'repair' && data.hardpoint.damage > 4) { 
+      // this.game.camera.shake();
+      // console.log('ouch! dmg was ', data.hardpoint.damage)
+      }
+  };
     }
 
-    if(defender.isPlayer && attacker.data.hardpoints[0].subtype !== 'repair') {
-      // this.game.camera.shake();
-    }
-  };
 
   if(data.durability) {
     if(data.durability < this.config.stats.durability) {
@@ -161,7 +167,6 @@ Ship.prototype.enable = function(data) {
   this.alpha = 1.0;
   this.disabled = false;
   this.chassis.tint = 0xFFFFFF;
-  this.data.credits = this.config.stats.size;
   this.hud.enable();
   this.selector.enable();
   this.engineCore.show(true);
