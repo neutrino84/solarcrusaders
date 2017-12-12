@@ -26,6 +26,7 @@ ShipManager.prototype.init = function(eventManager) {
   // internal
   this.game.on('ship/add', this.add, this);
   this.game.on('ship/remove', this.remove, this);
+  this.game.on('ship/remove/clear_squadron', this.clearSquadron, this);
   this.game.on('ship/create', this.create, this);
   this.game.on('ship/disabled', this.disabled, this);
 
@@ -53,7 +54,6 @@ ShipManager.prototype.add = function(ship) {
 };
 
 ShipManager.prototype.remove = function(ship) {
-  console.log('in back end remove')
   var ships = this.ships,
       s = ships[ship.uuid];
   for(var i in this.ships){
@@ -63,6 +63,15 @@ ShipManager.prototype.remove = function(ship) {
   }
   if(s !== undefined) {
     delete this.ships[ship.uuid] && s.destroy();
+  }
+};
+
+ShipManager.prototype.clearSquadron = function(ship) {
+  var ships = this.ships,
+      s = ships[ship.uuid];
+  if(!s.squadron){return}
+  for(var i in s.squadron){
+    this.game.emit('ship/remove', s.squadron[i]);
   }
 };
 

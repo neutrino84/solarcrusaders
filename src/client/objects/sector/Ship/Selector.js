@@ -272,6 +272,7 @@ Selector.prototype.shieldBlueStart = function() {
 };
 
 Selector.prototype.shieldBlueStop = function() {
+  console.log('in shieldblue stop, this.shieldBlue is ', this.shieldBlue)
     if(this.shieldBlue){
       this.shieldBlue.alpha = 0;
     };

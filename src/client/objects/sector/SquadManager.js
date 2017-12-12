@@ -203,8 +203,10 @@ SquadManager.prototype.regroup = function() {
   //clear minimap target
   this.game.emit('squad/engageHostile', null)
 
+    console.log('in regroup')
   for (var s in ships){
     var ship = ships[s];
+
 
     ship.selector.hostileHighlightStop();
     ship.selector.hostileEngagedStop();

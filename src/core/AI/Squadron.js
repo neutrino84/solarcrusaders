@@ -115,6 +115,7 @@ Squadron.prototype.engage = function(target, type){
 };
 
 Squadron.prototype.update = function() {
+  if(!this.game){return}
   var ship = this.ship,
       settings = this.settings,
       rnd = this.game.rnd,

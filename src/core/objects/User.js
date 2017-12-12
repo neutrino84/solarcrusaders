@@ -102,22 +102,27 @@ User.prototype.reconnected = function(socket) {
 };
 
 User.prototype.disconnected = function() {
-  this.timeout = this.game.clock.events.add(10000, this.destroy, this);
+  console.log('USER disconnected, users ship was nvm')
+  this.timeout = this.game.clock.events.add(5000, this.destroy, this);
 };
 
 User.prototype.destroy = function() {
   // remove ships
+  this.game.emit('ship/remove/clear_squadron', this.ship);
+  // this.squadClear = this.game.clock.events.add(1000, function(){
+    
+  // }, this);
   this.game.emit('ship/remove', this.ship);
-
   // remove from manager
   this.game.emit('auth/remove', this);
 
   // destroy objects
-  this.latency.destroy();
 
   // cleanup
   this.game = this.model = this.latency = this.ship =
     this.station = this.data = this.socket = undefined;
+
+
 };
 
 
