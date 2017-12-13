@@ -172,6 +172,7 @@ Squadron.prototype.update = function() {
 };
 
 Squadron.prototype.attack = function() {
+  if(!this.game){return}
   var ship = this.ship,
       settings = this.settings,
       offset = this.offset,
@@ -204,6 +205,7 @@ Squadron.prototype.attack = function() {
 };
 
 Squadron.prototype.repair = function() {
+  if(!this.game){return}
   var ship = this.ship,
       settings = this.settings,
       offset = this.offset,

@@ -106,6 +106,8 @@ HotkeyManager.prototype.listener = function(hotkey) {
     //squadron
 
       if(key.toLowerCase() === 'c'){
+        console.log('posish: ', this.player.x, this.player.y, this.player.uuid)
+        this.socket.emit('coordinate/check', this.player.uuid)
         this.game.emit('hotkey/squad/closestHostile', 'closestHostile')
       };
       if(key.toLowerCase() === 'e'){

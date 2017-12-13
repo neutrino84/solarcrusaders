@@ -81,21 +81,22 @@ HudStation.prototype.create = function() {
 
 HudStation.prototype.show = function() {
   this.visible = true;
-  this.animating && this.animating.isRunning && this.animating.stop(false);
-  this.animating = this.game.tweens.create(this);
-  this.animating.to({ alpha: 1.0 }, 250);
-  this.animating.on('complete', this.update, this);
-  this.animating.start();
+  // this.animating && this.animating.isRunning && this.animating.stop(false);
+  // this.animating = this.game.tweens.create(this);
+  // this.animating.to({ alpha: 1.0 }, 250);
+  // this.animating.on('complete', this.update, this);
+  // this.animating.start();
 };
 
 HudStation.prototype.hide = function() {
-  this.animating && this.animating.isRunning && this.animating.stop(false);
-  this.animating = this.game.tweens.create(this);
-  this.animating.to({ alpha: 0.0 }, 250);
-  this.animating.on('complete', function() {
-    this.visible = false;
-  }, this);
-  this.animating.start();
+  this.visible = false;
+  // this.animating && this.animating.isRunning && this.animating.stop(false);
+  // this.animating = this.game.tweens.create(this);
+  // this.animating.to({ alpha: 0.0 }, 250);
+  // this.animating.on('complete', function() {
+  //   this.visible = false;
+  // }, this);
+  // this.animating.start();
 };
 
 HudStation.prototype.update = function() {
@@ -118,6 +119,7 @@ HudStation.prototype.data = function(data) {
   var stats = this.station.config.stats,
       healthBar = this.healthBar,
       energyBar = this.energyBar;
+      console.log('hud station data is ', data)
   if(this.visible) {
     data.health && healthBar.change('width', data.health/stats.health);
   }

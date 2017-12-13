@@ -68,8 +68,6 @@ NetManager.prototype._data = function(data) {
       ships = data.ships,
       stations = data.stations;
 
-      // console.log('data is ', data)
-
   if(this.game.cache.checkJSONKey('ship-configuration') &&
       this.game.cache.checkJSONKey('station-configuration') &&
       this.game.cache.checkJSONKey('item-configuration')) {
@@ -90,9 +88,6 @@ NetManager.prototype._data = function(data) {
     for(var s in ships) {
       ship = ships[s];
 
-      
-
-
       if(data.type === 'sync' && this.ships[ship.uuid] === undefined) {
         this.syncronizing = false;
         this.ships[ship.uuid] = new ShipData(this.game, ship);
@@ -108,11 +103,9 @@ NetManager.prototype._data = function(data) {
 
       if(data.type === 'sync' && this.stations[station.uuid] === undefined) {
         this.syncronizing = false;
-        // console.log('sync station is ', station)
         station.period = station.period * 0.7
         this.stations[station.uuid] = new StationData(this.game, station);
       } else if(this.stations[station.uuid]) {
-        // console.log(station.health)
         this.stations[station.uuid].update(station);
       }
     }

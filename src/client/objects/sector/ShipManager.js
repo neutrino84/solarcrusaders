@@ -12,7 +12,7 @@ var engine = require('engine'),
 function ShipManager(game, state, first) {
   this.game = game;
   this.state = state;
-  this.creditsPane = state.ui.bottom.creditsPane;
+  // this.creditsPane = state.ui.bottom.creditsPane;
   this.clock = game.clock;
   this.net = game.net;
   this.socket = game.net.socket;
@@ -169,7 +169,12 @@ ShipManager.prototype.create = function(data, sync) {
 };
 
 ShipManager.prototype.undock = function() {
-  // this.player.locked = false;
+  this.player.locked = false;
+  // this.player.docked = false;
+
+  // this.socket.emit('player/undock', this.player.uuid)
+
+  this.game.camera.follow(this.player)
 };
 
 ShipManager.prototype.remove = function(data) {
@@ -244,6 +249,12 @@ ShipManager.prototype._sync = function(data) {
     ship = this.ships[sync.uuid];
 
     if(ship) {
+      if(ship.isPlayer && ship.docked){
+        // console.log(ship.docked)
+      }
+      if(sync.dock){
+        console.log('front end, ship is docked,')
+      }
       ship.movement.plot(sync);
     } else {
       d = netManager.getShipData(sync.uuid);
@@ -253,30 +264,34 @@ ShipManager.prototype._sync = function(data) {
 };
 
 ShipManager.prototype._player = function(ship) {
-  // if(this.firstIteration){
+    if(this.firstIteration){
     this.player = ship;
-  //   ship.alpha = 0
-  //   ship.locked = true;
-  //   ship.events.loop(100, fadeIn = function(){
-  //     ship.alpha += 0.05
-  //     if(ship.alpha >= 1){
-  //       for(var i = 0; i < ship.events.events.length; i++){
-  //         if(ship.events.events[i].callback.name === 'fadeIn'){
-  //           ship.events.remove(ship.events.events[i]);
-  //         }
-  //       }
-  //     }
-  //   }, this);
+      ship.alpha = 0
+      ship.events.loop(100, fadeIn = function(){
+        ship.alpha += 0.025
+        if(ship.alpha >= 1){
+          for(var i = 0; i < ship.events.events.length; i++){
+            if(ship.events.events[i].callback.name === 'fadeIn'){
+              ship.events.remove(ship.events.events[i]);
+            }
+          }
+        }
+      }, this);
+    // ship.locked = true;
+  } else {
+    this.player = ship;
+  }
     this._player_credits()
-  // } else {
-  //   this.player = ship;
-  // }
+
+  var homeBase = this.state.stationManager.find('ubadian-station-x01')
+
   this.player.unfriendlies = {};
   this.player.targetCount = 0;
   this.player.targetlistCooldown = false;
   this.player.previous;
   this.player.squadron = {};
-  this.game.camera.follow(ship);
+  this.game.camera.follow(this.player)
+  // this.game.camera.follow(homeBase);
 };
 
 ShipManager.prototype._player_credits = function() {
@@ -287,7 +302,7 @@ ShipManager.prototype._player_credits = function() {
   //   tempCredits = this.player.data.credits;
   // }
   // this.creditsPane.updateCredits(tempCredits)
-  this.creditsPane.updateCredits(this.player.data.credits)
+  // this.creditsPane.updateCredits(this.player.data.credits)
 };
 
 ShipManager.prototype._attack = function(data) {
@@ -374,11 +389,12 @@ ShipManager.prototype._secondary = function(data) {
           destination: {x: position.x, y: position.y }
         })
       }
-    else if(data.type === 'start') {
-      // if(ship.docked){
-      //   ship.docked = false;
-      //   socket.emit('player/undock', ship.uuid)
-      // }
+    else if(data.type === 'start' && !ship.locked) {
+      if(ship.docked){
+        // console.log('shipManager secondary')
+        ship.docked = false;
+        socket.emit('player/undock', ship.uuid)
+      }
       indicator.show(position);
       game.emit('ship/plot');
       socket.emit('ship/plot', {

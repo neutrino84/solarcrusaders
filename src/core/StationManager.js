@@ -14,6 +14,7 @@ function StationManager(game) {
 StationManager.prototype.constructor = StationManager;
 
 StationManager.prototype.init = function() {
+  
   // listen to messaging
   this.game.on('station/add', this.add, this);
   this.game.on('station/create', this.create, this);
@@ -87,13 +88,13 @@ StationManager.prototype.sync = function() {
   return synced;
 };
 
-StationManager.prototype.getPosition = function() {
-  var stations = this.stations, station, position;
-  for(var s in this.stations){
+StationManager.prototype.getPosition = function(chassis) {
+  var stations = this.game.stations, station, position;
+  for(var s in stations){
     station = stations[s];
-    if(station && station.chassis == 'ubadian-station-x01'){
+    if(station && station.chassis == chassis){
       position = station.movement.position;
-      return position;
+      return station;
     }
   }
 };
@@ -102,6 +103,7 @@ StationManager.prototype.attacked = function(attacker, target, slot) {
   var stations, station,
       game = this.game,
       stations = this.game.stations;
+
     for(var s in stations) {
       station = stations[s];
       station.hit(attacker, target, slot);

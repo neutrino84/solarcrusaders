@@ -2,10 +2,11 @@
 var winston = require('winston'),
     User = require('./objects/User');
 
-function UserManager(game) {
+function UserManager(game, sectorManager) {
   this.game = game;
   this.model = game.model;
   this.sockets = game.sockets;
+  this.sectorManager = sectorManager;
 
   this.game.users = {};
 };
@@ -66,12 +67,18 @@ UserManager.prototype.disconnect = function(socket) {
 
 UserManager.prototype.ship = function(socket, args) {
   var game = this.game,
+      stationManager = this.sectorManager.stationManager,
       session = socket.request.session,
       user = game.users[session.user.uuid],
       data = args[1];
       // console.log('got here', args)
+      var station = stationManager.getPosition('ubadian-station-x01');
+      var startingPosition = station.movement.position;
+
   user && game.emit('ship/create', {
     chassis: args[1],
+    x : startingPosition.x,
+    y : startingPosition.y,
     squadron : {}
   }, user);
 };

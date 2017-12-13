@@ -33,6 +33,7 @@ ShipManager.prototype.init = function(eventManager) {
   // networking
   this.sockets.on('ship/plot', this.plot, this);
   this.sockets.on('ship/attack', this.attack, this);
+  this.sockets.on('coordinate/check', this.coordinate_check, this);
   this.sockets.on('ship/enhancement/start', this.enhancement, this);
 
   this.sockets.on('player/undock', this.player_undock, this);
@@ -51,6 +52,10 @@ ShipManager.prototype.add = function(ship) {
   if(this.ships[ship.uuid] === undefined) {
     this.ships[ship.uuid] = ship;
   }
+};
+
+ShipManager.prototype.coordinate_check = function(socket, args) {
+  console.log('SHIP position is: ', this.ships[args[1]].movement.position.x, this.ships[args[1]].movement.position.y)
 };
 
 ShipManager.prototype.remove = function(ship) {
@@ -289,21 +294,31 @@ ShipManager.prototype.sync = function() {
       synced = [];
   for(var s in ships) {
     ship = ships[s];
+    if(ship.docked){
+      station = this.sectorManager.stationManager.getPosition('ubadian-station-x01');
+      movement = ship.movement;
+      movement.update();
+      position = station.movement.position;
+
+      data = {
+        uuid: ship.uuid,
+        pos: { x: position.x, y: position.y },
+        spd: station.speed,
+        dock: true
+      };
+      synced.push(data);
+    } else {
     movement = ship.movement;
     movement.update();
     position = movement.position;
 
-    if(ship.docked){
-      movement.position = this.sectorManager.stationManager.getPosition();
-      movement.plot(this.sectorManager.stationManager.getPosition());
+      data = {
+        uuid: ship.uuid,
+        pos: { x: position.x, y: position.y },
+        spd: ship.speed * movement.throttle
+      };
+      synced.push(data);
     }
-
-    data = {
-      uuid: ship.uuid,
-      pos: { x: position.x, y: position.y },
-      spd: ship.speed * movement.throttle
-    };
-    synced.push(data);
   }
   return synced;
 };

@@ -88,9 +88,13 @@ function Hud(ship, settings) {
   this.losses = {};
   this.gainTimers = [];
   this.lossTimers = [];
-
+  
   this.container.addPanel(this.healthBar);
-  this.container.addPanel(this.energyBar);
+
+  //prevent stations from getting energy bars
+  if(!this.ship.rot){
+    this.container.addPanel(this.energyBar);
+  }
 
   // this.scoreContainer.addPanel(this.score)
   this.container.addPanel(this.scoreContainer)

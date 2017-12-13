@@ -20,7 +20,7 @@ function EventManager(game) {
   // };
   this.ships = {
     basic: 0,
-    pirate: 2,
+    pirate: 0,
     enforcer: 0
   };
 
@@ -52,7 +52,6 @@ EventManager.prototype.init = function() {
 
   // create default station
   this.game.emit('station/create', {
-    default: true,
     chassis: 'ubadian-station-x01',
     x: 2048,
     y: 2048,
@@ -60,7 +59,6 @@ EventManager.prototype.init = function() {
   });
 
   this.game.emit('station/create', {
-    default: true,
     chassis: 'general-station-x01',
     x: -3000,
     y: 3000,
@@ -69,18 +67,16 @@ EventManager.prototype.init = function() {
 
   // create scavenger nests
   this.game.emit('station/create', {
-    default: true,
     chassis: 'scavenger-x01',
-    x: 3550*1.5, 
-    y: -3550*1.5,
+    x: 5411, 
+    y: -5354,
     radius: 0
   });
 
   this.game.emit('station/create', {
-    default: true,
     chassis: 'scavenger-x01',
-    x: -3550*1.5, 
-    y: 3550*1.5,
+    x: -5055,
+    y: 4973,
     radius: 0
   });
 
@@ -148,7 +144,6 @@ EventManager.prototype.squadGen = function(master){
   //   ai: 'squadron',
   //   master: master
   // });
-
 
   if(rando > 0.6){
     this.game.emit('ship/create', {

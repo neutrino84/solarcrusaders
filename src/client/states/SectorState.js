@@ -21,8 +21,8 @@ function SectorState(game) {
 
   this.game.on('user/shipSelected', this.playerCreated, this);
 
-  this.scaleX = 1;
-  this.scaleY = 1;
+  this.scaleX = 1.5;
+  this.scaleY = 1.5;
 };
 
 SectorState.prototype = Object.create(engine.State.prototype);
@@ -71,12 +71,12 @@ SectorState.prototype.preload = function() {
   this.game.load.image('clouds', 'imgs/game/planets/clouds.jpg');
 
   // load stations
-  this.game.load.image('ubadian-station-x01', 'imgs/game/stations/ubaidian-x01.png');
-  this.game.load.image('ubadian-station-x01-cap', 'imgs/game/stations/ubaidian-cap-x01.png');
-  this.game.load.image('scavenger-x01', 'imgs/game/stations/scavenger-x01.png');
-  this.game.load.image('scavenger-x01-cap', 'imgs/game/stations/scavenger-x01.png');
-  this.game.load.image('general-station-x01', 'imgs/game/stations/general-x01.png');
-  this.game.load.image('general-station-x01-cap', 'imgs/game/stations/general-cap-x01.png');
+  this.game.load.image('ubadian-station-x01', 'imgs/game/stations/stations_enlarged/ubaidian-x01.png');
+  this.game.load.image('ubadian-station-x01-cap', 'imgs/game/stations/stations_enlarged/ubaidian-cap-x01.png');
+  this.game.load.image('scavenger-x01', 'imgs/game/stations/stations_enlarged/scavenger-x01.png');
+  this.game.load.image('scavenger-x01-cap', 'imgs/game/stations/stations_enlarged/scavenger-x01.png');
+  this.game.load.image('general-station-x01', 'imgs/game/stations/stations_enlarged/general-x01.png');
+  this.game.load.image('general-station-x01-cap', 'imgs/game/stations/stations_enlarged/general-cap-x01.png');
 
   // load strip graphics
   this.game.load.image('laser-blue', 'imgs/game/fx/laser-blue.png');
@@ -129,21 +129,25 @@ SectorState.prototype.create = function() {
 
   // set world
   this.game.world.size(0, 0, 4096, 4096);
-  this.game.world.scale.set(1, 1);
+  this.game.world.scale.set(1.5, 1.5);
 
   // create sector
   this.createAsteroids();
   this.createSpace();
   this.createSnow();
 
+
+
     // this.game.world.scale.set(.6, .6);
   if(this.game.auth.user.ship){
+    console.log('PLAYER HAS SHIP')
+  this.ui.create();
     this.createManagers(); 
   } else {
     this.game.camera.focus(2048, 2048); 
+    this.ui.create();
   }
   // create ui
-  this.ui.create();
 
   // shipyard selection SFX
   this.game.sound.add('selectionSFX1', 2);
@@ -154,22 +158,26 @@ SectorState.prototype.playerCreated = function(){
     var game = this.game;
 
     this.createManagers('firstIteration');
+    // this.ui.create();
+    // console.log('in playwer created, stationManager is ', this.stationManager)
+    // this.stationManager.find('ubadian-station-x01')
+    // this.game.camera
 
-    // game.clock.events.add(1500, function(){
-    //   game.clock.events.loop(100, zoomOut = function(){
-    //     this.scaleX = this.scaleX - 0.01;
-    //     this.scaleY = this.scaleY - 0.01;
-    //     game.world.scale.set(this.scaleX, this.scaleY)
-    //     if(this.scaleX <= 0.8){
-    //       for(var i = 0; i < game.clock.events.events.length; i++){
-    //         if(game.clock.events.events[i].callback.name === 'zoomOut'){
-    //           game.clock.events.remove(game.clock.events.events[i]);
-    //           // this.shipManager.undock();
-    //         }
-    //       };
-    //     }
-    //   }, this)
-    // }, this)
+    game.clock.events.add(1500, function(){
+      game.clock.events.loop(50, zoomOut = function(){
+        this.scaleX = this.scaleX - 0.01;
+        this.scaleY = this.scaleY - 0.01;
+        game.world.scale.set(this.scaleX, this.scaleY)
+        if(this.scaleX <= 0.8){
+          for(var i = 0; i < game.clock.events.events.length; i++){
+            if(game.clock.events.events[i].callback.name === 'zoomOut'){
+              game.clock.events.remove(game.clock.events.events[i]);
+              this.shipManager.undock();
+            }
+          };
+        }
+      }, this)
+    }, this)
 };
 
 SectorState.prototype.createSpace = function() {
@@ -220,12 +228,12 @@ SectorState.prototype.createManagers = function(first) {
   this.netManager = new NetManager(game, this);
   this.inputManager = new InputManager(game, this);
   this.hotkeyManager = new HotkeyManager(game, this);
-  // if(first){
-  //   this.shipManager = new ShipManager(game, this, first);
-  // } else {
-    this.shipManager = new ShipManager(game, this);
-  // }
   this.stationManager = new StationManager(game, this);
+  if(first){
+    this.shipManager = new ShipManager(game, this, first);
+  } else {
+    this.shipManager = new ShipManager(game, this);
+  }
   this.squadManager = new SquadManager(game, this);
   this.soundManager.create();
   this.game.emit('game/backgroundmusic')

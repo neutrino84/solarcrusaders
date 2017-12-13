@@ -35,7 +35,7 @@ function Ship(manager, data, user) {
   };
   if(user){
   this.squadron = data.squadron
-  // this.docked = true;
+  this.docked = true;
   };
   // this.data.targettedBy = null;
 
@@ -225,9 +225,10 @@ Ship.prototype.attacked = function(target, slot, target_uuid) {
         ship.hit(this, target, slot, target_uuid);
       }
     };
-    for(var st in stations){
-        stations[st].hit(this, target, slot);
-    };
+    // for(var st in stations){
+    //     stations[st].hit(this, target, slot);
+    // };
+    this.game.emit('ship/attacked', this, target, slot)
   };
 };
 

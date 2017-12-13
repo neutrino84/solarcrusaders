@@ -106,12 +106,19 @@ Movement.prototype.plot = function(data) {
       a1, a2,
       distance;
 
+  if(data.dock){
+    this._destination.copyFrom(data.pos);
+    this._speed = data.spd;
+    this._velocity = (2.5 / (1/10)) * (1/60);
+    this.velocity = 0
+  } else{
   this._destination.copyFrom(data.pos);
   this._speed = data.spd;
   this._velocity = (data.spd / (1/10)) * (1/60);
 
   // set velocity
   this.velocity = this._velocity * 6;
+  }
 };
 
 Movement.prototype.destroy = function() {

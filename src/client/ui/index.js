@@ -39,6 +39,7 @@ UI.prototype.create = function() {
     bg: false
   });
   this.root.addPanel(this.header);
+  this.root.addPanel(this.bottom);
   this.header.id = 'header';
   this.header.alpha = 0;
 
@@ -50,7 +51,7 @@ UI.prototype.create = function() {
   // this.miniMapPane = new MiniMapPane(this.game);
   // this.root.addPanel(this.miniMapPane);
   
-  this.root.addPanel(this.bottom);
+  
   // this.root.addPanel(this.leaderBoard);
   //added miniMap pane
   // this.miniMapPanel.addPanel(Layout.NONE, this.miniMapPane);
@@ -92,11 +93,11 @@ UI.prototype.create = function() {
   // this._squadKeys();
 };
 
-// UI.prototype._squadKeys = function() {
-//   this.squadPane = new SquadPane(this.game); 
-//   this.root.addPanel(this.squadPane);
-//   this.root.invalidate();
-// };
+UI.prototype.create_bottom = function() {
+  // this.bottom = new BottomPane(this.game);
+  // this.root.addPanel(this.bottom);
+  // this.root.invalidate();
+};
 
 UI.prototype.refresh = function() {
   this.root.invalidate(true);

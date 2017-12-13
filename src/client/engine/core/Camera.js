@@ -72,11 +72,8 @@ Camera.prototype.update = function() {
       view = this.view,
       world = this.world,
       smoothing = this.smoothing;
-
-  if(this.target && this.target.key === 'ubadian-station-x01') {
-      x = this.target.x * 4;
-      y = this.target.y * 4;
-  } else if(this.target) {
+      
+  if(this.target) {
     if(this.smooth) {
       position = Point.interpolate(this.position, this.target, this.step, smoothing);
       x = smoothing.x;

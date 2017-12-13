@@ -7,7 +7,6 @@ function Station(manager, data) {
   this.game = manager.game;
   this.sockets = manager.sockets;
   this.model = manager.model;
-
   this.data = new this.model.Station(data);
   this.data.init();
 
@@ -50,6 +49,7 @@ Station.prototype.hit = function(attacker, target, slot) {
       distance = position.distance({ x: target.x, y: target.y }),
       ratio = distance / (this.size * hardpoint.data.aoe),
       damage, health, critical;
+
   if(ratio < 1.0) {
 
     // calc damage
@@ -99,7 +99,7 @@ Station.prototype.hit = function(attacker, target, slot) {
 
       // disable station
       if(!this.disabled) {
-        this.disable();
+        // this.disable();
       }
     }
 
