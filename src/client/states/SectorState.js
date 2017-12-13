@@ -146,6 +146,8 @@ SectorState.prototype.create = function() {
     this.game.camera.focus(2048, 2048); 
     this.ui.create();
   }
+
+  console.log('LATEST VERSION')
   // create ui
 
   // shipyard selection SFX
