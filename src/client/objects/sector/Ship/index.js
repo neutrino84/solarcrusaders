@@ -26,16 +26,12 @@ function Ship(manager, data) {
   // defaults
   this.rotation = data.rotation 
   this.shielded = false;
-  //   console.log(this.data.chassis)
   if(this.data.user){
     this.docked = true;
   } else {
     this.docked = false;
   };
-  if(this.data.chassis === 'ubaidian-x01f'){
-    console.log('this.docked is ', this.docked)
-    // console.log('this data is ', this.data)
-  }
+
   // + global.Math.PI;
   this.pivot.set(this.width/2, this.height/2);
 
@@ -93,7 +89,7 @@ Ship.prototype.refresh = function(data) {
       targetingComputer = this.targetingComputer;
 
   if(data.killed && this.isPlayer){
-    ships[data.killed].hud.showCreditLoss();
+    ships[data.killed].hud.showCreditLoss(data.gains);
     this.hud.showCreditGain(data.gains, data.killed)
   }
 

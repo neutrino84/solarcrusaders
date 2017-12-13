@@ -149,7 +149,7 @@
         "projection": 0.1,
         "delay": 16,
         "spread": 20,
-        "damage": 2.5,
+        "damage": 3,
         "offset": {
           "min": 0.92,
           "max": 0.98
@@ -199,11 +199,11 @@
         "glow": "0x12def9",
         "emitter": ["0xFFFFFF", "0x12def9"],
         "icon": "item-laser-a",
-        "range": 734,
+        "range": 900,
         "projection": 0.1,
         "delay": 16,
-        "spread": 14,
-        "damage": 1.85,
+        "spread": 17,
+        "damage": 2.3,
         "offset": {
           "min": 0.92,
           "max": 0.98

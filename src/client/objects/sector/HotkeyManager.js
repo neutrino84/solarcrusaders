@@ -55,9 +55,7 @@ HotkeyManager.prototype.listener = function(hotkey) {
     shieldship = hotkey.toString();
     this.game.input.on('keypress', function(event, key){
       if(key === shieldmaiden){
-        console.log(this.shieldmaidenCooldown)
         if(this.shieldmaidenCooldown){return}
-          console.log('inside SM hotkey')
         this.game.emit('ship/player/shieldmaidenActivate', 'shieldmaidenActivate');
         this.shieldmaidenCooldown = true;
         this.game.clock.events.add(5000, function(){
@@ -75,7 +73,7 @@ HotkeyManager.prototype.listener = function(hotkey) {
     		if(hotkeys['enhancements'][key] === 'shield' && this.isShielded){return};
         if(hotkeys['enhancements'][key] === 'piercing' && this.isPiercing){return};
         if(hotkeys['enhancements'][key] === 'detect' && this.detecting){
-          console.log('got here')
+        
           this.game.emit('squad/detectHostiles');
         };
 
@@ -106,8 +104,6 @@ HotkeyManager.prototype.listener = function(hotkey) {
     //squadron
 
       if(key.toLowerCase() === 'c'){
-        console.log('posish: ', this.player.x, this.player.y, this.player.uuid)
-        this.socket.emit('coordinate/check', this.player.uuid)
         this.game.emit('hotkey/squad/closestHostile', 'closestHostile')
       };
       if(key.toLowerCase() === 'e'){

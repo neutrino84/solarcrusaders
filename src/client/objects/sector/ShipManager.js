@@ -12,7 +12,7 @@ var engine = require('engine'),
 function ShipManager(game, state, first) {
   this.game = game;
   this.state = state;
-  // this.creditsPane = state.ui.bottom.creditsPane;
+  this.creditsPane = state.ui.bottom.creditsPane;
   this.clock = game.clock;
   this.net = game.net;
   this.socket = game.net.socket;
@@ -249,12 +249,6 @@ ShipManager.prototype._sync = function(data) {
     ship = this.ships[sync.uuid];
 
     if(ship) {
-      if(ship.isPlayer && ship.docked){
-        // console.log(ship.docked)
-      }
-      if(sync.dock){
-        console.log('front end, ship is docked,')
-      }
       ship.movement.plot(sync);
     } else {
       d = netManager.getShipData(sync.uuid);
@@ -281,7 +275,7 @@ ShipManager.prototype._player = function(ship) {
   } else {
     this.player = ship;
   }
-    this._player_credits()
+  this._player_credits()
 
   var homeBase = this.state.stationManager.find('ubadian-station-x01')
 
@@ -302,7 +296,7 @@ ShipManager.prototype._player_credits = function() {
   //   tempCredits = this.player.data.credits;
   // }
   // this.creditsPane.updateCredits(tempCredits)
-  // this.creditsPane.updateCredits(this.player.data.credits)
+  this.creditsPane.updateCredits(this.player.data.credits)
 };
 
 ShipManager.prototype._attack = function(data) {
@@ -372,7 +366,6 @@ ShipManager.prototype._secondary = function(data) {
       indicator = this.indicator;
 
       if(!ship.position){
-        console.log('in ShipManager _secondary, players ship doesnt have a position. ship is ', ship)
         return
       }
 
@@ -391,7 +384,6 @@ ShipManager.prototype._secondary = function(data) {
       }
     else if(data.type === 'start' && !ship.locked) {
       if(ship.docked){
-        // console.log('shipManager secondary')
         ship.docked = false;
         socket.emit('player/undock', ship.uuid)
       }

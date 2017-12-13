@@ -37,11 +37,7 @@ function Ship(manager, data, user) {
   this.squadron = data.squadron
   this.docked = true;
   };
-  // this.data.targettedBy = null;
 
-  // ship configuration
-
-  // console.log(this.data, this.data.chassis)
   this.config = client.ShipConfiguration[this.data.chassis];
 
   this.data.credits = this.config.stats.size;
@@ -325,16 +321,15 @@ Ship.prototype.hit = function(attacker, target, slot, target_uuid) {
         if(attacker.master && this.manager){
           masterShip = this.manager.ships[attacker.master];
           masterShip.credits = masterShip.credits + this.credits;
-
           updates.push({
-          uuid: masterShip.uuid,
-          credits: masterShip.credits,
-          reputation: masterShip.reputation,
-          killed : this.uuid,
-          gains : this.credits
-        });
+            uuid: masterShip.uuid,
+            credits: masterShip.credits,
+            reputation: masterShip.reputation,
+            killed : this.uuid,
+            gains : this.credits
+          });
         } else {
-          attacker.credits = attacker.credits + this.data.credits
+          attacker.credits = Math.floor(attacker.credits + this.data.credits)
           updates.push({
             uuid: attacker.uuid,
             credits: attacker.credits,
@@ -344,10 +339,10 @@ Ship.prototype.hit = function(attacker, target, slot, target_uuid) {
           });
         }
         if(this.user){
-          this.credits =  Math.floor(this.credits/2); 
+          var credits =  Math.floor(this.credits/2); 
             updates.push({
             uuid: this.uuid,
-            credits: this.credits
+            credits: credits
           });
         }
       }

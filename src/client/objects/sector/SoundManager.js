@@ -524,8 +524,6 @@ SoundManager.prototype.generateExplosionSound = function(data){
 SoundManager.prototype._player = function(ship){
   this.player = ship;
 
-  console.log('player.x is ', this.player.x)
-
   this.game.clock.events.create(1100, false, 1, function(){
     this.generateBackgroundMusic();
     this.generateSystemSound('systems-online')

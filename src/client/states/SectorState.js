@@ -140,7 +140,6 @@ SectorState.prototype.create = function() {
 
     // this.game.world.scale.set(.6, .6);
   if(this.game.auth.user.ship){
-    console.log('PLAYER HAS SHIP')
   this.ui.create();
     this.createManagers(); 
   } else {

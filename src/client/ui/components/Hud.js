@@ -138,7 +138,7 @@ Hud.prototype.show = function() {
   this.animating.start();
 };
 
-Hud.prototype.showCreditLoss = function() {
+Hud.prototype.showCreditLoss = function(credits) {
 
   this.visible = true;
   this.losses['a'] = new Label(this.game, {
@@ -152,7 +152,7 @@ Hud.prototype.showCreditLoss = function() {
 
 
   this.losses['a'].tint = 0xff0000;
-  this.losses['a'].text = this.ship.data.credits;
+  this.losses['a'].text = credits;
   this.losses['a'].visible = true;
 
   this.scoreContainer.addPanel(this.losses['a'])
@@ -184,7 +184,7 @@ Hud.prototype.showCreditLoss = function() {
                   bg: false
                 });
             this.losses['b'].tint = 0xff0000;
-            this.losses['b'].text = this.ship.data.credits;
+            this.losses['b'].text = credits;
             this.losses['b'].visible = true;
             this.losses['b'].alpha = 0.33;
             this.scoreContainer.addPanel(this.losses['b'])
@@ -215,7 +215,7 @@ Hud.prototype.showCreditLoss = function() {
                           bg: false
                         });
                     this.losses['c'].tint = 0xff0000;
-                    this.losses['c'].text = this.ship.data.credits;
+                    this.losses['c'].text = credits;
                     this.losses['c'].visible = true;
                     this.losses['c'].alpha = 0.15;
                     this.scoreContainer.addPanel(this.losses['c'])
