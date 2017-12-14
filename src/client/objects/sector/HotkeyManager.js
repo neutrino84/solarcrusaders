@@ -67,6 +67,8 @@ HotkeyManager.prototype.listener = function(hotkey) {
   if(player){
   	this.game.input.on('keypress', function(event, key){
   	//enhancements
+    if(player.disabled){return}
+
   	  if(hotkeys['enhancements'][key]){
     		if(hotkeys['enhancements'][key] === 'booster' && this.isBoosting){return};
     		if(hotkeys['enhancements'][key] === 'heal' && this.isHealing){return};

@@ -43,23 +43,13 @@ Ship.prototype.update = function(){
 
   var positionWithZoom = [ship.x / zoom, ship.y / zoom];
   var userWithZoom = [user.x / zoom, user.y / zoom];
-      // xplus = 100 - userWithZoom[0],
-      // yplus = 100 - userWithZoom[1];
 
-  // console.log(this.settings.size, this.settings.size/2)
-
-    
   this.position.x = (this.settings.size / 2 + positionWithZoom[0] - userWithZoom[0]) ;
 
   this.position.y = (this.settings.size / 2 + positionWithZoom[1] - userWithZoom[1]) ;
 
   if(this.ship.targetted){
-    // this.reticleRed.position.x = userWithZoom[0]
-    // this.reticleRed.position.y = userWithZoom[1];
-    // console.log('this is ', this)
-    // console.log('parent is ', this.parent)
-
-    // halfWidth = ship.width/2,
+    
     this.position.x = this.position.x - this.thickness
     this.position.y = this.position.y - this.thickness
   }

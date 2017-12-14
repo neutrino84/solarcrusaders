@@ -34,7 +34,9 @@ SectorState.prototype.init = function(args) {
 
   this.soundManager = new SoundManager(this.game);
 
-  // this.scrollLock = false;
+  this.scrollLock = false;
+//^ does this prevent scrolling
+
   this.game.stage.disableVisibilityChange = true;
 };
 
