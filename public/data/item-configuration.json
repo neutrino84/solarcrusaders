@@ -137,7 +137,7 @@
         "variation": 0.05
       },
       "quantum": {
-        "name": "Basic Pulse",
+        "name": "Quantum Pulse",
         "type": "pulse",
         "subtype": "basic",
         "sprite": "turret-a",
@@ -164,7 +164,7 @@
         "variation": 0.2
       },
       "nucleon": {
-        "name": "Basic Pulse",
+        "name": "Nucleon Pulse",
         "type": "pulse",
         "subtype": "basic",
         "sprite": "turret-a",
@@ -191,7 +191,7 @@
         "variation": 0.2
       },
       "tarkin": {
-        "name": "Basic Pulse",
+        "name": "Tarkin Pulse",
         "type": "pulse",
         "subtype": "basic",
         "sprite": "turret-a",
@@ -218,7 +218,7 @@
         "variation": 0.05
       },
       "bazuko": {
-        "name": "Basic Pulse",
+        "name": "Bazuko Pulse",
         "type": "pulse",
         "subtype": "basic",
         "sprite": "turret-a",
@@ -245,7 +245,7 @@
         "variation": 0.05
       },
       "XP1123": {
-        "name": "Basic Pulse",
+        "name": "Experimental Pulse",
         "type": "pulse",
         "subtype": "basic",
         "sprite": "turret-a",
@@ -292,7 +292,7 @@
         "durability": 1000.0
       },
       "silvertip": {
-        "name": "Type 1 Launcher",
+        "name": "Type 6 Launcher",
         "type": "rocket",
         "subtype": "basic",
         "sprite": "turret-b",

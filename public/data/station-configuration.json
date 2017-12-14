@@ -3,20 +3,20 @@
     "race": "ubaidian",
     "stats": {
       "health": 2000,
-      "heal": 2.0,
+      "heal": 7.0,
       "speed": 2.5,
       "size": 320,
       "radius": 768,
       "rotation": 0.0,
       "spin": 0.01,
-      "armor": 0.0
+      "armor": 0.01
     }
   },
   "general-station-x01": {
     "race": "general",
     "stats": {
       "health": 2000,
-      "heal": 0.0,
+      "heal": 3.0,
       "speed": 5,
       "size": 256,
       "radius": 768,
@@ -28,14 +28,14 @@
   "scavenger-x01": {
     "race": "scavenger",
     "stats": {
-      "health": 2000,
-      "heal": 2.0,
+      "health": 5000,
+      "heal": 3.0,
       "speed": 2.5,
       "size": 192,
       "radius": 1,
       "rotation": 0.0001,
       "spin": 0.001,
-      "armor": 0.0
+      "armor": 0.05
     }
   }
 }

@@ -85,7 +85,7 @@
     }
   },
   "enforcer": {
-    "respawn": 55000,
+    "respawn": 75000,
     "disengage": 12000,
     "friendly": ["user","squadron","basic","enforcer"],
     "position": {

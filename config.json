@@ -2,7 +2,7 @@
   "silent": true,
   "daemon": true,
   "production": false,
-  "url": "http://localhost.dev:4567",
+  "url": "http://localhost.local:4567",
   "secret": "121daf16-401d-409b-8b63-12232c0a211c",
   "database": "redis",
   "redis": {

@@ -320,7 +320,7 @@ Ship.prototype.hit = function(attacker, target, slot, target_uuid) {
 
         if(attacker.master && this.manager){
           masterShip = this.manager.ships[attacker.master];
-          masterShip.credits = masterShip.credits + this.credits;
+          masterShip.credits = Math.floor(masterShip.credits + this.credits);
           updates.push({
             uuid: masterShip.uuid,
             credits: masterShip.credits,

@@ -147,7 +147,6 @@ SectorState.prototype.create = function() {
     this.ui.create();
   }
 
-  console.log('LATEST VERSION')
   // create ui
 
   // shipyard selection SFX
