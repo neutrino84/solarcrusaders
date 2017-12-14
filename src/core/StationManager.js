@@ -19,6 +19,8 @@ StationManager.prototype.init = function() {
   this.game.on('station/add', this.add, this);
   this.game.on('station/create', this.create, this);
   this.game.on('ship/attacked', this.attacked, this);
+
+  this.game.clock.events.loop(1000, this.update, this);
 };
 
 StationManager.prototype.add = function(station) {
@@ -86,6 +88,38 @@ StationManager.prototype.sync = function() {
     synced.push(data);
   }
   return synced;
+};
+
+StationManager.prototype.update = function() {
+  var stations = this.game.stations,
+      station, delta, update, stats,
+      updates = [];
+  for(var s in stations) {
+    station = stations[s];
+    if(!station.disabled) {
+      stats = station.config.stats;
+      update = { uuid: station.uuid };
+      
+      // update health
+      if(station.health < stats.health) {
+        delta = station.heal;
+        station.health = global.Math.min(stats.health, station.health + delta);
+        update.health = engine.Math.roundTo(station.health, 1);
+      };
+
+      // push deltas
+      if(delta !== undefined) {
+        updates.push(update);
+      }
+      if(station.docked){
+        update.docked = true;
+        updates.push(update)
+      }
+    }
+  }
+  if(updates.length > 0) {
+    this.game.emit('station/data', updates);
+  }
 };
 
 StationManager.prototype.getPosition = function(chassis) {
