@@ -2,55 +2,35 @@ var engine = require('engine');
 
 function Ship(game, shipSettings, settings) {
   engine.Graphics.call(this, game);
-
-  this.ship = shipSettings.ship;
-  this.color = shipSettings.color
-  this.ship.direction = {x: engine.Math.getRandomInt(-1, 1), y: engine.Math.getRandomInt(-1, 1)};
-
-  if(this.ship.direction.x == 0 && this.ship.direction.y == 0){
-    this.ship.direction = {x: 1, y: engine.Math.getRandomInt(-1, 1)};
-  }
-
+  
   this.settings = settings;
 
-  this.thickness = this.ship.size * (2/70);
+  if(shipSettings.station){
+    this.ship = shipSettings.station; 
+    this.color = shipSettings.color
+    this.thickness = this.ship.size * (2/90);
 
-  if(this.ship.targetted){
-    // this.beginFill(0xfffCCC, 1);
-    // console.log
     this.lineStyle(1, this.color, 1.0);
-    // this.drawRect(0, 0, this.thickness*2.5, this.thickness*2.5);
-    this.drawRect(0, 0, this.thickness*2, this.thickness*2);
-    // this.endFill();
-    // console.log('this rect is ', this)
+    this.drawRect(0, 0, this.thickness*2, this.thickness*2); 
+    this.drawRect(0, 0, this.thickness, this.thickness); 
   } else {
-    this.lineStyle(0);
-    this.beginFill(this.color, 0.9);
-    this.drawCircle(0, 0, this.thickness);
-    this.endFill();
+    this.ship = shipSettings.ship;
+    this.color = shipSettings.color
+    this.thickness = this.ship.size * (2/70);
+
+    if(this.ship.targetted){
+      this.lineStyle(1, this.color, 1.0);
+      this.drawRect(0, 0, this.thickness*2, this.thickness*2);
+    } else {
+      this.lineStyle(0);
+      this.beginFill(this.color, 0.9);
+      this.drawCircle(0, 0, this.thickness);
+      this.endFill();
+    }
   }
-  
 
   this.needUpdate = true;
-  // console.log(this.ship, this.settings)
-  if(this.ship.targetted){
-    // this.reticleRed = 15;
-
-    // this.reticleRed = new engine.Graphics(); 
-    // this.reticleRed.lineStyle(2, 0xcc1111, 1.0);
-    // this.reticleRed.drawRect(10, 10, 5, 5);
-    // this.reticleRed.alpha = 1;
-
-
-    // this.reticleRed.pivot.set(halfWidth +2, halfHeight + 5);
-    
-    // console.log('ship targetted! reticle is ', this.reticleRed)
-  }
-
-
   this.update();
-
-
 };
 
 Ship.prototype = Object.create(engine.Graphics.prototype);

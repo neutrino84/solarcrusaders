@@ -97,6 +97,7 @@ ShipManager.prototype.constructor = ShipManager;
 ShipManager.prototype._sendMapData = function(){
   var player = this.player,
       ships = this.ships, 
+      stations = this.state.stationManager.stations,
       data = [], distance;
   for(var a in ships){
     if(!ships[a].disabled && !ships[a] !== player){
@@ -105,15 +106,25 @@ ShipManager.prototype._sendMapData = function(){
         data.push(ships[a])
       }
     }
+  };
+  for(var s in stations){
+    // if(!ships[a].disabled && !ships[a] !== player){
+      distance = engine.Point.distance(player, stations[s]);
+      if(distance < 2000){
+        data.push(stations[s])
+      }
+    // }
   }
-  // data.push(player)
+  // this.state.stationManager
   if(data.length){
     this.game.emit('mapData', player, data) 
-  }
+  };
 };
 
 ShipManager.prototype._sendMapDataShips = function(){
-    this.game.emit('shipsDump', this.ships) 
+  var stations = this.state.stationManager.stations;
+  console.log(stations)
+    this.game.emit('shipsDump', this.ships, stations) 
 };
 
 ShipManager.prototype.create = function(data, sync) {

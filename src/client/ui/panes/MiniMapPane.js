@@ -37,7 +37,10 @@ function MiniMapPane(game, settings) {
       squadron : 0xffffff, 
       user: 0x00ffff,
       enforcers: 0xe26816,
-      scavengers: 0xdb57c3
+      scavengers: 0xdb57c3,
+      pirate_stations : 0xFF0000,
+      scavenger_stations : 0xdb57c3,
+      ubadian_stations : 0xFFFF00
     },
     user: {
       ship: {
@@ -61,10 +64,14 @@ function MiniMapPane(game, settings) {
     scavengers : [],
     enforcers : [],
     users : [],
-    others : []
+    others : [],
+    pirate_stations : [],
+    scavenger_stations : [],
+    ubadian_stations : []
   }
 
   this.ships = {};
+  this.stations = {};
   this.player;
   this.target;
 
@@ -84,8 +91,10 @@ function MiniMapPane(game, settings) {
 MiniMapPane.prototype = Object.create(Graphics.prototype);
 MiniMapPane.prototype.constructor = MiniMapPane;
 
-MiniMapPane.prototype._shipsRefresh = function(ships) {
+MiniMapPane.prototype._shipsRefresh = function(ships, stations) {
+  // console.log('stations is ', stations, 'ships is ', ships)
     this.ships = ships;
+    this.stations = stations;
 };
 
 MiniMapPane.prototype._player = function(ship) {
@@ -97,14 +106,19 @@ MiniMapPane.prototype._target = function(uuid) {
 };
 
 MiniMapPane.prototype._sync = function(data) {
+  // return
   var game = this.game,
       ships = data.ships,
-      length = ships.length,
+      stations = data.stations,
+      shipsLength = ships.length,
+      stationsLength = stations.length,
       pirate = /^(pirate)/,
       ubaidian = /^(ubaidian)/,
+      ubadian = /^(ubadian)/,
+      general = /^(general)/,
       scav = /^(scavenger)/,
       enforcer = /^(enforcer)/,
-      sync, ship, type, targetted;
+      sync, stationSync, station, ship, type, targetted;
 
   this.catalogue = {
     squadron : [],
@@ -113,10 +127,13 @@ MiniMapPane.prototype._sync = function(data) {
     scavengers : [],
     users : [],
     enforcers: [],
-    others : []
+    others : [],
+    pirate_stations : [],
+    scavenger_stations : [],
+    ubadian_stations : []
   }
 
-  for(var s=0; s<length; s++) {
+  for(var s=0; s<shipsLength; s++) {
     sync = ships[s];
     ship = this.ships[sync.uuid];
     type = null,
@@ -146,10 +163,6 @@ MiniMapPane.prototype._sync = function(data) {
         targetted = true;
       }
 
-      if(ship.data.uuid === this.target){
-        targetted = true;
-      }
-
       if(type && !targetted){
         this.catalogue[type].push({
           ship: {
@@ -171,7 +184,35 @@ MiniMapPane.prototype._sync = function(data) {
         })
       }
     }
-  }
+  };
+  // if(this.stations.length){
+    for(var st=0; st<stationsLength; st++) {
+      stationSync = stations[st];
+      station = this.stations[stationSync.uuid];
+      type = null;
+      // console.log(station)
+      // debugger
+      if(station && ubadian.test(station.data.chassis)){
+        type = 'ubadian_stations';
+      } else if(station && general.test(station.data.chassis)){
+        type = 'pirate_stations';
+      } else if(station && scav.test(station.data.chassis)){
+        type = 'scavenger_stations';
+      };
+      if(type){
+        // console.log(type, station)
+        // debugger
+        this.catalogue[type].push({
+          station: {
+            x: station.position.x,
+            y: station.position.y,
+            size : station.data.size
+          },
+          color: this.mapSettings.colors[type]
+        })
+      }
+    }
+  // }
   this._removeShips();
   this._drawShips(); 
 };
@@ -185,6 +226,9 @@ MiniMapPane.prototype._drawShips = function() {
   draw(this.catalogue.squadron);
   draw(this.catalogue.enforcers);
   draw(this.catalogue.scavengers);
+  draw(this.catalogue.pirate_stations);
+  draw(this.catalogue.scavenger_stations);
+  draw(this.catalogue.ubadian_stations);
 
 
   function draw(group){
@@ -197,6 +241,7 @@ MiniMapPane.prototype._drawShips = function() {
 };
 
 MiniMapPane.prototype._drawShip = function(ship) {
+  console.log(ship)
   this.shipGroup.add(new Ship(this.game, ship, this.mapSettings));
 };
 

@@ -61,7 +61,7 @@ CreditsPane.prototype.constructor = CreditsPane;
 
 CreditsPane.prototype.updateCredits = function(credits) {
   // this.creditValue = this.creditValue + credits;
-  this.creditsCount.text = credits;
+  this.creditsCount.text = Math.floor(credits);
 };
 
 module.exports = CreditsPane;

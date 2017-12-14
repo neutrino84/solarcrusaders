@@ -119,7 +119,8 @@ SectorState.prototype.create = function() {
       mouse.capture = true;
       mouse.mouseWheelCallback = function(event) {
         var delta = event.deltaY / sensitivity,
-            scale = engine.Math.clamp(this.world.scale.x - delta, 0.5, 1.0);
+            scale = engine.Math.clamp(this.world.scale.x - delta, 0.1, 1.0);
+            // scale = engine.Math.clamp(this.world.scale.x - delta, 0.5, 1.0);
         if(self.game.paused) { return; }
         if(self.zoom && self.zoom.isRunning) {
           self.zoom.stop();
@@ -139,7 +140,7 @@ SectorState.prototype.create = function() {
 
 
     // this.game.world.scale.set(.6, .6);
-  if(this.game.auth.user.ship){
+  if(this.game.auth.user && this.game.auth.user.ship){
   this.ui.create();
     this.createManagers(); 
   } else {
