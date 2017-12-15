@@ -317,10 +317,10 @@ Object.defineProperty(Sound.prototype, 'mute', {
     if(value) {
       this._muted = true;
       this._muteVolume = this._tempVolume;
-      this.gainNode.gain.value = 0;
+      this.gainNode.gain.setValueAtTime(0, 0)
     } else {
       this._muted = false;
-      this.gainNode.gain.value = this._muteVolume;
+      this.gainNode.gain.setValueAtTime(this._muteVolume, 0)
     }
     this.emit('mute', this);
   }
@@ -338,7 +338,7 @@ Object.defineProperty(Sound.prototype, 'volume', {
     }
     this._tempVolume = value;
     this._volume = value;
-    this.gainNode.gain.value = value;
+    this.gainNode.gain.setValueAtTime(value, 0);
   }
 });
 

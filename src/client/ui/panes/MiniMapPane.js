@@ -92,7 +92,6 @@ MiniMapPane.prototype = Object.create(Graphics.prototype);
 MiniMapPane.prototype.constructor = MiniMapPane;
 
 MiniMapPane.prototype._shipsRefresh = function(ships, stations) {
-  // console.log('stations is ', stations, 'ships is ', ships)
     this.ships = ships;
     this.stations = stations;
 };
@@ -190,7 +189,6 @@ MiniMapPane.prototype._sync = function(data) {
       stationSync = stations[st];
       station = this.stations[stationSync.uuid];
       type = null;
-      // console.log(station)
       // debugger
       if(station && ubadian.test(station.data.chassis)){
         type = 'ubadian_stations';
@@ -200,8 +198,6 @@ MiniMapPane.prototype._sync = function(data) {
         type = 'scavenger_stations';
       };
       if(type){
-        // console.log(type, station)
-        // debugger
         this.catalogue[type].push({
           station: {
             x: station.position.x,
@@ -241,7 +237,6 @@ MiniMapPane.prototype._drawShips = function() {
 };
 
 MiniMapPane.prototype._drawShip = function(ship) {
-  console.log(ship)
   this.shipGroup.add(new Ship(this.game, ship, this.mapSettings));
 };
 

@@ -61,7 +61,7 @@ UI.prototype.create = function() {
   this.root.invalidate();
 
   // add root to stage
-  this.game.world.ui.addChild(this.root);
+  this.game.stage.addChild(this.root);
 
   // console.log(this.game.world)
   // this.game.world.foreground.alpha = 0;

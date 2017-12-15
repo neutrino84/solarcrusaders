@@ -6,13 +6,19 @@ function Ship(game, shipSettings, settings) {
   this.settings = settings;
 
   if(shipSettings.station){
+    this.station = true;
     this.ship = shipSettings.station; 
     this.color = shipSettings.color
     this.thickness = this.ship.size * (2/90);
 
     this.lineStyle(1, this.color, 1.0);
-    this.drawRect(0, 0, this.thickness*2, this.thickness*2); 
+    // this.drawRect(0, 0, this.thickness*2, this.thickness*2); 
     this.drawRect(0, 0, this.thickness, this.thickness); 
+
+    this.outerRect = new engine.Graphics();
+    this.outerRect.lineStyle(1, this.color, 1.0);
+    this.outerRect.drawRect(0, 0, this.thickness*2, this.thickness*2); 
+    // this.position.set
   } else {
     this.ship = shipSettings.ship;
     this.color = shipSettings.color
@@ -44,9 +50,18 @@ Ship.prototype.update = function(){
   var positionWithZoom = [ship.x / zoom, ship.y / zoom];
   var userWithZoom = [user.x / zoom, user.y / zoom];
 
-  this.position.x = (this.settings.size / 2 + positionWithZoom[0] - userWithZoom[0]) ;
 
-  this.position.y = (this.settings.size / 2 + positionWithZoom[1] - userWithZoom[1]) ;
+  if(this.station){
+    this.position.x = (this.settings.size / 2 + positionWithZoom[0] - userWithZoom[0])-this.thickness/2 ;
+    this.position.y = (this.settings.size / 2 + positionWithZoom[1] - userWithZoom[1])-this.thickness/2 ; 
+    this.outerRect.position.x = this.position.x
+    this.outerRect.position.y = this.position.y
+    // this.addChildAt(this.outerRect, 0);
+  } else {
+    this.position.x = (this.settings.size / 2 + positionWithZoom[0] - userWithZoom[0])
+    this.position.y = (this.settings.size / 2 + positionWithZoom[1] - userWithZoom[1]) 
+  }
+
 
   if(this.ship.targetted){
     
