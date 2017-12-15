@@ -37,7 +37,7 @@ SectorState.prototype.init = function(args) {
 
   this.playerManager = new PlayerManager(this.game);
 
-  this.scrollLock = false;
+  this.scrollLock = true;
 //^ does this prevent scrolling
 
   this.game.stage.disableVisibilityChange = true;
@@ -124,7 +124,7 @@ SectorState.prototype.create = function() {
       mouse.capture = true;
       mouse.mouseWheelCallback = function(event) {
         var delta = event.deltaY / sensitivity,
-            scale = engine.Math.clamp(this.world.scale.x - delta, 0.1, 1.0);
+            scale = engine.Math.clamp(this.world.scale.x - delta, 0.5, 1.0);
             // scale = engine.Math.clamp(this.world.scale.x - delta, 0.5, 1.0);
         if(self.game.paused) { return; }
         if(self.zoom && self.zoom.isRunning) {
