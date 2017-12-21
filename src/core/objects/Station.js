@@ -50,8 +50,8 @@ Station.prototype.hit = function(attacker, target, slot) {
       ratio = distance / (this.size * hardpoint.data.aoe),
       damage, health, critical;
 
-  if(ratio < 1.0) {
-
+  // if(ratio < 0.1 && attacker.ai && attacker.ai.type === 'pirate') {
+    if(ratio < 0.1) {
     // calc damage
     critical = game.rnd.rnd() <= attacker.critical;
     damage = global.Math.max(0, hardpoint.data.damage * (1-ratio) * (1-this.armor));
@@ -73,7 +73,7 @@ Station.prototype.hit = function(attacker, target, slot) {
       });
 
       // update attacker
-      attacker.credits = attacker.credits + (race === 'general' ? damage : 0);
+      // attacker.credits = attacker.credits + (race === 'general' ? damage : 0);
       updates['ship'].push({
         uuid: attacker.uuid,
         credits: attacker.credits.toFixed(0),
@@ -99,7 +99,8 @@ Station.prototype.hit = function(attacker, target, slot) {
 
       // disable station
       if(!this.disabled) {
-        // this.disable();
+        console.log('disabling station')
+        this.disable();
       }
     }
 
@@ -121,7 +122,7 @@ Station.prototype.disable = function() {
   this.disabled = true;
 
   // broadcast
-  this.sockets.emit('station/disabled', {
+  this.game.emit('station/disabled', {
     uuid: this.uuid
   });
 };
@@ -134,7 +135,7 @@ Station.prototype.enable = function() {
   this.data.health = this.config.stats.health;
 
   // broadcast
-  this.sockets.emit('station/enabled', {
+  this.game.emit('station/enabled', {
     uuid: this.uuid
   });
 };

@@ -103,16 +103,15 @@ User.prototype.reconnected = function(socket) {
 
 User.prototype.disconnected = function() {
   console.log('USER disconnected, users ship was nvm')
-  this.timeout = this.game.clock.events.add(5000, this.destroy, this);
+  this.timeout = this.game.clock.events.add(9000, this.destroy, this);
 };
 
 User.prototype.destroy = function() {
   // remove ships
-  this.game.emit('ship/remove/clear_squadron', this.ship);
-  // this.squadClear = this.game.clock.events.add(1000, function(){
-    
-  // }, this);
-  this.game.emit('ship/remove', this.ship);
+  if(this.ship){
+    this.game.emit('ship/remove/clear_squadron', this.ship);
+    this.game.emit('ship/remove', this.ship);
+  }
   // remove from manager
   this.game.emit('auth/remove', this);
 

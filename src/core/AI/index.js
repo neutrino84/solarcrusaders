@@ -30,7 +30,7 @@ AI.prototype.create = function(type, ship, faction) {
       ai = new Basic(ship);
       break
     case 'pirate':
-      ai = new Pirate(ship);
+      ai = new Pirate(ship, faction);
       break;
     case 'scavenger':
       ai = new Scavenger(ship, faction);

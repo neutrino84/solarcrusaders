@@ -6,6 +6,7 @@ var uuid = require('uuid'),
 function StationManager(game) {
   this.game = game;
   this.model = game.model;
+  this.sockets = game.sockets;
 
   // global stations
   this.game.stations = {};
@@ -19,6 +20,7 @@ StationManager.prototype.init = function() {
   this.game.on('station/add', this.add, this);
   this.game.on('station/create', this.create, this);
   this.game.on('ship/attacked', this.attacked, this);
+  this.game.on('station/disabled', this.disabled, this);
 
   this.game.clock.events.loop(1000, this.update, this);
 };
@@ -122,7 +124,7 @@ StationManager.prototype.update = function() {
   }
 };
 
-StationManager.prototype.getPosition = function(chassis) {
+StationManager.prototype.getStation = function(chassis) {
   var stations = this.game.stations, station, position;
   for(var s in stations){
     station = stations[s];
@@ -142,6 +144,10 @@ StationManager.prototype.attacked = function(attacker, target, slot) {
       station = stations[s];
       station.hit(attacker, target, slot);
     }
+};
+
+StationManager.prototype.disabled = function(data) {
+  this.sockets.send('station/disabled', data);
 };
 
 module.exports = StationManager;

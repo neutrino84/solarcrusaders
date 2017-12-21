@@ -257,7 +257,8 @@ SquadManager.prototype._payment = function() {
       }
    this.socket.emit('player/credits', {player_uuid: player.uuid, credits : credits});
    this.player.events.add(1000, function(){
-   this.game.emit('player/credits')
+    this.player.hud.showCreditLoss(credits)
+    this.game.emit('player/credits')
     }, this);  
 };
 

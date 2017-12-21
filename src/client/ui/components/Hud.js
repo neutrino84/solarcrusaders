@@ -139,9 +139,8 @@ Hud.prototype.show = function() {
 };
 
 Hud.prototype.showCreditLoss = function(credits) {
-
   this.visible = true;
-  this.losses['a'] = new Label(this.game, {
+  this.losses_a = new Label(this.game, {
         constraint: Layout.USE_PS_SIZE,
         align: 'center',
         text: {
@@ -151,31 +150,35 @@ Hud.prototype.showCreditLoss = function(credits) {
       });
 
 
-  this.losses['a'].tint = 0xff0000;
-  this.losses['a'].text = credits;
-  this.losses['a'].visible = true;
+  this.losses_a.tint = 0xff0000;
+  this.losses_a.alpha = 1;
+  this.losses_a.text = credits;
+  this.losses_a.visible = true;
 
-  this.scoreContainer.addPanel(this.losses['a'])
+  console.log('got to credit loss, credits is ', credits, 'loss label is ', this.losses_a)
 
-  this.lossTimers['a'] && this.ship.events.remove(this.lossTimers['a'])
-  this.lossTimers['a'] = this.ship.events.loop(100, lossTimer_a = function(){
-    if(!this.losses['a']){return};
-    this.losses['a'].y -= 1;
-    this.losses['a'].alpha -= .033;
-    if(this.losses['a'] <= -28){
-        this.losses['a'].y = 0;
-        this.losses['a'].alpha = 0;
-        this.losses['a'] = false;
+
+  this.scoreContainer.addPanel(this.losses_a)
+
+  this.lossTimers && this.ship.events.remove(this.lossTimers)
+  this.lossTimers = this.ship.events.loop(100, lossTimer_a = function(){
+    if(!this.losses_a){return};
+    this.losses_a.y -= 1;
+    // this.losses_a.alpha -= .033;
+    if(this.losses_a.y <= -28){
+        this.losses_a.y = 0;
+        this.losses_a.alpha = 0;
+        this.losses_a = false;
         this.healthBar.visible = true;
         this.energyBar.visible = true;
         this.visible = false;
-        this.losses['a'].destroy();
+        // this.losses_a.destroy();
         this.ship.events.remove(this.lossTimers['a'])
     };
   }, this);
 
         this.ship.events.add(333, function(){
-            this.losses['b'] = new Label(this.game, {
+            this.losses_b = new Label(this.game, {
                   constraint: Layout.USE_PS_SIZE,
                   align: 'center',
                   text: {
@@ -183,30 +186,30 @@ Hud.prototype.showCreditLoss = function(credits) {
                   },
                   bg: false
                 });
-            this.losses['b'].tint = 0xff0000;
-            this.losses['b'].text = credits;
-            this.losses['b'].visible = true;
-            this.losses['b'].alpha = 0.33;
-            this.scoreContainer.addPanel(this.losses['b'])
+            this.losses_b.tint = 0xff0000;
+            this.losses_b.text = credits;
+            this.losses_b.visible = true;
+            this.losses_b.alpha = 0.33;
+            this.scoreContainer.addPanel(this.losses_b)
 
-            this.lossTimers['b'] && this.ship.events.remove(this.lossTimers['b'])
-            this.lossTimers['b'] = this.ship.events.loop(100, lossTimer_b = function(){
-              this.losses['b'].y -= 1;
-              this.losses['b'].alpha -= .033;
-              if(this.losses['b'].y <= -28){
-                  this.losses['b'].alpha = 0;
-                  this.losses['b'].y = 0;
-                  this.losses['b'].visible = false;
+            this.lossTimers_b && this.ship.events.remove(this.lossTimers_b)
+            this.lossTimers_b = this.ship.events.loop(100, lossTimer_b = function(){
+              this.losses_b.y -= 1;
+              this.losses_b.alpha -= .033;
+              if(this.losses_b.y <= -28){
+                  this.losses_b.alpha = 0;
+                  this.losses_b.y = 0;
+                  this.losses_b.visible = false;
                   this.healthBar.visible = true;
                   this.energyBar.visible = true;
                   this.visible = false;
-                  this.losses['b'].destroy();
-                  this.ship.events.remove(this.lossTimers['b'])
+                  // this.losses_b.destroy();
+                  this.ship.events.remove(this.lossTimers_b)
               };
             }, this);
 
             this.ship.events.add(333, function(){
-                    this.losses['c'] = new Label(this.game, {
+                    this.losses_c = new Label(this.game, {
                           constraint: Layout.USE_PS_SIZE,
                           align: 'center',
                           text: {
@@ -214,25 +217,25 @@ Hud.prototype.showCreditLoss = function(credits) {
                           },
                           bg: false
                         });
-                    this.losses['c'].tint = 0xff0000;
-                    this.losses['c'].text = credits;
-                    this.losses['c'].visible = true;
-                    this.losses['c'].alpha = 0.15;
-                    this.scoreContainer.addPanel(this.losses['c'])
+                    this.losses_c.tint = 0xff0000;
+                    this.losses_c.text = credits;
+                    this.losses_c.visible = true;
+                    this.losses_c.alpha = 0.15;
+                    this.scoreContainer.addPanel(this.losses_c)
 
-                    this.lossTimers['c'] && this.ship.events.remove(this.lossTimers['c'])
-                    this.lossTimers['c'] = this.ship.events.loop(100, lossTimer_c = function(){
-                      this.losses['c'].y -= 1;
-                      this.losses['c'].alpha -= .033;
-                      if(this.losses['c'].y <= -28){
-                          this.losses['c'].alpha = 0;
-                          this.losses['c'].y = 0
-                          this.losses['c'].visible = false;
+                    this.lossTimers_c && this.ship.events.remove(this.lossTimers_c)
+                    this.lossTimers_c = this.ship.events.loop(100, lossTimer_c = function(){
+                      this.losses_c.y -= 1;
+                      this.losses_c.alpha -= .033;
+                      if(this.losses_c.y <= -28){
+                          this.losses_c.alpha = 0;
+                          this.losses_c.y = 0
+                          this.losses_c.visible = false;
                           this.healthBar.visible = true;
                           this.energyBar.visible = true;
                           this.visible = false;
-                          this.losses['c'].destroy();
-                          this.ship.events.remove(this.lossTimers['c'])
+                          // this.losses_c.destroy();
+                          this.ship.events.remove(this.lossTimers_c)
                       };
                     }, this);
             },this);
@@ -373,7 +376,13 @@ Hud.prototype.update = function() {
 
     this.scale.set(inverse, inverse);
     this.rotation = -ship.rotation;
-    this.container.y = -(ship.data.size/inverse+8);
+    if(this.ship.rot){
+      this.container.y = -(400/inverse+8);
+    } else if(ship.data.size > 200){
+      this.container.y = -(200/inverse+8);
+    } else {
+      this.container.y = -(ship.data.size/inverse+8);
+    }
   }
 };
 

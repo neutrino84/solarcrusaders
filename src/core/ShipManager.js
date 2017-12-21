@@ -11,6 +11,12 @@ function ShipManager(game, sectorManager) {
   this.model = game.model;
   this.sockets = game.sockets;
 
+  this.pirateAttackLog = {
+    'temeni' : [],
+    'katos_boys' : [],
+    'sappers' : []
+  }
+
   this.sectorManager = sectorManager;
 
   this.ships = {};
@@ -29,6 +35,7 @@ ShipManager.prototype.init = function(eventManager) {
   this.game.on('ship/remove/clear_squadron', this.clearSquadron, this);
   this.game.on('ship/create', this.create, this);
   this.game.on('ship/disabled', this.disabled, this);
+  this.game.on('pirate/attackStation', this.attackStation, this);
 
   // networking
   this.sockets.on('ship/plot', this.plot, this);
@@ -78,6 +85,63 @@ ShipManager.prototype.clearSquadron = function(ship) {
   for(var i in s.squadron){
     this.game.emit('ship/remove', s.squadron[i]);
   }
+};
+
+ShipManager.prototype.attackStation = function(ai, faction) {
+      var ships = this.ships;
+      switch(ai) {
+        case 'basic':
+          break
+        case 'pirate':
+          for(var s in ships){
+            // console.log(ships[s].ai.type)
+            if(ships[s].ai && ships[s].ai.type === 'pirate' && ships[s].ai.faction === faction){
+              var ship = ships[s];
+              switch(ship.faction) {
+                case 'temeni':
+                  if(this.pirateAttackLog['temeni'].indexOf(ship.uuid) == -1){
+                    this.pirateAttackLog['temeni'].push(ship.uuid);
+                    // ship.ai.attackingStation = true;
+                    ship.ai.engageStation(this.sectorManager.stationManager.getStation('ubadian-station-x01'));
+                    console.log('temeni attack')
+                    return
+                  }
+                break
+                case 'katos_boys':
+                  if(this.pirateAttackLog['katos_boys'].indexOf(ship.uuid) == -1){
+                    this.pirateAttackLog['katos_boys'].push(ship.uuid);
+                    // ship.ai.attackingStation = true;
+                    ship.ai.engageStation(this.sectorManager.stationManager.getStation('ubadian-station-x01'));
+                    console.log('kato attack')
+                    return
+                  }
+                break
+                case 'sappers':
+                break
+                default:
+                break
+              }
+            }
+          }
+          // debugger
+          break;
+        case 'scavenger':
+          
+          break;
+        case 'squadron':
+          
+          break;
+        case 'enforcer':
+          
+          break;
+        default:
+        
+          break;
+      }
+  // if(!s.squadron){return}
+  // for(var i in s.squadron){
+  //   this.game.emit('ship/remove', s.squadron[i]);
+  // }
 };
 
 ShipManager.prototype.create = function(data, user) {
@@ -295,7 +359,7 @@ ShipManager.prototype.sync = function() {
   for(var s in ships) {
     ship = ships[s];
     if(ship.docked){
-      station = this.sectorManager.stationManager.getPosition('ubadian-station-x01');
+      station = this.sectorManager.stationManager.getStation('ubadian-station-x01');
       movement = ship.movement;
       movement.update();
       position = station.movement.position;

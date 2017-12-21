@@ -1,6 +1,7 @@
 
 var engine = require('engine'),
-    Hud = require('../../../ui/components/Hud');
+    Hud = require('../../../ui/components/Hud'),
+    Explosion = require('../Ship/Explosion');
 
 function Station(manager, data) {
   engine.Sprite.call(this, manager.game, data.chassis);
@@ -12,6 +13,9 @@ function Station(manager, data) {
 
   // config data
   this.config = data.config.station;
+
+  // timer events
+  this.events = new engine.Timer(this.game, false);
 
   // core ship classes
   this.rotation = this.rot = data.rotation;
@@ -26,7 +30,9 @@ function Station(manager, data) {
     direction: this.direction,
     position: this.position
   };
-
+  
+  this.explosion = new Explosion(this);
+  // console.log('explosion is ', this.explosion)
   // timer events
   this.events = new engine.Timer(this.game, false);
 
@@ -41,6 +47,9 @@ Station.prototype.boot = function() {
   this.cap.pivot.set(this.cap.width/2, this.cap.height/2);
   this.cap.position.set(this.width/2, this.height/2);
   this.cap.rotation = global.Math.random() * global.Math.PI;
+
+
+  this.explosion.create();
 
   // add cap
   this.addChild(this.cap);
@@ -93,6 +102,17 @@ Station.prototype.plot = function(data) {
   this.rot = data.rot;
   this.spin = data.spn;
   this.destination.copyFrom(data.pos);
+};
+
+Station.prototype.disable = function() {
+  this.disabled = true;
+  this.tint = 0x333333;
+  this.cap.tint = 0x333333;
+  this.hud.disable();
+};
+
+Station.prototype.explode = function() {
+  this.explosion.start();
 };
 
 Station.prototype.destroy = function(options) {

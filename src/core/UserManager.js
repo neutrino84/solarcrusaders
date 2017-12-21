@@ -71,8 +71,7 @@ UserManager.prototype.ship = function(socket, args) {
       session = socket.request.session,
       user = game.users[session.user.uuid],
       data = args[1];
-      // console.log('got here', args)
-      var station = stationManager.getPosition('ubadian-station-x01');
+      var station = stationManager.getStation('ubadian-station-x01');
       var startingPosition = station.movement.position;
 
   user && game.emit('ship/create', {

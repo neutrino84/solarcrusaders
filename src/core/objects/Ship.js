@@ -16,7 +16,6 @@ function Ship(manager, data, user) {
   this.model = manager.model;
   this.user = user;
   
-  
   this.data = new this.model.Ship(data);
   // if(user){
   // console.log(this, data)
@@ -255,7 +254,7 @@ Ship.prototype.hit = function(attacker, target, slot, target_uuid) {
     }
 
     //prevent friendly fire dmg to squadron
-    if(this.master === attacker.uuid || attacker.hardpoints[0].subtype === 'repair' && data.health >= (this.config.stats.health)){return}  
+    // if(this.master === attacker.uuid || attacker.hardpoints[0].subtype === 'repair' && data.health >= (this.config.stats.health)){return}  
 
 
     // calc damage
@@ -320,7 +319,7 @@ Ship.prototype.hit = function(attacker, target, slot, target_uuid) {
 
         if(attacker.master && this.manager){
           masterShip = this.manager.ships[attacker.master];
-          masterShip.credits = Math.floor(masterShip.credits + this.credits);
+          masterShip.credits = Math.floor(masterShip.credits + this.credits*0.75);
           updates.push({
             uuid: masterShip.uuid,
             credits: masterShip.credits,
@@ -329,7 +328,7 @@ Ship.prototype.hit = function(attacker, target, slot, target_uuid) {
             gains : this.credits
           });
         } else {
-          attacker.credits = Math.floor(attacker.credits + this.data.credits)
+          attacker.credits = Math.floor(attacker.credits + this.data.credits*0.75)
           updates.push({
             uuid: attacker.uuid,
             credits: attacker.credits,
@@ -339,7 +338,8 @@ Ship.prototype.hit = function(attacker, target, slot, target_uuid) {
           });
         }
         if(this.user){
-          var credits =  Math.floor(this.credits/2); 
+          var credits =  Math.floor(this.credits/2);
+          this.credits = credits; 
             updates.push({
             uuid: this.uuid,
             credits: credits
@@ -397,7 +397,7 @@ Ship.prototype.disable = function() {
   this.respawn = this.game.clock.events.add(this.ai ? this.ai.settings.respawn : Ship.RESPAWN_TIME, this.enable, this)
 
   // blast close
-  // this.blast();
+  this.blast();
 
   // broadcast
   this.game.emit('ship/disabled', {

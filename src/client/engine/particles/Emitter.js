@@ -172,8 +172,8 @@ Emitter.prototype.flow = function(lifespan, frequency, quantity, total, immediat
 
 Emitter.prototype.start = function(explode, lifespan, frequency, quantity) {
   if(explode === undefined) { explode = true; }
-  if(lifespan === undefined) { lifespan = this.lifespan; }
-  if(frequency === undefined || frequency === null) { frequency = 250; }
+  if(lifespan === undefined) {lifespan = this.lifespan;}
+  if(frequency === undefined || frequency === null) {frequency = 250;}
   if(quantity === undefined) { quantity = 0; }
 
   if(quantity > this.maxParticles) {

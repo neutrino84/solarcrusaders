@@ -42,7 +42,7 @@ function PlayerManager(game) {
   this.upgradeAvailable = false;
 
   this.game.on('ship/player', this._player, this);
-  this.game.on('killpoints', this.playerKillpoints, this);
+  this.game.on('player/credits', this.playerCredits, this);
 
   //^ needs to be a private message listener from player (this came from front-end ship index.js)
   // ship.user.socket.emit? 
@@ -53,6 +53,10 @@ PlayerManager.prototype.constructor = PlayerManager;
 PlayerManager.prototype.create = function(sectorState) {
   this.manager = sectorState.shipManager;
   this.ships = this.manager.ships;
+};
+
+PlayerManager.prototype.playerCredits = function() {
+  console.log('player credits are sittin at: ', this.player.data.credits)
 };
 
 PlayerManager.prototype.playerKillpoints = function(socket, killpoints) {

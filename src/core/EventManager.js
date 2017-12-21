@@ -13,16 +13,46 @@ function EventManager(game) {
   this.sockets = game.sockets;
 
   this.level = 1;
-  this.ships = {
-    basic: 9,
-    pirate: 20,
-    enforcer: 2
-  };
+
+  this.attackCount = 0;
+
+  this.pirateAttackSwitch = false;
+
   // this.ships = {
-  //   basic: 0,
-  //   pirate: 0,
-  //   enforcer: 0
+  //   basic: 9,
+  //   pirate: 20,
+  //   enforcer: 2
   // };
+  this.ships = {
+    basic: 0,
+    enforcer: 0,
+    pirate: {
+      factions : {
+        'katos_boys' : {
+          num : 0,
+          starting_position : {
+            x: 6966,
+            y: 4249
+          }
+        },
+        'temeni' : {
+          num : 0,
+          starting_position : {
+            x: -3743,
+            y: -941
+          }
+        },
+        'sappers' : {
+          num : 0,
+          starting_position : {
+            x: 1501,
+            y: 1521
+          }
+        }
+      }
+      
+    }
+  };
 
   this.chassis = {
     basic : ['ubaidian-x01a','ubaidian-x01b','ubaidian-x01c','ubaidian-x01d','ubaidian-x01e','ubaidian-x01f'],
@@ -53,9 +83,8 @@ EventManager.prototype.init = function() {
   // create default station
   this.game.emit('station/create', {
     chassis: 'ubadian-station-x01',
-    x: 2048,
-    y: 2048,
-    radius: 512
+    x: 1501,
+    y: 1521
   });
 
   this.game.emit('station/create', {
@@ -87,28 +116,42 @@ EventManager.prototype.init = function() {
 
   //generate ships
   for(var a in this.ships){
-    this.shipGen(this.ships[a], a.toString())
+    if(this.ships[a].factions){
+      for(var f in this.ships[a].factions){
+        this.shipGen(this.ships[a].factions[f].num, a.toString(), this.ships[a].factions[f].starting_position, f)
+      }
+    }else{
+      this.shipGen(this.ships[a], a.toString())
+    }
   };
 
   this.scavGen(0);
   
 };
 
-EventManager.prototype.shipGen = function(num, ai){
+EventManager.prototype.shipGen = function(num, ai, startingPos, faction){
   var randomPostion;
-
-  for(var i = 0; i<num; i++){
-
   randomPostion = this.generateRandomPosition(6000); 
-
-    this.game.emit('ship/create', {
-      chassis: this.game.rnd.pick(this.chassis[ai]),
-      x: randomPostion.x,
-      y: randomPostion.y,
-      ai: ai,
-      credits: 50
-    });
-  };
+  if(ai === 'pirate'){
+    for(var i = 0; i < num; i++){
+      this.game.emit('ship/create', {
+        chassis: this.game.rnd.pick(this.chassis['pirate']),
+        x: startingPos.x,
+        y: startingPos.y,
+        ai: 'pirate',
+        faction: faction
+      });
+    }
+  } else {
+    for(var i = 0; i<num; i++){
+      this.game.emit('ship/create', {
+        chassis: this.game.rnd.pick(this.chassis[ai]),
+        x: randomPostion.x,
+        y: randomPostion.y,
+        ai: ai
+      })
+    }
+  } 
 };
 
 EventManager.prototype.squadGen = function(master){
@@ -127,7 +170,8 @@ EventManager.prototype.squadGen = function(master){
   } else {
     chassis3 = this.game.rnd.pick(this.chassis['squadron'])
   }
-  
+
+// return
   // this.game.emit('ship/create', {
   //   chassis: 'squad-attack',
   //   x: randomPostion.x,
@@ -308,6 +352,19 @@ EventManager.prototype.disabled = function(object) {
 };
 
 EventManager.prototype.update = function() {
+  this.attackCount ++
+
+  if(this.attackCount % 14 === 0){
+  // if(this.attackCount == 20){  
+    if(this.pirateAttackSwitch){
+      this.hostilePirateFaction = 'temeni'
+      this.pirateAttackSwitch = false;
+    } else {
+      this.hostilePirateFaction = 'katos_boys'
+      this.pirateAttackSwitch = true;
+    }
+    this.game.emit('pirate/attackStation', 'pirate', this.hostilePirateFaction)
+  }
   // if(this.ships.pirate < 2 && this.game.rnd.frac() > 0.75) {
   //   this.ships.pirate++;
   //   this.game.emit('ship/create', {

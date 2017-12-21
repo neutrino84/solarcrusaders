@@ -5,8 +5,8 @@
     "friendly": ["basic","user","squadron","enforcer"],
     "position": {
       "radius": 5096,
-      "x": 2048,
-      "y": 2048
+      "x": 1521,
+      "y": 1501
     },
     "escape": {
       "health": 0.25
@@ -18,19 +18,37 @@
   },
   "pirate": {
   	"respawn": 55000,
-    "disengage": 9216,
+    "disengage": 20000,
     "friendly": ["pirate"],
-    "position": {
-      "radius": 5012,
+    "position_sappers": {
+      "radius": 700,
       "x": 2048,
       "y": 2048
     },
+    "sensor_sappers": {
+      "aim": 1,
+      "range": 3596
+    },
+    "position_katos_boys": {
+      "radius": 700,
+      "x": 6966,
+      "y": 4249
+    },
+    "sensor_katos_boys": {
+      "aim": 1,
+      "range": 596
+    },
+    "position_temeni": {
+      "radius": 700,
+      "x": -3743,
+      "y": -941
+    },
+    "sensor_temeni": {
+      "aim": 1,
+      "range": 596
+    },
     "escape": {
       "health": 0.2
-    },
-    "sensor": {
-      "aim": 1,
-      "range": 4096
     }
   },
   "scavenger": {

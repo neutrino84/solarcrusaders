@@ -43,14 +43,20 @@ ShockwaveEmitter.prototype.rocket = function() {
 };
 
 ShockwaveEmitter.prototype.explosion = function(object) {
-  var movement = object.movement, speed;
-      if(movement){
-        speed = movement._speed * 2,
-        vector = movement._vector;
-      } else {
-        speed = object.speed,
-        vector = object.vector;
-      };
+  var movement = object.movement, 
+      speed = movement._speed * 2 || object.speed, 
+      vector = movement._vector || object.vector;
+      // if(movement){
+        // speed = movement._speed * 2;
+        // if(movement._vector){
+        //   vector = movement._vector
+        // } else {
+        //   vector = object.vector;
+        // }
+      // } else {
+      //   speed = object.speed,
+      //   vector = object.vector;
+      // };
 
   this.blendMode = engine.BlendMode.NORMAL;
 

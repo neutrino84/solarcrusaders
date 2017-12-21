@@ -44,10 +44,13 @@ UI.prototype.create = function() {
   this.header.alpha = 0;
 
   // add elements
+
   if(this.game.auth.user && !this.game.auth.user.ship){
+    console.log('about to make ship yard')
     this.shipyard = new Shipyard(this.game); 
     this.root.addPanel(this.shipyard);
   }
+  
   // this.miniMapPane = new MiniMapPane(this.game);
   // this.root.addPanel(this.miniMapPane);
   

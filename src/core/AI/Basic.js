@@ -115,6 +115,10 @@ Basic.prototype.scanner = function() {
 
 Basic.prototype.friendly = function(target) {
   var settings = this.settings;
+  if(this.attackingStation){
+    console.log('GOT HERE')
+    return true;
+  }
   if(target.ai && settings.friendly.indexOf(target.ai.type) >= 0) { return true; }
   if(target.user && settings.friendly.indexOf('user') >= 0) { return true; }
   return false;

@@ -97,9 +97,6 @@ Ship.prototype.refresh = function(data) {
     this.game.emit('player/credits')
   };
 
-  if(data.docked){
-    // this.docked = true;
-  }
   if(data.shielded ){
     this.shielded = true;
     this.shieldGenerator.startShieldField();

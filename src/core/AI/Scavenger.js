@@ -329,9 +329,9 @@ Scavenger.prototype.getHomePosition = function() {
       sensor = this.sensor,
       random_boolean = Math.random() >= 0.5;
       if(this.faction === 'vulothi'){
-        sensor.setTo(5411, -5354, 800);
+        sensor.setTo(5411, -5354, 500);
       } else if(this.faction === 'fenris'){
-        sensor.setTo(position.x, position.y, 800);
+        sensor.setTo(position.x, position.y, 500);
       }
   return this.sensor.random();
 };

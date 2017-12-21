@@ -123,7 +123,6 @@ ShipManager.prototype._sendMapData = function(){
 
 ShipManager.prototype._sendMapDataShips = function(){
   var stations = this.state.stationManager.stations;
-  console.log(stations)
     this.game.emit('shipsDump', this.ships, stations) 
 };
 

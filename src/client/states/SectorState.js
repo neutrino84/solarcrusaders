@@ -37,7 +37,7 @@ SectorState.prototype.init = function(args) {
 
   this.playerManager = new PlayerManager(this.game);
 
-  this.scrollLock = true;
+  // this.scrollLock = true;
 //^ does this prevent scrolling
 
   this.game.stage.disableVisibilityChange = true;
@@ -124,7 +124,7 @@ SectorState.prototype.create = function() {
       mouse.capture = true;
       mouse.mouseWheelCallback = function(event) {
         var delta = event.deltaY / sensitivity,
-            scale = engine.Math.clamp(this.world.scale.x - delta, 0.5, 1.0);
+            scale = engine.Math.clamp(this.world.scale.x - delta, 0.1, 1.0);
             // scale = engine.Math.clamp(this.world.scale.x - delta, 0.5, 1.0);
         if(self.game.paused) { return; }
         if(self.zoom && self.zoom.isRunning) {
@@ -135,7 +135,16 @@ SectorState.prototype.create = function() {
 
   // set world
   this.game.world.size(0, 0, 4096, 4096);
-  this.game.world.scale.set(1.5, 1.5);
+ 
+  if(this.game.auth.user && this.game.auth.user.ship){
+    this.game.world.scale.set(0.8, 0.8);
+    this.ui.create();
+    this.createManagers(); 
+  } else {
+    this.game.world.scale.set(1.5, 1.5);
+    this.game.camera.focus(2048, 2048); 
+    this.ui.create();
+  }
 
   // create sector
   this.createAsteroids();
@@ -145,13 +154,6 @@ SectorState.prototype.create = function() {
 
 
     // this.game.world.scale.set(.6, .6);
-  if(this.game.auth.user && this.game.auth.user.ship){
-  this.ui.create();
-    this.createManagers(); 
-  } else {
-    this.game.camera.focus(2048, 2048); 
-    this.ui.create();
-  }
 
   // create ui
 

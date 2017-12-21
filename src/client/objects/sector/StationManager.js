@@ -1,6 +1,11 @@
 
 var engine = require('engine'),
-    Station = require('./Station');
+    Station = require('./Station'),
+    ExplosionEmitter = require('./emitters/ExplosionEmitter'),
+    FlashEmitter = require('./emitters/FlashEmitter'),
+    GlowEmitter = require('./emitters/GlowEmitter'),
+    ShockwaveEmitter = require('./emitters/ShockwaveEmitter'),
+    FireEmitter = require('./emitters/FireEmitter');
 
 function StationManager(game, state) {
   this.game = game;
@@ -14,9 +19,30 @@ function StationManager(game, state) {
   // stations
   this.stations = {};
 
+  // create emitters
+  this.explosionEmitter = new ExplosionEmitter(this.game);
+  this.flashEmitter = new FlashEmitter(this.game);
+  this.glowEmitter = new GlowEmitter(this.game);
+  this.shockwaveEmitter = new ShockwaveEmitter(this.game);
+  this.fireEmitter = new FireEmitter(this.game);
+
+  this.game.particles.add(this.explosionEmitter);
+  this.game.particles.add(this.flashEmitter);
+  this.game.particles.add(this.glowEmitter);
+  this.game.particles.add(this.shockwaveEmitter);
+  this.game.particles.add(this.fireEmitter);
+
+
+  this.game.world.add(this.fireEmitter);
+  this.game.world.add(this.explosionEmitter);
+  this.game.world.add(this.flashEmitter);
+  this.game.world.add(this.shockwaveEmitter);
+  this.game.world.add(this.glowEmitter);
+
   // listen to messaging
   this.game.on('auth/disconnect', this.disconnect, this);
   this.game.on('sector/sync', this.sync, this);
+  this.game.on('station/disabled', this._disabled, this);
 
   // add to world
   this.game.world.add(this.stationsGroup);
@@ -51,6 +77,20 @@ StationManager.prototype.create = function(data) {
   }
 };
 
+StationManager.prototype._disabled = function(data) {
+  var station = this.stations[data.uuid],
+      socket = this.socket,
+      game = this.game, chassis;
+      console.log('front end station diabled')
+  if(station !== undefined) {
+    chassis = station.data.chassis;
+
+    station.disable();
+    station.explode();
+    // this.game.emit('station/sound/death', station);
+  }
+};
+
 StationManager.prototype.sync = function(data) {
   var game = this.game,
       netManager = this.state.netManager,
@@ -63,25 +103,6 @@ StationManager.prototype.sync = function(data) {
 
     if(station) {
       station.plot(sync);
-
-      // if(this.game.rnd.frac() > 0.9) {
-
-      //   console.log(engine.Point.distance(station, sync.pos))
-
-      //   this.trajectoryGraphics.lineStyle(0);
-      //   this.trajectoryGraphics.beginFill(0x6666FF, 1.0);
-      //   this.trajectoryGraphics.drawCircle(station.x, station.y, 12);
-      //   this.trajectoryGraphics.endFill();
-
-      //   this.trajectoryGraphics.lineStyle(1.0);
-      //   this.trajectoryGraphics.beginFill(0xFFFFFF, 1.0);
-      //   this.trajectoryGraphics.drawCircle(sync.pos.x, sync.pos.y, 6);
-      //   this.trajectoryGraphics.endFill();
-
-      // }
-
-      // station.position.set(sync.pos.x, sync.pos.y);
-      // station.rotation = sync.rot;
     } else {
       model = netManager.getStationData(sync.uuid);
       model && this.create(model);
