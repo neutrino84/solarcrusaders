@@ -35,6 +35,7 @@ Station.prototype.save = function(callback) {
 };
 
 Station.prototype.hit = function(attacker, target, slot) {
+  if(!attacker){return}
   var updates = {
         user: [],
         ship: [],
@@ -98,7 +99,6 @@ Station.prototype.hit = function(attacker, target, slot) {
 
       // disable station
       if(!this.disabled) {
-        console.log('disabling station')
         this.disable();
       }
     }
@@ -119,6 +119,12 @@ Station.prototype.hit = function(attacker, target, slot) {
 Station.prototype.disable = function() {
   // disable
   this.disabled = true;
+
+  if(this.data.chassis === 'ubadian-station-x01'){
+    this.game.clock.events.add(2000, function(){
+      this.game.emit('game/over')
+    }, this)
+  }
 
   // broadcast
   this.game.emit('station/disabled', {

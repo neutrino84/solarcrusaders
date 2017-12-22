@@ -121,17 +121,17 @@ LossState.prototype.create = function() {
     bg: false
   });
 
-  // this.lossMessage.text = 'YOU LOSE';
-  console.log(this.lossMessage)
   this.lossMessage.label.typewriter('The pirates have destroyed the Ubadian outpost and overrun the sector',10)
   this.game.clock.events.add(2000, function(){
     this.lossMessage2.text = 'INSERT COIN'
     this.lossMessage2.label.blink()
-    // this.lossMessage2.label.typewriter('INSERT COIN', 100); 
+    this.game.clock.events.add(4000, function(){
+      this.game.states.start('sector')
+    }, this)
+
+
   }, this)
 
-
-  // this.lossMessage2.text = 'INSERT COIN';
   this.lossMessage.align = 'center'
 
   this.lossScreen.addPanel(this.lossScreenLabelContainer)
@@ -139,8 +139,6 @@ LossState.prototype.create = function() {
   this.lossScreenLabelContainer.addPanel(this.lossMessage2);
 
   this.root.addPanel(this.lossScreen);
-
-    // this.lossMessage.label.typewriter('trying it out a second time',250)
 
   // invalidate
   this.root.invalidate();
@@ -160,7 +158,8 @@ LossState.prototype.resize = function(width, height) {
 };
 
 LossState.prototype.shutdown = function() {
-  //.. properly destroy
+  //.. properly destroy]
+  this.game.stage.removeChild(this.root);
 };
 
 module.exports = LossState;

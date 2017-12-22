@@ -24,6 +24,11 @@ function SectorState(game) {
   this.game.on('user/shipSelected', this.playerCreated, this);
   this.game.on('game/loss', this.switch, this)
 
+  this.game.world.static.removeAll();
+  this.game.world.background.removeAll();
+  this.game.world.foreground.removeAll();
+  this.game.world.removeAll();
+
   this.scaleX = 1.5;
   this.scaleY = 1.5;
 };
@@ -311,9 +316,7 @@ SectorState.prototype.resize = function(width, height) {
 
 // pauseUpdate = function() {};
 SectorState.prototype.switch = function() {
-  // console.log('game.socket is ', this.game.net.socket)
   this.game.clock.events.add(2000, function(){
-    // this.game.net.socket.emit('game/over')
     this.game.states.start('loss')
   }, this)
 }

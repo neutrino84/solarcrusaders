@@ -18,7 +18,7 @@ function AI(manager, events) {
   this.queenCount = 0;
 
   this.game.on('queen/death', this.queenDeath, this);
-  // this.game.on('restart/systems', this.restart, this);
+  this.game.on('game/over', this.restart, this);
 };
 
 AI.prototype.constructor = AI;
@@ -88,14 +88,14 @@ AI.prototype.queenDeath = function(){
   this.queenCount --
 }
 
-// AI.prototype.restart = function(){
-//   this.ships = {};
-//   this.consumed = {};
-//   this.queenThreshold = 150;
-//   this.next = 900;
-//   this.queenSpawnCycle = 0;
-//   this.queenCount = 0;
-// }
+AI.prototype.restart = function(){
+  this.ships = {};
+  this.consumed = {};
+  this.queenThreshold = 150;
+  this.next = 900;
+  this.queenSpawnCycle = 0;
+  this.queenCount = 0;
+}
 
 AI.prototype.destroy = function() {
   this.timer && this.game.clock.events.remove(this.timer);
