@@ -313,14 +313,13 @@ SectorState.prototype.resize = function(width, height) {
 SectorState.prototype.switch = function() {
   // console.log('game.socket is ', this.game.net.socket)
   this.game.clock.events.add(2000, function(){
-    this.game.net.socket.emit('game/over')
-    this.game.states.start('loss', 'put_args_here')
+    // this.game.net.socket.emit('game/over')
+    this.game.states.start('loss')
   }, this)
 }
 
 SectorState.prototype.shutdown = function() {
   //.. properly destroy
-  // console.log('in shutdown')
 this.shipManager.destroy();
  this.soundManager = this.stationManager = this.space = 
  this.planet = this.nebula = this.neb1 = this.neb2 = this.neb3 = this.hotkeyManager

@@ -178,6 +178,7 @@ Scavenger.prototype.scanner = function() {
 };
 
 Scavenger.prototype.update = function() {
+  if(!this.game){return}
   var ship = this.ship,
       ships = this.manager.ships,
       settings = this.settings,

@@ -36,7 +36,7 @@ ShipManager.prototype.init = function(eventManager) {
   this.game.on('ship/create', this.create, this);
   this.game.on('ship/disabled', this.disabled, this);
   this.game.on('pirate/attackStation', this.attackStation, this);
-  this.game.on('game/over', this.removeAll, this);
+  // this.game.on('game/over', this.removeAll, this);
 
   // networking
   this.sockets.on('ship/plot', this.plot, this);
@@ -413,17 +413,17 @@ ShipManager.prototype.disabled = function(data) {
   this.sockets.send('ship/disabled', data);
 };
 
-ShipManager.prototype.removeAll = function() {
-  console.log('in backend shipmanager, removeAll')
-  for(var a in this.ships){
-    this.remove(this.ships[a]);
-  }
-  this.ships = {};
-  this.pirateAttackLog = {
-    'temeni' : [],
-    'katos_boys' : [],
-    'sappers' : []
-  };
-};
+// ShipManager.prototype.removeAll = function() {
+//   console.log('in backend shipmanager, removeAll')
+//   for(var a in this.ships){
+//     this.remove(this.ships[a]);
+//   }
+//   this.ships = {};
+//   this.pirateAttackLog = {
+//     'temeni' : [],
+//     'katos_boys' : [],
+//     'sappers' : []
+//   };
+// };
 
 module.exports = ShipManager;

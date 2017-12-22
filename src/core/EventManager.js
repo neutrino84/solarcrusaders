@@ -70,7 +70,7 @@ EventManager.prototype.init = function() {
   this.game.on('station/disabled', this.disabled, this);
   this.game.on('ship/disabled', this.disabled, this);
   this.game.on('squad/create', this.squadGen, this);
-  this.game.on('game/over', this.restart, this);
+  // this.game.on('game/over', this.restart, this);
 
   // refresh data interval
  this.updateTimer = this.game.clock.events.loop(1000, this.update, this);
@@ -380,19 +380,19 @@ EventManager.prototype.update = function() {
   // }
 };
 
-EventManager.prototype.restart = function() {
+// EventManager.prototype.restart = function() {
 
-  this.updateTimer && this.game.clock.events.remove(this.updateTimer);
+//   this.updateTimer && this.game.clock.events.remove(this.updateTimer);
 
-  this.game.removeListener('user/add', this.add, this);
-  this.game.removeListener('ship/add', this.add, this);
-  this.game.removeListener('station/add', this.add, this);
-  this.game.removeListener('station/disabled', this.disabled, this);
-  this.game.removeListener('ship/disabled', this.disabled, this);
-  this.game.removeListener('squad/create', this.squadGen, this);
+//   this.game.removeListener('user/add', this.add, this);
+//   this.game.removeListener('ship/add', this.add, this);
+//   this.game.removeListener('station/add', this.add, this);
+//   this.game.removeListener('station/disabled', this.disabled, this);
+//   this.game.removeListener('ship/disabled', this.disabled, this);
+//   this.game.removeListener('squad/create', this.squadGen, this);
 
-  this.init();
-};
+//   this.init();
+// };
 
 EventManager.prototype.generateRandomPosition = function(size) {
   var rnd = this.game.rnd,

@@ -9,7 +9,7 @@ function AI(manager, events) {
   this.manager = manager;
   this.game = manager.game;
   this.events = events;
-  // this.timer = this.game.clock.events.loop(500, this.update, this);
+  this.timer = this.game.clock.events.loop(500, this.update, this);
   this.ships = {};
   this.consumed = {};
   this.queenThreshold = 150;
@@ -88,14 +88,14 @@ AI.prototype.queenDeath = function(){
   this.queenCount --
 }
 
-AI.prototype.restart = function(){
-  this.ships = {};
-  this.consumed = {};
-  this.queenThreshold = 150;
-  this.next = 900;
-  this.queenSpawnCycle = 0;
-  this.queenCount = 0;
-}
+// AI.prototype.restart = function(){
+//   this.ships = {};
+//   this.consumed = {};
+//   this.queenThreshold = 150;
+//   this.next = 900;
+//   this.queenSpawnCycle = 0;
+//   this.queenCount = 0;
+// }
 
 AI.prototype.destroy = function() {
   this.timer && this.game.clock.events.remove(this.timer);

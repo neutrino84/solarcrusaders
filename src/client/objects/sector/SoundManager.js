@@ -397,7 +397,7 @@ SoundManager.prototype.generateEnhancementSound = function(data){
       ship = this.ships[data.uuid],
       distance = 0.1,
       num = Math.floor((Math.random() * 3)+1);
-  if(!player){return}
+  if(!player || !ship){return}
   if(player.x && ship && player !== ship) { 
     distance = engine.Point.distance(ship, player);    
     volume = global.Math.max(sound.volume - (distance / 2000), 0);

@@ -26,7 +26,7 @@ UserManager.prototype.init = function() {
 
   // user messaging
   this.game.on('user/add', this.add, this);
-  this.game.on('game/over', this.clear, this);
+  // this.game.on('game/over', this.clear, this);
 };
 
 UserManager.prototype.add = function(user) {

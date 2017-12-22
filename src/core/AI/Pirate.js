@@ -72,7 +72,7 @@ Pirate.prototype.friendly = function(target) {
 };
 
 Pirate.prototype.update = function() {
-  if(!this.game){return}
+  // if(!this.game){return}
   var ship = this.ship,
       sensor = this.sensor,
       offset = this.offset,
