@@ -44,6 +44,7 @@ function Basic(ship) {
 Basic.prototype.constructor = Basic;
 
 Basic.prototype.update = function() {
+  if(!this.game){return}
   var ship = this.ship,
       sensor = this.sensor,
       offset = this.offset,

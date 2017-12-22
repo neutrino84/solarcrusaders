@@ -42,6 +42,12 @@ BottomPane.prototype._squadPane = function(){
   // this.addPanel(this.squadPane);
 };
 
+BottomPane.prototype.stopProcesses = function(){
+  console.log('BOTTOM STOP PROCESSES')
+  this.removePanel(this.creditsPane);
+  this.removePanel(this.enhancementPane);
+};
+
 BottomPane.prototype = Object.create(Pane.prototype);
 BottomPane.prototype.constructor = BottomPane;
 

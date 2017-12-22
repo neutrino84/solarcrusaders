@@ -30,9 +30,8 @@ function Station(manager, data) {
     direction: this.direction,
     position: this.position
   };
-  
-  this.explosion = new Explosion(this);
-  // console.log('explosion is ', this.explosion)
+
+  this.explosion = new Explosion(this, true);
   // timer events
   this.events = new engine.Timer(this.game, false);
 
@@ -94,6 +93,10 @@ Station.prototype.update = function() {
   // update
   this.hud.update();
 
+
+  if(this.disabled) {
+    this.explosion.update();
+  }
   engine.Sprite.prototype.update.call(this);
 };
 
@@ -109,6 +112,10 @@ Station.prototype.disable = function() {
   this.tint = 0x333333;
   this.cap.tint = 0x333333;
   this.hud.disable();
+  if(this.chassis === 'ubadian-station-x01'){
+    console.log('chassis right')
+  }
+  this.game.emit('game/loss')
 };
 
 Station.prototype.explode = function() {

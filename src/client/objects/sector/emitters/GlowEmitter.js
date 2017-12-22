@@ -16,8 +16,8 @@ GlowEmitter.prototype.constructor = GlowEmitter;
 
 GlowEmitter.prototype.mini = function(object) {
   var movement = object.movement,
-      speed = movement._speed * 2 || object.speed,
-      vector = movement._vector || object.vector;
+      speed = movement._speed * 2,
+      vector = movement._vector;
 
   this.lifespan = 1000;
 
@@ -30,9 +30,8 @@ GlowEmitter.prototype.mini = function(object) {
 
 GlowEmitter.prototype.explosion = function(object) {
   var movement = object.movement,
-      speed = movement._speed * 2 || object.speed * 10,
-      vector = movement._vector || object.vector;
-  console.log(object, speed, vector, movement)
+      speed = movement._speed * 2,
+      vector = movement._vector;
 
   this.lifespan = 2000;
   this.setVelocity(speed * 2, speed * 2);

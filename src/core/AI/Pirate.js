@@ -16,7 +16,6 @@ function Pirate(ship, faction) {
 
   // this.throttle = 500
 
-  //make diff throttles for diff factions
 };
 
 Pirate.prototype = Object.create(Basic.prototype);
@@ -73,6 +72,7 @@ Pirate.prototype.friendly = function(target) {
 };
 
 Pirate.prototype.update = function() {
+  if(!this.game){return}
   var ship = this.ship,
       sensor = this.sensor,
       offset = this.offset,
@@ -209,10 +209,8 @@ Pirate.prototype.plot = function(){
   		offset.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
   		if(this.game.rnd.frac() > 0.1){
   			ship.movement.plot({ x: this.offset.x-p1.x, y: this.offset.y-p1.y}, distance/2);
-  			// console.log(distance/5)
   		} else {
   			ship.movement.plot({ x: this.offset.x-p1.x, y: this.offset.y-p1.y}, distance);
-  			// console.log('wups', distance/2)
   		}
   		
   	} else {
@@ -233,17 +231,15 @@ Pirate.prototype.plot = function(){
 Pirate.prototype.engageStation = function(station) {
 	var ship = this.ship;
   this.attackingStation = true;
-
   this.engage(station)
-  console.log('engaging station')
   // debugger
   this.game.clock.events.add(10000, function(){
-  	this.ship.activate('booster');
-  	console.log('boosting')
+    if(this.ship){
+  	 this.ship.activate('booster'); 
+    }
   }, this);
 };
 Pirate.prototype.disengage = function() {
-  console.log('disengaging')
   if(this.attackingStation){
   	this.attackingStation = false;
   }

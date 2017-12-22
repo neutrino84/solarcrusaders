@@ -83,6 +83,7 @@ Ship.prototype.boot = function() {
 };
 
 Ship.prototype.refresh = function(data) {
+  if(!this.manager){return}
   var ship, attacker, defender,
       damage = this.damage,
       ships = this.manager.ships,

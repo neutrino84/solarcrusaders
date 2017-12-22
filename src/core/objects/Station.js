@@ -76,7 +76,6 @@ Station.prototype.hit = function(attacker, target, slot) {
       // attacker.credits = attacker.credits + (race === 'general' ? damage : 0);
       updates['ship'].push({
         uuid: attacker.uuid,
-        credits: attacker.credits.toFixed(0),
         hardpoint: {
           station: this.uuid,
           slot: hardpoint.slot,
@@ -86,13 +85,13 @@ Station.prototype.hit = function(attacker, target, slot) {
       });
 
       // update attacker user
-      if(attacker.user) {
-        attacker.user.credits = attacker.credits;
-        updates['user'].push({
-          uuid: attacker.user.uuid,
-          credits: attacker.credits.toFixed(0)
-        });
-      }
+      // if(attacker.user) {
+      //   attacker.user.credits = attacker.credits;
+      //   updates['user'].push({
+      //     uuid: attacker.user.uuid,
+      //     credits: attacker.credits.toFixed(0)
+      //   });
+      // }
     } else {
       // disengage attacker
       attacker.ai && attacker.ai.disengage();
@@ -138,6 +137,17 @@ Station.prototype.enable = function() {
   this.game.emit('station/enabled', {
     uuid: this.uuid
   });
+};
+
+Station.prototype.destroy = function() {
+  this.sockets.send('station/removed', {
+    uuid: this.uuid
+  });
+
+  this.manager = this.game =
+    this.data = this.user = this.sockets =
+    this.config = this.timers =
+    this.enhancements = this.hardpoints = undefined;
 };
 
 Object.defineProperty(Station.prototype, 'health', {

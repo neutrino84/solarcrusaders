@@ -1,6 +1,7 @@
 
 var engine = require('engine'),
     SectorState = require('./SectorState'),
+    LossState = require('./LossState'),
     Layout = require('../ui/Layout'),
     Pane = require('../ui/components/Pane'),
     Image = require('../ui/components/Image'),
@@ -19,10 +20,12 @@ LoadingState.prototype.preload = function() {
 
 LoadingState.prototype.create = function() {
   var game = this.game,
-      sectorState = new SectorState(game);
+      sectorState = new SectorState(game),
+      lossState = new LossState(game);
 
   // load game
   game.states.add('sector', sectorState);
+  game.states.add('loss', lossState);
   game.states.start('sector');
 
   this.image = new Image(game, {

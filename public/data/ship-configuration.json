@@ -982,7 +982,7 @@
     "class": "shield",
     "stats": {
       "capacity": 3000,
-      "health": 3,
+      "health": 125,
       "heal": 0.35,
       "armor": 0.1,
       "speed": 30.0,

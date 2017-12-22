@@ -154,10 +154,7 @@ Hud.prototype.showCreditLoss = function(credits) {
   this.losses_a.alpha = 1;
   this.losses_a.text = credits;
   this.losses_a.visible = true;
-
-  console.log('got to credit loss, credits is ', credits, 'loss label is ', this.losses_a)
-
-
+  
   this.scoreContainer.addPanel(this.losses_a)
 
   this.lossTimers && this.ship.events.remove(this.lossTimers)

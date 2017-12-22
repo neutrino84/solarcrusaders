@@ -18,32 +18,27 @@ function EventManager(game) {
 
   this.pirateAttackSwitch = false;
 
-  // this.ships = {
-  //   basic: 9,
-  //   pirate: 20,
-  //   enforcer: 2
-  // };
   this.ships = {
-    basic: 0,
-    enforcer: 0,
+    basic: 4,
+    enforcer: 1,
     pirate: {
       factions : {
         'katos_boys' : {
-          num : 0,
+          num : 8,
           starting_position : {
             x: 6966,
             y: 4249
           }
         },
         'temeni' : {
-          num : 0,
+          num : 8,
           starting_position : {
             x: -3743,
             y: -941
           }
         },
         'sappers' : {
-          num : 0,
+          num : 8,
           starting_position : {
             x: 1501,
             y: 1521
@@ -56,14 +51,13 @@ function EventManager(game) {
 
   this.chassis = {
     basic : ['ubaidian-x01a','ubaidian-x01b','ubaidian-x01c','ubaidian-x01d','ubaidian-x01e','ubaidian-x01f'],
-    // basic : ['ubaidian-x01a','ubaidian-x01b','ubaidian-x01d','ubaidian-x01f'],
-    // pirate: ['pirate-x01','pirate-x01','pirate-x02','ubaidian-x01c','ubaidian-x01e'],
     pirate: ['pirate-x01','pirate-x01','pirate-x01','pirate-x02'],
     squadron: ['squad-shield','squad-repair','squad-attack','squad-attack','squad-attack','squad-attack'],
     squadron2: ['squad-repair','squad-attack'],
     scavenger: ['scavenger-x01','scavenger-x02'],
     enforcer: ['enforcer-x02']
   };
+
 };
 
 EventManager.prototype.constructor = EventManager;
@@ -76,9 +70,10 @@ EventManager.prototype.init = function() {
   this.game.on('station/disabled', this.disabled, this);
   this.game.on('ship/disabled', this.disabled, this);
   this.game.on('squad/create', this.squadGen, this);
+  this.game.on('game/over', this.restart, this);
 
   // refresh data interval
-  this.game.clock.events.loop(1000, this.update, this);
+ this.updateTimer = this.game.clock.events.loop(1000, this.update, this);
 
   // create default station
   this.game.emit('station/create', {
@@ -125,7 +120,7 @@ EventManager.prototype.init = function() {
     }
   };
 
-  this.scavGen(0);
+  this.scavGen(10);
   
 };
 
@@ -383,6 +378,20 @@ EventManager.prototype.update = function() {
   //     ai: 'basic'
   //   });
   // }
+};
+
+EventManager.prototype.restart = function() {
+
+  this.updateTimer && this.game.clock.events.remove(this.updateTimer);
+
+  this.game.removeListener('user/add', this.add, this);
+  this.game.removeListener('ship/add', this.add, this);
+  this.game.removeListener('station/add', this.add, this);
+  this.game.removeListener('station/disabled', this.disabled, this);
+  this.game.removeListener('ship/disabled', this.disabled, this);
+  this.game.removeListener('squad/create', this.squadGen, this);
+
+  this.init();
 };
 
 EventManager.prototype.generateRandomPosition = function(size) {

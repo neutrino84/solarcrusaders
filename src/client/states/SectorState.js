@@ -7,6 +7,7 @@ var engine = require('engine'),
     NebulaCluster = require('../fx/NebulaCluster'),
     Snow = require('../fx/Snow'),
     MiniMap = require('../fx/MiniMap'),
+    LossState = require('./LossState'),
     InputManager = require('../objects/sector/InputManager'),
     ShipManager = require('../objects/sector/ShipManager'),
     StationManager = require('../objects/sector/StationManager'),
@@ -21,6 +22,7 @@ function SectorState(game) {
   this.auth = game.auth;
 
   this.game.on('user/shipSelected', this.playerCreated, this);
+  this.game.on('game/loss', this.switch, this)
 
   this.scaleX = 1.5;
   this.scaleY = 1.5;
@@ -133,6 +135,11 @@ SectorState.prototype.create = function() {
         this.world.scale.set(scale, scale);
       };
 
+      // var lossState = new LossState(this.game);
+
+      // this.game.states.add('loss', lossState);
+      // this.game.states.start('loss');
+
   // set world
   this.game.world.size(0, 0, 4096, 4096);
  
@@ -150,9 +157,6 @@ SectorState.prototype.create = function() {
   this.createAsteroids();
   this.createSpace();
   this.createSnow();
-
-
-
     // this.game.world.scale.set(.6, .6);
 
   // create ui
@@ -195,14 +199,6 @@ SectorState.prototype.createSpace = function() {
   this.planet = new Planet(this.game, this.planetTexture);
 
   this.snow = new Snow(this.game, this.game.width, this.game.height);
-
-  // this.nebula = new NebulaCluster(this.game);
-  // this.nebula.position.set(-256, 1024);
-  // this.nebula.create(3);
-
-  // this.game.world.static.add(this.space);
-  // this.game.world.background.add(this.planet);
-  // this.game.world.foreground.add(this.nebula);
 
 
   this.nebula = new NebulaCluster(this.game);
@@ -314,9 +310,22 @@ SectorState.prototype.resize = function(width, height) {
 // resumed = function() {};
 
 // pauseUpdate = function() {};
+SectorState.prototype.switch = function() {
+  // console.log('game.socket is ', this.game.net.socket)
+  this.game.clock.events.add(2000, function(){
+    this.game.net.socket.emit('game/over')
+    this.game.states.start('loss', 'put_args_here')
+  }, this)
+}
 
 SectorState.prototype.shutdown = function() {
   //.. properly destroy
-};
+  // console.log('in shutdown')
+this.shipManager.destroy();
+ this.soundManager = this.stationManager = this.space = 
+ this.planet = this.nebula = this.neb1 = this.neb2 = this.neb3 = this.hotkeyManager
+ = this.shipManager = undefined
+  
+  };
 
 module.exports = SectorState;

@@ -186,6 +186,7 @@ Enforcer.prototype.plot = function(){
 // };
 
 Enforcer.prototype.update = function() {
+  if(!this.game){return}
   var ship = this.ship,
       ships = this.manager.ships,
       settings = this.settings,

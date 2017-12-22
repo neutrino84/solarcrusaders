@@ -11,9 +11,9 @@ ExplosionEmitter.prototype = Object.create(engine.Emitter.prototype);
 ExplosionEmitter.prototype.constructor = ExplosionEmitter;
 
 ExplosionEmitter.prototype.small = function(ship) {
-  var movement = ship.movement,
-      speed = movement._speed,
-      vector = movement._vector;
+  var movement = ship.movement, 
+      speed = movement._speed || ship.speed, 
+      vector = movement._vector || ship.vector;
 
   this.lifespan = 500;
 
@@ -31,8 +31,8 @@ ExplosionEmitter.prototype.small = function(ship) {
 };
 
 ExplosionEmitter.prototype.medium = function(ship) {
-  var movement = ship.movement,
-      speed = movement._speed,
+  var movement = ship.movement, 
+      speed = movement._speed, 
       vector = movement._vector;
 
   this.lifespan = 1000;
@@ -51,8 +51,8 @@ ExplosionEmitter.prototype.medium = function(ship) {
 };
 
 ExplosionEmitter.prototype.explosion = function(ship) {
-  var movement = ship.movement,
-      speed = movement._speed,
+  var movement = ship.movement, 
+      speed = movement._speed, 
       vector = movement._vector;
 
   this.lifespan = 1024;
@@ -71,9 +71,10 @@ ExplosionEmitter.prototype.explosion = function(ship) {
 };
 
 ExplosionEmitter.prototype.smulder = function(ship) {
-  var movement = ship.movement,
-      speed = movement._speed,
+  var movement = ship.movement, 
+      speed = movement._speed, 
       vector = movement._vector;
+
 
   this.lifespan = 1000;
 

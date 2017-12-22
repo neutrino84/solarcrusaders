@@ -56,7 +56,6 @@ PlayerManager.prototype.create = function(sectorState) {
 };
 
 PlayerManager.prototype.playerCredits = function() {
-  console.log('player credits are sittin at: ', this.player.data.credits)
 };
 
 PlayerManager.prototype.playerKillpoints = function(socket, killpoints) {

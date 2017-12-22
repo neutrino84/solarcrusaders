@@ -104,8 +104,8 @@ Key.prototype = {
     this._justUp = false;
 
     if(hard) {
-      this.onDown.removeAll();
-      this.onUp.removeAll();
+      // this.onDown.removeAll();
+      // this.onUp.removeAll();
       this.onHoldCallback = null;
       this.onHoldContext = null;
     }

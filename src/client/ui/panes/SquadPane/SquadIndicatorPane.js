@@ -83,14 +83,22 @@ function SquadIndicatorPane(game, settings) {
   this.game.on('squad/construct', this._squadConstruct, this)
   this.game.on('squad/enable', this._squadEnable, this)
   this.game.on('squad/disable', this._squadDisable, this)
+  this.game.on('game/loss', this.stop, this)
+  this.exists = true;
 };
 
 SquadIndicatorPane.prototype = Object.create(Pane.prototype);
 SquadIndicatorPane.prototype.constructor = SquadIndicatorPane;
 
+SquadIndicatorPane.prototype.stop = function(){
+  this.exists = false;
+};
+
 SquadIndicatorPane.prototype._payment = function(){
-  this.paymentTimerIndicator.change('width', this.paymentClock)
-}
+  if(this.exists){
+    this.paymentTimerIndicator.change('width', this.paymentClock) 
+  }
+};
 
 SquadIndicatorPane.prototype._squadConstruct = function(chassis){
   var game = this.game, 

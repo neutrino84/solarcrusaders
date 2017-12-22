@@ -44,8 +44,8 @@ ShockwaveEmitter.prototype.rocket = function() {
 
 ShockwaveEmitter.prototype.explosion = function(object) {
   var movement = object.movement, 
-      speed = movement._speed * 2 || object.speed, 
-      vector = movement._vector || object.vector;
+      speed = movement._speed * 2, 
+      vector = movement._vector;
       // if(movement){
         // speed = movement._speed * 2;
         // if(movement._vector){

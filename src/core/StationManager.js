@@ -10,6 +10,7 @@ function StationManager(game) {
 
   // global stations
   this.game.stations = {};
+
 };
 
 StationManager.prototype.constructor = StationManager;
@@ -21,6 +22,7 @@ StationManager.prototype.init = function() {
   this.game.on('station/create', this.create, this);
   this.game.on('ship/attacked', this.attacked, this);
   this.game.on('station/disabled', this.disabled, this);
+  this.game.on('game/over', this.removeAllStations, this);
 
   this.game.clock.events.loop(1000, this.update, this);
 };
@@ -28,6 +30,14 @@ StationManager.prototype.init = function() {
 StationManager.prototype.add = function(station) {
   if(this.game.stations[station.uuid] === undefined) {
     this.game.stations[station.uuid] = station;
+  }
+};
+
+StationManager.prototype.remove = function(station) {
+  var stations = this.stations,
+      s = stations[station.uuid];
+  if(s !== undefined) {
+    delete this.stations[station.uuid] && s.destroy();
   }
 };
 
@@ -148,6 +158,15 @@ StationManager.prototype.attacked = function(attacker, target, slot) {
 
 StationManager.prototype.disabled = function(data) {
   this.sockets.send('station/disabled', data);
+
+  this.game.emit('restart/systems')
+};
+
+ShipManager.prototype.removeAllStations = function() {
+  console.log('in backend stationmanager, removeAll')
+  for(var s in this.stations){
+    this.remove(this.stations[s]);
+  }
 };
 
 module.exports = StationManager;

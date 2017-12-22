@@ -1,6 +1,7 @@
 
 var Panel = require('../ui/Panel'),
     Pane = require('../ui/components/Pane'),
+    Label = require('../ui/components/Label'),
     Layout = require('../ui/Layout'),
     pixi = require('pixi'),
     Shipyard = require('../ui/panes/Shipyard'),
@@ -11,6 +12,8 @@ var Panel = require('../ui/Panel'),
 
 function UI(game) {
   this.game = game;
+
+  // this.game.on('game/loss', this.lossScreen, this)
 };
 
 UI.prototype.preload = function() {
@@ -38,6 +41,7 @@ UI.prototype.create = function() {
     },
     bg: false
   });
+  
   this.root.addPanel(this.header);
   this.root.addPanel(this.bottom);
   this.header.id = 'header';
@@ -46,7 +50,6 @@ UI.prototype.create = function() {
   // add elements
 
   if(this.game.auth.user && !this.game.auth.user.ship){
-    console.log('about to make ship yard')
     this.shipyard = new Shipyard(this.game); 
     this.root.addPanel(this.shipyard);
   }
@@ -101,6 +104,58 @@ UI.prototype.create_bottom = function() {
   // this.bottom = new BottomPane(this.game);
   // this.root.addPanel(this.bottom);
   // this.root.invalidate();
+};
+
+UI.prototype.lossScreen = function(){
+  // this.root.removePanel();
+    console.log('in loss screen')
+  // console.log(this.bottom)
+  // this.bottom.stopProcesses();
+  this.game.clock.events.add(1000, function(){
+    // this.bottom.destroy();
+    this.root.removeChild(this.bottom)
+    
+    this.lossScreen = new Pane(this.game, {
+      constraint: Layout.CENTER,
+      width: this.game.width,
+      height: this.game.height,
+      layout: {
+        type: 'stack'
+      },
+      bg: {
+        fillAlpha: 1,
+        color: 0x000000
+      }
+    });
+    this.lossMessage = new Label(this.game, {
+      constraint: Layout.USE_PS_SIZE,
+      text: {
+        fontName: 'medium'
+      },
+      bg: false
+    });
+    this.lossMessage.text = 'YOU LOSE';
+    this.lossScreen.addPanel(this.lossMessage);
+    this.root.addPanel(this.lossScreen);
+    this.root.invalidate();
+
+    this.tween = this.game.tweens.create(this.lossScreen.bg);
+    this.tween.to({ fillAlpha: 1.0 }, 100);
+    this.tween.delay(0);
+    this.tween.start();
+    this.tween.once('complete', function() {
+      console.log('COMPLETE!', this.lossScreen.bg.fillAlpha)
+      this.root.invalidate();
+    }, this);
+
+
+    // this.game.clock.events.add(2000, function(){
+      // this.game.clock.events.add(3000, function(){
+      //   console.log(this.lossScreen);
+      //   this.lossScreen.bg.fillAlpha = 0.2;
+      // }, this)
+    // }, this)
+  }, this);
 };
 
 UI.prototype.refresh = function() {

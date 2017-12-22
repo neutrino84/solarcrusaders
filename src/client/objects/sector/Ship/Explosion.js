@@ -8,7 +8,9 @@ function Explosion(ship, isStation) {
 
   this.temp = new engine.Point();
 
-  
+  if(isStation){
+    this.isStation = true;
+  }
   // create hit area
   this.hit = new engine.Circle(this.ship.width/2, this.ship.height/2, this.ship.data.size/2);
 };
@@ -30,7 +32,7 @@ Explosion.prototype.start = function() {
   if(this.ship.manager.state.shipManager.player){
     player = this.ship.manager.state.shipManager.player;
   }
-  if(player){
+  if(player && this.isStation){
     manager.shockwaveEmitter.explosion(player);
   } else {
     manager.shockwaveEmitter.explosion(ship);
@@ -38,11 +40,29 @@ Explosion.prototype.start = function() {
   manager.shockwaveEmitter.at({ center: ship.position });
   manager.shockwaveEmitter.explode(1);
   // manager.shockwaveEmitter.explode(2);
+  if(player && this.isStation){
+      manager.fireEmitter.pulse(["0xFFFFFF", "0x12def9"]);
+      manager.fireEmitter.at({ center: ship.position });
+      manager.fireEmitter.explode(1);
+      manager.shockwaveEmitter.explode(1);
+    this.game.clock.events.add(250, function(){
+      manager.fireEmitter.explode(2);
+      manager.shockwaveEmitter.explode(2);
+      this.game.clock.events.add(250, function(){
+        manager.fireEmitter.explode(3);
+        manager.shockwaveEmitter.explode(3);
+        this.game.clock.events.add(500, function(){
+          manager.fireEmitter.explode(10);
+          manager.shockwaveEmitter.explode(10);
+        }, this)
+      }, this)
+    }, this)
+  };
 
 
   var explosionValue = rnd.frac()+0.075
 
-  if(player){
+  if(player && this.isStation){
     manager.glowEmitter.explosion(player);
   } else {
     manager.glowEmitter.explosion(ship);
@@ -50,14 +70,11 @@ Explosion.prototype.start = function() {
   manager.glowEmitter.at({ center: ship.position });
   // manager.glowEmitter.explode(explosionValue);
 
-
-  // console.log('exploding')
-
   manager.glowEmitter.explode(3);
 
   events.repeat(50, 100, function() {
     if(rnd.frac() > 0.35) {
-      if(player){
+      if(player && this.isStation){
         manager.explosionEmitter.explosion(player);
       } else {
         manager.explosionEmitter.explosion(ship);
@@ -76,13 +93,8 @@ Explosion.prototype.start = function() {
 };
 
 Explosion.prototype.update = function() {
-  if(this.shipReference){
-    this.hit.x = this.shipReference.x;
-    this.hit.y = this.shipReference.y; 
-  }else{
     this.hit.x = this.ship.x;
     this.hit.y = this.ship.y; 
-  }
 };
 
 Explosion.prototype.destroy = function() {

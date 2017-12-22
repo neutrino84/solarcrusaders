@@ -6,6 +6,7 @@ var engine = require('engine'),
     LoadingState = require('./states/LoadingState'),
 
     startGameEngine = function() {
+      console.log('loading state is ', LoadingState)
       var game = new engine.Game({
             parent: 'content',
             antialias: false,

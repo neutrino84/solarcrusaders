@@ -81,7 +81,6 @@ StationManager.prototype._disabled = function(data) {
   var station = this.stations[data.uuid],
       socket = this.socket,
       game = this.game, chassis;
-      console.log('front end station diabled')
   if(station !== undefined) {
     chassis = station.data.chassis;
 

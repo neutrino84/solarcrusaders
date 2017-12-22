@@ -32,7 +32,7 @@ FireEmitter.prototype.energy = function(colors) {
 FireEmitter.prototype.pulse = function(colors) {
   var colors = colors || ['0xFFFFFF', '0xFF0000'],
       rnd = this.game.rnd;
-  
+
   this.lifespan = 200;
 
   this.setVector(0, 0);

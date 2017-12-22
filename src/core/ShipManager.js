@@ -36,11 +36,11 @@ ShipManager.prototype.init = function(eventManager) {
   this.game.on('ship/create', this.create, this);
   this.game.on('ship/disabled', this.disabled, this);
   this.game.on('pirate/attackStation', this.attackStation, this);
+  this.game.on('game/over', this.removeAll, this);
 
   // networking
   this.sockets.on('ship/plot', this.plot, this);
   this.sockets.on('ship/attack', this.attack, this);
-  this.sockets.on('coordinate/check', this.coordinate_check, this);
   this.sockets.on('ship/enhancement/start', this.enhancement, this);
 
   this.sockets.on('player/undock', this.player_undock, this);
@@ -61,10 +61,6 @@ ShipManager.prototype.add = function(ship) {
   }
 };
 
-ShipManager.prototype.coordinate_check = function(socket, args) {
-  console.log('SHIP position is: ', this.ships[args[1]].movement.position.x, this.ships[args[1]].movement.position.y)
-};
-
 ShipManager.prototype.remove = function(ship) {
   var ships = this.ships,
       s = ships[ship.uuid];
@@ -75,7 +71,7 @@ ShipManager.prototype.remove = function(ship) {
   }
   if(s !== undefined) {
     delete this.ships[ship.uuid] && s.destroy();
-  }
+  };
 };
 
 ShipManager.prototype.clearSquadron = function(ship) {
@@ -94,25 +90,20 @@ ShipManager.prototype.attackStation = function(ai, faction) {
           break
         case 'pirate':
           for(var s in ships){
-            // console.log(ships[s].ai.type)
             if(ships[s].ai && ships[s].ai.type === 'pirate' && ships[s].ai.faction === faction){
               var ship = ships[s];
               switch(ship.faction) {
                 case 'temeni':
                   if(this.pirateAttackLog['temeni'].indexOf(ship.uuid) == -1){
                     this.pirateAttackLog['temeni'].push(ship.uuid);
-                    // ship.ai.attackingStation = true;
                     ship.ai.engageStation(this.sectorManager.stationManager.getStation('ubadian-station-x01'));
-                    console.log('temeni attack')
                     return
                   }
                 break
                 case 'katos_boys':
                   if(this.pirateAttackLog['katos_boys'].indexOf(ship.uuid) == -1){
                     this.pirateAttackLog['katos_boys'].push(ship.uuid);
-                    // ship.ai.attackingStation = true;
                     ship.ai.engageStation(this.sectorManager.stationManager.getStation('ubadian-station-x01'));
-                    console.log('kato attack')
                     return
                   }
                 break
@@ -123,25 +114,11 @@ ShipManager.prototype.attackStation = function(ai, faction) {
               }
             }
           }
-          // debugger
-          break;
-        case 'scavenger':
-          
-          break;
-        case 'squadron':
-          
-          break;
-        case 'enforcer':
-          
           break;
         default:
         
           break;
       }
-  // if(!s.squadron){return}
-  // for(var i in s.squadron){
-  //   this.game.emit('ship/remove', s.squadron[i]);
-  // }
 };
 
 ShipManager.prototype.create = function(data, user) {
@@ -434,6 +411,19 @@ ShipManager.prototype.update = function() {
 
 ShipManager.prototype.disabled = function(data) {
   this.sockets.send('ship/disabled', data);
+};
+
+ShipManager.prototype.removeAll = function() {
+  console.log('in backend shipmanager, removeAll')
+  for(var a in this.ships){
+    this.remove(this.ships[a]);
+  }
+  this.ships = {};
+  this.pirateAttackLog = {
+    'temeni' : [],
+    'katos_boys' : [],
+    'sappers' : []
+  };
 };
 
 module.exports = ShipManager;

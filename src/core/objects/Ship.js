@@ -254,7 +254,7 @@ Ship.prototype.hit = function(attacker, target, slot, target_uuid) {
     }
 
     //prevent friendly fire dmg to squadron
-    // if(this.master === attacker.uuid || attacker.hardpoints[0].subtype === 'repair' && data.health >= (this.config.stats.health)){return}  
+    if(this.master === attacker.uuid || attacker.hardpoints[0].subtype === 'repair' && data.health >= (this.config.stats.health)){return}  
 
 
     // calc damage
@@ -267,7 +267,7 @@ Ship.prototype.hit = function(attacker, target, slot, target_uuid) {
     damage += critical ? damage : 0;
     damage *= piercing ? piercing.damage : 1.0;
     if(this.squadron && this.shieldCheck(this.uuid)){
-        damage = damage*0.65;
+        damage = damage*0.55;
         shielded = true;
     };
     if(attacker.hardpoints[0].subtype === 'repair'){
@@ -393,6 +393,13 @@ Ship.prototype.disable = function() {
 
   // disengage ai
   this.ai && this.ai.disengage();
+  //remove from attackStation list
+  if(this.ai && this.ai.type == 'pirate' && this.manager.pirateAttackLog[this.ai.faction].indexOf(this.uuid) > -1){
+    var index = this.manager.pirateAttackLog[this.ai.faction].indexOf(this.uuid)
+    if(index > -1) {
+      this.manager.pirateAttackLog[this.ai.faction].splice(index, 1);
+    };
+  };
 
   this.respawn = this.game.clock.events.add(this.ai ? this.ai.settings.respawn : Ship.RESPAWN_TIME, this.enable, this)
 
@@ -433,6 +440,7 @@ Ship.prototype.blast = function() {
 };
 
 Ship.prototype.enable = function() {
+  if(!this.config){return}
   // re-enable
   this.disabled = false;
 

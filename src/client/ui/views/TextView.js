@@ -69,4 +69,34 @@ TextView.prototype.paint = function() {
   this.position.set(margin.left + padding.left, margin.top + padding.top);
 };
 
+TextView.prototype.typewriter = function(string, interval) {
+  interval = interval || 300;
+  index = 0;
+
+  this.game.clock.events.loop(interval, function() {
+    this.font.text = string.slice(0, index);
+    // console.log(this.font.text)
+    index++;
+
+    if(index > string.length){
+      //access this event to call .stop() to stop the loop
+    }
+  }, this);
+};
+
+TextView.prototype.blink = function(interval) {
+  var interval = interval || 500,
+      on = true;
+
+  this.game.clock.events.loop(interval, function() {
+    if(on){
+      this.alpha = 0;
+      on = !on
+    }else{
+      this.alpha = 1;
+      on = !on
+    }
+  }, this);
+}
+
 module.exports = TextView;

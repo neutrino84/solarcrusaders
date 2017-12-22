@@ -26,6 +26,7 @@ UserManager.prototype.init = function() {
 
   // user messaging
   this.game.on('user/add', this.add, this);
+  this.game.on('game/over', this.clear, this);
 };
 
 UserManager.prototype.add = function(user) {
@@ -127,6 +128,13 @@ UserManager.prototype.update = function() {
     game.emit('user/data', {
       type: 'update', users: updates
     });
+  }
+};
+
+UserManager.prototype.clear = function() {
+  for(var i in this.game.users){
+    console.log(this.game.users[i])
+    this.game.users[i].ship = null;
   }
 };
 
