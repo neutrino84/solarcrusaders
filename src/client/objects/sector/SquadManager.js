@@ -260,4 +260,21 @@ SquadManager.prototype._payment = function() {
     }, this);  
 };
 
+SquadManager.prototype.destroy = function() {
+
+  this.game.removeListener('ship/player', this._player, this);
+  this.game.removeListener('squad/regroup', this.regroup, this);
+  this.game.removeListener('squad/shieldUp', this.shieldUpOut, this);
+  this.game.removeListener('squad/shieldUpIn', this.shieldUpIn, this);
+
+  this.game.removeListener('squad/payment', this._payment, this);
+
+  this.game.removeListener('squad/closestHostile', this.closestHostile, this)
+  this.game.removeListener('squad/engageTarget', this.engageHostile, this)
+  this.game.removeListener('squad/detectHostiles', this.detectHostiles, this)
+  this.game.removeListener('hotkey/squad/detectHostiles', this.detectHostiles, this)
+
+  this.socket = this.net = this.clock = this.player = this.shipNetManager = undefined;
+};
+
 module.exports = SquadManager;

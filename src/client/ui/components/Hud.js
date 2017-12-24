@@ -8,6 +8,7 @@ var pixi = require('pixi'),
     Class = engine.Class;
 
 function Hud(ship, settings) {
+  if(!ship){return}
   Pane.call(this, ship.game, Class.mixin(settings, {
     width: 0,
     height: 0,

@@ -83,7 +83,7 @@ function SquadIndicatorPane(game, settings) {
   this.game.on('squad/construct', this._squadConstruct, this)
   this.game.on('squad/enable', this._squadEnable, this)
   this.game.on('squad/disable', this._squadDisable, this)
-  this.game.on('game/loss', this.stop, this)
+  // this.game.on('game/loss', this.stop, this)
   this.exists = true;
 };
 
@@ -170,6 +170,18 @@ SquadIndicatorPane.prototype._squadDisable = function(chassis) {
       return;
     }
   };
+};
+
+SquadIndicatorPane.prototype.destroy = function() {
+
+  this.ship_containers = [];
+  this.count = 0;
+
+  this.game.removeListener('squad/construct', this._squadConstruct, this)
+  this.game.removeListener('squad/enable', this._squadEnable, this)
+  this.game.removeListener('squad/disable', this._squadDisable, this)
+
+  this.removeAll();
 };
 
 SquadIndicatorPane.prototype._iconFadeOut = function(chassis) {

@@ -42,8 +42,17 @@ BottomPane.prototype._squadPane = function(){
   // this.addPanel(this.squadPane);
 };
 
+BottomPane.prototype.destroy = function(){
+  this.squadIndicatorPane.destroy();
+  this.enhancementPane.destroy();
+  this.squadHotkeyPane.destroy();
+  this.removeAll();
+  this.squadIndicatorPane = this.squadHotkeyPane = this.enhancementPane = undefined;
+  // this.squadPane = new SquadPane(game);
+  // this.addPanel(this.squadPane);
+};
+
 BottomPane.prototype.stopProcesses = function(){
-  console.log('BOTTOM STOP PROCESSES')
   this.removePanel(this.creditsPane);
   this.removePanel(this.enhancementPane);
 };

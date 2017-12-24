@@ -124,7 +124,6 @@ StationManager.prototype.update = function() {
       // update health
       if(station.health < stats.health) {
         delta = station.heal;
-        console.log('delta is ', delta)
         station.health = global.Math.min(stats.health, station.health + delta);
         update.health = engine.Math.roundTo(station.health, 1);
       }
@@ -136,7 +135,6 @@ StationManager.prototype.update = function() {
     }
   }
   if(updates.length > 0) {
-    console.log('updating')
     game.emit('station/data', updates);
   }
 };

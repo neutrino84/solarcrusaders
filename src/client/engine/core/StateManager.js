@@ -7,6 +7,8 @@ function StateManager(game, state) {
   this.states = {};
   this._current = '';
 
+  this.firstIteration = false;
+
   this._pendingState = state || null;
   this._clearWorld = false;
   this._clearCache = false;

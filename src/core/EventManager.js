@@ -121,7 +121,7 @@ EventManager.prototype.init = function() {
     }
   };
 
-  this.scavGen(10);
+  this.scavGen(14);
   
 };
 
@@ -350,7 +350,7 @@ EventManager.prototype.disabled = function(object) {
 EventManager.prototype.update = function() {
   this.attackCount ++
 
-  if(this.attackCount % 14 === 0){
+  if(this.attackCount % 13 === 0){
   // if(this.attackCount == 20){  
     if(this.pirateAttackSwitch){
       this.hostilePirateFaction = 'temeni'
@@ -360,6 +360,11 @@ EventManager.prototype.update = function() {
       this.pirateAttackSwitch = true;
     }
     this.game.emit('pirate/attackStation', 'pirate', this.hostilePirateFaction)
+
+    if(this.attackCount > 104){
+      this.attackCount = 0;
+      this.game.emit('pirate/attackStation', 'clear')
+    }
   }
   // if(this.ships.pirate < 2 && this.game.rnd.frac() > 0.75) {
   //   this.ships.pirate++;
@@ -382,9 +387,6 @@ EventManager.prototype.update = function() {
 };
 
 EventManager.prototype.restart = function() {
-
-  console.log('in eventManager restard')
-
   this.updateTimer && this.game.clock.events.remove(this.updateTimer);
 
   this.game.removeListener('user/add', this.add, this);

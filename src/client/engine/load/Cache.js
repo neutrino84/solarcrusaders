@@ -405,8 +405,9 @@ Cache.prototype = {
 
   removeImage: function(key) {
     var img = this._cache.image[key];
-        img.base.destroy();
-        img.framedata.destroy();
+
+        img && img.base.destroy();
+        img && img.framedata.destroy();
     delete this._cache.image[key];
   },
 

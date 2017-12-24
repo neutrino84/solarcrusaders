@@ -48,17 +48,16 @@ function SquadHotkeyPane(game, settings) {
     );
     this.addPanel(this.containers[i]);
   }
+  this.initialized = false;
 
   this.game.on('ship/player', this._player, this);
   this.game.on('ship/player/squadSync', this._squadIcons, this);
 
-  this.initialized = false;
   this.game.on('hotkey/squad/closestHostile', this._hotkeySelect, this);
   this.game.on('hotkey/squad/engageTarget', this._hotkeySelect, this);
   this.game.on('hotkey/squad/regroup', this._hotkeySelect, this);
   this.game.on('hotkey/squad/shieldUp', this._hotkeySelect, this);
   this.game.on('hotkey/squad/repairOverdrive', this._hotkeySelect, this);
-  // this.game.on('squad/detectHostiles', this._select, this);
   this.game.on('hotkey/squad/shieldDestination', this._shieldDestination, this);
 
 
@@ -270,7 +269,6 @@ SquadHotkeyPane.prototype._player = function(player) {
       squadShips = player.data.enhancements,
       containers = this.containers,
       buttons = this.buttons;
-
   // set player object
   this.player = player;
   this._squadIcons('regroup');
@@ -299,6 +297,11 @@ SquadHotkeyPane.prototype._player = function(player) {
   //   }
   // }
   this.invalidate();
+};
+
+SquadHotkeyPane.prototype.destroy = function(){
+  this.containers = [];
+  this.buttons = {};
 };
 
 SquadHotkeyPane.prototype._squadIcons = function(icon) {
@@ -412,6 +415,18 @@ SquadHotkeyPane.prototype._squadIcons = function(icon) {
   // };
 
   this.invalidate();
+};
+
+SquadHotkeyPane.prototype.destroy = function(){
+  this.game.removeListener('ship/player', this._player, this);
+  this.game.removeListener('ship/player/squadSync', this._squadIcons, this);
+
+  this.game.removeListener('hotkey/squad/closestHostile', this._hotkeySelect, this);
+  this.game.removeListener('hotkey/squad/engageTarget', this._hotkeySelect, this);
+  this.game.removeListener('hotkey/squad/regroup', this._hotkeySelect, this);
+  this.game.removeListener('hotkey/squad/shieldUp', this._hotkeySelect, this);
+  this.game.removeListener('hotkey/squad/repairOverdrive', this._hotkeySelect, this);
+  this.game.removeListener('hotkey/squad/shieldDestination', this._shieldDestination, this);
 };
 
 module.exports = SquadHotkeyPane;

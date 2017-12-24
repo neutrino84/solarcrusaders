@@ -24,10 +24,20 @@ function SectorState(game) {
   this.game.on('user/shipSelected', this.playerCreated, this);
   this.game.on('game/loss', this.switch, this)
 
-  this.game.world.static.removeAll();
-  this.game.world.background.removeAll();
-  this.game.world.foreground.removeAll();
-  this.game.world.removeAll();
+  // this.game.world.static.removeAll();
+  // this.game.world.background.removeAll();
+  // this.game.world.foreground.removeAll();
+  // this.game.world.removeAll();
+
+  // for(var i in game.cache._cache.image){
+  //   game.cache._cache.image[i] && game.cache.removeImage(game.cache._cache.image[i].key)
+  // }
+  // for(var j in game.cache._cache.json){
+  //   game.cache._cache.json[j] && game.cache.removeJson(game.cache._cache.json[j])
+  // }
+  // for(var s in game.cache._cache.sound){
+  //   game.cache._cache.sound[s] && game.cache.removeSound(game.cache._cache.sound[s])
+  // }
 
   this.scaleX = 1.5;
   this.scaleY = 1.5;
@@ -38,6 +48,8 @@ SectorState.prototype.constructor = engine.State;
 
 SectorState.prototype.init = function(args) {
   // instanciate ui
+  console.log('IN SECTOR STATE INIT')
+
   this.ui = new UI(this.game);
 
   this.soundManager = new SoundManager(this.game);
@@ -55,10 +67,6 @@ SectorState.prototype.preload = function() {
   this.ui.preload();
   this.soundManager.preload();
 
-  // load background
-  this.game.load.image('space', 'imgs/game/space/sector-a.jpg');
-  this.game.load.image('nebula', 'imgs/game/space/nebula-a.jpg');
-  this.game.load.image('snow', 'imgs/game/space/snow.jpg');
 
 
   var planets = [
@@ -71,55 +79,56 @@ SectorState.prototype.preload = function() {
   ]
 
   this.planetTexture = this.game.rnd.pick(planets);
+  // load background
+  // if(!this.game.states.firstIteration){
+    this.game.load.image('space', 'imgs/game/space/sector-a.jpg');
+    this.game.load.image('nebula', 'imgs/game/space/nebula-a.jpg');
+    this.game.load.image('snow', 'imgs/game/space/snow.jpg');
 
-  this.game.load.image('planet', ('imgs/game/planets/' + this.planetTexture + '.jpg'));
-  // this.game.load.image('planet1', 'imgs/game/planets/eamon-alpha.jpg');
-  //  this.game.load.image('planet2', 'imgs/game/planets/daigus.jpg');
-  //   this.game.load.image('planet3', 'imgs/game/planets/modo.jpg');
-  //    this.game.load.image('planet4', 'imgs/game/planets/ichor.jpg');
-  //     this.game.load.image('planet5', 'imgs/game/planets/talus.jpg');
-  //      this.game.load.image('planet6', 'imgs/game/planets/arkon.jpg');
+    this.game.load.image('planet', ('imgs/game/planets/' + this.planetTexture + '.jpg'));
+    this.game.load.image('clouds', 'imgs/game/planets/clouds.jpg');
 
-  this.game.load.image('clouds', 'imgs/game/planets/clouds.jpg');
+    // load stations
+    this.game.load.image('ubadian-station-x01', 'imgs/game/stations/stations_enlarged/ubaidian-x01.png');
+    this.game.load.image('ubadian-station-x01-cap', 'imgs/game/stations/stations_enlarged/ubaidian-cap-x01.png');
+    this.game.load.image('scavenger-x01', 'imgs/game/stations/stations_enlarged/scavenger-x01.png');
+    this.game.load.image('scavenger-x01-cap', 'imgs/game/stations/stations_enlarged/scavenger-x01.png');
+    this.game.load.image('general-station-x01', 'imgs/game/stations/stations_enlarged/general-x01.png');
+    this.game.load.image('general-station-x01-cap', 'imgs/game/stations/stations_enlarged/general-cap-x01.png');
 
-  // load stations
-  this.game.load.image('ubadian-station-x01', 'imgs/game/stations/stations_enlarged/ubaidian-x01.png');
-  this.game.load.image('ubadian-station-x01-cap', 'imgs/game/stations/stations_enlarged/ubaidian-cap-x01.png');
-  this.game.load.image('scavenger-x01', 'imgs/game/stations/stations_enlarged/scavenger-x01.png');
-  this.game.load.image('scavenger-x01-cap', 'imgs/game/stations/stations_enlarged/scavenger-x01.png');
-  this.game.load.image('general-station-x01', 'imgs/game/stations/stations_enlarged/general-x01.png');
-  this.game.load.image('general-station-x01-cap', 'imgs/game/stations/stations_enlarged/general-cap-x01.png');
+    // load strip graphics
+    this.game.load.image('laser-blue', 'imgs/game/fx/laser-blue.png');
+    this.game.load.image('laser-blue2', 'imgs/game/fx/laser-blue2.png');
+    this.game.load.image('laser-blue3', 'imgs/game/fx/laser-blue3.png');
+    this.game.load.image('laser-red', 'imgs/game/fx/laser-red.png');
+    this.game.load.image('laser-red2', 'imgs/game/fx/laser-red2.png');
+    this.game.load.image('laser-red3', 'imgs/game/fx/laser-red3.png');
+    this.game.load.image('laser-green', 'imgs/game/fx/laser-green.png');
+    this.game.load.image('laser-green2', 'imgs/game/fx/laser-green2.png');
+    this.game.load.image('laser-green3', 'imgs/game/fx/laser-green3.png');
+    this.game.load.image('laser-purple', 'imgs/game/fx/laser-purple.png');
+    this.game.load.image('laser-yellow', 'imgs/game/fx/laser-yellow.png');
+    this.game.load.image('laser-yellow2', 'imgs/game/fx/laser-yellow2.png');
+    this.game.load.image('laser-yellow3', 'imgs/game/fx/laser-yellow3.png');
+    this.game.load.image('laser-yellow-long', 'imgs/game/fx/laser-yellow-long.png');
+    this.game.load.image('laser-vulcan', 'imgs/game/fx/laser-vulcan.png');
+    this.game.load.image('laser-heavy', 'imgs/game/fx/laser-heavy.png');
+    this.game.load.image('laser-bazuko', 'imgs/game/fx/laser-bazuko.png');
+    this.game.load.image('laser-bazuko2', 'imgs/game/fx/laser-bazuko2.png');
+    this.game.load.image('laser-bazuko3', 'imgs/game/fx/laser-bazuko3.png');
+    this.game.load.image('laser-gaus', 'imgs/game/fx/laser-gaus.png');
+  // 
+  // };
+    // load texture atlas
+    this.game.load.atlasJSONHash('texture-atlas', 'imgs/game/texture-atlas.png', 'data/texture-atlas.json');
 
-  // load strip graphics
-  this.game.load.image('laser-blue', 'imgs/game/fx/laser-blue.png');
-  this.game.load.image('laser-blue2', 'imgs/game/fx/laser-blue2.png');
-  this.game.load.image('laser-blue3', 'imgs/game/fx/laser-blue3.png');
-  this.game.load.image('laser-red', 'imgs/game/fx/laser-red.png');
-  this.game.load.image('laser-red2', 'imgs/game/fx/laser-red2.png');
-  this.game.load.image('laser-red3', 'imgs/game/fx/laser-red3.png');
-  this.game.load.image('laser-green', 'imgs/game/fx/laser-green.png');
-  this.game.load.image('laser-green2', 'imgs/game/fx/laser-green2.png');
-  this.game.load.image('laser-green3', 'imgs/game/fx/laser-green3.png');
-  this.game.load.image('laser-purple', 'imgs/game/fx/laser-purple.png');
-  this.game.load.image('laser-yellow', 'imgs/game/fx/laser-yellow.png');
-  this.game.load.image('laser-yellow2', 'imgs/game/fx/laser-yellow2.png');
-  this.game.load.image('laser-yellow3', 'imgs/game/fx/laser-yellow3.png');
-  this.game.load.image('laser-yellow-long', 'imgs/game/fx/laser-yellow-long.png');
-  this.game.load.image('laser-vulcan', 'imgs/game/fx/laser-vulcan.png');
-  this.game.load.image('laser-heavy', 'imgs/game/fx/laser-heavy.png');
-  this.game.load.image('laser-bazuko', 'imgs/game/fx/laser-bazuko.png');
-  this.game.load.image('laser-bazuko2', 'imgs/game/fx/laser-bazuko2.png');
-  this.game.load.image('laser-bazuko3', 'imgs/game/fx/laser-bazuko3.png');
-  this.game.load.image('laser-gaus', 'imgs/game/fx/laser-gaus.png');
-// 
-  // load texture atlas
-  this.game.load.atlasJSONHash('texture-atlas', 'imgs/game/texture-atlas.png', 'data/texture-atlas.json');
+    // load ship configuration
+    this.game.load.json('ship-configuration', 'data/ship-configuration.json');
+    this.game.load.json('item-configuration', 'data/item-configuration.json');
+    this.game.load.json('station-configuration', 'data/station-configuration.json');
+  this.game.states.firstIteration = true;
+}
 
-  // load ship configuration
-  this.game.load.json('ship-configuration', 'data/ship-configuration.json');
-  this.game.load.json('item-configuration', 'data/item-configuration.json');
-  this.game.load.json('station-configuration', 'data/station-configuration.json');
-};
 
 // loadUpdate = function() {};
 // loadRender = function() {};
@@ -261,10 +270,10 @@ SectorState.prototype.createSnow = function() {
 SectorState.prototype.createAsteroids = function() {
   var game = this.game,
       steroid,
-      amount = 64;
+      amount = 164;
   for(var i=0; i<amount; i++) {
     asteroid = new Asteroid(this.game);
-    asteroid.position.set(2048 / 4, 2048 / 4);
+    asteroid.position.set(3048 / 4, 3048 / 4);
 
     game.world.foreground.add(asteroid);
   }
@@ -324,10 +333,14 @@ SectorState.prototype.switch = function() {
 SectorState.prototype.shutdown = function() {
   //.. properly destroy
 this.shipManager.destroy();
- this.soundManager = this.stationManager = this.space = 
+this.stationManager.destroy();
+this.squadManager.destroy();
+this.soundManager.destroy();
+this.ui.destroy();
+ this.soundManager = this.stationManager = this.space = this.ui =
  this.planet = this.nebula = this.neb1 = this.neb2 = this.neb3 = this.hotkeyManager
  = this.shipManager = undefined
   
-  };
+};
 
 module.exports = SectorState;

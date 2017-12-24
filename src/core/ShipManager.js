@@ -77,7 +77,7 @@ ShipManager.prototype.remove = function(ship) {
 ShipManager.prototype.clearSquadron = function(ship) {
   var ships = this.ships,
       s = ships[ship.uuid];
-  if(!s.squadron){return}
+  if(!s || !s.squadron){return}
   for(var i in s.squadron){
     this.game.emit('ship/remove', s.squadron[i]);
   }
@@ -108,6 +108,13 @@ ShipManager.prototype.attackStation = function(ai, faction) {
                   }
                 break
                 case 'sappers':
+                break
+                case 'clear':
+                  this.pirateAttackLog = {
+                    'temeni' : [],
+                    'katos_boys' : [],
+                    'sappers' : []
+                  }
                 break
                 default:
                 break

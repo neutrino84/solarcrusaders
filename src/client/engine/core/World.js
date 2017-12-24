@@ -11,7 +11,6 @@ World.prototype = Object.create(Group.prototype);
 World.prototype.constructor = World;
 
 World.prototype.boot = function() {
-  console.log('booting world')
   // main game containers
   this.static = new Group(this.game, this.game.stage);
   this.main = new Group(this.game, this.game.stage);
@@ -52,9 +51,9 @@ World.prototype.shutdown = function() {
   // this.removeAll();
   // ^want to move these 
 
-  console.log('world static is ', this.game.static)
-  console.log('world background is ', this.game.static)
-  console.log('world is ', this)
+  // console.log('world static is ', this.game.static)
+  // console.log('world background is ', this.game.static)
+  // console.log('world is ', this)
 
   // main game containers
   // this.static = new Group(this.game, this.game.stage);

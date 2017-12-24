@@ -88,11 +88,14 @@ function ShipManager(game, state, first) {
   this.game.on('squad/shieldDestinationDeactivate', this._destinationDeactivate, this);
   this.game.on('squad/engageHostile', this._target, this);
 
-  // this.game.clock.events.loop(10, this._sendMapData, this)
-  this.game.clock.events.loop(5000, this._sendMapDataShips, this)
+  this.mapDataTimer = this.game.clock.events.loop(5000, this._sendMapDataShips, this)
 };
 
 ShipManager.prototype.constructor = ShipManager;
+
+ShipManager.prototype._whoIsPlayer = function(){
+  console.log(this.player.data.credits)
+}
 
 ShipManager.prototype._sendMapData = function(){
   var player = this.player,
@@ -210,10 +213,11 @@ ShipManager.prototype.removeAll = function() {
 };
 
 ShipManager.prototype.destroy = function() {
-  var game = this.game,
-      auth = this.game.auth,
-      socket = this.socket;
+  var game = this.game;
 
+  this.mapDataTimer && this.game.clock.events.remove(this.mapDataTimer);
+
+  game.removeListener('player/credits', this._player_credits);
   game.removeListener('auth/disconect', this._disconnect);
   game.removeListener('sector/sync', this._sync);
   game.removeListener('ship/player', this._player);
@@ -224,6 +228,8 @@ ShipManager.prototype.destroy = function() {
   game.removeListener('ship/enabled', this._enabled);
   game.removeListener('game/pause', this._pause);
   game.removeListener('game/resume', this._resume);
+  game.removeListener('squad/shieldDestinationDeactivate', this._destinationDeactivate);
+  game.removeListener('squad/engageHostile', this._target);
 
   game.particles.remove(this.explosionEmitter);
   game.particles.remove(this.flashEmitter);
@@ -268,8 +274,8 @@ ShipManager.prototype._sync = function(data) {
 };
 
 ShipManager.prototype._player = function(ship) {
-    if(this.firstIteration){
     this.player = ship;
+    if(this.firstIteration){
       ship.alpha = 0
       ship.events.loop(100, fadeIn = function(){
         ship.alpha += 0.025
@@ -280,10 +286,7 @@ ShipManager.prototype._player = function(ship) {
             }
           }
         }
-      }, this);
-    // ship.locked = true;
-  } else {
-    this.player = ship;
+    }, this);
   }
   this._player_credits()
 
@@ -299,14 +302,7 @@ ShipManager.prototype._player = function(ship) {
 };
 
 ShipManager.prototype._player_credits = function() {
-  // var tempCredits;
-  // if(credits){
-  //   tempCredits = this.player.data.credits + credits;
-  // } else {
-  //   tempCredits = this.player.data.credits;
-  // }
-  // this.creditsPane.updateCredits(tempCredits)
-  this.creditsPane.updateCredits(this.player.data.credits)
+    this.creditsPane.updateCredits(this.player.data.credits) 
 };
 
 ShipManager.prototype._attack = function(data) {

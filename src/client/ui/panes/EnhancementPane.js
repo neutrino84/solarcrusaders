@@ -259,6 +259,14 @@ EnhancementPane.prototype._player = function(player) {
   this.invalidate();
 };
 
+EnhancementPane.prototype.destroy = function() {
+  // remove listeners
+  this.game.removeListener('ship/player', this._player, this);
+  this.game.removeListener('ship/enhancement/started', this._started, this);
+  this.game.removeListener('ship/enhancement/stopped', this._stopped, this);
+  this.game.removeListener('ship/enhancement/cooled', this._cooled, this);
+}
+
 // EnhancementPane.prototype._extraIcons = function(icon) {
 //   var button, container,
 //       enhancements = this.player.data.enhancements,

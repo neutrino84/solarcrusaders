@@ -327,7 +327,7 @@ SoundManager.prototype._fire = function(data) {
       volume = 0.0,
       harvesterNum = Math.floor((Math.random() * 5)+1), 
       v, r;
-  if(data.spawn>0) {
+  if(data.spawn>0 && ship.x && this.player) {
     distance = engine.Point.distance(ship, player);
     volume = global.Math.max(1-(distance/8192), 0);
 
@@ -528,6 +528,27 @@ SoundManager.prototype._player = function(ship){
     this.generateBackgroundMusic();
     this.generateSystemSound('systems-online')
   }, this)
+};
+
+SoundManager.prototype.destroy = function(){
+
+  this.game.removeListener('shipyard/hover', this._selection, this);
+  this.game.removeListener('ship/enhancement/started', this._enhance, this);
+  this.game.removeListener('ship/sound/growl', this.generateQueenGrowl, this);
+  this.game.removeListener('ship/disabled', this._disabled, this);
+  this.game.removeListener('ship/hardpoint/fire', this._fire, this);
+  this.game.removeListener('ship/hardpoint/hit', this._hit, this);
+  this.game.removeListener('system/sound', this.generateSystemSound, this);
+  this.game.removeListener('ship/secondary', this.generateThrusterSound, this);
+  this.game.removeListener('global/sound/spawn', this.generateSpawnSound, this);
+
+  this.game.removeListener('squad/sound', this.generateSquadSound, this);
+  this.game.removeListener('squad/shieldDestination', this.generateSquadSound, this);
+  this.game.removeListener('squad/shieldDestinationDeactivate', this.generateSquadSound, this);
+
+  this.game.sound.stopAll();
+
+  this.manager = this.shipManager = this.ships = this.config = undefined;
 };
 
 module.exports = SoundManager;

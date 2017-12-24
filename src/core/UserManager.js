@@ -1,4 +1,3 @@
-
 var winston = require('winston'),
     User = require('./objects/User');
 
@@ -26,7 +25,7 @@ UserManager.prototype.init = function() {
 
   // user messaging
   this.game.on('user/add', this.add, this);
-  // this.game.on('game/over', this.clear, this);
+  this.game.on('game/over', this.clear, this);
 };
 
 UserManager.prototype.add = function(user) {
@@ -133,8 +132,7 @@ UserManager.prototype.update = function() {
 
 UserManager.prototype.clear = function() {
   for(var i in this.game.users){
-    console.log(this.game.users[i])
-    this.game.users[i].ship = null;
+    this.remove(this.game.users[i])
   }
 };
 

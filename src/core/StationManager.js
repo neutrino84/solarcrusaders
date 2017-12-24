@@ -34,10 +34,10 @@ StationManager.prototype.add = function(station) {
 };
 
 StationManager.prototype.remove = function(station) {
-  var stations = this.stations,
+  var stations = this.game.stations,
       s = stations[station.uuid];
   if(s !== undefined) {
-    delete this.stations[station.uuid] && s.destroy();
+    delete this.game.stations[station.uuid] && s.destroy();
   }
 };
 
@@ -161,8 +161,9 @@ StationManager.prototype.disabled = function(data) {
 };
 
 StationManager.prototype.removeAllStations = function() {
-  for(var s in this.stations){
-    this.remove(this.stations[s]);
+  console.log('in backend remove ALL STATIONS')
+  for(var s in this.game.stations){
+    this.remove(this.game.stations[s]);
   }
 };
 

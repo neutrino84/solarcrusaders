@@ -126,7 +126,14 @@ LossState.prototype.create = function() {
     this.lossMessage2.text = 'INSERT COIN'
     this.lossMessage2.label.blink()
     this.game.clock.events.add(4000, function(){
+
+      this.game.world.static.removeAll();
+      this.game.world.background.removeAll();
+      this.game.world.foreground.removeAll();
+      // this.game.world.removeAll();
+      this.game.net.socket.emit('auth/connect');
       this.game.states.start('sector')
+      // location.reload(false);
     }, this)
 
 

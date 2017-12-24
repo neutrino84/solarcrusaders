@@ -122,7 +122,9 @@ Station.prototype.disable = function() {
 
   if(this.data.chassis === 'ubadian-station-x01'){
     this.game.clock.events.add(2000, function(){
-      this.game.emit('game/over')
+      if(this.game){
+        this.game.emit('game/over')
+      }
     }, this)
   }
 
