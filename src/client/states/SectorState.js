@@ -48,8 +48,7 @@ SectorState.prototype.constructor = engine.State;
 
 SectorState.prototype.init = function(args) {
   // instanciate ui
-  console.log('IN SECTOR STATE INIT')
-
+  
   // this.soundManager = undefined;
 
   this.ui = new UI(this.game);
@@ -141,7 +140,7 @@ SectorState.prototype.create = function() {
       mouse.capture = true;
       mouse.mouseWheelCallback = function(event) {
         var delta = event.deltaY / sensitivity,
-            scale = engine.Math.clamp(this.game.world.scale.x - delta, 0.1, 1.0);
+            scale = engine.Math.clamp(this.game.world.scale.x - delta, 0.5, 1.0);
             // scale = engine.Math.clamp(this.world.scale.x - delta, 0.5, 1.0);
         if(this.game.paused) { return; }
         if(this.zoom && this.zoom.isRunning) {

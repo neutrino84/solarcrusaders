@@ -93,10 +93,6 @@ function ShipManager(game, state, first) {
 
 ShipManager.prototype.constructor = ShipManager;
 
-ShipManager.prototype._whoIsPlayer = function(){
-  console.log(this.player.data.credits)
-}
-
 ShipManager.prototype._sendMapData = function(){
   var player = this.player,
       ships = this.ships, 

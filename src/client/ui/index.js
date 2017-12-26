@@ -12,9 +12,6 @@ var Panel = require('../ui/Panel'),
 
 function UI(game) {
   this.game = game;
-
-console.log('creating UI index')
-  // this.game.on('game/loss', this.lossScreen, this)
 };
 
 UI.prototype.preload = function() {

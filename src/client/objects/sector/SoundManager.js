@@ -124,7 +124,6 @@ SoundManager.prototype.preload = function() {
 };
 
 SoundManager.prototype.create = function() {
-  console.log(this.game)
   this.manager = this.game.states.current;
   this.shipManager = this.manager.shipManager;
   this.stationManager = this.manager.stationManager;

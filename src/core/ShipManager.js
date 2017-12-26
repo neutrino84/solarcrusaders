@@ -189,7 +189,6 @@ ShipManager.prototype.attack = function(socket, args) {
 
 ShipManager.prototype.squad_engage = function(socket, args){
   var ships = this.ships, target;
-  console.log(this.ships)
     for (var s in ships){
       ship = ships[s];
 
@@ -421,7 +420,6 @@ ShipManager.prototype.disabled = function(data) {
 };
 
 ShipManager.prototype.removeAll = function() {
-  console.log('in backend shipmanager, removeAll')
   for(var a in this.ships){
     this.remove(this.ships[a]);
   }

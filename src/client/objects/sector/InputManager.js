@@ -40,10 +40,8 @@ Selection.prototype._onInput = function(world, pointer) {
 };
 
 Selection.prototype._shield = function() {
-  this.shieldCheck = true
-  console.log('shield on')
+  this.shieldCheck = true;
   this.game.clock.events.add(3000, function(){
-    console.log('shield off')
     this.shieldCheck = false;
   }, this)
 };
