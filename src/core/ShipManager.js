@@ -189,7 +189,7 @@ ShipManager.prototype.attack = function(socket, args) {
 
 ShipManager.prototype.squad_engage = function(socket, args){
   var ships = this.ships, target;
-
+  console.log(this.ships)
     for (var s in ships){
       ship = ships[s];
 

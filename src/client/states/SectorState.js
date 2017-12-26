@@ -50,13 +50,15 @@ SectorState.prototype.init = function(args) {
   // instanciate ui
   console.log('IN SECTOR STATE INIT')
 
+  // this.soundManager = undefined;
+
   this.ui = new UI(this.game);
 
   this.soundManager = new SoundManager(this.game);
 
   this.playerManager = new PlayerManager(this.game);
 
-  // this.scrollLock = true;
+  this.scrollLock = true;
 //^ does this prevent scrolling
 
   this.game.stage.disableVisibilityChange = true;
@@ -134,20 +136,19 @@ SectorState.prototype.preload = function() {
 // loadRender = function() {};
 
 SectorState.prototype.create = function() {
-  var self = this,
-      sensitivity = 1000,
+  var sensitivity = 1000,
       mouse = this.game.input.mouse;
       mouse.capture = true;
       mouse.mouseWheelCallback = function(event) {
         var delta = event.deltaY / sensitivity,
-            scale = engine.Math.clamp(this.world.scale.x - delta, 0.1, 1.0);
+            scale = engine.Math.clamp(this.game.world.scale.x - delta, 0.1, 1.0);
             // scale = engine.Math.clamp(this.world.scale.x - delta, 0.5, 1.0);
-        if(self.game.paused) { return; }
-        if(self.zoom && self.zoom.isRunning) {
-          self.zoom.stop();
+        if(this.game.paused) { return; }
+        if(this.zoom && this.zoom.isRunning) {
+          return;
         }
-        this.world.scale.set(scale, scale);
-      };
+        this.game.world.scale.set(scale, scale);
+      }.bind(this);
 
       // var lossState = new LossState(this.game);
 
@@ -189,21 +190,29 @@ SectorState.prototype.playerCreated = function(){
     // this.stationManager.find('ubadian-station-x01')
     // this.game.camera
 
-    game.clock.events.add(1500, function(){
-      game.clock.events.loop(50, zoomOut = function(){
-        this.scaleX = this.scaleX - 0.01;
-        this.scaleY = this.scaleY - 0.01;
-        game.world.scale.set(this.scaleX, this.scaleY)
-        if(this.scaleX <= 0.8){
-          for(var i = 0; i < game.clock.events.events.length; i++){
-            if(game.clock.events.events[i].callback.name === 'zoomOut'){
-              game.clock.events.remove(game.clock.events.events[i]);
-              this.shipManager.undock();
-            }
-          };
-        }
-      }, this)
-    }, this)
+    // game.clock.events.add(1500, function(){
+    //   game.clock.events.loop(50, zoomOut = function(){
+    //     this.scaleX = this.scaleX - 0.01;
+    //     this.scaleY = this.scaleY - 0.01;
+    //     game.world.scale.set(this.scaleX, this.scaleY)
+    //     if(this.scaleX <= 0.8){
+    //       for(var i = 0; i < game.clock.events.events.length; i++){
+    //         if(game.clock.events.events[i].callback.name === 'zoomOut'){
+    //           game.clock.events.remove(game.clock.events.events[i]);
+    //           this.shipManager.undock();
+    //         }
+    //       };
+    //     }
+    //   }, this)
+    // }, this)
+
+    this.zoom = this.game.tweens.create(this.game.world.scale);
+    this.zoom.to({ x: 0.8, y: 0.8 }, 5000, engine.Easing.Quadratic.InOut);
+    this.zoom.delay(1500);
+    this.zoom.start();
+    // this.zoom.on('complete', function() {
+    //   this.scrollLock = false;
+    // }, this);
 };
 
 SectorState.prototype.createSpace = function() {
@@ -325,7 +334,8 @@ SectorState.prototype.resize = function(width, height) {
 
 // pauseUpdate = function() {};
 SectorState.prototype.switch = function() {
-  this.game.clock.events.add(2000, function(){
+  this.soundManager.destroy();
+  this.game.clock.events.add(3000, function(){
     this.game.states.start('loss')
   }, this)
 }
@@ -335,11 +345,16 @@ SectorState.prototype.shutdown = function() {
 this.shipManager.destroy();
 this.stationManager.destroy();
 this.squadManager.destroy();
-this.soundManager.destroy();
+
 this.ui.destroy();
- this.soundManager = this.stationManager = this.space = this.ui =
+ this.stationManager = this.space = this.ui =
  this.planet = this.nebula = this.neb1 = this.neb2 = this.neb3 = this.hotkeyManager
- = this.shipManager = undefined
+ = this.shipManager =this.soundManager = undefined
+
+ // this.game.clock.events.add(1000, function(){
+ //  console.log('undefining sound manager')
+ //  this.soundManager = undefined;
+ // }, this)
   
 };
 

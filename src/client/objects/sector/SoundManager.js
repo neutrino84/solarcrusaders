@@ -73,6 +73,8 @@ SoundManager.prototype.preload = function() {
   load.audio('capital-explosion-b','sounds/explosions/actionExplosion.mp3');
   load.audio('capital-explosion-c','sounds/explosions/explosionBig100.mp3');
 
+  load.audio('ubadian-station-explosion','sounds/explosions/ubadianStationExplosion.mp3');
+
   load.audio('squadshipDeath','sounds/explosions/squadShipExplosion3.mp3');
   load.audio('shieldUp','sounds/squadSounds/shieldUpBetterStill.mp3');
 
@@ -122,9 +124,12 @@ SoundManager.prototype.preload = function() {
 };
 
 SoundManager.prototype.create = function() {
+  console.log(this.game)
   this.manager = this.game.states.current;
   this.shipManager = this.manager.shipManager;
+  this.stationManager = this.manager.stationManager;
   this.ships = this.shipManager.ships;
+  this.stations = this.stationManager.stations;
   this.config = this.game.cache.getJSON('item-configuration', false);
 
 
@@ -190,6 +195,8 @@ SoundManager.prototype.create = function() {
   this.game.sound.add('capital-explosion-b', 6);
   this.game.sound.add('capital-explosion-c', 6);
 
+  this.game.sound.add('ubadian-station-explosion', 1);
+
   this.game.sound.add('squadshipDeath', 2);
   this.game.sound.add('shieldUp', 2);
 
@@ -224,6 +231,7 @@ SoundManager.prototype.create = function() {
   this.game.on('ship/enhancement/started', this._enhance, this);
   this.game.on('ship/sound/growl', this.generateQueenGrowl, this);
   this.game.on('ship/disabled', this._disabled, this);
+  this.game.on('station/disabled/sound', this._disabledStation, this);
   this.game.on('ship/hardpoint/fire', this._fire, this);
   this.game.on('ship/hardpoint/hit', this._hit, this);
   this.game.on('system/sound', this.generateSystemSound, this);
@@ -317,6 +325,28 @@ SoundManager.prototype._disabled = function(data) {
   }
 };
 
+SoundManager.prototype._disabledStation = function(data) {
+  var game = this.game,
+      player = this.player || { x: 2048, y: 2048 },
+      station = this.stations[data.uuid],
+      volume = 0.5,
+      rnd = game.rnd, sound, distance, num;
+  if(station) {
+    distance = engine.Point.distance(station, player);
+    volume = global.Math.max(1-(distance/5192), 0);
+    volume *= volume;
+    sound = null;
+
+    if(station.data.chassis === 'ubadian-station-x01'){
+      console.log('UBADIAN STATION EXPLODING SOUND')
+      sound = 'ubadian-station-explosion';
+    };
+    if(sound && volume > SoundManager.MINIMUM_VOLUME) {
+      game.sound.play(sound, volume, false, rnd.realInRange(0.8, 1.2));
+    }
+  }
+};
+
 SoundManager.prototype._fire = function(data) {
   var created = data.created,
       game = this.game,
@@ -374,8 +404,28 @@ SoundManager.prototype.generateSystemSound = function(sound){
 
 SoundManager.prototype.generateBackgroundMusic = function(){
   var num = Math.floor((Math.random() * 3)+1);
+  this.backgroundMusic = 'background'+num;
   this.game.sound.play('background'+num, 0.6, true);
-  // console.log('music is background'+num)
+};
+
+SoundManager.prototype.fadeOut = function(key){
+  for(var i = 0; i < this.game.sound._sounds.length; i++){
+    if(this.game.sound._sounds[i].name === key){
+      this.game.sound._sounds[i].fadeOut();
+    }
+  }
+};
+
+SoundManager.prototype.fadeOutAll = function(){
+  var game = this.game;
+  game.clock.events.add(1000, function(){
+      this.fadeOut(this.backgroundMusic);
+  }, this);
+  for(var i = 0; i < game.sound._sounds.length; i++){
+    if(game.sound._sounds[i].name !== this.backgroundMusic){
+      this.fadeOut(game.sound._sounds[i].name);
+    };
+  };
 };
 
 SoundManager.prototype.generateThrusterSound = function(){
@@ -530,7 +580,30 @@ SoundManager.prototype._player = function(ship){
   }, this)
 };
 
+// SoundManager.prototype.destroy = function(){
+
+//   this.game.removeListener('shipyard/hover', this._selection, this);
+//   this.game.removeListener('ship/enhancement/started', this._enhance, this);
+//   this.game.removeListener('ship/sound/growl', this.generateQueenGrowl, this);
+//   this.game.removeListener('ship/disabled', this._disabled, this);
+//   this.game.removeListener('ship/hardpoint/fire', this._fire, this);
+//   this.game.removeListener('ship/hardpoint/hit', this._hit, this);
+//   this.game.removeListener('system/sound', this.generateSystemSound, this);
+//   this.game.removeListener('ship/secondary', this.generateThrusterSound, this);
+//   this.game.removeListener('global/sound/spawn', this.generateSpawnSound, this);
+
+//   this.game.removeListener('squad/sound', this.generateSquadSound, this);
+//   this.game.removeListener('squad/shieldDestination', this.generateSquadSound, this);
+//   this.game.removeListener('squad/shieldDestinationDeactivate', this.generateSquadSound, this);
+
+//   this.game.sound.stopAll();
+
+//   this.manager = this.shipManager = this.ships = this.config = undefined;
+// };
+
 SoundManager.prototype.destroy = function(){
+
+  this.fadeOutAll(); 
 
   this.game.removeListener('shipyard/hover', this._selection, this);
   this.game.removeListener('ship/enhancement/started', this._enhance, this);
@@ -546,7 +619,10 @@ SoundManager.prototype.destroy = function(){
   this.game.removeListener('squad/shieldDestination', this.generateSquadSound, this);
   this.game.removeListener('squad/shieldDestinationDeactivate', this.generateSquadSound, this);
 
-  this.game.sound.stopAll();
+  // this.game.clock.events.add(1000, function(){
+  //   this.fadeOut(this.backgroundMusic);
+  // }, this)
+  // this.game.sound.stopAll();
 
   this.manager = this.shipManager = this.ships = this.config = undefined;
 };

@@ -83,10 +83,11 @@ StationManager.prototype._disabled = function(data) {
       game = this.game, chassis;
   if(station !== undefined) {
     chassis = station.data.chassis;
+    
+    this.game.emit('station/disabled/sound', station);
 
     station.disable();
     station.explode();
-    // this.game.emit('station/sound/death', station);
   }
 };
 

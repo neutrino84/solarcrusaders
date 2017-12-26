@@ -19,7 +19,7 @@ function EventManager(game) {
   this.pirateAttackSwitch = false;
 
   this.ships = {
-    basic: 4,
+    basic: 5,
     enforcer: 1,
     pirate: {
       factions : {
@@ -65,11 +65,11 @@ EventManager.prototype.constructor = EventManager;
 EventManager.prototype.init = function() {
 
   // subscribe to messaging
-  this.game.on('user/add', this.add, this);
-  this.game.on('ship/add', this.add, this);
-  this.game.on('station/add', this.add, this);
-  this.game.on('station/disabled', this.disabled, this);
-  this.game.on('ship/disabled', this.disabled, this);
+  // this.game.on('user/add', this.add, this);
+  // this.game.on('ship/add', this.add, this);
+  // this.game.on('station/add', this.add, this);
+  // this.game.on('station/disabled', this.disabled, this);
+  // this.game.on('ship/disabled', this.disabled, this);
   this.game.on('squad/create', this.squadGen, this);
   this.game.on('game/over', this.restart, this);
 
@@ -121,7 +121,7 @@ EventManager.prototype.init = function() {
     }
   };
 
-  this.scavGen(14);
+  this.scavGen(16);
   
 };
 
@@ -166,24 +166,8 @@ EventManager.prototype.squadGen = function(master){
   } else {
     chassis3 = this.game.rnd.pick(this.chassis['squadron'])
   }
-
-// return
   // this.game.emit('ship/create', {
   //   chassis: 'squad-attack',
-  //   x: randomPostion.x,
-  //   y: randomPostion.y,
-  //   ai: 'squadron',
-  //   master: master
-  // });
-  // this.game.emit('ship/create', {
-  //   chassis: 'squad-attack',
-  //   x: randomPostion.x,
-  //   y: randomPostion.y,
-  //   ai: 'squadron',
-  //   master: master
-  // });
-  // this.game.emit('ship/create', {
-  //   chassis: 'squad-shield',
   //   x: randomPostion.x,
   //   y: randomPostion.y,
   //   ai: 'squadron',
@@ -253,7 +237,6 @@ EventManager.prototype.enforcerGen = function(x, y, master){
 };
 
 EventManager.prototype.scavGen = function(num) {
-
   for(var i = 0; i < Math.round(num/2); i++){
     this.game.emit('ship/create', {
       chassis: this.game.rnd.pick(this.chassis['scavenger']),
@@ -389,12 +372,13 @@ EventManager.prototype.update = function() {
 EventManager.prototype.restart = function() {
   this.updateTimer && this.game.clock.events.remove(this.updateTimer);
 
-  this.game.removeListener('user/add', this.add, this);
-  this.game.removeListener('ship/add', this.add, this);
-  this.game.removeListener('station/add', this.add, this);
+  // this.game.removeListener('user/add', this.add);
+  // this.game.removeListener('ship/add', this.add, this);
+  // this.game.removeListener('station/add', this.add, this);
   this.game.removeListener('station/disabled', this.disabled, this);
   this.game.removeListener('ship/disabled', this.disabled, this);
   this.game.removeListener('squad/create', this.squadGen, this);
+  this.game.removeListener('game/over', this.restart, this);
 
   this.init();
 };
