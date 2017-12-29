@@ -52,15 +52,6 @@ UI.prototype.create = function() {
     this.root.addPanel(this.shipyard);
   }
   
-  // this.miniMapPane = new MiniMapPane(this.game);
-  // this.root.addPanel(this.miniMapPane);
-  
-  
-  
-  // this.root.addPanel(this.leaderBoard);
-  //added miniMap pane
-  // this.miniMapPanel.addPanel(Layout.NONE, this.miniMapPane);
-
   // invalidate
   this.root.invalidate();
 

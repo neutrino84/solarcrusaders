@@ -1213,6 +1213,135 @@
       ]
     }
   },
+  "pirate-x03": {
+    "race": "general",
+    "class": "battlecruiser",
+    "stats": {
+      "capacity": 3000,
+      "health": 750,
+      "heal": 0.25,
+      "armor": 0.2,
+      "speed": 10.0,
+      "rate": 1500,
+      "evasion": 0.02,
+      "energy": 200,
+      "recharge": 1,
+      "size": 104,
+      "durability": 135,
+      "critical": 0.01
+    },
+    "enhancements": ["heal", "booster", "shield"],
+    "engine": {
+      "glows": [
+        {
+          "tint": "0xFFFFFF",
+          "scale": {
+            "startX": 0.02,
+            "endX": 0.05,
+            "startY": 0.08,
+            "endY": 0.12
+          },
+          "position": {
+            "x": 154,
+            "y": 103
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "0xFFFFFF",
+          "scale": {
+            "startX": 0.02,
+            "endX": 0.05,
+            "startY": 0.08,
+            "endY": 0.12
+          },
+          "position": {
+            "x": 170,
+            "y": 147
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "0xFFFFFF",
+          "scale": {
+            "startX": 0.02,
+            "endX": 0.05,
+            "startY": 0.08,
+            "endY": 0.12
+          },
+          "position": {
+            "x": 170,
+            "y": 59
+          },
+          "rotation": 0
+        }
+      ]
+    },
+    "targeting": {
+      "hardpoints": [
+        {
+          "type": ["projectile"],
+          "pivot": {
+            "x": 17,
+            "y": 16
+          },
+          "position": {
+            "x": 43,
+            "y": 46
+          },
+          "default": {
+            "type": "rocket",
+            "subtype": "blackhammer"
+          }
+        },
+        { 
+          "type": ["projectile"],
+          "pivot": {
+            "x": 43,
+            "y": 165
+          },
+          "position": {
+            "x": 162,
+            "y": 45
+          },
+          "default": {
+            "type": "rocket",
+            "subtype": "blackhammer"
+          }
+        },
+        {
+          "type": ["projectile"],
+          "pivot": {
+            "x": 143,
+            "y": 49
+          },
+          "position": {
+            "x": 48,
+            "y": 145
+          },
+          "default": {
+            "type": "rocket",
+            "subtype": "blackhammer"
+          }
+        },
+        {
+          "type": ["projectile"],
+          "pivot": {
+            "x": 17,
+            "y": 16
+          },
+          "position": {
+            "x": 143,
+            "y": 161
+          },
+          "default": {
+            "type": "rocket",
+            "subtype": "blackhammer"
+          }
+        }
+      ]
+    }
+  },
   "enforcer-x01": {
     "race": "ubaidian",
     "class": "fighter",
@@ -1590,7 +1719,7 @@
       "health": 875,
       "heal": 0.2,
       "armor": 0.1,
-      "speed": 11.0,
+      "speed": 10.0,
       "rate": 1800,
       "evasion": 2,
       "energy": 100,

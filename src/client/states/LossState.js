@@ -20,7 +20,6 @@ LossState.prototype.constructor = engine.State;
 LossState.prototype.init = function(args) {
   // instanciate ui
   this.ui = new UI(this.game);
-  console.log('in loss state init, args are ', args)
 };
 
 LossState.prototype.preload = function() {
@@ -53,21 +52,6 @@ LossState.prototype.create = function() {
   });
   this.root.alpha = 0;
 
-  console.log('THIS ROOT IS : ', this.root)
-
-  // this.lossScreen = new Pane(this.game, {
-  //   constraint: Layout.CENTER,
-  //   width: this.game.width,
-  //   height: this.game.height,
-  //   layout: {
-  //     type: 'stack'
-  //   },
-  //   bg: {
-  //     fillAlpha: 1,
-  //     color: 0x000000
-  //   }
-  // });
-
   this.lossScreen = new Pane(this.game, {
     constraint: Layout.CENTER,
     width: this.game.width,
@@ -81,12 +65,6 @@ LossState.prototype.create = function() {
     },
     bg: false
   });
-
-  // type: 'flow',
-  //     ax: Layout.CENTER, 
-  //     ay: Layout.BOTTOM,
-  //     direction: Layout.HORIZONTAL, 
-  //     gap: 4
 
   this.lossScreenLabelContainer = new Pane(this.game, {
     constraint: Layout.CENTER,
@@ -125,14 +103,15 @@ LossState.prototype.create = function() {
   this.game.clock.events.add(2000, function(){
     this.lossMessage2.text = 'INSERT COIN'
     this.lossMessage2.label.blink()
-    this.game.clock.events.add(4000, function(){
-
       this.game.world.static.removeAll();
       this.game.world.background.removeAll();
       this.game.world.foreground.removeAll();
-      // this.game.world.removeAll();
+      this.game.world.removeAll();
+    this.game.clock.events.add(4000, function(){
+      // console.log('game.world (after loss state) is ', this.game.world)
       this.game.net.socket.emit('auth/connect');
       this.game.states.start('sector')
+
       // location.reload(false);
     }, this)
 

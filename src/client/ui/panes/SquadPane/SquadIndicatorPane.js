@@ -15,10 +15,11 @@ var engine = require('engine'),
 
 function SquadIndicatorPane(game, settings) {
   Pane.call(this, game, {
-    constraint: Layout.CENTER,
-    height: 18,
-    width: 120,
-    padding: [13, 0, 0, 0],
+    constraint: Layout.RIGHT,
+    height: 25,
+    width: 150,
+    margin: [0, 0, 0, 0],
+    padding: [5, 0, 0, 0],
     layout: {
       type: 'flow',
       ax: Layout.CENTER, 
@@ -49,13 +50,13 @@ function SquadIndicatorPane(game, settings) {
   });
 
 
-  this.paymentTimerIndicator = new ProgressBar(this.game, this.settings.paymentTimerIndicator);
+  // this.paymentTimerIndicator = new ProgressBar(this.game, this.settings.paymentTimerIndicator);
 
-  this.paymentTimerIndicator.percentage('width', 0)
+  // this.paymentTimerIndicator.percentage('width', 0)
   
   // this.invalidate();
 
-  this.addPanel(this.paymentTimerIndicator)
+  // this.addPanel(this.paymentTimerIndicator)
 
   this.ship_containers = [];
   this.count = 0;
@@ -105,20 +106,20 @@ SquadIndicatorPane.prototype._squadConstruct = function(chassis){
       containers = this.ship_containers,
       ship, ship_negative;
 
-  if(!this.clockStarted){
-    this.clockStarted = true;
-    this.game.clock.events.loop(1250, function(){
-      this.paymentClock += (0.1/3);  
-      if(this.paymentClock >= .99999999){
-        this.paymentClock = 1;
-        this._payment();
-        this.paymentClock = 0;
-        this.game.emit('squad/payment')
-        return
-      }
-      this._payment()
-    }, this)
-  }
+  // if(!this.clockStarted){
+  //   this.clockStarted = true;
+  //   this.game.clock.events.loop(1250, function(){
+  //     this.paymentClock += (0.1/3);  
+  //     if(this.paymentClock >= .99999999){
+  //       this.paymentClock = 1;
+  //       this._payment();
+  //       this.paymentClock = 0;
+  //       this.game.emit('squad/payment')
+  //       return
+  //     }
+  //     this._payment()
+  //   }, this)
+  // }
 
   ship = new Image(game, {
       key: 'texture-atlas',

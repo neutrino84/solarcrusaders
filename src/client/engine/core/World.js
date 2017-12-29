@@ -41,7 +41,6 @@ World.prototype.resize = function(width, height) {
 
 World.prototype.shutdown = function() {
   //..
-  console.log('shutting down World')
 
   // this.static = this.main = this.front = this.ui = this.background = this.foreground
 

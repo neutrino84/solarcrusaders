@@ -1,5 +1,6 @@
 
-var Panel = require('../../Panel'),
+var engine = require('engine'),
+    Panel = require('../../Panel'),
     Pane = require('../../components/Pane'),
     Label = require('../../components/Label'),
     ButtonIcon = require('../../components/ButtonIcon'),
@@ -448,24 +449,40 @@ Shipyard.prototype._hover = function(button) {
 };
 
 Shipyard.prototype._select= function(button){
+  var header = this.parent.panels[0];
   this.socket.emit('user/ship', button.parent.id, this.game.auth.socket.id)
   this.game.emit('shipyard/hover', 'selectionSFX2')
   this.game.emit('user/shipSelected')
   // this.parent.panels[0].alpha = 1;
-  var scope = this;
-  this.alpha = 0;
-  this.game.clock.events.loop(100, fadeInHeader = function(){
-    scope.parent.panels[0].alpha += 0.025;
-    // scope.alpha -= 0.1;
-    if(scope.parent.panels[0].alpha >= 1){
-      for(var i = 0; i < this.game.clock.events.events.length; i++){
-        if(scope.game.clock.events.events[i].callback.name === 'fadeInHeader'){
-          scope.game.clock.events.remove(scope.game.clock.events.events[i]);
-        }
-      }
-      scope.destroy()
-    }
+
+  this.selectedSequence1 = this.game.tweens.create(this);
+  this.selectedSequence1.to({alpha : 0}, 3000);
+  this.selectedSequence1.delay(1000);
+  this.selectedSequence1.start();
+
+  this.selectedSequence2 = this.game.tweens.create(this.parent.panels[0]);
+  this.selectedSequence2.to({alpha : 1}, 5000);
+  this.selectedSequence2.start();
+
+  this.selectedSequence1.on('complete', function() {
+    this.destroy()
   }, this);
+
+  // var scope = this;
+  // this.alpha = 0;
+
+  // this.game.clock.events.loop(100, fadeInHeader = function(){
+  //   scope.parent.panels[0].alpha += 0.025;
+  //   // scope.alpha -= 0.1;
+  //   if(scope.parent.panels[0].alpha >= 1){
+  //     for(var i = 0; i < this.game.clock.events.events.length; i++){
+  //       if(scope.game.clock.events.events[i].callback.name === 'fadeInHeader'){
+  //         scope.game.clock.events.remove(scope.game.clock.events.events[i]);
+  //       }
+  //     }
+  //     scope.destroy()
+  //   }
+  // }, this);
 
 };
 

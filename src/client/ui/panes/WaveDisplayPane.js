@@ -8,18 +8,18 @@ var engine = require('engine'),
     FlowLayout = require('../layouts/FlowLayout'),
     BorderLayout = require('../layouts/BorderLayout'),
     BackgroundView = require('../views/BackgroundView'),
-    ButtonIcon = require('../components/ButtonIcon'),
     ProgressBar = require('../components/ProgressBar'),
+    ButtonIcon = require('../components/ButtonIcon'),
     Tooltip = require('../components/Tooltip'),
     Class = engine.Class;
 
-function CreditsPane(game, settings) {
+function WaveDisplayPane(game, settings) {
   Pane.call(this, game, {
     constraint: Layout.CENTER,
     height: 15,
-    width: 200,
-    margin: [0, 20, 0, 0],
-    padding: [0, 0, 0, 0],
+    width: 90,
+    margin: [0, 0, 0, 0],
+    padding: [0, 30, 0, 0],
     layout: {
       type: 'flow',
       ax: Layout.CENTER, 
@@ -28,7 +28,7 @@ function CreditsPane(game, settings) {
       gap: 10
     },
     bg: false,
-    paymentTimerIndicator: {
+    waveIndicator: {
       width: 80,
       height: 2,
       margin: [0, 0, 20, 0],
@@ -50,78 +50,86 @@ function CreditsPane(game, settings) {
     }
   });
 
-  this.creditsText = new Label(this.game, {
+  this.mainText = new Label(this.game, {
         constraint: Layout.USE_PS_SIZE,
         align: 'center',
-        text: {
-          fontName: 'full'
-        },
-        bg: false
-      });
-  this.creditsCount = new Label(this.game, {
-        constraint: Layout.USE_PS_SIZE,
-        align: 'center',
+        color : 0xffffff,
+        margin: [0, 0, 0, 0],
         text: {
           fontName: 'full'
         },
         bg: false
       });
 
-  this.creditsText.text = 'CREDITS';
+  this.waveText = new Label(this.game, {
+        constraint: Layout.USE_PS_SIZE,
+        padding : [0, 7, 0, 0],
+        align: 'center',
+        color : 0xffffff,
+        text: {
+          fontName: 'full'
+        },
+        bg: false
+      });
+  // this.creditsCount = new Label(this.game, {
+  //       constraint: Layout.USE_PS_SIZE,
+  //       align: 'center',
+  //       text: {
+  //         fontName: 'full'
+  //       },
+  //       bg: false
+  //     });
+
+  // this.creditsCount.text = this.creditValue;
+  this.waveIndicator = new ProgressBar(this.game, this.settings.waveIndicator);
+
+  this.waveIndicator.percentage('width', 0)
 
 
-  this.paymentTimerIndicator = new ProgressBar(this.game, this.settings.paymentTimerIndicator);
-
-  this.paymentTimerIndicator.percentage('width', 0)
-
-  this.paymentClock = 0;
-  this.clockStarted = false;
+  this.mainText.text = 'WAVE'
+  this.waveText.text = ''
 
   this.exists = true;
 
-  // this.creditsCount.text = this.creditValue;
+  this.waveClock = 0;
+  this.clockStarted = false;
 
+  this.addPanel(this.mainText)
+  this.addPanel(this.waveText)
 
-  this.addPanel(this.creditsText)
-  this.addPanel(this.creditsCount)
-
-  this.addPanel(this.paymentTimerIndicator)
+  this.addPanel(this.waveIndicator)
 
   this.game.on('squad/construct', this._startClock, this)
   // this.game.on('player/credits', this._credits, this);
   // this.game.on('player/credits/init', this._credits, this);
 };
 
-CreditsPane.prototype = Object.create(Pane.prototype);
-CreditsPane.prototype.constructor = CreditsPane;
+WaveDisplayPane.prototype = Object.create(Pane.prototype);
+WaveDisplayPane.prototype.constructor = WaveDisplayPane;
 
-CreditsPane.prototype._startClock = function(){
+WaveDisplayPane.prototype._startClock = function(){
+  this.waveText.text = 1;
 
   if(!this.clockStarted){
     this.clockStarted = true;
-    this.game.clock.events.loop(1250, function(){
-      this.paymentClock += (0.1/3);  
-      if(this.paymentClock >= .99999999){
-        this.paymentClock = 1;
-        this._payment();
-        this.paymentClock = 0;
-        this.game.emit('squad/payment')
+    this.game.clock.events.loop(4000, function(){
+      this.waveClock += (0.1/3);  
+      if(this.waveClock >= .99999999){
+        this.waveClock = 1;
+        // this._wave();
+        this.waveClock = 0;
+        this.game.emit('wave/complete')
         return
       }
-      this._payment();
+      this._updateDisplay();
     }, this)
   };
 };
 
-CreditsPane.prototype._payment = function(){
+WaveDisplayPane.prototype._updateDisplay = function() {
   if(this.exists){
-    this.paymentTimerIndicator.change('width', this.paymentClock) 
+    this.waveIndicator.change('width', this.waveClock) 
   }
 };
 
-CreditsPane.prototype.updateCredits = function(credits) {
-  // this.creditValue = this.creditValue + credits;
-  this.creditsCount.text = Math.floor(credits);
-};
-
-module.exports = CreditsPane;
+module.exports = WaveDisplayPane;

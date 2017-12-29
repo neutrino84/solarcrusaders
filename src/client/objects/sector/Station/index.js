@@ -115,7 +115,9 @@ Station.prototype.disable = function() {
   if(this.chassis === 'ubadian-station-x01'){
     console.log('chassis right')
   }
-  this.game.emit('game/loss')
+  this.game.clock.events.add(750, function(){
+    this.game.emit('game/loss'); 
+  }, this);
 };
 
 Station.prototype.explode = function() {

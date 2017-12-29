@@ -399,6 +399,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">ships/pirates/pirate-x03.png</key>
             <key type="filename">ships/scavengers/scavenger-x04.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -556,6 +557,7 @@
             <filename>ships/ubaidian/squadron/indicators/squad-repair_upright.png</filename>
             <filename>ships/ubaidian/squadron/indicators/squad-shield_upright_black.png</filename>
             <filename>ships/ubaidian/squadron/indicators/squad-shield_upright.png</filename>
+            <filename>ships/pirates/pirate-x03.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

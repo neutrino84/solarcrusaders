@@ -73,13 +73,13 @@ TextView.prototype.typewriter = function(string, interval) {
   interval = interval || 300;
   index = 0;
 
-  this.game.clock.events.loop(interval, function() {
+  this.typewriterLoop = this.game.clock.events.loop(interval, function() {
     this.font.text = string.slice(0, index);
-    // console.log(this.font.text)
     index++;
 
     if(index > string.length){
-      //access this event to call .stop() to stop the loop
+      this.game.clock.events.remove(this.typewriterLoop);
+      
     }
   }, this);
 };

@@ -6,6 +6,7 @@ var engine = require('engine'),
     // MenuPane = require('./MenuPane'),
     CircleView = require('../views/CircleView'),
     MiniMapPane = require('../panes/MiniMapPane'),
+    InGameMessagePane = require('../panes/InGameMessagePane'),
     Pane = require('../components/Pane'),
     Label = require('../components/Label'),
     Image = require('../components/Image'),
@@ -32,7 +33,7 @@ function HeaderPane(game, settings) {
   });
 
 
-  this.square = new Pane(this.game, {
+  this.minimapContainer = new Pane(this.game, {
     width: 200,
     height: 200,
     // margin: [20, 20, 0, 0],
@@ -47,9 +48,27 @@ function HeaderPane(game, settings) {
       radius: 0
     }
   });
+
+  // this.waveDisplayContainer = new Pane(this.game, {
+  //   width: 400,
+  //   height: 100,
+  //   layout: {
+  //     type: 'flow',
+  //     gap: [0, 0]
+  //   },
+  //   bg: {
+  //     color: 0xFF0000,
+  //     fillAlpha: 1.0,
+  //     borderSize: 0.0
+  //   }
+  // });
+
   this.miniMap = new MiniMapPane(game);
-  this.square.addView(this.miniMap)
-  this.addPanel(this.square);
+  this.messageDisplay = new InGameMessagePane(game);
+  this.minimapContainer.addView(this.miniMap)
+  // this.waveDisplayContainer.addView(this.waveDisplay)
+  this.addPanel(this.minimapContainer);
+  this.addPanel(this.messageDisplay);
 
   // this.loginPane = new LoginPane(game);
   // this.loginPane.start();
