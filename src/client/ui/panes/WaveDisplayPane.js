@@ -85,6 +85,7 @@ function WaveDisplayPane(game, settings) {
 
   this.waveIndicator.percentage('width', 0)
 
+  this.wave = 1;
 
   this.mainText.text = 'WAVE'
   this.waveText.text = ''
@@ -108,27 +109,33 @@ WaveDisplayPane.prototype = Object.create(Pane.prototype);
 WaveDisplayPane.prototype.constructor = WaveDisplayPane;
 
 WaveDisplayPane.prototype._startClock = function(){
-  this.waveText.text = 1;
+  this.waveText.text = this.wave;
 
   if(!this.clockStarted){
     this.clockStarted = true;
     this.game.clock.events.loop(4000, function(){
       this.waveClock += (0.1/3);  
       if(this.waveClock >= .99999999){
-        this.waveClock = 1;
-        // this._wave();
         this.waveClock = 0;
+        this.wave++
         this.game.emit('wave/complete')
+        this._updateWave();
         return
       }
-      this._updateDisplay();
+      this._updateIndicator();
     }, this)
   };
 };
 
-WaveDisplayPane.prototype._updateDisplay = function() {
+WaveDisplayPane.prototype._updateIndicator = function() {
   if(this.exists){
     this.waveIndicator.change('width', this.waveClock) 
+  }
+};
+
+WaveDisplayPane.prototype._updateWave = function() {
+  if(this.exists){
+    this.waveText.text = this.wave;
   }
 };
 

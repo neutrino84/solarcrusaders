@@ -18,58 +18,27 @@ function EventManager(game) {
 
   this.pirateAttackSwitch = false;
 
-  // this.ships = {
-  //   basic: 5,
-  //   enforcer: 1,
-  //   pirate: {
-  //     factions : {
-  //       'katos_boys' : {
-  //         num : 8,
-  //         starting_position : {
-  //           x: 6966,
-  //           y: 4249
-  //         }
-  //       },
-  //       'temeni' : {
-  //         num : 8,
-  //         starting_position : {
-  //           x: -3743,
-  //           y: -941
-  //         }
-  //       },
-  //       'sappers' : {
-  //         num : 8,
-  //         starting_position : {
-  //           x: 1501,
-  //           y: 1521
-  //         }
-  //       }
-  //     }
-      
-  //   }
-  // };
-
   this.ships = {
-    basic: 1,
-    enforcer: 0,
+    basic: 4,
+    enforcer: 1,
     pirate: {
       factions : {
         'katos_boys' : {
-          num : 0,
+          num : 8,
           starting_position : {
             x: 6966,
             y: 4249
           }
         },
         'temeni' : {
-          num : 0,
+          num : 8,
           starting_position : {
             x: -3743,
             y: -941
           }
         },
         'sappers' : {
-          num : 0,
+          num : 8,
           starting_position : {
             x: 1501,
             y: 1521
@@ -80,10 +49,41 @@ function EventManager(game) {
     }
   };
 
+  // this.ships = {
+  //   basic: 1,
+  //   enforcer: 0,
+  //   pirate: {
+  //     factions : {
+  //       'katos_boys' : {
+  //         num : 0,
+  //         starting_position : {
+  //           x: 6966,
+  //           y: 4249
+  //         }
+  //       },
+  //       'temeni' : {
+  //         num : 0,
+  //         starting_position : {
+  //           x: -3743,
+  //           y: -941
+  //         }
+  //       },
+  //       'sappers' : {
+  //         num : 0,
+  //         starting_position : {
+  //           x: 1501,
+  //           y: 1521
+  //         }
+  //       }
+  //     }
+      
+  //   }
+  // };
+
   this.chassis = {
     basic : ['ubaidian-x01a','ubaidian-x01b','ubaidian-x01c','ubaidian-x01d','ubaidian-x01e','ubaidian-x01f'],
-    // pirate: ['pirate-x01','pirate-x01','pirate-x01','pirate-x02'],
-    pirate: ['pirate-x03'],
+    pirate: ['pirate-x01','pirate-x01','pirate-x01','pirate-x02'],
+    // pirate: ['pirate-x03'],
     squadron: ['squad-shield','squad-repair','squad-attack','squad-attack','squad-attack','squad-attack'],
     squadron2: ['squad-repair','squad-attack'],
     scavenger: ['scavenger-x01','scavenger-x02'],
