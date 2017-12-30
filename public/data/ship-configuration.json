@@ -730,7 +730,7 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "XP1123"
+            "subtype": "quantum"
           }
         },
         {
@@ -745,7 +745,7 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "XP1123"
+            "subtype": "quantum"
           }
         }
               ]
