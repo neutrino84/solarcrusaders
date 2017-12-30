@@ -336,10 +336,9 @@ SoundManager.prototype._disabledStation = function(data) {
     volume *= volume;
     sound = null;
 
-    if(station.data.chassis === 'ubadian-station-x01'){
-      console.log('UBADIAN STATION EXPLODING SOUND')
+    // if(station.data.chassis === 'ubadian-station-x01'){
       sound = 'ubadian-station-explosion';
-    };
+    // };
     if(sound && volume > SoundManager.MINIMUM_VOLUME) {
       game.sound.play(sound, volume, false, rnd.realInRange(0.8, 1.2));
     }

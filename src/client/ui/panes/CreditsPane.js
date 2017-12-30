@@ -96,7 +96,6 @@ CreditsPane.prototype = Object.create(Pane.prototype);
 CreditsPane.prototype.constructor = CreditsPane;
 
 CreditsPane.prototype._startClock = function(){
-
   if(!this.clockStarted){
     this.clockStarted = true;
     this.game.clock.events.loop(1250, function(){

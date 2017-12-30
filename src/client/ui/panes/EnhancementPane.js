@@ -182,6 +182,7 @@ EnhancementPane.prototype._started = function(data) {
 
   if(this.player && button && data.uuid === this.player.uuid) {
     // disable
+    // console.log(button.id)
     button.disabled(true);
     button.count = global.parseInt(config['basic'].cooldown);
     button.label.text = button.count;
@@ -194,7 +195,7 @@ EnhancementPane.prototype._started = function(data) {
     button.invalidate(false, true);
 
     // timer
-    button.timer && this.game.clock.events.remove(this.timer);
+    button.timer && this.game.clock.events.remove(button.timer);
     button.timer = this.game.clock.events.repeat(1000, button.count,
       function() {
         button.label.text = (--button.count).toString();
@@ -218,7 +219,7 @@ EnhancementPane.prototype._cooled = function(data) {
       button.label.visible = false;
 
   // cancel timer
-  this.timer && this.game.clock.events.remove(this.timer);
+  button.timer && this.game.clock.events.remove(button.timer);
 };
 
 EnhancementPane.prototype._player = function(player) {
@@ -260,33 +261,13 @@ EnhancementPane.prototype._player = function(player) {
 };
 
 EnhancementPane.prototype.destroy = function() {
+
+  this.removeAll();
   // remove listeners
   this.game.removeListener('ship/player', this._player, this);
   this.game.removeListener('ship/enhancement/started', this._started, this);
   this.game.removeListener('ship/enhancement/stopped', this._stopped, this);
   this.game.removeListener('ship/enhancement/cooled', this._cooled, this);
-}
-
-// EnhancementPane.prototype._extraIcons = function(icon) {
-//   var button, container,
-//       enhancements = this.player.data.enhancements,
-//       containers = this.containers,
-//       buttons = this.buttons,
-//       player = this.player;
-//   if(icon === 'shieldship'){
-//     shieldmaidenButton = this.create();
-//     shieldmaidenButton.id = icon;
-//     shieldmaidenButton.bg.on('inputUp', this._selectExtraIcon, this);
-//     shieldmaidenButton.start();
-
-//     buttons[icon] = shieldmaidenButton;
-
-//     containers[enhancements.length].addPanel(shieldmaidenButton)
-
-//     this.game.emit('hotkey/shieldship', enhancements.length+1);
-//   };
-
-//   this.invalidate();
-// };
+};
 
 module.exports = EnhancementPane;

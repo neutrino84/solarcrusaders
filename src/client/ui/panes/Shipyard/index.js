@@ -41,19 +41,6 @@ function Shipyard(game) {
     };
   };
 
-  // if(x < 800 || y < 800){
-  //   textHeight = 100;
-  //   if(x < 1026){
-  //     this.shipContainersSize = 100;
-  //     if(x < 860){
-  //       this.shipContainersSize = 80;
-  //     }
-  //   }
-  // } else {
-  //   textHeight = 175;
-  // };
-
-
   Pane.call(this, game, {
     constraint: Layout.CENTER,
     padding: [100, 100, 100, 100],
@@ -449,11 +436,18 @@ Shipyard.prototype._hover = function(button) {
 };
 
 Shipyard.prototype._select= function(button){
-  var header = this.parent.panels[0];
+  var header = this.parent.panels[0],
+      containers = this.containers;
+
+  for(var i = 0; i < 6; i++){
+    containers[i].panels[0].bg.removeListener('inputOver', this._hover, this)
+    containers[i].panels[0].bg.removeListener('inputOut', this._unhover, this)
+    containers[i].panels[0].bg.removeListener('inputDown', this._select, this)
+  }
+
   this.socket.emit('user/ship', button.parent.id, this.game.auth.socket.id)
   this.game.emit('shipyard/hover', 'selectionSFX2')
   this.game.emit('user/shipSelected')
-  // this.parent.panels[0].alpha = 1;
 
   this.selectedSequence1 = this.game.tweens.create(this);
   this.selectedSequence1.to({alpha : 0}, 3000);

@@ -113,7 +113,7 @@ WaveDisplayPane.prototype._startClock = function(){
 
   if(!this.clockStarted){
     this.clockStarted = true;
-    this.game.clock.events.loop(4000, function(){
+    this.waveClockTimer = this.game.clock.events.loop(4000, function(){
       this.waveClock += (0.1/3);  
       if(this.waveClock >= .99999999){
         this.waveClock = 0;
@@ -137,6 +137,11 @@ WaveDisplayPane.prototype._updateWave = function() {
   if(this.exists){
     this.waveText.text = this.wave;
   }
+};
+
+WaveDisplayPane.prototype.destroy = function() {
+  this.game.removeListener('squad/construct', this._startClock, this)
+  this.game.clock.events.remove(this.waveClockTimer);
 };
 
 module.exports = WaveDisplayPane;

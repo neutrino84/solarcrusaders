@@ -90,12 +90,10 @@ Pane.prototype = Object.create(Panel.prototype);
 Pane.prototype.constructor = Pane;
 
 Pane.prototype.fade = function(alpha, interval) {
-  console.log('IN PANE FADe! alpha, interval: ', this.alpha, alpha, interval)
   this.tween && this.tween.stop();
   this.tween = this.game.tweens.create(this);
   this.tween.to({ alpha: alpha }, interval);
-  this.tween.start()
-  console.log(this.alpha)
+  this.tween.start();
 }
 
 module.exports = Pane;

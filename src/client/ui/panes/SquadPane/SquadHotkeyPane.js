@@ -299,10 +299,10 @@ SquadHotkeyPane.prototype._player = function(player) {
   this.invalidate();
 };
 
-SquadHotkeyPane.prototype.destroy = function(){
-  this.containers = [];
-  this.buttons = {};
-};
+// SquadHotkeyPane.prototype.destroy = function(){
+//   this.containers = [];
+//   this.buttons = {};
+// };
 
 SquadHotkeyPane.prototype._squadIcons = function(icon) {
   var buttons = this.buttons, containers = this.containers, closestHostileButton;
@@ -418,6 +418,8 @@ SquadHotkeyPane.prototype._squadIcons = function(icon) {
 };
 
 SquadHotkeyPane.prototype.destroy = function(){
+  this.removeAll();
+
   this.game.removeListener('ship/player', this._player, this);
   this.game.removeListener('ship/player/squadSync', this._squadIcons, this);
 
