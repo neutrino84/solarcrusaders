@@ -24,15 +24,6 @@ LossState.prototype.init = function(args) {
 
 LossState.prototype.preload = function() {
     this.ui.preload();
-
-    
-    // load texture atlas
-    this.game.load.atlasJSONHash('texture-atlas', 'imgs/game/texture-atlas.png', 'data/texture-atlas.json');
-
-    // load ship configuration
-    // this.game.load.json('ship-configuration', 'data/ship-configuration.json');
-    // this.game.load.json('item-configuration', 'data/item-configuration.json');
-    // this.game.load.json('station-configuration', 'data/station-configuration.json');
 };
 
 LossState.prototype.create = function() {
@@ -116,7 +107,7 @@ LossState.prototype.create = function() {
     }, this)
 
 
-  }, this)
+  }, this);
 
   this.lossMessage.align = 'center'
 
@@ -129,10 +120,8 @@ LossState.prototype.create = function() {
   // invalidate
   this.root.invalidate();
 
-  this.root.fade(1, 1000)
-
-  // add event listeners
-
+  this.root.fade(1, 1000);
+  
   this.game.stage.addChild(this.root);
 };
 

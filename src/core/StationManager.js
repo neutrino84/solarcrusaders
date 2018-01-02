@@ -70,7 +70,8 @@ StationManager.prototype.data = function(uuids) {
         size: station.size,
         health: station.health,
         heal: station.heal,
-        armor: station.armor
+        armor: station.armor,
+        faction : station.faction
       });
     }
   }

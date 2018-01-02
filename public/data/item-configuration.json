@@ -257,7 +257,7 @@
         "projection": 0.2,
         "delay": 16,
         "spread": 10,
-        "damage": 33,
+        "damage": 13,
         "offset": {
           "min": 0.92,
           "max": 0.98

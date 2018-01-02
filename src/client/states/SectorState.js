@@ -22,7 +22,8 @@ function SectorState(game) {
   this.auth = game.auth;
 
   this.game.on('user/shipSelected', this.playerCreated, this);
-  this.game.on('game/loss', this.switch, this)
+  this.game.on('game/loss', this.switchState, this)
+  this.game.on('game/win', this.switchState, this)
 
   // this.game.world.static.removeAll();
   // this.game.world.background.removeAll();
@@ -183,6 +184,7 @@ SectorState.prototype.create = function() {
 SectorState.prototype.playerCreated = function(){
     var game = this.game;
 
+    console.log('secState, player created')
     this.createManagers('firstIteration');
     // this.ui.create();
     // console.log('in playwer created, stationManager is ', this.stationManager)
@@ -251,6 +253,7 @@ SectorState.prototype.createSpace = function() {
 SectorState.prototype.createManagers = function(first) {
   var game = this.game;
 
+  console.log('create managers, first is ', first)
   this.netManager = new NetManager(game, this);
   this.inputManager = new InputManager(game, this);
   this.hotkeyManager = new HotkeyManager(game, this);
@@ -332,23 +335,39 @@ SectorState.prototype.resize = function(width, height) {
 // resumed = function() {};
 
 // pauseUpdate = function() {};
-SectorState.prototype.switch = function() {
+SectorState.prototype.switchState = function(outcome) {
+
+  console.log('in sector state switchstate. outcome is ', outcome)
+
   this.soundManager.destroy();
-  this.game.clock.events.add(3000, function(){
-    this.game.states.start('loss')
-  }, this)
+  if(outcome === 'loss'){
+    this.game.clock.events.add(3000, function(){
+      this.game.states.start('loss')
+    }, this); 
+  } else {
+    this.game.clock.events.add(3000, function(){
+      this.game.states.start('win')
+    }, this); 
+  };
 }
 
 SectorState.prototype.shutdown = function() {
   //.. properly destroy
+
+// this.game.removeListener('user/shipSelected', this.playerCreated, this);
+// this.game.removeListener('game/loss', this.switchState, this);
+// this.game.removeListener('game/win', this.switchState, this);
+
+
 this.shipManager.destroy();
 this.stationManager.destroy();
 this.squadManager.destroy();
+this.netManager.destroy();
 
 this.ui.destroy();
  this.stationManager = this.space = this.ui =
  this.planet = this.nebula = this.neb1 = this.neb2 = this.neb3 = this.hotkeyManager
- = this.shipManager =this.soundManager = undefined
+ = this.shipManager = this.netManager = this.soundManager = undefined
 
  // this.game.clock.events.add(1000, function(){
  //  console.log('undefining sound manager')

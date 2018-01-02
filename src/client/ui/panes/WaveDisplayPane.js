@@ -100,7 +100,8 @@ function WaveDisplayPane(game, settings) {
 
   this.addPanel(this.waveIndicator)
 
-  this.game.on('squad/construct', this._startClock, this)
+  this.game.on('squad/construct', this._start, this);
+  this.game.on('wave/cycle', this.wavecycle, this);
   // this.game.on('player/credits', this._credits, this);
   // this.game.on('player/credits/init', this._credits, this);
 };
@@ -108,23 +109,8 @@ function WaveDisplayPane(game, settings) {
 WaveDisplayPane.prototype = Object.create(Pane.prototype);
 WaveDisplayPane.prototype.constructor = WaveDisplayPane;
 
-WaveDisplayPane.prototype._startClock = function(){
+WaveDisplayPane.prototype._start = function(){
   this.waveText.text = this.wave;
-
-  if(!this.clockStarted){
-    this.clockStarted = true;
-    this.waveClockTimer = this.game.clock.events.loop(4000, function(){
-      this.waveClock += (0.1/3);  
-      if(this.waveClock >= .99999999){
-        this.waveClock = 0;
-        this.wave++
-        this.game.emit('wave/complete')
-        this._updateWave();
-        return
-      }
-      this._updateIndicator();
-    }, this)
-  };
 };
 
 WaveDisplayPane.prototype._updateIndicator = function() {
@@ -137,6 +123,21 @@ WaveDisplayPane.prototype._updateWave = function() {
   if(this.exists){
     this.waveText.text = this.wave;
   }
+};
+
+WaveDisplayPane.prototype.wavecycle = function(num) {
+  this.waveClock = (1/60 * num);  
+  if(this.waveClock >= .99999999){
+    this.waveClock = 0;
+    this.wave++
+    this.game.emit('wave/complete')
+    console.log('WAVE COMPLETE, this.wave is ', this.wave)
+    console.log(this.game.auth)
+    console.log(this.game.auth.user)
+    this._updateWave();
+    return
+  }
+  this._updateIndicator();
 };
 
 WaveDisplayPane.prototype.destroy = function() {

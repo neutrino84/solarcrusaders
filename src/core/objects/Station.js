@@ -7,9 +7,11 @@ function Station(manager, data) {
   this.game = manager.game;
   this.sockets = manager.sockets;
   this.model = manager.model;
+
   this.data = new this.model.Station(data);
   this.data.init();
 
+  this.faction = data.faction;
   this.uuid = this.data.uuid;
   this.chassis = this.data.chassis;
   this.race = this.data.race;
@@ -51,8 +53,8 @@ Station.prototype.hit = function(attacker, target, slot) {
       ratio = distance / (this.size * hardpoint.data.aoe),
       damage, health, critical;
 
-  // if(ratio < 0.1 && attacker.ai && attacker.ai.type === 'pirate') {
-    if(ratio < 0.1) {
+  if(ratio < 0.1 && attacker.ai && attacker.ai.type === 'pirate') {
+    // if(ratio < 0.1) {
     // calc damage
     critical = game.rnd.rnd() <= attacker.critical;
     damage = global.Math.max(0, hardpoint.data.damage * (1-ratio) * (1-this.armor));
@@ -119,15 +121,7 @@ Station.prototype.hit = function(attacker, target, slot) {
 Station.prototype.disable = function() {
   // disable
   this.disabled = true;
-
-  if(this.data.chassis === 'ubadian-station-x01'){
-    this.game.clock.events.add(4000, function(){
-      if(this.game){
-        this.game.emit('game/over')
-      }
-    }, this)
-  }
-
+  
   // broadcast
   this.game.emit('station/disabled', {
     uuid: this.uuid

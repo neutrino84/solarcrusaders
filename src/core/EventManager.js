@@ -7,19 +7,52 @@ var uuid = require('uuid'),
     AI = require('./AI')
     Utils = require('../utils');
 
-function EventManager(game) {
+function EventManager(game, manager) {
   this.game = game;
+  this.sectorManager = manager;
   this.model = game.model;
   this.sockets = game.sockets;
-
-  this.level = 1;
 
   this.attackCount = 0;
 
   this.pirateAttackSwitch = false;
 
+  this.wavecycleCount = 0;
+
+  this.game.clock.events.loop(1000, this.wavecycle, this)
+  // this.ships = {
+  //   basic: 4,
+  //   enforcer: 1,
+  //   pirate: {
+  //     factions : {
+  //       'katos_boys' : {
+  //         num : 8,
+  //         starting_position : {
+  //           x: 6966,
+  //           y: 4249
+  //         }
+  //       },
+  //       'temeni' : {
+  //         num : 8,
+  //         starting_position : {
+  //           x: -3743,
+  //           y: -941
+  //         }
+  //       },
+  //       'sappers' : {
+  //         num : 8,
+  //         starting_position : {
+  //           x: 1501,
+  //           y: 1521
+  //         }
+  //       }
+  //     }
+      
+  //   }
+  // };
+
   this.ships = {
-    basic: 4,
+    basic: 5,
     enforcer: 1,
     pirate: {
       factions : {
@@ -49,37 +82,6 @@ function EventManager(game) {
     }
   };
 
-  // this.ships = {
-  //   basic: 1,
-  //   enforcer: 0,
-  //   pirate: {
-  //     factions : {
-  //       'katos_boys' : {
-  //         num : 0,
-  //         starting_position : {
-  //           x: 6966,
-  //           y: 4249
-  //         }
-  //       },
-  //       'temeni' : {
-  //         num : 0,
-  //         starting_position : {
-  //           x: -3743,
-  //           y: -941
-  //         }
-  //       },
-  //       'sappers' : {
-  //         num : 0,
-  //         starting_position : {
-  //           x: 1501,
-  //           y: 1521
-  //         }
-  //       }
-  //     }
-      
-  //   }
-  // };
-
   this.chassis = {
     basic : ['ubaidian-x01a','ubaidian-x01b','ubaidian-x01c','ubaidian-x01d','ubaidian-x01e','ubaidian-x01f'],
     pirate: ['pirate-x01','pirate-x01','pirate-x01','pirate-x02'],
@@ -90,6 +92,18 @@ function EventManager(game) {
     enforcer: ['enforcer-x02']
   };
 
+  this.spawnSets = {
+    1 : {'katos_boys' : {'pirate-x01' : 1},'temeni' : {'pirate-x01' : 1}},
+    2 : {'katos_boys' : {'pirate-x01' : 2},'temeni' : {'pirate-x01' : 2}}, 
+    3 : {'katos_boys' : {'pirate-x01' : 2},'temeni' : {'pirate-x02' : 1}},
+    4 : {'katos_boys' : {'pirate-x01' : 0,'pirate-x02' : 1},'temeni' : {'pirate-x01' : 1,'pirate-x02' : 1}},
+    5 : {'katos_boys' : {'pirate-x01' : 2,'pirate-x02' : 1},'temeni' : {'pirate-x01' : 1,'pirate-x02' : 1}}, 
+    6 : {'katos_boys' : {'pirate-x02' : 2},'temeni' : {'pirate-x01' : 4}},
+    7 : {'katos_boys' : {'pirate-x01' : 1,'pirate-x03' : 1},'temeni' : {'pirate-x01' : 2,'pirate-x02' : 1}},
+    8 : {'katos_boys' : {'pirate-x01' : 2,'pirate-x03' : 1},'temeni' : {'pirate-x01' : 2,'pirate-x03' : 1}},
+    9 : {'katos_boys' : {'pirate-x01' : 4,'pirate-x03' : 1},'temeni' : {'pirate-x01' : 4,'pirate-x03' : 1}},
+    10 : {'katos_boys' : {'pirate-x01' : 4,'pirate-x02' : 2,'pirate-x03' : 1},'temeni' : {'pirate-x01' : 4,'pirate-x02' : 2,'pirate-x03' : 1}}
+  };
 };
 
 EventManager.prototype.constructor = EventManager;
@@ -101,47 +115,20 @@ EventManager.prototype.init = function() {
   // this.game.on('ship/add', this.add, this);
   // this.game.on('station/add', this.add, this);
   // this.game.on('station/disabled', this.disabled, this);
-  // this.game.on('ship/disabled', this.disabled, this);
+
+  this.game.on('wave/cycle/complete', this.wavecycleComplete, this);
+  this.game.on('ship/disabled', this.disabled, this);
   this.game.on('squad/create', this.squadGen, this);
+  this.game.on('station/disabled', this.disabled, this);
   this.game.on('game/over', this.restart, this);
 
   // refresh data interval
  this.updateTimer = this.game.clock.events.loop(1000, this.update, this);
 
-  // create default station
-  this.game.emit('station/create', {
-    chassis: 'ubadian-station-x01',
-    x: 1501,
-    y: 1521
-  });
 
-  this.game.emit('station/create', {
-    chassis: 'general-station-x01',
-    x: -3743,
-    y: -941
-  });
 
-  this.game.emit('station/create', {
-    chassis: 'general-station-x01',
-    x: 6966,
-    y: 4249
-  });
-
-  // create scavenger nests
-  this.game.emit('station/create', {
-    chassis: 'scavenger-x01',
-    x: 5411, 
-    y: -5354,
-    radius: 0
-  });
-
-  this.game.emit('station/create', {
-    chassis: 'scavenger-x01',
-    x: -5055,
-    y: 4973,
-    radius: 0
-  });
-
+  this.stationGen();
+  this.scavGen(16);
   //generate ships
   for(var a in this.ships){
     if(this.ships[a].factions){
@@ -152,9 +139,54 @@ EventManager.prototype.init = function() {
       this.shipGen(this.ships[a], a.toString())
     }
   };
-
-  this.scavGen(16);
   
+};
+
+EventManager.prototype.stationGen = function(){
+  // create default station
+  this.game.emit('station/create', {
+    chassis: 'ubadian-station-x01',
+    x: 1501,
+    y: 1521,
+    faction: 'imperial'
+  });
+
+  this.game.emit('station/create', {
+    chassis: 'general-station-x01',
+    x: -3743,
+    y: -941,
+    faction: 'temeni'
+  });
+
+  this.game.emit('station/create', {
+    chassis: 'general-station-x01',
+    x: 6966,
+    y: 4249,
+    faction: 'katos_boys'
+  });
+
+  // create scavenger nests
+  this.game.emit('station/create', {
+    chassis: 'scavenger-x01',
+    x: 5411, 
+    y: -5354,
+    faction : 'vulothi'
+  });
+
+  this.game.emit('station/create', {
+    chassis: 'scavenger-x01',
+    x: -5055,
+    y: 4973,
+    faction : 'fenris'
+  });
+
+  this.stationCounts = {
+    'imperial' : 1,
+    'katos_boys' : 1,
+    'temeni' : 1,
+    'vulothi' : 1,
+    'fenris' : 1
+  }
 };
 
 EventManager.prototype.shipGen = function(num, ai, startingPos, faction){
@@ -359,13 +391,102 @@ EventManager.prototype.disabled = function(object) {
         this.ships.pirate--;
         break;
     }
+  } else if(this.game.stations[object.uuid] && this.game.stations[object.uuid].faction){
+      switch(this.game.stations[object.uuid].faction) {
+        case 'imperial':
+          console.log('ubadian station destroyed')
+        this.stationCounts.imperial--
+        this.lossCondition();
+          break;
+        case 'temeni':
+          console.log('temeni station destroyed')
+        this.stationCounts.temeni--
+        this.winCondition();
+          break;
+        case 'katos_boys':
+          console.log('katos_boys station destroyed')
+          this.stationCounts.katos_boys-- 
+          this.winCondition();
+          break;
+        case 'vulothi':
+          console.log('vulothi nest destroyed')
+          break;
+        case 'fenris':
+          console.log('fenris nest destroyed')
+          break;
+      }
   }
+};
+
+EventManager.prototype.wavecycle = function(){
+  this.wavecycleCount++
+  this.sockets.send('wave/cycle', this.wavecycleCount);
+  if(this.wavecycleCount >= 60){
+    this.wavecycleCount = 0;
+    this.game.emit('wave/cycle/complete');
+  };
+};
+
+EventManager.prototype.wavecycleComplete = function(num){
+  for(var u in this.game.users){
+    var wave = this.game.users[u].wave;
+    console.log('USERS IS ', this.game.users)
+    if(this.game.users[u].ship){
+      this.waveSpawn(wave)
+      this.game.users[u].wave++
+    };
+  };
+  this.game.emit('send_user_data');
+
+};
+
+EventManager.prototype.waveSpawn = function(num){
+  var set, start;
+
+  // this.spawnSets = {
+  //   1 : {
+  //     'katos_boys' : {
+  //         'pirate-x01' : 1
+  //       },
+  //     'temeni' : {
+  //         'pirate-x01' : 1
+  //       }
+  //   }
+
+  if(this.spawnSets[num]){
+    set = this.spawnSets[num];
+    for(var s in set){
+      if(s === 'katos_boys'){
+        start = {x: 6966, y: 4249}
+      } else if(s === 'temeni'){
+        start = {x: -3743, y: -941}
+      };
+      for(var ship in set[s]){
+        for(var i = 0; i < set[s][ship]; i++){
+          this.game.emit('ship/create', {
+            chassis: ship,
+            x: start.x,
+            y: start.y,
+            ai: 'pirate',
+            faction: s
+          });
+        }
+        
+      }
+
+    };
+  };
+
+  // for(var i = 0; i < this.spawnSets[num]){
+
+  // }
+
 };
 
 EventManager.prototype.update = function() {
   this.attackCount ++
 
-  if(this.attackCount % 13 === 0){
+  if(this.attackCount % 10 === 0){
   // if(this.attackCount == 20){  
     if(this.pirateAttackSwitch){
       this.hostilePirateFaction = 'temeni'
@@ -375,42 +496,39 @@ EventManager.prototype.update = function() {
       this.pirateAttackSwitch = true;
     }
     this.game.emit('pirate/attackStation', 'pirate', this.hostilePirateFaction);
-    if(this.attackCount = 104){
+    if(this.attackCount >= 121){
       this.attackCount = 0;
       this.game.emit('pirate/attackStation', 'clear')
-    }
-  }
-  // if(this.ships.pirate < 2 && this.game.rnd.frac() > 0.75) {
-  //   this.ships.pirate++;
-  //   this.game.emit('ship/create', {
-  //     x: 2048,
-  //     y: 2048,
-  //     chassis: 'general-x01',
-  //     ai: 'pirate'
-  //   });
-  // }
-  // if(this.ships.basic < 3 && this.game.rnd.frac() > 0.75) {
-  //   this.ships.basic++;
-  //   this.game.emit('ship/create', {
-  //     x: 2048,
-  //     y: 2048,
-  //     chassis: 'ubaidian-x04',
-  //     ai: 'basic'
-  //   });
-  // }
+    };
+  };
+};
+
+EventManager.prototype.winCondition = function(){
+  if(this.stationCounts.katos_boys === 0 && this.stationCounts.temeni === 0){
+    //WIN GAME
+    console.log('YOU WON THE GAME!')
+    this.sockets.send('game/win');
+    this.game.clock.events.add(4000, function(){
+      this.game.emit('game/over');
+    }, this);
+  };
+};
+
+EventManager.prototype.lossCondition = function(){
+  console.log('YOU LOST THE GAME!')
+  if(this.stationCounts.imperial === 0){
+    this.game.clock.events.add(4000, function(){
+      this.game.emit('game/over');
+    }, this);
+  };
 };
 
 EventManager.prototype.restart = function() {
   this.updateTimer && this.game.clock.events.remove(this.updateTimer);
-
-  // this.game.removeListener('user/add', this.add);
-  // this.game.removeListener('ship/add', this.add, this);
-  // this.game.removeListener('station/add', this.add, this);
   this.game.removeListener('station/disabled', this.disabled, this);
   this.game.removeListener('ship/disabled', this.disabled, this);
   this.game.removeListener('squad/create', this.squadGen, this);
   this.game.removeListener('game/over', this.restart, this);
-
   this.init();
 };
 

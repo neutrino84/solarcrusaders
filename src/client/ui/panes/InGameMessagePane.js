@@ -46,7 +46,9 @@ function InGameMessage(game, settings) {
 
   // this.game.on('player/credits', this._credits, this);
   // this.game.on('player/credits/init', this._credits, this);
-  this.game.on('user/shipSelected', this.message, this)
+  this.game.on('user/shipSelected', this.message, this);
+  this.game.on('wave/complete', this.waveComplete, this);
+
 };
 
 InGameMessage.prototype = Object.create(Pane.prototype);
@@ -78,6 +80,10 @@ InGameMessage.prototype.message = function(message, duration) {
       }, this);
     }, this);
   }
+};
+
+InGameMessage.prototype.waveComplete = function(){
+  this.message('* pirates spawned *')
 };
 
 InGameMessage.prototype.updateDisplay = function(credits) {

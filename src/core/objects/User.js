@@ -14,6 +14,7 @@ function User(game, data, socket) {
 
   this.ship = null;
   this.station = null;
+  this.wave = 1;
   this.uuid = this.data.uuid;
 };
 
@@ -102,7 +103,6 @@ User.prototype.reconnected = function(socket) {
 };
 
 User.prototype.disconnected = function() {
-  console.log('USER disconnected, users ship was nvm')
   this.timeout = this.game.clock.events.add(9000, this.destroy, this);
 };
 

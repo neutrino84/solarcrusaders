@@ -22,7 +22,7 @@ function SectorManager(game) {
   this.stationManager = new StationManager(game);
   this.shipManager = new ShipManager(game, this);
   this.userManager = new UserManager(game, this);
-  this.eventManager = new EventManager(game);
+  this.eventManager = new EventManager(game, this);
 };
 
 SectorManager.prototype.constructor = SectorManager;
@@ -78,6 +78,9 @@ SectorManager.prototype.data = function(socket, args) {
 };
 
 SectorManager.prototype.queue = function(key) {
+  if(key === 'users'){
+    console.log('USERS QUEUED. key is ', key)
+  }
   return function(updates) {
     this.updates[key] = this.updates[key].concat(updates);
   }

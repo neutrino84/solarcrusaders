@@ -113,9 +113,8 @@ Station.prototype.disable = function() {
   this.cap.tint = 0x333333;
   this.hud.disable();
   if(this.data.chassis === 'ubadian-station-x01'){
-    console.log('chassis right')
     this.game.clock.events.add(750, function(){
-      this.game.emit('game/loss'); 
+      this.game.emit('game/loss', 'loss'); 
     }, this);
   };
   this.game.emit('station/disabled/sound', this);

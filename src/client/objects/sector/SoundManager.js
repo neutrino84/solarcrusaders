@@ -276,7 +276,7 @@ SoundManager.prototype._hit = function(data) {
       ship = data.ship,
       explosion = game.rnd.pick(['damage-a', 'damage-b']),
       distance = engine.Point.distance(target, player),
-      volume = global.Math.max(1-(distance/8192), 0),
+      volume = global.Math.max(1-(distance/2048), 0),
       v, r;
   if(volume > SoundManager.MINIMUM_VOLUME) {
     v = game.rnd.realInRange(volume/6, volume/2),
@@ -300,7 +300,7 @@ SoundManager.prototype._disabled = function(data) {
       sound = explosion;
     } else if(player && player !== ship) {
       distance = engine.Point.distance(ship, player);
-      volume = global.Math.max(1-(distance/8192), 0);
+      volume = global.Math.max(1-(distance/2048), 0);
       volume *= volume;
       sound = explosion;
 
@@ -332,7 +332,7 @@ SoundManager.prototype._disabledStation = function(data) {
       rnd = game.rnd, sound, distance, num;
   if(station) {
     distance = engine.Point.distance(station, player);
-    volume = global.Math.max(1-(distance/5192), 0);
+    volume = global.Math.max(1-(distance/2048), 0);
     volume *= volume;
     sound = null;
 
@@ -357,7 +357,7 @@ SoundManager.prototype._fire = function(data) {
       v, r;
   if(data.spawn>0 && ship.x && this.player) {
     distance = engine.Point.distance(ship, player);
-    volume = global.Math.max(1-(distance/8192), 0);
+    volume = global.Math.max(1-(distance/2048), 0);
 
     if(volume > SoundManager.MINIMUM_VOLUME) {
       // smooth distance
@@ -543,7 +543,7 @@ SoundManager.prototype.generateExplosionSound = function(data){
   };
   if(player && player !== ship) {   
     distance = engine.Point.distance(ship, player);    
-    volume = global.Math.max(1 - (distance / 5000), 0);
+    volume = global.Math.max(1 - (distance / 2048), 0);
     if(data.data.size >= 64) {
       sound = bigExplosion
       if(volume >.6){volume = .6}
@@ -557,11 +557,11 @@ SoundManager.prototype.generateExplosionSound = function(data){
     };
     if(data.data.chassis === 'scavengers-x03c'){
       sound = 'overseerDeath';
-      volume = global.Math.max(0.85 - (distance / 5000), 0);
+      volume = global.Math.max(0.85 - (distance / 2048), 0);
     };
     if(data.data.chassis === 'scavengers-x02' || data.data.chassis === 'scavengers-x01'){
       sound = 'harvesterDeath' + num;
-      volume = global.Math.max(0.7 - (distance / 5000), 0);
+      volume = global.Math.max(0.7 - (distance / 2048), 0);
     };
   }; 
   if(volume > 0){
@@ -575,29 +575,8 @@ SoundManager.prototype._player = function(ship){
   this.game.clock.events.create(1100, false, 1, function(){
     this.generateBackgroundMusic();
     this.generateSystemSound('systems-online')
-  }, this)
+  }, this);
 };
-
-// SoundManager.prototype.destroy = function(){
-
-//   this.game.removeListener('shipyard/hover', this._selection, this);
-//   this.game.removeListener('ship/enhancement/started', this._enhance, this);
-//   this.game.removeListener('ship/sound/growl', this.generateQueenGrowl, this);
-//   this.game.removeListener('ship/disabled', this._disabled, this);
-//   this.game.removeListener('ship/hardpoint/fire', this._fire, this);
-//   this.game.removeListener('ship/hardpoint/hit', this._hit, this);
-//   this.game.removeListener('system/sound', this.generateSystemSound, this);
-//   this.game.removeListener('ship/secondary', this.generateThrusterSound, this);
-//   this.game.removeListener('global/sound/spawn', this.generateSpawnSound, this);
-
-//   this.game.removeListener('squad/sound', this.generateSquadSound, this);
-//   this.game.removeListener('squad/shieldDestination', this.generateSquadSound, this);
-//   this.game.removeListener('squad/shieldDestinationDeactivate', this.generateSquadSound, this);
-
-//   this.game.sound.stopAll();
-
-//   this.manager = this.shipManager = this.ships = this.config = undefined;
-// };
 
 SoundManager.prototype.destroy = function(){
 

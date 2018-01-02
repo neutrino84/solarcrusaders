@@ -26,6 +26,10 @@ UserManager.prototype.init = function() {
   // user messaging
   this.game.on('user/add', this.add, this);
   this.game.on('game/over', this.clear, this);
+  this.game.on('send_user_data', this.update, this);
+
+  // update data interval
+  // this.game.clock.events.loop(1000, this.update, this);
 };
 
 UserManager.prototype.add = function(user) {
@@ -116,18 +120,20 @@ UserManager.prototype.data = function(uuids) {
 };
 
 UserManager.prototype.update = function() {
+  // console.log('user update')
   var game = this.game,
       users = game.users,
       user, delta, update, stats,
       updates = [];
   for(var s in users) {
     user = users[s];
-  }
-  if(updates.length > 0) {
-    game.emit('user/data', {
-      type: 'update', users: updates
-    });
-  }
+    // console.log(user.wave)
+    // updates.push(user)
+  };
+  // console.log(updates)
+  // if(updates.length > 0) {
+  //   game.emit('user/data', updates);
+  // }
 };
 
 UserManager.prototype.clear = function() {
