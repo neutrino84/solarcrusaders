@@ -33,15 +33,19 @@ GlowEmitter.prototype.explosion = function(object) {
       speed = movement._speed * 2,
       vector = movement._vector;
 
-  this.lifespan = 2000;
+  this.lifespan = 800;
   this.setVelocity(speed * 2, speed * 2);
   this.setVector(vector.x, vector.y);
 
-  this.setScale(1.0, object.data.size * 1.5, 1000);
-  this.setScale(1.0, 150, 1000);
+  // this.setScale(1.0, object.data.size * 1.5, 1000);
+  if(this.game.rnd.frac()>0.2){
+    this.setScale(1.0, object.data.size/5, 1000);
+  } else {
+    this.setScale(1.0, object.data.size, 1000);
+  }
   // this.setAlpha(0.4, 0, 2000);
-  this.setAlpha(0.0, 0.2, 2000);
-  this.setTint(0xFFffff, 0x999999, 2000);
+  this.setAlpha(0.0, 0.1, 100);
+  this.setTint(0xFFffff, 0x999999, 100);
 };
 
 module.exports = GlowEmitter;
