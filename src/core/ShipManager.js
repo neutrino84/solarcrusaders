@@ -397,7 +397,7 @@ ShipManager.prototype.update = function() {
       //update targettedBy
       if(ship.data.targettedBy){
         update.targettedBy = ship.data.targettedBy
-        updates.push(update)
+        // updates.push(update)
       };
 
       // push deltas

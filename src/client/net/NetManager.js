@@ -32,6 +32,7 @@ function NetManager(game) {
   this.connect('global/sound/spawn');
   this.connect('game/win');
   this.connect('wave/cycle');
+  this.connect('wave/response');
 };
 
 NetManager.prototype.constructor = NetManager;
@@ -77,7 +78,6 @@ NetManager.prototype._data = function(data) {
     // update ships
     for(var u in users) {
       user = users[u];
-      console.log('user data, user is ', user)
       if(data.type === 'sync' && this.users[user.uuid] === undefined) {
         this.syncronizing = false;
         this.users[user.uuid] = new UserData(this.game, user);

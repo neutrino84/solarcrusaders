@@ -53,7 +53,7 @@ Station.prototype.hit = function(attacker, target, slot) {
       ratio = distance / (this.size * hardpoint.data.aoe),
       damage, health, critical;
 
-  if(ratio < 0.1 && attacker.ai && attacker.ai.type === 'pirate') {
+  if((ratio < 0.1 && attacker.ai && attacker.ai.type === 'pirate' && this.chassis === 'ubadian-station-x01') || (ratio < 0.1 && this.chassis !== 'ubadian-station-x01')) {
     // if(ratio < 0.1) {
     // calc damage
     critical = game.rnd.rnd() <= attacker.critical;
@@ -121,7 +121,7 @@ Station.prototype.hit = function(attacker, target, slot) {
 Station.prototype.disable = function() {
   // disable
   this.disabled = true;
-  
+
   // broadcast
   this.game.emit('station/disabled', {
     uuid: this.uuid

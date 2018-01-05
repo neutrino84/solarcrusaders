@@ -21,7 +21,7 @@ UI.prototype.preload = function() {
 };
 
 UI.prototype.create = function() {
-  this.bottom = new BottomPane(this.game);
+  this.bottom = new BottomPane(this.game, this.game.auth.user.wave);
   this.header = new HeaderPane(this.game);
   // this.leaderBoard = new LeaderBoardPane(this.game);
 
@@ -46,7 +46,7 @@ UI.prototype.create = function() {
   this.header.alpha = 0;
 
   // add elements
-
+  // console.log('UI index, auth user is ', this.game.auth.user)
   if(this.game.auth.user && !this.game.auth.user.ship){
     this.shipyard = new Shipyard(this.game); 
     this.root.addPanel(this.shipyard);

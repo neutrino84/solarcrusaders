@@ -4,10 +4,11 @@ var async = require('async'),
     Latency = require('../../utils/Latency'),
     EventEmitter = require('eventemitter3');
 
-function User(game, data, socket) {
+function User(game, data, socket, manager) {
   this.game = game;
   this.model = game.model;
   this.socket = socket;
+  this.manager = manager;
 
   this.latency = new Latency(this);
   this.data = new this.model.User(data);
@@ -15,6 +16,10 @@ function User(game, data, socket) {
   this.ship = null;
   this.station = null;
   this.wave = 1;
+  this.cache = {
+    wave : 1,
+    ship : null
+  };
   this.uuid = this.data.uuid;
 };
 
@@ -93,10 +98,13 @@ User.prototype.save = function(callback) {
 User.prototype.reconnected = function(socket) {
   // update socket
   this.socket = socket;
+
   this.socket.emit('auth/sync', this.data.toStreamObject());
 
   // update latency
   this.latency.connect(socket);
+
+  this.manager.update();
 
   // restart user logout timer
   this.timeout && this.game.clock.events.remove(this.timeout);
@@ -132,6 +140,15 @@ Object.defineProperty(User.prototype, 'credits', {
 
   set: function(value) {
     this.data.credits = value;
+  }
+});
+Object.defineProperty(User.prototype, 'wave', {
+  get: function() {
+    return this.cache.wave;
+  },
+
+  set: function(value) {
+    this.data.wave = value;
   }
 });
 

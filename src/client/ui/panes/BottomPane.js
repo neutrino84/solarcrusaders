@@ -11,7 +11,6 @@ var engine = require('engine'),
 
 function BottomPane(game) {
   this.socket = game.net.socket;
-
   Pane.call(this, game, {
     constraint: Layout.BOTTOM,
     padding: [4],

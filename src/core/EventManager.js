@@ -19,7 +19,7 @@ function EventManager(game, manager) {
 
   this.wavecycleCount = 0;
 
-  this.game.clock.events.loop(1000, this.wavecycle, this)
+  this.game.clock.events.loop(1000, this.wavecycle, this);
   // this.ships = {
   //   basic: 4,
   //   enforcer: 1,
@@ -71,7 +71,7 @@ function EventManager(game, manager) {
           }
         },
         'sappers' : {
-          num : 8,
+          num : 12,
           starting_position : {
             x: 1501,
             y: 1521
@@ -430,10 +430,10 @@ EventManager.prototype.wavecycle = function(){
 EventManager.prototype.wavecycleComplete = function(num){
   for(var u in this.game.users){
     var wave = this.game.users[u].wave;
-    console.log('USERS IS ', this.game.users)
     if(this.game.users[u].ship){
       this.waveSpawn(wave)
-      this.game.users[u].wave++
+      if(this.game.users[u].wave < 10)
+      this.game.users[u].wave++;
     };
   };
   this.game.emit('send_user_data');

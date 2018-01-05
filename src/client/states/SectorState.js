@@ -12,7 +12,7 @@ var engine = require('engine'),
     ShipManager = require('../objects/sector/ShipManager'),
     StationManager = require('../objects/sector/StationManager'),
     SquadManager = require('../objects/sector/SquadManager'),
-    PlayerManager = require('../objects/sector/PlayerManager'),
+    UserManager = require('../objects/sector/UserManager'),
     SoundManager = require('../objects/sector/SoundManager'),
     HotkeyManager = require('../objects/sector/HotkeyManager'),
     Asteroid = require('../objects/sector/misc/Asteroid');
@@ -56,7 +56,7 @@ SectorState.prototype.init = function(args) {
 
   this.soundManager = new SoundManager(this.game);
 
-  this.playerManager = new PlayerManager(this.game);
+  this.userManager = new UserManager(this.game, this);
 
   this.scrollLock = true;
 //^ does this prevent scrolling
@@ -264,12 +264,10 @@ SectorState.prototype.createManagers = function(first) {
     this.shipManager = new ShipManager(game, this);
   }
   this.squadManager = new SquadManager(game, this);
-  this.playerManager.create(this);
   this.soundManager.create();
   this.game.emit('game/backgroundmusic')
 
   this.squadManager.create(this);
-  // this.playerManager.create(this);
   this.hotkeyManager.create(this);
 };
 

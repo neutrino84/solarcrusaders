@@ -393,6 +393,7 @@ SoundManager.prototype._fire = function(data) {
 
 SoundManager.prototype.generateSystemSound = function(sound){
   var systemSFX = ['reactor-online','sensors-online','weapons-systems-online','repairs-completed']
+  console.log('system sound is ', sound)
   if(sound){
     this.game.sound.play(sound, 0.2, false);
   } else {
@@ -601,7 +602,7 @@ SoundManager.prototype.destroy = function(){
   // }, this)
   // this.game.sound.stopAll();
 
-  this.manager = this.shipManager = this.ships = this.config = undefined;
+  this.manager = this.shipManager = this.ships = this.player = this.config = undefined;
 };
 
 module.exports = SoundManager;

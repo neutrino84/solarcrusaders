@@ -15,6 +15,7 @@ UserManager.prototype.constructor = UserManager;
 UserManager.prototype.init = function() {
   // auth request
   this.sockets.on('auth/connect', this.connect, this);
+  this.sockets.on('requesting/wave', this.waveRequest, this);
 
   // auth messaging
   this.game.on('auth/disconnect', this.disconnect, this);
@@ -52,7 +53,7 @@ UserManager.prototype.connect = function(socket) {
     user.reconnected(socket);
   } else if(data && socket) {
     winston.info('[UserManager] Creating user in game');
-    user = new User(game, data, socket);
+    user = new User(game, data, socket, this);
     user.init(function() {
       game.emit('user/add', user);
     }, this);
@@ -74,9 +75,9 @@ UserManager.prototype.ship = function(socket, args) {
       stationManager = this.sectorManager.stationManager,
       session = socket.request.session,
       user = game.users[session.user.uuid],
-      data = args[1];
-      var station = stationManager.getStation('ubadian-station-x01');
-      var startingPosition = station.movement.position;
+      data = args[1],
+      station = stationManager.getStation('ubadian-station-x01'),
+      startingPosition = station.movement.position;
 
   user && game.emit('ship/create', {
     chassis: args[1],
@@ -84,6 +85,7 @@ UserManager.prototype.ship = function(socket, args) {
     y : startingPosition.y,
     squadron : {}
   }, user);
+  this.game.clock.events.add(1500, this.update, this);
 };
 
 UserManager.prototype.all = function(uuids) {
@@ -119,21 +121,31 @@ UserManager.prototype.data = function(uuids) {
   return users;
 };
 
+UserManager.prototype.waveRequest = function(socket, args) {
+  var uuid = args[1],
+      wave = this.game.users[uuid].wave,
+      response = [];
+  response.push(uuid);
+  response.push(wave);
+  socket.emit('wave/response', response)
+};
+
 UserManager.prototype.update = function() {
-  // console.log('user update')
   var game = this.game,
       users = game.users,
-      user, delta, update, stats,
+      user, delta, update, stats, update,
       updates = [];
   for(var s in users) {
     user = users[s];
-    // console.log(user.wave)
-    // updates.push(user)
+      update = { uuid: user.uuid };
+      update.ship = user.ship.chassis;
+      update.wave = user.wave;
+      updates.push(update)
   };
   // console.log(updates)
-  // if(updates.length > 0) {
-  //   game.emit('user/data', updates);
-  // }
+  if(updates.length > 0) {
+    game.emit('user/data', updates);
+  }
 };
 
 UserManager.prototype.clear = function() {
