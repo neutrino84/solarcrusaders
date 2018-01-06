@@ -114,6 +114,7 @@ Station.prototype.disable = function() {
   this.hud.disable();
   if(this.data.chassis === 'ubadian-station-x01'){
     this.game.clock.events.add(750, function(){
+      console.log('emitting station mssg')
       this.game.emit('game/loss', 'loss'); 
     }, this);
   };

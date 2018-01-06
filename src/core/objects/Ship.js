@@ -424,6 +424,7 @@ Ship.prototype.disable = function() {
   if(this.faction){
     if(this.faction === 'temeni' || this.faction === 'katos_boys'){
       this.game.clock.events.add(5000, function(){
+        if(!this.game){return}
         this.game.emit('ship/remove', this);
       }, this)
     }

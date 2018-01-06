@@ -19,7 +19,6 @@ function UserManager(game, state) {
   // listen to messaging
   this.game.on('auth/disconnect', this.disconnect, this);
   this.game.on('sector/sync', this.sync, this);
-  this.game.on('user/disabled', this._disabled, this);
 }
 
 UserManager.prototype.constructor = UserManager;
@@ -52,7 +51,7 @@ UserManager.prototype.sync = function(data) {
     if(user) {
       // console.log('user exists')
       // user.plot(sync);
-    } else {
+    } else if(netManager){
       model = netManager.getUserData(sync.uuid);
       model && this.create(model);
     }
@@ -60,33 +59,33 @@ UserManager.prototype.sync = function(data) {
 };
 
 UserManager.prototype.update = function() {
-  var game = this.game,
-      users = this.users,
-      user, delta, update, stats,
-      updates = [];
-  for(var s in users) {
-    user = users[s];
+  // var game = this.game,
+  //     users = this.users,
+  //     user, delta, update, stats,
+  //     updates = [];
+  // for(var s in users) {
+  //   user = users[s];
     
-    if(!user.disabled) {
-      stats = user.config.stats;
-      update = { uuid: user.uuid };
+  //   if(!user.disabled) {
+  //     stats = user.config.stats;
+  //     update = { uuid: user.uuid };
 
-      // update health
-      if(user.health < stats.health) {
-        delta = user.heal;
-        user.health = global.Math.min(stats.health, user.health + delta);
-        update.health = engine.Math.roundTo(user.health, 1);
-      }
+  //     // update health
+  //     if(user.health < stats.health) {
+  //       delta = user.heal;
+  //       user.health = global.Math.min(stats.health, user.health + delta);
+  //       update.health = engine.Math.roundTo(user.health, 1);
+  //     }
 
-      // push deltas
-      if(delta !== undefined) {
-        updates.push(update);
-      }
-    }
-  }
-  if(updates.length > 0) {
-    game.emit('user/data', updates);
-  }
+  //     // push deltas
+  //     if(delta !== undefined) {
+  //       updates.push(update);
+  //     }
+  //   }
+  // }
+  // if(updates.length > 0) {
+  //   game.emit('user/data', updates);
+  // }
 };
 
 UserManager.prototype.remove = function(data) {
@@ -104,6 +103,7 @@ UserManager.prototype.removeAll = function() {
   for(var s in users) {
     this.remove(users[s]);
   }
+  this.users = {};
 };
 
 UserManager.prototype.find = function(chassis) {
@@ -117,18 +117,22 @@ UserManager.prototype.find = function(chassis) {
   }
 };
 
-UserManager.prototype.destroy = function() {
-  this.game.removeListener('auth/disconnect', this.disconnect);
-  this.game.removeListener('sector/sync', this.sync);
+// UserManager.prototype.destroy = function() {
+//   this.game.removeListener('auth/disconnect', this.disconnect);
+//   this.game.removeListener('sector/sync', this.sync);
 
-  this.removeAll();
+//   this.removeAll();
 
-  this.game = this.socket = this._syncBind =
-   this._attackBind = undefined;
-};
+//   this.game = this.socket = this._syncBind =
+//    this._attackBind = undefined;
+// };
 
 UserManager.prototype.disconnect = function() {
+    this.game.removeListener('auth/disconnect', this.disconnect);
+  this.game.removeListener('sector/sync', this.sync);
   this.removeAll();
+   this.game = this.socket = this._syncBind =
+   this._attackBind = undefined;
 };
 
 module.exports = UserManager;

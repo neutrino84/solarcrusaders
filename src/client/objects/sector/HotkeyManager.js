@@ -161,6 +161,7 @@ HotkeyManager.prototype.refresh = function() {
 };
 
 HotkeyManager.prototype._cooled = function(data){
+  if(!this.player){return}
   if(data.uuid === this.player.uuid){
     switch(data.enhancement) {
       case 'heal':

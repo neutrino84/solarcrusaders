@@ -123,11 +123,15 @@ UserManager.prototype.data = function(uuids) {
 
 UserManager.prototype.waveRequest = function(socket, args) {
   var uuid = args[1],
-      wave = this.game.users[uuid].wave,
       response = [];
-  response.push(uuid);
-  response.push(wave);
-  socket.emit('wave/response', response)
+  if(this.game.users[uuid]){
+    wave = this.game.users[uuid].wave;
+    response.push(uuid);
+    response.push(wave);
+  };
+  if(response.length){
+    this.game.emit('wave/response', socket, response) 
+  }
 };
 
 UserManager.prototype.update = function() {
@@ -138,8 +142,10 @@ UserManager.prototype.update = function() {
   for(var s in users) {
     user = users[s];
       update = { uuid: user.uuid };
-      update.ship = user.ship.chassis;
       update.wave = user.wave;
+      if(user.ship){
+        update.ship = user.ship.chassis;
+      }
       updates.push(update)
   };
   // console.log(updates)

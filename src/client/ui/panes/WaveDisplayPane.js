@@ -71,16 +71,7 @@ function WaveDisplayPane(game, settings) {
         },
         bg: false
       });
-  // this.creditsCount = new Label(this.game, {
-  //       constraint: Layout.USE_PS_SIZE,
-  //       align: 'center',
-  //       text: {
-  //         fontName: 'full'
-  //       },
-  //       bg: false
-  //     });
 
-  // this.creditsCount.text = this.creditValue;
   this.waveIndicator = new ProgressBar(this.game, this.settings.waveIndicator);
 
   this.waveIndicator.percentage('width', 0)
@@ -105,19 +96,17 @@ function WaveDisplayPane(game, settings) {
 
   this.game.on('user/wave/update', this._updateWave, this);
   this.game.on('wave/cycle', this.wavecycle, this);
-  this.game.on('auth/sync/delayed', this._userSynced, this);
-
   this.game.on('wave/response', this.waveResponse, this);
+  // this.game.on('auth/sync/delayed', this._userSynced, this);
+
 };
 
 WaveDisplayPane.prototype = Object.create(Pane.prototype);
 WaveDisplayPane.prototype.constructor = WaveDisplayPane;
 
 WaveDisplayPane.prototype.delayedUpdate = function(){
-  // console.log('DELAYED UPDATE', this.game.auth.user)
   if(this.game.auth.user){
     var uuid = this.game.auth.user.uuid
-    // console.log('uuid is ', uuid)
     this.game.net.socket.emit('requesting/wave', uuid);
   }
 };
@@ -149,7 +138,10 @@ WaveDisplayPane.prototype.wavecycle = function(num){
 };
 
 WaveDisplayPane.prototype.destroy = function() {
-  this.game.removeListener('squad/construct', this._startClock, this)
+  this.game.removeListener('wave/cycle', this.wavecycle, this);
+  this.game.removeListener('user/wave/update', this._updateWave, this)
+  this.game.removeListener('wave/response', this.waveResponse, this);
+
   this.game.clock.events.remove(this.waveClockTimer);
 };
 

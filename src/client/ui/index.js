@@ -50,7 +50,9 @@ UI.prototype.create = function() {
   if(this.game.auth.user && !this.game.auth.user.ship){
     this.shipyard = new Shipyard(this.game); 
     this.root.addPanel(this.shipyard);
-  }
+  } else {
+    this.header.alpha = 1;
+  };
   
   // invalidate
   this.root.invalidate();

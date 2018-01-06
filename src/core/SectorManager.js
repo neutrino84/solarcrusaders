@@ -48,9 +48,8 @@ SectorManager.prototype.init = function() {
 };
 
 SectorManager.prototype.waveResponse = function(socket, args){
-  console.log('backEnd sector manager wave response', socket, args)
   socket.emit('wave/response', args);
-}
+};
 
 SectorManager.prototype.update = function() {
   var sockets = this.sockets,
@@ -94,9 +93,7 @@ SectorManager.prototype.queued = function() {
   if(updates.ships.length > 0 ||
       updates.stations.length > 0 ||
       updates.users.length > 0) {
-    if(updates.users.length){
-      // console.log('sctrmngr, updates.users: ', updates.users, updates.ships, updates.stations)
-    }
+    
     // send data
     this.sockets.send('sector/data', {
       type: 'update',

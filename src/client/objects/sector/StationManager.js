@@ -166,8 +166,10 @@ StationManager.prototype.find = function(chassis) {
 };
 
 StationManager.prototype.destroy = function() {
+  console.log('station manager DESTROYING')
   this.game.removeListener('auth/disconnect', this.disconnect);
   this.game.removeListener('sector/sync', this.sync);
+  this.game.removeListener('station/disabled', this._disabled,);
 
   this.removeAll();
 

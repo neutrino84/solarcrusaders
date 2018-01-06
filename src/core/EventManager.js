@@ -394,25 +394,20 @@ EventManager.prototype.disabled = function(object) {
   } else if(this.game.stations[object.uuid] && this.game.stations[object.uuid].faction){
       switch(this.game.stations[object.uuid].faction) {
         case 'imperial':
-          console.log('ubadian station destroyed')
         this.stationCounts.imperial--
         this.lossCondition();
           break;
         case 'temeni':
-          console.log('temeni station destroyed')
         this.stationCounts.temeni--
         this.winCondition();
           break;
         case 'katos_boys':
-          console.log('katos_boys station destroyed')
           this.stationCounts.katos_boys-- 
           this.winCondition();
           break;
         case 'vulothi':
-          console.log('vulothi nest destroyed')
           break;
         case 'fenris':
-          console.log('fenris nest destroyed')
           break;
       }
   }
@@ -432,7 +427,7 @@ EventManager.prototype.wavecycleComplete = function(num){
     var wave = this.game.users[u].wave;
     if(this.game.users[u].ship){
       this.waveSpawn(wave)
-      if(this.game.users[u].wave < 10)
+      // if(this.game.users[u].wave < 10)
       this.game.users[u].wave++;
     };
   };
@@ -506,7 +501,6 @@ EventManager.prototype.update = function() {
 EventManager.prototype.winCondition = function(){
   if(this.stationCounts.katos_boys === 0 && this.stationCounts.temeni === 0){
     //WIN GAME
-    console.log('YOU WON THE GAME!')
     this.sockets.send('game/win');
     this.game.clock.events.add(4000, function(){
       this.game.emit('game/over');
@@ -515,7 +509,6 @@ EventManager.prototype.winCondition = function(){
 };
 
 EventManager.prototype.lossCondition = function(){
-  console.log('YOU LOST THE GAME!')
   if(this.stationCounts.imperial === 0){
     this.game.clock.events.add(4000, function(){
       this.game.emit('game/over');
@@ -525,6 +518,7 @@ EventManager.prototype.lossCondition = function(){
 
 EventManager.prototype.restart = function() {
   this.updateTimer && this.game.clock.events.remove(this.updateTimer);
+  this.game.removeListener('wave/cycle/complete', this.wavecycleComplete, this);
   this.game.removeListener('station/disabled', this.disabled, this);
   this.game.removeListener('ship/disabled', this.disabled, this);
   this.game.removeListener('squad/create', this.squadGen, this);

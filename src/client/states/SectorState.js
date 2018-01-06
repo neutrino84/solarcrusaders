@@ -21,10 +21,10 @@ function SectorState(game) {
   this.game = game;
   this.auth = game.auth;
 
+  
   this.game.on('user/shipSelected', this.playerCreated, this);
   this.game.on('game/loss', this.switchState, this)
   this.game.on('game/win', this.switchState, this)
-
   // this.game.world.static.removeAll();
   // this.game.world.background.removeAll();
   // this.game.world.foreground.removeAll();
@@ -184,36 +184,15 @@ SectorState.prototype.create = function() {
 SectorState.prototype.playerCreated = function(){
     var game = this.game;
 
-    console.log('secState, player created')
     this.createManagers('firstIteration');
-    // this.ui.create();
-    // console.log('in playwer created, stationManager is ', this.stationManager)
-    // this.stationManager.find('ubadian-station-x01')
-    // this.game.camera
-
-    // game.clock.events.add(1500, function(){
-    //   game.clock.events.loop(50, zoomOut = function(){
-    //     this.scaleX = this.scaleX - 0.01;
-    //     this.scaleY = this.scaleY - 0.01;
-    //     game.world.scale.set(this.scaleX, this.scaleY)
-    //     if(this.scaleX <= 0.8){
-    //       for(var i = 0; i < game.clock.events.events.length; i++){
-    //         if(game.clock.events.events[i].callback.name === 'zoomOut'){
-    //           game.clock.events.remove(game.clock.events.events[i]);
-    //           this.shipManager.undock();
-    //         }
-    //       };
-    //     }
-    //   }, this)
-    // }, this)
 
     this.zoom = this.game.tweens.create(this.game.world.scale);
     this.zoom.to({ x: 0.8, y: 0.8 }, 5000, engine.Easing.Quadratic.InOut);
     this.zoom.delay(1500);
     this.zoom.start();
-    // this.zoom.on('complete', function() {
-    //   this.scrollLock = false;
-    // }, this);
+    this.zoom.on('complete', function() {
+      this.scrollLock = false;
+    }, this);
 };
 
 SectorState.prototype.createSpace = function() {
@@ -253,7 +232,6 @@ SectorState.prototype.createSpace = function() {
 SectorState.prototype.createManagers = function(first) {
   var game = this.game;
 
-  console.log('create managers, first is ', first)
   this.netManager = new NetManager(game, this);
   this.inputManager = new InputManager(game, this);
   this.hotkeyManager = new HotkeyManager(game, this);
@@ -339,6 +317,7 @@ SectorState.prototype.switchState = function(outcome) {
 
   this.soundManager.destroy();
   if(outcome === 'loss'){
+    console.log('emitting loss')
     this.game.clock.events.add(3000, function(){
       this.game.states.start('loss')
     }, this); 

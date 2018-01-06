@@ -75,8 +75,6 @@ function BottomPane(game) {
       fillAlpha: 0.0,
     }
   });
-
-
   this.creditsPane = new CreditsPane(game);
   this.waveDisplayPane = new WaveDisplayPane(game);
   this.squadIndicatorPane = new SquadIndicatorPane(game);

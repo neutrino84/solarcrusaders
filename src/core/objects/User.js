@@ -142,14 +142,14 @@ Object.defineProperty(User.prototype, 'credits', {
     this.data.credits = value;
   }
 });
-Object.defineProperty(User.prototype, 'wave', {
-  get: function() {
-    return this.cache.wave;
-  },
+// Object.defineProperty(User.prototype, 'wave', {
+//   get: function() {
+//     return this.cache.wave;
+//   },
 
-  set: function(value) {
-    this.data.wave = value;
-  }
-});
+//   set: function(value) {
+//     this.data.wave = value;
+//   }
+// });
 
 module.exports = User;

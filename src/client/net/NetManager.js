@@ -166,6 +166,24 @@ NetManager.prototype._emit = function(ns, data) {
 };
 
 NetManager.prototype.destroy = function() {
+
+  this.socket.removeListener('sector/sync');
+  this.socket.removeListener('sector/data');
+  this.socket.removeListener('user/shipSelected');
+  this.socket.removeListener('ship/attack');
+  this.socket.removeListener('ship/removed');
+  this.socket.removeListener('ship/disabled');
+  this.socket.removeListener('ship/enabled');
+  this.socket.removeListener('ship/enhancement/started');
+  this.socket.removeListener('ship/enhancement/stopped');
+  this.socket.removeListener('ship/enhancement/cooled');
+  this.socket.removeListener('station/disabled');
+  this.socket.removeListener('squad/shieldMaidenConnect');
+  this.socket.removeListener('squad/shieldUpIn');
+  this.socket.removeListener('global/sound/spawn');
+  this.socket.removeListener('game/win');
+  this.socket.removeListener('wave/cycle');
+  this.socket.removeListener('wave/response');
   //CLEANUP
 };
 

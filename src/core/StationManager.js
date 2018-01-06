@@ -162,7 +162,6 @@ StationManager.prototype.disabled = function(data) {
 };
 
 StationManager.prototype.removeAllStations = function() {
-  console.log('in backend remove ALL STATIONS')
   for(var s in this.game.stations){
     this.remove(this.game.stations[s]);
   }

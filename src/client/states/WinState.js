@@ -150,6 +150,15 @@ WinState.prototype.create = function() {
     },
     bg: false
   });
+  this.winMessage9 = new Label(this.game, {
+    constraint: Layout.USE_PS_SIZE,
+    align: 'center',
+    color: 0xffffe0, 
+    text: {
+      fontName: 'medium',
+    },
+    bg: false
+  });
 
   this.game.clock.events.add(500, function(){
     this.winMessage1.label.typewriter('With their bases destroyed', 10);
@@ -175,20 +184,24 @@ WinState.prototype.create = function() {
   this.game.clock.events.add(7800, function(){
     this.winMessage8.label.typewriter('She may be the key to preventing galactic war', 10);
   }, this);
+  this.game.clock.events.add(9000, function(){
+    this.winMessage9.label.typewriter('Reports suggest shes been smuggled to the Chiron waystation...', 10);
+  }, this);
+
 
         // 'With the sector secure, the Imperial Loyalists must now track down Izel, the grandaughter of the late emperor.' ,10)
 
   // this.game.clock.events.add(4000, function(){
   //   this.winMessage3.label.typewriter('She could be the key to preventing galactic war.' ,10)
   // }, this);
-  this.game.clock.events.add(10500, function(){
+  this.game.clock.events.add(13000, function(){
     // this.winMessage4.text = 'CONGRATS'
     // this.winMessage4.label.blink()
       this.game.world.static.removeAll();
       this.game.world.background.removeAll();
       this.game.world.foreground.removeAll();
       this.game.world.removeAll();
-    this.game.clock.events.add(1000, function(){
+    this.game.clock.events.add(1500, function(){
       // console.log('game.world (after loss state) is ', this.game.world)
       this.game.net.socket.emit('auth/connect');
       this.game.states.start('sector')
@@ -208,6 +221,7 @@ WinState.prototype.create = function() {
   this.winScreenLabelContainer.addPanel(this.winMessage6);
   this.winScreenLabelContainer.addPanel(this.winMessage7);
   this.winScreenLabelContainer.addPanel(this.winMessage8);
+  this.winScreenLabelContainer.addPanel(this.winMessage9);
 
   this.root.addPanel(this.winScreen);
 

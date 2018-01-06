@@ -30,10 +30,6 @@ Auth.prototype._disconnect = function() {
 Auth.prototype._sync = function(user) {
   this.user = user;
   this.game.emit('auth/sync', user);
-  console.log(this.game.clock.events)
-  this.game.clock.events.add(4000, function(){
-    this.game.emit('auth/sync/delayed', user);
-  }, this)
 };
 
 module.exports = Auth;
