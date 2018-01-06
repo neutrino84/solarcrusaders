@@ -71,14 +71,19 @@ SectorState.prototype.preload = function() {
 
 
 
+  // var planets = [
+  // 'daigus',
+  // 'eamon-alpha',
+  // 'modo',
+  // 'ichor',
+  // 'talus',
+  // 'arkon'
+  // ]
+
   var planets = [
-  'daigus',
-  'eamon-alpha',
-  'modo',
-  'ichor',
-  'talus',
   'arkon'
   ]
+
 
   this.planetTexture = this.game.rnd.pick(planets);
   // load background
@@ -340,11 +345,12 @@ this.shipManager.destroy();
 this.stationManager.destroy();
 this.squadManager.destroy();
 this.netManager.destroy();
+// this.userManager.destroy();
 
 this.ui.destroy();
  this.stationManager = this.space = this.ui =
  this.planet = this.nebula = this.neb1 = this.neb2 = this.neb3 = this.hotkeyManager
- = this.shipManager = this.netManager = this.soundManager = undefined
+ = this.shipManager = this.netManager = this.userManager = this.soundManager = undefined
 
  // this.game.clock.events.add(1000, function(){
  //  console.log('undefining sound manager')

@@ -85,7 +85,7 @@ UserManager.prototype.ship = function(socket, args) {
     y : startingPosition.y,
     squadron : {}
   }, user);
-  this.game.clock.events.add(1500, this.update, this);
+  // this.game.clock.events.add(1500, this.update, this);
 };
 
 UserManager.prototype.all = function(uuids) {
@@ -123,15 +123,16 @@ UserManager.prototype.data = function(uuids) {
 
 UserManager.prototype.waveRequest = function(socket, args) {
   var uuid = args[1],
-      response = [];
-  if(this.game.users[uuid]){
-    wave = this.game.users[uuid].wave;
-    response.push(uuid);
-    response.push(wave);
-  };
+      response = [],
+      wave;
+      if(this.game.users[uuid]){
+        wave = this.game.users[uuid].wave;
+        response.push(uuid);
+        response.push(wave);    
+      };
   if(response.length){
-    this.game.emit('wave/response', socket, response) 
-  }
+    this.game.emit('wave/response', socket, response)
+  };
 };
 
 UserManager.prototype.update = function() {
@@ -141,12 +142,14 @@ UserManager.prototype.update = function() {
       updates = [];
   for(var s in users) {
     user = users[s];
+    if(users[s]){
       update = { uuid: user.uuid };
-      update.wave = user.wave;
       if(user.ship){
         update.ship = user.ship.chassis;
       }
+      update.wave = user.wave;
       updates.push(update)
+    }
   };
   // console.log(updates)
   if(updates.length > 0) {

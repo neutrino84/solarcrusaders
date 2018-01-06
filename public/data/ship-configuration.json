@@ -661,7 +661,7 @@
       "heal": 0.4,
       "armor": 0.01,
       "speed": 34.0,
-      "rate": 35,
+      "rate": 350,
       "evasion": 0.2,
       "energy": 190,
       "recharge": 1.2,
@@ -730,7 +730,7 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "XP1123"
+            "subtype": "quantum"
           }
         },
         {
@@ -745,7 +745,7 @@
           },
           "default": {
             "type": "pulse",
-            "subtype": "XP1123"
+            "subtype": "quantum"
           }
         }
       ]

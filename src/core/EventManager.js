@@ -426,8 +426,7 @@ EventManager.prototype.wavecycleComplete = function(num){
   for(var u in this.game.users){
     var wave = this.game.users[u].wave;
     if(this.game.users[u].ship){
-      this.waveSpawn(wave)
-      // if(this.game.users[u].wave < 10)
+      this.waveSpawn(wave);
       this.game.users[u].wave++;
     };
   };
