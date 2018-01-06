@@ -423,7 +423,7 @@ Ship.prototype.disable = function() {
   };
   if(this.faction){
     if(this.faction === 'temeni' || this.faction === 'katos_boys'){
-      this.game.clock.events.add(5000, function(){
+      this.removeTimer = this.game.clock.events.add(2500, function(){
         this.game.emit('ship/remove', this);
       }, this)
     }
@@ -551,6 +551,11 @@ Ship.prototype.destroy = function() {
   for(var e in available) {
     available[e].destroy();
   }
+  // this.game
+  // console.log('GAME IS ', this.game)
+
+  this.removeTimer && this.game.clock.events.remove(this.removeTimer);
+
   this.ai && this.ai.destroy();
 
   this.sockets.send('ship/removed', {

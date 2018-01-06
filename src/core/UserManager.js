@@ -85,7 +85,7 @@ UserManager.prototype.ship = function(socket, args) {
     y : startingPosition.y,
     squadron : {}
   }, user);
-  this.game.clock.events.add(1500, this.update, this);
+  // this.game.clock.events.add(1500, this.update, this);
 };
 
 UserManager.prototype.all = function(uuids) {
@@ -123,11 +123,21 @@ UserManager.prototype.data = function(uuids) {
 
 UserManager.prototype.waveRequest = function(socket, args) {
   var uuid = args[1],
-      wave = this.game.users[uuid].wave,
-      response = [];
-  response.push(uuid);
-  response.push(wave);
-  socket.emit('wave/response', response)
+      response = [],
+      wave;
+      console.log('in wave response, uuid is', uuid)
+      if(this.game.users[uuid]){
+        wave = this.game.users[uuid].wave;
+        response.push(uuid);
+        response.push(wave);    
+      } else {
+        'user not in game'
+      }
+  if(response.length){
+    console.log('EMITTING WAVE RESPONSE, socket is', socket, 'args is ', args, 'response is ', response)
+    this.game.emit('wave/response', socket, response)
+  }
+  
 };
 
 UserManager.prototype.update = function() {
@@ -137,10 +147,15 @@ UserManager.prototype.update = function() {
       updates = [];
   for(var s in users) {
     user = users[s];
+    if(users[s]){
       update = { uuid: user.uuid };
-      update.ship = user.ship.chassis;
+      if(user.ship){
+        update.ship = user.ship.chassis;
+      }
       update.wave = user.wave;
+      console.log('USERmnger WAVE IS ', user.wave)
       updates.push(update)
+    }
   };
   // console.log(updates)
   if(updates.length > 0) {

@@ -18,6 +18,7 @@ User.prototype.boot = function() {
 
 User.prototype.refresh = function(data) {
   if(data.wave){
+    console.log('data.wave is ', data.wave)
     if(this.playerUserObj.uuid === data.uuid){
       // console.log('wave is ', data)
       this.game.auth.user.wave = data.wave

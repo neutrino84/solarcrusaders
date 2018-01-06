@@ -184,7 +184,6 @@ SectorState.prototype.create = function() {
 SectorState.prototype.playerCreated = function(){
     var game = this.game;
 
-    console.log('secState, player created')
     this.createManagers('firstIteration');
     // this.ui.create();
     // console.log('in playwer created, stationManager is ', this.stationManager)
@@ -253,7 +252,6 @@ SectorState.prototype.createSpace = function() {
 SectorState.prototype.createManagers = function(first) {
   var game = this.game;
 
-  console.log('create managers, first is ', first)
   this.netManager = new NetManager(game, this);
   this.inputManager = new InputManager(game, this);
   this.hotkeyManager = new HotkeyManager(game, this);
@@ -361,11 +359,12 @@ this.shipManager.destroy();
 this.stationManager.destroy();
 this.squadManager.destroy();
 this.netManager.destroy();
+// this.userManager.destroy();
 
 this.ui.destroy();
  this.stationManager = this.space = this.ui =
  this.planet = this.nebula = this.neb1 = this.neb2 = this.neb3 = this.hotkeyManager
- = this.shipManager = this.netManager = this.soundManager = undefined
+ = this.shipManager = this.netManager = this.userManager = this.soundManager = undefined
 
  // this.game.clock.events.add(1000, function(){
  //  console.log('undefining sound manager')

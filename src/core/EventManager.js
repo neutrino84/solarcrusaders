@@ -432,8 +432,12 @@ EventManager.prototype.wavecycleComplete = function(num){
     var wave = this.game.users[u].wave;
     if(this.game.users[u].ship){
       this.waveSpawn(wave)
-      if(this.game.users[u].wave < 10)
-      this.game.users[u].wave++;
+      console.log('WAVE IS ', this.game.users[u].wave)
+      if(this.game.users[u].wave < 10){
+        this.game.users[u].wave++;
+        console.log('GOT HERE IS ', this.game.users[u].wave)
+        
+      }
     };
   };
   this.game.emit('send_user_data');
@@ -525,6 +529,8 @@ EventManager.prototype.lossCondition = function(){
 
 EventManager.prototype.restart = function() {
   this.updateTimer && this.game.clock.events.remove(this.updateTimer);
+
+  this.game.removeListener('wave/cycle/complete', this.wavecycleComplete, this);
   this.game.removeListener('station/disabled', this.disabled, this);
   this.game.removeListener('ship/disabled', this.disabled, this);
   this.game.removeListener('squad/create', this.squadGen, this);

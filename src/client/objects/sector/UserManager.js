@@ -19,7 +19,6 @@ function UserManager(game, state) {
   // listen to messaging
   this.game.on('auth/disconnect', this.disconnect, this);
   this.game.on('sector/sync', this.sync, this);
-  this.game.on('user/disabled', this._disabled, this);
 }
 
 UserManager.prototype.constructor = UserManager;
@@ -52,7 +51,7 @@ UserManager.prototype.sync = function(data) {
     if(user) {
       // console.log('user exists')
       // user.plot(sync);
-    } else {
+    } else if(netManager){
       model = netManager.getUserData(sync.uuid);
       model && this.create(model);
     }
@@ -104,6 +103,7 @@ UserManager.prototype.removeAll = function() {
   for(var s in users) {
     this.remove(users[s]);
   }
+  this.users = {};
 };
 
 UserManager.prototype.find = function(chassis) {
@@ -117,18 +117,22 @@ UserManager.prototype.find = function(chassis) {
   }
 };
 
-UserManager.prototype.destroy = function() {
-  this.game.removeListener('auth/disconnect', this.disconnect);
-  this.game.removeListener('sector/sync', this.sync);
+// UserManager.prototype.destroy = function() {
+//   this.game.removeListener('auth/disconnect', this.disconnect);
+//   this.game.removeListener('sector/sync', this.sync);
 
-  this.removeAll();
+//   this.removeAll();
 
-  this.game = this.socket = this._syncBind =
-   this._attackBind = undefined;
-};
+//   this.game = this.socket = this._syncBind =
+//    this._attackBind = undefined;
+// };
 
 UserManager.prototype.disconnect = function() {
+    this.game.removeListener('auth/disconnect', this.disconnect);
+  this.game.removeListener('sector/sync', this.sync);
   this.removeAll();
+   this.game = this.socket = this._syncBind =
+   this._attackBind = undefined;
 };
 
 module.exports = UserManager;

@@ -88,9 +88,9 @@ function WaveDisplayPane(game, settings) {
   this.wave = 1;
 
   this.mainText.text = 'WAVE'
-  // this.waveText.text = ''
-
   this.waveText.text = '';
+
+  // this.waveText.text = '';
 
   this.exists = true;
 
@@ -101,28 +101,34 @@ function WaveDisplayPane(game, settings) {
   this.addPanel(this.waveText)
   this.addPanel(this.waveIndicator)
 
-  this.game.clock.events.add(1000, this.delayedUpdate, this)
-
   this.game.on('user/wave/update', this._updateWave, this);
   this.game.on('wave/cycle', this.wavecycle, this);
-  this.game.on('auth/sync/delayed', this._userSynced, this);
+  this.game.on('ship/player', this._player, this);
 
   this.game.on('wave/response', this.waveResponse, this);
 };
+
+
 
 WaveDisplayPane.prototype = Object.create(Pane.prototype);
 WaveDisplayPane.prototype.constructor = WaveDisplayPane;
 
 WaveDisplayPane.prototype.delayedUpdate = function(){
-  // console.log('DELAYED UPDATE', this.game.auth.user)
+   this.updateTimer = this.game.clock.events.add(1000, this.delayedUpdate, this)
+};
+
+WaveDisplayPane.prototype.delayedUpdate = function(){
+  console.log('DELAYED UPDATE', this.game.auth.user)
+  // this.wave = 1
   if(this.game.auth.user){
     var uuid = this.game.auth.user.uuid
-    // console.log('uuid is ', uuid)
+    console.log(this.game.auth.user, 'uuid is ', uuid)
     this.game.net.socket.emit('requesting/wave', uuid);
   }
 };
 
 WaveDisplayPane.prototype.waveResponse = function(response){
+  console.log('wave response is ', response)
   this._updateWave(response[1]);
 };
 
@@ -134,6 +140,7 @@ WaveDisplayPane.prototype._updateIndicator = function(){
 
 WaveDisplayPane.prototype._updateWave = function(wave){
   if(this.exists){
+    console.log('wave is ', wave)
     this.wave = wave;
     this.waveText.text = this.wave;
   }
@@ -149,8 +156,12 @@ WaveDisplayPane.prototype.wavecycle = function(num){
 };
 
 WaveDisplayPane.prototype.destroy = function() {
-  this.game.removeListener('squad/construct', this._startClock, this)
+  this.game.removeListener('user/wave/update', this._updateWave, this);
+  this.game.removeListener('wave/cycle', this.wavecycle, this);
+  this.game.removeListener('wave/response', this.waveResponse, this);
+
   this.game.clock.events.remove(this.waveClockTimer);
+  this.game.clock.events.remove(this.updateTimer);
 };
 
 module.exports = WaveDisplayPane;
