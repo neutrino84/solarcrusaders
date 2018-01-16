@@ -52,8 +52,8 @@ function EventManager(game, manager) {
   // };
 
   this.ships = {
-    basic: 5,
-    enforcer: 1,
+    basic: 8,
+    enforcer: 2,
     pirate: {
       factions : {
         'katos_boys' : {
@@ -71,7 +71,7 @@ function EventManager(game, manager) {
           }
         },
         'sappers' : {
-          num : 12,
+          num : 16,
           starting_position : {
             x: 1501,
             y: 1521
@@ -230,14 +230,28 @@ EventManager.prototype.squadGen = function(master){
   } else {
     chassis3 = this.game.rnd.pick(this.chassis['squadron'])
   }
-  // this.game.emit('ship/create', {
-  //   chassis: 'squad-attack',
-  //   x: randomPostion.x,
-  //   y: randomPostion.y,
-  //   ai: 'squadron',
-  //   master: master
-  // });
-
+  this.game.emit('ship/create', {
+    chassis: 'squad-attack',
+    x: randomPostion.x,
+    y: randomPostion.y,
+    ai: 'squadron',
+    master: master
+  });
+    this.game.emit('ship/create', {
+    chassis: 'squad-attack',
+    x: randomPostion.x,
+    y: randomPostion.y,
+    ai: 'squadron',
+    master: master
+  });
+  this.game.emit('ship/create', {
+    chassis: 'squad-shield',
+    x: randomPostion.x,
+    y: randomPostion.y,
+    ai: 'squadron',
+    master: master
+  });
+return
   if(rando > 0.6){
     this.game.emit('ship/create', {
       chassis: chassis1,
@@ -423,7 +437,13 @@ EventManager.prototype.wavecycle = function(){
 };
 
 EventManager.prototype.wavecycleComplete = function(num){
+  var wave;
   for(var u in this.game.users){
+    if(this.game.users[u].wave > 10){
+      wave = 10
+    } else {
+      wave = this.game.users[u].wave;
+    }
     var wave = this.game.users[u].wave;
     if(this.game.users[u].ship){
       this.waveSpawn(wave);
