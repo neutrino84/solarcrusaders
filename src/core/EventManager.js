@@ -52,8 +52,8 @@ function EventManager(game, manager) {
   // };
 
   this.ships = {
-    basic: 8,
-    enforcer: 2,
+    basic: 7,
+    enforcer: 1,
     pirate: {
       factions : {
         'katos_boys' : {
@@ -71,7 +71,7 @@ function EventManager(game, manager) {
           }
         },
         'sappers' : {
-          num : 16,
+          num : 8,
           starting_position : {
             x: 1501,
             y: 1521
@@ -128,7 +128,7 @@ EventManager.prototype.init = function() {
 
 
   this.stationGen();
-  this.scavGen(16);
+  this.scavGen(12);
   //generate ships
   for(var a in this.ships){
     if(this.ships[a].factions){
