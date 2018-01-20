@@ -440,7 +440,7 @@
     "moniker": "pig-nose",
     "stats": {
       "capacity": 1800,
-      "health": 150,
+      "health": 155,
       "heal": 0.5,
       "armor": 0.01,
       "speed": 29.0,
@@ -450,7 +450,7 @@
       "recharge": 0.9,
       "size": 72,
       "durability": 64,
-      "critical": 0.01
+      "critical": 0.02
     },
     "enhancements": ["heal", "booster", "shield", "piercing","detect"],
     "engine": {
