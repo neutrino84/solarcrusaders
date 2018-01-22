@@ -85,8 +85,14 @@ Station.prototype.update = function() {
         rotation = engine.Math.linearInterpolation([this.rotation, this.rotation+this.spin], interpolate2);
     this.direction.set(this.destination.x - destination.x, this.destination.y - destination.y);
     this.position.set(destination.x, destination.y);
-    this.rotation = rotation;
-    this.cap.rotation = -rotation*8;
+    if(!this.disabled){
+      this.rotation = rotation;
+      this.cap.rotation = -rotation*8;
+    }else{
+      this.rotation = this.storedRotation;
+      this.cap.rotation = this.storedCapRotation;
+    }
+    
     this.events.update(this.game.clock.time);
   }
 
@@ -103,11 +109,14 @@ Station.prototype.update = function() {
 Station.prototype.plot = function(data) {
   this.speed = data.spd;
   this.rot = data.rot;
-  this.spin = data.spn;
+  this.spin = data.spn; 
   this.destination.copyFrom(data.pos);
 };
 
 Station.prototype.disable = function() {
+  this.storedRotation = this.rotation;
+  this.storedCapRotation = this.cap.rotation;
+
   this.disabled = true;
   this.tint = 0x333333;
   this.cap.tint = 0x333333;

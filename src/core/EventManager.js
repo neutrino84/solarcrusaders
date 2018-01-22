@@ -93,16 +93,16 @@ function EventManager(game, manager) {
   };
 
   this.spawnSets = {
-    1 : {'katos_boys' : {'pirate-x01' : 1},'temeni' : {'pirate-x01' : 1}},
-    2 : {'katos_boys' : {'pirate-x01' : 2},'temeni' : {'pirate-x01' : 2}}, 
-    3 : {'katos_boys' : {'pirate-x01' : 2},'temeni' : {'pirate-x02' : 1}},
-    4 : {'katos_boys' : {'pirate-x01' : 0,'pirate-x02' : 1},'temeni' : {'pirate-x01' : 1,'pirate-x02' : 1}},
-    5 : {'katos_boys' : {'pirate-x01' : 2,'pirate-x02' : 1},'temeni' : {'pirate-x01' : 1,'pirate-x02' : 1}}, 
+    1 : {'katos_boys' : {'pirate-x01' : 2},'temeni' : {'pirate-x03' : 1}},
+    2 : {'katos_boys' : {'pirate-x01' : 2, 'pirate-x03' : 1},'temeni' : {'pirate-x01' : 3}}, 
+    3 : {'katos_boys' : {'pirate-x01' : 3},'temeni' : {'pirate-x02' : 2}},
+    4 : {'katos_boys' : {'pirate-x01' : 1,'pirate-x02' : 1},'temeni' : {'pirate-x01' : 2,'pirate-x02' : 1}},
+    5 : {'katos_boys' : {'pirate-x01' : 3,'pirate-x02' : 1},'temeni' : {'pirate-x03' : 1,'pirate-x02' : 1}}, 
     6 : {'katos_boys' : {'pirate-x02' : 2},'temeni' : {'pirate-x01' : 4}},
-    7 : {'katos_boys' : {'pirate-x01' : 1,'pirate-x03' : 1},'temeni' : {'pirate-x01' : 2,'pirate-x02' : 1}},
-    8 : {'katos_boys' : {'pirate-x01' : 2,'pirate-x03' : 1},'temeni' : {'pirate-x01' : 2,'pirate-x03' : 1}},
-    9 : {'katos_boys' : {'pirate-x01' : 4,'pirate-x03' : 1},'temeni' : {'pirate-x01' : 4,'pirate-x03' : 1}},
-    10 : {'katos_boys' : {'pirate-x01' : 4,'pirate-x02' : 2,'pirate-x03' : 1},'temeni' : {'pirate-x01' : 4,'pirate-x02' : 2,'pirate-x03' : 1}}
+    7 : {'katos_boys' : {'pirate-x03' : 1,'pirate-x04' : 1},'temeni' : {'pirate-x01' : 3,'pirate-x02' : 1}},
+    8 : {'katos_boys' : {'pirate-x01' : 2,'pirate-x04' : 1},'temeni' : {'pirate-x01' : 3,'pirate-x04' : 1}},
+    9 : {'katos_boys' : {'pirate-x01' : 4,'pirate-x04' : 1},'temeni' : {'pirate-x01' : 4,'pirate-x04' : 1}},
+    10 : {'katos_boys' : {'pirate-x01' : 4,'pirate-x02' : 2,'pirate-x04' : 1},'temeni' : {'pirate-x01' : 4,'pirate-x02' : 2,'pirate-x03' : 1}}
   };
 };
 
@@ -186,7 +186,7 @@ EventManager.prototype.stationGen = function(){
     'temeni' : 1,
     'vulothi' : 1,
     'fenris' : 1
-  }
+  };
 };
 
 EventManager.prototype.shipGen = function(num, ai, startingPos, faction){
@@ -230,27 +230,52 @@ EventManager.prototype.squadGen = function(master){
   } else {
     chassis3 = this.game.rnd.pick(this.chassis['squadron'])
   }
-  this.game.emit('ship/create', {
-    chassis: 'squad-attack',
-    x: randomPostion.x,
-    y: randomPostion.y,
-    ai: 'squadron',
-    master: master
-  });
+
+  if(rando > 0.5){
     this.game.emit('ship/create', {
-    chassis: 'squad-attack',
-    x: randomPostion.x,
-    y: randomPostion.y,
-    ai: 'squadron',
-    master: master
-  });
-  this.game.emit('ship/create', {
-    chassis: 'squad-shield',
-    x: randomPostion.x,
-    y: randomPostion.y,
-    ai: 'squadron',
-    master: master
-  });
+      chassis: 'squad-attack',
+      x: randomPostion.x,
+      y: randomPostion.y,
+      ai: 'squadron',
+      master: master
+    });
+      this.game.emit('ship/create', {
+      chassis: 'squad-attack',
+      x: randomPostion.x,
+      y: randomPostion.y,
+      ai: 'squadron',
+      master: master
+    });
+    this.game.emit('ship/create', {
+      chassis: 'squad-shield',
+      x: randomPostion.x,
+      y: randomPostion.y,
+      ai: 'squadron',
+      master: master
+    });
+  } else {
+    this.game.emit('ship/create', {
+      chassis: 'squad-attack',
+      x: randomPostion.x,
+      y: randomPostion.y,
+      ai: 'squadron',
+      master: master
+    });
+      this.game.emit('ship/create', {
+      chassis: 'squad-attack',
+      x: randomPostion.x,
+      y: randomPostion.y,
+      ai: 'squadron',
+      master: master
+    });
+    this.game.emit('ship/create', {
+      chassis: 'squad-repair',
+      x: randomPostion.x,
+      y: randomPostion.y,
+      ai: 'squadron',
+      master: master
+    });
+  }
 return
   if(rando > 0.6){
     this.game.emit('ship/create', {
@@ -476,6 +501,9 @@ EventManager.prototype.waveSpawn = function(num){
         start = {x: -3743, y: -941}
       };
       for(var ship in set[s]){
+        if(!this.stationCounts[s]){
+          continue
+        }
         for(var i = 0; i < set[s][ship]; i++){
           this.game.emit('ship/create', {
             chassis: ship,

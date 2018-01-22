@@ -136,6 +136,8 @@ WaveDisplayPane.prototype.wavecycle = function(num){
   if(this.waveClock >= .99999999){
     this.waveClock = 0;
     this.game.emit('wave/complete');
+    this.wave++
+    this.waveText.text = this.wave;
   }
   this._updateIndicator();
 };

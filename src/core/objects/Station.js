@@ -121,6 +121,8 @@ Station.prototype.hit = function(attacker, target, slot) {
 Station.prototype.disable = function() {
   // disable
   this.disabled = true;
+  this.movement.pause();
+  //stop orbit
 
   // broadcast
   this.game.emit('station/disabled', {

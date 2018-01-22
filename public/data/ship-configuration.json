@@ -1107,7 +1107,7 @@
     "class": "invader",
     "stats": {
       "capacity": 3000,
-      "health": 250,
+      "health": 230,
       "heal": 0.25,
       "armor": 0.15,
       "speed": 20.0,
@@ -1126,13 +1126,13 @@
           "tint": "0xFFFFFF",
           "scale": {
             "startX": 0.02,
-            "endX": 0.05,
-            "startY": 0.08,
-            "endY": 0.12
+            "endX": 0.04,
+            "startY": 0.04,
+            "endY": 0.14
           },
           "position": {
-            "x": 85,
-            "y": 40
+            "x": 79,
+            "y": 41
           },
           "rotation": 0
         },
@@ -1140,12 +1140,12 @@
           "tint": "0xFFFFFF",
           "scale": {
             "startX": 0.02,
-            "endX": 0.05,
-            "startY": 0.08,
-            "endY": 0.12
+            "endX": 0.04,
+            "startY": 0.04,
+            "endY": 0.14
           },
           "position": {
-            "x": 85,
+            "x": 79,
             "y": 62
           },
           "rotation": 0
@@ -1214,6 +1214,89 @@
     }
   },
   "pirate-x03": {
+    "race": "general",
+    "class": "cruiser",
+    "stats": {
+      "capacity": 3000,
+      "health": 300,
+      "heal": 0.25,
+      "armor": 0.3,
+      "speed": 13.0,
+      "rate": 500,
+      "evasion": 0.02,
+      "energy": 200,
+      "recharge": 1,
+      "size": 104,
+      "durability": 135,
+      "critical": 0.01
+    },
+    "enhancements": ["heal", "booster", "shield","piercing"],
+    "engine": {
+      "glows": [
+        {
+          "tint": "0xFFFFFF",
+          "scale": {
+            "startX": 0.02,
+            "endX": 0.05,
+            "startY": 0.08,
+            "endY": 0.12
+          },
+          "position": {
+            "x": 75,
+            "y": 28
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "0xFFFFFF",
+          "scale": {
+            "startX": 0.02,
+            "endX": 0.05,
+            "startY": 0.08,
+            "endY": 0.12
+          },
+          "position": {
+            "x": 74,
+            "y": 72
+          },
+          "rotation": 0
+        }
+      ]
+    },
+    "targeting": {
+      "hardpoints": [
+        {
+          "pivot": {
+            "x": 17,
+            "y": 16
+          },
+          "position": {
+            "x": 52,
+            "y": 29
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "quantum"
+          }
+        },
+        { 
+          "pivot": {
+            "x": 43,
+            "y": 165
+          },
+          "position": {
+            "x": 52,
+            "y": 73
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "quantum"
+          }
+        }
+      ]
+    }
+  },
+  "pirate-x04": {
     "race": "general",
     "class": "battlecruiser",
     "stats": {

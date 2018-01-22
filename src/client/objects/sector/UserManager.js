@@ -49,8 +49,6 @@ UserManager.prototype.sync = function(data) {
     user = this.users[sync.uuid];
 
     if(user) {
-      // console.log('user exists')
-      // user.plot(sync);
     } else if(netManager){
       model = netManager.getUserData(sync.uuid);
       model && this.create(model);

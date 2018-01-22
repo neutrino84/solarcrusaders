@@ -15,6 +15,8 @@ function Orbit(parent) {
   this.orbit = new engine.Circle(this.data.x, this.data.y, this.data.radius);
   this.circumference = this.orbit.circumference();
   
+  this.paused = false;
+
   this.center = {
     x: global.parseFloat(this.data.x),
     y: global.parseFloat(this.data.y)
@@ -26,18 +28,25 @@ Orbit.CLOCK_RATE = 100;
 Orbit.prototype.constructor = Orbit;
 
 Orbit.prototype.update = function() {
-  this.period += (this.parent.speed * this.throttle) / this.circumference * global.Math.PI;
+  // if(!this.disabled){
+    this.period += (this.parent.speed * this.throttle) / this.circumference * global.Math.PI;
+  // };
   this.orbit.circumferencePoint(this.period, false, false, this.position);
-  this.rotation += this.spin;
+  if(!this.paused){
+    // this.rotation += this.spin; 
+  }
 };
 
 Orbit.prototype.pause = function() {
+  this.paused = true;
   this.stored = {
     period: this.period,
     rotation: this.rotation,
-    throttle: this.throttle
+    throttle: this.throttle,
+    spin: this.spin
   };
   this.throttle = 0; 
+  // this.spin = 0; 
 };
 
 Orbit.prototype.compensated = function(rtt) {

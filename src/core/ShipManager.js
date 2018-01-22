@@ -269,9 +269,7 @@ ShipManager.prototype.player_credits = function(socket, args){
   var ships = this.ships,
       player = ships[args[1].player_uuid],
       credits = args[1].credits;
-      console.log('IN BACKEND CREDITS UPDATE. CREDITS DELTA IS ', credits)
       if(player.data.credits + credits <= 0){
-        console.log('making it zero')
         player.data.credits = 0;
       } else {
         player.data.credits += credits;

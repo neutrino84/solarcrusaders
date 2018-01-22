@@ -56,7 +56,7 @@ SectorState.prototype.init = function(args) {
 
   this.soundManager = new SoundManager(this.game);
 
-  this.userManager = new UserManager(this.game, this);
+  // this.userManager = new UserManager(this.game, this);
 
   this.scrollLock = true;
 //^ does this prevent scrolling
@@ -350,7 +350,7 @@ this.netManager.destroy();
 this.ui.destroy();
  this.stationManager = this.space = this.ui =
  this.planet = this.nebula = this.neb1 = this.neb2 = this.neb3 = this.hotkeyManager
- = this.shipManager = this.netManager = this.userManager = this.soundManager = undefined
+ = this.shipManager = this.netManager = this.soundManager = undefined
 
  // this.game.clock.events.add(1000, function(){
  //  console.log('undefining sound manager')
