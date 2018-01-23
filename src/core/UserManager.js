@@ -16,6 +16,7 @@ UserManager.prototype.init = function() {
   // auth request
   this.sockets.on('auth/connect', this.connect, this);
   this.sockets.on('requesting/wave', this.waveRequest, this);
+  this.sockets.on('updating/respawnMultiplier', this.updateRespawnMultiplier, this);
 
   // auth messaging
   this.game.on('auth/disconnect', this.disconnect, this);
@@ -135,6 +136,14 @@ UserManager.prototype.waveRequest = function(socket, args) {
   };
 };
 
+UserManager.prototype.updateRespawnMultiplier = function(socket, args) {
+  var uuid = args[1];
+
+  if(this.game.users[uuid]){
+    this.game.users[uuid].respawnMultiplier = args[2];
+  };
+};
+
 UserManager.prototype.update = function() {
   var game = this.game,
       users = game.users,
@@ -151,7 +160,6 @@ UserManager.prototype.update = function() {
       updates.push(update)
     }
   };
-  // console.log(updates)
   if(updates.length > 0) {
     game.emit('user/data', updates);
   }

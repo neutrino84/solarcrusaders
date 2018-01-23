@@ -10,6 +10,7 @@ var engine = require('engine'),
     LossState = require('./LossState'),
     InputManager = require('../objects/sector/InputManager'),
     ShipManager = require('../objects/sector/ShipManager'),
+    PlayerManager = require('../objects/sector/PlayerManager'),
     StationManager = require('../objects/sector/StationManager'),
     SquadManager = require('../objects/sector/SquadManager'),
     UserManager = require('../objects/sector/UserManager'),
@@ -246,6 +247,7 @@ SectorState.prototype.createManagers = function(first) {
   } else {
     this.shipManager = new ShipManager(game, this);
   }
+  this.playerManager = new PlayerManager(game);
   this.squadManager = new SquadManager(game, this);
   this.soundManager.create();
   this.game.emit('game/backgroundmusic')

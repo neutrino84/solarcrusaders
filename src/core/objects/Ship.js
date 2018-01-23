@@ -17,10 +17,6 @@ function Ship(manager, data, user) {
   this.user = user;
   
   this.data = new this.model.Ship(data);
-  // if(user){
-  // console.log(this, data)
-    
-  // }
 
   this.data.init();
   this.uuid = this.data.uuid;
@@ -254,7 +250,7 @@ Ship.prototype.hit = function(attacker, target, slot, target_uuid) {
     }
 
     //prevent friendly fire dmg to squadron
-    // if(this.master === attacker.uuid || attacker.hardpoints[0].subtype === 'repair' && data.health >= (this.config.stats.health)){return}  
+    if(this.master === attacker.uuid || attacker.hardpoints[0].subtype === 'repair' && data.health >= (this.config.stats.health)){return}  
 
 
     // calc damage
@@ -401,7 +397,7 @@ Ship.prototype.disable = function() {
     };
   };
 
-  this.respawn = this.game.clock.events.add(this.ai ? this.ai.settings.respawn : Ship.RESPAWN_TIME, this.enable, this)
+  this.respawn = this.game.clock.events.add(this.ai ? this.ai.settings.respawn : Ship.RESPAWN_TIME*this.user.respawnMultiplier, this.enable, this)
 
   // blast close
   this.blast();
@@ -550,9 +546,7 @@ Ship.prototype.destroy = function() {
       available = enhancements.available;
   for(var e in available) {
     available[e].destroy();
-  }
-  // this.game
-  // console.log('GAME IS ', this.game)
+  };
 
   this.removeTimer && this.game.clock.events.remove(this.removeTimer);
 
