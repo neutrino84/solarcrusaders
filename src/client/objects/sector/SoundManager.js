@@ -353,7 +353,6 @@ SoundManager.prototype._disabledStation = function(data) {
 };
 
 SoundManager.prototype._fire = function(data) {
-  console.log('data.created is ',data.created)
   var created = data.created,
       game = this.game,
       player = this.player || { x: 2048, y: 2048 },

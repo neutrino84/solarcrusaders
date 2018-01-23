@@ -114,7 +114,6 @@ WaveDisplayPane.prototype.delayedUpdate = function(){
 };
 
 WaveDisplayPane.prototype.waveResponse = function(response){
-  console.log('wave response is ', response)
   this._updateWave(response[1]);
 };
 

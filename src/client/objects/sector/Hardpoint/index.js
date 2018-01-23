@@ -110,7 +110,6 @@ Hardpoint.prototype.hit = function(ship, target) {
       length = actives.length;
       vector = ship.movement._vector,
       speed = ship.movement._speed;
-      console.log('in hit')
   for(var i=0; i<length; i++) {
     launcher = actives[i];
     launcher.hit && launcher.hit(ship, target);
@@ -127,7 +126,6 @@ Hardpoint.prototype.hit = function(ship, target) {
   this.manager.flashEmitter.attack();
   this.manager.flashEmitter.at({ center: target });
   this.manager.flashEmitter.explode(1);
-  console.log(ship, launcher, actives)
   this.game.emit('ship/hardpoint/hit', {
     ship: ship,
     target: target
