@@ -291,7 +291,7 @@
         "spawn": 1,
         "durability": 1000.0,
         "sound": "rocket-launcher",
-        "volume": 0.18,
+        "volume": 0.3,
         "variation": 0.05
       },
       "silvertip": {
@@ -312,7 +312,7 @@
         "spawn": 4,
         "durability": 1000.0,
         "sound": "rocket-launcher",
-        "volume": 0.19,
+        "volume": 0.4,
         "variation": 0.05
       },
       "blackhammer": {
@@ -333,7 +333,7 @@
         "spawn": 1,
         "durability": 1000.0,
         "sound": "rocket-launch",
-        "volume": 0.6,
+        "volume": 0.5,
         "variation": 0.05
       }
     },
