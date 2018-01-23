@@ -8,6 +8,8 @@ function PlayerManager(game) {
   this.clock = game.clock;
   this.net = game.net;
   this.socket = game.net.socket;
+  this.hud = null;
+
   // this.shipNetManager = game.states.current.shipNetManager;
   // this.enhancementManager = new EnhancementManager(this);
 
@@ -18,8 +20,9 @@ function PlayerManager(game) {
   this.respawnMultiplier = 1;
 
   // killpoints
-  this.killpoints = 0;
-  this.credits = 0;
+  // this.killpoints = 0;
+  // this.credits = 0;
+  this.baseRespawnTime = 10;
   this.upgrade = {
     1: 400,
     2: 1000,
@@ -198,6 +201,7 @@ PlayerManager.prototype.upgradeAvailableFlasherStop = function(){
 
 PlayerManager.prototype._player = function(ship) {
   this.playerShip = ship;
+  this.hud = ship.hud;
   this.chassis = ship.data.chassis,
   this.stockWeapons = client.ShipConfiguration[this.chassis]['targeting']['hardpoints'],
   ship.chassis.filters = [],
@@ -205,6 +209,7 @@ PlayerManager.prototype._player = function(ship) {
 };
 
 PlayerManager.prototype._death = function() {
+  this.hud.respawnCountdownStart(this.baseRespawnTime * this.respawnMultiplier);
   this.respawnMultiplier++;
   this.socket.emit('updating/respawnMultiplier', this.game.auth.user.uuid, this.respawnMultiplier)
 };

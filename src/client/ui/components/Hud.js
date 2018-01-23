@@ -63,12 +63,24 @@ function Hud(ship, settings) {
         gap: 1
       },
       bg: false
+    },
+    indicatorContainer: {
+      constraint: Layout.CENTER,
+      layout: {
+        type: 'flow',
+        ax: Layout.CENTER, 
+        ay: Layout.TOP,
+        direction: Layout.VERTICAL, 
+        gap: 1
+      },
+      bg: false
     }
   }));
 
   this.ship = ship;
 
   this.container = new Pane(this.game, this.settings.container);
+  this.indicatorContainer = new Pane(this.game, this.settings.indicatorContainer);
   this.energyBar = new ProgressBar(this.game, this.settings.energyBar);
   this.healthBar = new ProgressBar(this.game, this.settings.healthBar);
   this.scoreContainer = new Pane(this.game, {
@@ -84,20 +96,36 @@ function Hud(ship, settings) {
       },
       bg: false
     });
+
+  this.respawnCountdown = new Label(this.game, {
+        constraint: Layout.USE_PS_SIZE,
+        align: 'center',
+        text: {
+          fontName: 'full'
+        },
+        bg: false
+      });
+  this.respawnCountdown.tint = 0xffffff;
+  this.respawnCountdown.text = '';
+
   
   this.gains = {};
   this.losses = {};
   this.gainTimers = [];
   this.lossTimers = [];
+  this.countDownTimerNum = 0;
   
-  this.container.addPanel(this.healthBar);
+  this.indicatorContainer.addPanel(this.healthBar);
 
   //prevent stations from getting energy bars
   if(!this.ship.rot){
-    this.container.addPanel(this.energyBar);
+    this.indicatorContainer.addPanel(this.energyBar);
   }
 
   // this.scoreContainer.addPanel(this.score)
+
+  this.scoreContainer.addPanel(this.respawnCountdown)
+  this.container.addPanel(this.indicatorContainer)
   this.container.addPanel(this.scoreContainer)
 
   this.addPanel(this.container);
@@ -123,7 +151,8 @@ Hud.prototype.create = function() {
   this.position.set(this.ship.width/2, this.ship.height/2);
 
   this.visible = false;
-  this.alpha = 0.0;
+  this.indicatorContainer.alpha = 0;
+  this.alpha = 1.0;
 
   this.ship.addChild(this);
 };
@@ -133,7 +162,7 @@ Hud.prototype.show = function() {
   this.healthBar.visible = true;
   this.energyBar.visible = true;
   this.animating && this.animating.isRunning && this.animating.stop(false);
-  this.animating = this.game.tweens.create(this);
+  this.animating = this.game.tweens.create(this.indicatorContainer);
   this.animating.to({ alpha: 1.0 }, 250);
   this.animating.on('complete', this.update, this);
   this.animating.start();
@@ -162,14 +191,14 @@ Hud.prototype.showCreditLoss = function(credits) {
   this.lossTimers = this.ship.events.loop(100, lossTimer_a = function(){
     if(!this.losses_a){return};
     this.losses_a.y -= 1;
-    // this.losses_a.alpha -= .033;
+    this.losses_a.alpha -= .033;
     if(this.losses_a.y <= -28){
         this.losses_a.y = 0;
         this.losses_a.alpha = 0;
         this.losses_a = false;
         this.healthBar.visible = true;
         this.energyBar.visible = true;
-        this.visible = false;
+        // this.visible = false;
         // this.losses_a.destroy();
         this.ship.events.remove(this.lossTimers['a'])
     };
@@ -200,7 +229,7 @@ Hud.prototype.showCreditLoss = function(credits) {
                   this.losses_b.visible = false;
                   this.healthBar.visible = true;
                   this.energyBar.visible = true;
-                  this.visible = false;
+                  // this.visible = false;
                   // this.losses_b.destroy();
                   this.ship.events.remove(this.lossTimers_b)
               };
@@ -231,7 +260,7 @@ Hud.prototype.showCreditLoss = function(credits) {
                           this.losses_c.visible = false;
                           this.healthBar.visible = true;
                           this.energyBar.visible = true;
-                          this.visible = false;
+                          // this.visible = false;
                           // this.losses_c.destroy();
                           this.ship.events.remove(this.lossTimers_c)
                       };
@@ -277,7 +306,7 @@ Hud.prototype.showCreditGain = function(credits, uuid) {
         this.gains[uuid]['a'].visible = false;
         this.healthBar.visible = true;
         this.energyBar.visible = true;
-        this.visible = false;
+        // this.visible = false;
         this.gains[uuid]['a'].destroy();
         this.ship.events.remove(this.gainTimers[uuid]['a'])
 
@@ -309,7 +338,7 @@ Hud.prototype.showCreditGain = function(credits, uuid) {
             this.gains[uuid]['b'].visible = false;
             this.healthBar.visible = true;
             this.energyBar.visible = true;
-            this.visible = false;
+            // this.visible = false;
             this.gains[uuid]['b'].destroy();
             this.ship.events.remove(this.gainTimers[uuid]['b'])
         };
@@ -340,7 +369,7 @@ Hud.prototype.showCreditGain = function(credits, uuid) {
                     this.gains[uuid]['c'].visible = false;
                     this.healthBar.visible = true;
                     this.energyBar.visible = true;
-                    this.visible = false;
+                    // this.visible = false;
                     this.gains[uuid]['c'].destroy();
                     this.ship.events.remove(this.gainTimers[uuid]['c'])
                 };
@@ -350,12 +379,44 @@ Hud.prototype.showCreditGain = function(credits, uuid) {
   this.game.emit('player/credits');
 };
 
+Hud.prototype.respawnCountdownStart = function(num) {
+  // this.respawnCountdown && this.scoreContainer.removePanel(this.respawnCountdown);
+  this.countDownTimerNum = num;
+
+  this.respawnCountdown.x = 2;
+  this.respawnCountdown.y = -13;
+  
+  // this.respawnCountdown = new Label(this.game, {
+  //       constraint: Layout.USE_PS_SIZE,
+  //       align: 'center',
+  //       text: {
+  //         fontName: 'full'
+  //       },
+  //       bg: false
+  //     });
+  // this.respawnCountdown.tint = 0xffffff;
+  // this.respawnCountdown.x = 1;
+  // this.respawnCountdown.y = -15;
+  this.respawnCountdown.text = this.countDownTimerNum;
+  // this.respawnCountdown.visible = true;
+  
+  this.countDownTimer && this.ship.events.remove(this.countDownTimer)
+  this.countDownTimer = this.ship.events.loop(1000, function(){
+      this.countDownTimerNum --
+      this.respawnCountdown.text = this.countDownTimerNum;
+      if(this.countDownTimerNum <= 0){
+        this.respawnCountdown.text = '';
+        this.ship.events.remove(this.countDownTimer);        
+      }
+  }, this);
+};
+
 Hud.prototype.hide = function() {
   this.animating && this.animating.isRunning && this.animating.stop(false);
-  this.animating = this.game.tweens.create(this);
+  this.animating = this.game.tweens.create(this.indicatorContainer);
   this.animating.to({ alpha: 0.0 }, 250);
   this.animating.on('complete', function() {
-    this.visible = false;
+    // this.visible = false;
     this.energyBar.visible = false;
     this.healthBar.visible = false;
   }, this);
