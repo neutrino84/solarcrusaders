@@ -95,7 +95,10 @@ Ship.prototype.refresh = function(data) {
   }
 
   if(data.credits && this.isPlayer){
-    this.game.emit('player/credits')
+    this.game.emit('player/credits');
+    if(data.creditsLost){
+      this.hud.showCreditLoss(data.creditsLost);
+    }
   };
 
   if(data.shielded ){

@@ -65,7 +65,7 @@ InGameMessage.prototype.message = function(message, duration) {
           this.mainText.text = '';
           this.message('Defend the Ubadian outpost until the Imperial Loyalists arrive', 30);
           events.add(7000, function(){
-            this.message('Destroy both pirate basesto win', 30);
+            this.message('Destroy both pirate bases to win', 30);
             events.add(6000, function(){
               this.mainText.text = '';
             }, this);  

@@ -18,6 +18,7 @@ function EventManager(game, manager) {
   this.pirateAttackSwitch = false;
 
   this.wavecycleCount = 0;
+  this.passiveWave = 0;
 
   this.game.clock.events.loop(1000, this.wavecycle, this);
   this.ships = {
@@ -93,12 +94,12 @@ function EventManager(game, manager) {
   };
 
   this.spawnSets = {
-    1 : {'katos_boys' : {'pirate-x01' : 2},'temeni' : {'pirate-x03' : 1}},
-    2 : {'katos_boys' : {'pirate-x01' : 2, 'pirate-x03' : 1},'temeni' : {'pirate-x01' : 3}}, 
+    1 : {'katos_boys' : {'pirate-x01' : 3},'temeni' : {'pirate-x01' : 2, 'pirate-x03' : 1}},
+    2 : {'katos_boys' : {'pirate-x01' : 4, 'pirate-x03' : 1},'temeni' : {'pirate-x01' : 3}}, 
     3 : {'katos_boys' : {'pirate-x01' : 3},'temeni' : {'pirate-x02' : 2}},
     4 : {'katos_boys' : {'pirate-x01' : 1,'pirate-x02' : 1},'temeni' : {'pirate-x01' : 2,'pirate-x02' : 1}},
     5 : {'katos_boys' : {'pirate-x01' : 3,'pirate-x02' : 1},'temeni' : {'pirate-x03' : 1,'pirate-x02' : 1}}, 
-    6 : {'katos_boys' : {'pirate-x02' : 2},'temeni' : {'pirate-x01' : 4}},
+    6 : {'katos_boys' : {'pirate-x02' : 2, 'pirate-x03' : 2},'temeni' : {'pirate-x01' : 4}},
     7 : {'katos_boys' : {'pirate-x03' : 1,'pirate-x04' : 1},'temeni' : {'pirate-x01' : 3,'pirate-x02' : 1}},
     8 : {'katos_boys' : {'pirate-x01' : 2,'pirate-x04' : 1},'temeni' : {'pirate-x01' : 3,'pirate-x04' : 1}},
     9 : {'katos_boys' : {'pirate-x01' : 4,'pirate-x04' : 1},'temeni' : {'pirate-x01' : 4,'pirate-x04' : 1}},
@@ -219,7 +220,7 @@ EventManager.prototype.squadGen = function(master){
       randomPostion = this.generateRandomPosition(2700),
       randomPostion2 = this.generateRandomPosition(2700),
       rando = this.game.rnd.frac();
-
+  // return
   if(chassis1 === 'squad-shield'){
     chassis2 = this.game.rnd.pick(this.chassis['squadron2'])
   } else {
@@ -458,6 +459,11 @@ EventManager.prototype.wavecycle = function(){
   if(this.wavecycleCount >= 60){
     this.wavecycleCount = 0;
     this.game.emit('wave/cycle/complete');
+    this.passiveWave++
+    if(this.passiveWave > 4){
+      this.waveSpawn(8)
+      this.passiveWave = 0;
+    }
   };
 };
 

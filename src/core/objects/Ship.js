@@ -334,11 +334,13 @@ Ship.prototype.hit = function(attacker, target, slot, target_uuid) {
           });
         }
         if(this.user){
-          var credits =  Math.floor(this.credits/2);
+          var credits =  Math.floor(this.credits/2),
+              creditsLost = this.credits - credits;
           this.credits = credits; 
             updates.push({
             uuid: this.uuid,
-            credits: credits
+            credits: credits,
+            creditsLost: creditsLost
           });
         }
       }

@@ -53,8 +53,8 @@ Station.prototype.hit = function(attacker, target, slot) {
       ratio = distance / (this.size * hardpoint.data.aoe),
       damage, health, critical;
 
-  if((ratio < 0.1 && attacker.ai && attacker.ai.type === 'pirate' && this.chassis === 'ubadian-station-x01') || (ratio < 0.1 && this.chassis !== 'ubadian-station-x01')) {
-    // if(ratio < 0.1) {
+  // if((ratio < 0.1 && attacker.ai && attacker.ai.type === 'pirate' && this.chassis === 'ubadian-station-x01') || (ratio < 0.1 && this.chassis !== 'ubadian-station-x01')) {
+    if(ratio < 0.1) {
     // calc damage
     critical = game.rnd.rnd() <= attacker.critical;
     damage = global.Math.max(0, hardpoint.data.damage * (1-ratio) * (1-this.armor));
