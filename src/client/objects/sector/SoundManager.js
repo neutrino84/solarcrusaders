@@ -32,6 +32,9 @@ SoundManager.prototype.preload = function() {
   load.audio('pulse-tarkin', 'sounds/pulses/tarkin.mp3');
   load.audio('pulse-bazuko', 'sounds/pulses/bazuko.mp3');
 
+  load.audio('rocket-launch1', 'sounds/rockets/rocket-launch1.mp3');
+  load.audio('rocket-launch2', 'sounds/rockets/rocket-launch2.mp3');
+
   // load.audio('plasma-basic', 'sounds/plasmas/basic.mp3');
   // load.audio('laser-basic', 'sounds/lasers/basic.mp3');
   // load.audio('laser-light', 'sounds/lasers/light.mp3');
@@ -139,6 +142,10 @@ SoundManager.prototype.create = function() {
   this.game.sound.add('pulse-quantum', 6);
   this.game.sound.add('pulse-tarkin', 6);
   this.game.sound.add('pulse-bazuko', 6);
+
+  this.game.sound.add('rocket-launch1', 3);
+  this.game.sound.add('rocket-launch2', 3);
+
   // this.game.sound.add('pulse-nucleon', 6);
   // this.game.sound.add('pulse-vulcan', 6);
   // this.game.sound.add('plasma-basic', 6);
@@ -346,6 +353,7 @@ SoundManager.prototype._disabledStation = function(data) {
 };
 
 SoundManager.prototype._fire = function(data) {
+  console.log('data.created is ',data.created)
   var created = data.created,
       game = this.game,
       player = this.player || { x: 2048, y: 2048 },
@@ -354,8 +362,9 @@ SoundManager.prototype._fire = function(data) {
       launcher, sound, 
       volume = 0.0,
       harvesterNum = Math.floor((Math.random() * 5)+1), 
+      rocketNum = Math.floor((Math.random() * 2)+1), 
       v, r;
-  if(data.spawn>0 && ship.x && this.player) {
+  if(data.spawn>0 && ship && this.player) {
     distance = engine.Point.distance(ship, player);
     volume = global.Math.max(1-(distance/2048), 0);
 
@@ -378,6 +387,10 @@ SoundManager.prototype._fire = function(data) {
 
           if(sound === 'beam-harvester'){
           sound = 'beam-harvester'+harvesterNum
+          }
+          if(sound === 'rocket-launcher'){
+
+          sound = 'rocket-launch'+rocketNum
           }
           // each spawn gets a slightly different volume
           game.clock.events.create(launcher.delay, false, data.spawn,
@@ -403,7 +416,7 @@ SoundManager.prototype.generateSystemSound = function(sound){
 SoundManager.prototype.generateBackgroundMusic = function(){
   var num = Math.floor((Math.random() * 3)+1);
   this.backgroundMusic = 'background'+num;
-  this.game.sound.play('background'+num, 0.6, true);
+  // this.game.sound.play('background'+num, 0.6, true);
 };
 
 SoundManager.prototype.fadeOut = function(key){

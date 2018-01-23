@@ -53,6 +53,7 @@ TargetingComputer.prototype.hit = function(ship, data) {
   var hardpoints = this.hardpoints,
       hardpoint = hardpoints[data.hardpoint.slot];
   if(ship && hardpoint) {
+    console.log('hardpoint')
     hardpoint.hit(ship, data.hardpoint.target);
   }
 };

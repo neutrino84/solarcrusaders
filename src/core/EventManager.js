@@ -20,37 +20,6 @@ function EventManager(game, manager) {
   this.wavecycleCount = 0;
 
   this.game.clock.events.loop(1000, this.wavecycle, this);
-  // this.ships = {
-  //   basic: 4,
-  //   enforcer: 1,
-  //   pirate: {
-  //     factions : {
-  //       'katos_boys' : {
-  //         num : 8,
-  //         starting_position : {
-  //           x: 6966,
-  //           y: 4249
-  //         }
-  //       },
-  //       'temeni' : {
-  //         num : 8,
-  //         starting_position : {
-  //           x: -3743,
-  //           y: -941
-  //         }
-  //       },
-  //       'sappers' : {
-  //         num : 8,
-  //         starting_position : {
-  //           x: 1501,
-  //           y: 1521
-  //         }
-  //       }
-  //     }
-      
-  //   }
-  // };
-
   this.ships = {
     basic: 7,
     enforcer: 1,
@@ -81,6 +50,37 @@ function EventManager(game, manager) {
       
     }
   };
+
+  // this.ships = {
+  //   basic: 0,
+  //   enforcer: 0,
+  //   pirate: {
+  //     factions : {
+  //       'katos_boys' : {
+  //         num : 0,
+  //         starting_position : {
+  //           x: 6966,
+  //           y: 4249
+  //         }
+  //       },
+  //       'temeni' : {
+  //         num : 0,
+  //         starting_position : {
+  //           x: -3743,
+  //           y: -941
+  //         }
+  //       },
+  //       'sappers' : {
+  //         num : 0,
+  //         starting_position : {
+  //           x: 1501,
+  //           y: 1521
+  //         }
+  //       }
+  //     }
+      
+  //   }
+  // };
 
   this.chassis = {
     basic : ['ubaidian-x01a','ubaidian-x01b','ubaidian-x01c','ubaidian-x01d','ubaidian-x01e','ubaidian-x01f'],

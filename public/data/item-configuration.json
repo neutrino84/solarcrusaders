@@ -289,7 +289,10 @@
         "length": 256,
         "aoe": 2.5,
         "spawn": 1,
-        "durability": 1000.0
+        "durability": 1000.0,
+        "sound": "rocket-launcher",
+        "volume": 0.18,
+        "variation": 0.05
       },
       "silvertip": {
         "name": "Type 6 Launcher",
@@ -307,7 +310,10 @@
         "length": 256,
         "aoe": 2.25,
         "spawn": 4,
-        "durability": 1000.0
+        "durability": 1000.0,
+        "sound": "rocket-launcher",
+        "volume": 0.19,
+        "variation": 0.05
       },
       "blackhammer": {
         "name": "Type 10 Launcher",
@@ -325,7 +331,10 @@
         "length": 256,
         "aoe": 3,
         "spawn": 1,
-        "durability": 1000.0
+        "durability": 1000.0,
+        "sound": "rocket-launch",
+        "volume": 0.6,
+        "variation": 0.05
       }
     },
     "plasma": {

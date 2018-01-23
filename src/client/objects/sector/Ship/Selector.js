@@ -33,6 +33,12 @@ Selector.prototype.create = function() {
       red2: 40
     },
     'pirate-x03' : {
+      ret1: 50,
+      ret2: -16,
+      red1: 33,
+      red2: 40
+    },
+    'pirate-x04' : {
       ret1: 121,
       ret2: 9,
       red1: 100,
