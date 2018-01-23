@@ -55,8 +55,8 @@ Routes.prototype.init = function(next) {
   this.express.get('/', function(req, res, next) {
     res.render('index',
       Utils.extend({
-        title: 'Solar Crusaders | Puremana Studios',
-        url: 'http://solarcrusaders.com/'
+        title: 'Mobius Dimension | Puremana Studios',
+        url: 'http://mobiusdimension.io/'
       }, routeParameters));
   });
 
