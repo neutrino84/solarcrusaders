@@ -15,7 +15,7 @@ function Routes(app) {
 };
 
 Routes.DESCRIPTION =
-  'Solar Crusaders is a multiplayer top-down strategy space game featuring a sandbox universe, ' +
+  'Mobius Dimension is a multiplayer top-down strategy space game featuring a sandbox universe, ' +
   'real-time battles, exploration, crafting and more.';
 
 Routes.prototype.constructor = Routes;
@@ -70,11 +70,12 @@ Routes.prototype.init = function(next) {
   this.play.get('/', function(req, res, next) {
     res.render('play',
       Utils.extend({
-        title: 'Play | Solar Crusaders',
+        title: 'Play | Mobius Dimension',
         user: req.session.user && req.session.user.role !== 'guest' ? true : false,
-        url: 'http://play.solarcrusaders.com/'
+        url: 'http://play.mobiusdimension.io/'
       }, routeParameters));
   });
+  // url: 'http://play.solarcrusaders.com/'
 
   this.play.get('*', function(req, res, next) {
     res.redirect('/');
