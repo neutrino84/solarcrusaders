@@ -7,15 +7,17 @@ var pixi = require('pixi'),
 
 function Planet(game) {
   this.planetTexture = new pixi.Texture(engine.Shader.getRepeatTexture(game, 'planet')),
-  this.cloudsTexture = new pixi.Texture(engine.Shader.getRepeatTexture(game, 'clouds'));
+  this.highlightTexture = new pixi.Texture(engine.Shader.getRepeatTexture(game, 'highlight'));
 
   engine.Shader.call(this, game, this.planetTexture);
 
-  this.atmosphere = new Atmosphere(game);
+  // create planet atmosphere
+  this.atmosphere = new Atmosphere(game, 0.12, 4.0, 1.0, [0.345, 0.71, 1.0]);
   this.atmosphere.cache();
   this.addChild(this.atmosphere);
 
   this.pivot.set(this.width/2, this.height/2);
+  this.scale.set(1.0, 1.0);
   this.position.set(2048/6, 2048/6);
 };
 
@@ -26,7 +28,7 @@ Planet.prototype.apply = function(renderer, shader) {
   shader.uniforms.time = this.game.clock.totalElapsedSeconds();
   shader.uniforms.translationMatrix = this.worldTransform.toArray(true);
   shader.uniforms.uSampler = renderer.bindTexture(this.planetTexture, 0);
-  shader.uniforms.uClouds = renderer.bindTexture(this.cloudsTexture, 1);
+  shader.uniforms.highlights = renderer.bindTexture(this.highlightTexture, 1);
 };
 
 Planet.prototype.getShader = function(gl) {
