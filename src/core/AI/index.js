@@ -1,23 +1,27 @@
 
 var Basic = require('./Basic'),
     Pirate = require('./Pirate'),
-    Squadron = require('./Squadron');
+    Squadron = require('./Squadron'),
+    User = require('./User');
 
-function AI(manager) {
-  this.manager = manager;
-  this.game = manager.game;
-  
+function AI(game) {
+  this.game = game;
+
+  // global npcs
   this.game.npcs = {};
-  this.timer = this.game.clock.events.loop(500, this.update, this);
 };
 
 AI.prototype.constructor = AI;
 
-AI.prototype.create = function(type, ship) {
+AI.prototype.init = function() {
+  this.game.on('ship/remove', this.remove, this);
+};
+
+AI.prototype.factory = function(ship) {
   var ai = null,
       game = this.game,
       npcs = game.npcs;
-  switch(type) {
+  switch(ship.data.ai) {
     case 'basic':
       ai = new Basic(ship);
       break
@@ -28,7 +32,7 @@ AI.prototype.create = function(type, ship) {
       ai = new Squadron(ship);
       break;
     default:
-      ai = null;
+      ai = ship.user ? new User(ship) : null;
       break;
   }
   if(ai != null) {
@@ -52,16 +56,14 @@ AI.prototype.update = function() {
   for(var s in npcs) {
     npc = npcs[s];
 
-    if(!npc.disabled && npc.ai) {
+    if(npc && !npc.disabled) {
       npc.ai.update();
   	}
   }
 };
 
 AI.prototype.destroy = function() {
-  this.timer && this.game.clock.events.remove(this.timer);
-  this.manager = this.game =
-    this.game.npcs = undefined;
+  this.game = this.game.npcs = undefined;
 };
 
 module.exports = AI;
