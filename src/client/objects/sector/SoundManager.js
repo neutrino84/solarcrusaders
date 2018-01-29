@@ -4,8 +4,11 @@ var engine = require('engine');
 function SoundManager(game) {
   this.game = game;
 
-  // listen to player
-  this.game.on('ship/player', this._player, this);
+  // default
+  this.player = {
+    x: 2048,
+    y: 2048
+  };
 };
 
 SoundManager.prototype.constructor = SoundManager;
@@ -19,6 +22,8 @@ SoundManager.prototype.init = function() {
 SoundManager.prototype.preload = function() {
   var game = this.game,
       load = game.load;
+
+  return;
 
   load.audio('pulse-basic', 'sounds/pulses/basic.mp3');
   load.audio('pulse-nucleon', 'sounds/pulses/nucleon.mp3');
@@ -39,8 +44,7 @@ SoundManager.prototype.create = function() {
   return;
   
   this.manager = this.game.states.current;
-  this.shipManager = this.manager.shipManager;
-  this.ships = this.shipManager.ships;
+  this.ships = this.game.ships;
   this.config = this.game.cache.getJSON('item-configuration', false);
 
   // generate sound pools
@@ -59,15 +63,15 @@ SoundManager.prototype.create = function() {
   this.game.sound.add('explosion-a', 2);
 
   // subscribe to events
-  this.game.on('ship/enhancement/started', this._enhance, this);
-  this.game.on('ship/disabled', this._disabled, this);
-  this.game.on('ship/hardpoint/fire', this._fire, this);
-  this.game.on('ship/hardpoint/hit', this._hit, this);
+  this.game.on('ship/user', this.user, this);
+  this.game.on('ship/enhancement/started', this.enhance, this);
+  this.game.on('ship/hardpoint/fire', this.fire, this);
+  this.game.on('ship/hardpoint/hit', this.hit, this);
 };
 
-SoundManager.prototype._enhance = function(data) {
+SoundManager.prototype.enhance = function(data) {
   var game = this.game,
-      player = this.player || { x: 2048, y: 2048 },
+      player = this.player,
       ship = this.ships[data.uuid],
       enhancements = this.config.enhancement,
       enhancement = data.enhancement,
@@ -84,13 +88,13 @@ SoundManager.prototype._enhance = function(data) {
     }
   }
   if(volume > SoundManager.MINIMUM_VOLUME) {
-    this.game.sound.play(sound.name, volume, false); 
+    game.sound.play(sound.name, volume, false); 
   }
 };
 
-SoundManager.prototype._hit = function(data) {
+SoundManager.prototype.hit = function(data) {
   var game = this.game,
-      player = this.player || { x: 2048, y: 2048 },
+      player = this.player,
       target = data.target,
       ship = data.ship,
       explosion = game.rnd.pick(['damage-a', 'damage-b']),
@@ -105,33 +109,10 @@ SoundManager.prototype._hit = function(data) {
   }
 };
 
-SoundManager.prototype._disabled = function(data) {
-  var game = this.game,
-      player = this.player || { x: 2048, y: 2048 },
-      ship = this.ships[data.uuid],
-      volume = 0.5,
-      rnd = game.rnd,
-      explosion = rnd.pick(['explosion-a']),
-      sound, distance;
-  if(ship) {
-    if(player === ship) {
-      sound = explosion;
-    } else if(player && player !== ship) {
-      distance = engine.Point.distance(ship, player);
-      volume = global.Math.max(1-(distance/8192), 0);
-      volume *= volume;
-      sound = explosion;
-    }
-    if(sound && volume > SoundManager.MINIMUM_VOLUME) {
-      game.sound.play(sound, volume, false, rnd.realInRange(0.8, 1.2));
-    }
-  }
-};
-
-SoundManager.prototype._fire = function(data) {
+SoundManager.prototype.fire = function(data) {
   var created = data.created,
       game = this.game,
-      player = this.player || { x: 2048, y: 2048 },
+      player = this.player,
       rnd = game.rnd,
       ship = data.ship,
       launcher, sound, 
@@ -160,7 +141,7 @@ SoundManager.prototype._fire = function(data) {
           // each spawn gets a slightly different volume
           game.clock.events.create(launcher.delay, false, data.spawn,
             function(key, volume, rate) {
-              this.game.sound.play(key, volume, false, rate, false);
+              game.sound.play(key, volume, false, rate, false);
             }, this, [sound, v, r]
           );
         }
@@ -169,7 +150,30 @@ SoundManager.prototype._fire = function(data) {
   }
 };
 
-SoundManager.prototype._player = function(ship) {
+SoundManager.prototype.disabled = function(data) {
+  var game = this.game,
+      player = this.player,
+      ship = this.ships[data.uuid],
+      volume = 0.5,
+      rnd = game.rnd,
+      explosion = rnd.pick(['explosion-a']),
+      sound, distance;
+  if(ship) {
+    if(player === ship) {
+      sound = explosion;
+    } else if(player && player !== ship) {
+      distance = engine.Point.distance(ship, player);
+      volume = global.Math.max(1-(distance/8192), 0);
+      volume *= volume;
+      sound = explosion;
+    }
+    if(sound && volume > SoundManager.MINIMUM_VOLUME) {
+      game.sound.play(sound, volume, false, rnd.realInRange(0.8, 1.2));
+    }
+  }
+};
+
+SoundManager.prototype.user = function(ship) {
   this.player = ship;
 };
 
