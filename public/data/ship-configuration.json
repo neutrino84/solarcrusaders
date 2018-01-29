@@ -2,27 +2,26 @@
   "ubaidian-x01": {
     "race": "ubaidian",
     "class": "destroyer",
-    "name": "Spectrum",
+    "name": "Aurora",
     "stats": {
       "capacity": 1000,
       "health": 100,
       "heal": 0.2,
       "armor": 0.0,
-      "speed": 24.0,
-      "rate": 312,
+      "speed": 30.0,
+      "rate": 512,
       "evasion": 0.16,
       "energy": 200,
       "recharge": 1,
-      "size": 62,
+      "size": 64,
       "durability": 1000,
       "critical": 0.025
     },
-    "squadron": ["ubaidian-x04", "ubaidian-x04"],
     "enhancements": ["heal", "booster", "shield"],
     "engine": {
       "glows": [
         {
-          "tint": "0x3399FF",
+          "tint": "0x3399ff",
           "scale": {
             "startX": 0.1,
             "endX": 0.2,
@@ -36,7 +35,7 @@
           "rotation": 0
         },
         {
-          "tint": "0x3399FF",
+          "tint": "0x3399ff",
           "scale": {
             "startX": 0.1,
             "endX": 0.2,
@@ -95,21 +94,20 @@
       "health": 400,
       "heal": 0.1,
       "armor": 0.0,
-      "speed": 8.0,
+      "speed": 12.0,
       "rate": 1024,
-      "evasion": 0.02,
+      "evasion": 0.08,
       "energy": 200,
       "recharge": 1,
       "size": 72,
       "durability": 1000,
       "critical": 0.025
     },
-    "squadron": [],
     "enhancements": ["heal", "booster", "shield"],
     "engine": {
       "glows": [
         {
-          "tint": "0x3399FF",
+          "tint": "0x3399ff",
           "scale": {
             "startX": 0.22,
             "endX": 0.28,
@@ -123,7 +121,7 @@
           "rotation": 0
         },
         {
-          "tint": "0x3399FF",
+          "tint": "0x3399ff",
           "scale": {
             "startX": 0.22,
             "endX": 0.28,
@@ -192,21 +190,20 @@
       "health": 100,
       "heal": 0.1,
       "armor": 0.0,
-      "speed": 38.0,
-      "rate": 196,
+      "speed": 34.0,
+      "rate": 1024,
       "evasion": 0.2,
       "energy": 100,
       "recharge": 1,
-      "size": 48,
+      "size": 42,
       "durability": 1000,
       "critical": 0.05
     },
-    "squadron": [],
     "enhancements": ["heal", "booster", "shield"],
     "engine": {
       "glows": [
         {
-          "tint": "0x3399FF",
+          "tint": "0x3399ff",
           "scale": {
             "startX": 0.02,
             "endX": 0.04,
@@ -220,7 +217,7 @@
           "rotation": 0
         },
         {
-          "tint": "0x3399FF",
+          "tint": "0x3399ff",
           "scale": {
             "startX": 0.02,
             "endX": 0.04,
@@ -243,7 +240,7 @@
             "y": 15
           },
           "default": {
-             "type": "projectile",
+             "type": "pulse",
              "subtype": "basic"
            }
          },
@@ -253,7 +250,7 @@
              "y": 47
            },
            "default": {
-            "type": "projectile",
+            "type": "pulse",
             "subtype": "basic"
           }
         }
@@ -270,20 +267,19 @@
       "heal": 0.1,
       "armor": 0.0,
       "speed": 36.0,
-      "rate": 2048,
-      "evasion": 0.25,
+      "rate": 1024,
+      "evasion": 0.24,
       "energy": 100,
       "recharge": 1,
-      "size": 48,
+      "size": 42,
       "durability": 1000,
       "critical": 0.25
     },
-    "squadron": [],
     "enhancements": ["heal", "booster", "shield"],
     "engine": {
       "glows": [
         {
-          "tint": "0x3399FF",
+          "tint": "0x3399ff",
           "scale": {
             "startX": 0.08,
             "endX": 0.10,
@@ -306,7 +302,7 @@
             "y": 19
           },
           "default": {
-            "type": "energy",
+            "type": "pulse",
             "subtype": "basic"
           }
         }
@@ -322,21 +318,20 @@
       "health": 100,
       "heal": 0.2,
       "armor": 0.0,
-      "speed": 24.0,
-      "rate": 512,
-      "evasion": 0.12,
+      "speed": 30.0,
+      "rate": 1024,
+      "evasion": 0.16,
       "energy": 200,
-      "recharge": 1,
+      "recharge": 1.0,
       "size": 62,
       "durability": 1000,
       "critical": 0.025
     },
-    "squadron": [],
     "enhancements": ["heal", "booster", "shield"],
     "engine": {
       "glows": [
         {
-          "tint": "0x3399FF",
+          "tint": "0x3399ff",
           "scale": {
             "startX": 0.12,
             "endX": 0.12,
@@ -350,7 +345,7 @@
           "rotation": 10
         },
         {
-          "tint": "0x3399FF",
+          "tint": "0x3399ff",
           "scale": {
             "startX": 0.12,
             "endX": 0.12,
@@ -373,8 +368,8 @@
             "y": 38
           },
           "default": {
-            "type": "pulse",
-            "subtype": "basic"
+            "type": "projectile",
+            "subtype": "phalanx"
           }
         },
         {
@@ -383,8 +378,8 @@
             "y": 63
           },
           "default": {
-            "type": "pulse",
-            "subtype": "basic"
+            "type": "projectile",
+            "subtype": "phalanx"
           }
         },
         {
@@ -393,8 +388,260 @@
             "y": 88
           },
           "default": {
-            "type": "pulse",
+            "type": "projectile",
+            "subtype": "phalanx"
+          }
+        }
+      ]
+    }
+  },
+  "ubaidian-x06": {
+    "race": "ubaidian",
+    "class": "frigate",
+    "name": "Mithra",
+    "stats": {
+      "capacity": 500,
+      "health": 30,
+      "heal": 0.0,
+      "armor": 0.0,
+      "speed": 36.0,
+      "rate": 1024,
+      "evasion": 0.24,
+      "energy": 50,
+      "recharge": 0.5,
+      "size": 48,
+      "durability": 500,
+      "critical": 0.01
+    },
+    "enhancements": ["heal", "booster", "shield"],
+    "engine": {
+      "glows": [
+        {
+          "tint": "0x3399ff",
+          "scale": {
+            "startX": 0.04,
+            "endX": 0.12,
+            "startY": 0.04,
+            "endY": 0.32
+          },
+          "position": {
+            "x": 38,
+            "y": 31
+          },
+          "rotation": 0
+        }
+      ]
+    },
+    "targeting": {
+      "hardpoints": [
+        {
+          "position": {
+            "x": 32,
+            "y": 32
+          },
+          "default": {
+            "type": "projectile",
             "subtype": "basic"
+          }
+        }
+      ]
+    }
+  },
+  "ubaidian-x07": {
+    "race": "ubaidian",
+    "class": "destroyer",
+    "name": "Strongjaw",
+    "stats": {
+      "capacity": 1000,
+      "health": 100,
+      "heal": 0.2,
+      "armor": 0.0,
+      "speed": 32.0,
+      "rate": 1024,
+      "evasion": 0.18,
+      "energy": 200,
+      "recharge": 1.0,
+      "size": 64,
+      "durability": 1000,
+      "critical": 0.025
+    },
+    "enhancements": ["heal", "booster", "shield"],
+    "engine": {
+      "glows": [
+        {
+          "tint": "0x3399ff",
+          "scale": {
+            "startX": 0.12,
+            "endX": 0.16,
+            "startY": 0.12,
+            "endY": 0.24
+          },
+          "position": {
+            "x": 102,
+            "y": 44
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "0x3399ff",
+          "scale": {
+            "startX": 0.12,
+            "endX": 0.16,
+            "startY": 0.12,
+            "endY": 1.0
+          },
+          "position": {
+            "x": 106,
+            "y": 63
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "0x3399ff",
+          "scale": {
+            "startX": 0.12,
+            "endX": 0.16,
+            "startY": 0.12,
+            "endY": 0.24
+          },
+          "position": {
+            "x": 102,
+            "y": 83
+          },
+          "rotation": 0
+        }
+      ]
+    },
+    "targeting": {
+      "hardpoints": [
+        {
+          "position": {
+            "x": 79,
+            "y": 49
+          },
+          "default": {
+            "type": "energy",
+            "subtype": "basic"
+          }
+        },
+        {
+          "position": {
+            "x": 98,
+            "y": 64
+          },
+          "default": {
+            "type": "energy",
+            "subtype": "basic"
+          }
+        },
+        {
+          "position": {
+            "x": 79,
+            "y": 80
+          },
+          "default": {
+            "type": "energy",
+            "subtype": "basic"
+          }
+        }
+      ]
+    }
+  },
+  "ubaidian-x08": {
+    "race": "ubaidian",
+    "class": "destroyer",
+    "name": "Turo",
+    "stats": {
+      "capacity": 1000,
+      "health": 100,
+      "heal": 0.2,
+      "armor": 0.0,
+      "speed": 32.0,
+      "rate": 1024,
+      "evasion": 0.18,
+      "energy": 200,
+      "recharge": 1.0,
+      "size": 72,
+      "durability": 1000,
+      "critical": 0.025
+    },
+    "enhancements": ["heal", "booster", "shield"],
+    "engine": {
+      "glows": [
+        {
+          "tint": "0x3399ff",
+          "scale": {
+            "startX": 0.12,
+            "endX": 0.16,
+            "startY": 0.12,
+            "endY": 0.24
+          },
+          "position": {
+            "x": 72,
+            "y": 44
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "0x3399ff",
+          "scale": {
+            "startX": 0.12,
+            "endX": 0.16,
+            "startY": 0.12,
+            "endY": 1.0
+          },
+          "position": {
+            "x": 80,
+            "y": 63
+          },
+          "rotation": 0
+        },
+        {
+          "tint": "0x3399ff",
+          "scale": {
+            "startX": 0.12,
+            "endX": 0.16,
+            "startY": 0.12,
+            "endY": 0.24
+          },
+          "position": {
+            "x": 72,
+            "y": 83
+          },
+          "rotation": 0
+        }
+      ]
+    },
+    "targeting": {
+      "hardpoints": [
+        {
+          "position": {
+            "x": 59,
+            "y": 40
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "gamma"
+          }
+        },
+        {
+          "position": {
+            "x": 33,
+            "y": 64
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "gamma"
+          }
+        },
+        {
+          "position": {
+            "x": 59,
+            "y": 88
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "gamma"
           }
         }
       ]
@@ -411,22 +658,21 @@
       "armor": 0.0,
       "speed": 36.0,
       "rate": 1024,
-      "evasion": 0.12,
+      "evasion": 0.16,
       "energy": 100,
       "recharge": 1,
       "size": 48,
       "durability": 500,
       "critical": 0.01
     },
-    "squadron": [],
     "enhancements": ["heal", "booster", "shield"],
     "engine": {
       "glows": [
         {
-          "tint": "0x3399FF",
+          "tint": "0x3399ff",
           "scale": {
-            "startX": 0.02,
-            "endX": 0.04,
+            "startX": 0.08,
+            "endX": 0.12,
             "startY": 0.12,
             "endY": 0.14
           },
@@ -437,10 +683,10 @@
           "rotation": 0
         },
         {
-          "tint": "0x3399FF",
+          "tint": "0x3399ff",
           "scale": {
-            "startX": 0.02,
-            "endX": 0.04,
+            "startX": 0.08,
+            "endX": 0.12,
             "startY": 0.12,
             "endY": 0.14
           },
@@ -476,21 +722,20 @@
       "health": 30,
       "heal": 0.1,
       "armor": 0.0,
-      "speed": 24.0,
+      "speed": 20.0,
       "rate": 768,
-      "evasion": 0.08,
+      "evasion": 0.14,
       "energy": 100,
       "recharge": 1,
       "size": 48,
       "durability": 500,
       "critical": 0.01
     },
-    "squadron": [],
     "enhancements": ["heal", "booster", "shield"],
     "engine": {
       "glows": [
         {
-          "tint": "0x3399FF",
+          "tint": "0x3399ff",
           "scale": {
             "startX": 0.02,
             "endX": 0.28,
@@ -504,7 +749,7 @@
           "rotation": 0
         },
         {
-          "tint": "0x3399FF",
+          "tint": "0x3399ff",
           "scale": {
             "startX": 0.02,
             "endX": 0.28,
