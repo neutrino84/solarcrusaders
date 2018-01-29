@@ -4,8 +4,7 @@ var uuid = require('uuid'),
     client = require('client'),
     ShipManager = require('./ShipManager'),
     UserManager = require('./UserManager'),
-    StationManager = require('./StationManager'),
-    EventManager = require('./EventManager');
+    StationManager = require('./StationManager');
 
 function SectorManager(game) {
   this.game = game;
@@ -13,13 +12,12 @@ function SectorManager(game) {
 
   // buffer
   this.updates = {
+    users: [],
     ships: [],
-    stations: [],
-    users: []
+    stations: []
   };
 
   // instance managers
-  this.eventManager = new EventManager(game);
   this.userManager = new UserManager(game);
   this.stationManager = new StationManager(game);
   this.shipManager = new ShipManager(game);
@@ -28,7 +26,6 @@ function SectorManager(game) {
 SectorManager.prototype.constructor = SectorManager;
 
 SectorManager.prototype.init = function() {
-  this.eventManager.init();
   this.userManager.init();
   this.stationManager.init();
   this.shipManager.init();
@@ -41,20 +38,14 @@ SectorManager.prototype.init = function() {
   this.game.on('station/data', this.queue('stations'), this);
   this.game.on('user/data', this.queue('users'), this);
 
-  // start game
-  this.eventManager.start();
-
   // queue
-  this.game.clock.events.loop(50, this.queued, this);
+  this.game.clock.events.loop(100, this.queued, this);
 };
 
 SectorManager.prototype.update = function() {
   var sockets = this.sockets,
       ships = this.shipManager.sync(),
       stations = this.stationManager.sync();
-
-  // update events
-  this.eventManager.update();
 
   // syncronize all
   sockets.send('sector/sync', {
@@ -72,9 +63,9 @@ SectorManager.prototype.data = function(socket, args) {
   // relay data to user
   socket.emit('sector/data', {
     type: 'sync',
+    users: users,
     ships: ships,
-    stations: stations,
-    users: users
+    stations: stations
   });
 };
 
@@ -85,13 +76,14 @@ SectorManager.prototype.queue = function(key) {
 };
 
 SectorManager.prototype.queued = function() {
-  var updates = this.updates;
+  var updates = this.updates,
+      sockets = this.sockets;
   if(updates.ships.length > 0 ||
       updates.stations.length > 0 ||
       updates.users.length > 0) {
 
     // send data
-    this.sockets.send('sector/data', {
+    sockets.send('sector/data', {
       type: 'update',
       ships: updates.ships,
       stations: updates.stations,
@@ -99,11 +91,9 @@ SectorManager.prototype.queued = function() {
     });
 
     // clear buffer
-    this.updates = {
-      ships: [],
-      stations: [],
-      users: []
-    };
+    updates.ships = [];
+    updates.stations =[];
+    updates.users = [];
   }
 };
 

@@ -7,25 +7,18 @@ var engine = require('engine'),
 function NetManager(game) {
   this.game = game;
   this.socket = game.net.socket;
-  this.user = game.auth.user;
-  this.syncronizing = false;
+  this.auth = game.auth;
 
-  // global data
-  this.game.data = {
-    users: {},
-    ships: {},
-    stations: {}
-  };
+  // user cache
+  this.game.users = {};
 
-  // sector
-  this.socket.on('sector/sync', this._sync.bind(this));
-  this.socket.on('sector/data', this._data.bind(this));
+  // socket events
+  this.socket.on('sector/data', this.data.bind(this));
+  this.socket.on('sector/sync', this.syncronize.bind(this));
 
-  // ship
+  // socket/game routes
   this.connect('ship/attack');
-  this.connect('ship/removed');
-  this.connect('ship/disabled');
-  this.connect('ship/enabled');
+  this.connect('ship/remove');
   this.connect('ship/enhancement/started');
   this.connect('ship/enhancement/stopped');
   this.connect('ship/enhancement/cooled');
@@ -33,86 +26,65 @@ function NetManager(game) {
 
 NetManager.prototype.constructor = NetManager;
 
-NetManager.prototype.init = function() {
-
-};
-
 NetManager.prototype.connect = function(ns) {
-  this.socket.on(ns, this._emit.bind(this, ns));
+  var game = this.game,
+      socket = this.socket,
+      emit = function(data) {
+        game.emit(ns, data);
+      };
+  socket.on(ns, emit);
 };
 
-NetManager.prototype.getUserData = function(uuid) {
-  return this.game.data.users[uuid];
-};
-
-NetManager.prototype.getShipData = function(uuid) {
-  return this.game.data.ships[uuid];
-};
-
-NetManager.prototype.getStationData = function(uuid) {
-  return this.game.data.stations[uuid];
-};
-
-NetManager.prototype._data = function(data) {
-  var user, ship, station,
+NetManager.prototype.data = function(data) {
+  var game = this.game,
+      auth = this.auth,
       users = data.users,
       ships = data.ships,
-      stations = data.stations;
+      stations = data.stations,
+      user, ship, station, exists;
 
-  if(this.game.cache.checkJSONKey('ship-configuration') &&
-      this.game.cache.checkJSONKey('station-configuration') &&
-      this.game.cache.checkJSONKey('item-configuration')) {
+  if(game.cache.checkJSONKey('station-configuration') &&
+      game.cache.checkJSONKey('ship-configuration') &&
+      game.cache.checkJSONKey('item-configuration')) {
 
     // update users
     for(var u in users) {
-      user = users[u];
-
-      if(this.game.data.users[user.uuid] === undefined) {
-        this.game.data.users[user.uuid] = new UserData(this.game, user);
-      } else if(this.game.data.users[user.uuid]) {
-        this.game.data.users[user.uuid].update(user);
-
-        if(user.uuid === this.user.uuid) {
-          for(var p in user) {
-            this.user[p] = user[p];
-          }
-        }
-      }
+      //.. userdata not yet updated
     }
 
     // update ships
     for(var s in ships) {
       ship = ships[s];
+      exists = game.ships[ship.uuid];
 
-      if(data.type === 'sync' && this.game.data.ships[ship.uuid] === undefined) {
-        this.syncronizing = false;
-        this.game.data.ships[ship.uuid] = new ShipData(this.game, ship);
-      } else if(this.game.data.ships[ship.uuid]) {
-        this.game.data.ships[ship.uuid].update(ship);
+      if(!exists && data.type === 'sync') {
+        game.emit('ship/create', new ShipData(game, ship));
+      } else if(exists && data.type === 'update') {
+        exists.data.update(ship);
       }
     }
 
     // update stations
     for(var s in stations) {
       station = stations[s];
+      exists = game.stations[station.uuid];
 
-      if(data.type === 'sync' && this.game.data.stations[station.uuid] === undefined) {
-        this.syncronizing = false;
-        this.game.data.stations[station.uuid] = new StationData(this.game, station);
-      } else if(this.game.data.stations[station.uuid]) {
-        this.game.data.stations[station.uuid].update(station);
+      if(!exists && data.type === 'sync') {
+        game.emit('station/create', new StationData(game, station));
+      } else if(exists && data.type === 'update') {
+        exists.data.update(station);
       }
     }
   }
 };
 
-NetManager.prototype._sync = function(data) {
-  var ship, user, station,
-      users = data.users,
+NetManager.prototype.syncronize = function(data) {
+  var game = this.game,
+      socket = this.socket,
       ships = data.ships,
       stations = data.stations,
+      ship, station,
       uuids = {
-        users: [],
         ships: [],
         stations: []
       };
@@ -121,7 +93,7 @@ NetManager.prototype._sync = function(data) {
   for(var s in ships) {
     ship = ships[s];
 
-    if(this.game.data.ships[ship.uuid] === undefined) {
+    if(!game.ships[ship.uuid]) {
       uuids.ships.push(ship.uuid);
     }
   }
@@ -130,23 +102,18 @@ NetManager.prototype._sync = function(data) {
   for(var s in stations) {
     station = stations[s];
 
-    if(this.game.data.stations[station.uuid] === undefined) {
+    if(!game.stations[station.uuid]) {
       uuids.stations.push(station.uuid);
     }
   }
 
-  // emit sync
-  this.game.emit('sector/sync', data);
-
-  // request new data
-  if(!this.syncronizing && (uuids.ships.length > 0 || uuids.stations.length > 0)) {
-    this.syncronizing = true;
-    this.socket.emit('sector/data', uuids);
+  // request data
+  if(uuids.ships.length > 0 || uuids.stations.length > 0) {
+    socket.emit('sector/data', uuids);
   }
-};
 
-NetManager.prototype._emit = function(ns, data) {
-  this.game.emit(ns, data);
+  // send sync updated
+  game.emit('sector/sync', data);
 };
 
 module.exports = NetManager;

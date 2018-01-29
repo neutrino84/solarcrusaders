@@ -18,7 +18,8 @@ Socket.prototype.init = function(next) {
       options = {
         transports: ['websocket'],
         pingInterval: 3000,
-        pingTimeout: 5000
+        pingTimeout: 5000,
+        wsEngine: 'uws'
       };
 
   // initialize socket server
