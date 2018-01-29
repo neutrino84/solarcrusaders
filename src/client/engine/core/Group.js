@@ -1,5 +1,5 @@
 var pixi = require('pixi'),
-    CONST = require('../const'),
+    Const = require('../const'),
     ArraySet = require('../utils/ArraySet');
 
 function Group(game, parent) {
@@ -8,7 +8,7 @@ function Group(game, parent) {
   pixi.Container.call(this);
   
   this.game = game;
-  this.type = CONST.GROUP;
+  this.type = Const.GROUP;
 
   if(parent) {
     parent.addChild(this);

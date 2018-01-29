@@ -1,6 +1,5 @@
 var CONST = require('../const'),
     Math = require('../utils/Math'),
-    Tilemap = require('../tilemap/Tilemap'),
     Device = require('../system/Device'),
     EventEmitter = require('eventemitter3');
 

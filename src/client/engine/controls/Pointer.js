@@ -62,7 +62,6 @@ function Pointer(game, id, mode) {
   this.position = new Point();
   this.positionDown = new Point();
   this.positionUp = new Point();
-  // this.circle = new Circle(0, 0, 44);
 
   this._history = [];
   this._clickTrampolines = null;
@@ -310,8 +309,6 @@ Pointer.prototype = {
     this.y = (this.pageY - 0) * input.scale.y;
 
     this.position.setTo(this.x, this.y);
-    // this.circle.x = this.x;
-    // this.circle.y = this.y;
 
     var Input = require('./Input');
     if(input.multiInputOverride === Input.MOUSE_OVERRIDES_TOUCH ||
@@ -321,8 +318,6 @@ Pointer.prototype = {
       input.x = this.x;
       input.y = this.y;
       input.position.setTo(input.x, input.y);
-      // input.circle.x = input.x;
-      // input.circle.y = input.y;
     }
 
     // TODO: reactivate once we have scale

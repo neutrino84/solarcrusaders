@@ -21,7 +21,6 @@ function Input(game) {
 
   this.position = null;
   this.speed = null;
-  this.circle = null;
   this.scale = null;
 
   this.maxPointers = -1;
@@ -44,11 +43,6 @@ function Input(game) {
 
   this.minPriorityID = 0;
   this.resetLocked = false;
-
-  // this.onDown = null;
-  // this.onUp = null;
-  // this.onTap = null;
-  // this.onHold = null;
   
   this.interactiveItems = new ArraySet();
 
@@ -72,7 +66,7 @@ Input.prototype.constructor = Input;
 Input.prototype.boot = function() {
   this.mousePointer = new Pointer(this.game, 0, Pointer.MODE.CURSOR);
   this.mouse = new Mouse(this.game);
-  
+
   this.keyboard = new Keyboard(this.game);
   this.keyboard.addCallbacks(this,
     function(event, key) { this.emit('keydown', event, key); }, 
@@ -84,8 +78,6 @@ Input.prototype.boot = function() {
   this.speed = new Point();
   this.position = new Point();
   this._oldPosition = new Point();
-
-  // this.circle = new Phaser.Circle(0, 0, 44);
 
   this.activePointer = this.mousePointer;
 

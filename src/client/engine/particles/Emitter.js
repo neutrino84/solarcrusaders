@@ -10,13 +10,12 @@ var Const = require('../const'),
 function Emitter(game, x, y, maxParticles) {
   Group.call(this, game);
 
-  this.maxParticles = maxParticles || 50;
-  
-  this.name = 'emitter' + this.game.particles.ID++;
-  this.type = Const.EMITTER;
+  this.name = null;
 
   this.vector = new Point(0, 0);
   this.velocity = new Point(0, 0);
+
+  this.maxParticles = maxParticles || 50;
 
   this.minParticleScale = 1.0;
   this.maxParticleScale = 1.0;
@@ -287,7 +286,7 @@ Emitter.prototype.setAlpha = function(min, max, rate, ease, yoyo) {
 
   if(game.cache.checkBinaryKey(key)) {
     this.alphaData = game.cache.getBinary(key);
-  } else if(rate > 0 && min !== max) {
+  } else if(rate > 0) { // && min !== max) {
     var data,
         tweenData = { v: min },
         tween = this.game.tweens.create(tweenData).to({ v: max }, rate, ease);
@@ -318,7 +317,7 @@ Emitter.prototype.setScale = function(min, max, rate, ease, yoyo) {
 
   if(game.cache.checkBinaryKey(key)) {
     this.scaleData = game.cache.getBinary(key);
-  } else if(rate > 0 && (min !== max)) {
+  } else if(rate > 0) { // && (min !== max)) {
     var data,
         tweenData = { x: min, y: min },
         tween = this.game.tweens.create(tweenData).to( { x: max, y: max }, rate, ease);
@@ -348,7 +347,7 @@ Emitter.prototype.setTint = function(startTint, endTint, rate, ease, yoyo) {
 
   if(game.cache.checkBinaryKey(key)) {
     this.tintData = game.cache.getBinary(key);
-  } else if(rate > 0 && (startTint !== endTint)) {
+  } else if(rate > 0) { // && (startTint !== endTint)) {
     var data, tints = [],
         tweenData = { step: 0 },
         tween = game.tweens.create(tweenData).to({ step: 100 }, rate, ease);

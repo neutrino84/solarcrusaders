@@ -26,6 +26,10 @@ function Keyboard(game) {
 Keyboard.prototype = {
 
   addCallbacks: function(context, onDown, onUp, onPress) {
+    if(this.onDownCallback || this.onUpCallback || this.onPressCallback) {
+      throw new Error('Keyboard cannot re-assign callbacks');
+    }
+
     this.callbackContext = context;
 
     if(onDown !== undefined && onDown !== null) {
@@ -78,17 +82,17 @@ Keyboard.prototype = {
     }
 
     var self = this;
-    this._onKeyDown = function(event) {
-      return self.processKeyDown(event);
-    };
+        this._onKeyDown = function(event) {
+          return self.processKeyDown(event);
+        };
 
-    this._onKeyUp = function(event) {
-      return self.processKeyUp(event);
-    };
+        this._onKeyUp = function(event) {
+          return self.processKeyUp(event);
+        };
 
-    this._onKeyPress = function(event) {
-      return self.processKeyPress(event);
-    };
+        this._onKeyPress = function(event) {
+          return self.processKeyPress(event);
+        };
 
     global.addEventListener('keydown', this._onKeyDown, false);
     global.addEventListener('keyup', this._onKeyUp, false);

@@ -41,7 +41,7 @@ SoundManager.prototype.boot = function() {
   } else {
     this.noAudio = false;
     this.masterGain = this.context.createGain();
-    this.masterGain.gain.value = 1.0;
+    // this.masterGain.gain.value = 1.0;
     this.masterGain.connect(this.context.destination);
   }
 };
@@ -126,7 +126,7 @@ SoundManager.prototype.setMute = function() {
 
   this._muted = true;
   this._muteVolume = this.masterGain.gain.value;
-  this.masterGain.gain.value = 0.0;
+  this.masterGain.gain.setValueAtTime(0, 0);
 
   this.emit('mute');
 };
@@ -135,7 +135,7 @@ SoundManager.prototype.unsetMute = function() {
   if(!this._muted || this._codeMuted) { return; }
 
   this._muted = false;
-  this.masterGain.gain.value = this._muteVolume;
+  this.masterGain.gain.setValueAtTime(this._muteVolume, 0);
 
   this.emit('unmute');
 };
@@ -163,12 +163,10 @@ Object.defineProperty(SoundManager.prototype, 'mute', {
 
     if(value) {
       if(this._muted) { return; }
-
       this._codeMuted = true;
       this.setMute();
     } else {
       if(!this._muted) { return; }
-
       this._codeMuted = false;
       this.unsetMute();
     }
@@ -188,8 +186,7 @@ Object.defineProperty(SoundManager.prototype, 'volume', {
     }
     if(this._volume !== value) {
       this._volume = value;
-      this.masterGain.gain.value = value;
-
+      this.masterGain.gain.setValueAtTime(value, 0);
       this.emit('volume', value);
     }
   }

@@ -2,24 +2,24 @@ var Emitter = require('./Emitter');
 
 function ParticleManager(game) {
   this.game = game;
-  this.emitters = {};
-  this.ID = 0;
+  this.game.emitters = {};
 };
 
 ParticleManager.prototype = {
   add: function(emitter) {
-    this.emitters[emitter.name] = emitter;
-    return emitter;
+    this.game.emitters[emitter.name] = emitter;
   },
 
   remove: function(emitter) {
-    delete this.emitters[emitter.name];
+    delete this.game.emitters[emitter.name];
   },
 
   update: function() {
-    for(var key in this.emitters) {
-      if(this.emitters[key].visible) {
-        this.emitters[key].update();
+    var game = this.game,
+        emitters = game.emitters;
+    for(var key in emitters) {
+      if(emitters[key].visible) {
+        emitters[key].update();
       }
     }
   }

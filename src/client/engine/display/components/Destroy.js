@@ -5,7 +5,6 @@ function Destroy() {};
 
 Destroy.prototype = {
   destroy: function(options) {
-    if(this.game === undefined) { return; }
     if(options === undefined) {
       options = {
         children: true,

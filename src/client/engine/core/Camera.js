@@ -6,7 +6,7 @@ function Camera(game, x, y, width, height) {
   this.game = game;
   this.world = game.world;
 
-  this.step = 0.05;
+  this.step = 0.5;
   this.target = null;
   this.shaking = 0.0;
   this.smooth = false;
