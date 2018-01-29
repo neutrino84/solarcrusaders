@@ -1,21 +1,20 @@
 
-function EnhancementManager(parent) {
-  this.manager = parent;
-  this.game = parent.game;
-  this.socket = parent.socket;
+function EnhancementManager(game) {
+  this.game = game;
+  this.socket = game.net.socket;
 
   // subscribe to messaging
-  this.game.on('ship/enhancement/start', this._start, this);
-  this.game.on('ship/enhancement/started', this._started, this);
-  this.game.on('ship/enhancement/stopped', this._stopped, this);
+  this.game.on('ship/enhancement/start', this.start, this);
+  this.game.on('ship/enhancement/started', this.started, this);
+  this.game.on('ship/enhancement/stopped', this.stopped, this);
 };
 
-EnhancementManager.prototype._start = function(data) {
+EnhancementManager.prototype.start = function(data) {
   this.socket.emit('ship/enhancement/start', data);
 };
 
-EnhancementManager.prototype._started = function(data) {
-  var ship = this.manager.ships[data.uuid];
+EnhancementManager.prototype.started = function(data) {
+  var ship = this.game.ships[data.uuid];
   if(ship !== undefined) {
     switch(data.enhancement) {
       case 'heal':
@@ -31,8 +30,8 @@ EnhancementManager.prototype._started = function(data) {
   }
 };
 
-EnhancementManager.prototype._stopped = function(data) {
-  var ship = this.manager.ships[data.uuid];
+EnhancementManager.prototype.stopped = function(data) {
+  var ship = this.game.ships[data.uuid];
   if(ship !== undefined) {
     switch(data.enhancement) {
       case 'heal':
@@ -49,12 +48,13 @@ EnhancementManager.prototype._stopped = function(data) {
 };
 
 EnhancementManager.prototype.destroy = function() {
-  this.game.removeListener('ship/enhancement/start', this._start);
-  this.game.removeListener('ship/enhancement/started', this._started);
-  this.game.removeListener('ship/enhancement/stopped', this._stopped);
+  this.game.removeListener('ship/enhancement/start', this.start);
+  this.game.removeListener('ship/enhancement/started', this.started);
+  this.game.removeListener('ship/enhancement/stopped', this.stopped);
 
-  this.manager = this.game =
-    this.socket = undefined;
+  // destroy variable
+  // references
+  this.game = this.socket = undefined;
 };
 
 module.exports = EnhancementManager
