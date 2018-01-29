@@ -1,43 +1,50 @@
 
 var engine = require('engine');
 
-function Selection(game) {
+function InputManager(game) {
   this.game = game;
   this.world = game.world;
 
   this.input = new engine.InputHandler(this.world.static);
   this.input.start();
 
-  this.world.static.on('inputUp', this._onInput, this);
-  this.world.static.on('inputDown', this._onInput, this);
+  this.world.static.on('inputUp', this.onInput, this);
+  this.world.static.on('inputDown', this.onInput, this);
 };
 
-Selection.prototype.constructor = Selection;
+InputManager.prototype.constructor = InputManager;
 
-Selection.prototype._onInput = function(world, pointer) {
-  var data = {
-        target: {
-          x: pointer.x,
-          y: pointer.y
-        }
-      };
+InputManager.prototype.onInput = function(world, pointer) {
+  // emit ship input
   if(pointer.button === engine.Mouse.LEFT_BUTTON) {
-    data.type = pointer.leftButton.isDown ? 'start' : 'stop';
-    this.game.emit('ship/primary', data);
+    this.game.emit('ship/primary', {
+      type: pointer.leftButton.isDown ? 'start' : 'stop',
+      target: {
+        x: pointer.x,
+        y: pointer.y
+      }
+    });
   } else if(pointer.button === engine.Mouse.RIGHT_BUTTON) {
-    data.type = pointer.rightButton.isDown ? 'start' : 'stop';
-    this.game.emit('ship/secondary', data);
+    this.game.emit('ship/secondary', {
+      type: pointer.rightButton.isDown ? 'start' : 'stop',
+      target: {
+        x: pointer.x,
+        y: pointer.y
+      }
+    });
   }
+
+  // release focus
+  this.game.emit('ui/focus/release');
 };
 
-Selection.prototype.destroy = function() {
+InputManager.prototype.destroy = function() {
   this.input.destroy();
 
-  this.world.static.removeListener('onDown', this._onInput);
-  this.world.static.removeListener('onUp', this._onInput);
+  this.world.static.removeListener('onDown', this.onInput);
+  this.world.static.removeListener('onUp', this.onInput);
 
-  this.game =
-    this.input = undefined;
+  this.game = this.world = this.input = undefined;
 };
 
-module.exports = Selection;
+module.exports = InputManager;

@@ -1,22 +1,31 @@
+
 var engine = require('engine');
 
 function HotkeyManager(game) {
   this.game = game;
 
+  // registered
+  // key presses
   this.registered = {
-    'down': {},
-    'up': {},
     'press': {}
   };
 
-  // add messaging
-  this.game.on('/hotkey/register', this.register, this);
+  // register
+  this.game.emit('ui/focus/register', this);
 
-  // add callbacks
-  this.game.input.keyboard.addCallbacks(this, this.onDown, this.onUp, this.onPress);
+  // add messaging
+  this.game.on('ui/hotkey/register', this.register, this);
 };
 
 HotkeyManager.prototype.constructor = HotkeyManager;
+
+HotkeyManager.prototype.focus = function() {
+  this.game.input.on('keypress', this.keypress, this); 
+};
+
+HotkeyManager.prototype.blur = function() {
+  this.game.input.removeListener('keypress', this.keypress, this); 
+};
 
 HotkeyManager.prototype.register = function(type, char, callback, context, args) {
   this.registered[type][char] = {
@@ -26,27 +35,7 @@ HotkeyManager.prototype.register = function(type, char, callback, context, args)
   }
 };
 
-HotkeyManager.prototype.onDown = function(event, char) {
-  var registered = this.registered['down'][char] || {},
-      callback = registered.callback,
-      context = registered.context,
-      args = registered.args || [];
-  if(callback && context) {
-    callback.call(context, event, char);
-  }
-};
-
-HotkeyManager.prototype.onUp = function(event, char) {
-  var registered = this.registered['up'][char] || {},
-      callback = registered.callback,
-      context = registered.context,
-      args = registered.args || [];
-  if(callback && context) {
-    callback.call(context, event, char);
-  }
-};
-
-HotkeyManager.prototype.onPress = function(event, char) {
+HotkeyManager.prototype.keypress = function(event, char) {
   var registered = this.registered['press'][char] || {},
       callback = registered.callback,
       context = registered.context,
@@ -57,7 +46,15 @@ HotkeyManager.prototype.onPress = function(event, char) {
 };
 
 HotkeyManager.prototype.destroy = function() {
-  //..
+  // remove
+  // listener
+  this.blur();
+
+  // reset registered
+  // key presses
+  this.registered = {
+    'press': {}
+  };
 };
 
 module.exports = HotkeyManager;
