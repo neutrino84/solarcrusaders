@@ -46,7 +46,7 @@ LeaderBoardRow.prototype.create = function() {
 
 LeaderBoardRow.prototype.refresh = function(username, score) {
   this.usernameLabel.text = username.toUpperCase();
-  this.scoreLabel.text = score;
+  this.scoreLabel.text = global.Math.round(score);
 };
 
 Object.defineProperty(LeaderBoardRow.prototype, 'tint', {

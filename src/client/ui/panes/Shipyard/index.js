@@ -18,7 +18,7 @@ function Shipyard(game) {
     title: {
       width: 768,
       height: 32,
-      padding: [4],
+      padding: [8],
       layout: {
         type: 'flow',
         ax: Layout.TOP, 
@@ -36,7 +36,7 @@ function Shipyard(game) {
         }
       },
       description: {
-        padding: [0, 4, 0, 0],
+        padding: [4, 4, 0, 0],
         font: {
           name: 'full',
           text: 'Select a ship and squadron'
@@ -85,7 +85,7 @@ Shipyard.prototype.create = function() {
   this.shipPane = new ShipPane(game);
   this.shipPane.create();
 
-  this.detailsPane;
+  // this.detailsPane;
 
   // add base panes
   this.addPanel(this.titlePane);
@@ -97,10 +97,12 @@ Shipyard.prototype.create = function() {
 };
 
 Shipyard.prototype.show = function() {
+  this.shipPane.start();
   this.game.emit('ui/modal', this);
 };
 
 Shipyard.prototype.hide = function() {
+  this.shipPane.stop();
   this.game.emit('ui/modal', false);
 };
 

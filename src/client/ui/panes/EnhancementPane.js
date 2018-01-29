@@ -31,10 +31,10 @@ function EnhancementPane(game, settings) {
 
   this.config = this.game.cache.getJSON('item-configuration')['enhancement'];
 
-  this.game.on('ship/player', this._player, this);
-  this.game.on('ship/enhancement/started', this._started, this);
-  this.game.on('ship/enhancement/stopped', this._stopped, this);
-  this.game.on('ship/enhancement/cooled', this._cooled, this);
+  this.game.on('ship/user', this.user, this);
+  this.game.on('ship/enhancement/started', this.started, this);
+  this.game.on('ship/enhancement/stopped', this.stopped, this);
+  this.game.on('ship/enhancement/cooled', this.cooled, this);
 };
 
 EnhancementPane.prototype = Object.create(Pane.prototype);
@@ -48,7 +48,7 @@ EnhancementPane.prototype.create = function(enhancement, key) {
 
   // generate placeholders
   for(var i=0; i<EnhancementPane.MAXIMUM; i++) {
-    this.game.emit('/hotkey/register', 'press', i, this.hotkey, this);
+    this.game.emit('ui/hotkey/register', 'press', i, this.hotkey, this);
     this.placeholders.push(
       new Pane(this.game, {
         constraint: Layout.CENTER,
@@ -89,7 +89,7 @@ EnhancementPane.prototype.selected = function(button) {
   });
 };
 
-EnhancementPane.prototype._started = function(data) {
+EnhancementPane.prototype.started = function(data) {
   var game = this.game,
       player = this.player,
       config = this.config[data.enhancement],
@@ -99,7 +99,7 @@ EnhancementPane.prototype._started = function(data) {
   }
 };
 
-EnhancementPane.prototype._stopped = function(data) {
+EnhancementPane.prototype.stopped = function(data) {
   var game = this.game,
       player = this.player,
       button = this.buttons[data.enhancement];
@@ -108,7 +108,7 @@ EnhancementPane.prototype._stopped = function(data) {
   }
 };
 
-EnhancementPane.prototype._cooled = function(data) {
+EnhancementPane.prototype.cooled = function(data) {
   var game = this.game,
       player = this.player,
       button = this.buttons[data.enhancement];
@@ -117,17 +117,15 @@ EnhancementPane.prototype._cooled = function(data) {
   }
 };
 
-EnhancementPane.prototype._player = function(player) {
+EnhancementPane.prototype.user = function(ship) {
   var enhancement, button,
-      enhancements = player.data.enhancements,
       game = this.game,
       buttons = this.buttons,
       indexes = this.indexes,
-      placeholders = this.placeholders;
+      placeholders = this.placeholders,
+      player = this.player = ship,
+      enhancements = player.data.enhancements;
 
-  // set player object
-  this.player = player;
-  
   // create buttons
   for(var i=0; i<enhancements.length; i++) {
     enhancement = enhancements[i];

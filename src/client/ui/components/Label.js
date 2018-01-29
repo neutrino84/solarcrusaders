@@ -13,14 +13,17 @@ function Label(game, settings) {
     },
     font: {
       name: 'medium',
-      color: 0xffffff
+      text: '',
+      color: 0xffffff,
+      scale: 1.0
     }
   }));
-  
+
   // create view
   this.view = new TextView(game, this.settings.font);
-  this.view.scale.set(this.settings.font.scale || 1.0, this.settings.font.scale || 1.0);
-  this.view.tint = this.settings.font.color || 0xffffff;
+  this.view.scale.set(this.settings.font.scale, this.settings.font.scale);
+  this.view.tint = this.settings.font.color;
+  this.view.font.text = this.settings.font.text;
 
   // update preferred size
   this.setPreferredSize(
@@ -34,18 +37,8 @@ function Label(game, settings) {
 Label.prototype = Object.create(Pane.prototype);
 Label.prototype.constructor = Label;
 
-// Label.prototype.calcPreferredSize = function() {
-//   return {
-//     width: this.settings.width || this.view.width,
-//     height: this.settings.height || this.view.height
-//   };
-// };
-
 Label.prototype.doLayout = function() {
-  // position
-  this.view.position.set(
-    this.margin.left + this.padding.left,
-    this.margin.top + this.padding.top);
+  this.view.position.set(this.left, this.top);
 };
 
 Object.defineProperty(Label.prototype, 'blendMode', {

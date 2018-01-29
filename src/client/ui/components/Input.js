@@ -1,238 +1,189 @@
 
 var engine = require('engine'),
     Label = require('./Label'),
+    TextView = require('../views/TextView'),
     Class = engine.Class;
 
-function Input(game, string, settings) {
-  Label.call(this, game, string, Class.mixin(settings, {
-    width: 144,
-    height: 16,
-    padding: [5, 3, 3, 3],
-    border: [0],
-    color: 0xFFFFFF,
+function Input(game, settings) {
+  Label.call(this, game, Class.mixin(settings, {
+    height: 8,
+    width: 128,
+    margin: [0],
+    padding: [8],
+    limit: 20,
     password: false,
-    bg: {
-      fillAlpha: 0.1,
-      color: 0x000000,
-      borderColor: 0x336699,
-      blendMode: engine.BlendMode.ADD
+    font: {
+      name: 'full',
+      color: 0xffffff
     },
-    text: {
-      fontName: 'full'
+    placeholder: {
+      color: 0xffffff,
+      text: '',
+      alpha: 0.5
+    },
+    bg: {
+      color: 0xffffff,
+      fillAlpha: 1.0,
+      borderAlpha: 1.0,
+      borderSize: 1.0,
+      borderColor: 0x000000
     }
   }));
 
-  this._value = '';
-  this._placeholder = '';
-  this._disabled = false;
-  this._selected = false;
+  // register
+  this.game.emit('ui/focus/register', this);
 
-  this.next = null;
+  // create placeholder
+  this.placeholder = new TextView(game, this.settings.font);
+  this.placeholder.scale.set(this.settings.font.scale, this.settings.font.scale);
+  this.placeholder.tint = this.settings.placeholder.color;
+  this.placeholder.font.text = this.settings.placeholder.text;
+  this.placeholder.alpha = this.settings.placeholder.alpha;
 
+  // add placeholder view
+  this.addView(this.placeholder);
+
+  // cursor location
   this.cursor = new engine.Graphics(this.game);
-  this.cursor.beginFill(0x6699CC, 1.0);
-  this.cursor.drawRect(0, 0, 7, this.height);
+  this.cursor.beginFill(0xffffff, 0.75);
+  this.cursor.drawRect(0, 0, 6, this.height);
   this.cursor.endFill();
   this.cursor.position.set(this.left, this.top);
   this.cursor.visible = false;
-
   this.addChild(this.cursor);
 
-  this.placeholder = string.toUpperCase();
-  
-  this.textView.blendMode = engine.BlendMode.ADD;
+  // masker input mask
+  this.masker = new engine.Graphics(this.game);
+  this.masker.beginFill(0xffffff, 1.0);
+  this.masker.drawRect(0, 0, 128, 8);
+  this.masker.endFill();
+  this.masker.position.set(this.left, this.top);
+  this.masker.visible = true;
+  this.view.mask = this.masker;
+  this.addChild(this.masker);
 
   // even handling
   this.bg.on('inputUp', this._inputUp, this);
-  this.bg.on('inputOver', this._inputOver, this);
-  this.bg.on('inputOut', this._inputOut, this);
+  this.bg.on('inputDown', this._inputDown, this);
 };
 
 Input.prototype = Object.create(Label.prototype);
 Input.prototype.constructor = Input;
 
+Input.prototype.doLayout = function() {
+  this.placeholder.position.set(this.left, this.top);
+};
+
 Input.prototype.start = function() {
   this.bg.inputEnabled = true;
-  this.bg.input.priorityID = 2;
-
-  // listen for focus
-  this.game.on('gui/focus/retain', this._retain, this);
 };
 
 Input.prototype.stop = function() {
   this.bg.inputEnabled = false;
-
-  // ignore focus
-  this.game.removeListener('gui/focus/retain', this._retain);
 };
 
 Input.prototype.focus = function() {
-  this.selected = true;
-  this.timer = this.game.clock.events.loop(250, this._cursor, this);
-  this.game.input.on('keypress', this._keyPress, this);
-  this.game.input.on('keydown', this._keyDown, this);
   this.cursor.visible = true;
+  this.placeholder.visible = false;
 
-  // capture keys
-  this.game.input.keyboard.addKeyCapture([
-    engine.Keyboard.TAB,
-    engine.Keyboard.BACKSPACE,
-    engine.Keyboard.DELETE,
-    engine.Keyboard.ENTER
-  ]);
+  // listen to keys
+  this.game.input.on('keypress', this.keypress, this);
+  this.game.input.on('keydown', this.keydown, this);
+
+  // add cursor timer
+  this.timer = this.game.clock.events.loop(350, function() {
+    this.cursor.visible = !this.cursor.visible;
+  }, this);
+
+  // // capture keys
+  // this.game.input.keyboard.addKeyCapture([
+  //   engine.Keyboard.TAB,
+  //   engine.Keyboard.BACKSPACE,
+  //   engine.Keyboard.DELETE,
+  //   engine.Keyboard.ENTER
+  // ]);
 };
 
 Input.prototype.blur = function() {
-  this.selected = false;
-  this.game.clock.events.remove(this.timer);
-  this.game.input.removeListener('keypress', this._keyPress, this);
-  this.game.input.removeListener('keydown', this._keyDown, this);
   this.cursor.visible = false;
 
-  // remove capture keys
-  this.game.input.keyboard.removeKeyCapture([
-    engine.Keyboard.TAB,
-    engine.Keyboard.BACKSPACE,
-    engine.Keyboard.DELETE,
-    engine.Keyboard.ENTER
-  ]);
-};
-
-Input.prototype._retain = function(object) {
-  if(object !== this) {
-    this.game.emit('gui/focus/release', this);
+  // placeholder
+  if(this.text.length == 0) {
+    this.placeholder.visible = true;
   }
+
+  // listen to keys
+  this.game.input.removeListener('keypress', this.keypress, this);
+  this.game.input.removeListener('keydown', this.keydown, this);
+
+  // remove cursor timer
+  this.game.clock.events.remove(this.timer);
+
+  // // remove capture keys
+  // this.game.input.keyboard.removeKeyCapture([
+  //   engine.Keyboard.TAB,
+  //   engine.Keyboard.BACKSPACE,
+  //   engine.Keyboard.DELETE,
+  //   engine.Keyboard.ENTER
+  // ]);
 };
 
-Input.prototype._keyDown = function(event) {
+Input.prototype.keydown = function(event) {
   var keyCode = event.keyCode;
   switch(keyCode) {
-    case engine.Keyboard.TAB:
-      this.next && this.game.emit('gui/focus/retain', this.next);
-      break;
     case engine.Keyboard.ENTER:
-      this.emit('inputEnter', this);
-      this.game.emit('gui/focus/release', this);
+      //..
+      break;
+    case engine.Keyboard.TAB:
+      event.preventDefault();
       break;
     case engine.Keyboard.DELETE:
     case engine.Keyboard.BACKSPACE:
-      this.value = this._value.slice(0, this._value.length-1);
+      this.text = this.text.slice(0, this.text.length-1);
       break;
   }
 };
 
-Input.prototype._keyPress = function(event, key) {
-  var textView = this.textView,
+Input.prototype.keypress = function(event, key) {
+  var view = this.view,
       keyCode = event.keyCode ? event.keyCode : event.which;
-  switch(keyCode) {
-    default:
-      if(textView.font.frameKeys[keyCode] >= 0 || (
-          this._value !== '' && keyCode === engine.Keyboard.SPACEBAR)) {
-        this.value += key;
-      }
-      break;
+  if(view.font.keys[keyCode] >= 0 ||
+      keyCode === engine.Keyboard.SPACEBAR) {
+    this.text += key;
   }
 };
 
 Input.prototype._inputUp = function() {
-  this.emit('inputUp', this);
-  this.game.emit('gui/focus/retain', this);
+  this.game.emit('ui/focus/capture', this);
 };
 
-Input.prototype._inputOver = function() {
-  this.bg.tint = 0x336699;
+Input.prototype._inputDown = function() {
 };
 
-Input.prototype._inputOut = function() {
-  this.bg.tint = 0xFFFFFF;
-};
-
-Input.prototype._update = function() {
-  if(!this.selected && this._value === '') {
-    this.text = this.placeholder;
-    this.textView.visible = true;
-    this.tint = 0x888888;
-  } else {
-    if(this._value === '') {
-      this.textView.visible = false;
-    } else {
-      this.textView.visible = true;
-      this.text = this._parsed();
-    }
-    this.tint = 0xFFFFFF;
-  }
-  this.cursor.position.x =
-    this._value !== '' ?
-      this.textView.width + this.left : this.left;
-};
-
-Input.prototype._cursor = function() {
-  this.cursor.visible = !this.cursor.visible;
-};
-
-Input.prototype._encrypt = function() {
-  var pass = '',
-      length = this._value.length;
-  for(var i=0; i<length; i++) {
-    pass += '*';
-  }
-  return pass;
-};
-
-Input.prototype._parsed = function() {
-  var value = this.settings.password ? this._encrypt() : this._value,
-      length = value.length,
-      character = this.textView.settings.character,
-      width = this.size.width - this.left - this.right - 5,
-      maxCharWidth = character.width + character.spacing.x + character.offset.x,
-      maxChars = global.Math.floor(width / maxCharWidth);
-  if(length < maxChars) {
-    return value;
-  } else {
-    return value.slice(length-maxChars);
-  }
-};
-
-Object.defineProperty(Input.prototype, 'placeholder', {
-  set: function(value) {
-    this._placeholder = value;
-    this._update();
+Object.defineProperty(Input.prototype, 'text', {
+  get: function() {
+    return this.view.font.text;
   },
 
-  get: function() {
-    return this._placeholder;
-  }
-});
-
-Object.defineProperty(Input.prototype, 'value', {
   set: function(value) {
-    this._value = value;
-    this._update();
-  },
+    var settings = this.settings,
+        offset = {
+          cursor: global.Math.min(value.length, settings.limit)*6,
+          view: global.Math.min(settings.limit-value.length, 0)*6
+        };
 
-  get: function() {
-    return this._value;
-  }
-});
+    // update cursor
+    this.cursor.position.x = this.left + offset.cursor;
+    this.cursor.position.y = this.top;
 
-Object.defineProperty(Input.prototype, 'selected', {
-  set: function(value) {
-    this._selected = value;
-    this._update();
-  },
+    // update text and texture
+    this.view.font.text = value.toString();
+    this.view.position.set(this.left + offset.view, this.top);
 
-  get: function() {
-    return this._selected;
-  }
-});
-
-Object.defineProperty(Input.prototype, 'disabled', {
-  set: function(value) {
-    this._disabled = value;
-  },
-
-  get: function() {
-    return this._disabled;
+    // update preferred size
+    this.setPreferredSize(
+      settings.width || view.width,
+      settings.height || view.height);
   }
 });
 

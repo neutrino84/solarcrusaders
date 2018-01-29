@@ -2,6 +2,7 @@
 var engine = require('engine'),
     Layout = require('../Layout'),
     Pane = require('../components/Pane'),
+    LoginPane = require('./LoginPane'),
     LeaderBoardPane = require('./LeaderBoardPane'),
     SquadronPane = require('./SquadronPane');
 
@@ -14,14 +15,19 @@ function TopPane(game) {
     }
   });
 
-  // squadron
+  // login pane
+  this.login = new LoginPane(this.game);
+  this.login.create();
+
+  // squadron pane
   this.squadron = new SquadronPane(this.game);
   this.squadron.create();
 
-  // create leaderboard
+  // leaderboard pane
   this.leaderboard = new LeaderBoardPane(this.game);
   this.leaderboard.create();
 
+  this.addPanel(this.login);
   this.addPanel(this.squadron);
   this.addPanel(this.leaderboard);
 };

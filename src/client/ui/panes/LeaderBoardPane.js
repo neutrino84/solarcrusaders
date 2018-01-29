@@ -44,11 +44,10 @@ function LeaderBoardPane(game, settings) {
   });
 
   this.rows = [];
-  this.user = this.game.auth.user;
+  // this.user = this.game.auth.user;
   this.userRow = null
 
   // subscribe to messaging
-  this.game.on('ship/player', this.refresh, this);
   this.game.clock.events.loop(1000, this.refresh, this);
 };
 
@@ -59,8 +58,8 @@ LeaderBoardPane.prototype.constructor = LeaderBoardPane;
 
 LeaderBoardPane.prototype.create = function() {
   var game = this.game,
-      settings = this.settings,
-      user = this.user;
+      settings = this.settings;//,
+      //user = this.user;
 
   //
   this.titleLabel = new Label(game, settings.title);
@@ -68,49 +67,53 @@ LeaderBoardPane.prototype.create = function() {
   this.currentUserPane = new Pane(game, settings.currentUserPane);
 
   // current user
-  this.userRow = new LeaderBoardRow(game);
-  this.userRow.create();
-  this.userRow.refresh(user.username, user.credits);
-  this.userRow.tint = 0x33ff33;
+  // this.userRow = new LeaderBoardRow(game);
+  // this.userRow.create();
+  // this.userRow.refresh(user.username, user.credits);
+  // this.userRow.tint = 0x33ff33;
 
   this.addPanel(this.titleLabel)
   this.addPanel(this.usersPane);
   this.addPanel(this.currentUserPane);
   
-  this.currentUserPane.addPanel(this.userRow);
+  // this.currentUserPane.addPanel(this.userRow);
 };
 
 LeaderBoardPane.prototype.refresh = function() {
-  var data, row,
+  var ship, row,
       game = this.game,
       user = this.user,
       rows = this.rows,
       userRow = this.userRow,
       usersPane = this.usersPane,
       currentUserPane = this.currentUserPane,
-      arr = Object.values(game.data.ships),
+      arr = Object.values(game.ships),
       ships = arr.sort(function(a, b) {
-        return b.credits - a.credits;
+        return b.data.credits - a.data.credits;
       });
 
   // populate rows
   for(var i=0; i<LeaderBoardPane.MAXIMUM_USERS; i++) {
-    data = ships[i];
+    ship = ships[i];
     row = rows[i];
 
-    if(data) {
+    if(ship != undefined) {
       if(row == undefined) {
         row = new LeaderBoardRow(game);
         row.create();
         rows.push(row);
+        
         usersPane.addPanel(row);
       }
-      row.refresh(data.username, data.credits);
+      row.refresh(ship.data.username, ship.data.credits);
+      row.visible = true;
+    } else if(row != undefined) {
+      row.visible = false;
     }
   }
 
   // update user
-  userRow.refresh(user.username, user.credits);
+  // userRow.refresh(user.username, user.credits);
 
   // rebuild
   this.parent.invalidate();

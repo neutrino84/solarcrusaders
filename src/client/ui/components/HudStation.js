@@ -14,12 +14,11 @@ function HudStation(station, settings) {
       type: 'raster'
     },
     healthBar: {
-      width: 100,
+      width: 144,
       height: 3,
       progress: {
         color: 0x66ff66,
         fillAlpha: 0.5,
-        // blendMode: engine.BlendMode.ADD,
         modifier: {
           left: 0.0,
           top: 0.0,
@@ -45,8 +44,8 @@ function HudStation(station, settings) {
     }
   }));
 
-  this.station = station;
   this.visible = false;
+  this.station = station;
 
   this.container = new Pane(this.game, this.settings.container);
   this.healthBar = new ProgressBar(this.game, this.settings.healthBar);
@@ -93,7 +92,7 @@ HudStation.prototype.update = function() {
 
     this.scale.set(inverse, inverse);
     this.rotation = -station.rotation;
-    this.container.y = -(station.data.size/inverse+8);
+    this.container.y = -((station.data.size*1.34)/inverse);
   }
 };
 

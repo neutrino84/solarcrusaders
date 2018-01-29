@@ -7,7 +7,7 @@ function BackgroundView(game, settings) {
   this.settings = engine.Class.mixin(settings, {
     color: 0x000000,
     fillAlpha: 1.0,
-    radius: 0,
+    radius: 0.0,
     borderSize: 0.0,
     borderColor: 0x000000,
     borderAlpha: 0.0,
@@ -37,26 +37,26 @@ BackgroundView.prototype.paint = function() {
       top = margin.top + modifier.top,
       width = (size.width - margin.right - margin.left) * modifier.width,
       height = (size.height - margin.top - margin.bottom) * modifier.height,
-      drawMethod = settings.radius > 0 ? 'drawRoundedRect' : 'drawRect';
+      drawMethod = settings.radius > 0.0 ? 'drawRoundedRect' : 'drawRect';
   
-  if(settings.fillAlpha > 0 || (settings.borderSize > 0 && settings.borderAlpha > 0)) {
+  if(settings.fillAlpha > 0.0 || (settings.borderSize > 0.0 && settings.borderAlpha > 0.0)) {
     this.clear();
 
     // draw border
-    if(settings.borderSize > 0 && settings.borderAlpha > 0) {
+    if(settings.borderSize > 0.0 && settings.borderAlpha > 0.0) {
       this.lineStyle(settings.borderSize, settings.borderColor, settings.borderAlpha);
     }
     
-    // draw fill
-    if(settings.fillAlpha > 0) {
+    // begin fill
+    if(settings.fillAlpha > 0.0) {
       this.beginFill(settings.color, settings.fillAlpha);
     }
     
-    // draw
+    // draw graphics
     this[drawMethod](left, top, width, height, settings.radius);
     
     // end fill
-    if(settings.fillAlpha > 0) {
+    if(settings.fillAlpha > 0.0) {
       this.endFill();
     }
   }

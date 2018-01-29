@@ -16,7 +16,7 @@ function ShipPane(game) {
   });
 
   this.buttons = {};
-  this.selectable = ['ubaidian-x01', 'ubaidian-x05'];
+  this.selectable = ['ubaidian-x01', 'ubaidian-x05', 'ubaidian-x07', 'ubaidian-x08'];
   this.config = this.game.cache.getJSON('ship-configuration');
 };
 
@@ -34,11 +34,24 @@ ShipPane.prototype.create = function() {
   for(var i=0; i<selectable.length; i++) {
     button = new ShipButton(game, selectable[i], config[selectable[i]]);
     button.create();
-    button.start();
     button.on('inputUp', this.selected, this);
     buttons[selectable[i]] = button;
     
     this.addPanel(button);
+  }
+};
+
+ShipPane.prototype.start = function() {
+  var buttons = this.buttons;
+  for(var b in buttons) {
+    buttons[b].start();
+  }
+};
+
+ShipPane.prototype.stop = function() {
+  var buttons = this.buttons;
+  for(var b in buttons) {
+    buttons[b].stop();
   }
 };
 

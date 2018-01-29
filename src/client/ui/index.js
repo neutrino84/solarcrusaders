@@ -1,14 +1,14 @@
 
-var Panel = require('../ui/Panel'),
-    Pane = require('../ui/components/Pane'),
-    Layout = require('../ui/Layout'),
-    Shipyard = require('../ui/panes/Shipyard'),
-    TopPane = require('../ui/panes/TopPane'),
-    BottomPane = require('../ui/panes/BottomPane');
+var Focus = require('./Focus'),
+    Panel = require('./Panel'),
+    Layout = require('./Layout'),
+    Pane = require('./components/Pane'),
+    Shipyard = require('./panes/Shipyard'),
+    TopPane = require('./panes/TopPane'),
+    BottomPane = require('./panes/BottomPane');
 
 function UI(game) {
   this.game = game;
-  this.auth = game.auth;
   this.modaled = null;
   this.settings = {
     content: {
@@ -27,9 +27,12 @@ function UI(game) {
     }
   };
 
+  // focus manager
+  this.focus = new Focus(game);
+
   // subscribe to messaging
   this.game.on('ui/modal', this.modal, this);
-  this.game.on('auth/sync', this.syncronize, this);
+  this.game.on('auth/sync', this.auth, this);
 };
 
 UI.prototype.preload = function() {
@@ -59,14 +62,14 @@ UI.prototype.create = function() {
   this.content.addPanel(this.bottom);
   this.root.addPanel(this.content);
 
-  // syncronize
-  this.syncronize();
-
   // invalidate
   this.root.invalidate();
 
   // add root to stage
-  this.game.stage.addChild(this.root);
+  this.game.world.ui.addChild(this.root);
+
+  // authenticate user
+  this.auth(this.game.auth.user);
 };
 
 UI.prototype.modal = function(pane) {
@@ -84,13 +87,9 @@ UI.prototype.modal = function(pane) {
   }
 };
 
-UI.prototype.syncronize = function() {
-  var game = this.game,
-      auth = this.auth;
-  if(auth.user) {
-    if(!auth.user.ship) {
-      game.emit('ui/shipyard/show');
-    }
+UI.prototype.auth = function(user) {
+  if(user && !user.ship) {
+    this.game.emit('ui/shipyard/show');
   }
 };
 

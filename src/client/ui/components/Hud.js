@@ -14,12 +14,11 @@ function Hud(ship, settings) {
       type: 'raster'
     },
     healthBar: {
-      width: 80,
-      height: 3,
+      width: ship.data.size * 0.66,
+      height: ship.data.size < 52 ? 1 : 2,
       progress: {
         color: 0x66ff66,
         fillAlpha: 0.5,
-        // blendMode: engine.BlendMode.ADD,
         modifier: {
           left: 0.0,
           top: 0.0,
@@ -28,17 +27,16 @@ function Hud(ship, settings) {
         }
       },
       bg: {
-        fillAlpha: 0.24,
+        fillAlpha: 0.10,
         color: 0x66ff66
       }
     },
     energyBar: {
-      width: 80,
-      height: 2,
+      width: ship.data.size * 0.66,
+      height: 1,
       progress: {
         color: 0xffff66,
         fillAlpha: 0.5,
-        // blendMode: engine.BlendMode.ADD,
         modifier: {
           left: 0.0,
           top: 0.0,
@@ -47,7 +45,7 @@ function Hud(ship, settings) {
         }
       },
       bg: {
-        fillAlpha: 0.24,
+        fillAlpha: 0.10,
         color: 0xffff66
       }
     },
@@ -100,29 +98,27 @@ Hud.prototype.show = function() {
 };
 
 Hud.prototype.hide = function() {
-    this.visible = false;
+  this.visible = false;
 };
 
 Hud.prototype.update = function() {
   var scale, inverse,
       ship = this.ship;
-  
-  // keep
-  // orientation
   if(this.visible) {
     scale = this.game.world.scale.x;
     inverse = (1.0+scale)/scale;
 
     this.scale.set(inverse, inverse);
     this.rotation = -ship.rotation;
-    this.container.y = -((ship.data.size*2)/inverse+8);
+    this.container.y = -((ship.data.size*1.5)/inverse+4);
   }
 };
 
 Hud.prototype.data = function(data) {
-  var stats = this.ship.config.stats,
+  var ship = this.ship,
       healthBar = this.healthBar,
-      energyBar = this.energyBar;
+      energyBar = this.energyBar,
+      stats = ship.config.stats;
   if(this.visible) {
     data.health && healthBar.percentage('width', data.health / stats.health);
     data.energy && energyBar.percentage('width', data.energy / stats.energy);
@@ -130,17 +126,13 @@ Hud.prototype.data = function(data) {
 };
 
 Hud.prototype.enable = function() {
-  this.healthBar.percentage('width', 1);
-  this.energyBar.percentage('width', 1);
-
-  this.show();
+  this.healthBar.percentage('width', 1.0);
+  this.energyBar.percentage('width', 1.0);
 };
 
 Hud.prototype.disable = function() {
-  this.healthBar.percentage('width', 0);
-  this.energyBar.percentage('width', 0);
-
-  this.hide();
+  this.healthBar.percentage('width', 0.0);
+  this.energyBar.percentage('width', 0.0);
 };
 
 Hud.prototype.destroy = function(options) {
