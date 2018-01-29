@@ -3,7 +3,9 @@ var engine = require('engine'),
     EventEmitter = require('eventemitter3'),
     Timeout = require('./Timeout'),
     Clock = require('./Clock'),
-    SectorManager = require('./SectorManager');
+    AI = require('./AI'),
+    SectorManager = require('./SectorManager'),
+    EventManager = require('./EventManager');
 
 function Game(app) {
   this.app = app;
@@ -13,14 +15,21 @@ function Game(app) {
   this.sockets = app.sockets;
 
   this.delta = 0;
-  this.isBooted = false;
+  this.booted = false;
 
-  this.rnd = new engine.RandomGenerator();
+  // helpers
+  this.rnd = new engine.RandomGenerator([global.Math.random()]);
 
-  this.timeout = new Timeout(this);
+  // game logic
+  this.manager = new SectorManager(this);
+  this.events = new EventManager(this);
+  this.ai = new AI(this);
+
+  // timing
   this.clock = new Clock(this);
-  this.sectorManager = new SectorManager(this);
+  this.timeout = new Timeout(this);
 
+  // messaging
   EventEmitter.call(this);
 };
 
@@ -28,37 +37,39 @@ Game.prototype = Object.create(EventEmitter.prototype);
 Game.prototype.constructor = Game;
 
 Game.prototype.init = function(next) {
-  if(this.isBooted) { return; }
+  // init game logic
+  this.manager.init();
+  this.events.init();
+  this.ai.init();
 
-  this.isBooted = true;
-
-  this.sectorManager.init();
+  // init timing
   this.clock.init();
   this.timeout.init();
 
-  //
+  // booted
+  this.booted = true;
+
+  // async proceed
   next();
 };
 
 Game.prototype.update = function() {
-  var clock = this.clock,
-      step = clock.stepSize,
-      elapsed = clock.elapsedMS;
-
   // update clock
-  clock.update();
+  this.clock.update();
 
   // delta
-  this.delta += elapsed;
+  this.delta += this.clock.elapsedMS;
 
   // update at desired fps
-  if(this.delta >= step) {
-    this.sectorManager.update();
-    this.delta -= step;
+  if(this.delta >= this.clock.stepSize) {
+    this.manager.update();
+    this.events.update();
+    this.ai.update();
+    this.delta -= this.clock.stepSize;
   }
 
   // check for overload
-  if(elapsed > step) {
+  if(this.delta > this.clock.stepSize) {
     this.winston.info('overload warning');
   }
 };
