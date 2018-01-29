@@ -1,19 +1,22 @@
 
 var engine = require('engine');
 
-function Movement(parent) {
-  this.parent = parent;
-  this.game = parent.game;
+function Movement(ship) {
+  this.ship = ship;
+  this.game = ship.game;
 
-  this.speed = 0;
-  this.velocity = 0;
-  this.throttle = 0;
+  this.speed = 0.0;
+  this.step = 0.0;
 
   this.vector = new engine.Point();
-  this.position = new engine.Point();
-  this.destination = new engine.Point();
   this.direction = new engine.Point();
-}
+  this.position = new engine.Point(ship.data.x, ship.data.y);
+  this.destination = new engine.Point(ship.data.x, ship.data.y);
+};
+
+Movement.STEP_SIZE = 10/60;
+Movement.INTERPOLATION = 0.18;
+Movement.COMPENSATE = 0.24;
 
 Movement.prototype.constructor = Movement;
 
@@ -22,63 +25,58 @@ Movement.prototype.update = function() {
       destination = this.destination,
       vector = this.vector,
       direction = this.direction,
+      step = this.step,
       speed = this.speed,
-      velocity = this.velocity,
-      ship = this.parent,
-      distance, a1, a2;
+      ship = this.ship,
+      a1, a2;
 
-  // ship position to point
-  position.set(ship.position.x, ship.position.y);
+  // throttle
+  this.throttle = position.distance(ship.position)/(ship.config.stats.speed*Movement.STEP_SIZE);
 
-  // calculate distance
-  distance = position.distance(destination);
+  // position
+  position.copyFrom(ship.position);
 
-  if(speed * 2.0 < distance) {
-    velocity *= 2.0;
-  }
-  
   // calculate vector
-  vector.set(destination.x - position.x, destination.y - position.y);
+  vector.set(destination.x - ship.position.x, destination.y - ship.position.y);
   vector.normalize();
+  vector.multiply(step, step);
 
-  // update direction
-  direction.interpolate({
-    x: vector.x * velocity,
-    y: vector.y * velocity }, 0.25, direction);
-
-  // calculate throttle
-  this.throttle = speed > 0 ? direction.getMagnitude() * 6 / speed : 0;
+  // interpolate step
+  direction.interpolate(vector, Movement.INTERPOLATION, direction);
 
   // update ship position
-  ship.position.set(position.x + direction.x, position.y + direction.y);
+  ship.position.set(
+    ship.position.x + vector.x,
+    ship.position.y + vector.y);
 
   // update rotation
-  if(!ship.disabled && velocity > 0) {
-    a1 = position.y - ship.position.y;
-    a2 = position.x - ship.position.x;
+  if(speed > 0.0) {
+    a1 = -direction.y;
+    a2 = -direction.x;
 
     if(a1 !== 0 && a2 !== 0) {
       ship.rotation = global.Math.atan2(a1, a2);
-    } else {
-      ship.rotation = 0;
     }
-  }
-
-  if(ship.disabled && velocity > 0) {
-    ship.rotation += velocity/100;
   }
 };
 
 Movement.prototype.plot = function(data) {
-  this.destination.copyFrom(data.pos);
+  var step = 10/global.Math.max(this.game.clock.fps, 34); //Movement.STEP_SIZE,
+      compensate = Movement.COMPENSATE,
+      compensation = engine.Point.interpolate(this.ship.position, data.cmp, compensate);
+
+  // speed and step
   this.speed = data.spd;
-  this.velocity = (data.spd / (1/10)) * (1/60);
+  this.step = data.spd*step;
+  this.destination.set(data.pos.x, data.pos.y);
+
+  // compensate ship
+  // position and apply
+  this.ship.position.copy(compensation);
 };
 
 Movement.prototype.destroy = function() {
-  this.parent = this.game =
-    this.destination = this.position =
-    this.vector = this.direction = undefined;
+  this.ship = this.game = undefined;
 };
 
 module.exports = Movement;
