@@ -10,8 +10,9 @@ function Clock(game) {
   this.started = 0;
   this.desiredFps = Clock.DESIRED_FPS;
   this.stepSize = 1000 / Clock.DESIRED_FPS;
-  this.events = new engine.Timer(this.game, false);
+  this.events = new engine.Timer(game, false);
 
+  // custom timers
   this.timers = [];
 };
 
@@ -30,32 +31,12 @@ Clock.prototype.update = function() {
   this.time = global.Date.now();
   this.elapsedMS = this.time - this.previousDateNow;
 
+  // update events timers
   this.events.update(this.time);
 
   if(this.timers.length) {
     this.updateTimers();
   }
-};
-
-Clock.prototype.throttle = function(fn, threshhold, context) {
-  var last,
-      deferTimer,
-      threshhold = threshhold || 250,
-      clock = this;
-  return function(arg) {
-    var context = context || this,
-        now = clock.time;
-    if(last && now < last + threshhold) {
-      clearTimeout(deferTimer);
-      deferTimer = setTimeout(function () {
-        last = now;
-        fn.call(context, arg);
-      }, threshhold);
-    } else {
-      last = now;
-      fn.call(context, arg);
-    }
-  };
 };
 
 Clock.prototype.add = function(timer) {
