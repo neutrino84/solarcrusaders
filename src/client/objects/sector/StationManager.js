@@ -2,9 +2,8 @@
 var engine = require('engine'),
     Station = require('./Station');
 
-function StationManager(game, state) {
+function StationManager(game) {
   this.game = game;
-  this.state = state;
   this.socket = game.net.socket;
   this.stationsGroup = new engine.Group(game);
 
@@ -12,11 +11,12 @@ function StationManager(game, state) {
   this.stationsGroup.addChild(this.trajectoryGraphics);
 
   // stations
-  this.stations = {};
+  this.game.stations = {};
 
   // listen to messaging
   this.game.on('auth/disconnect', this.disconnect, this);
-  this.game.on('sector/sync', this.sync, this);
+  this.game.on('sector/sync', this.syncronize, this);
+  this.game.on('station/create', this.create, this);
 
   // add to world
   this.game.world.add(this.stationsGroup);
@@ -29,69 +29,46 @@ StationManager.prototype.constructor = StationManager;
 
 StationManager.prototype.create = function(data) {
   var game = this.game,
-      state = this.state,
-      stations = this.stations,
-      container = this.stationsGroup,
-      station = new Station(this, data),
-      user = state.auth.user;
+      stationsGroup = this.stationsGroup,
+      station = new Station(this, data);
 
-  // set data
-  station.uuid = data.uuid;
-  station.boot();
-
-  // add station registry
-  stations[data.uuid] = station;
-
-  // display
-  container.addAt(station);
-
-  // focus if no player ship
-  if(!user.ship) {
-    //..
-  }
+  // create
+  station.create();
+  stationsGroup.addAt(station);
+  game.stations[data.uuid] = station;
 };
 
-StationManager.prototype.sync = function(data) {
+StationManager.prototype.syncronize = function(data) {
   var game = this.game,
-      netManager = this.state.netManager,
-      stations = data.stations,
-      length = stations.length,
-      sync, station, model;
-  for(var s=0; s<length; s++) {
-    sync = stations[s];
-    station = this.stations[sync.uuid];
+      stations = game.stations,
+      syncronize = data.stations,
+      sync, station;
+  for(var s=0; s<syncronize.length; s++) {
+    sync = syncronize[s];
+    station = stations[sync.uuid];
+    station && station.plot(sync);
 
-    if(station) {
-      station.plot(sync);
-
-      // if(this.game.rnd.frac() > 0.9) {
-
-      //   console.log(engine.Point.distance(station, sync.pos))
-
+    // if() {
+      // if(game.rnd.frac() > 0.5) {
       //   this.trajectoryGraphics.lineStyle(0);
       //   this.trajectoryGraphics.beginFill(0x6666FF, 1.0);
       //   this.trajectoryGraphics.drawCircle(station.x, station.y, 12);
       //   this.trajectoryGraphics.endFill();
-
       //   this.trajectoryGraphics.lineStyle(1.0);
       //   this.trajectoryGraphics.beginFill(0xFFFFFF, 1.0);
       //   this.trajectoryGraphics.drawCircle(sync.pos.x, sync.pos.y, 6);
       //   this.trajectoryGraphics.endFill();
-
       // }
 
       // station.position.set(sync.pos.x, sync.pos.y);
       // station.rotation = sync.rot;
-    } else {
-      model = netManager.getStationData(sync.uuid);
-      model && this.create(model);
-    }
+    // }
   }
 };
 
 StationManager.prototype.update = function() {
   var game = this.game,
-      stations = this.stations,
+      stations = game.stations,
       station, delta, update, stats,
       updates = [];
   for(var s in stations) {
@@ -120,18 +97,23 @@ StationManager.prototype.update = function() {
 };
 
 StationManager.prototype.remove = function(data) {
-  var stations = this.stations,
+  var game = this.game,
+      stations = game.stations,
       station = stations[data.uuid];
   if(station !== undefined) {
+    // destroy
     station.destroy();
+
+    // remove from memory
     delete stations[station.uuid];
   }
 };
 
 StationManager.prototype.removeAll = function() {
-  var station,
-      stations = this.stations;
+  var game = this.game,
+      stations = game.stations;
   for(var s in stations) {
+    // remove all ships
     this.remove(stations[s]);
   }
 };
@@ -142,8 +124,7 @@ StationManager.prototype.destroy = function() {
 
   this.removeAll();
 
-  this.game = this.socket = this._syncBind =
-   this._attackBind = undefined;
+  this.game = this.socket = undefined;
 };
 
 StationManager.prototype.disconnect = function() {
