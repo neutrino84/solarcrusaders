@@ -1,7 +1,7 @@
+
 var engine = require('engine'),
     pixi = require('pixi'),
     UI = require('../ui'),
-    NetManager = require('../net/NetManager'),
     Space = require('../fx/Space'),
     Planet = require('../fx/Planet'),
     Snow = require('../fx/Snow'),
@@ -9,7 +9,9 @@ var engine = require('engine'),
     InputManager = require('../objects/sector/InputManager'),
     ShipManager = require('../objects/sector/ShipManager'),
     StationManager = require('../objects/sector/StationManager'),
+    EnhancementManager = require('../objects/sector/EnhancementManager'),
     SoundManager = require('../objects/sector/SoundManager'),
+    NetManager = require('../net/NetManager'),
     HotkeyManager = require('../objects/sector/HotkeyManager'),
     ExplosionEmitter = require('../objects/sector/emitters/ExplosionEmitter'),
     FlashEmitter = require('../objects/sector/emitters/FlashEmitter'),
@@ -43,9 +45,9 @@ SectorState.prototype.preload = function() {
   // load background
   this.game.load.image('snow', 'imgs/game/space/snow.jpg');
   this.game.load.image('space', 'imgs/game/space/sector-a.jpg');
-  this.game.load.image('nebula', 'imgs/game/space/noise.jpg');
+  this.game.load.image('nebula', 'imgs/game/space/nebula-a.jpg');
 
-  this.game.load.image('clouds', 'imgs/game/planets/clouds.jpg');
+  this.game.load.image('clouds', 'imgs/game/planets/noise.jpg');
   this.game.load.image('planet', 'imgs/game/planets/talus.jpg');
   this.game.load.image('highlight', 'imgs/game/planets/talus-highlight.jpg');
 
@@ -58,6 +60,7 @@ SectorState.prototype.preload = function() {
   // load strip graphics
   this.game.load.image('laser-blue', 'imgs/game/fx/laser-blue.png');
   this.game.load.image('laser-red', 'imgs/game/fx/laser-red.png');
+  this.game.load.image('laser-white', 'imgs/game/fx/laser-white.png');
   this.game.load.image('energy-blue', 'imgs/game/fx/energy-blue.png');
   this.game.load.image('energy-red', 'imgs/game/fx/energy-red.png');
 
@@ -80,7 +83,7 @@ SectorState.prototype.create = function() {
       mouse.capture = true;
       mouse.mouseWheelCallback = function(event) {
         var delta = event.deltaY / sensitivity,
-            scale = engine.Math.clamp(this.world.scale.x - delta, 0.34, 1.0);
+            scale = engine.Math.clamp(this.world.scale.x - delta, 0.25, 1.0);
         if(self.game.paused) { return; }
         if(self.zoom && self.zoom.isRunning) {
           self.zoom.stop();
@@ -89,16 +92,16 @@ SectorState.prototype.create = function() {
       };
 
   // set world
-  this.game.world.size(0, 0, 4096, 4096);
-  this.game.world.scale.set(0.38, 0.38);
+  this.game.world.size(0, 0, 8192, 8192);
+  this.game.world.scale.set(0.25, 0.25);
 
   // adjust camera
   this.game.camera.focus(2048, 2048);
 
   // create sector
+  this.createSpace();
   this.createAsteroids();
   this.createManagers();
-  this.createSpace();
   this.createEmitters();
 
   // create ui
@@ -113,37 +116,26 @@ SectorState.prototype.createSpace = function() {
   this.space.cache();
 
   this.planet = new Planet(this.game);
-
   this.snow = new Snow(this.game, this.game.width, this.game.height);
 
   this.nebula = new NebulaCluster(this.game);
   this.nebula.position.set(1024 - 128, 1024 - 128);
   this.nebula.create(12, 0.00006, 0.0, [0.2, 0.6, 0.8]);
 
-  this.neb1 = new NebulaCluster(this.game);
-  this.neb1.position.set(256, 256);
-  this.neb1.create(4, 0.00034, 256, [0.8, 0.2, 0.2]);
+  // this.neb1 = new NebulaCluster(this.game);
+  // this.neb1.position.set(256, 256);
+  // this.neb1.create(4, 0.00034, 256, [0.8, 0.2, 0.2]);
 
-  this.neb2 = new NebulaCluster(this.game);
-  this.neb2.position.set(128, 128);
-  this.neb2.create(4, 0.00034, 256, [1.0, 0.8, 0.2]);
+  // this.neb2 = new NebulaCluster(this.game);
+  // this.neb2.position.set(128, 128);
+  // this.neb2.create(4, 0.00034, 256, [1.0, 0.8, 0.2]);
 
   this.game.world.static.add(this.space);
   this.game.world.static.add(this.snow);
   this.game.world.background.add(this.nebula);
   this.game.world.background.add(this.planet);
-  this.game.world.add(this.neb1);
-  this.game.world.add(this.neb2);
-};
-
-SectorState.prototype.createManagers = function() {
-  var game = this.game;
-
-  this.netManager = new NetManager(game, this);
-  this.inputManager = new InputManager(game, this);
-  this.hotkeyManager = new HotkeyManager(game, this);
-  this.stationManager = new StationManager(game, this);
-  this.shipManager = new ShipManager(game, this);
+  // this.game.world.add(this.neb1);
+  // this.game.world.add(this.neb2);
 };
 
 SectorState.prototype.createAsteroids = function() {
@@ -154,28 +146,38 @@ SectorState.prototype.createAsteroids = function() {
     asteroid = new Asteroid(this.game);
     asteroid.position.set(2048 / 4, 2048 / 4);
 
+    // add to scene graph
     game.world.foreground.add(asteroid);
   }
 };
 
+SectorState.prototype.createManagers = function() {
+  this.netManager = new NetManager(this.game);
+  this.inputManager = new InputManager(this.game);
+  this.hotkeyManager = new HotkeyManager(this.game);
+  this.stationManager = new StationManager(this.game);
+  this.shipManager = new ShipManager(this.game);
+  this.enhancementManager = new EnhancementManager(this.game);
+};
+
 SectorState.prototype.createEmitters = function() {
   this.explosionEmitter = new ExplosionEmitter(this.game);
-  this.flashEmitter = new FlashEmitter(this.game);
   this.glowEmitter = new GlowEmitter(this.game);
   this.shockwaveEmitter = new ShockwaveEmitter(this.game);
   this.fireEmitter = new FireEmitter(this.game);
+  this.flashEmitter = new FlashEmitter(this.game);
 
   this.game.particles.add(this.explosionEmitter);
-  this.game.particles.add(this.flashEmitter);
   this.game.particles.add(this.glowEmitter);
   this.game.particles.add(this.shockwaveEmitter);
   this.game.particles.add(this.fireEmitter);
+  this.game.particles.add(this.flashEmitter);
 
   this.game.world.add(this.fireEmitter);
-  this.game.world.add(this.flashEmitter);
   this.game.world.add(this.explosionEmitter);
   this.game.world.add(this.shockwaveEmitter);
   this.game.world.add(this.glowEmitter);
+  this.game.world.add(this.flashEmitter);
 };
 
 SectorState.prototype.focus = function() {}
