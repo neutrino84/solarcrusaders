@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>4</int>
         <key>texturePackerVersion</key>
-        <string>4.5.0</string>
+        <string>4.6.1</string>
         <key>fileName</key>
         <string>/Users/oliver/projects/solarcrusaders/assets/imgs/texture-atlas.tps</string>
         <key>autoSDSettings</key>
@@ -210,6 +210,8 @@
             <key type="filename">ships/ubaidian/ubaidian-x04.png</key>
             <key type="filename">ships/ubaidian/ubaidian-x05.png</key>
             <key type="filename">ships/ubaidian/ubaidian-x06.png</key>
+            <key type="filename">ships/ubaidian/ubaidian-x09.png</key>
+            <key type="filename">ships/ubaidian/ubaidian-x10.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -224,6 +226,7 @@
             </struct>
             <key type="filename">fx/engine-highlight.png</key>
             <key type="filename">fx/turret-glow.png</key>
+            <key type="filename">ships/ubaidian/ubaidian-x07.png</key>
             <key type="filename">turrets/turret-projectile-a.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -358,6 +361,7 @@
                 <false/>
             </struct>
             <key type="filename">ships/ubaidian/ubaidian-x01.png</key>
+            <key type="filename">ships/ubaidian/ubaidian-x08.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -385,6 +389,7 @@
             </struct>
             <key type="filename">turrets/turret-a.png</key>
             <key type="filename">turrets/turret-b.png</key>
+            <key type="filename">turrets/turret-d.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -444,6 +449,11 @@
             <filename>ships/ubaidian/ubaidian-x06.png</filename>
             <filename>turrets/turret-c.png</filename>
             <filename>turrets/turret-projectile-a.png</filename>
+            <filename>ships/ubaidian/ubaidian-x07.png</filename>
+            <filename>ships/ubaidian/ubaidian-x08.png</filename>
+            <filename>ships/ubaidian/ubaidian-x09.png</filename>
+            <filename>ships/ubaidian/ubaidian-x10.png</filename>
+            <filename>turrets/turret-d.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
