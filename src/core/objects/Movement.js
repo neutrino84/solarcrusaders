@@ -6,182 +6,123 @@ function Movement(parent) {
   this.game = parent.game;
   this.data = parent.data;
 
-  this.time = null;
-  this.formation = null;
-  this.friction = null;
-  this.magnitude = 0;
-  this.throttle = this.data.throttle;
-  this.speed = this.data.speed;
+  this.started = 0;
+  this.speed = 0;
   this.rotation = this.data.rotation;
+  this.throttle = this.data.throttle;
 
-  this.start = {
-    x: global.parseFloat(this.data.x),
-    y: global.parseFloat(this.data.y)
-  };
-
-  this.circle = new engine.Circle();
-  this.last = new engine.Point(this.start.x, this.start.y);
-  this.position = new engine.Point(this.start.x, this.start.y);
+  this.previous = new engine.Point(this.data.x, this.data.y);
+  this.position = new engine.Point(this.data.x, this.data.y);
   this.destination = new engine.Point();
   this.vector = new engine.Point();
   this.direction = new engine.Point();
-  this.relative = new engine.Point();
 };
 
-Movement.CLOCK_RATE = 100;
-Movement.IDLE_TIMEOUT_MS = 6000;
-Movement.FRICTION_DISABLED = 0.98;
-Movement.FRICTION_IDLED = 0.96;
-Movement.FRICTION_THRESHOLD = 0.24;
-Movement.STOP_THRESHOLD = 32;
+Movement.DELTA_THRESHOLD = 0.0001;
+Movement.DELTA_COEFFICIENT = 0.26;
+Movement.DISABLED_DELTA_COEFFICIENT = 0.024;
 Movement.THROTTLE_THRESHOLD = 256;
-Movement.FORMATION_STOP_THRESHOLD = 16;
-Movement.FORMATION_THROTTLE_THRESHOLD = 128;
-Movement.FORMATION_THROTTLE_MODIFIER = 64;
 
 Movement.prototype.constructor = Movement;
 
 Movement.prototype.stop = function() {
-  this.magnitude = 0;
   this.throttle = 0;
 };
 
-Movement.prototype.plot = function(destination, throttle) {
-  if(!this.formation && !this.parent.disabled) {
-    // copy destination trajectory
-    this.destination.copyFrom(destination);
-    this.magnitude = this.destination.getMagnitude();
-    this.throttle = throttle ? throttle : engine.Math.clamp(this.magnitude/Movement.THROTTLE_THRESHOLD, 0.0, 1.0);
+Movement.prototype.plot = function(vector, throttle) {
+  var size = this.data.size,
+      a = vector.x * vector.x,
+      b = vector.y * vector.y,
+      magnitude = global.Math.sqrt(a + b);
 
-    // check if stopping
-    // and handle idle timer
-    this.timer && this.game.clock.events.remove(this.timer);
-    if(this.magnitude <= Movement.STOP_THRESHOLD) {
-      this.stop();
+  if(!this.parent.disabled) {
+    // set throttle
+    if(throttle) {
+      this.throttle = throttle;
+    } else if(magnitude<=size) {
+      this.throttle = 0.0;
     } else {
-      this.timer = this.game.clock.events.add(Movement.IDLE_TIMEOUT_MS, this.idled, this);
+      this.throttle = global.Math.min(magnitude/Movement.THROTTLE_THRESHOLD, 1.0);
+    }
+
+    // set a destination
+    // if there is throttle
+    if(this.throttle > 0.0) {
+      this.vector.set(vector.x, vector.y);
     }
   }
-};
-
-Movement.prototype.idled = function() {
-  this.friction = Movement.FRICTION_IDLED;
 };
 
 Movement.prototype.update = function() {
   var parent = this.parent,
-      last = this.last,
+      previous = this.previous,
       position = this.position,
       vector = this.vector,
-      destination = this.destination,
       direction = this.direction,
-      formation = this.formation,
-      evasion = parent.evasion,
-      maneuver, cross, dot,
-      ev, throttle;
+      lerp = parent.speed*this.throttle-this.speed,
+      coefficient = parent.disabled ?
+        Movement.DISABLED_DELTA_COEFFICIENT :
+        Movement.DELTA_COEFFICIENT,
+      maneuver, cross, dot;
 
-  // time compensation
-  this.time = this.game.clock.time;
+  // update time
+  this.started = this.game.clock.time;
 
-  // check if in formation
-  if(formation) {
-    // get trajectory
-    destination.copyFrom(formation.position(parent.uuid));
-    destination.subtract(position.x, position.y);
-
-    // set magnitude and throttle
-    this.magnitude = destination.getMagnitude();
-    if(this.magnitude > Movement.FORMATION_STOP_THRESHOLD) {
-      // calculate optimal throttle
-      throttle = Movement.FORMATION_THROTTLE_THRESHOLD +
-        ((1-formation.movement.throttle) * Movement.FORMATION_THROTTLE_MODIFIER);
-
-      // set local throttle
-      this.throttle = engine.Math.clamp(this.magnitude/throttle, 0.0, 1.0);
-    } else {
-      this.stop();
-    }
-  }
-
-  // friction
-  if(parent.disabled) {
-    this.throttle *= Movement.FRICTION_DISABLED;
-  } else if(this.friction) {
-    if(this.throttle > Movement.FRICTION_THRESHOLD) {
-      this.throttle *= this.friction;
-    } else {
-      this.throttle = 0;
-    }
+  // calculate speed
+  if(global.Math.abs(lerp) > Movement.DELTA_THRESHOLD) {
+    this.speed += lerp * coefficient;
   }
 
   // update ship position
-  if(this.throttle > 0) {
-    // set movement speed
-    this.speed = parent.speed * this.throttle;
-    
-    // normalize vector
-    vector.set(destination.x, destination.y);
+  if(this.speed > 0.0) {
+    // normalize
     vector.normalize();
 
-    // linear rotate
-    if(!vector.isZero()) {
+    // calculate maneuverability
+    maneuver = parent.evasion;
 
-      // maneuverability
-      ev = evasion/2;
-      maneuver = (ev/this.throttle)+ev;
-
-      // head towards direction
-      direction.set(
-        global.Math.cos(this.rotation),
-        global.Math.sin(this.rotation));
-
-      // calculate new rotation
-      dot = vector.dot(direction);
-      cross = vector.cross(direction);
-      if(cross > maneuver) {
-        this.rotation -= maneuver;
-      } else if(cross < -maneuver) {
-        this.rotation += maneuver;
-      } else if(dot < 0) {
-        this.rotation -= maneuver
-      }
-      
-      // last position
-      last.set(position.x, position.y);
-
-      // linear speed
-      position.add(
-        this.speed * direction.x, 
-        this.speed * direction.y);
+    // calculate new rotation
+    dot = vector.dot(direction);
+    cross = vector.cross(direction);
+    if(cross > maneuver) {
+      this.rotation -= maneuver;
+    } else if(cross < -maneuver) {
+      this.rotation += maneuver;
+    } else if(dot < 0) {
+      this.rotation -= maneuver
     }
-  } else {
-    // set movement speed
-    this.speed = 0;
-    this.friction = null;
+
+    // direction
+    direction.set(
+      global.Math.cos(this.rotation),
+      global.Math.sin(this.rotation));
+
+    // set last position
+    previous.copyFrom(position);
+
+    // linear speed
+    position.add(
+      direction.x * this.speed, 
+      direction.y * this.speed);
   }
 };
 
 Movement.prototype.compensated = function(rtt) {
   var rtt = rtt || 0,
+      game = this.game,
+      previous = this.previous,
       position = this.position,
-      last = this.last,
-      relative = this.relative,
-      direction = this.direction,
-      modifier = (this.game.clock.time - this.time + rtt) / Movement.CLOCK_RATE;
+      elapsed;
+  
+  // calculate compensation
+  elapsed = game.clock.time - this.started;
+  previous = previous.interpolate(position, elapsed/100);
 
-  if(this.magnitude > Movement.STOP_THRESHOLD) {
-    relative.set(last.x, last.y);
-    relative.interpolate(position, modifier, relative);
-    relative.subtract(this.speed * direction.x, this.speed * direction.y);
-  } else {
-    relative.set(position.x, position.y);
-  }
-
-  return relative;
+  return previous;
 };
 
 Movement.prototype.destroy = function() {
-  //.. destroy
+  this.parent = this.game = this.data = undefined;
 };
 
 module.exports = Movement;

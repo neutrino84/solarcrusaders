@@ -15,52 +15,65 @@ UserManager.prototype.constructor = UserManager;
 UserManager.prototype.init = function() {
   // auth request
   this.sockets.on('auth/connect', this.connect, this);
+  this.sockets.on('user/ship', this.ship, this);
 
   // auth messaging
   this.game.on('auth/disconnect', this.disconnect, this);
-  this.game.on('auth/remove', this.remove, this);
-
-  // listen for user ship selection
-  this.game.on('user/ship', this.ship, this);
-
-  // user messaging
-  this.game.on('user/add', this.add, this);
-};
-
-UserManager.prototype.add = function(user) {
-  this.game.users[user.uuid] = user;
-};
-
-UserManager.prototype.remove = function(user) {
-  delete this.game.users[user.uuid];
 };
 
 UserManager.prototype.connect = function(socket) {
   var user,
       game = this.game,
-      users = game.users,
       session = socket.request.session,
-      data = session ? session.user : undefined;
-  if(data && users[data.uuid] && users[data.uuid].socket) {
-    winston.info('[UserManager] User already exists in game');
-    user = users[data.uuid];
-    user.reconnected(socket);
-  } else if(data && socket) {
-    winston.info('[UserManager] Creating user in game');
-    user = new User(game, data, socket);
-    user.init(function() {
-      game.emit('user/add', user);
-    }, this);
+      users = game.users,
+      station = game.events.primary('stations', 'ubaidian');
+
+  if(session && session.user) {
+    user = users[session.user.uuid];
+
+    if(user) {
+      winston.info('[UserManager] Reconnecting an existing user to socket');
+
+      // connect user socket
+      user.reconnected(socket);
+    } else {
+      winston.info('[UserManager] Connecting a new user to socket');
+
+      // create new user
+      user = new User(game, session.user);
+      user.init(function() {
+        // add to world
+        users[user.uuid] = user;
+
+        // create dev ship
+        game.emit('ship/create', {
+          user: user.uuid,
+          station: station.uuid,
+          chassis: 'ubaidian-x08',
+          squadron: [
+            'ubaidian-x06', 'ubaidian-x06'
+          ]
+        });
+
+        // connect user socket
+        user.reconnected(socket);
+      }, this);
+    }
   } else {
-    winston.info('[UserManager] User data error');
-    socket.disconnect(true);
+    winston.error('[UserManager] An error occurred connecting socket to user');
+
+    // errant socket disconnect
+    this.disconnect(socket);
   }
 };
 
 UserManager.prototype.disconnect = function(socket) {
   var game = this.game,
       session = socket.request.session,
-  user = game.users[session.user.uuid];
+      uuid = session.user && session.user.uuid,
+      user = game.users[uuid];
+
+  // disconnect user
   user && user.disconnected();
 };
 
@@ -68,10 +81,18 @@ UserManager.prototype.ship = function(socket, args) {
   var game = this.game,
       session = socket.request.session,
       user = game.users[session.user.uuid],
-      data = args[1];
-  user && game.emit('ship/create', {
-    chassis: data.name
-  }, user);
+      data = args[1],
+      station = game.events.primary('stations', 'ubaidian');
+
+  // create ships
+  if(user && user.ship == null) {
+    game.emit('ship/create', {
+      user: user.uuid,
+      station: station.uuid,
+      chassis: data.name,
+      squadron: ['ubaidian-x06', 'ubaidian-x06']
+    });
+  }
 };
 
 UserManager.prototype.all = function(uuids) {

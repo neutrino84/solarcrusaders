@@ -8,39 +8,47 @@ var async = require('async'),
     Formation = require('./Formation'),
     Utils = require('../../utils');
 
-function Ship(manager, data, user, master) {
-  this.manager = manager;
-  this.game = manager.game;
-  this.sockets = manager.sockets;
-  this.model = manager.model;
-  this.user = user;
-  this.master = master;
-  this.owner = master && master.user ? master.user : undefined;
-  this.station = undefined;
+function Ship(game, data) {
+  this.game = game;
+  this.sockets = game.sockets;
+  this.model = game.model;
 
+  this.uuid = null;
+  this.chassis = null;
+  this.race = null;
+
+  // relationships
+  this.ai = null;
+  this.station = null;
+  this.user = null;
+  this.master = null;
+
+  // variables
+  this.disabled = false;
+  this.events = [];
+  this.targets = [];
+
+  // data model
   this.data = new this.model.Ship(data);
   this.data.init();
 
-  this.uuid = this.data.uuid;
-  this.chassis = this.data.chassis;
-
-  // ship configuration
-  this.config = client.ShipConfiguration[this.data.chassis];
-
-  // disabled state
-  this.disabled = false;
-
-  // movement
+  // ship movement helper
   this.movement = new Movement(this);
 
-  // formation
+  // squadron formation helper
   this.formation = new Formation(this);
 
-  // generate ai
-  this.ai = manager.ai.create(data.ai, this);
+  // current ship
+  // command directives
+  this.commands = {
+    focus: true,
+    formation: true,
+    supress: false,
+    defend: false
+  };
 
-  // create metadata
-  this.squadron = {};
+  // hardpoints
+  // enhancements
   this.hardpoints = {};
   this.enhancements = {
     active: {
@@ -59,29 +67,39 @@ function Ship(manager, data, user, master) {
   this.serialized = {
     hardpoints: [],
     enhancements: []
-  }
+  };
+
+  // ship configuration
+  this.config = client.ShipConfiguration[this.data.chassis];
+  this.config.squadron = data.squadron || [];
 };
 
 Ship.prototype.constructor = Ship;
 
-Ship.prototype.init = function(callback) {
+Ship.prototype.init = function(callback, context) {
   var self = this,
-      data = this.data,
-      initialize = function() {
-        self.createRelationships();
-        self.createEnhancements();
-        self.createHardpoints();
-        self.createSquadron();
-      };
+      game = this.game,
+      data = this.data;
   if(data.isNewRecord()) {
-    initialize();
-    callback();
+    // data shortcuts
+    this.uuid = data.uuid;
+    this.chassis = data.chassis;
+    this.race = data.race;
+
+    this.createRelationships();
+    this.createEnhancements();
+    this.createHardpoints();
+
+    // ai helper
+    this.ai = this.game.ai.factory(this);
+
+    // callback created
+    callback.call(context, self);
   } else {
     async.series([
       data.reload.bind(data)
     ], function(err, results) {
-      initialize();
-      callback();
+      callback.call(context, self);
     });
   }
 };
@@ -105,9 +123,23 @@ Ship.prototype.save = function(callback) {
 };
 
 Ship.prototype.createRelationships = function() {
+  var game = this.game,
+      data = this.data;
+
+  // relationships
+  this.station = game.stations[data.station] || null;
+  this.user = game.users[data.user] || null;
+  this.master = game.ships[data.master] || null;
+
+  // update user object
   if(this.user) {
     this.user.ship = this;
     this.user.data.ship = this.uuid;
+  }
+
+  // add to formation
+  if(this.master) {
+    this.master.formation.add(this);
   }
 };
 
@@ -147,40 +179,37 @@ Ship.prototype.createHardpoints = function() {
 };
 
 Ship.prototype.createSquadron = function() {
-  var name,
-      game = this.game,
-      master = this.master,
+  var game = this.game,
       user = this.user,
+      formation = this.formation,
       squadron = this.config.squadron,
-      len = squadron.length;
+      position = {};
 
-  // create
-  if(user) {
-    for(var i=0; i<len; i++) {
-      name = squadron[i];
-      game.emit('ship/create', {
-        chassis: name,
-        ai: 'squadron'
-      }, null, this);
-    }
-  }
+  // add squadron
+  for(var i=0; i<squadron.length; i++) {
+    // starting position
+    formation.position(i, position);
 
-  // update master
-  if(master) {
-    master.squadron[this.uuid] = this;
-    master.formation.add(this.uuid);
+    // create ship
+    game.emit('ship/create', {
+      master: this.uuid,
+      station: this.station.uuid,
+      chassis: squadron[i],
+      x: position.x,
+      y: position.y,
+      ai: 'squadron'
+    });
   }
 };
 
-Ship.prototype.plot = function(coordinates) {
+Ship.prototype.plot = function(coordinates, rtt) {
   var movement = this.movement,
-      squadron = this.squadron,
-      squad;
-  
+      compensated = movement.compensated(rtt);
+
   // plot ship
   movement.plot({
-    x: coordinates.x - movement.position.x,
-    y: coordinates.y - movement.position.y });
+    x: coordinates.x - compensated.x,
+    y: coordinates.y - compensated.y });
 };
 
 Ship.prototype.attack = function(data, rtt) {
@@ -189,7 +218,7 @@ Ship.prototype.attack = function(data, rtt) {
   var attacker = this,
       game = this.game,
       sockets = this.sockets,
-      squadron = this.squadron,
+      events = this.events,
       movement = this.movement,
       hardpoints = this.hardpoints,
       runtime, hardpoint, compensated,
@@ -201,6 +230,9 @@ Ship.prototype.attack = function(data, rtt) {
   compensated = movement.compensated(rtt);
   distance = compensated.distance(target);
 
+  // clear events
+  events.length = 0;
+
   // validate attack
   for(var slot in hardpoints) {
     hardpoint = hardpoints[slot];
@@ -210,7 +242,7 @@ Ship.prototype.attack = function(data, rtt) {
       runtime = distance * hardpoint.data.projection + hardpoint.data.delay;
 
       // time collisions
-      game.clock.events.add(runtime, this.attacked, this, target, slot);
+      events.push(game.clock.events.add(runtime-rtt, this.attacked, this, target, slot));
     }
   }
 
@@ -219,15 +251,14 @@ Ship.prototype.attack = function(data, rtt) {
 };
 
 Ship.prototype.attacked = function(target, slot) {
-  var ship, ships,
-      game = this.game,
-      ships = game.ships;
+  var game = this.game,
+      ships = game.ships, ship;
 
   // iterate
   for(var s in ships) {
     ship = ships[s];
 
-    if(ship.game && ship != this) {
+    if(!ship.disabled && ship != this) {
       ship.hit(this, target, slot);
     }
   }
@@ -237,168 +268,131 @@ Ship.prototype.attacked = function(target, slot) {
 };
 
 Ship.prototype.hit = function(attacker, target, slot) {
-  var updates = {
-        user: [],
-        ship: [],
-        station: []
-      },
+  var updates = [],
       game = this.game,
-      sockets = this.sockets,
+      uuid = this.uuid,
       movement = this.movement,
       data = this.data,
+      size = this.size,
       ai = this.ai,
-      durability = this.durability,
-      squadron = attacker.squadron,
+      rnd = game.rnd,
       hardpoint = attacker.hardpoints[slot],
-      compensated = movement.compensated(),
-      distance = compensated.distance(target),
-      ratio = distance / (this.size * hardpoint.data.aoe),
+      position = movement.compensated(0),
+      distance = position.distance(target),
+      ratio = 1-(distance/(size+hardpoint.data.aoe)),
       damage, health, critical;
 
-  // test proximity
-  // for a hit
-  if(ratio < 1.0) {
+  // hit test
+  if(ratio > 0.0) {
     // // test data
     // if(!attacker.ai && this.ai) {
     //   sockets.send('ship/test', {
     //     uuid: this.uuid,
-    //     compensated: compensated,
+    //     compensated: position,
     //     targ: target
     //   });
     // }
 
-    // calc damage
-    critical = this.game.rnd.rnd() <= attacker.critical;
-    damage = global.Math.max(0, hardpoint.data.damage * (1-ratio) * (1-this.armor));
-    damage += critical ? damage : 0;
-    health = data.health-damage;
+    // calculate damage
+    critical = rnd.rnd() <= attacker.critical ? rnd.realInRange(2.0, 6.0) : 1.0;
+    damage = hardpoint.data.damage * ratio * critical;
+    health = data.health-damage > 0 ? data.health-damage : 0;
+
+    // update health
+    data.health = health;
+    updates.push({
+      uuid: uuid,
+      attacker: attacker.uuid,
+      health: data.health,
+      damage: damage,
+      critical: critical
+    });
+
+    // update attacker
+    attacker.credits += damage;
+    updates.push({
+      uuid: attacker.uuid,
+      credits: attacker.credits,
+      hardpoint: {
+        uuid: uuid,
+        slot: hardpoint.slot,
+        target: target,
+        damage: damage
+      }
+    });
 
     // update damage
-    if(!this.disabled && health > 0) {
-      // update health
-      data.health = health;
-      updates['ship'].push({
-        uuid: this.uuid,
-        attacker: attacker.uuid,
-        health: data.health,
-        damage: damage,
-        critical: critical
-      });
-
-      // update attacker
-      attacker.credits = attacker.credits + (data.race === 'general' ? damage : 0);
-      updates['ship'].push({
-        uuid: attacker.uuid,
-        credits: attacker.credits.toFixed(0),
-        hardpoint: {
-          ship: this.uuid,
-          slot: hardpoint.slot,
-          target: target,
-          damage: damage
-        }
-      });
-
-      // attacker squadron
-      for(var s in squadron) {
-        squad = squadron[s];
-        squad.ai.engage(this);
+    if(health > 0) {
+      // update targets in
+      // the attacker ship
+      if(attacker.targets.indexOf(this) < 0) {
+        attacker.targets.unshift(this);
+        attacker.targets = attacker.targets.slice(0, 3);
       }
 
-      // update attacker user
-      if(attacker.user) {
-        attacker.user.credits = attacker.credits.toFixed(0);
-        updates['user'].push({
-          uuid: attacker.user.uuid,
-          credits: attacker.credits.toFixed(0)
-        });
-      }
-
-      // defend
+      // notify ai of 
+      // this attack
       ai && ai.attacked(attacker);
     } else {
-      // disengage attacker
-      attacker.ai && attacker.ai.disengage();
+      // disabled
+      updates.push({
+        uuid: uuid,
+        disabled: true
+      });
 
-      // disable ship
-      if(!this.disabled) {
-        this.disable();
-
-        // update attacker reputation
-        attacker.reputation = global.Math.floor(attacker.reputation + (this.reputation * -0.05));
-        updates['ship'].push({
-          uuid: attacker.uuid,
-          reputation: attacker.reputation
-        });
-      }
+      // disable
+      this.disable();
     }
 
     // broadcast
-    if(updates['ship'].length) {
-      game.emit('ship/data', updates['ship']);
-    }
-    if(updates['station'].length) {
-      game.emit('station/data', updates['station']);
-    }
-    if(updates['user'].length) {
-      game.emit('user/data', updates['user']);
-    }
+    game.emit('ship/data', updates);
   }
-};
-
-Ship.prototype.disable = function() {
-  var squad,
-      game = this.game,
-      uuid = this.uuid,
-      ai = this.ai,
-      squadron = this.squadron,
-      movement = this.movement;
-
-  // disable
-  this.disabled = true;
-
-  // disengage ai
-  ai && ai.disengage();
-
-  // disengage self movement
-  movement.formation = null;
-
-  // disengage squad
-  // movement formations
-  for(var s in squadron) {
-    squad = squadron[s];
-    squad.movement.formation = null;
-  }
-
-  // broadcast
-  game.emit('ship/disabled', {
-    uuid: uuid,
-    ai: {
-      type: ai ? ai.type : null
-    }
-  });
 };
 
 Ship.prototype.enable = function() {
   // re-enable
   this.disabled = false;
 
-  // update health, energy, durability
+  // reset health, energy, durability
   this.data.health = this.config.stats.health;
   this.data.energy = this.config.stats.energy;
-  this.data.durability = this.config.stats.durability;
 
-  // reset
-  this.movement.magnitude = 0;
-  this.movement.position.copyFrom(this.ai ? this.ai.getHomePosition() : this.manager.generateRandomPosition(1024));
+  // stop destruction timer
+  this.destruction && this.game.clock.events.remove(this.destruction);
 
-  // boradcast
-  this.game.emit('ship/enabled', {
+  // broadcast
+  this.game.emit('ship/data', [{
     uuid: this.uuid,
-    pos: {
-      x: this.movement.position.x,
-      y: this.movement.position.y
-    }
-  });
+    disabled: false
+  }]);
+};
+
+Ship.prototype.disable = function() {
+  // disable
+  this.disabled = true;
+
+  // stop movement
+  this.movement.stop();
+
+  // disband squadron
+  this.formation.disband();
+
+  // cleanup
+  this.ai && this.ai.disengage();
+
+  // remove from formation
+  this.master && this.master.formation.remove(this);
+
+  // destruction timer
+  this.destruction && this.game.clock.events.remove(this.destruction);
+  this.destruction = this.game.clock.events.add(this.game.rnd.integerInRange(8000, 16000), function() {
+    this.game.emit('ship/remove', this);
+  }, this);
+};
+
+Ship.prototype.command = function(data) {
+  // set command option
+  this.commands[data.action] = data.toggled;
 };
 
 Ship.prototype.activate = function(name) {
@@ -444,7 +438,7 @@ Ship.prototype.deactivate = function(enhancement) {
       enhancements = this.enhancements,
       active = enhancements.active,
       stats = enhancement.stats;
-
+  
   for(var s in stats) {
     delete active[s][enhancement.type];
   }
@@ -466,42 +460,51 @@ Ship.prototype.cooled = function(enhancement) {
 };
 
 Ship.prototype.destroy = function() {
-  var game = this.game,
-      movement = this.movement,
-      ai = this.ai,
-      sockets = this.sockets,
-      squadron = this.squadron;
-      enhancements = this.enhancements,
-      available = enhancements.available;
+  var squad, enhancement,
+      game = this.game,
+      enhancements = this.enhancements.available,
+      events = this.events;
   
   // destroy enhancements
-  for(var e in available) {
-    available[e].destroy();
+  for(var e in enhancements) {
+    enhancements[e].destroy();
   }
 
-  // destroy squadron
-  for(var s in squadron) {
-    game.emit('ship/remove', squadron[s]);
+  // destroy events
+  for(var e in events) {
+    game.clock.events.remove(events[e]);
+  }
+  
+  // remove reference
+  if(this.user != undefined) {
+    this.user.ship = null;
+    this.user.data.ship = null;
   }
 
-  // destroy movement
-  movement.destroy();
+  // destroy helpers
+  this.formation.destroy();
+  this.movement.destroy();
+  this.ai.destroy();
 
-  // destroy ai
-  ai && ai.destroy();
-
-  // notify ship destroyed
-  sockets.send('ship/removed', {
+  // notify sockets
+  this.sockets.send('ship/remove', {
     uuid: this.uuid
   });
 
+  // remove from world
+  delete this.game.ships[this.uuid];
+
   // final cleanup
-  this.manager = this.game =
-    this.data = this.user = this.sockets =
-    this.config = this.timers = this.movement =
-    this.formation = this.enhancements = this.hardpoints =
-    this.data = undefined;
+  this.game = this.data = this.user = this.master =
+    this.sockets = this.config = this.movement =
+    this.enhancements = this.hardpoints = undefined;
 };
+
+Object.defineProperty(Ship.prototype, 'integrity', {
+  get: function() {
+    return this.data.health/this.config.stats.health;
+  }
+});
 
 Object.defineProperty(Ship.prototype, 'credits', {
   get: function() {

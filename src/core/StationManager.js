@@ -6,6 +6,7 @@ var uuid = require('uuid'),
 function StationManager(game) {
   this.game = game;
   this.model = game.model;
+  this.sockets = game.sockets;
 
   // global stations
   this.game.stations = {};
@@ -14,23 +15,37 @@ function StationManager(game) {
 StationManager.prototype.constructor = StationManager;
 
 StationManager.prototype.init = function() {
-  // listen to messaging
-  this.game.on('station/add', this.add, this);
+  // listen to station messaging
+  this.game.on('station/remove', this.remove, this);
   this.game.on('station/create', this.create, this);
+
+  // listen to ship attack messaging
   this.game.on('ship/attacked', this.attacked, this);
 };
 
 StationManager.prototype.add = function(station) {
-  if(this.game.stations[station.uuid] === undefined) {
-    this.game.stations[station.uuid] = station;
+  var game = this.game,
+      stations = game.stations;
+
+  // check if exists
+  if(stations[station.uuid] == undefined) {
+    stations[station.uuid] = station;
   }
+
+  // station added to world
+  game.emit('station/add', station);
 };
 
 StationManager.prototype.create = function(data) {
-  var station = new Station(this, data);
-      station.init(function(err) {
-        this.game.emit('station/add', station);
-      }, this);
+  var game = this.game,
+      station = new Station(game, data);
+      station.init(this.add, this);
+};
+
+StationManager.prototype.remove = function() {
+  var game = this.game,
+      station = game.stations[data.uuid];
+      station && station.destroy();
 };
 
 StationManager.prototype.data = function(uuids) {
@@ -42,16 +57,16 @@ StationManager.prototype.data = function(uuids) {
       stations.push({
         uuid: station.uuid,
         name: station.data.name,
-        x: station.movement.position.x,
-        y: station.movement.position.y,
-        throttle: station.movement.throttle,
+        chassis: station.chassis,
+        race: station.data.race,
+        x: station.data.x,
+        y: station.data.y,
+        disabled: station.disabled,
         rotation: station.movement.rotation,
         spin: station.movement.spin,
         period: station.movement.period,
-        speed: station.speed * station.movement.throttle,
+        speed: station.movement.speed,
         radius: station.radius,
-        chassis: station.chassis,
-        race: station.race,
         size: station.size,
         health: station.health,
         heal: station.heal,
@@ -70,13 +85,16 @@ StationManager.prototype.sync = function() {
     station = stations[s];
 
     if(station) {
+      // update
       movement = station.movement;
       movement.update();
+
+      // package
       position = movement.position;
       data = {
         uuid: station.uuid,
-        pos: { x: position.x, y: position.y },
-        spd: station.speed * movement.throttle,
+        prd: movement.period,
+        spd: movement.speed,
         rot: movement.rotation,
         spn: movement.spin
       };
@@ -88,13 +106,16 @@ StationManager.prototype.sync = function() {
 };
 
 StationManager.prototype.attacked = function(attacker, target, slot) {
-  var stations, station,
-      game = this.game,
-      stations = this.game.stations;
-    for(var s in stations) {
-      station = stations[s];
+  var game = this.game,
+      stations = game.stations,
+      station;
+  for(var s in stations) {
+    station = stations[s];
+
+    if(!station.disabled) {
       station.hit(attacker, target, slot);
     }
+  }
 };
 
 module.exports = StationManager;

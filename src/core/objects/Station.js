@@ -2,33 +2,49 @@
 var client = require('client'),
     Orbit = require('./Orbit');
 
-function Station(manager, data) {
-  this.manager = manager;
-  this.game = manager.game;
-  this.sockets = manager.sockets;
-  this.model = manager.model;
+function Station(game, data) {
+  this.game = game;
+  this.sockets = game.sockets;
+  this.model = game.model;
 
+  this.uuid = null;
+  this.chassis = null;
+  this.race = null;
+
+  // variables
+  this.disabled = false;
+
+  // data model
   this.data = new this.model.Station(data);
   this.data.init();
 
-  this.uuid = this.data.uuid;
-  this.chassis = this.data.chassis;
-  this.race = this.data.race;
-
-  // disabled state
-  this.disabled = false;
+  // station movement helper
+  this.movement = new Orbit(this);
 
   // station configuration
   this.config = client.StationConfiguration[this.data.chassis];
-
-  // station orbit movement
-  this.movement = new Orbit(this);
 };
 
 Station.prototype.constructor = Station;
 
 Station.prototype.init = function(callback, context) {
-  callback.call(context);
+  var self = this,
+      game = this.game,
+      data = this.data;
+  if(data.isNewRecord()) {
+    // data shortcuts
+    this.uuid = data.uuid;
+    this.chassis = data.chassis;
+    this.race = data.race;
+
+    callback.call(context, self);
+  } else {
+    async.series([
+      data.reload.bind(data)
+    ], function(err, results) {
+      callback.call(context, self);
+    });
+  }
 };
 
 Station.prototype.save = function(callback) {
@@ -36,83 +52,74 @@ Station.prototype.save = function(callback) {
 };
 
 Station.prototype.hit = function(attacker, target, slot) {
-  var updates = {
-        user: [],
+  var game = this.game,
+      uuid = this.uuid,
+      movement = this.movement,
+      data = this.data,
+      size = this.size,
+      rnd = game.rnd,
+      hardpoint = attacker.hardpoints[slot],
+      position = movement.compensated(0),
+      distance = position.distance(target),
+      ratio = 1-(distance/(size+hardpoint.data.aoe)),
+      damage, health, critical,
+      updates = {
         ship: [],
         station: []
-      },
-      game = this.game,
-      sockets = this.sockets,
-      movement = this.movement,
-      race = this.data.race,
-      hardpoint = attacker.hardpoints[slot],
-      position = movement.position,
-      distance = position.distance({ x: target.x, y: target.y }),
-      ratio = distance / (this.size * hardpoint.data.aoe),
-      damage, health, critical;
-  if(ratio < 1.0) {
+      };
 
-    // calc damage
-    critical = game.rnd.rnd() <= attacker.critical;
-    damage = global.Math.max(0, hardpoint.data.damage * (1-ratio) * (1-this.armor));
-    damage += critical ? damage : 0;
-    health = this.health-damage;
+  // hit test
+  if(ratio > 0.0) {
+    // calculate damage
+    critical = rnd.rnd() <= attacker.critical ? 2.0 : 1.0;
+    damage = hardpoint.data.damage * ratio * critical;
+    health = data.health-damage > 0 ? data.health-damage : 0;
+
+    // update health
+    data.health = health;
+    updates['station'].push({
+      uuid: uuid,
+      attacker: attacker.uuid,
+      health: data.health,
+      damage: damage,
+      critical: critical
+    });
+
+    // update attacker
+    attacker.credits += damage;
+    updates['ship'].push({
+      uuid: attacker.uuid,
+      credits: attacker.credits,
+      hardpoint: {
+        uuid: uuid,
+        slot: hardpoint.slot,
+        target: target,
+        damage: damage
+      }
+    });
 
     // update damage
-    if(!this.disabled && health > 0) {
-      // update health
-      this.health = health;
-      
-      // update station
-      updates['station'].push({
-        uuid: this.uuid,
-        attacker: attacker.uuid,
-        health: this.health,
-        damage: damage,
-        critical: critical
-      });
-
-      // update attacker
-      attacker.credits = attacker.credits + (race === 'general' ? damage : 0);
-      updates['ship'].push({
-        uuid: attacker.uuid,
-        credits: attacker.credits.toFixed(0),
-        hardpoint: {
-          station: this.uuid,
-          slot: hardpoint.slot,
-          target: target,
-          damage: damage
-        }
-      });
-
-      // update attacker user
-      if(attacker.user) {
-        attacker.user.credits = attacker.credits;
-        updates['user'].push({
-          uuid: attacker.user.uuid,
-          credits: attacker.credits.toFixed(0)
-        });
+    if(health > 0) {
+      // update targets in
+      // the attacker ship
+      if(attacker.targets.indexOf(this) < 0) {
+        attacker.targets.push(this);
+        attacker.targets = attacker.targets.slice(0, 3);
       }
     } else {
-      // disengage attacker
-      attacker.ai && attacker.ai.disengage();
+      // disabled
+      updates['station'].push({
+        uuid: uuid,
+        disabled: true
+      });
 
-      // disable station
-      if(!this.disabled) {
-        this.disable();
-      }
+      // disable
+      this.disable();
     }
 
     // broadcast
-    if(updates['ship'].length) {
-      game.emit('ship/data', updates['ship']);
-    }
-    if(updates['station'].length) {
-      game.emit('station/data', updates['station']);
-    }
-    if(updates['user'].length) {
-      game.emit('user/data', updates['user']);
-    }
+    game.emit('ship/data', updates['ship']);
+    game.emit('station/data', updates['station']);
   }
 };
 
@@ -120,24 +127,28 @@ Station.prototype.disable = function() {
   // disable
   this.disabled = true;
 
-  // broadcast
-  this.sockets.emit('station/disabled', {
-    uuid: this.uuid
-  });
+  // stop movement
+  this.movement.disabled();
 };
 
 Station.prototype.enable = function() {
   // re-enable
   this.disabled = false;
-
-  // update health / energy
-  this.data.health = this.config.stats.health;
-
-  // broadcast
-  this.sockets.emit('station/enabled', {
-    uuid: this.uuid
-  });
 };
+
+Station.prototype.destroy = function() {
+  // remove from world
+  delete this.game.stations[this.uuid];
+
+  // final cleanup
+  this.game = this.data = this.movement = undefined;
+}
+
+Object.defineProperty(Station.prototype, 'integrity', {
+  get: function() {
+    return this.data.health/this.config.stats.health;
+  }
+});
 
 Object.defineProperty(Station.prototype, 'health', {
   get: function() {
@@ -198,7 +209,6 @@ Object.defineProperty(Station.prototype, 'size', {
     this.data.size = value;
   }
 });
-
 
 Object.defineProperty(Station.prototype, 'armor', {
   get: function() {

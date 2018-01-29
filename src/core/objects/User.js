@@ -7,14 +7,24 @@ var async = require('async'),
 function User(game, data, socket) {
   this.game = game;
   this.model = game.model;
-  this.socket = socket;
 
-  this.latency = new Latency(this);
+  // data model
   this.data = new this.model.User(data);
+  this.data.init();
 
-  this.ship = null;
-  this.station = null;
+  // data shortcuts
   this.uuid = this.data.uuid;
+  this.username = this.data.username;
+
+  // relationships
+  this.socket = null;
+  this.ship = null;
+
+  // variables
+  this.offline = true;
+
+  // rtt ping engine
+  this.latency = new Latency(this);
 };
 
 User.prototype.constructor = User;
@@ -27,40 +37,25 @@ User.prototype.init = function(callback, context) {
       latency = this.latency;
 
   if(data.isNewRecord()) {
-    // connect demo ship
-    game.emit('ship/create', {
-      chassis: 'ubaidian-x01'
-    }, this);
-
-    // update client
-    socket.emit('auth/sync', this.data.toStreamObject());
-
-    // update latency
-    latency.connect(socket);
-
-    // call callback
-    callback.call(context);
+    callback.call(context, self);
   } else {
     async.series([
       data.reload.bind(data),
       data.ships.bind(data)
     ], function(err, results) {
       var data = results[0],
-          ships = results[1];
+          ship, ships = results[1];
 
+      // create
       if(ships && ships.length) {
         for(var s=0; s<ships.length; s++) {
-          if(ship.uuid === this.data.ship) {
-            ship = ships[s].toStreamObject();
-
-            // create user ship
-            game.emit('ship/create', ship, this);
-          }
+          // create user ship
+          game.emit('ship/create', ships[s].toStreamObject());
         }
       }
 
       // call callback
-      callback.call(context);
+      callback.call(context, self);
     });
   }
 };
@@ -89,6 +84,9 @@ User.prototype.save = function(callback) {
 };
 
 User.prototype.reconnected = function(socket) {
+  // set variables
+  this.offline = false;
+
   // update socket
   this.socket = socket;
   this.socket.emit('auth/sync', this.data.toStreamObject());
@@ -96,27 +94,29 @@ User.prototype.reconnected = function(socket) {
   // update latency
   this.latency.connect(socket);
 
-  // restart user logout timer
+  // stop user logout timer
   this.timeout && this.game.clock.events.remove(this.timeout);
 };
 
 User.prototype.disconnected = function() {
-  this.timeout = this.game.clock.events.add(10000, this.destroy, this);
+  // set variables
+  this.offline = true;
+
+  // start user logout timer
+  this.timeout = this.game.clock.events.add(5000, this.destroy, this);
 };
 
 User.prototype.destroy = function() {
-  // remove ships
-  this.game.emit('ship/remove', this.ship);
+  // remove ship
+  this.ship && this.game.emit('ship/remove', this.ship);
 
-  // remove from manager
-  this.game.emit('auth/remove', this);
-
-  // destroy objects
-  this.latency.destroy();
+  // remove from world
+  delete this.game.users[this.uuid];
 
   // cleanup
-  this.game = this.model = this.latency = this.ship =
-    this.station = this.data = this.socket = undefined;
+  this.game = this.model = 
+    this.latency = this.ship = this.data =
+    this.socket = undefined;
 };
 
 

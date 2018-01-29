@@ -1,137 +1,129 @@
 
-var uuid = require('uuid'),
-    engine = require('engine'),
-    User = require('./objects/User'),
-    Ship = require('./objects/Ship'),
-    Station = require('./objects/Station'),
-    Utils = require('../utils');
+var engine = require('engine');
 
 function EventManager(game) {
   this.game = game;
   this.model = game.model;
   this.sockets = game.sockets;
+  this.rnd = game.rnd;
 
-  this.ships = {
-    basic: [],
-    pirate: []
-  };
-
+  // game stations
   this.stations = {
-    basic: [],
-    pirate: []
-  };
+    ubaidian: [],
+    general: []
+  }
+
+  // game ships
+  this.ships = {
+    ubaidian: [],
+    general: []
+  }
+
+  // damage output
+  this.dps = {
+    ubaidian: 0,
+    general: 0
+  }
 };
 
 EventManager.prototype.constructor = EventManager;
 
 EventManager.prototype.init = function() {
   // subscribe to messaging
-  this.game.on('user/add', this.add, this);
-  this.game.on('ship/add', this.add, this);
-  this.game.on('station/add', this.add, this);
-  this.game.on('station/disabled', this.disabled, this);
-  this.game.on('ship/disabled', this.disabled, this);
-
-  // refresh data interval
-  this.game.clock.events.loop(1000, this.update, this);
+  this.game.on('ship/add', this.add('ships'), this);
+  this.game.on('station/add', this.add('stations'), this);
+  this.game.on('ship/remove', this.remove('ships'), this);
+  this.game.on('station/remove', this.remove('stations'), this);
 };
 
-EventManager.prototype.start = function() {
-  // create default station
-  this.game.emit('station/create', {
-    chassis: 'ubaidian-x01',
-    race: 'ubaidian',
-    x: 2048,
-    y: 2048,
-    radius: 512
-  });
-
-  // create pirate base
-  this.game.emit('station/create', {
-    chassis: 'general-x01',
-    race: 'general',
-    x: 0,
-    y: 0,
-    radius: 256
-  });
-
-  // create pirate ships
-  for(var i=0; i<0; i++) {
-    this.game.emit('ship/create', {
-      chassis: 'general-x0' + global.Math.ceil(global.Math.random() * 2),
-      ai: 'pirate'
-    });
-  }
-
-  // create ubaidian ships
-  for(var i=0; i<0; i++) {
-    this.game.emit('ship/create', {
-      chassis: 'ubaidian-x0' + global.Math.ceil(global.Math.random() * 5),
-      ai: 'basic'
-    });
-  }
+EventManager.prototype.add = function(type) {
+  var collection = this[type];
+  return function(object) {
+    collection[object.data.race].push(object);
+  };
 };
 
-EventManager.prototype.add = function(object) {
-  var game = this.game,
-      stations = this.stations;
+EventManager.prototype.remove = function(type) {
+  var index, objects, object, removed,
+      game = this.game,
+      collection = this[type];
+  return function(object) {
+    objects = collection[object.race];
+    index = objects.indexOf(object);
 
-  if(object instanceof User) {
-
-  } else if(object instanceof Ship) {
-    if(object.ai) {
-      switch(object.ai.type) {
-        case 'basic':
-        case 'squadron':
-          object.station = stations.basic;
-          object.data.station = stations.basic.uuid;
-          break;
-        case 'pirate':
-          object.station = stations.pirate;
-          object.data.station = stations.pirate.uuid;
-          break;
-        default:
-          break;
-      }
-    } else {
-      object.station = stations.basic;
-      object.data.station = stations.basic.uuid;
+    if(index > -1) {
+      removed = engine.Utility.splice(objects, index);
     }
-  } else if(object instanceof Station) {
-    switch(object.data.race) {
-      case 'ubaidian':
-        stations.basic = object;
-        break;
-      case 'general':
-        stations.pirate = object;
-        break;
-    }
-  }
-};
-
-EventManager.prototype.disabled = function(data) {
-  if(data.ai) {
-    switch(data.ai.type) {
-      case 'basic':
-        this.game.emit('ship/create', {
-          chassis: 'ubaidian-x0' + global.Math.ceil(global.Math.random() * 5),
-          ai: 'basic'
-        });
-        break;
-      case 'pirate':
-        this.game.emit('ship/create', {
-          chassis: 'general-x0' + global.Math.ceil(global.Math.random() * 2),
-          ai: 'pirate'
-        });
-        break;
-      default:
-        break;
-    }
-  }
+  };
 };
 
 EventManager.prototype.update = function() {
+  var races = ['ubaidian', 'general'];
+  for(var r in races) {
+    this.station(races[r]);
+    this.ship(races[r])
+  }
+};
 
+EventManager.prototype.station = function(race) {
+  var game = this.game,
+      rnd = this.rnd,
+      stations = this.stations[race],
+      radius,
+      position = new engine.Point(2048, 2048),
+      vector = new engine.Point()
+      pi2 = 2.0*global.Math.PI;
+  if(stations.length == 0) {
+    if(race === 'ubaidian') {
+      radius = rnd.integerInRange(512, 768);
+    } else {
+      engine.Point.rotate(position, 2048, 2048, rnd.realInRange(0, pi2), false, rnd.integerInRange(3072, 5120));
+      radius = rnd.integerInRange(192, 256);
+    }
+
+    // create station
+    game.emit('station/create', {
+      chassis: race + '-x01',
+      x: position.x,
+      y: position.y,
+      radius: radius,
+      rotation: rnd.realInRange(0, pi2),
+      period: rnd.realInRange(0, pi2)
+    });
+  }
+};
+
+EventManager.prototype.ship = function(race) {
+  var game = this.game,
+      rnd = this.rnd,
+      ships = this.ships[race],
+      station = this.primary('stations', race),
+      count = race === 'ubaidian' ? 4 : 8,
+      squad = race === 'ubaidian' ? 6 : 1,
+      chassis = rnd.integerInRange(
+        1, race === 'ubaidian' ? 8 : 2
+      );
+
+  // create ship
+  if(ships.length < count) {
+    game.emit('ship/create', {
+      station: station.uuid,
+      chassis: race + '-x0' + chassis,
+      x: station.movement.position.x,
+      y: station.movement.position.y,
+      rotation: rnd.realInRange(0, 2.0*global.Math.PI),
+      ai: race === 'ubaidian' ? 'basic' : 'pirate',
+      squadron: rnd.pick([[race + '-x0' + squad, race + '-x0' + squad], []])
+    });
+  }
+};
+
+EventManager.prototype.primary = function(type, race) {
+  if(this[type] && this[type][race] && this[type][race].length) {
+    return this[type][race][0];
+  } else {
+    return null;
+  }
 };
 
 module.exports = EventManager;

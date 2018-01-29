@@ -2,7 +2,6 @@
 var winston = require('winston'),
     uuid = require('uuid'),
     engine = require('engine'),
-    AI = require('./AI'),
     Ship = require('./objects/Ship');
 
 function ShipManager(game) {
@@ -12,27 +11,19 @@ function ShipManager(game) {
 
   // global ships
   this.game.ships = {};
-
-  // ai manager
-  this.ai = new AI(this);
-
-  // ship spawn
-  this.circle = new engine.Circle();
-  this.point = new engine.Point();
 };
 
 ShipManager.prototype.constructor = ShipManager;
 
 ShipManager.prototype.init = function() {
   // internal
-  this.game.on('ship/add', this.add, this);
   this.game.on('ship/remove', this.remove, this);
   this.game.on('ship/create', this.create, this);
-  this.game.on('ship/disabled', this.disabled, this);
 
   // networking
   this.sockets.on('ship/plot', this.plot, this);
   this.sockets.on('ship/attack', this.attack, this);
+  this.sockets.on('ship/squadron', this.squadron, this);
   this.sockets.on('ship/enhancement/start', this.enhancement, this);
 
   // update data interval
@@ -41,43 +32,35 @@ ShipManager.prototype.init = function() {
 
 ShipManager.prototype.add = function(ship) {
   var game = this.game,
-      circle = this.circle,
-      point = this.point,
-      station;
-  if(game.ships[ship.uuid] === undefined) {
-    // ship station
-    station = ship.station;
+      ships = game.ships;
 
-    // create random point around station
-    circle.setTo(station.movement.position.x, station.movement.position.y, station.data.size);
-    circle.random(false, point);
-
-    // update ship position
-    ship.movement.position.copyFrom(point);
-
-    // add ship to world
-    game.ships[ship.uuid] = ship;
+  // check if exists
+  if(ships[ship.uuid] == undefined) {
+    ships[ship.uuid] = ship;
   }
+
+  // ship added to world
+  game.emit('ship/add', ship);
 };
 
-ShipManager.prototype.remove = function(ship) {
-  if(this.game.ships[ship.uuid]) {
-    this.game.ships[ship.uuid].destroy();
-    this.game.ships[ship.uuid] = undefined;
-  } else {
-    winston.warn('ship could not be removed and destroyed');
-  }
+ShipManager.prototype.create = function(data) {
+  var game = this.game,
+      ship = new Ship(game, data);
+      ship.init(function() {
+        // add ship
+        this.add(ship);
+        
+        // create squadron
+        if(data.squadron && data.squadron.length) {
+          ship.createSquadron();
+        }
+      }, this);
 };
 
-ShipManager.prototype.create = function(data, user, master) {
-  var self = this,
-      game = this.game,
-      ship = new Ship(this, data, user, master);
-  
-  // initialize ship
-  ship.init(function() {
-    game.emit('ship/add', ship);
-  });
+ShipManager.prototype.remove = function(data) {
+  var game = this.game,
+      ship = game.ships[data.uuid];
+      ship && ship.destroy();
 };
 
 ShipManager.prototype.plot = function(socket, args) {
@@ -86,7 +69,7 @@ ShipManager.prototype.plot = function(socket, args) {
       data = args[1],
       ship = game.ships[data.uuid];
   if(ship && ship.user && ship.user.uuid === user.uuid) {
-    ship.plot(data.coordinates);
+    ship.plot(data.coordinates, ship.user.latency.rtt);
   }
 };
 
@@ -97,7 +80,7 @@ ShipManager.prototype.attack = function(socket, args) {
       data = args[1],
       ship = ships[data.uuid];
   if(ship && ship.user && ship.user.uuid === user.uuid) {
-    ship.attack(data, ship.user.rtt);
+    ship.attack(data, ship.user.latency.rtt);
   }
 };
 
@@ -119,6 +102,17 @@ ShipManager.prototype.enhancement = function(socket, args) {
   }
 };
 
+ShipManager.prototype.squadron = function(socket, args) {
+  var ships = this.game.ships,
+      sockets = this.sockets,
+      user = socket.request.session.user,
+      data = args[1],
+      ship = ships[data.uuid];
+  if(ship && ship.user && ship.user.uuid === user.uuid) {
+    ship.command(data);
+  }
+};
+
 ShipManager.prototype.data = function(uuids) {
   var ship,
       ships = [],
@@ -128,21 +122,20 @@ ShipManager.prototype.data = function(uuids) {
     if(ship) {
       ships.push({
         uuid: ship.uuid,
-        chassis: ship.chassis,
-        name: ship.data.name,
-        x: ship.movement.x,
-        y: ship.movement.y,
-        rotation: ship.movement.rotation,
-        speed: ship.speed * ship.movement.throttle,
         user: ship.user ? ship.user.uuid : null,
         master: ship.master ? ship.master.uuid : null,
-        owner: ship.owner ? ship.owner.uuid : null,
+        chassis: ship.chassis,
+        name: ship.data.name,
+        class: ship.data.class,
+        x: ship.movement.position.x,
+        y: ship.movement.position.y,
+        rotation: ship.movement.rotation,
         ai: ship.ai ? ship.ai.type : null,
         station: ship.station ? ship.station.uuid : null,
         username: ship.user ? ship.user.data.username : ship.data.name,
         disabled: ship.disabled,
         size: ship.size,
-        credits: ship.data.credits.toFixed(0),
+        credits: ship.data.credits,
         reputation: ship.data.reputation,
         kills: ship.data.kills,
         disables: ship.data.disables,
@@ -156,6 +149,8 @@ ShipManager.prototype.data = function(uuids) {
         rate: ship.rate,
         critical: ship.critical,
         evasion: ship.evasion,
+        speed: ship.movement.speed,
+        commands: ship.commands,
         enhancements: ship.serialized.enhancements,
         hardpoints: ship.serialized.hardpoints
       });
@@ -165,21 +160,32 @@ ShipManager.prototype.data = function(uuids) {
 };
 
 ShipManager.prototype.sync = function() {
-  var data, ship, position, movement,
-      ships = this.game.ships,
-      synced = [];
+  var game = this.game,
+      ships = game.ships,
+      synced = [],
+      data, ship,
+      movement, position, compensated;
   for(var s in ships) {
     ship = ships[s];
 
     if(ship) {
+      // update
       movement = ship.movement;
       movement.update();
+
+      // comp
+      compensated = movement.compensated();
+
+      // package
       position = movement.position;
       data = {
         uuid: ship.uuid,
         pos: { x: position.x, y: position.y },
-        spd: ship.speed * movement.throttle
+        cmp: { x: compensated.x, y: compensated.y },
+        spd: movement.speed
       };
+
+      // sync
       synced.push(data);
     }
   }
@@ -187,7 +193,8 @@ ShipManager.prototype.sync = function() {
 };
 
 ShipManager.prototype.update = function() {
-  var ships = this.game.ships,
+  var game = this.game,
+      ships = game.ships,
       ship, delta, update, stats,
       updates = [];
   for(var s in ships) {
@@ -218,12 +225,8 @@ ShipManager.prototype.update = function() {
     }
   }
   if(updates.length > 0) {
-    this.game.emit('ship/data', updates);
+    game.emit('ship/data', updates);
   }
-};
-
-ShipManager.prototype.disabled = function(data) {
-  this.sockets.send('ship/disabled', data);
 };
 
 module.exports = ShipManager;
