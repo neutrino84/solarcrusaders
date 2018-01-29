@@ -4,7 +4,17 @@ var uuid = require('uuid'),
     schema = db.schema,
     Validator = require('../utils/Validator'),
     Sanitation = require('../utils/Sanitation'),
-    Password = require('../utils/Password');
+    Password = require('../utils/Password'),
+    emailValidator = function(err) {
+      if(this.isNewRecord()) {
+        if(!Validator.isEmailValid(this.email)) { err(); }
+      }
+    },
+    usernameValidator = function(err) {
+      if(this.isNewRecord()) {
+        if(!Validator.isUsernameValid(this.username)) { err(); }
+      }
+    };
 
 var User = schema.define('user', {
   uuid:       { type: schema.UUID, default: uuid.v4 },
@@ -41,17 +51,7 @@ User.validatesNumericalityOf('credits', { int: true });
 User.validatesNumericalityOf('reputation', { int: true });
 User.validatesNumericalityOf('logins', { int: true });
 
-function emailValidator(err) {
-  if(this.isNewRecord()) {
-    if(!Validator.isEmailValid(this.email)) { err(); }
-  }
-};
-
-function usernameValidator(err) {
-  if(this.isNewRecord()) {
-    if(!Validator.isUsernameValid(this.username)) { err(); }
-  }
-};
+User.prototype.init = function() {};
 
 User.prototype.sanitize = function() {
   this.userslug = Sanitation.slugify(this.username);

@@ -7,36 +7,38 @@ var client = require('client'),
     schema = db.schema;
 
 var Ship = schema.define('ship', {
-  uuid:       { type: schema.UUID, default: uuid.v4 },
-  master:     { type: schema.UUID },
-  owner:      { type: schema.UUID },
-  station:    { type: schema.UUID },
-  name:       { type: schema.String },
-  chassis:    { type: schema.String },
-  class:      { type: schema.String },
-  race:       { type: schema.String },
-  created:    { type: schema.Date, default: Date.now },
-  kills:      { type: schema.Integer, default: 0 },
-  disables:   { type: schema.Integer, default: 0 },
-  assists:    { type: schema.Integer, default: 0 },
-  credits:    { type: schema.Double, default: 0.0 },
-  reputation: { type: schema.Double, default: 0.0 },
-  x:          { type: schema.Double, default: 2048.0 },
-  y:          { type: schema.Double, default: 2048.0 },
-  throttle:   { type: schema.Double, default: 0.0 },
-  rotation:   { type: schema.Double, default: 0.0 },
-  health:     { type: schema.Double },
-  heal:       { type: schema.Double },
-  capacity:   { type: schema.Double },
-  size:       { type: schema.Double },
-  energy:     { type: schema.Double },
-  recharge:   { type: schema.Double },
-  armor:      { type: schema.Double },
-  evasion:    { type: schema.Double },
-  durability: { type: schema.Double },
-  speed:      { type: schema.Double },
-  rate:       { type: schema.Double },
-  critical:   { type: schema.Double }
+  uuid:            { type: schema.UUID, default: uuid.v4 },
+  user:            { type: schema.UUID },
+  master:          { type: schema.UUID },
+  station:         { type: schema.UUID },
+  name:            { type: schema.String },
+  chassis:         { type: schema.String },
+  class:           { type: schema.String },
+  race:            { type: schema.String },
+  ai:              { type: schema.String },
+  created:         { type: schema.Date, default: Date.now },
+  kills:           { type: schema.Integer, default: 0 },
+  disables:        { type: schema.Integer, default: 0 },
+  assists:         { type: schema.Integer, default: 0 },
+  credits:         { type: schema.Double, default: 0.0 },
+  reputation:      { type: schema.Double, default: 0.0 },
+  x:               { type: schema.Double, default: 2048.0 },
+  y:               { type: schema.Double, default: 2048.0 },
+  throttle:        { type: schema.Double, default: 0.0 },
+  rotation:        { type: schema.Double, default: 0.0 },
+  disabled:        { type: schema.Boolean, default: false },
+  health:          { type: schema.Double },
+  heal:            { type: schema.Double },
+  capacity:        { type: schema.Double },
+  size:            { type: schema.Double },
+  energy:          { type: schema.Double },
+  recharge:        { type: schema.Double },
+  armor:           { type: schema.Double },
+  evasion:         { type: schema.Double },
+  durability:      { type: schema.Double },
+  speed:           { type: schema.Double },
+  rate:            { type: schema.Double },
+  critical:        { type: schema.Double }
 });
 
 Ship.CLASSES = [
@@ -52,6 +54,8 @@ Ship.CLASSES = [
 ];
 
 Ship.validatesLengthOf('name', { min: 2, max: 64 });
+Ship.validatesPresenceOf('chassis');
+
 Ship.validatesInclusionOf('class', { in: Ship.CLASSES });
 Ship.validatesInclusionOf('race', { in: Faction.RACES });
 
@@ -59,6 +63,7 @@ Ship.validatesNumericalityOf('x');
 Ship.validatesNumericalityOf('y');
 Ship.validatesNumericalityOf('throttle');
 Ship.validatesNumericalityOf('rotation');
+Ship.validatesNumericalityOf('durability');
 Ship.validatesNumericalityOf('health');
 Ship.validatesNumericalityOf('heal');
 Ship.validatesNumericalityOf('capacity');
@@ -67,7 +72,6 @@ Ship.validatesNumericalityOf('energy');
 Ship.validatesNumericalityOf('recharge');
 Ship.validatesNumericalityOf('armor');
 Ship.validatesNumericalityOf('evasion');
-Ship.validatesNumericalityOf('durability');
 Ship.validatesNumericalityOf('speed');
 Ship.validatesNumericalityOf('rate');
 Ship.validatesNumericalityOf('critical');
@@ -79,9 +83,9 @@ Ship.prototype.init = function() {
     stats = config.stats;
     
     if(!this.name) { this.name = Generator.getName(config.race); }
-    if(!this.throttle) { this.throttle = 0.0; }
-    if(!this.race) { this.race = config.race; }
     if(!this.class) { this.class = config.class; }
+    if(!this.race) { this.race = config.race; }
+    if(!this.durability) { this.durability = stats.durability; }
     if(!this.health) { this.health = stats.health; }
     if(!this.heal) { this.heal = stats.heal; }
     if(!this.capacity) { this.capacity = stats.capacity; }
@@ -90,10 +94,11 @@ Ship.prototype.init = function() {
     if(!this.recharge) { this.recharge = stats.recharge; }
     if(!this.armor) { this.armor = stats.armor; }
     if(!this.evasion) { this.evasion = stats.evasion; }
-    if(!this.durability) { this.durability = stats.durability; }
     if(!this.speed) { this.speed = stats.speed; }
     if(!this.rate) { this.rate = stats.rate; }
     if(!this.critical) { this.critical = stats.critical; }
+  } else if(this.isNewRecord()) {
+    throw new Error('Ship models must have a chassis assigned');
   }
 };
 
