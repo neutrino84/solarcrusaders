@@ -5,7 +5,6 @@ var pixi = require('pixi'),
 function Missile(parent) {
   this.parent = parent;
   this.game = parent.game;
-  this.state = parent.manager;
   this.data = parent.data;
   this.ship = parent.ship;
   this.sprite = parent.sprite;
@@ -76,9 +75,9 @@ Missile.prototype.explode = function() {
     this.isDone = true;
     this.hasExploded = true;
 
-    this.state.explosionEmitter.rocket();
-    this.state.explosionEmitter.at({ center: this.missile.position });
-    this.state.explosionEmitter.explode(3);
+    this.game.emitters.explosion.rocket();
+    this.game.emitters.explosion.at({ center: this.missile.position });
+    this.game.emitters.explosion.explode(3);
   }
 };
 
@@ -103,9 +102,9 @@ Missile.prototype.update = function() {
       missile.rotation = global.Math.atan2(y - missile.position.y, x - missile.position.x)
       missile.position.set(x, y);
       
-      this.state.fireEmitter.missile();
-      this.state.fireEmitter.at({ center: missile.position });
-      this.state.fireEmitter.explode(1);
+      this.game.emitters.fire.missile();
+      this.game.emitters.fire.at({ center: missile.position });
+      this.game.emitters.fire.explode(1);
     } else {
       this.explode();
       this.stop();

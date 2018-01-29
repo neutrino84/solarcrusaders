@@ -5,165 +5,146 @@ var pixi = require('pixi'),
 function Energy(parent) {
   this.parent = parent;
   this.game = parent.game;
-  this.manager = parent.manager;
-  this.state = parent.manager.state;
   this.data = parent.data;
-  this.clock  = this.game.clock;
+  this.ship = parent.ship;
+  this.manager = parent.manager;
+  this.clock  = parent.game.clock;
+  this.rnd = parent.game.rnd;
 
-  this.elapsed = 0;
+  this.tracking = null;
+  this.started = 0;
   this.length = 0;
   this.duration = 0;
-  this.started = 0;
-
-  this.isDone = false;
+  this.multiple = false;
   this.isRunning = false;
-  this.hasExploded = false;
 
-  this._start = new engine.Point();
-  this._end = new engine.Point();
+  this.p1 = new engine.Point();
+  this.p2 = new engine.Point();
 
-  this.random = new engine.Point();
-  this.offset = new engine.Point();
   this.origin = new engine.Point();
   this.destination = new engine.Point();
-  
+  this.locked = new engine.Point();
+
   this.texture = new pixi.Texture(this.game.cache.getBaseTexture(this.data.texture));
   
-  this.strip = new engine.Strip(this.game, this.texture, [this._start, this._end]);
+  this.strip = new engine.Strip(this.game, this.texture, [this.p1, this.p2]);
   this.strip.blendMode = engine.BlendMode.ADD;
 
-  this.glow = new engine.Sprite(this.game, 'texture-atlas', this.data.glow.sprite);
+  this.glow = new engine.Sprite(this.game, 'texture-atlas', 'turret-glow.png');
   this.glow.pivot.set(32, 32);
-  this.glow.position.set(0, 16);
-  this.glow.tint = global.parseInt(this.data.glow.tint);
+  this.glow.position.set(6, 12);
+  this.glow.tint = global.parseInt(this.data.glow);
   this.glow.blendMode = engine.BlendMode.ADD;
 };
 
-Energy.prototype.start = function(destination, distance, spawn, index, slot, total) {
-  this.elapsed = 0;
+Energy.prototype.start = function(destination, distance) {
+  this.duration = distance*this.data.projection;
   this.length = this.data.length;
-  this.duration = distance * this.data.projection;
-  this.runtime = this.duration + this.length;
-  this.delay = this.data.delay + (this.parent.ship.data.rate * this.game.rnd.realInRange(0.0, 1.0) * (slot/total));
+  this.offset = this.parent.ship.data.rate*this.parent.slot/this.parent.total;
+  this.delay = this.data.delay + this.rnd.realInRange(this.offset/2, this.offset);
   this.started = this.clock.time + this.delay;
 
-  this.ship = null;
-  this.isDone = false;
+  // reset
   this.isRunning = true;
-  this.hasExploded = false;
+  this.tracking = null;
+  this.glow.alpha = 0.0;
+  this.strip.alpha = 0.0;
 
-  this.glow.alpha = 1.0;
-  this.glow.scale.set(this.data.glow.size, this.data.glow.size);
-  this.glow.rotation = global.Math.PI * this.game.rnd.frac();
+  // create randomness
+  this.scale = this.rnd.realInRange(1.0, 2.0);
+  this.glow.scale.set(this.scale, this.scale);
+  this.glow.rotation = this.rnd.realInRange(0, global.Math.PI);
 
-  this.destination.copyFrom(destination);
-  this.offset.copyFrom(destination);
-  this.offset.add(this.spread(), this.spread());
+  // update origin
+  this.parent.updateTransform(this.origin, this.destination);
 
-  this.origin.copyFrom(this.parent.updateTransform());
-  this._start.copyFrom(this.origin);
-  this._end.copyFrom(this.origin);
+  // update destination
+  this.destination.set(destination.x, destination.y);
+  this.destination.add(
+    this.rnd.realInRange(-this.data.spread, this.data.spread),
+    this.rnd.realInRange(-this.data.spread, this.data.spread));
 
-  this.manager.fxGroup.addChild(this.strip);
+  this.p1.copyFrom(this.origin);
+  this.p2.copyFrom(this.origin);
+
   this.parent.sprite.addChild(this.glow);
-};
-
-Energy.prototype.spread = function(spread) {
-  var rnd = this.game.rnd,
-      spread = spread || this.data.spread;
-  return rnd.realInRange(-spread, spread);
+  this.manager.fxGroup.addChild(this.strip);
 };
 
 Energy.prototype.stop = function() {
-  this.isDone = true;
   this.isRunning = false;
-  this.manager.fxGroup.removeChild(this.strip);
   this.parent.sprite.removeChild(this.glow);
-};
-
-Energy.prototype.continue = function(target) {
-  if(this.hasExploded) { return; }
-
-  this.started = this.clock.time - this.duration;
-  this.runtime = this.duration + this.length;
-
-  this.offset.copyFrom(target);
-  this.offset.add(this.spread(), this.spread());
+  this.manager.fxGroup.removeChild(this.strip);
 };
 
 Energy.prototype.hit = function(ship, target) {
-  if(this.hasExploded) { return; }
+  var size = ship.data.size*0.5;
 
-  var rnd = this.game.rnd,
-      r1 = rnd.realInRange(-ship.data.size/2, ship.data.size/2),
-      r2 = rnd.realInRange(-ship.data.size/2, ship.data.size/2);
+  // ship
+  this.tracking = ship.position;
 
-  this.hasExploded = true;
-
-  this.ship = ship;
-
-  this.random.setTo(r1, r2);
-
-  this.started = this.clock.time - this.duration;
-  this.runtime = this.duration + this.length;
+  // lock target
+  this.locked.setTo(
+    this.rnd.realInRange(-size, size), 
+    this.rnd.realInRange(-size, size));
 };
 
 Energy.prototype.update = function() {
-  var f1, f2, f3;
+  var f1, f2, f3,
+      game = this.game,
+      origin = this.origin,
+      destination = this.destination,
+      glow = this.glow,
+      strip = this.strip,
+      elapsed = this.clock.time-this.started,
+      p1 = this.p1,
+      p2 = this.p2;
 
   if(this.isRunning === true) {
-    this.elapsed = this.clock.time - this.started;
-    
+    // update orig / dest
+    this.parent.updateTransform(origin, destination);
+
     // always glow animate rotation
-    this.glow.rotation += 0.02;
+    glow.rotation += 0.02;
 
     // animate glow scale at start
-    if(this.elapsed < 0) {
-      this.origin.copyFrom(this.parent.updateTransform());
-      this._start.copyFrom(this.origin);
-      this._end.copyFrom(this.origin);
-
-      f1 = -this.elapsed/this.delay;
-
-      this.glow.scale.set(this.data.glow.size * f1, this.data.glow.size * f1);
-      this.glow.alpha = f1 * 1.0;
-
-      return;
-    }
-
-    if(this.ship) {
-      this.offset.copyFrom(this.ship.position);
-      this.offset.add(this.random.x, this.random.y);
-    }
-
-    f3 = engine.Easing.Quadratic.InOut(this.elapsed/this.runtime);
-
-    // move target
-    this.destination.interpolate(this.offset, f3, this.destination);
-
-    if(this.elapsed < this.duration) {
-      f1 = this.elapsed/this.duration;
+    if(elapsed < 0) {
+      // copy points
+      p1.set(origin.x, origin.y);
+      p2.set(origin.x, origin.y);
       
-      this.origin.interpolate(this.destination, f1, this._start);
+      // charge glow effect
+      f1 = 1-(-elapsed/this.delay);
+      glow.alpha = f1;
     } else {
-      this._start.copyFrom(this.destination);
+      if(elapsed < this.duration) {
+        f1 = elapsed/this.duration;
+        strip.alpha = f1;
+        origin.interpolate(destination, f1, p1);
+      } else {
+        p1.copyFrom(destination);
 
-      this.state.fireEmitter.energy(this.data.emitter);
-      this.state.fireEmitter.at({ center: this.destination });
-      this.state.fireEmitter.explode(1);
+        // emit particles
+        game.emitters.fire.energy(this.data.emitter);
+        game.emitters.fire.at({ center: destination });
+        game.emitters.fire.explode(1);
+      }
+
+      if(elapsed >= this.length) {
+        f2 = (elapsed-this.length)/this.duration;
+
+        strip.alpha = 1-f2;
+        origin.interpolate(destination, f2, p2);
+      } else {
+        p2.copyFrom(origin);
+      }
     }
 
-    if(this.elapsed > this.length) {
-      f2 = (this.elapsed-this.length)/this.duration;
-      this.origin.copyFrom(this.parent.updateTransform());
-      this.origin.interpolate(this.destination, f2, this._end);
-    } else {
-      this._end.copyFrom(this.parent.updateTransform(this.destination));
-    }
-
-    // stop once done
-    if(this.elapsed >= this.runtime) {
+    // stop once stop
+    if(elapsed > this.length + this.duration) {
       this.stop();
+    } else if(this.tracking) {
+      destination.interpolate(engine.Point.add(this.tracking, this.locked), 0.5, destination);
     }
   }
 };
@@ -176,8 +157,7 @@ Energy.prototype.destroy = function() {
 
   this.parent = this.game =
     this.data = this.clock = this.manager =
-    this.destination = this.origin =
-    this.target = this.offset = undefined;
+    this.texture = undefined;
 };
 
 module.exports = Energy;
