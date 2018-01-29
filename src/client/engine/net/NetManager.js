@@ -40,6 +40,7 @@ NetManager.prototype = {
 
   _connect: function() {
     console.log('socket connected');
+    this.game.emit('connected')
   },
 
   _reconnect: function() {
