@@ -45,15 +45,15 @@ UserManager.prototype.connect = function(socket) {
         // add to world
         users[user.uuid] = user;
 
-        // create dev ship
-        game.emit('ship/create', {
-          user: user.uuid,
-          station: station.uuid,
-          chassis: 'ubaidian-x08',
-          squadron: [
-            'ubaidian-x06', 'ubaidian-x06'
-          ]
-        });
+        // // create dev ship
+        // game.emit('ship/create', {
+        //   user: user.uuid,
+        //   station: station.uuid,
+        //   chassis: 'ubaidian-x08',
+        //   squadron: [
+        //     'ubaidian-x06', 'ubaidian-x06'
+        //   ]
+        // });
 
         // connect user socket
         user.reconnected(socket);
