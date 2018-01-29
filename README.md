@@ -45,9 +45,9 @@ Install solarcrusaders required packages
     # Hosts file
     #
     127.0.0.1   localhost
-    127.0.0.1   localhost.dev
-    127.0.0.1   www.localhost.dev
-    127.0.0.1   play.localhost.dev
+    127.0.0.1   localhost.local
+    127.0.0.1   www.localhost.local
+    127.0.0.1   play.localhost.local
 
 #### update config.json
 
@@ -55,7 +55,7 @@ Install solarcrusaders required packages
       "silent": false,
       "daemon": false,
       "production": false,
-      "url": "http://localhost.dev:4567",
+      "url": "http://localhost.local:4567",
       "secret": "secret",
       "database": "redis",
       "redis": {
@@ -114,7 +114,7 @@ Every time you make changes to ./solarcrusaders/src/* you will need to re-run:
 
 ## See if your local game server is running
 
-Open a web browser and navigate to http://play.localhost.dev:4567/
+Open a web browser and navigate to http://play.localhost.local:4567/
 
 #### Information on audio sprites
 
@@ -137,8 +137,8 @@ Open a web browser and navigate to http://play.localhost.dev:4567/
     echo "dummynet in quick proto tcp from any to any port 4567 pipe 1" | sudo pfctl -a mop -f -
     echo "dummynet out quick proto tcp from any to any port 4567 pipe 2" | sudo pfctl -a mop -f -
 
-    sudo dnctl pipe 1 config delay 80ms bw 10Mbit/s plr 0.02
-    sudo dnctl pipe 2 config delay 40ms bw 20Mbit/s plr 0.01
+    sudo dnctl pipe 1 config delay 40ms bw 10Mbit/s plr 0.02
+    sudo dnctl pipe 2 config delay 40ms bw 10Mbit/s plr 0.02
 
 #### Start
 
