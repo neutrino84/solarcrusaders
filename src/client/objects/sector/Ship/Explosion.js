@@ -5,8 +5,8 @@ function Explosion(ship) {
   this.ship = ship;
   this.game = ship.game;
   this.events = ship.events;
-  this.state = ship.manager.state;
 
+  // temporary
   this.temp = new engine.Point();
 
   // create hit area
@@ -15,49 +15,43 @@ function Explosion(ship) {
 
 Explosion.prototype.constructor = Explosion;
 
-Explosion.prototype.create = function() {
-  
-};
+Explosion.prototype.create = function() {};
 
 Explosion.prototype.start = function() {
-  var temp = this.temp,
+  var game = this.game,
+      temp = this.temp,
       events = this.events,
       ship = this.ship,
       hit = this.hit,
-      rnd = this.game.rnd,
-      state = this.state;
+      rnd = this.game.rnd;
 
-  state.glowEmitter.explosion(ship.data.size);
-  state.glowEmitter.at({ center: ship.movement.position });
-  state.glowEmitter.explode(1);
+  game.emitters.glow.explosion(ship.data.size);
+  game.emitters.glow.at({ center: ship.movement.position });
+  game.emitters.glow.explode(1);
 
-  for(var i=0; i<24; i++) {
-    state.flashEmitter.explosion();
-    state.flashEmitter.at({ center: ship.movement.position });
-    state.flashEmitter.explode(1);
+  game.emitters.shockwave.explosion(ship.data.size/8);
+  game.emitters.shockwave.at({ center: ship.movement.position });
+  game.emitters.shockwave.explode(1);
+
+  for(var i=0; i<16; i++) {
+    game.emitters.flash.explosion();
+    game.emitters.flash.at({ center: ship.movement.position });
+    game.emitters.flash.explode(1);
   }
 
-  events.repeat(20, 40, function() {
-    state.glowEmitter.burst(ship.data.size);
-    state.glowEmitter.at({ center: ship.movement.position });
-    state.glowEmitter.explode(1);
-
-    if(rnd.frac() > 0.8) {
-      state.flashEmitter.explosion();
-      state.flashEmitter.at({ center: ship.movement.position });
-      state.flashEmitter.explode(1);
+  events.repeat(20, 80, function() {
+    if(rnd.frac() < 0.5) {
+      game.emitters.glow.burst(ship.data.size);
+      game.emitters.glow.at({ center: ship.movement.position });
+      game.emitters.glow.explode(1);
     }
   });
 
-  state.shockwaveEmitter.explosion(ship.data.size/8);
-  state.shockwaveEmitter.at({ center: ship.movement.position });
-  state.shockwaveEmitter.explode(1);
-
-  events.repeat(40, 100, function() {
-    if(rnd.frac() > 0.2) {
-      state.explosionEmitter.explosion();
-      state.explosionEmitter.at({ center: hit.random(undefined, temp) });
-      state.explosionEmitter.explode(rnd.frac() > 0.5 ? 1 : 2);
+  events.repeat(40, 80, function() {
+    if(rnd.frac() < 0.75) {
+      game.emitters.explosion.explosion();
+      game.emitters.explosion.at({ center: hit.random(false, temp) });
+      game.emitters.explosion.explode(1);
     }
   });
 

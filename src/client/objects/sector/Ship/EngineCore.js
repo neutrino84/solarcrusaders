@@ -3,7 +3,6 @@ var engine = require('engine');
 
 function EngineCore(ship, config) {
   this.ship = ship;
-  this.state = ship.manager.state;
   this.game = ship.game;
   this.config = config;
 
@@ -11,8 +10,7 @@ function EngineCore(ship, config) {
 
   this.glows = [];
   this.highlights = [];
-
-  this.clamp = 1.0;
+  this.multiplier = 0;
   this.isBoosting = false;
 };
 
@@ -64,22 +62,29 @@ EngineCore.prototype.create = function() {
 
 EngineCore.prototype.start = function() {
   this.isBoosting = true;
-  this.clamp = 1.25;
 };
 
 EngineCore.prototype.stop = function() {
   this.isBoosting = false;
-  this.clamp = 1.0;
 };
 
-EngineCore.prototype.show = function(show) {
+EngineCore.prototype.show = function() {
   var glows = this.glows,
       highlights = this.highlights,
-      config = this.config.glows,
-      length = config.length;
+      length = glows.length;
   for(var i=0; i<length; i++) {
-    glows[i].renderable = show;
-    highlights[i].renderable = show;
+    glows[i].visible = true;
+    highlights[i].visible = true;
+  }
+};
+
+EngineCore.prototype.hide = function() {
+  var glows = this.glows,
+      highlights = this.highlights,
+      length = glows.length;
+  for(var i=0; i<length; i++) {
+    glows[i].visible = false;
+    highlights[i].visible = false;
   }
 };
 
@@ -87,13 +92,16 @@ EngineCore.prototype.update = function() {
   var game = this.game,
       glows = this.glows,
       ship = this.ship,
-      state = this.state,
       highlights = this.highlights,
       config = this.config.glows,
       length = config.length,
       flicker = EngineCore.flicker[game.clock.frames % 6],
-      scale, highlight, position
-      multiplier = engine.Math.clamp(ship.movement.throttle, 0.0, this.clamp);
+      scale, highlight, position,
+      multiplier = engine.Math.min(ship.movement.throttle, 1.2);
+  
+  // interpolate multiplier
+  this.multiplier += this.multiplier + (multiplier - this.multiplier) * 0.5;
+
   for(var g=0; g<length; g++) {
     scale = config[g].scale;
 
@@ -106,12 +114,16 @@ EngineCore.prototype.update = function() {
     highlight = highlights[g];
     highlight.alpha = 1.0;
     highlight.scale.set(multiplier, multiplier);
+    highlight.pivot.set(32 - multiplier * 14, 32);
       
     if(this.isBoosting) {
-      position = game.world.worldTransform.applyInverse(ship.worldTransform.apply(glows[g].position))
-      state.fireEmitter.boost([config[g].tint, 0x333333]);
-      state.fireEmitter.at({ center: position });
-      state.fireEmitter.explode(1);
+      // set position
+      position = game.world.worldTransform.applyInverse(ship.worldTransform.apply(glows[g].position));
+
+      // show glow
+      game.emitters.fire.boost([config[g].tint, config[g].tint]);
+      game.emitters.fire.at({ center: position });
+      game.emitters.fire.explode(1);
     }
   }
 };

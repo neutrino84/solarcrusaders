@@ -4,151 +4,113 @@ var engine = require('engine');
 function Selector(ship) {
   this.ship = ship;
   this.game = ship.game;
-  this.manager = ship.manager;
   this.data = ship.data;
-  this.point = new engine.Point();
+
+  this.rotation = 0;
+  this.targeting = new engine.Graphics();
+  this.graphics = new engine.Graphics();
 };
 
 Selector.prototype.constructor = Selector;
 
 Selector.prototype.create = function() {
   var ship = this.ship,
-      point = this.point,
-      radius = ship.data.size,
-      color, alpha, thickness, fill,
-      friendly;
+      graphics = this.graphics,
+      targeting = this.targeting,
+      pi = global.Math.PI,
+      size = ship.data.size,
+      color, alpha, thickness,
+      x, y, start, end, length;
 
-  // configure
-  switch(ship.data.ai) {
-    case 'basic':
-      color = 0xffff00;
-      alpha = 0.0;
-      thickness = 8.0;
-      fill = 0.0;
-      friendly = true;
-      break;
-    case 'pirate':
-      color = 0xcc3333;
-      alpha = 0.6;
-      thickness = 4.0;
-      fill = 0.2;
-      friendly = false;
-      break;
-  }
-
-  if(ship.isPlayer || ship.isPlayerOwned) {
-    color = 0x0066ff;
-    alpha = 0.8;
+  // set colors
+  if(ship.isPirate) {
+    color = 0xff3333;
+    alpha = 0.4;
+    thickness = 6.0;
+    target = 0xff0000;
+  } else if(ship.isPlayer) {
+    color = 0x3366ff;
+    alpha = 1.0;
     thickness = 8.0;
-    fill = 0.2;
+    target = 0x0033ff;
+  } else if(ship.isPlayerOwned) {
+    color = 0x3366ff;
+    alpha = 1.0;
+    thickness = 6.0;
+    target = 0x0033ff;
+  } else {
+    color = 0xffffff;
+    alpha = 0.2;
+    thickness = 4.0;
+    target = 0x33ff33;
   }
 
-  // create circle areas
-  this.inner = new engine.Circle(0, 0, radius);
-  this.hit = new engine.Circle(0, 0, radius * 1.34);
-  
-  // create basic graphics
-  this.graphics = new engine.Graphics();
-  this.graphics.lineStyle(thickness, color, 1.0);
-  this.graphics.beginFill(color, fill);
-  this.graphics.drawCircle(this.hit.x, this.hit.y, this.hit.radius);
-  this.graphics.endFill();
-  if(friendly && !ship.isPlayer && !ship.isPlayerOwned) {
-    this.hit.circumferencePoint(45, true, true, this.point);
-    this.graphics.moveTo(this.point.x, this.point.y);
-    this.hit.circumferencePoint(225, true, true, this.point);
-    this.graphics.lineTo(this.point.x, this.point.y);
-    this.hit.circumferencePoint(135, true, true, this.point);
-    this.graphics.moveTo(this.point.x, this.point.y);
-    this.hit.circumferencePoint(315, true, true, this.point);
-    this.graphics.lineTo(this.point.x, this.point.y);
-  }
-  // this.graphics.pivot.set(0, 0);
-  this.graphics.position.set(this.ship.width/2, this.ship.height/2);
-  this.graphics.blendMode = engine.BlendMode.ADD;
-  this.graphics.alpha = alpha;
+  // create base
+  graphics.lineStyle(thickness, color, alpha);
+  targeting.lineStyle(thickness+2.0, target, 1.0);
+  for(var i=0; i<8; i++) {
+    length = pi/4;
+    start = i*length;
+    end = start+length;
+    x = global.Math.cos(start)*size;
+    y = global.Math.sin(start)*size;
 
-  // add target
-  if(ship.data.ai === 'pirate') {
-    this.target = new engine.Graphics();
-    this.target.lineStyle(10.0, color, 1.0);
-    this.target.beginFill(color, fill);
-    this.target.drawCircle(this.hit.x, this.hit.y, this.hit.radius);
-    this.target.endFill();
-    this.hit.circumferencePoint(45, true, true, this.point);
-    this.target.moveTo(this.point.x, this.point.y);
-    this.inner.circumferencePoint(45, true, true, this.point);
-    this.target.lineTo(this.point.x, this.point.y);
-    this.hit.circumferencePoint(225, true, true, this.point);
-    this.target.moveTo(this.point.x, this.point.y);
-    this.inner.circumferencePoint(225, true, true, this.point);
-    this.target.lineTo(this.point.x, this.point.y);
-    this.hit.circumferencePoint(135, true, true, this.point);
-    this.target.moveTo(this.point.x, this.point.y);
-    this.inner.circumferencePoint(135, true, true, this.point);
-    this.target.lineTo(this.point.x, this.point.y);
-    this.hit.circumferencePoint(315, true, true, this.point);
-    this.target.moveTo(this.point.x, this.point.y);
-    this.inner.circumferencePoint(315, true, true, this.point);
-    this.target.lineTo(this.point.x, this.point.y);
-    this.target.position.set(this.ship.width/2, this.ship.height/2);
-    this.target.blendMode = engine.BlendMode.ADD;
-    this.target.visible = false;
-    this.ship.addChild(this.target);
-  }
+    // design
+    if(i%2===0) {
+      graphics.moveTo(x, y);
+      graphics.arc(0, 0, size, start, end, false);
 
-  // add selector
-  this.ship.addChildAt(this.graphics, friendly ? undefined : 0);
+      targeting.moveTo(x, y);
+      targeting.arc(0, 0, size, start, end, false);
+    }
+  }
+  graphics.position.set(ship.width/2, ship.height/2);
+  graphics.blendMode = engine.BlendMode.ADD;
+  graphics.visible = false;
+
+  targeting.position.set(ship.width/2, ship.height/2);
+  targeting.blendMode = engine.BlendMode.ADD;
+  targeting.visible = false;
+
+  // add selector graphics
+  ship.addChild(graphics);
+  ship.addChild(targeting);
 };
 
-Selector.prototype.enable = function() {
+Selector.prototype.show = function() {
   this.graphics.visible = true;
 };
 
-Selector.prototype.disable = function() {
+Selector.prototype.hide = function() {
   this.graphics.visible = false;
-
-  if(this.target) {
-    this.target.visible = false;
-  }
+  this.targeting.visible = false;
 };
 
 Selector.prototype.targeted = function() {
-  if(this.target) {
-    this.target.visible = true;
-    this.timer && this.ship.events.remove(this.timer);
-    this.timer = this.ship.events.add(5000, function() {
-      this.target.visible = false;
-    }, this);
-  }
-};
-
-Selector.prototype.warn = function() {
-  // reset
-  this.graphics.alpha = 0.0;
-
-  // animation
-  if(!this.tween || this.tween && !this.tween.isRunning) {
-    this.tween = this.game.tweens.create(this.graphics);
-    this.tween.to({ alpha: 0.25 }, 250, engine.Easing.Quadratic.Out, false, 0, 2, true);
-    this.tween.start();
-  }
+  this.targeting.visible = true;
+  this.timer && this.ship.events.remove(this.timer);
+  this.timer = this.ship.events.add(3000, function() {
+    this.targeting.visible = false;
+  }, this);
 };
 
 Selector.prototype.update = function() {
-  var graphics = this.graphics,
-      target = this.target,
-      ship = this.ship;
-  if(ship.data.ai === 'pirate') {
-    this.target.rotation += 0.1;
-  } else {
-    this.graphics.rotation = -this.ship.rotation;
-  }
+  var ship = this.ship,
+      graphics = this.graphics,
+      targeting = this.targeting,
+      rotation = this.rotation;
+
+  // align selector to screen
+  graphics.rotation = -ship.rotation + global.Math.PI/8 + rotation;
+  targeting.rotation = graphics.rotation;
+
+  // if(ship.isPlayer || ship.isPlayerOwned) {
+  //   this.rotation += 0.05;
+  // }
 };
 
 Selector.prototype.destroy = function() {
-  this.ship = this.game = this.manager =
-    this.data = undefined;
+  this.ship = this.game = this.data = undefined;
 };
 
 module.exports = Selector;

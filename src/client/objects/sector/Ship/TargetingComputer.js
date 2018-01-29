@@ -9,11 +9,7 @@ function TargetingComputer(ship, config) {
   this.config = config;
 
   this.hardpoints = [];
-
   this.target = new engine.Point();
-
-  // throttle firing rate
-  this.fire = this.game.clock.throttle(this.fired, this.ship.data.rate, this, true);
 };
 
 TargetingComputer.prototype.constructor = TargetingComputer;
@@ -33,16 +29,15 @@ TargetingComputer.prototype.create = function() {
 
 TargetingComputer.prototype.attack = function(data) {
   var hardpoints = this.hardpoints,
-      length = hardpoints.length,
-      target = data.targ;
-  if(length > 0) {
+      target = this.target;
+  if(hardpoints.length > 0) {
     // update target
-    this.target.set(target.x, target.y);
+    target.set(data.targ.x, data.targ.y);
 
     // display
-    for(var i=0; i<length; i++) {
+    for(var i=0; i<hardpoints.length; i++) {
       hardpoint = hardpoints[i];
-      hardpoint.fire(this.target);
+      hardpoint.fire(target);
     }
   }
 };
@@ -50,6 +45,8 @@ TargetingComputer.prototype.attack = function(data) {
 TargetingComputer.prototype.hit = function(ship, data) {
   var hardpoints = this.hardpoints,
       hardpoint = hardpoints[data.hardpoint.slot];
+  
+  // notify hardpoint
   if(ship && hardpoint) {
     hardpoint.hit(ship, data.hardpoint.target);
   }
@@ -59,28 +56,27 @@ TargetingComputer.prototype.fired = function() {
   var game = this.game,
       ship = this.ship,
       hardpoints = this.hardpoints,
+      target = this.target,
       input = this.game.input,
       socket = ship.manager.socket,
-      hardpoint, distance,
-      target = {
-        x: input.mousePointer.x,
-        y: input.mousePointer.y
-      };
-  if(hardpoints.length > 0) {
-    game.world.worldTransform.applyInverse(target, this.target);
+      hardpoint;
 
+  // player fired
+  if(hardpoints.length > 0) {
+    game.world.worldTransform.applyInverse(input.mousePointer, target);
+    
     // display
     for(var i=0; i<hardpoints.length; i++) {
       hardpoint = hardpoints[i];
-      hardpoint.fire(this.target);
+      hardpoint.fire(target);
     }
 
-    // server
+    // emit socket message
     socket.emit('ship/attack', {
       uuid: ship.uuid,
       targ: {
-        x: this.target.x,
-        y: this.target.y
+        x: target.x,
+        y: target.y
       }
     });
   }
@@ -91,7 +87,10 @@ TargetingComputer.prototype.update = function() {
       hardpoints = this.hardpoints,
       length = hardpoints.length;
   if(length > 0) {
+    // reposition ship
     ship.updateTransform();
+    
+    // update hardpoints
     for(var h in hardpoints) {
       hardpoints[h].update();
     }
@@ -105,13 +104,9 @@ TargetingComputer.prototype.destroy = function() {
   for(var h in hardpoints) {
     hardpoint = hardpoints[h];
     hardpoint.destroy();
-    hardpoint.fxGroup =
-      hardpoint.flashEmitter =
-      hardpoint.explosionEmitter =
-      hardpoint.glowEmitter = undefined;
   }
   
-  this.parent = this.game =
+  this.ship = this.game =
     this.config = this.hardpoints = undefined;
 };
 

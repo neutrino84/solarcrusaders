@@ -13,29 +13,28 @@ var engine = require('engine'),
 function Ship(manager, data) {
   engine.Sprite.call(this, manager.game, 'texture-atlas', data.chassis + '.png');
 
-  this.name = data.name;
   this.manager = manager;
-  this.state = manager.state;
   this.game = manager.game;
-  this.data = data;
 
-  // convenience vars
+  // convenience
+  this.data = data;
+  this.name = data.name;
   this.uuid = data.uuid;
-  this.user = data.user;
-  this.master = data.master;
-  this.owner = data.owner;
-  this.username = data.username;
-  this.target = null;
-  
+
   // config data
   this.config = data.config.ship;
+
+  // master ship
+  this.master = manager.game.ships[data.master];
 
   // layer chassis
   this.chassis = new engine.Sprite(this.game, 'texture-atlas', data.chassis + '.png');
 
   // defaults
-  this.rotation = data.rotation + global.Math.PI;
+  this.disabled = data.disabled;
+  this.position.set(data.x, data.y);
   this.pivot.set(this.width/2, this.height/2);
+  this.rotation = data.rotation + global.Math.PI;
 
   // timer events
   this.events = new engine.Timer(this.game, false);
@@ -59,6 +58,9 @@ Ship.prototype.create = function() {
   // add chassis
   this.addChild(this.chassis);
 
+  // start events
+  this.events.start();
+
   // create main systems
   this.targetingComputer.create();
   this.engineCore.create();
@@ -69,71 +71,68 @@ Ship.prototype.create = function() {
   this.explosion.create();
   this.selector.create();
 
+  // first refresh
+  this.refresh(this.data);
+
   // subscribe to updates
   this.data.on('data', this.refresh, this);
-
-  // start events
-  this.events.start();
-
-  // set disabled
-  this.data.disabled && this.disable();
-
-  // set player
-  if(this.isPlayer) {
-    this.game.emit('ship/player', this);
-  }
-
-  // hud display
-  if(this.isPlayer || this.isPlayerOwned) {
-    this.hud.show();
-  }
 };
 
 Ship.prototype.refresh = function(data) {
-  var ship, attacker, defender,
-      game = this.game,
+  var game = this.game,
       damage = this.damage,
-      ships = this.manager.ships,
-      stations = this.state.stationManager.stations,
-      selector = this.selector,
-      targetingComputer = this.targetingComputer;
+      targetingComputer = this.targetingComputer,
+      hud = this.hud,
+      ships = game.ships,
+      stations = game.stations,
+      ship, attacker, defender;
 
-  // critical hit
+  // handle critical hit
   data.critical && damage.critical();
 
-  // 
+  // master ship instance
+  if(data.master && game.ships[data.master]) {
+    this.master = game.ships[data.master];
+  }
+
+  // set disabled state
+  if(data.disabled === true) {
+    if(data.disabled !== this.disabled) {
+      this.explosion.start();
+    }
+    this.disable();
+  } else if(data.disabled === false) {
+    this.enable();
+  }
+
+  // update hud
   if(data.hardpoint) {
     attacker = ships[data.uuid];
-    defender = ships[data.hardpoint.ship] || stations[data.hardpoint.station];
+    defender = ships[data.hardpoint.uuid] || stations[data.hardpoint.uuid];
 
     if(defender) {
+      // ship hit fx
       targetingComputer.hit(defender, data);
 
-      // show targeted
-      if(attacker.isPlayer && defender.data.ai === 'pirate') {
-        defender.selector.targeted();
-      }
-
-      // friendly fire warning
-      if(attacker.user && !defender.isPlayerOwned && defender.data.ai !== 'pirate') {
-        defender.selector && defender.selector.warn();
-      }
-
-      // camera shake and hud
+      // camera and hud
       if(defender.isPlayer) {
         game.camera.shake();
-      }
-
-      if(!defender.isPlayer) {
+      } else {
         defender.hud.show();
         defender.hud.timer && defender.events.remove(defender.hud.timer);
         defender.hud.timer = defender.events.add(3000, defender.hud.hide, defender.hud);
+
+        // targeted
+        if(defender.selector && !defender.isPlayerOwned && (
+            attacker.isPlayer || attacker.isPlayerOwned)) {
+          defender.selector.targeted();
+        }
       }
     }
-  };
+  }
 
   // update hud
-  this.hud.data(data);
+  hud.data(data);
 };
 
 Ship.prototype.update = function() {
@@ -142,49 +141,69 @@ Ship.prototype.update = function() {
   this.targetingComputer.update();
   this.hud.update();
   this.selector.update();
-
-  // update disabled state
-  if(this.disabled) {
-    this.engineCore.update();
-    this.explosion.update();
-  } else {
-    this.engineCore.update();
-  }
+  this.engineCore.update();
+  this.explosion.update();
 
   // update timers
   this.events.update(this.game.clock.time);
 
+  // update inherited
   engine.Sprite.prototype.update.call(this);
 };
 
-Ship.prototype.enable = function(data) {
-  this.alpha = 1.0;
+Ship.prototype.enable = function() {
+  // disabled state
   this.disabled = false;
-  // this.chassis.tint = 0xFFFFFF;
+
+  // helpers
+  if(this.isPlayer) {
+    this.hud.show();
+  }
   this.hud.enable();
-  this.selector.enable();
-  this.engineCore.show(true);
-  this.position.set(data.pos.x, data.pos.y);
+  this.selector.show();
+  this.engineCore.show();
 };
 
 Ship.prototype.disable = function() {
+  var children = this.children,
+      child;
+
+  // disabled state
   this.disabled = true;
-  // this.chassis.tint = 0x333333;
+  this.tint = 0x888888;
+
+  // helpers
+  this.hud.hide();
   this.hud.disable();
-  this.selector.disable();
+  this.selector.hide();
   this.engineCore.stop();
-  this.engineCore.show(false);
+  this.engineCore.hide();
   this.shieldGenerator.stop();
   this.repair.stop();
+
+  for(var i=0; i<children.length; i++) {
+    child = children[i];
+    child.tint = 0x888888;
+  }
+
+  // disable fire
+  if(this.isPlayer) {
+    this.manager.autofire && this.game.clock.events.remove(this.manager.autofire);
+  }
 };
 
-Ship.prototype.explode = function() {
-  this.explosion.start();
+Ship.prototype.remove = function() {
+  // fade out and remove
+  this.fade = this.game.tweens.create(this);
+  this.fade.to({ alpha: 0 }, 1000, engine.Easing.Quadratic.InOut, true);
+  this.fade.on('complete', this.destroy, this);
 };
 
 Ship.prototype.destroy = function(options) {
   // remove timers
   this.events.destroy();
+
+  // stop listening to data
   this.data.removeListener('data', this.data);
 
   this.hud.destroy();
@@ -198,21 +217,27 @@ Ship.prototype.destroy = function(options) {
   // children destroy themselves
   engine.Sprite.prototype.destroy.call(this, options);
 
-  this.manager = this.state = this.config =
+  this.manager = this.config =
     this.movement = this.hud = this.selector = 
-    this.data = this.targetingComputer =
+    this.data = this.targetingComputer = this.explosion =
     this.repair = this.engineCore = undefined;
 };
 
+Object.defineProperty(Ship.prototype, 'isPirate', {
+  get: function() {
+    return this.data.ai === 'pirate' || (this.master && this.master.data.ai === 'pirate');
+  }
+});
+
 Object.defineProperty(Ship.prototype, 'isPlayer', {
   get: function() {
-    return this.user && this.game.auth.user.uuid === this.user;
+    return this.data.user && this.game.auth.user.uuid === this.data.user;
   }
 });
 
 Object.defineProperty(Ship.prototype, 'isPlayerOwned', {
   get: function() {
-    return this.owner && this.game.auth.user.uuid === this.owner;
+    return this.data.master && this.game.auth.user.ship === this.data.master;
   }
 });
 
