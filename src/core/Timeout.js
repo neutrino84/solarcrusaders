@@ -9,9 +9,7 @@ Timeout.prototype.constructor = Timeout;
 
 Timeout.prototype.init = function() {
   var self = this;
-  this.loop = function() {
-    return self.update();
-  };
+      self.loop = function() { return self.update(); };
   this.timeout = global.setTimeout(this.loop, 0);
 };
 
