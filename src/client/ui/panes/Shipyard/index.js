@@ -4,46 +4,18 @@ var engine = require('engine'),
     Pane = require('../../components/Pane'),
     Label = require('../../components/Label'),
     ButtonIcon = require('../../components/ButtonIcon'),
+    LoginPane = require('../../panes/LoginPane'),
     Layout = require('../../Layout');
+
 
 function Shipyard(game) {
   this.socket = game.net.socket;
   var w = window,
       d = document;
-  //     e = d.documentElement,
-  //     g = d.getElementsByTagName('body')[0],
-  //     x = w.innerWidth || e.clientWidth || g.clientWidth,
-  //     y = w.innerHeight|| e.clientHeight|| g.clientHeight, textHeight;
-  this.textHeight = 175;
-  this.shipContainersSize = 128;
-
-
-  this.resizeDynamic();
-  
-
-  w.onresize = function(){
-    var w = window,
-        d = document,
-        e = d.documentElement,
-        g = d.getElementsByTagName('body')[0],
-        x = w.innerWidth || e.clientWidth || g.clientWidth,
-        y = w.innerHeight|| e.clientHeight|| g.clientHeight;
-    if(x < 1026 || y < 800){
-      this.textHeight = 100;
-      if(x < 900 || y < 800){
-        this.shipContainersSize = 110;
-        if(x < 860){
-          this.shipContainersSize = 80;
-        }
-      }
-    } else {
-      this.textHeight = 175;
-    };
-  };
 
   Pane.call(this, game, {
     constraint: Layout.CENTER,
-    padding: [100, 100, 100, 100],
+    padding: [50, 50, 50, 50],
     layout: {
       type: 'stack'
     }
@@ -56,23 +28,12 @@ function Shipyard(game) {
     },
     bg: {
       fillAlpha: 0.95,
-      color: 0x000000
+      color: 0x000c00
     }
   });
-  this.shipPanels = new Pane(this.game, {
-    constraint: Layout.CENTER,
-    height: 200,
-    layout: {
-      type: 'list',
-      columns: 3,
-      gap: [2,2]
-    },
-    bg: {
-      fillAlpha: 0,
-      color: 0x002222
-    }
-  });
-  this.shipPanels.id = 'shipPanels';
+
+  this.textHeight = 150;
+  this.shipContainersSize = 128;
 
   var text = new Label(this.game, {
     constraint: Layout.USE_PS_SIZE,
@@ -80,18 +41,49 @@ function Shipyard(game) {
       fontName: 'medium'
     },
     bg: false
-  }), textPane = new Pane(this.game, {
-    constraint: Layout.TOP,
-    width: this.game.width/2,
-    height: this.textHeight,
+  }), spacerPanel = new Pane(this.game, {
+    width: 20,
+    height: 128,
     layout: {
       type: 'stack'
     },
     bg: {
       fillAlpha: 0.0,
-      color: 0xff00bb
+      color: 0xAAAAAA
     }
-  }), statsPane = new Pane(this.game, {
+  });
+  // this.resizeDynamic();
+
+  this.topPane = new Pane(this.game, {
+    constraint: Layout.TOP,
+    width: this.game.width/2,
+    height: this.textHeight,
+    layout: {
+      type: 'flow',
+      ax: Layout.CENTER, 
+      ay: Layout.CENTER,
+      direction: Layout.VERTICAL, 
+      gap: 13
+    },
+    bg: {
+      fillAlpha: 0.0,
+      color: 0xfccc00
+    }
+  }); 
+  this.middlePane = new Pane(this.game, {
+    constraint: Layout.CENTER,
+    width: this.game.width/2,
+    height: this.textHeight*2,
+    layout: {
+      type: 'border',
+      gap: [5,5]
+    },
+    bg: {
+      fillAlpha: 0.0,
+      color: 0xfcaaa0
+    }
+  });
+  this.bottomPane = new Pane(this.game, {
     constraint: Layout.BOTTOM,
     width: 100,
     height: this.game.height/4,
@@ -106,36 +98,81 @@ function Shipyard(game) {
       fillAlpha: 0.1,
       color: 0xff00bb
     }
-  }), submitButtonPanel = new Pane(this.game, {
-    width: 128,
-    height: 64,
-    margin: [33,0,0,0],
+  });
+
+  // this.loginPlaceholder = new Pane(this.game, {
+  //   constraint: Layout.CENTER,
+  //   height: 90,
+  //   width: this.game.width/2,
+  //   layout: {
+  //     type: 'stack',
+  //   },
+  //   bg: {
+  //     fillAlpha: 1,
+  //     color: 0xcc11b0
+  //   }
+  // });
+  this.loginPlaceholder = new LoginPane(this.game);
+  this.loginPlaceholder.create();
+
+  this.chooseText = new Pane(this.game, {
+    constraint: Layout.TOP,
+    // height: 100,
+    height: this.middlePane.psHeight/5,
+    width: this.game.width/1.5,
     layout: {
-      type: 'stack'
+      type: 'flow',
+      ax: Layout.LEFT, 
+      ay: Layout.CENTER,
+      direction: Layout.VERTICAL
     },
+    // padding: [5, 5, 5, 5],
     bg: {
       fillAlpha: 0.0,
-      color: 0xAAAAAA
-    }
-  }), spacerPanel = new Pane(this.game, {
-    width: 20,
-    height: 128,
-    layout: {
-      type: 'stack'
-    },
-    bg: {
-      fillAlpha: 0.0,
-      color: 0xAAAAAA
+      color: 0xff0000
     }
   });
 
+
+  this.shipPanels = new Pane(this.game, {
+    constraint: Layout.BOTTOM,
+    height: this.middlePane.psHeight*3/5,
+    width: this.bg.width,
+    layout: {
+      type: 'list',
+      columns: 3,
+      gap: [2,2]
+    },
+    bg: {
+      fillAlpha: 0,
+      color: 0x002222
+    },
+    id: 'shipPanels'
+  });
+  // , submitButtonPanel = new Pane(this.game, {
+  //   width: 128,
+  //   height: 64,
+  //   margin: [33,0,0,0],
+  //   layout: {
+  //     type: 'stack'
+  //   },
+  //   bg: {
+  //     fillAlpha: 0.0,
+  //     color: 0xAAAAAA
+  //   }
+  // }), 
+
   text.visible = true;
   text.text = 'Choose your ship';
-  textPane.addPanel(text);
-  textPane.id = 'textPane';
-  statsPane.id = 'statsPane';
-  submitButtonPanel.id = 'submitButtonPanel';
+  this.chooseText.addPanel(text);
+  this.topPane.addPanel(this.loginPlaceholder);
+  // this.topPane.addPanel(this.chooseText);
+  this.topPane.id = 'topPane';
+  this.bottomPane.id = 'bottomPane';
+  // submitButtonPanel.id = 'submitButtonPanel';
   
+
+  console.log('w is ', this.middlePane)
 
   // generate containers
   this.containers = [];
@@ -155,18 +192,23 @@ function Shipyard(game) {
     );
     this.shipPanels.addPanel(this.containers[i]);
   }
-  // this.containers.push(submitButtonPanel)
   this.shipPanels.addPanel(spacerPanel);
-  this.shipPanels.addPanel(submitButtonPanel);
 
-  this.bg.addPanel(textPane);
-  this.bg.addPanel(this.shipPanels);
-  this.bg.addPanel(statsPane);
+  // this.bg.addPanel(this.chooseText);
+  this.middlePane.addPanel(this.chooseText);
+  this.middlePane.addPanel(this.shipPanels);
+
+  this.bg.addPanel(this.topPane);
+  // this.bg.addPanel(this.shipPanels);
+  this.bg.addPanel(this.middlePane);
+  this.bg.addPanel(this.bottomPane);
 
   this.addPanel(this.bg);
 
   this.fill();
   this.stats();
+  // this.containers.push(submitButtonPanel)
+  // this.shipPanels.addPanel(submitButtonPanel);
 };
 
 Shipyard.prototype = Object.create(Pane.prototype);
@@ -312,9 +354,9 @@ Shipyard.prototype.stats = function(){
   this.shipStats['ubaidian-x01f'][7].text = '       armor - 0.01'
 
   for(var i = 0; i < this.bg.panels.length; i++){
-    if(this.bg.panels[i].id === 'statsPane'){
-      var statsPane = this.bg.panels[i];
-      statsPane.alpha = -1;
+    if(this.bg.panels[i].id === 'bottomPane'){
+      var bottomPane = this.bg.panels[i];
+      bottomPane.alpha = -1;
     }
   }
   this.invalidate();
@@ -400,31 +442,32 @@ Shipyard.prototype._hover = function(button) {
           fontName: 'medium'
         },
         bg: false
-      }); 
+      });
   this.game.emit('shipyard/hover', 'selectionSFX1')
-  for(var i = 0; i < ships.length-2; i++){
+  for(var i = 0; i < ships.length-1; i++){
     if(ships[i].children[1].id !== ship){
+      // console.log('- ', ships[i])
       ships[i].alpha = ships[i].alpha - 0.7;
     }
   }
   for(var i = 0; i < this.bg.panels.length; i++){
-    if(this.bg.panels[i].id === 'statsPane'){
-      var statsPane = this.bg.panels[i];
+    if(this.bg.panels[i].id === 'bottomPane'){
+      var bottomPane = this.bg.panels[i];
 
-      statsPane.removeAll()
+      bottomPane.removeAll()
 
-      statsPane.addPanel(this.shipStats[ship][0])
-      statsPane.addPanel(this.shipStats[ship][1])
-      statsPane.addPanel(this.shipStats[ship][2])
-      statsPane.addPanel(this.shipStats[ship][3])
-      statsPane.addPanel(this.shipStats[ship][4])
-      statsPane.addPanel(this.shipStats[ship][5])
-      statsPane.addPanel(this.shipStats[ship][6])
-      statsPane.addPanel(this.shipStats[ship][7])
+      bottomPane.addPanel(this.shipStats[ship][0])
+      bottomPane.addPanel(this.shipStats[ship][1])
+      bottomPane.addPanel(this.shipStats[ship][2])
+      bottomPane.addPanel(this.shipStats[ship][3])
+      bottomPane.addPanel(this.shipStats[ship][4])
+      bottomPane.addPanel(this.shipStats[ship][5])
+      bottomPane.addPanel(this.shipStats[ship][6])
+      bottomPane.addPanel(this.shipStats[ship][7])
 
-      statsPane.invalidate();
+      bottomPane.invalidate();
 
-      statsPane.alpha = statsPane.alpha * -1;
+      bottomPane.alpha = bottomPane.alpha * -1;
 
       // for(var i = 0; i < this.shipPanels.panels.length; i++){
       //   if(this.shipPanels.panels[i].id === 'submitButtonPanel'){
@@ -484,18 +527,18 @@ Shipyard.prototype._unhover = function(button) {
   var ships = this.shipPanels.panels,
       ship = button.parent.id;
 
-  for(var i = 0; i < ships.length-2; i++){
+  for(var i = 0; i < ships.length-1; i++){
     if(ships[i].children[1].id !== ship){
       ships[i].alpha = ships[i].alpha + 0.7;
     }
   }
   for(var i = 0; i < this.bg.panels.length; i++){
-    if(this.bg.panels[i].id === 'statsPane'){
-      var statsPane = this.bg.panels[i];
+    if(this.bg.panels[i].id === 'bottomPane'){
+      var bottomPane = this.bg.panels[i];
 
-      statsPane.removeAll()
-      statsPane.alpha = statsPane.alpha * -1;
-      statsPane.invalidate();
+      bottomPane.removeAll()
+      bottomPane.alpha = bottomPane.alpha * -1;
+      bottomPane.invalidate();
     }
   };
 };
@@ -514,6 +557,10 @@ Shipyard.prototype.resizeDynamic = function() {
       if(x < 860){
         this.shipContainersSize = 80;
       }
+      // this.shipContainersSize = 80;
+      // if(x < 860){
+      //   this.shipContainersSize = 50;
+      // }
     }
   } else {
     this.textHeight = 175;
