@@ -3,24 +3,32 @@ var engine = require('engine' ),
     Pane = require('../components/Pane'),
     Input = require('../components/Input'),
     Label = require('../components/Label'),
-    Button = require('../components/Button');
-    // LeaderBoardRow = require('./LeaderBoardRow');
+    Button = require('../components/Button'),
+    LeaderBoardRow = require('./LeaderBoardRow');
 
 function LoginPane(game) {
   Pane.call(this, game, {
-    constraint: Layout.CENTER,
+    constraint: Layout.LEFT,
     padding: [8],
     width: game.width/2,
-    height: 60,
+    height: game.height/8,
     layout: {
       type: 'flow',
-      ax: Layout.CENTER,
+      ax: Layout.LEFT,
       ay: Layout.TOP,
       direction: Layout.VERTICAL,
-      gap: 6
+      gap: 0
+    },
+    bg: {
+      color: 0xffffff,
+      fillAlpha: 0.0,
+      borderSize: 1.0,
+      borderColor: 0xff0000,
+      borderAlpha: 0.9
     },
     content: {
-      // width: game.width/3,
+      width: game.width/2,
+      height: 60,
       layout: {
         type: 'flow',
         ax: Layout.LEFT,
@@ -28,69 +36,63 @@ function LoginPane(game) {
         direction: Layout.HORIZONTAL,
         gap: 4
       },
-      width: game.width/2,
-      bg:{
-        color: 0xff0000,
-        fillAlpha: 1,
+      bg: {
+        color: 0xffffff,
+        fillAlpha: 0.0,
         borderSize: 1.0,
-        borderColor: 0xffffff,
-        borderAlpha: 0.75
-      }
+        borderColor: 0xffcc00,
+        borderAlpha: 0.0
+      }  
     },
     title: {
       padding: [0],
-      text: {
-        fontName: 'full',
-        text: 'AUTHENTICATION'
-      }
+      margin: [0,0,8,game.width/2 - 100],
+      width: game.width/2,
+      height: 5,
+      font: {
+        name: 'full',
+        text: '     AUTHENTICATION     '
+      },
+      align: 'left'
     },
     username: {
+      width: 200,
+      height: 70,
       placeholder: {
         text: 'USERNAME'
       },
       bg: {
-        color: 0xffffff,
-        fillAlpha: 0.1,
         borderSize: 1.0,
         borderColor: 0xffffff,
-        borderAlpha: 0.75
-      }
+        borderAlpha: 0.9
+      },
+      string: '                     '
     },
     password: {
-      // width: 700,
-      padding: [8],
       placeholder: {
         text: 'PASSWORD'
       },
       bg: {
-        color: 0xffffff,
-        fillAlpha: 0.1,
         borderSize: 1.0,
         borderColor: 0xffffff,
-        borderAlpha: 0.75
-      }
+        borderAlpha: 0.9
+      },
+      string: '                     '
     },
     button: {
       padding: [8],
       label: {
-        text: {
-          fontName: 'full'
+        font: {
+          name: 'full'
         }
       },
       bg: {
         color: 0xffffff,
-        fillAlpha: 0.9,
+        fillAlpha: 0.1,
         borderSize: 1.0,
         borderColor: 0xffffff,
-        borderAlpha: 0.75
+        borderAlpha: 0.9
       }
-    },
-    bg: {
-      color: 0xffffff,
-      fillAlpha: 0,
-      borderSize: 1.0,
-      borderColor: 0xff00cc,
-      borderAlpha: 0.75
     }
   });
 };
@@ -101,25 +103,17 @@ LoginPane.prototype.constructor = LoginPane;
 LoginPane.prototype.create = function() {
   // title label
   this.title = new Label(this.game, this.settings.title);
-
-  this.title.text = 'AUTHENTICATION'
-  // Label(this.game, {
-  //     constraint: Layout.USE_PS_SIZE,
-  //     text: {
-  //       fontName: 'medium'
-  //     },
-  //     bg: false
-  //   })
+  this.title.text = 'AUTHENTICATE'
 
   // content pane
   this.content = new Pane(this.game, this.settings.content);
 
   // input fields
   this.username = new Input(this.game, this.settings.username);
-  // this.username.start();
+  this.username.start();
 
   this.password = new Input(this.game, this.settings.password);
-  // this.password.start();
+  this.password.start();
   
   // login button
   this.login = new Button(this.game, this.settings.button);
@@ -133,7 +127,6 @@ LoginPane.prototype.create = function() {
 
   this.addPanel(this.title);
   this.addPanel(this.content);
-  console.log('this.content is ', this, this.title, this.content)
   this.content.addPanel(this.username);
   this.content.addPanel(this.password);
   this.content.addPanel(this.login);

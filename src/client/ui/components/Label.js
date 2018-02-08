@@ -1,6 +1,7 @@
 
 var engine = require('engine'),
     Pane = require('./Pane'),
+    Layout = require('../Layout'),
     TextView = require('../views/TextView'),
     Class = engine.Class;
 
@@ -10,7 +11,13 @@ function Label(game, settings) {
     align: 'left',
     string: '',
     bg: false,
-    text: {}
+    text: {},
+    font: {
+      name: 'medium',
+      text: '',
+      color: 0xffffff,
+      scale: 1.0
+    }
   }));
   
   this.label = new TextView(game, this.settings.string, this.settings.text);

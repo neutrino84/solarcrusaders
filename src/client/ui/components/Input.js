@@ -6,7 +6,8 @@ var engine = require('engine'),
 
 function Input(game, settings) {
   Label.call(this, game, Class.mixin(settings, {
-    height: 8,
+    height: 13,
+    width:100,
     margin: [0],
     padding: [8],
     limit: 20,
@@ -15,18 +16,18 @@ function Input(game, settings) {
       fontName: 'full',
       color: 0xffffff
     },
+    color: 0xFFFFFF,
+    align: 'left',
     placeholder: {
       color: 0xffffff,
-      text: '',
+      text: 'heyo what up',
       alpha: 0.5
     },
     bg: {
-      color: 0xffffff,
-      fillAlpha: 1.0,
-      borderAlpha: 1.0,
-      borderSize: 1.0,
-      borderColor: 0x000000
-    }
+      fillAlpha: 0.05,
+      color: 0xffffff
+    },
+    string: ''
   }));
 
   console.log('input is ', this)
@@ -36,7 +37,7 @@ function Input(game, settings) {
 
   // create placeholder
   this.placeholder = new TextView(game, '', this.settings.placeholder);
-  // this.placeholder.scale.set(this.settings.font.scale, this.settings.font.scale);
+  this.placeholder.scale.set(this.settings.font.scale, this.settings.font.scale);
   this.placeholder.tint = this.settings.placeholder.color;
   this.placeholder.font.text = this.settings.placeholder.text;
   this.placeholder.alpha = this.settings.placeholder.alpha;
@@ -54,15 +55,16 @@ function Input(game, settings) {
   this.addChild(this.cursor);
 
   // masker input mask
-  this.masker = new engine.Graphics(this.game);
-  this.masker.beginFill(0xffffff, 1.0);
-  this.masker.drawRect(0, 0, 128, 8);
-  this.masker.endFill();
-  this.masker.position.set(this.left, this.top);
-  this.masker.visible = true;
+  // this.masker = new engine.Graphics(this.game);
+  // this.masker.beginFill(0xffffff, 1.0);
+  // this.masker.drawRect(0, 0, 128, 8);
+  // this.masker.endFill();
+  // this.masker.position.set(this.left, this.top);
+  // this.masker.visible = true;
+  // this.label.mask = this.masker;
+  // this.addChild(this.masker);
+  
   // console.log(this, this.label)
-  this.label.mask = this.masker;
-  this.addChild(this.masker);
 
   // even handling
   this.bg.on('inputUp', this._inputUp, this);
@@ -86,7 +88,7 @@ Input.prototype.stop = function() {
 
 Input.prototype.focus = function() {
   this.cursor.visible = true;
-  // this.placeholder.visible = false;
+  this.placeholder.visible = false;
 
   // listen to keys
   this.game.input.on('keypress', this.keypress, this);
@@ -111,7 +113,7 @@ Input.prototype.blur = function() {
 
   // placeholder
   if(this.text.length == 0) {
-    // this.placeholder.visible = true;
+    this.placeholder.visible = true;
   }
 
   // listen to keys

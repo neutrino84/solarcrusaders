@@ -60,7 +60,7 @@ function Shipyard(game) {
     height: this.textHeight,
     layout: {
       type: 'flow',
-      ax: Layout.CENTER, 
+      ax: Layout.LEFT, 
       ay: Layout.CENTER,
       direction: Layout.VERTICAL, 
       gap: 13
