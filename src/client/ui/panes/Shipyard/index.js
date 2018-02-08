@@ -171,9 +171,6 @@ function Shipyard(game) {
   this.bottomPane.id = 'bottomPane';
   // submitButtonPanel.id = 'submitButtonPanel';
   
-
-  console.log('w is ', this.middlePane)
-
   // generate containers
   this.containers = [];
   for(var i=0; i<6; i++) {

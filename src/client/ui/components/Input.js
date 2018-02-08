@@ -7,7 +7,6 @@ var engine = require('engine'),
 function Input(game, settings) {
   Label.call(this, game, Class.mixin(settings, {
     height: 8,
-    width: 128,
     margin: [0],
     padding: [8],
     limit: 20,
@@ -30,18 +29,20 @@ function Input(game, settings) {
     }
   }));
 
+  console.log('input is ', this)
+
   // register
   this.game.emit('ui/focus/register', this);
 
   // create placeholder
-  // this.placeholder = new TextView(game, this.settings.font);
+  this.placeholder = new TextView(game, '', this.settings.placeholder);
   // this.placeholder.scale.set(this.settings.font.scale, this.settings.font.scale);
-  // this.placeholder.tint = this.settings.placeholder.color;
-  // this.placeholder.font.text = this.settings.placeholder.text;
-  // this.placeholder.alpha = this.settings.placeholder.alpha;
+  this.placeholder.tint = this.settings.placeholder.color;
+  this.placeholder.font.text = this.settings.placeholder.text;
+  this.placeholder.alpha = this.settings.placeholder.alpha;
 
   // add placeholder view
-  // this.addView(this.placeholder);
+  this.addView(this.placeholder);
 
   // cursor location
   this.cursor = new engine.Graphics(this.game);

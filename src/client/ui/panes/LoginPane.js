@@ -10,6 +10,8 @@ function LoginPane(game) {
   Pane.call(this, game, {
     constraint: Layout.CENTER,
     padding: [8],
+    width: game.width/2,
+    height: 60,
     layout: {
       type: 'flow',
       ax: Layout.CENTER,
@@ -18,6 +20,7 @@ function LoginPane(game) {
       gap: 6
     },
     content: {
+      // width: game.width/3,
       layout: {
         type: 'flow',
         ax: Layout.LEFT,
@@ -25,6 +28,14 @@ function LoginPane(game) {
         direction: Layout.HORIZONTAL,
         gap: 4
       },
+      width: game.width/2,
+      bg:{
+        color: 0xff0000,
+        fillAlpha: 1,
+        borderSize: 1.0,
+        borderColor: 0xffffff,
+        borderAlpha: 0.75
+      }
     },
     title: {
       padding: [0],
@@ -46,6 +57,8 @@ function LoginPane(game) {
       }
     },
     password: {
+      // width: 700,
+      padding: [8],
       placeholder: {
         text: 'PASSWORD'
       },
@@ -66,11 +79,18 @@ function LoginPane(game) {
       },
       bg: {
         color: 0xffffff,
-        fillAlpha: 0.1,
+        fillAlpha: 0.9,
         borderSize: 1.0,
         borderColor: 0xffffff,
         borderAlpha: 0.75
       }
+    },
+    bg: {
+      color: 0xffffff,
+      fillAlpha: 0,
+      borderSize: 1.0,
+      borderColor: 0xff00cc,
+      borderAlpha: 0.75
     }
   });
 };
@@ -81,6 +101,15 @@ LoginPane.prototype.constructor = LoginPane;
 LoginPane.prototype.create = function() {
   // title label
   this.title = new Label(this.game, this.settings.title);
+
+  this.title.text = 'AUTHENTICATION'
+  // Label(this.game, {
+  //     constraint: Layout.USE_PS_SIZE,
+  //     text: {
+  //       fontName: 'medium'
+  //     },
+  //     bg: false
+  //   })
 
   // content pane
   this.content = new Pane(this.game, this.settings.content);
@@ -104,6 +133,7 @@ LoginPane.prototype.create = function() {
 
   this.addPanel(this.title);
   this.addPanel(this.content);
+  console.log('this.content is ', this, this.title, this.content)
   this.content.addPanel(this.username);
   this.content.addPanel(this.password);
   this.content.addPanel(this.login);
