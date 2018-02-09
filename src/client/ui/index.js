@@ -1,5 +1,6 @@
 
 var Panel = require('../ui/Panel'),
+    Focus = require('../ui/Focus'),
     Pane = require('../ui/components/Pane'),
     Label = require('../ui/components/Label'),
     Layout = require('../ui/Layout'),
@@ -12,12 +13,15 @@ var Panel = require('../ui/Panel'),
 
 function UI(game) {
   this.game = game;
+  this.focus = new Focus(game);
 };
 
 UI.prototype.preload = function() {
   // load font
   this.game.load.image('medium', 'imgs/game/fonts/medium.png');
   this.game.load.image('full', 'imgs/game/fonts/full.png');
+
+  // focus manager
 };
 
 UI.prototype.create = function() {

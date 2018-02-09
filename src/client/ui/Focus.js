@@ -13,6 +13,7 @@ function Focus(game) {
 };
 
 Focus.prototype.register = function(focus) {
+  console.log('in focus register')
   var focusable = this.focusable;
       focusable.push(focus);
   if(focusable.length == 1) {
@@ -25,7 +26,7 @@ Focus.prototype.capture = function(focus) {
       focused = this.focused,
       focusable = this.focusable,
       index = focusable.indexOf(focus);
-
+ console.log('got to focus capture')
   if(index >= 0 && focused != focus) {
     for(var i=0; i<focusable.length; i++) {
       layer = focusable[i];

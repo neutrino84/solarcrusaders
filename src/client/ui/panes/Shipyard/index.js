@@ -10,6 +10,7 @@ var engine = require('engine'),
 
 function Shipyard(game) {
   this.socket = game.net.socket;
+  this.loggedIn = false;
   var w = window,
       d = document;
 
@@ -27,7 +28,7 @@ function Shipyard(game) {
       gap: [5,5]
     },
     bg: {
-      fillAlpha: 0.95,
+      fillAlpha: 0.05,
       color: 0x000c00
     }
   });
@@ -60,14 +61,14 @@ function Shipyard(game) {
     height: this.textHeight,
     layout: {
       type: 'flow',
-      ax: Layout.LEFT, 
+      ax: Layout.CENTER, 
       ay: Layout.CENTER,
       direction: Layout.VERTICAL, 
       gap: 13
     },
     bg: {
-      fillAlpha: 0.0,
-      color: 0xfccc00
+      fillAlpha: 0.5,
+      color: 0x000000
     }
   }); 
   this.middlePane = new Pane(this.game, {
@@ -79,8 +80,8 @@ function Shipyard(game) {
       gap: [5,5]
     },
     bg: {
-      fillAlpha: 0.0,
-      color: 0xfcaaa0
+      fillAlpha: 0.5,
+      color: 0x000000
     }
   });
   this.bottomPane = new Pane(this.game, {
@@ -126,7 +127,7 @@ function Shipyard(game) {
       ay: Layout.CENTER,
       direction: Layout.VERTICAL
     },
-    // padding: [5, 5, 5, 5],
+    padding: [0, 10, 0, 0],
     bg: {
       fillAlpha: 0.0,
       color: 0xff0000
@@ -206,6 +207,10 @@ function Shipyard(game) {
   this.stats();
   // this.containers.push(submitButtonPanel)
   // this.shipPanels.addPanel(submitButtonPanel);
+  console.log(this.bg)
+  // this.bg.alpha = 0;
+  this.middlePane.alpha = 0;
+  this.bottomPane.alpha = 0;
 };
 
 Shipyard.prototype = Object.create(Pane.prototype);
@@ -431,6 +436,7 @@ Shipyard.prototype.fill = function() {
   };
 };
 Shipyard.prototype._hover = function(button) {
+  if(!this.loggedIn){return}
   var ships = this.shipPanels.panels,
       ship = button.parent.id,
       spacer = new Label(this.game, {
@@ -521,6 +527,7 @@ Shipyard.prototype._select= function(button){
 };
 
 Shipyard.prototype._unhover = function(button) {
+  if(!this.loggedIn){return}
   var ships = this.shipPanels.panels,
       ship = button.parent.id;
 

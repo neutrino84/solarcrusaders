@@ -14,7 +14,7 @@ function LoginPane(game) {
     height: game.height/8,
     layout: {
       type: 'flow',
-      ax: Layout.LEFT,
+      ax: Layout.CENTER,
       ay: Layout.TOP,
       direction: Layout.VERTICAL,
       gap: 0
@@ -24,15 +24,15 @@ function LoginPane(game) {
       fillAlpha: 0.0,
       borderSize: 1.0,
       borderColor: 0xff0000,
-      borderAlpha: 0.9
+      borderAlpha: 0.0
     },
     content: {
       width: game.width/2,
       height: 60,
       layout: {
         type: 'flow',
-        ax: Layout.LEFT,
-        ay: Layout.TOP,
+        ax: Layout.CENTER,
+        ay: Layout.CENTER,
         direction: Layout.HORIZONTAL,
         gap: 4
       },
@@ -46,12 +46,26 @@ function LoginPane(game) {
     },
     title: {
       padding: [0],
+      // margin: [0,0,8,0],
+      font: {
+        name: 'full',
+        text: 'NOW ENTERING THE MOBIUS DIMENSION v1.0.3'
+      },
+      align: 'left',
+      bg: {
+        borderSize: 1.0,
+        borderColor: 0xaaffff,
+        borderAlpha: 0.0
+      }
+    },
+    auth_title: {
+      padding: [0],
       margin: [0,0,8,game.width/2 - 100],
       width: game.width/2,
       height: 5,
       font: {
         name: 'full',
-        text: '     AUTHENTICATION     '
+        text: 'AUTHENTICATION'
       },
       align: 'left'
     },
@@ -87,11 +101,11 @@ function LoginPane(game) {
         }
       },
       bg: {
-        color: 0xffffff,
-        fillAlpha: 0.1,
-        borderSize: 1.0,
+        color: 0xff0000,
         borderColor: 0xffffff,
-        borderAlpha: 0.9
+        borderAlpha: 0.9,
+        fillAlpha: 0.0,
+        borderSize: 1.0
       }
     }
   });
@@ -103,7 +117,7 @@ LoginPane.prototype.constructor = LoginPane;
 LoginPane.prototype.create = function() {
   // title label
   this.title = new Label(this.game, this.settings.title);
-  this.title.text = 'AUTHENTICATE'
+  this.title.text = 'NOW ENTERING THE MOBIUS DIMENSION v1.0.5'
 
   // content pane
   this.content = new Pane(this.game, this.settings.content);
@@ -125,6 +139,15 @@ LoginPane.prototype.create = function() {
   this.register.start();
   this.register.label.text = 'REGISTER';
 
+  // this.login.bg.alpha = 1
+  // console.log('login bg is ', this.login)
+  // this.login.bg.borderColor = 0xff0000;
+  this.login.invalidate();
+  console.log('login bg is ', this.login.bg)
+  console.log('register bg is ', this.register.bg)
+
+
+  this.addPanel(this.title);
   this.addPanel(this.title);
   this.addPanel(this.content);
   this.content.addPanel(this.username);

@@ -30,10 +30,8 @@ function Input(game, settings) {
     string: ''
   }));
 
-  console.log('input is ', this)
+  
 
-  // register
-  this.game.emit('ui/focus/register', this);
 
   // create placeholder
   this.placeholder = new TextView(game, '', this.settings.placeholder);
@@ -69,6 +67,16 @@ function Input(game, settings) {
   // even handling
   this.bg.on('inputUp', this._inputUp, this);
   this.bg.on('inputDown', this._inputDown, this);
+
+
+  this.true = false; 
+
+  this.label.font.text = '';
+
+  // this.registered = 
+
+  // register
+  // this.game.emit('ui/focus/register', this);
 };
 
 Input.prototype = Object.create(Label.prototype);
@@ -151,7 +159,9 @@ Input.prototype.keydown = function(event) {
 Input.prototype.keypress = function(event, key) {
   var view = this.label,
       keyCode = event.keyCode ? event.keyCode : event.which;
-  if(view.font.keys[keyCode] >= 0 ||
+
+  //rebuild version uses view.font.keys instead of frameKeys
+  if(view.font.frameKeys[keyCode] >= 0 ||
       keyCode === engine.Keyboard.SPACEBAR) {
     this.text += key;
   }
@@ -162,6 +172,10 @@ Input.prototype._inputUp = function() {
 };
 
 Input.prototype._inputDown = function() {
+  if(!this.true){
+    this.game.emit('ui/focus/register', this); 
+  };
+  this.true = true;
 };
 
 Object.defineProperty(Input.prototype, 'text', {
