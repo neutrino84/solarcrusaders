@@ -71,7 +71,7 @@ function Input(game, settings) {
 
   this.true = false; 
 
-  this.label.font.text = '';
+  this.label.font.text = ' ';
 
   // this.registered = 
 
@@ -120,7 +120,7 @@ Input.prototype.blur = function() {
   this.cursor.visible = false;
 
   // placeholder
-  if(this.text.length == 0) {
+  if(this.text.length == 0 || this.text == ' ') {
     this.placeholder.visible = true;
   }
 
