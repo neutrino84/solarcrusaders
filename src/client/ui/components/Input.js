@@ -61,8 +61,6 @@ function Input(game, settings) {
   // this.masker.visible = true;
   // this.label.mask = this.masker;
   // this.addChild(this.masker);
-  
-  // console.log(this, this.label)
 
   // even handling
   this.bg.on('inputUp', this._inputUp, this);
@@ -72,11 +70,6 @@ function Input(game, settings) {
   this.true = false; 
 
   this.label.font.text = ' ';
-
-  // this.registered = 
-
-  // register
-  // this.game.emit('ui/focus/register', this);
 };
 
 Input.prototype = Object.create(Label.prototype);
@@ -97,6 +90,7 @@ Input.prototype.stop = function() {
 Input.prototype.focus = function() {
   this.cursor.visible = true;
   this.placeholder.visible = false;
+  this.bg.filters = null;
 
   // listen to keys
   this.game.input.on('keypress', this.keypress, this);

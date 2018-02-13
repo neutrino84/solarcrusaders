@@ -264,6 +264,7 @@ Squadron.prototype.shieldmaidenActivate = function() {
 };
 
 Squadron.prototype.shieldmaidenDeactivate = function() {
+  if(!this.manager){return}
   var ships = this.manager.ships,
       ship = this.ship,
       master = ships[this.master],
