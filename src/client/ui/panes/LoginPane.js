@@ -65,6 +65,7 @@ function LoginPane(game) {
       }  
     },
     title: {
+      margin: [0,0,30,0],
       padding: [0],
       // margin: [0,0,8,0],
       font: {
@@ -74,7 +75,8 @@ function LoginPane(game) {
       bg: {
         borderSize: 1.0,
         borderColor: 0xaaffff,
-        borderAlpha: 0.0
+        borderAlpha: 0.0,
+        fillAlpha: 0
       },
       text: 'NOW ENTERING THE MOBIUS DIMENSION v1.0.3'
     },

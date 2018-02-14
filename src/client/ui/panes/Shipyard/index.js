@@ -58,7 +58,7 @@ function Shipyard(game) {
   this.topPane = new Pane(this.game, {
     constraint: Layout.TOP,
     width: this.game.width/2,
-    height: this.textHeight,
+    height: this.game.height*3/10,
     layout: {
       type: 'flow',
       ax: Layout.LEFT, 
@@ -74,7 +74,7 @@ function Shipyard(game) {
   this.middlePane = new Pane(this.game, {
     constraint: Layout.CENTER,
     width: this.game.width/2,
-    height: this.textHeight*2,
+    height: this.game.height*3/10,
     layout: {
       type: 'border',
       gap: [5,5]
@@ -87,7 +87,7 @@ function Shipyard(game) {
   this.bottomPane = new Pane(this.game, {
     constraint: Layout.BOTTOM,
     width: 100,
-    height: this.game.height/4,
+    height: this.game.height*3/10,
     layout: {
       type: 'flow',
       ax: Layout.LEFT, 
