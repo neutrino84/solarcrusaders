@@ -65,7 +65,7 @@ function LoginPane(game) {
       }  
     },
     title: {
-      margin: [0,0,30,0],
+      margin: [0,0,10,0],
       padding: [0],
       // margin: [0,0,8,0],
       font: {

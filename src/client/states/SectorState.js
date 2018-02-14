@@ -319,12 +319,8 @@ SectorState.prototype.resize = function(width, height) {
 
 // pauseUpdate = function() {};
 SectorState.prototype.switchState = function(outcome) {
-
-  console.log('in sector state switchstate. outcome is ', outcome)
-
   this.soundManager.destroy();
   if(outcome === 'loss'){
-    console.log('emitting loss')
     this.game.clock.events.add(3000, function(){
       this.game.states.start('loss')
     }, this); 

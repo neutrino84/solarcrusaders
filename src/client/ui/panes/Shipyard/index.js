@@ -58,13 +58,13 @@ function Shipyard(game) {
   this.topPane = new Pane(this.game, {
     constraint: Layout.TOP,
     width: this.game.width/2,
-    height: this.game.height*3/10,
+    height: this.game.height*2/10,
     layout: {
       type: 'flow',
       ax: Layout.LEFT, 
       ay: Layout.CENTER,
       direction: Layout.VERTICAL, 
-      gap: 13
+      gap: 6
     },
     bg: {
       fillAlpha: 0.5,
@@ -74,7 +74,7 @@ function Shipyard(game) {
   this.middlePane = new Pane(this.game, {
     constraint: Layout.CENTER,
     width: this.game.width/2,
-    height: this.game.height*3/10,
+    height: this.game.height*4/10,
     layout: {
       type: 'border',
       gap: [5,5]
@@ -119,7 +119,7 @@ function Shipyard(game) {
   this.chooseText = new Pane(this.game, {
     constraint: Layout.TOP,
     // height: 100,
-    height: this.middlePane.psHeight/5,
+    height: this.middlePane.psHeight*1/10,
     width: this.game.width/1.5,
     layout: {
       type: 'flow',
@@ -137,9 +137,10 @@ function Shipyard(game) {
 
   this.shipPanels = new Pane(this.game, {
     constraint: Layout.BOTTOM,
-    height: this.middlePane.psHeight*3/5,
+    height: this.middlePane.psHeight*5/10,
     width: this.bg.width,
     padding: [0,30,0,0],
+    // margin: [50, 0, 0, 0],
     layout: {
       type: 'list',
       columns: 3,
