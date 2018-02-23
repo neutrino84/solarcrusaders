@@ -68,18 +68,24 @@ Button.prototype.disabled = function(value) {
 };
 
 Button.prototype._inputUp = function() {
+  if(this.activated){return}
   this.bg.alpha = this.settings.bg.alpha.up;
 };
 
 Button.prototype._inputDown = function() {
+  if(this.activated){
+    return
+  }
   this.bg.alpha = this.settings.bg.alpha.down;
 };
 
 Button.prototype._inputOver = function() {
+  if(this.activated){return}
   this.bg.alpha = this.settings.bg.alpha.over;
 };
 
 Button.prototype._inputOut = function() {
+  if(this.activated){return}
   if(this._disabled) {
     this.bg.alpha = this.settings.bg.alpha.disabled;
   } else {

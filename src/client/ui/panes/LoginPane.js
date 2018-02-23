@@ -11,11 +11,11 @@ function LoginPane(game) {
   Pane.call(this, game, {
     constraint: Layout.LEFT,
     padding: [8],
-    width: game.width/1.1,
+    width: game.width/1.4,
     height: game.height/8,
     layout: {
       type: 'flow',
-      ax: Layout.CENTER,
+      ax: Layout.LEFT,
       ay: Layout.TOP,
       direction: Layout.VERTICAL,
       gap: 0
@@ -28,11 +28,11 @@ function LoginPane(game) {
       borderAlpha: 0.0
     },
     content: {
-      width: game.width/1.2,
+      width: game.width/1.6,
       height: 45,
       layout: {
         type: 'flow',
-        ax: Layout.CENTER,
+        ax: Layout.LEFT,
         ay: Layout.CENTER,
         direction: Layout.HORIZONTAL,
         gap: 4
@@ -46,16 +46,16 @@ function LoginPane(game) {
       }  
     },
     registration: {
-      width: game.width/1.2,
+      width: game.width/1.6,
       height: 45,
       layout: {
         type: 'flow',
-        ax: Layout.CENTER,
+        ax: Layout.LEFT,
         ay: Layout.CENTER,
         direction: Layout.HORIZONTAL,
         gap: 4
       },
-      padding: [0, 152, 0 ,0],
+      // padding: [0, 152, 0 ,0],
       bg: {
         color: 0xffffff,
         fillAlpha: 0.0,
@@ -209,6 +209,7 @@ function LoginPane(game) {
       }
     },
     guestButton: {
+      margin: [0,250,0,0],
       padding: [8],
       label: {
         font: {
@@ -218,15 +219,35 @@ function LoginPane(game) {
       bg: {
         color: 0x98FB98,
         borderColor: 0x98FB98,
-        borderAlpha: 0.9,
+        borderAlpha: 0.4,
+        fillAlpha: 0.1,
+        borderSize: 1.0,
+        alpha: {
+          enabled: 0.5,
+          disabled: 0.5,
+          over: 1.0,
+          down: 2.0
+        }
+      }
+    },
+    tutorialButton: {
+      padding: [8],
+      label: {
+        font: {
+          name: 'full'
+        }
+      },
+      bg: {
+        color: 0x333ccc,
+        borderColor: 0x333ccc,
+        borderAlpha: 0.4,
         fillAlpha: 0.2,
         borderSize: 1.0,
         alpha: {
           enabled: 0.5,
           disabled: 0.5,
-          over: 2.0,
-          down: 1.0,
-          up: 1.0
+          over: 1.0,
+          down: 2.0
         }
       }
     }
@@ -275,16 +296,36 @@ LoginPane.prototype.create = function() {
   this.register.bg.on('inputDown', this._register, this);
   this.register.label.text = 'REGISTER';
 
-  this.guest = new Button(this.game, this.settings.guestButton);
-  this.guest.start();
-  this.guest.label.text = 'PLAY AS GUEST';
-  this.guest.bg.on('inputOver', this._hover, this);
-  this.guest.bg.on('inputOut', this._unhover, this);
-  this.guest.bg.on('inputDown', this._playAsGuest, this);
+  this.guestButton = new Button(this.game, this.settings.guestButton);
+  this.guestButton.start();
+  this.guestButton.label.text = 'PLAY AS GUEST';
+  this.guestButton.bg.on('inputOver', this._hover, this);
+  this.guestButton.bg.on('inputOut', this._unhover, this);
+  this.guestButton.bg.on('inputDown', this._playAsGuest, this);
+
+  this.guestButton.bg.on('inputUp', this._inputUp, this);
+
+  this.guestButton.activated = false;
+ 
+
+  this.tutorialButton = new Button(this.game, this.settings.tutorialButton);
+  this.tutorialButton.start();
+  this.tutorialButton.label.text = 'TUTORIAL MODE';
+  this.tutorialButton.bg.on('inputOver', this._hover, this);
+  this.tutorialButton.bg.on('inputOut', this._unhover, this);
+  this.tutorialButton.bg.on('inputDown', this._tutorialMode, this);
+
+  this.tutorialButton.bg.on('inputUp', this._inputUp, this);
+
+  this.tutorialButton.activated = false;
 
   var colorMatrix = new pixi.filters.ColorMatrixFilter();
-  this.guest.bg.filters = [colorMatrix];
+  this.guestButton.bg.filters = [colorMatrix];
   colorMatrix.technicolor(14);
+
+  var colorMatrix2 = new pixi.filters.ColorMatrixFilter();
+  this.tutorialButton.bg.filters = [colorMatrix2];
+  colorMatrix2.technicolor(9);
   this.registration = new Pane(this.game, this.settings.registration);
 
   // this.login.bg.alpha = 1
@@ -326,7 +367,8 @@ LoginPane.prototype.create = function() {
   this.content.addPanel(this.password);
   this.content.addPanel(this.login);
   this.content.addPanel(this.register);
-  this.content.addPanel(this.guest);
+  this.content.addPanel(this.guestButton);
+  this.content.addPanel(this.tutorialButton);
 
   this.registration.addPanel(this.email);
   this.registration.addPanel(this.choosePassword);
@@ -348,6 +390,7 @@ LoginPane.prototype._hover = function(button) {
 
 LoginPane.prototype._unhover = function(button) {
   // console.log('in login out. button is: ', button)
+  // console.log(button)
 };
 
 LoginPane.prototype._login = function(button) {
@@ -398,10 +441,20 @@ LoginPane.prototype._chooseShip = function(button) {
 };
 
 LoginPane.prototype._playAsGuest = function(button) {
+  this.guestButton.activated = !this.guestButton.activated;
   this.registration.alpha = 0;
   this.game.emit('ui/showShips'); 
 };
 
+LoginPane.prototype._inputUp = function(){
+}
+
+LoginPane.prototype._tutorialMode = function(button) {
+
+  this.tutorialButton.activated = !this.tutorialButton.activated;
+  // this.registration.alpha = 0;
+  // this.game.emit('ui/showShips'); 
+};
 
 LoginPane.prototype._register = function(button) {
   var inputs = this.loginInputs;
