@@ -20,28 +20,28 @@ function EventManager(game, manager) {
   this.wavecycleCount = 0;
   this.passiveWave = 0;
 
-  this.game.clock.events.loop(1000, this.wavecycle, this);
+  // this.game.clock.events.loop(1000, this.wavecycle, this);
   this.ships = {
-    basic: 7,
-    enforcer: 1,
+    basic: 0,
+    enforcer: 0,
     pirate: {
       factions : {
         'katos_boys' : {
-          num : 8,
+          num : 0,
           starting_position : {
             x: 6966,
             y: 4249
           }
         },
         'temeni' : {
-          num : 8,
+          num : 0,
           starting_position : {
             x: -3743,
             y: -941
           }
         },
         'sappers' : {
-          num : 8,
+          num : 0,
           starting_position : {
             x: 1501,
             y: 1521
@@ -220,7 +220,7 @@ EventManager.prototype.squadGen = function(master){
       randomPostion = this.generateRandomPosition(2700),
       randomPostion2 = this.generateRandomPosition(2700),
       rando = this.game.rnd.frac();
-  // return
+  return
   if(chassis1 === 'squad-shield'){
     chassis2 = this.game.rnd.pick(this.chassis['squadron2'])
   } else {

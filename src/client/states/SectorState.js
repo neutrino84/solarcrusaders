@@ -134,7 +134,7 @@ SectorState.prototype.preload = function() {
     this.game.load.json('ship-configuration', 'data/ship-configuration.json');
     this.game.load.json('item-configuration', 'data/item-configuration.json');
     this.game.load.json('station-configuration', 'data/station-configuration.json');
-  this.game.states.firstIteration = true;
+    this.game.states.firstIteration = true;
 }
 
 
@@ -147,7 +147,7 @@ SectorState.prototype.create = function() {
       mouse.capture = true;
       mouse.mouseWheelCallback = function(event) {
         var delta = event.deltaY / sensitivity,
-            scale = engine.Math.clamp(this.game.world.scale.x - delta, 0.5, 1.0);
+            scale = engine.Math.clamp(this.game.world.scale.x - delta, 0.01, 1.0);
             // scale = engine.Math.clamp(this.world.scale.x - delta, 0.5, 1.0);
         if(this.game.paused) { return; }
         if(this.zoom && this.zoom.isRunning) {

@@ -1,4 +1,3 @@
-
 var async = require('async'),
     engine = require('engine'),
     client = require('client'),
@@ -488,6 +487,7 @@ Ship.prototype.activate = function(name) {
       available = enhancements.available,
       enhancement = available[name],
       stats, active, update, cost;
+      console.log('in active')
   if(enhancement) {
     cost = this.energy + enhancement.cost;
 
@@ -499,6 +499,7 @@ Ship.prototype.activate = function(name) {
       stats = enhancement.stats;
       for(var s in stats) {
         active[s][name] = enhancement;
+        console.log(active[s][name])
       }
 
       update = { uuid: this.uuid };
