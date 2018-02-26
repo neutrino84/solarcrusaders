@@ -437,7 +437,6 @@ LoginPane.prototype._chooseShip = function(button) {
   } else {
     this.errorContainer1.alpha = 1; 
   }
-  // this.registration.addPanel(this.errorContainer1);
 };
 
 LoginPane.prototype._playAsGuest = function(button) {
@@ -450,11 +449,11 @@ LoginPane.prototype._inputUp = function(){
 }
 
 LoginPane.prototype._tutorialMode = function(button) {
+  var shipyard = this.parent.parent.parent,
+      tutorialButton = this.tutorialButton;
 
-  this.tutorialButton.activated = !this.tutorialButton.activated;
-  // this.registration.alpha = 0;
-  // this.game.emit('ui/showShips'); 
-};
+  tutorialButton.activated = !tutorialButton.activated;
+  shipyard.tutorialSelected = !shipyard.tutorialSelected;};
 
 LoginPane.prototype._register = function(button) {
   var inputs = this.loginInputs;

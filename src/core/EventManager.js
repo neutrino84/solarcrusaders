@@ -129,7 +129,7 @@ EventManager.prototype.init = function() {
 
 
   this.stationGen();
-  this.scavGen(12);
+  this.scavGen(0);
   //generate ships
   for(var a in this.ships){
     if(this.ships[a].factions){
@@ -152,46 +152,46 @@ EventManager.prototype.stationGen = function(){
     faction: 'imperial'
   });
 
-  // this.game.emit('station/create', {
-  //   chassis: 'general-station-x01',
-  //   x: -3743,
-  //   y: -941,
-  //   faction: 'temeni'
-  // });
+  this.game.emit('station/create', {
+    chassis: 'general-station-x01',
+    x: -3743,
+    y: -941,
+    faction: 'temeni'
+  });
 
-  // this.game.emit('station/create', {
-  //   chassis: 'general-station-x01',
-  //   x: 6966,
-  //   y: 4249,
-  //   faction: 'katos_boys'
-  // });
+  this.game.emit('station/create', {
+    chassis: 'general-station-x01',
+    x: 6966,
+    y: 4249,
+    faction: 'katos_boys'
+  });
 
-  // this.game.emit('station/create', {
-  //   chassis: 'general-station-x01',
-  //   x: 16000,
-  //   y: 16000,
-  //   faction: 'katos_boys'
-  // });
+  this.game.emit('station/create', {
+    chassis: 'tutorial-platform',
+    x: 16000,
+    y: 16000,
+    faction: 'tutorial'
+  });
 
-  // this.game.emit('station/create', {
-  //   chassis: 'general-station-x01',
-  //   x: -17000,
-  //   y: -18000,
-  //   faction: 'katos_boys'
-  // });
+  this.game.emit('station/create', {
+    chassis: 'tutorial-platform',
+    x: -17000,
+    y: -18000,
+    faction: 'tutorial'
+  });
 
-  // this.game.emit('station/create', {
-  //   chassis: 'general-station-x01',
-  //   x: -18000,
-  //   y: 17000,
-  //   faction: 'katos_boys'
-  // });
+  this.game.emit('station/create', {
+    chassis: 'tutorial-platform',
+    x: -18000,
+    y: 17000,
+    faction: 'tutorial'
+  });
 
   this.game.emit('station/create', {
     chassis: 'tutorial-platform',
     x: 20000,
     y: -14000,
-    faction: 'katos_boys'
+    faction: 'tutorial'
   });
 
 

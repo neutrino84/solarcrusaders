@@ -173,7 +173,8 @@ SectorState.prototype.create = function() {
     this.createManagers(); 
   } else {
     this.game.world.scale.set(1.5, 1.5);
-    this.game.camera.focus(2048, 2048); 
+    // this.game.camera.focus(2048, 2048); 
+    this.game.camera.focus(16000, 16000); 
     this.ui.create();
   }
 

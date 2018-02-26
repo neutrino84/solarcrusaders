@@ -213,6 +213,8 @@ function Shipyard(game) {
   this.middlePane.alpha = 0;
   this.bottomPane.alpha = 0;
 
+  this.tutorialSelected = false;
+
   this.game.on('ui/showShips', this._showShips, this)
 };
 
@@ -722,7 +724,7 @@ Shipyard.prototype._select= function(button){
     containers[i].panels[0].bg.removeListener('inputDown', this._select, this)
   }
 
-  this.socket.emit('user/ship', button.parent.id, this.game.auth.socket.id)
+  this.socket.emit('user/ship', button.parent.id, this.game.auth.socket.id, this.tutorialSelected)
   this.game.emit('shipyard/hover', 'selectionSFX2')
   this.game.emit('user/shipSelected')
 

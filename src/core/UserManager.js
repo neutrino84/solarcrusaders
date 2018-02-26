@@ -1,4 +1,5 @@
 var winston = require('winston'),
+    engine = require('engine'),
     User = require('./objects/User');
 
 function UserManager(game, sectorManager) {
@@ -8,6 +9,9 @@ function UserManager(game, sectorManager) {
   this.sectorManager = sectorManager;
 
   this.game.users = {};
+
+  // this.tutorialSpawns = [];
+  this.tutorialPositions = [[-17000, -18000],[16000, 16000],[-18000, 17000],[20000, -14000]]
 };
 
 UserManager.prototype.constructor = UserManager;
@@ -78,15 +82,27 @@ UserManager.prototype.ship = function(socket, args) {
       user = game.users[session.user.uuid],
       data = args[1],
       station = stationManager.getStation('ubadian-station-x01'),
-      startingPosition = station.movement.position;
+      startingPosition = station.movement.position, 
+      tutorial = null;
+
+  if(args[3]){
+    // ask Ollie why this.game.rnd.pick doesn't really work on the back end (index is always the same)
+    var num = Math.floor(Math.random()*this.tutorialPositions.length);
+    var temp = (this.tutorialPositions.splice(num, 1))[0];
+    if(this.tutorialPositions.length < 1){
+      this.tutorialPositions = [[-17000, -18000],[16000, 16000],[-18000, 17000],[20000, -14000]]
+    }
+    startingPosition = new engine.Point(temp[0], temp[1]);
+    tutorial = [startingPosition.x, startingPosition.y];
+  }
 
   user && game.emit('ship/create', {
     chassis: args[1],
     x : startingPosition.x,
     y : startingPosition.y,
-    squadron : {}
+    squadron : {},
+    tutorial: tutorial
   }, user);
-  // this.game.clock.events.add(1500, this.update, this);
 };
 
 UserManager.prototype.all = function(uuids) {

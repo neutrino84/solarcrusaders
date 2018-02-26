@@ -28,8 +28,11 @@ function Ship(manager, data, user) {
     this.queen = data.queen
   };
   if(user){
-  this.squadron = data.squadron
-  this.docked = true;
+    if(data.tutorial){
+      this.tutorial = data.tutorial;
+    }
+    this.squadron = data.squadron
+    this.docked = true;
   };
 
   this.config = client.ShipConfiguration[this.data.chassis];
@@ -487,7 +490,6 @@ Ship.prototype.activate = function(name) {
       available = enhancements.available,
       enhancement = available[name],
       stats, active, update, cost;
-      console.log('in active')
   if(enhancement) {
     cost = this.energy + enhancement.cost;
 
@@ -499,7 +501,6 @@ Ship.prototype.activate = function(name) {
       stats = enhancement.stats;
       for(var s in stats) {
         active[s][name] = enhancement;
-        console.log(active[s][name])
       }
 
       update = { uuid: this.uuid };

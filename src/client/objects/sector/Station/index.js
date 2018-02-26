@@ -74,7 +74,6 @@ Station.prototype.refresh = function(data) {
 };
 
 Station.prototype.update = function() {
-  // calculate movement]
   if(!this.destination.isZero()) {
     var elapsed = this.game.clock.elapsed,
         d1 = this.destination.distance(this.position),

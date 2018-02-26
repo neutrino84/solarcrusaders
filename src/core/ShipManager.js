@@ -136,7 +136,7 @@ ShipManager.prototype.create = function(data, user) {
       enforcership = /^(enforcer)/,
       chassis = data.chassis,
       rndPosition;
-
+      
   ship = new Ship(this, data, user);
   ship.init(function() {
     game.emit('ship/add', ship);
@@ -347,17 +347,34 @@ ShipManager.prototype.sync = function() {
   for(var s in ships) {
     ship = ships[s];
     if(ship.docked){
-      station = this.sectorManager.stationManager.getStation('ubadian-station-x01');
+
       movement = ship.movement;
       movement.update();
-      position = station.movement.position;
 
-      data = {
-        uuid: ship.uuid,
-        pos: { x: position.x, y: position.y },
-        spd: station.speed,
-        dock: true
-      };
+      //check if tutorial is on
+      if(ship.tutorial){
+        data = {
+          uuid: ship.uuid,
+          pos: { x: ship.tutorial[0], y: ship.tutorial[1]},
+          spd: 0,
+          dock: true
+        };
+      } else {
+        station = this.sectorManager.stationManager.getStation('ubadian-station-x01');
+        position = station.movement.position;
+
+        data = {
+          uuid: ship.uuid,
+          pos: { x: position.x, y: position.y },
+          spd: station.speed,
+          dock: true
+        };
+      }
+
+
+      
+
+      
       synced.push(data);
     } else {
     movement = ship.movement;
@@ -409,10 +426,10 @@ ShipManager.prototype.update = function() {
       if(delta !== undefined) {
         updates.push(update);
       }
-      if(ship.docked){
-        update.docked = true;
-        updates.push(update)
-      }
+      // if(ship.docked){
+      //   update.docked = true;
+      //   updates.push(update)
+      // }
     }
   }
   if(updates.length > 0) {

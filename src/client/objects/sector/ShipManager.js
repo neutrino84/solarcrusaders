@@ -293,8 +293,7 @@ ShipManager.prototype._player = function(ship) {
   this.player.targetlistCooldown = false;
   this.player.previous;
   this.player.squadron = {};
-  this.game.camera.follow(this.player)
-  // this.game.camera.follow(homeBase);
+  this.game.camera.follow(this.player);
 };
 
 ShipManager.prototype._player_credits = function() {
