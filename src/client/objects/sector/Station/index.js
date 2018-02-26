@@ -46,7 +46,7 @@ Station.prototype.boot = function() {
   this.cap.pivot.set(this.cap.width/2, this.cap.height/2);
   this.cap.position.set(this.width/2, this.height/2);
   this.cap.rotation = global.Math.random() * global.Math.PI;
-
+  // console.log(this)
 
   this.explosion.create();
 

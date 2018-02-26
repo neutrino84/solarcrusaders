@@ -104,6 +104,9 @@ SectorState.prototype.preload = function() {
     this.game.load.image('general-station-x01', 'imgs/game/stations/stations_enlarged/general-x01.png');
     this.game.load.image('general-station-x01-cap', 'imgs/game/stations/stations_enlarged/general-cap-x01.png');
 
+    this.game.load.image('tutorial-platform', 'imgs/game/stations/tutorial-platform.png');
+    this.game.load.image('tutorial-platform-cap', 'imgs/game/stations/tutorial-platform-cap.png');
+
     // load strip graphics
     this.game.load.image('laser-blue', 'imgs/game/fx/laser-blue.png');
     this.game.load.image('laser-blue2', 'imgs/game/fx/laser-blue2.png');
@@ -147,7 +150,7 @@ SectorState.prototype.create = function() {
       mouse.capture = true;
       mouse.mouseWheelCallback = function(event) {
         var delta = event.deltaY / sensitivity,
-            scale = engine.Math.clamp(this.game.world.scale.x - delta, 0.01, 1.0);
+            scale = engine.Math.clamp(this.game.world.scale.x - delta, 0.03, 1.0);
             // scale = engine.Math.clamp(this.world.scale.x - delta, 0.5, 1.0);
         if(this.game.paused) { return; }
         if(this.zoom && this.zoom.isRunning) {

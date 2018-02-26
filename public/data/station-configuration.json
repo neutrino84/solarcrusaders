@@ -25,6 +25,19 @@
       "armor": 0.01
     }
   },
+  "tutorial-platform": {
+    "race": "general",
+    "stats": {
+      "health": 4000,
+      "heal": 4,
+      "speed": 2.5,
+      "size": 1200,
+      "radius": 1,
+      "rotation": 0.0001,
+      "spin": 0.001,
+      "armor": 0.04
+    }
+  },
   "scavenger-x01": {
     "race": "scavenger",
     "stats": {
