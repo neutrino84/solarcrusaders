@@ -83,6 +83,7 @@ function MiniMapPane(game, settings) {
   this.game.on('ship/player', this._player, this);
   this.game.on('player/disabled', this._fadeOut, this);
   this.game.on('player/enabled', this._fadeIn, this);
+  this.game.on('map/off', this._mapOff, this);
 
   this.game.on('squad/engageHostile', this._target, this);
 };
@@ -244,6 +245,9 @@ MiniMapPane.prototype._removeShips = function() {
   this.shipGroup.removeAll();
 };
 
+
+//CHANGE FADIN AND OUT TO TWEENS
+
 MiniMapPane.prototype._fadeIn = function() {
 
   this.game.clock.events.add(3000, function(){
@@ -285,6 +289,31 @@ MiniMapPane.prototype._fadeOut = function() {
       }
     }, this);
   }
+};
+
+MiniMapPane.prototype._mapOff = function() {
+  // var lossTimer = /^(lossTimer)/;
+
+  // for(var i = 0; i < this.game.clock.events.events.length; i++){
+  //   if(this.game.clock.events.events[i].callback.name === 'minimapFadeIn' || lossTimer.test(this.game.clock.events.events[i].callback.name)){
+  //     this.game.clock.events.remove(this.game.clock.events.events[i]);
+  //   }
+  // }
+
+  if(this.parent.alpha >= 1){
+    this.parent.alpha = 0;
+  }
+  //   this.game.clock.events.loop(100, minimapFadeOut = function(){
+  //     this.parent.alpha -= 0.055;
+  //     if(this.parent.alpha <= 0){
+  //       for(var i = 0; i < this.game.clock.events.events.length; i++){
+  //         if(this.game.clock.events.events[i].callback.name === 'minimapFadeOut'){
+  //           this.game.clock.events.remove(this.game.clock.events.events[i]);
+  //         }
+  //       }
+  //     }
+  //   }, this);
+  // }
 };
 
 MiniMapPane.prototype.paint = function() {

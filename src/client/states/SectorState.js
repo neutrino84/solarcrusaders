@@ -13,6 +13,7 @@ var engine = require('engine'),
     PlayerManager = require('../objects/sector/PlayerManager'),
     StationManager = require('../objects/sector/StationManager'),
     SquadManager = require('../objects/sector/SquadManager'),
+    TutorialManager = require('../objects/sector/TutorialManager'),
     UserManager = require('../objects/sector/UserManager'),
     SoundManager = require('../objects/sector/SoundManager'),
     HotkeyManager = require('../objects/sector/HotkeyManager'),
@@ -24,6 +25,7 @@ function SectorState(game) {
 
   
   this.game.on('user/shipSelected', this.playerCreated, this);
+  this.game.on('user/shipSelected/tutorial', this.playerCreated, this);
   this.game.on('game/loss', this.switchState, this)
   this.game.on('game/win', this.switchState, this)
   // this.game.world.static.removeAll();
@@ -173,8 +175,8 @@ SectorState.prototype.create = function() {
     this.createManagers(); 
   } else {
     this.game.world.scale.set(1.5, 1.5);
-    // this.game.camera.focus(2048, 2048); 
-    this.game.camera.focus(16000, 16000); 
+    this.game.camera.focus(2048, 2048); 
+    // this.game.camera.focus(16000, 16000); 
     this.ui.create();
   }
 
@@ -191,11 +193,18 @@ SectorState.prototype.create = function() {
   this.game.sound.add('selectionSFX2', 1);
 };
 
-SectorState.prototype.playerCreated = function(){
+SectorState.prototype.playerCreated = function(tutorial){
     var game = this.game;
+
 
     this.createManagers('firstIteration');
 
+    if(tutorial){
+      this.game.emit('map/off');
+      this.tutorialManager = new TutorialManager(this.game);
+      // this.game.emit('map/off');
+      // this.game.emit('blob')
+    };
     this.zoom = this.game.tweens.create(this.game.world.scale);
     this.zoom.to({ x: 0.8, y: 0.8 }, 5000, engine.Easing.Quadratic.InOut);
     this.zoom.delay(1500);

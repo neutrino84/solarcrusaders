@@ -87,14 +87,16 @@ UserManager.prototype.ship = function(socket, args) {
 
   if(args[3]){
     // ask Ollie why this.game.rnd.pick doesn't really work on the back end (index is always the same)
-    var num = Math.floor(Math.random()*this.tutorialPositions.length);
-    var temp = (this.tutorialPositions.splice(num, 1))[0];
+    var num = Math.floor(Math.random()*this.tutorialPositions.length),
+        temp = (this.tutorialPositions.splice(num, 1))[0];
     if(this.tutorialPositions.length < 1){
       this.tutorialPositions = [[-17000, -18000],[16000, 16000],[-18000, 17000],[20000, -14000]]
     }
     startingPosition = new engine.Point(temp[0], temp[1]);
     tutorial = [startingPosition.x, startingPosition.y];
-  }
+
+    user.tutorial = true;
+  };
 
   user && game.emit('ship/create', {
     chassis: args[1],

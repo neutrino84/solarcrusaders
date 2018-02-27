@@ -17,6 +17,7 @@ function User(game, data, socket, manager) {
   this.station = null;
   this.wave = 1;
   this.respawnMultiplier = 1;
+  this.tutorial = false;
   this.cache = {
     wave : 1,
     ship : null
