@@ -7,6 +7,8 @@ var Panel = require('../ui/Panel'),
     pixi = require('pixi'),
     Shipyard = require('../ui/panes/Shipyard'),
     BottomPane = require('../ui/panes/BottomPane'),
+    // TutorialDisplay = require('../ui/panes/TutorialDisplay'),
+    TutorialDisplay = require('../ui/panes/TutorialDisplay'),
     MiniMapPane = require('../ui/panes/MiniMapPane'),
     HeaderPane = require('../ui/panes/HeaderPane'),
     LeaderBoardPane = require('../ui/panes/LeaderBoardPane');
@@ -53,6 +55,10 @@ UI.prototype.create = function() {
   if(this.game.auth.user && !this.game.auth.user.ship){
     this.shipyard = new Shipyard(this.game); 
     this.root.addPanel(this.shipyard);
+
+     // this.tutorialDisplay = new TutorialDisplay(this.game); 
+     // this.root.addPanel(this.tutorialDisplay);
+     //  this.tutorialDisplay.create();
   } else {
     this.header.alpha = 1;
   };
@@ -64,19 +70,41 @@ UI.prototype.create = function() {
   this.game.stage.addChild(this.root);
 
   this.game.on('connected', this.reconnect, this)
+  this.game.on('tutorial/show', this.showTutorial, this)
 };
 
 UI.prototype.reconnect = function() {
   console.log('reconnecting UI')
+  // return
   if(!this.shipyard){
     this.shipyard = new Shipyard(this.game); 
     this.root.addPanel(this.shipyard);
+
+    this.root.invalidate();
   }
 }
 
 UI.prototype.refresh = function() {
   this.root.invalidate(true);
 };
+
+UI.prototype.showTutorial = function() {
+  // var TutorialDisplay = require('../ui/panes/TutorialDisplay');
+  console.log('this.root is ', this.root)
+  this.root.removePanel(this.shipyard);
+
+  this.tutorialDisplay = new TutorialDisplay(this.game); 
+  this.root.addPanel(this.tutorialDisplay);
+  this.tutorialDisplay.create();
+
+  this.root.invalidate();
+
+  // this.tutorialDisplay.create();
+
+  // this.tutorialDisplay.alpha = 0
+};
+
+
 
 UI.prototype.destroy = function() {
   this.bottom.destroy();

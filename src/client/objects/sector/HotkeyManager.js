@@ -104,6 +104,9 @@ HotkeyManager.prototype.listener = function(hotkey) {
         }
   	  };
     //squadron
+      if(key.toLowerCase() === 'q'){
+        console.log(this.player.x, this.player.y)
+      };
 
       if(key.toLowerCase() === 'c'){
         this.game.emit('hotkey/squad/closestHostile', 'closestHostile')

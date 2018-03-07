@@ -11,6 +11,7 @@ var engine = require('engine'),
     Hud = require('../../../ui/components/Hud');
 
 function Ship(manager, data) {
+  console.log('shipdata is ', data)
   engine.Sprite.call(this, manager.game, 'texture-atlas', data.chassis + '.png');
 
   this.name = data.name;

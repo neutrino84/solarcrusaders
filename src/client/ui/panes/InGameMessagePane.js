@@ -52,7 +52,6 @@ function InGameMessage(game, settings) {
   this.game.on('ingame/message', this.message, this);
   this.game.on('user/shipSelected', this.introMessage, this);
   this.game.on('wave/complete', this.waveComplete, this);
-  this.game.on('tutorialMessage', this.tutorialMessage, this);
 
 };
 
@@ -88,28 +87,25 @@ InGameMessage.prototype.message = function(message, duration) {
 };
 
 InGameMessage.prototype.introMessage = function(){
+  var events = this.game.clock.events;
   events.add(4000, function(){
     this.mainText.label.typewriter('Pirates have decended upon the sector',30)
     events.add(5000, function(){
-        this.mainText.text = '';
         this.message('Defend the Ubadian outpost until the Imperial Loyalists arrive', 30);
         events.add(7000, function(){
           this.message('Destroy both pirate bases to win', 30);
-          events.add(6000, function(){
-            this.mainText.text = '';
-          }, this);  
         }, this);
     }, this);
   }, this);
 };
 
-InGameMessage.prototype.tutorialMessage = function(msg){
-  console.log('in message')
-  if(this.tutorial === 1){
-    this.message('welcome to the Mobius Dimension tutorial', 5000)
-    this.tutorial++
-  }
-};
+// InGameMessage.prototype.tutorialMessage = function(msg){
+//   console.log('in message')
+//   if(this.tutorial === 1){
+//     this.message('welcome to the Mobius Dimension tutorial', 5000)
+//     this.tutorial++
+//   }
+// };
 
 InGameMessage.prototype.waveComplete = function(){
   this.message('* pirates spawned *')

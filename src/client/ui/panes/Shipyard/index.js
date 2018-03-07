@@ -728,7 +728,7 @@ Shipyard.prototype._select= function(button){
   this.game.emit('shipyard/hover', 'selectionSFX2')
   if(this.tutorialSelected){
     this.game.emit('user/shipSelected/tutorial', true)
-    this.game.emit('blob')
+    // this.game.emit('blob')
   }else{
     this.game.emit('user/shipSelected')
   }

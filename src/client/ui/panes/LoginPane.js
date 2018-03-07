@@ -209,7 +209,7 @@ function LoginPane(game) {
       }
     },
     guestButton: {
-      margin: [0,250,0,0],
+      margin: [0,0,0,0],
       padding: [8],
       label: {
         font: {

@@ -13,6 +13,7 @@ var engine = require('engine'),
     PlayerManager = require('../objects/sector/PlayerManager'),
     StationManager = require('../objects/sector/StationManager'),
     SquadManager = require('../objects/sector/SquadManager'),
+    ObjectManager = require('../objects/sector/ObjectManager'),
     TutorialManager = require('../objects/sector/TutorialManager'),
     UserManager = require('../objects/sector/UserManager'),
     SoundManager = require('../objects/sector/SoundManager'),
@@ -201,7 +202,9 @@ SectorState.prototype.playerCreated = function(tutorial){
 
     if(tutorial){
       this.game.emit('map/off');
-      this.tutorialManager = new TutorialManager(this.game);
+      this.tutorialManager = new TutorialManager(this.game, this.objManager);
+
+      
       // this.game.emit('map/off');
       // this.game.emit('blob')
     };
@@ -260,6 +263,7 @@ SectorState.prototype.createManagers = function(first) {
   } else {
     this.shipManager = new ShipManager(game, this);
   }
+  this.objManager = new ObjectManager(game);
   this.playerManager = new PlayerManager(game);
   this.squadManager = new SquadManager(game, this);
   this.soundManager.create();

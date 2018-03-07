@@ -92,7 +92,8 @@ UserManager.prototype.ship = function(socket, args) {
     if(this.tutorialPositions.length < 1){
       this.tutorialPositions = [[-17000, -18000],[16000, 16000],[-18000, 17000],[20000, -14000]]
     }
-    startingPosition = new engine.Point(temp[0], temp[1]);
+    // startingPosition = new engine.Point(temp[0], temp[1]);
+    startingPosition = new engine.Point(16000, 16000);
     tutorial = [startingPosition.x, startingPosition.y];
 
     user.tutorial = true;
