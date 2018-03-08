@@ -14,7 +14,8 @@ function ShipManager(game, sectorManager) {
   this.pirateAttackLog = {
     'temeni' : [],
     'katos_boys' : [],
-    'sappers' : []
+    'sappers' : [],
+    'tutorial' : []
   }
 
   this.sectorManager = sectorManager;
@@ -142,6 +143,11 @@ ShipManager.prototype.create = function(data, user) {
     game.emit('ship/add', ship);
   });
 
+  // if(data.tutorialTargetID){
+  //   console.log('target ID is ', data.tutorialTargetID)
+  //   this.
+  // }
+
   if(data.master && squadship.test(chassis)){
     this.ships[data.master].squadron[ship.uuid] = ship;
     if(chassis === 'squad-shield'){
@@ -162,6 +168,7 @@ ShipManager.prototype.create = function(data, user) {
   if(ship.data.chassis === 'enforcer-x01'){
     this.ships[data.master].battalion[ship.uuid] = ship;
   };
+  
   if(user){
     this.eventManager.squadGen(user.ship.uuid);
   };
@@ -350,7 +357,6 @@ ShipManager.prototype.sync = function() {
 
       movement = ship.movement;
       movement.update();
-
       //check if tutorial is on
       if(ship.tutorial){
         data = {
@@ -370,11 +376,6 @@ ShipManager.prototype.sync = function() {
           dock: true
         };
       }
-
-
-      
-
-      
       synced.push(data);
     } else {
     movement = ship.movement;

@@ -9,7 +9,6 @@ function Marker(manager, data) {
 
   this.manager = manager;
   this.data = data;
-  console.log(data)
   // layer chassis
   // this.chassis = new engine.Sprite.call(this, manager.game, 'texture-atlas','squad-shield_upright.png');
 

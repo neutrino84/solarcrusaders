@@ -2,18 +2,19 @@ var engine = require('engine');
 
 function TutorialManager(game, objManager) {
 	this.game = game;
+	this.socket = game.net.socket;
 	this.paused = false;
 	this.objectManager = objManager;
 	this.objectives = [];
 	// for(var i = 0; i<5; i++;){
 	// 	this.objectives.push(false)
 	// };
-	console.log('this.objectives is ', this.objectives)
+	console.log('this.game is ', this.game)
 	this.counter = 0;
-	this.condition = null;
+	this.advance = true;
 	this.activeMarker = null;
-
 	this.startingPosition = null;
+	this.prox = null;
 
 	this.markerPositions = {
 		botRight : [{x: 16410, y: 15745}, {x: 15541, y: 15745}, {x: 15526, y: 16297}, {x: 16422, y: 16308}],
@@ -27,7 +28,8 @@ function TutorialManager(game, objManager) {
 			gameEvent: 'spawn_markers'
 		},{
 			msg: 'To move your ship, right click anywhere',
-			autoAdvance: true
+			autoAdvance: false,
+			gameEvent: 'right_click'
 		},{
 			msg: 'Move your ship into the yellow circle',
 			autoAdvance: false,
@@ -41,7 +43,8 @@ function TutorialManager(game, objManager) {
 			autoAdvance: true
 		},{
 			msg: 'Destroy this pirate ship',
-			autoAdvance: false
+			autoAdvance: false,
+			gameEvent: 'spawn_pirate'
 		}	
 
 	];
@@ -53,66 +56,72 @@ function TutorialManager(game, objManager) {
 	this.game.on('ship/player', this._player, this);
 	this.game.on('tutorial/advance', this._advance, this);
 	this.game.on('tutorial/advance/check', this._advanceCheck, this);
+	this.game.on('ship/secondary', this._rightClick, this)
 
 	// this._start();
 };
 
 TutorialManager.prototype.constructor = TutorialManager;
 
+TutorialManager.prototype._rightClick = function(){
+	console.log('in test 1')
+	if(this.objectives[0] && this.objectives[0] === 'incomplete'){
+		this.advance = true;
+		this._advanceCheck();
+		this.objectives[0] = 'complete'
+		this.game.removeListener('ship/secondary', this._rightClick);
+	}
+};
+
 TutorialManager.prototype._statCheck = function(){
 	var message = this.messages[this.counter];
 
 	if(!this.paused){
 		this.paused = true;
-		// if(!message.autoAdvance){
-		// 	packet.auto = false;
-		// }
-		// if(!message.satisfied){
-		// 	packet.satisfied = false;
-		// };
-
 		if(!message.autoAdvance){
-		this.condition = true;
-		}
-
-		if(message.gameEvent){
-			this.gameEvent(message.gameEvent)
+		this.advance = false;
 		};
-		
-		this.game.emit('tutorial/message', message)
-
-		// if(!message.autoAdvance && !message.satisfied){
-		// 	this.paused = true;	
-		// 	console.log('paused')
-		// }
-	}
+		if(message.gameEvent){
+		this.gameEvent(message.gameEvent)
+		};
+		this.game.emit('tutorial/message', message);
+	};
 };
-
-TutorialManager.prototype._advance = function(){
-	console.log('advancing')
-
-	this.counter++;
-
-	this.paused = false;
-};
-
-TutorialManager.prototype.createObject = function(){
-};
-
 TutorialManager.prototype.gameEvent = function(event){
-	var objectManager = this.objectManager
+	var objectManager = this.objectManager, num, marker;
 	console.log('in game event')
 	switch(event){
 		case 'spawn_markers':
-		this.game.emit('create/markers', this.startingPosition);
+			objectManager.createMarkers(this.startingPosition)
+		break;
+		case 'right_click':
+			this.objectives[0] = 'incomplete';
 		break;
 		case 'yellow_circle':
-		var num = Math.floor(Math.random()*4),
+			num = Math.floor(Math.random()*4);
 			marker = objectManager.objects['marker-x0'+num];
-		marker.selector.yellow.alpha = 1;
-		this.objectives[0] = this.activeMarker = marker;
-		this.objectiveLoop1 = this.game.clock.events.loop(500, this._proximityCheck, this);
-		console.log('eventz are ', this.game.clock.events)
+			marker.selector.yellow.alpha = 1;
+			this.objectives[1] = this.activeMarker = marker;
+			this.objectiveLoop1 = this.game.clock.events.loop(500, this._proximityCheck, this);
+		break;
+		case 'spawn_pirate':
+			num = Math.floor(Math.random()*4);
+			marker = objectManager.objects['marker-x0'+num];
+			// marker.selector.yellow.alpha = 1;
+			console.log('gonna spawn tutorial pirate, marker is ', num, 'coordinates are ', marker.x, marker.y)
+			this.objectives[2] = this.activeMarker = marker;
+		
+			this.socket.emit('tutorial/createShip', {x: marker.x, y: marker.y, player_uuid: this.player.uuid})
+
+
+			// this.game.socket.emit('ship/create', {
+			//     chassis: args[1],
+			//     x : startingPosition.x,
+			//     y : startingPosition.y,
+			//     squadron : {},
+			//     tutorial: tutorial
+			//   }, user);
+			// this.objectiveLoop2 = this.game.clock.events.loop(500, this._proximityCheck, this);
 		break;
 	}
 };
@@ -141,7 +150,8 @@ TutorialManager.prototype._proximityCheck = function(){
 		marker = this.activeMarker,
 		distance = engine.Point.distance(player, marker);
 	// console.log('in prox check, marker is ', marker, 'distance is ', distance)
-	if(distance < 200){
+	if(distance < 200 && !this.prox){
+		this.prox = true;
 		marker.selector.yellow.alpha = 0;
 		marker.selector.green.alpha = 1;
 
@@ -150,10 +160,10 @@ TutorialManager.prototype._proximityCheck = function(){
 	    this.sequence1.start();
 	    this.sequence1.on('complete', function() {
 	      this.game.clock.events.remove(this.objectiveLoop1);
-	      console.log('eventz are ', this.game.clock.events)
-	      this.condition = false;
-	      this._advance();
+	      console.log('event complete ')
 	      marker.selector.green.alpha = 0;
+	      this.advance = true;
+	      this._advanceCheck();
 	    }, this);
 	}
 };
@@ -161,7 +171,7 @@ TutorialManager.prototype._proximityCheck = function(){
 TutorialManager.prototype._advanceCheck = function(){
 	// this.counter++;
 	// this.paused = false;
-	if(!this.condition){
+	if(this.advance){
 		this.counter++;
 		console.log('counter is ', this.counter)
 		this.paused = false;

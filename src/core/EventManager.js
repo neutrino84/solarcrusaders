@@ -123,6 +123,9 @@ EventManager.prototype.init = function() {
   this.game.on('station/disabled', this.disabled, this);
   this.game.on('game/over', this.restart, this);
 
+
+  this.sockets.on('tutorial/createShip', this.createTutorialShips, this);
+
   // refresh data interval
  this.updateTimer = this.game.clock.events.loop(1000, this.update, this);
 
@@ -141,6 +144,17 @@ EventManager.prototype.init = function() {
     }
   };
   
+};
+EventManager.prototype.createTutorialShips = function(socket, args){
+  console.log('in event manager, creating pirate ship, data is ', args[1])
+  this.game.emit('ship/create', {
+      chassis: 'pirate-x01',
+      x: args[1].x,
+      y: args[1].y,
+      ai: 'pirate',
+      tutorialTargetID: args[1].player_uuid,
+      faction: 'tutorial'
+    });
 };
 
 EventManager.prototype.stationGen = function(){

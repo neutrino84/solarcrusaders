@@ -6,7 +6,12 @@ function Pirate(ship, faction) {
 
   this.type = 'pirate';
 
-  this.attackingStation = false;
+  if(ship.data.tutorialTarget){
+  this.attackingStation = true;
+  this.target = this.manager.ships[ship.data.tutorialTarget]
+  }else{
+  this.attackingStation = false; 
+  }
 
   this.settings = client.AIConfiguration[this.type];
 
@@ -199,10 +204,20 @@ Pirate.prototype.plot = function(){
       // return
   sensor.setTo(p1.x, p1.y, settings['sensor_' + this.faction].range);    
 
-  if(!this.retreat && this.target && this.target.data) {
+  if(this.faction === 'tutorial'){
+      // if(this.game.rnd)
+      size = this.target.data.size;
+      distance = this.target.movement.position.distance(p1)
+      offset.copyFrom(this.target.movement.position);
+      offset.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
+      if(this.game.rnd.frac() > 0.1){
+        ship.movement.plot({ x: this.offset.x-p1.x, y: this.offset.y-p1.y}, distance/2);
+      } else {
+        ship.movement.plot({ x: this.offset.x-p1.x, y: this.offset.y-p1.y}, distance);
+      }
+  }else if(!this.retreat && this.target && this.target.data || this.faction === 'tutorial'){
   	if(this.attackingStation){
-  		// this.engage(this.target)
-  		if(this.game.rnd)
+  		// if(this.game.rnd)
   		size = this.target.data.size;
   		distance = this.target.movement.position.distance(p1)
   		offset.copyFrom(this.target.movement.position);
@@ -212,7 +227,6 @@ Pirate.prototype.plot = function(){
   		} else {
   			ship.movement.plot({ x: this.offset.x-p1.x, y: this.offset.y-p1.y}, distance);
   		}
-  		
   	} else {
   	 size = this.target.data.size * 4;
   	 distance = this.target.movement.position.distance(p1)
@@ -222,6 +236,7 @@ Pirate.prototype.plot = function(){
   	 // ship.movement.plot({ x: this.offset.x-p1.x, y: this.offset.y-p1.y });
   	}
   } else if(rnd.frac() < 0.65 || this.retreat) {
+    console.log('inside minor')
     p2 = this.getHomePosition();
     distance = p2.distance(p1);
     ship.movement.plot({ x: p2.x-p1.x, y: p2.y-p1.y }, distance/8 );
@@ -238,6 +253,15 @@ Pirate.prototype.engageStation = function(station) {
   	 this.ship.activate('booster'); 
     }
   }, this);
+};
+Pirate.prototype.engagePlayer = function(target) {
+  var ship = this.ship;
+
+  if(ship.faction !== 'tutorial'){return}
+  console.log('engaging player')
+  this.target = target;
+  this.attackingStation = true;
+  this.engage(target);
 };
 Pirate.prototype.disengage = function() {
   if(this.attackingStation){

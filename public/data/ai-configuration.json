@@ -47,6 +47,10 @@
       "aim": 1,
       "range": 596
     },
+    "sensor_tutorial": {
+      "aim": 1,
+      "range": 596
+    },
     "escape": {
       "health": 0.2
     }

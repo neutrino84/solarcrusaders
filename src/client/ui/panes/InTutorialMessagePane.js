@@ -42,17 +42,9 @@ function InTutorialMessage(game, settings) {
         bg: false
       });
 
-  this.mainText.text = ''
+  this.mainText.text = '';
 
-  this.continue = true;
-
-  this.addPanel(this.mainText)
-  // this.game.on('player/credits', this._credits, this);
-  // this.game.on('player/credits/init', this._credits, this);
-
-  // this.game.on('ingame/message', this.message, this);
-  // this.game.on('user/shipSelected', this.introMessage, this);
-  // this.game.on('wave/complete', this.waveComplete, this);
+  this.addPanel(this.mainText);
   this.game.on('tutorial/message', this.message, this);
 
 };
@@ -61,26 +53,21 @@ InTutorialMessage.prototype = Object.create(Pane.prototype);
 InTutorialMessage.prototype.constructor = InTutorialMessage;
 
 InTutorialMessage.prototype.message = function(message) {
-  if(!message.autoAdvance){
-    this.continue = false;
-  };
 
   var events = this.game.clock.events,
       duration = message.duration || 3500;  
 
   this.mainText.text = '';
 
-    this.game.clock.events.add(250, function(){
+    this.game.clock.events.add(150, function(){
       this.mainText.label.typewriter(message.msg,10);
         events.add(duration, function(){
+          console.log('tutMsg, msg is ', message.msg, ' duration is ', duration, 'msg.autoAdvance is ', message.autoAdvance)
           this.game.emit('tutorial/advance/check');
-          if(this.continue){
+          if(message.autoAdvance){
             this.mainText.text = '';
           }
-        }, this)
-
-      // this.game.emit('tutorial/advance/check');
-
+        }, this);
     }, this);
 };
 module.exports = InTutorialMessage;

@@ -27,6 +27,9 @@ function Ship(manager, data, user) {
   if(data.queen){
     this.queen = data.queen
   };
+  if(data.tutorialTargetID){
+    this.tutorialTarget = data.tutorialTargetID;
+  }
   if(user){
     if(data.tutorial){
       this.tutorial = data.tutorial;
@@ -49,6 +52,13 @@ function Ship(manager, data, user) {
   }
   if(this.user){
     this.data.credits = this.config.stats.size*2
+  }
+  if(data.tutorialTargetID){
+    console.log('in hereeeeeee')
+    this.data.credits = 15;
+    // this.data.health = this.config.stats.health/10
+    this.data.health = 1;
+    this.data.speed = this.config.stats.speed/2;
   }
 
   // disabled state
