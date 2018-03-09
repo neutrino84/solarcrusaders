@@ -61,7 +61,7 @@ Movement.prototype.update = function() {
 };
 
 Movement.prototype.plot = function(data) {
-  var step = 10/global.Math.max(this.game.clock.fps, 34); //Movement.STEP_SIZE,
+  var step = 10/global.Math.max(this.game.clock.fps, 34), //Movement.STEP_SIZE,
       compensate = Movement.COMPENSATE,
       compensation = engine.Point.interpolate(this.ship.position, data.cmp, compensate);
 
