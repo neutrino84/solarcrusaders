@@ -32,8 +32,9 @@ Asteroid.prototype.update = function() {
 Asteroid.prototype.createOrbit = function() {
   var x = 2048 / 4,
       y = 2048 / 4,
-      width = this.game.rnd.integerInRange(256, 2048);
-      height = this.game.rnd.integerInRange(256, 2048),
+      game = this.game,
+      width = game.rnd.integerInRange(256, 2048),
+      height = game.rnd.integerInRange(256, 2048),
       ellipse = new engine.Ellipse(x, y, width, height);
   return ellipse;
 };
