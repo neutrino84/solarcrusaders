@@ -140,7 +140,7 @@ SectorState.prototype.createSpace = function() {
 
 SectorState.prototype.createAsteroids = function() {
   var game = this.game,
-      steroid,
+      asteroid,
       amount = 32;
   for(var i=0; i<amount; i++) {
     asteroid = new Asteroid(this.game);
