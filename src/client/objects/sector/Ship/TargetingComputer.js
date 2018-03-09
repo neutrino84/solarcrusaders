@@ -29,7 +29,8 @@ TargetingComputer.prototype.create = function() {
 
 TargetingComputer.prototype.attack = function(data) {
   var hardpoints = this.hardpoints,
-      target = this.target;
+      target = this.target,
+      hardpoint;
   if(hardpoints.length > 0) {
     // update target
     target.set(data.targ.x, data.targ.y);
