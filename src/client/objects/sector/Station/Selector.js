@@ -22,7 +22,7 @@ Selector.prototype.create = function() {
       pi = global.Math.PI,
       size = station.data.size + Selector.SIZE_PADDING,
       color, alpha, thickness,
-      x, y, start, end, length;
+      x, y, start, end, length, target;
 
   // set colors
   if(station.data.race === 'general') {
