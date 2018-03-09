@@ -121,7 +121,7 @@ Group.prototype.swap = function(child1, child2) {
 };
 
 Group.prototype.remove = function(child, options) {
-  var options = options || false
+  var options = options || false,
       removed = this.removeChild(child);
   if(options && removed) {
     removed.destroy(options);
