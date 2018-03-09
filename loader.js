@@ -22,7 +22,7 @@ fs.open(configFilePath, 'r', function(err) {
     loader.displayStartupMessages();
     loader.start();
 
-    if(nconf.get('daemon') !== 'false' && nconf.get('daemon') !== false) {
+    if(nconf.get('daemonize-process') !== 'false' && nconf.get('daemonize-process') !== false) {
       if(File.existsSync(pidFilePath)) {
         try {
           pid = fs.readFileSync(pidFilePath, { encoding: 'utf-8' });
@@ -33,7 +33,7 @@ fs.open(configFilePath, 'r', function(err) {
         }
       }
 
-      require('daemon')({
+      require('daemonize-process')({
         stdout: process.stdout,
         stderr: process.stderr
       });

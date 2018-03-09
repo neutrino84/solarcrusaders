@@ -15,7 +15,7 @@
     "compression": "^1.7.1",
     "connect-redis": "^3.3.2",
     "cookie-parser": "1.4.x",
-    "daemon": "1.1.x",
+    "daemonize-process": "1.0.x",
     "earcut": "2.1.x",
     "eventemitter3": "2.0.x",
     "express": "^4.15.5",
