@@ -92,7 +92,7 @@ SquadronPane.prototype = Object.create(Pane.prototype);
 SquadronPane.prototype.constructor = SquadronPane;
 
 SquadronPane.prototype.create = function() {
-  var command,
+  var command, button,
       commands = SquadronPane.COMMANDS,
       game = this.game,
       settings = this.settings,
