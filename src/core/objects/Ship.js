@@ -54,10 +54,9 @@ function Ship(manager, data, user) {
     this.data.credits = this.config.stats.size*2
   }
   if(data.tutorialTargetID){
-    console.log('in hereeeeeee')
     this.data.credits = 15;
     // this.data.health = this.config.stats.health/10
-    this.data.health = 1;
+    this.data.health = 15;
     this.data.speed = this.config.stats.speed/2;
   }
 
@@ -432,12 +431,13 @@ Ship.prototype.disable = function() {
     }, this)
   };
   if(this.faction){
-    if(this.faction === 'temeni' || this.faction === 'katos_boys'){
+    if(this.faction === 'temeni' || this.faction === 'katos_boys' || this.faction === 'tutorial'){
+      if(this.faction === 'tutorial'){ console.log('uuid is ', this.uuid) };
       this.removeTimer = this.game.clock.events.add(2500, function(){
         this.game.emit('ship/remove', this);
       }, this)
     }
-  }
+  };
 };
 
 Ship.prototype.blast = function() {
