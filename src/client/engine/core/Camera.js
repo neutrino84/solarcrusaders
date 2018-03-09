@@ -71,7 +71,8 @@ Camera.prototype.update = function() {
       rnd = this.game.rnd,
       view = this.view,
       world = this.world,
-      smoothing = this.smoothing;
+      smoothing = this.smoothing,
+      position;
 
   if(this.target) {
     if(this.smooth) {
