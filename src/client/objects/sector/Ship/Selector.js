@@ -20,7 +20,7 @@ Selector.prototype.create = function() {
       pi = global.Math.PI,
       size = ship.data.size,
       color, alpha, thickness,
-      x, y, start, end, length;
+      x, y, start, end, length, target;
 
   // set colors
   if(ship.isPirate) {
