@@ -40,7 +40,7 @@ Asteroid.prototype.createOrbit = function() {
 };
 
 Asteroid.prototype.createScale = function() {
-  var scale = this.game.rnd.realInRange(0.4, 1.2);
+  var scale = this.game.rnd.realInRange(0.4, 1.2),
       point = { x: scale, y: scale };
   return point;
 };
