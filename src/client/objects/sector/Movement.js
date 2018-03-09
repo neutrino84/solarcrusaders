@@ -28,7 +28,7 @@ Movement.prototype.update = function() {
       step = this.step,
       speed = this.speed,
       ship = this.ship,
-      a1, a2;
+      a1, a2, compensate;
 
   // throttle
   this.throttle = position.distance(ship.position)/(ship.config.stats.speed*Movement.STEP_SIZE);
