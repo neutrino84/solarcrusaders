@@ -13,6 +13,7 @@ var winston = require('winston'),
 
 function Database(app) {
   this.app = app;
+  this.logger = app.logger;
   this.nconf = app.nconf;
   this.client = null;
   this.schema = null;
@@ -23,7 +24,8 @@ Database.schema = new Schema(Redis, {});
 Database.prototype.constructor = Database;
 
 Database.prototype.init = function(next) {
-  var options = this.nconf.get('redis:options'),
+  var logger = this.logger,
+      options = this.nconf.get('redis:options'),
       host = this.nconf.get('redis:host'),
       port = this.nconf.get('redis:port'),
       password = this.nconf.get('redis:password'),
@@ -34,7 +36,11 @@ Database.prototype.init = function(next) {
   this.client = client;
   this.client.on('error', this.error);
   this.client.on('end', this.end);
-  password && this.client.auth(password);
+  
+  // authenticate redis
+  if(password != '') {
+    this.client.auth(password);
+  }
 
   // caminte init
   this.schema = Database.schema;
@@ -42,7 +48,7 @@ Database.prototype.init = function(next) {
   this.schema.settings.database = db;
   this.schema.adapter.initialize(this.client);
   this.schema.on('connected', function() {
-    winston.info('[Database] Redis client ready...');
+    logger.info('[Database] Redis client ready...');
     next();
   });
 };
@@ -52,7 +58,7 @@ Database.prototype.close = function() {
 };
 
 Database.prototype.error = function(err) {
-  winston.error('[Database] ' + err.message);
+  this.logger.error('[Database] ' + err.message);
   switch(err.code) {
     case 'ECONNREFUSED':
       process.exit(1);
@@ -62,7 +68,7 @@ Database.prototype.error = function(err) {
 };
 
 Database.prototype.end = function() {
-  winston.error('[Database] connection has ended.');
+  this.logger.error('[Database] connection has ended.');
 };
 
 Database.prototype.info = function(callback) {
