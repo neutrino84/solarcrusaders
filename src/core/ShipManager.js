@@ -1,6 +1,5 @@
 
-var winston = require('winston'),
-    uuid = require('uuid'),
+var uuid = require('uuid'),
     engine = require('engine'),
     Ship = require('./objects/Ship');
 

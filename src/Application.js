@@ -1,8 +1,10 @@
 
-var path = require('path'),
+var util = require('util'),
+    path = require('path'),
     async = require('async'),
     nconf = require('nconf'),
     winston = require('winston'),
+    moment = require('moment'),
     pkg = require('../package.json'),
 
     configFilePath = path.join(__dirname, '/../config.json'),
@@ -41,7 +43,15 @@ Application.prototype.init = function() {
   }
 
   this.nconf = nconf;
-  this.winston = winston;
+  this.logger = new (winston.Logger)({
+    transports: [new winston.transports.Console({
+      formatter: function(params) {
+        var timestamp = moment().format('YYYY-MM-DD HH:mm:ss').trim(),
+            formatted = util.format('%s %s', timestamp, params.message);
+        return formatted;
+      }
+    })]
+  });
   
   // add process listeners
   process.on('SIGTERM', this.shutdown.bind(this));
@@ -60,57 +70,47 @@ Application.prototype.start = function() {
     function(next) {
       self.database = new Database(self);
       self.database.init(next);
-
-      winston.info('[Application] Connected database client...');
+      self.logger.info('[Application] Connected database client...');
     },
     function(next) {
       self.model = new Model(self);
       self.model.init(next);
-
-      winston.info('[Application] Models loaded...');
+      self.logger.info('[Application] Models loaded...');
     },
     function(next) {
       self.server = new Server(self);
       self.server.init(next);
-      
-      winston.info('[Application] Starting web engine...');
+      self.logger.info('[Application] Starting web engine...');
     },
     function(next) {
       self.sockets = new Sockets(self);
       self.sockets.init(next);
-
-      winston.info('[Application] Starting sockets engine...');
+      self.logger.info('[Application] Starting sockets engine...');
     },
     function(next) {
       self.game = new Game(self);
       self.game.init(next);
-
-      winston.info('[Application] Started game engine...');
+      self.logger.info('[Application] Started game engine...');
     },
     function(next) {
       self.routes = new Routes(self);
       self.routes.init(next);
-
-      winston.info('[Application] Linking routes...');
-    },
-    function(next) {
-      self.server.listen(process.env.port);
-      next();
-
-      winston.info('[Application] Listening on port ' + process.env.port + ' [' + global.process.pid + ']');
+      self.logger.info('[Application] Linking routes...');
     }
   ], function(err) {
-    if(err) {
-      winston.error('[Application] ' + err.message);
-      switch(err.message) {
-        default:
-          if(err.stacktrace !== false) {
-            winston.error('[Application] ' + err.stack);
-          } else {
-            winston.error('[Application] ' + err.message);
-          }
-          break;
+    if(!err) {
+      self.server.listen(process.env.port);
+      self.logger.info('[Application] Listening on port ' + process.env.port + ' [' + global.process.pid + ']');
+    } else {
+      if(err.stacktrace !== false) {
+        self.logger.error('[Application] ' + err.message);
+        self.logger.error('[Application] ' + err.stack);
+      } else {
+        self.logger.error('[Application] ' + err.message);
       }
+
+      // error
+      // exit process
       process.exit(0);
     }
   });
@@ -120,10 +120,10 @@ Application.prototype.message = function(message) {
   if(typeof message !== 'object') { return; }
   switch(message.action) {
     case 'reload':
-      winston.info('[Application] reload.');
+      this.logger.info('[Application] reload.');
       break;
     default:
-      winston.info('[Application] Process message ' + message.action + '.');
+      this.logger.info('[Application] Process message ' + message.action + '.');
       break;
   }
 };
@@ -131,28 +131,30 @@ Application.prototype.message = function(message) {
 Application.prototype.shutdown = function(code) {
   if(this.database !== null) {
     this.database.close();
-    winston.info('[Application] Database connection closed.');
+    this.logger.info('[Application] Database connection closed.');
   }
   if(this.server !== null) {
     this.server.http.close();
-    winston.info('[Application] Web server closed.');
+    this.logger.info('[Application] Web server closed.');
   }
-  winston.info('[Application] Shutdown complete.');
+  this.logger.info('[Application] Shutdown complete.');
+  
+  // exit process
   process.exit(code || 0);
 };
 
 Application.prototype.restart = function() {
   if(process.send) {
-    winston.info('[Application] Restarting...');
+    this.logger.info('[Application] Restarting...');
     process.send({ action: 'restart' });
   } else {
-    winston.error('[Application] Could not restart server. Shutting down.');
+    this.logger.error('[Application] Could not restart server. Shutting down.');
     this.shutdown(1);
   }
 };
 
 Application.prototype.exception = function(err) {
-  winston.error('[Application] ' + err.stack);
+  this.logger.error('[Application] ' + err.stack);
   this.shutdown(1);
 };
 

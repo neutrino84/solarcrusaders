@@ -1,6 +1,5 @@
 
-var winston = require('winston'),
-    async = require('async'),
+var async = require('async'),
     passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy,
     Validator = require('../utils/Validator'),

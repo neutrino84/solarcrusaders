@@ -84,8 +84,8 @@ Routes.prototype.init = function(next) {
    * Error
    */
   this.express.use(function(err, req, res, next) {
-    self.app.winston.error('[Routes] ' + err.message + ' --- ' + err.stack);
-    res.json({ error: err.message, data: err.data });
+    self.app.logger.error('[Routes] ' + err.message + ' --- ' + err.stack);
+    // res.json({ error: err.message, data: err.data });
   });
 
   next();

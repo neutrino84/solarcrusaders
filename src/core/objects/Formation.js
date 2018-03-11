@@ -72,7 +72,8 @@ Formation.prototype.position = function(ship, out) {
     // compute circumference point
     circle.circumferencePoint(radians, false, false, out);
   } else {
-    winston.warn('[Formation] Squadron ship not found in formation');
+    // warn bad state condition
+    parent.game.logger.warn('[Formation] Squadron ship not found in formation');
   }
 };
 

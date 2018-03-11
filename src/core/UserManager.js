@@ -1,6 +1,5 @@
 
-var winston = require('winston'),
-    User = require('./objects/User');
+var User = require('./objects/User');
 
 function UserManager(game) {
   this.game = game;
@@ -32,12 +31,12 @@ UserManager.prototype.connect = function(socket) {
     user = users[session.user.uuid];
 
     if(user) {
-      winston.info('[UserManager] Reconnecting an existing user to socket');
+      game.logger.info('[UserManager] Reconnecting an existing user to socket');
 
       // connect user socket
       user.reconnected(socket);
     } else {
-      winston.info('[UserManager] Connecting a new user to socket');
+      game.logger.info('[UserManager] Connecting a new user to socket');
 
       // create new user
       user = new User(game, session.user);
@@ -60,7 +59,7 @@ UserManager.prototype.connect = function(socket) {
       }, this);
     }
   } else {
-    winston.error('[UserManager] An error occurred connecting socket to user');
+    game.logger.error('[UserManager] An error occurred connecting socket to user');
 
     // errant socket disconnect
     this.disconnect(socket);

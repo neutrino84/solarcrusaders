@@ -9,7 +9,7 @@ var engine = require('engine'),
 
 function Game(app) {
   this.app = app;
-  this.winston = app.winston;
+  this.logger = app.logger;
   this.database = app.database;
   this.model = app.model;
   this.sockets = app.sockets;
@@ -70,7 +70,7 @@ Game.prototype.update = function() {
 
   // check for overload
   if(this.delta > this.clock.stepSize) {
-    this.winston.info('overload warning');
+    this.logger.info('[Game] Step size exceeded by ' + (this.delta - this.clock.stepSize) + 'ms');
   }
 };
 

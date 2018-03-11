@@ -1,7 +1,6 @@
 
 var EventEmitter = require('eventemitter3'),
-    io = require('socket.io'),
-    winston = require('winston');
+    io = require('socket.io');
 
 function Socket(app) {
   this.app = app;
