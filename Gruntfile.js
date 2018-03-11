@@ -99,24 +99,10 @@ module.exports = function(grunt) {
       options: {
         mangle: {},
         compress: {
-          sequences: true,
-          properties: true,
-          dead_code: true,
-          drop_debugger: true,
-          drop_console: true,
-          unsafe: true,
-          conditionals : true,
-          comparisons: true,
-          evaluate: true,
-          booleans: true,
-          loops: true,
-          unused: true,
-          hoist_funs: true,
-          hoist_vars: true,
-          if_return: true,
-          join_vars: true,
-          cascade: true,
-          side_effects: true,
+          passes: 1,
+          keep_fargs: false,
+          reduce_funcs: false,
+          keep_infinity: true,
           warnings: true
         }
       },
