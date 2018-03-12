@@ -25,7 +25,9 @@ Destroy.prototype = {
       this.animations.destroy();
     }
 
-    this.game.tweens.removeFrom(this);
+    if(this.game) {
+      this.game.tweens.removeFrom(this);
+    }
 
     switch(this.type) {
       case Const.PARTICLE:
