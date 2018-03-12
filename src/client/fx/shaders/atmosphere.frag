@@ -2,46 +2,60 @@ precision lowp float;
 
 varying vec2 vTextureCoord;
 
+uniform float dist;
+uniform float glow;
+uniform float offset;
+uniform vec3 color;
+
 // rendering params
-const float sphsize = 0.8; // planet size
-const float dist = 0.12; // distance for glow and distortion
-const float glow = 2.2; // glow amount, mainly on hit side
+const float sphsize = 0.80;
+const float start = 0.0;
+const float steps = 512.0;
+const float stepsize = 0.006;
 
-const float start = 120.0;
-const float steps = 292.0; // number of steps for the volumetric rendering
-const float stepsize = 0.01;
-
-float atmosphere(vec3 p) {
-  float d = max(0.0, dist - max(0.0, length(p) - sphsize) / sphsize) / dist; // for distortion and glow area
-  float x = max(1.0, p.x * 2.0); // to increase glow on left side
-  return length(p) * (d * glow * x)+ d * glow * x; // return the result with glow applied
+float atmosphere(vec3 p, float d, float g) {
+  float len = max(0.0, d - max(0.0, length(p) - sphsize) / sphsize) / d;
+  return length(p) * (len * g) + len * g;
 }
 
 void main() {
   vec2 uv = vTextureCoord - vec2(0.5, 0.5);
+  vec3 pos = vec3(uv, 0.0);
+  vec3 l = normalize(vec3(1.0, 0.0, 1.0));
+
   vec3 dir = vec3(uv, 1.0);
-  vec3 from = vec3(0., 0., -2.);
+  vec3 from = vec3(0.0, 0.0, -2.0);
   vec3 col = vec3(0.0, 0.0, 0.0);
-  
+
   float v = 0.0;
   for(float r=start; r<steps; r++) {
     vec3 p = from + r * dir * stepsize;
-    if(length(p)-sphsize > 0.0) {
-      v += atmosphere(p);
-    } else {
-      v += min(0.82, atmosphere(p));
+
+    if(length(p)-sphsize>0.0) {
+      v += atmosphere(p, dist, glow*3.6);
     }
   }
 
-  // average values and
-  // apply bright factor
+  float w = 0.0;
+  for(float r=start; r<steps; r++) {
+    vec3 p = from + r * dir * stepsize;
+
+    if(length(p)-sphsize>0.0) {
+      w += atmosphere(p, dist * 5.0, glow*0.4);
+    }
+  }
+
+  // outer atmosphere
+  w /= steps;
+  w *= 0.5;
+
+  // inner atmosphere
   v /= steps;
-  v *= pow(v, 1.8);
+  v *= 0.25;
+  w += v;
 
-  // green - vec3(v/4.2, v/1.8, v/3.2);
-  // red - vec3(v/1.2, v/3.6, v/3.6);
-  // blue - vec3(v/3.0, v/1.8, v/1.0);
-  col += vec3(v/3.0, v/1.8, v/1.0);
+  // colorize
+  col = vec3(w*color.r, w*color.g, w*color.b);
 
-  gl_FragColor = vec4(col, 0.); 
+  gl_FragColor = vec4(col, v);
 }

@@ -12,7 +12,7 @@ function Planet(game) {
   engine.Shader.call(this, game, this.planetTexture);
 
   // create planet atmosphere
-  this.atmosphere = new Atmosphere(game, 0.12, 4.0, 1.0, [0.345, 0.71, 1.0]);
+  this.atmosphere = new Atmosphere(game, 0.025, 4.0, 1.0, [0.345, 0.71, 1.0]);
   this.atmosphere.cache();
   this.addChild(this.atmosphere);
 

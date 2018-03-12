@@ -5,7 +5,7 @@ var pixi = require('pixi'),
     Shader = require('pixi-gl-core').GLShader;
 
 function Nebula(game, offset, color) {
-  engine.Shader.call(this, game, new pixi.Texture(engine.Shader.getRepeatTexture(game, 'clouds')));
+  engine.Shader.call(this, game, new pixi.Texture(engine.Shader.getRepeatTexture(game, 'noise')));
 
   this.offset = offset || 1.0;
   this.color = color || [0.54, 0.72, 1.0];

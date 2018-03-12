@@ -6,7 +6,7 @@ var pixi = require('pixi'),
 
 function Space(game) {
   this.spaceTexture = new pixi.Texture(engine.Shader.getRepeatTexture(game, 'space'));
-  this.nebulaTexture = new pixi.Texture(engine.Shader.getRepeatTexture(game, 'nebula'));
+  // this.nebulaTexture = new pixi.Texture(engine.Shader.getRepeatTexture(game, 'nebula'));
 
   engine.Shader.call(this, game, this.spaceTexture);
 
@@ -87,7 +87,7 @@ Space.prototype._renderShaderWebGL = function(renderer) {
   
   glData.shader.uniforms.uTransform = uTransform;
   glData.shader.uniforms.uSampler = renderer.bindTexture(this.spaceTexture, 0);
-  glData.shader.uniforms.uMapSampler = renderer.bindTexture(this.nebulaTexture, 1);
+  // glData.shader.uniforms.uMapSampler = renderer.bindTexture(this.nebulaTexture, 1);
 
   renderer.state.setBlendMode(this.blendMode);
 
@@ -101,7 +101,7 @@ Space.prototype.destroy = function() {
   this.tileScale = null;
   this.tilePosition = null;
   this.spaceTexture = null;
-  this.nebulaTexture = null;
+  // this.nebulaTexture = null;
   
   this._glDatas = null;
 };
