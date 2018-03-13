@@ -8,7 +8,6 @@ function NebulaCluster(game) {
 
   this.game = game;
   this.sprites = [];
-  this.tweens = [];
 
   this.pivot.set(512, 512);
 };
@@ -19,8 +18,7 @@ NebulaCluster.prototype.constructor = NebulaCluster;
 NebulaCluster.prototype.create = function(density, speed, spread, color) {
   var game = this.game,
       sprites = this.sprites,
-      tweens = this.tweens,
-      nebula, tween, rnd;
+      nebula, rnd, scale;
 
   this.density = density || 2;
   this.speed = speed || 0.00006;
@@ -29,6 +27,7 @@ NebulaCluster.prototype.create = function(density, speed, spread, color) {
 
   for(var i=0; i<density; i++) {
     rnd = i/(density-1);
+    scale = game.rnd.realInRange(1.8, 3.6);
     nebula = new Nebula(game, rnd * 4.4 + 2.6, this.color);
     nebula.cache();
     nebula.pivot.set(512, 512);
@@ -36,42 +35,61 @@ NebulaCluster.prototype.create = function(density, speed, spread, color) {
       game.rnd.realInRange(-this.spread, this.spread),
       game.rnd.realInRange(-this.spread, this.spread));
     nebula.rotation = 2 * global.Math.PI * rnd;
-    nebula.scale.set(2.4*rnd+1.4, 2.4*rnd+1.4);
+    nebula.scale.set(scale, scale);
 
     sprites.push(nebula);
-    tweens.push(tween);
 
     this.addChild(nebula);
   }
-  
-  // this.lightning = new pixi.Sprite();
-  // this.lightning.blendMode = engine.BlendMode.ADD;
-  // this.lightning.pivot.set(256, 256);
-  // this.lightning.alpha = 0.0;
 
-  // this.lightningTween = tweens.create(this.lightning);
-  // this.lightningTween.to({ alpha: 0.3 }, 50, engine.Easing.Quadratic.InOut, false, 0, 0, true);
+  // lightning
+  this.lightning = new pixi.Sprite();
+  this.lightning.blendMode = engine.BlendMode.ADD;
+  this.lightning.pivot.set(512, 512);
+  this.lightning.alpha = 1.0;
 
-  // this.addChildAt(this.lightning, 2);
+  // start storm
+  this.storm();
+
+  this.addChild(this.lightning);
 };
 
 NebulaCluster.prototype.update = function() {
   var nebula,
-      rand = global.Math.random(),
+      game = this.game,
       sprites = this.sprites,
       len = sprites.length;
+
   for(var i=0; i<len; i++) {
     nebula = sprites[i];
     nebula.rotation += this.speed * (this.density - i) * (i%2 != 1 ? -1 : 1);
   }
-  // if(!this.lightningTween.isRunning && rand > 0.99) {
-    // nebula = sprites[global.Math.floor(global.Math.random() * len)];
-    // this.lightning.texture = nebula.texture;
-    // this.lightning.rotation = nebula.rotation;
-    // this.lightning.position.copy(nebula.position);
-    // this.lightning.scale.copy(nebula.scale);
-    // this.lightningTween.start();
-  // }
+};
+
+NebulaCluster.prototype.storm = function() {
+  var nebula,
+      game = this.game,
+      sprites = this.sprites,
+      lightning = this.lightning,
+      tween;
+
+  nebula = sprites[game.rnd.integerInRange(0, sprites.length-1)];
+
+  game.clock.events.add(game.rnd.integerInRange(250, 3000),
+    function() {
+      lightning.alpha = game.rnd.realInRange(0.16, 0.48);
+      lightning.texture = nebula.texture;
+      lightning.rotation = nebula.rotation;
+      lightning.position.copy(nebula.position);
+      lightning.scale.copy(nebula.scale);
+
+      tween = game.tweens.create(lightning);
+      tween.to({ alpha: 0.0 }, game.rnd.integerInRange(250, 500), engine.Easing.Quadratic.InOut, false, 0, 0);
+      tween.start();
+
+      game.clock.events.add(game.rnd.integerInRange(500, 3000), this.storm, this);
+    }, this
+  );
 };
 
 module.exports = NebulaCluster;
