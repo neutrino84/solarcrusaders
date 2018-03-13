@@ -20,28 +20,28 @@ function EventManager(game, manager) {
   this.wavecycleCount = 0;
   this.passiveWave = 0;
 
-  // this.game.clock.events.loop(1000, this.wavecycle, this);
+  this.game.clock.events.loop(1000, this.wavecycle, this);
   this.ships = {
-    basic: 0,
-    enforcer: 0,
+    basic: 5,
+    enforcer: 1,
     pirate: {
       factions : {
         'katos_boys' : {
-          num : 0,
+          num : 8,
           starting_position : {
             x: 6966,
             y: 4249
           }
         },
         'temeni' : {
-          num : 0,
+          num : 8,
           starting_position : {
             x: -3743,
             y: -941
           }
         },
         'sappers' : {
-          num : 0,
+          num : 8,
           starting_position : {
             x: 1501,
             y: 1521
@@ -125,6 +125,7 @@ EventManager.prototype.init = function() {
 
 
   this.sockets.on('tutorial/createShip', this.createTutorialShips, this);
+  this.sockets.on('tutorial/finished', this.tutorialComplete, this);
 
   // refresh data interval
  this.updateTimer = this.game.clock.events.loop(1000, this.update, this);
@@ -132,7 +133,7 @@ EventManager.prototype.init = function() {
 
 
   this.stationGen();
-  this.scavGen(0);
+  this.scavGen(16);
   //generate ships
   for(var a in this.ships){
     if(this.ships[a].factions){
@@ -155,6 +156,11 @@ EventManager.prototype.createTutorialShips = function(socket, args){
       tutorialTargetID: args[1].player_uuid,
       faction: 'tutorial'
     });
+};
+
+EventManager.prototype.tutorialComplete = function(socket, args){
+  var playerId = args[1].player_uuid;
+  this.game.emit('launch_from_tutorial', playerId)
 };
 
 EventManager.prototype.stationGen = function(){
@@ -264,7 +270,7 @@ EventManager.prototype.squadGen = function(master){
       randomPostion = this.generateRandomPosition(2700),
       randomPostion2 = this.generateRandomPosition(2700),
       rando = this.game.rnd.frac();
-  return
+  // return
   if(chassis1 === 'squad-shield'){
     chassis2 = this.game.rnd.pick(this.chassis['squadron2'])
   } else {
@@ -505,7 +511,7 @@ EventManager.prototype.wavecycle = function(){
     this.game.emit('wave/cycle/complete');
     this.passiveWave++
     if(this.passiveWave > 4){
-      this.waveSpawn(8)
+      this.waveSpawn(5)
       this.passiveWave = 0;
     }
   };
@@ -514,12 +520,15 @@ EventManager.prototype.wavecycle = function(){
 EventManager.prototype.wavecycleComplete = function(num){
   var wave;
   for(var u in this.game.users){
+    if(this.game.users[u].tutorial){
+      continue
+    }
     if(this.game.users[u].wave > 10){
       wave = 10
     } else {
       wave = this.game.users[u].wave;
     }
-    var wave = this.game.users[u].wave;
+    // var wave = this.game.users[u].wave;
     if(this.game.users[u].ship){
       this.waveSpawn(wave);
       this.game.users[u].wave++;
@@ -531,17 +540,6 @@ EventManager.prototype.wavecycleComplete = function(num){
 
 EventManager.prototype.waveSpawn = function(num){
   var set, start;
-
-  // this.spawnSets = {
-  //   1 : {
-  //     'katos_boys' : {
-  //         'pirate-x01' : 1
-  //       },
-  //     'temeni' : {
-  //         'pirate-x01' : 1
-  //       }
-  //   }
-
   if(this.spawnSets[num]){
     set = this.spawnSets[num];
     for(var s in set){
@@ -568,11 +566,6 @@ EventManager.prototype.waveSpawn = function(num){
 
     };
   };
-
-  // for(var i = 0; i < this.spawnSets[num]){
-
-  // }
-
 };
 
 EventManager.prototype.update = function() {

@@ -37,6 +37,7 @@ ShipManager.prototype.init = function(eventManager) {
   this.game.on('ship/create', this.create, this);
   this.game.on('ship/disabled', this.disabled, this);
   this.game.on('pirate/attackStation', this.attackStation, this);
+  this.game.on('launch_from_tutorial', this.launchPlayerShip, this);
   this.game.on('game/over', this.removeAll, this);
 
   // networking
@@ -59,6 +60,38 @@ ShipManager.prototype.init = function(eventManager) {
 ShipManager.prototype.add = function(ship) {
   if(this.ships[ship.uuid] === undefined) {
     this.ships[ship.uuid] = ship;
+  }
+};
+
+ShipManager.prototype.launchPlayerShip = function(user_id) {
+  var ships = this.ships, ship;
+
+  for(var s in ships){
+    if(ships[s].user && ships[s].user.uuid === user_id){
+      ship = ships[s];
+      // ship.destroy();
+
+      this.game.emit('ship/remove', ship);
+
+      // ship.docked = true;
+      // ship.post_tutorial_docked = true;
+
+
+
+      // station = this.sectorManager.stationManager.getStation('ubadian-station-x01');
+      // ship.movement.data.speed = 400;
+      // ship.movement.plot(station.movement.position)
+
+
+      // ship.movement.destination.set(2048,2048)
+
+
+      // console.log('holy shit it worked. movement.position is ', station.movement.position, ship.movement.destination)
+      
+      // ship.movement.position.set(2048, 2048)
+      // ship.
+
+    }
   }
 };
 
@@ -169,7 +202,7 @@ ShipManager.prototype.create = function(data, user) {
     this.ships[data.master].battalion[ship.uuid] = ship;
   };
   
-  if(user){
+  if(user && !user.tutorial){
     this.eventManager.squadGen(user.ship.uuid);
   };
 };
@@ -349,16 +382,25 @@ ShipManager.prototype.data = function(uuids) {
 
 ShipManager.prototype.sync = function() {
   var data, ship, position, movement,
-      ships = this.ships,
+      ships = this.ships, station,
       synced = [];
   for(var s in ships) {
     ship = ships[s];
     if(ship.docked){
-
       movement = ship.movement;
       movement.update();
       //check if tutorial is on
-      if(ship.tutorial){
+      if(ship.post_tutorial_docked){
+        console.log('yup')
+        station = this.sectorManager.stationManager.getStation('ubadian-station-x01');
+        position = station.movement.position;
+        data = {
+          uuid: ship.uuid,
+          pos: { x: position.x, y: position.y },
+          spd: 400,
+          dock: true
+        };
+      } else if(ship.tutorial){
         data = {
           uuid: ship.uuid,
           pos: { x: ship.tutorial[0], y: ship.tutorial[1]},
@@ -368,7 +410,6 @@ ShipManager.prototype.sync = function() {
       } else {
         station = this.sectorManager.stationManager.getStation('ubadian-station-x01');
         position = station.movement.position;
-
         data = {
           uuid: ship.uuid,
           pos: { x: position.x, y: position.y },

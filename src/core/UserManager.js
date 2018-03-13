@@ -33,6 +33,7 @@ UserManager.prototype.init = function() {
   this.game.on('user/add', this.add, this);
   this.game.on('game/over', this.clear, this);
   this.game.on('send_user_data', this.update, this);
+  this.game.on('launch_from_tutorial', this.recreatePlayerShip, this);
 
   // update data interval
   // this.game.clock.events.loop(1000, this.update, this);
@@ -106,6 +107,23 @@ UserManager.prototype.ship = function(socket, args) {
     squadron : {},
     tutorial: tutorial
   }, user);
+};
+
+UserManager.prototype.recreatePlayerShip = function(user_id){
+    var game = this.game,
+        // session = socket.request.session,
+        stationManager = this.sectorManager.stationManager,
+        user = game.users[user_id], cached_chassis = user.ship.chassis
+        // data = args[1],
+        station = stationManager.getStation('ubadian-station-x01'),
+        startingPosition = station.movement.position;
+    console.log('in user manager, user is ', user);
+    user && game.emit('ship/create', {
+      chassis: cached_chassis,
+      x : startingPosition.x,
+      y : startingPosition.y,
+      squadron : {}
+    }, user);
 };
 
 UserManager.prototype.all = function(uuids) {

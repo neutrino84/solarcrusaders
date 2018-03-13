@@ -6,12 +6,13 @@ function Pirate(ship, faction) {
 
   this.type = 'pirate';
 
-  if(ship.data.tutorialTarget){
-  this.attackingStation = true;
-  this.target = this.manager.ships[ship.data.tutorialTarget]
-  }else{
-  this.attackingStation = false; 
+  if(ship.tutorialTarget){
+  // this.attackingStation = true;
+  this.tutorialTarget = this.manager.ships[ship.tutorialTarget];
+  console.log('TUTORIAL TARRGET EXISTS')
   }
+  this.attackingStation = false; 
+  // }
 
   this.settings = client.AIConfiguration[this.type];
 
@@ -90,7 +91,7 @@ Pirate.prototype.update = function() {
   health = ship.data.health / ship.config.stats.health;
 
   // retreat due to damage
-  if(health < settings.escape.health) {
+  if(health < settings.escape.health && !this.tutorialTarget) {
     this.retreat = true;
   } else {
     this.retreat = false;
@@ -204,18 +205,18 @@ Pirate.prototype.plot = function(){
       // return
   sensor.setTo(p1.x, p1.y, settings['sensor_' + this.faction].range);    
 
-  if(this.faction === 'tutorial'){
-      // if(this.game.rnd)
-      size = this.target.data.size;
-      distance = this.target.movement.position.distance(p1)
-      offset.copyFrom(this.target.movement.position);
-      offset.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
-      if(this.game.rnd.frac() > 0.1){
-        ship.movement.plot({ x: this.offset.x-p1.x, y: this.offset.y-p1.y}, distance/2);
-      } else {
-        ship.movement.plot({ x: this.offset.x-p1.x, y: this.offset.y-p1.y}, distance);
-      }
-  }else if(!this.retreat && this.target && this.target.data || this.faction === 'tutorial'){
+  // if(this.faction === 'tutorial'){
+  //     size = this.target.data.size;
+  //     distance = this.target.movement.position.distance(p1)
+  //     offset.copyFrom(this.target.movement.position);
+  //     offset.add(rnd.realInRange(-size, size), rnd.realInRange(-size, size));
+  //     if(this.game.rnd.frac() > 0.1){
+  //       ship.movement.plot({ x: this.offset.x-p1.x, y: this.offset.y-p1.y}, distance/2);
+  //     } else {
+  //       ship.movement.plot({ x: this.offset.x-p1.x, y: this.offset.y-p1.y}, distance);
+  //     }
+  // }else 
+  if(!this.retreat && this.target && this.target.data){
   	if(this.attackingStation){
   		// if(this.game.rnd)
   		size = this.target.data.size;
@@ -235,8 +236,7 @@ Pirate.prototype.plot = function(){
   	 ship.movement.plot({ x: this.offset.x-p1.x, y: this.offset.y-p1.y }, this.throttle);
   	 // ship.movement.plot({ x: this.offset.x-p1.x, y: this.offset.y-p1.y });
   	}
-  } else if(rnd.frac() < 0.65 || this.retreat) {
-    console.log('inside minor')
+  } else if(!this.tutorialTarget && rnd.frac() < 0.65 || this.retreat && !this.tutorialTarget) {
     p2 = this.getHomePosition();
     distance = p2.distance(p1);
     ship.movement.plot({ x: p2.x-p1.x, y: p2.y-p1.y }, distance/8 );
@@ -258,7 +258,6 @@ Pirate.prototype.engagePlayer = function(target) {
   var ship = this.ship;
 
   if(ship.faction !== 'tutorial'){return}
-  console.log('engaging player')
   this.target = target;
   this.attackingStation = true;
   this.engage(target);
@@ -274,6 +273,7 @@ Pirate.prototype.disengage = function() {
 Pirate.prototype.getHomePosition = function() {
   var position = this.settings['position_' + this.faction],
       sensor = this.sensor;
+      if(!position){return}
       sensor.setTo(position.x, position.y, position.radius);
   return sensor.random();
 };

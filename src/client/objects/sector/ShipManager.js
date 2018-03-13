@@ -273,17 +273,29 @@ ShipManager.prototype._player = function(ship) {
     this.player = ship;
     if(this.firstIteration){
       ship.alpha = 0
-      ship.events.loop(100, fadeIn = function(){
-        ship.alpha += 0.025
-        if(ship.alpha >= 1){
-          for(var i = 0; i < ship.events.events.length; i++){
-            if(ship.events.events[i].callback.name === 'fadeIn'){
-              ship.events.remove(ship.events.events[i]);
-            }
-          }
-        }
-    }, this);
-  }
+
+      this.fadeIn = this.game.tweens.create(ship);
+      this.fadeIn.to({alpha: 1}, 6000, engine.Easing.Quadratic.InOut);
+      this.fadeIn.start();
+      // this.fadeIn.delay(100);
+      // this.game.camera.unfollow();
+      // this.game.camera.smooth = true;
+      this.fadeIn.on('complete', function() {
+        console.log('fadein complete')
+
+      }, this);
+    }
+
+    //   ship.events.loop(100, fadeIn = function(){
+    //     ship.alpha += 0.025
+    //     if(ship.alpha >= 1){
+    //       for(var i = 0; i < ship.events.events.length; i++){
+    //         if(ship.events.events[i].callback.name === 'fadeIn'){
+    //           ship.events.remove(ship.events.events[i]);
+    //         }
+    //       }
+    //     }
+    // }, this);
   this._player_credits()
 
   var homeBase = this.state.stationManager.find('ubadian-station-x01')

@@ -34,6 +34,7 @@ Movement.THROTTLE_THRESHOLD = 128.0;
 Movement.prototype.constructor = Movement;
 
 Movement.prototype.update = function() {
+      if (!this.parent){return}
   var parent = this.parent,
       destination = this.destination,
       last = this.last,

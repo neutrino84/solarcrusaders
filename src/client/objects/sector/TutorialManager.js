@@ -1,17 +1,15 @@
 var engine = require('engine');
 
-function TutorialManager(game, objManager) {
+function TutorialManager(game, sectorState) {
 	this.game = game;
 	this.socket = game.net.socket;
 	this.paused = false;
-	this.objectManager = objManager;
+	this.objectManager = sectorState.objManager;
+	this.stationManager = sectorState.stationManager;
+	console.log('station manager is ', this.stationManager)
 	this.objectives = [];
-	// for(var i = 0; i<5; i++;){
-	// 	this.objectives.push(false)
-	// };
-	console.log('this.game is ', this.game)
 	this.counter = 0;
-	this.advance = true;
+	this.advanceReady = true;
 	this.activeMarker = null;
 	this.startingPosition = null;
 	this.prox = null;
@@ -25,7 +23,8 @@ function TutorialManager(game, objManager) {
 		{
 			msg: 'Welcome to the Mobius Dimension tutorial',
 			autoAdvance: true,
-			gameEvent: 'spawn_markers'
+			gameEvent: 'spawn_markers',
+			duration: 2500
 		},{
 			msg: 'To move your ship, right click anywhere',
 			autoAdvance: false,
@@ -45,7 +44,15 @@ function TutorialManager(game, objManager) {
 			msg: 'Destroy this pirate ship',
 			autoAdvance: false,
 			gameEvent: 'spawn_pirate'
-		}	
+		},{
+			msg: 'Good!',
+			autoAdvance: true,
+			duration: 1000
+		},{
+			msg: 'The object of the game is to defend the Ubadian outpost station',
+			autoAdvance: false,
+			gameEvent: 'show_bases'
+		}			
 
 	];
 
@@ -54,7 +61,7 @@ function TutorialManager(game, objManager) {
 	this.game.clock.events.add(3000, this._start, this)
 
 	this.game.on('ship/player', this._player, this);
-	this.game.on('tutorial/advance', this._advance, this);
+	this.game.on('tutorial/advance', this.advance, this);
 	this.game.on('tutorial/advance/check', this._advanceCheck, this);
 	this.game.on('ship/secondary', this._rightClick, this)
 
@@ -64,9 +71,8 @@ function TutorialManager(game, objManager) {
 TutorialManager.prototype.constructor = TutorialManager;
 
 TutorialManager.prototype._rightClick = function(){
-	console.log('in test 1')
 	if(this.objectives[0] && this.objectives[0] === 'incomplete'){
-		this.advance = true;
+		this.advanceReady = true;
 		this._advanceCheck();
 		this.objectives[0] = 'complete'
 		this.game.removeListener('ship/secondary', this._rightClick);
@@ -79,7 +85,7 @@ TutorialManager.prototype._statCheck = function(){
 	if(!this.paused){
 		this.paused = true;
 		if(!message.autoAdvance){
-		this.advance = false;
+		this.advanceReady = false;
 		};
 		if(message.gameEvent){
 		this.gameEvent(message.gameEvent)
@@ -89,7 +95,6 @@ TutorialManager.prototype._statCheck = function(){
 };
 TutorialManager.prototype.gameEvent = function(event){
 	var objectManager = this.objectManager, num, marker;
-	console.log('in game event')
 	switch(event){
 		case 'spawn_markers':
 			objectManager.createMarkers(this.startingPosition)
@@ -107,21 +112,42 @@ TutorialManager.prototype.gameEvent = function(event){
 		case 'spawn_pirate':
 			num = Math.floor(Math.random()*4);
 			marker = objectManager.objects['marker-x0'+num];
-			// marker.selector.yellow.alpha = 1;
-			console.log('gonna spawn tutorial pirate, marker is ', num, 'coordinates are ', marker.x, marker.y)
 			this.objectives[2] = this.activeMarker = marker;
-		
-			this.socket.emit('tutorial/createShip', {x: marker.x, y: marker.y, player_uuid: this.player.uuid})
+			this.socket.emit('tutorial/createShip', {x: marker.x, y: marker.y, player_uuid: this.player.uuid});
+		break;
+		case 'show_bases':
+			this.zoomOut = this.game.tweens.create(this.game.world.scale);
+			this.zoomOut.to({ x: 0.2, y: 0.2 }, 3000, engine.Easing.Quadratic.InOut);
+			this.zoomOut.delay(100);
+			this.zoomOut.start();
+
+			this.zoomIn = this.game.tweens.create(this.game.world.scale);
+			this.zoomIn.to({ x: 0.6, y: 0.6 }, 3000, engine.Easing.Quadratic.InOut);
+
+			this.fadeOut = this.game.tweens.create(this.player);
+			this.fadeOut.to({alpha: 0}, 2900, engine.Easing.Quadratic.InOut);
+			this.fadeOut.start();
 
 
-			// this.game.socket.emit('ship/create', {
-			//     chassis: args[1],
-			//     x : startingPosition.x,
-			//     y : startingPosition.y,
-			//     squadron : {},
-			//     tutorial: tutorial
-			//   }, user);
-			// this.objectiveLoop2 = this.game.clock.events.loop(500, this._proximityCheck, this);
+			// this.game.camera.smooth = true;
+			this.zoomOut.on('complete', function() {
+				this.game.camera.unfollow();
+				this.game.camera.follow(this.stationManager.find('ubadian-station-x01')); 
+				this.socket.emit('tutorial/finished', {player_uuid: this.player.user})
+
+				this.zoomIn.start();
+
+				
+				// this.zoomIn.delay(100);
+				// this.game.camera.unfollow();
+				// this.game.camera.smooth = true;
+
+				this.zoomIn.on('complete', function() {
+					// this.game.camera.unfollow();
+					// this.game.camera.follow(this.player);
+					// this.socket.emit('tutorial/finished', {player_uuid: this.player.user})
+				}, this);
+			}, this);
 		break;
 	}
 };
@@ -149,7 +175,6 @@ TutorialManager.prototype._proximityCheck = function(){
 	var player = this.player,
 		marker = this.activeMarker,
 		distance = engine.Point.distance(player, marker);
-	// console.log('in prox check, marker is ', marker, 'distance is ', distance)
 	if(distance < 200 && !this.prox){
 		this.prox = true;
 		marker.selector.yellow.alpha = 0;
@@ -160,20 +185,21 @@ TutorialManager.prototype._proximityCheck = function(){
 	    this.sequence1.start();
 	    this.sequence1.on('complete', function() {
 	      this.game.clock.events.remove(this.objectiveLoop1);
-	      console.log('event complete ')
 	      marker.selector.green.alpha = 0;
-	      this.advance = true;
-	      this._advanceCheck();
+	      this.advance();
 	    }, this);
 	}
 };
 
+
+TutorialManager.prototype.advance = function(){
+	this.advanceReady = true;
+	this._advanceCheck();
+};
+
 TutorialManager.prototype._advanceCheck = function(){
-	// this.counter++;
-	// this.paused = false;
-	if(this.advance){
+	if(this.advanceReady){
 		this.counter++;
-		console.log('counter is ', this.counter)
 		this.paused = false;
 	} else {
 	console.log('MUST MEET CONDITION')

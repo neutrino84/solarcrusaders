@@ -11,7 +11,6 @@ var engine = require('engine'),
     Hud = require('../../../ui/components/Hud');
 
 function Ship(manager, data) {
-  console.log('shipdata is ', data)
   engine.Sprite.call(this, manager.game, 'texture-atlas', data.chassis + '.png');
 
   this.name = data.name;
@@ -57,6 +56,8 @@ Ship.prototype.constructor = Ship;
 Ship.prototype.boot = function() {
   // add chassis
   this.addChild(this.chassis);
+
+
 
   // create main systems
   this.engineCore.create();
@@ -199,7 +200,11 @@ Ship.prototype.disable = function() {
   this.engineCore.show(false);
   this.shieldGenerator.stop();
   this.repair.stop();
-
+  if(this.data.faction === 'tutorial' && this.manager.ships[this.data.attacker].isPlayer){
+    //send tutorial update msg
+    this.game.emit('tutorial/advance');
+    console.log('WORKED')
+  }
   if(this.isPlayer){
     this.game.emit('player/disabled');
   }

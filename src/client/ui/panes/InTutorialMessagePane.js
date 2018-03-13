@@ -62,7 +62,6 @@ InTutorialMessage.prototype.message = function(message) {
     this.game.clock.events.add(150, function(){
       this.mainText.label.typewriter(message.msg,10);
         events.add(duration, function(){
-          console.log('tutMsg, msg is ', message.msg, ' duration is ', duration, 'msg.autoAdvance is ', message.autoAdvance)
           this.game.emit('tutorial/advance/check');
           if(message.autoAdvance){
             this.mainText.text = '';

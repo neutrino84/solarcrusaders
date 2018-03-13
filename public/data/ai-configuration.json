@@ -56,7 +56,7 @@
     }
   },
   "scavenger": {
-  	"respawn": 50000,
+  	"respawn": 60000,
   	"disengage": 9216,
   	"friendly": ["scavenger"],
   	"position": {

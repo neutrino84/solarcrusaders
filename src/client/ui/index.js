@@ -89,8 +89,6 @@ UI.prototype.refresh = function() {
 };
 
 UI.prototype.showTutorial = function() {
-  // var TutorialDisplay = require('../ui/panes/TutorialDisplay');
-  console.log('this.root is ', this.root)
   this.root.removePanel(this.shipyard);
 
   this.tutorialDisplay = new TutorialDisplay(this.game); 
@@ -98,10 +96,6 @@ UI.prototype.showTutorial = function() {
   this.tutorialDisplay.create();
 
   this.root.invalidate();
-
-  // this.tutorialDisplay.create();
-
-  // this.tutorialDisplay.alpha = 0
 };
 
 

@@ -27,22 +27,8 @@ function SectorState(game) {
   
   this.game.on('user/shipSelected', this.playerCreated, this);
   this.game.on('user/shipSelected/tutorial', this.playerCreated, this);
-  this.game.on('game/loss', this.switchState, this)
-  this.game.on('game/win', this.switchState, this)
-  // this.game.world.static.removeAll();
-  // this.game.world.background.removeAll();
-  // this.game.world.foreground.removeAll();
-  // this.game.world.removeAll();
-
-  // for(var i in game.cache._cache.image){
-  //   game.cache._cache.image[i] && game.cache.removeImage(game.cache._cache.image[i].key)
-  // }
-  // for(var j in game.cache._cache.json){
-  //   game.cache._cache.json[j] && game.cache.removeJson(game.cache._cache.json[j])
-  // }
-  // for(var s in game.cache._cache.sound){
-  //   game.cache._cache.sound[s] && game.cache.removeSound(game.cache._cache.sound[s])
-  // }
+  this.game.on('game/loss', this.switchState, this);
+  this.game.on('game/win', this.switchState, this);
 
   this.scaleX = 1.5;
   this.scaleY = 1.5;
@@ -153,7 +139,7 @@ SectorState.prototype.create = function() {
       mouse.capture = true;
       mouse.mouseWheelCallback = function(event) {
         var delta = event.deltaY / sensitivity,
-            scale = engine.Math.clamp(this.game.world.scale.x - delta, 0.03, 1.0);
+            scale = engine.Math.clamp(this.game.world.scale.x - delta, 0.5, 1.0);
             // scale = engine.Math.clamp(this.world.scale.x - delta, 0.5, 1.0);
         if(this.game.paused) { return; }
         if(this.zoom && this.zoom.isRunning) {
@@ -202,7 +188,7 @@ SectorState.prototype.playerCreated = function(tutorial){
 
     if(tutorial){
       this.game.emit('map/off');
-      this.tutorialManager = new TutorialManager(this.game, this.objManager);
+      this.tutorialManager = new TutorialManager(this.game, this);
 
       
       // this.game.emit('map/off');
