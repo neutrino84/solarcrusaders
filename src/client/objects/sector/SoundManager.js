@@ -536,7 +536,7 @@ SoundManager.prototype.generateSquadSound = function(sound){
 
 SoundManager.prototype.generateSpawnSound = function(data){
   console.log('queen spawned')
-  if(!this.manager.tutorialManager){return}
+  if(this.manager.tutorialManager){return}
   this.game.sound.play(data, 0.2, false);
   this.game.camera.shake(5000);
 };
