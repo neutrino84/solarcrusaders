@@ -1,5 +1,6 @@
 
 var engine = require('engine'),
+    Movement = require('../Movement'),
     MarkerSelector = require('./MarkerSelector');
 
 function Marker(manager, data) {
@@ -9,10 +10,8 @@ function Marker(manager, data) {
 
   this.manager = manager;
   this.data = data;
-  // layer chassis
-  // this.chassis = new engine.Sprite.call(this, manager.game, 'texture-atlas','squad-shield_upright.png');
-
   this.selector = new MarkerSelector(this);
+  this.movement = new Movement(this);
 
   // timer events
   this.events = new engine.Timer(this.game, false);

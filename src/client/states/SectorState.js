@@ -29,6 +29,7 @@ function SectorState(game) {
   this.game.on('user/shipSelected/tutorial', this.playerCreated, this);
   this.game.on('game/loss', this.switchState, this);
   this.game.on('game/win', this.switchState, this);
+  this.game.on('game/transition', this.switchState, this);
 
   this.scaleX = 1.5;
   this.scaleY = 1.5;
@@ -38,15 +39,9 @@ SectorState.prototype = Object.create(engine.State.prototype);
 SectorState.prototype.constructor = engine.State;
 
 SectorState.prototype.init = function(args) {
-  // instanciate ui
-  
-  // this.soundManager = undefined;
-
   this.ui = new UI(this.game);
 
   this.soundManager = new SoundManager(this.game);
-
-  // this.userManager = new UserManager(this.game, this);
 
   this.scrollLock = true;
 //^ does this prevent scrolling
@@ -323,7 +318,12 @@ SectorState.prototype.resize = function(width, height) {
 // pauseUpdate = function() {};
 SectorState.prototype.switchState = function(outcome) {
   this.soundManager.destroy();
-  if(outcome === 'loss'){
+
+  if(outcome === 'transition'){
+    this.game.clock.events.add(3000, function(){
+      this.game.states.start('transition')
+    }, this);
+  } else if(outcome === 'loss'){
     this.game.clock.events.add(3000, function(){
       this.game.states.start('loss')
     }, this); 
@@ -337,27 +337,17 @@ SectorState.prototype.switchState = function(outcome) {
 SectorState.prototype.shutdown = function() {
   //.. properly destroy
 
-// this.game.removeListener('user/shipSelected', this.playerCreated, this);
-// this.game.removeListener('game/loss', this.switchState, this);
-// this.game.removeListener('game/win', this.switchState, this);
-
-
 this.shipManager.destroy();
 this.stationManager.destroy();
 this.squadManager.destroy();
 this.netManager.destroy();
-// this.userManager.destroy();
-
+this.tutorialManager && this.tutorialManager.destroy()
 this.ui.destroy();
+
  this.stationManager = this.space = this.ui =
  this.planet = this.nebula = this.neb1 = this.neb2 = this.neb3 = this.hotkeyManager
  = this.shipManager = this.netManager = this.soundManager = undefined
 
- // this.game.clock.events.add(1000, function(){
- //  console.log('undefining sound manager')
- //  this.soundManager = undefined;
- // }, this)
-  
 };
 
 module.exports = SectorState;

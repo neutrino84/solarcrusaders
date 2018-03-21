@@ -132,7 +132,6 @@ Ship.prototype.refresh = function(data) {
     
       if(defender.isPlayer && attacker.data.hardpoints[0].subtype !== 'repair' && data.hardpoint.damage > 4) { 
       // this.game.camera.shake();
-      // console.log('ouch! dmg was ', data.hardpoint.damage)
       }
   };
     }
@@ -201,9 +200,7 @@ Ship.prototype.disable = function() {
   this.shieldGenerator.stop();
   this.repair.stop();
   if(this.data.faction === 'tutorial' && this.manager.ships[this.data.attacker].isPlayer){
-    //send tutorial update msg
     this.game.emit('tutorial/advance');
-    console.log('WORKED')
   }
   if(this.isPlayer){
     this.game.emit('player/disabled');

@@ -238,8 +238,8 @@ function LoginPane(game) {
         }
       },
       bg: {
-        color: 0x333ccc,
-        borderColor: 0x333ccc,
+        color: 0xadd8e6,
+        borderColor: 0xadd8e6,
         borderAlpha: 0.4,
         fillAlpha: 0.2,
         borderSize: 1.0,

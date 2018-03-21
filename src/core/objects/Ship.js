@@ -423,20 +423,19 @@ Ship.prototype.disable = function() {
     this.game.clock.events.add(5000, function(){
       this.game.emit('queen/death');
       this.game.emit('ship/remove', this);
-    }, this)
+    }, this);
   }; 
   if(this.chassis === 'scavenger-x03'){
     this.game.clock.events.add(5000, function(){
       this.game.emit('ship/remove', this);
-    }, this)
+    }, this);
   };
   if(this.faction){
     if(this.faction === 'temeni' || this.faction === 'katos_boys' || this.faction === 'tutorial'){
-      if(this.faction === 'tutorial'){ console.log('uuid is ', this.uuid) };
       this.removeTimer = this.game.clock.events.add(2500, function(){
         this.game.emit('ship/remove', this);
-      }, this)
-    }
+      }, this);
+    };
   };
 };
 

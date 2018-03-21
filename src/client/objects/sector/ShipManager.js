@@ -208,48 +208,6 @@ ShipManager.prototype.removeAll = function() {
   }
 };
 
-ShipManager.prototype.destroy = function() {
-  var game = this.game;
-
-  this.mapDataTimer && this.game.clock.events.remove(this.mapDataTimer);
-
-  game.removeListener('player/credits', this._player_credits);
-  game.removeListener('auth/disconect', this._disconnect);
-  game.removeListener('sector/sync', this._sync);
-  game.removeListener('ship/player', this._player);
-  game.removeListener('ship/primary', this._primary);
-  game.removeListener('ship/secondary', this._secondary);
-  game.removeListener('ship/removed', this._removed);
-  game.removeListener('ship/disabled', this._disabled);
-  game.removeListener('ship/enabled', this._enabled);
-  game.removeListener('game/pause', this._pause);
-  game.removeListener('game/resume', this._resume);
-  game.removeListener('squad/shieldDestinationDeactivate', this._destinationDeactivate);
-  game.removeListener('squad/engageHostile', this._target);
-
-  game.particles.remove(this.explosionEmitter);
-  game.particles.remove(this.flashEmitter);
-  game.particles.remove(this.glowEmitter);
-  game.particles.remove(this.shockwaveEmitter);
-  game.particles.remove(this.explosionEmitter);
-
-  // game.world.remove(this.trajectoryGroup);
-  game.world.remove(this.subGroup);
-  game.world.remove(this.shipsGroup);
-  game.world.remove(this.fxGroup);
-  game.world.remove(this.fireEmitter);
-  game.world.remove(this.explosionEmitter);
-  game.world.remove(this.flashEmitter);
-  game.world.remove(this.shockwaveEmitter);
-  game.world.remove(this.glowEmitter);
-  game.world.remove(this.indicator);
-
-  this.removeAll();
-
-  this.game = this.socket = this._syncBind =
-   this._attackBind = undefined;
-};
-
 ShipManager.prototype._sync = function(data) {
   var game = this.game,
       netManager = this.state.netManager,
@@ -270,32 +228,15 @@ ShipManager.prototype._sync = function(data) {
 };
 
 ShipManager.prototype._player = function(ship) {
-    this.player = ship;
-    if(this.firstIteration){
-      ship.alpha = 0
+  this.player = ship;
+  if(this.firstIteration){
+    ship.alpha = 0
 
-      this.fadeIn = this.game.tweens.create(ship);
-      this.fadeIn.to({alpha: 1}, 6000, engine.Easing.Quadratic.InOut);
-      this.fadeIn.start();
-      // this.fadeIn.delay(100);
-      // this.game.camera.unfollow();
-      // this.game.camera.smooth = true;
-      this.fadeIn.on('complete', function() {
-        console.log('fadein complete')
-
-      }, this);
-    }
-
-    //   ship.events.loop(100, fadeIn = function(){
-    //     ship.alpha += 0.025
-    //     if(ship.alpha >= 1){
-    //       for(var i = 0; i < ship.events.events.length; i++){
-    //         if(ship.events.events[i].callback.name === 'fadeIn'){
-    //           ship.events.remove(ship.events.events[i]);
-    //         }
-    //       }
-    //     }
-    // }, this);
+    this.fadeIn = this.game.tweens.create(ship);
+    this.fadeIn.to({alpha: 1}, 6000, engine.Easing.Quadratic.InOut);
+    this.fadeIn.start();
+  };
+    
   this._player_credits()
 
   var homeBase = this.state.stationManager.find('ubadian-station-x01')
@@ -505,6 +446,48 @@ ShipManager.prototype._pause = function() {
 
 ShipManager.prototype._disconnect = function() {
   this.removeAll();
+};
+
+ShipManager.prototype.destroy = function() {
+  var game = this.game;
+
+  this.mapDataTimer && this.game.clock.events.remove(this.mapDataTimer);
+
+  game.removeListener('player/credits', this._player_credits);
+  game.removeListener('auth/disconect', this._disconnect);
+  game.removeListener('sector/sync', this._sync);
+  game.removeListener('ship/player', this._player);
+  game.removeListener('ship/primary', this._primary);
+  game.removeListener('ship/secondary', this._secondary);
+  game.removeListener('ship/removed', this._removed);
+  game.removeListener('ship/disabled', this._disabled);
+  game.removeListener('ship/enabled', this._enabled);
+  game.removeListener('game/pause', this._pause);
+  game.removeListener('game/resume', this._resume);
+  game.removeListener('squad/shieldDestinationDeactivate', this._destinationDeactivate);
+  game.removeListener('squad/engageHostile', this._target);
+
+  game.particles.remove(this.explosionEmitter);
+  game.particles.remove(this.flashEmitter);
+  game.particles.remove(this.glowEmitter);
+  game.particles.remove(this.shockwaveEmitter);
+  game.particles.remove(this.explosionEmitter);
+
+  // game.world.remove(this.trajectoryGroup);
+  game.world.remove(this.subGroup);
+  game.world.remove(this.shipsGroup);
+  game.world.remove(this.fxGroup);
+  game.world.remove(this.fireEmitter);
+  game.world.remove(this.explosionEmitter);
+  game.world.remove(this.flashEmitter);
+  game.world.remove(this.shockwaveEmitter);
+  game.world.remove(this.glowEmitter);
+  game.world.remove(this.indicator);
+
+  this.removeAll();
+
+  this.game = this.socket = this._syncBind =
+   this._attackBind = undefined;
 };
 
 module.exports = ShipManager;

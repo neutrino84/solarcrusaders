@@ -73,4 +73,10 @@ TutorialDisplay.prototype.hide = function() {
 
 };
 
+TutorialDisplay.prototype.destroy = function() {
+    this.messageDisplay.destroy();
+
+    this.game = undefined;
+};
+
 module.exports = TutorialDisplay;

@@ -64,35 +64,13 @@ ShipManager.prototype.add = function(ship) {
 };
 
 ShipManager.prototype.launchPlayerShip = function(user_id) {
-  var ships = this.ships, ship;
+  // var ships = this.ships, ship;
 
-  for(var s in ships){
-    if(ships[s].user && ships[s].user.uuid === user_id){
-      ship = ships[s];
-      // ship.destroy();
-
-      this.game.emit('ship/remove', ship);
-
-      // ship.docked = true;
-      // ship.post_tutorial_docked = true;
-
-
-
-      // station = this.sectorManager.stationManager.getStation('ubadian-station-x01');
-      // ship.movement.data.speed = 400;
-      // ship.movement.plot(station.movement.position)
-
-
-      // ship.movement.destination.set(2048,2048)
-
-
-      // console.log('holy shit it worked. movement.position is ', station.movement.position, ship.movement.destination)
-      
-      // ship.movement.position.set(2048, 2048)
-      // ship.
-
-    }
-  }
+  // for(var s in ships){
+  //   if(ships[s].user && ships[s].user.uuid === user_id){
+  //     ship = ships[s];
+  //   }
+  // }
 };
 
 ShipManager.prototype.remove = function(ship) {
@@ -175,11 +153,6 @@ ShipManager.prototype.create = function(data, user) {
   ship.init(function() {
     game.emit('ship/add', ship);
   });
-
-  // if(data.tutorialTargetID){
-  //   console.log('target ID is ', data.tutorialTargetID)
-  //   this.
-  // }
 
   if(data.master && squadship.test(chassis)){
     this.ships[data.master].squadron[ship.uuid] = ship;
@@ -391,7 +364,6 @@ ShipManager.prototype.sync = function() {
       movement.update();
       //check if tutorial is on
       if(ship.post_tutorial_docked){
-        console.log('yup')
         station = this.sectorManager.stationManager.getStation('ubadian-station-x01');
         position = station.movement.position;
         data = {

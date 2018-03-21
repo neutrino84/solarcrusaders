@@ -1,7 +1,7 @@
 
 var engine = require('engine'),
     Marker = require('./misc/Marker'),
-    Ship = require('./Ship'),
+    Movement = require('./Movement'),
     // /Users/GalvanizeComp/Desktop/solarcrusaders/src/client/objects/sector/misc/Marker.js
     Asteroid = require('./misc/Indicator');
     // Indicator = require('./misc/Indicator');
@@ -121,6 +121,10 @@ ObjectManager.prototype.create = function(data) {
   return object;
 };
 
+ObjectManager.prototype.createMovement = function(object){
+  
+};
+
 ObjectManager.prototype.remove = function(data) {
   var game = this.game,
       camera = game.camera,
@@ -151,11 +155,10 @@ ObjectManager.prototype.removeAll = function() {
 };
 
 ObjectManager.prototype.createMarkers = function(startingPosition) {
+  console.log('in create markers, starting position is ', startingPosition)
   var game = this.game;
 
-  this.startingPosition = startingPosition
-
-  console.log('start is ', startingPosition)
+  this.startingPosition = startingPosition;
   for(var i =0; i<4; i++){
     this.create({type: 'marker', pos: this.markerPositions[this.startingPosition][i]})
   }

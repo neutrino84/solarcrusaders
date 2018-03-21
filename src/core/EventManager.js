@@ -147,7 +147,6 @@ EventManager.prototype.init = function() {
   
 };
 EventManager.prototype.createTutorialShips = function(socket, args){
-  console.log('in event manager, creating pirate ship, data is ', args[1])
   this.game.emit('ship/create', {
       chassis: 'pirate-x01',
       x: args[1].x,
@@ -160,7 +159,9 @@ EventManager.prototype.createTutorialShips = function(socket, args){
 
 EventManager.prototype.tutorialComplete = function(socket, args){
   var playerId = args[1].player_uuid;
-  this.game.emit('launch_from_tutorial', playerId)
+  // this.game.emit('launch_from_tutorial', playerId)
+  this.game.emit('user/remove', this.game.users[playerId])
+
 };
 
 EventManager.prototype.stationGen = function(){

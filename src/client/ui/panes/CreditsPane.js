@@ -123,4 +123,11 @@ CreditsPane.prototype.updateCredits = function(credits) {
   this.creditsCount.text = Math.floor(credits);
 };
 
+CreditsPane.prototype.destroy = function() {
+  this.game.removeListener('squad/construct', this._startClock, this);
+
+  this.creditsText = this.creditsCount = this.paymentTimerIndicator = this.paymentClock = this.clockStarted = 
+  this.exists = this.game = undefined;
+};
+
 module.exports = CreditsPane;

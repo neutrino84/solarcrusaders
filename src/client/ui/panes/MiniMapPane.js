@@ -352,4 +352,17 @@ MiniMapPane.prototype.paint = function() {
   }
 };
 
+MiniMapPane.prototype.destroy = function(){
+  this.game.removeListener('shipsDump', this._shipsRefresh, this);
+  this.game.removeListener('sector/sync', this._sync, this);
+  this.game.removeListener('ship/player', this._player, this);
+  this.game.removeListener('player/disabled', this._fadeOut, this);
+  this.game.removeListener('player/enabled', this._fadeIn, this);
+  this.game.removeListener('map/off', this._mapOff, this);
+  this.game.removeListener('squad/engageHostile', this._target, this);
+   
+   this.shipGroup =this.ships = this.stations = this.player = 
+   this.target = this.game = undefined;
+};
+
 module.exports = MiniMapPane;

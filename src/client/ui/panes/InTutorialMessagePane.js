@@ -53,7 +53,7 @@ InTutorialMessage.prototype = Object.create(Pane.prototype);
 InTutorialMessage.prototype.constructor = InTutorialMessage;
 
 InTutorialMessage.prototype.message = function(message) {
-
+  console.log('message: ', message);
   var events = this.game.clock.events,
       duration = message.duration || 3500;  
 
@@ -68,5 +68,10 @@ InTutorialMessage.prototype.message = function(message) {
           }
         }, this);
     }, this);
+};
+
+InTutorialMessage.prototype.destroy = function(){
+  this.game.removeListener('tutorial/message', this.message, this);
+  this.mainText = this.tutorial = this.game = undefined;
 };
 module.exports = InTutorialMessage;

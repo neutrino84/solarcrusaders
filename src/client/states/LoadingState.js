@@ -3,6 +3,7 @@ var engine = require('engine'),
     SectorState = require('./SectorState'),
     LossState = require('./LossState'),
     WinState = require('./WinState'),
+    TransitionState = require('./transitionState'),
     Layout = require('../ui/Layout'),
     Pane = require('../ui/components/Pane'),
     Image = require('../ui/components/Image'),
@@ -23,12 +24,14 @@ LoadingState.prototype.create = function() {
   var game = this.game,
       sectorState = new SectorState(game),
       lossState = new LossState(game),
+      transitionState = new TransitionState(game),
       winState = new WinState(game);
 
   // load game
   game.states.add('sector', sectorState);
   game.states.add('loss', lossState);
   game.states.add('win', winState);
+  game.states.add('transition', transitionState);
   game.states.start('sector');
 
   this.image = new Image(game, {

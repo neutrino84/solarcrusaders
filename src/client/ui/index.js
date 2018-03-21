@@ -101,8 +101,12 @@ UI.prototype.showTutorial = function() {
 
 
 UI.prototype.destroy = function() {
+  this.game.removeListener('tutorial/show', this.showTutorial, this);
+  this.game.removeListener('connected', this.reconnect, this);
+
   this.bottom.destroy();
-  this.bottom.removeAll();
+  this.header.destroy();
+  this.tutorialDisplay && this.tutorialDisplay.destroy();
   this.root.removeAll();
   this.game.stage.removeChild(this.root)
 

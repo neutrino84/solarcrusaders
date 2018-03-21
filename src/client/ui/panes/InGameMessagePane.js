@@ -92,6 +92,14 @@ InGameMessage.prototype.waveComplete = function(){
   this.message('* pirates spawned *')
 };
 
+InGameMessage.prototype.destroy = function(){
+  this.game.removeListener('ingame/message', this.message, this);
+  this.game.removeListener('user/shipSelected', this.introMessage, this);
+  this.game.removeListener('wave/complete', this.waveComplete, this);
+
+   this.mainText = this.tutorial = this.game = undefined;
+};
+
 InGameMessage.prototype.updateDisplay = function(credits) {
   // this.mainText.label.typewriter('Pirates have decended upon the sector',10)
   // this.mainText.label.typewriter('Survive 15 waves or destroy both their bases',10)

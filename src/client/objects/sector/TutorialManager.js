@@ -6,7 +6,6 @@ function TutorialManager(game, sectorState) {
 	this.paused = false;
 	this.objectManager = sectorState.objManager;
 	this.stationManager = sectorState.stationManager;
-	console.log('station manager is ', this.stationManager)
 	this.objectives = [];
 	this.counter = 0;
 	this.advanceReady = true;
@@ -24,7 +23,7 @@ function TutorialManager(game, sectorState) {
 			msg: 'Welcome to the Mobius Dimension tutorial',
 			autoAdvance: true,
 			gameEvent: 'spawn_markers',
-			duration: 2500
+			duration: 3500
 		},{
 			msg: 'To move your ship, right click anywhere',
 			autoAdvance: false,
@@ -58,17 +57,27 @@ function TutorialManager(game, sectorState) {
 
 	
 
-	this.game.clock.events.add(3000, this._start, this)
+	this.game.clock.events.add(2000, this._start, this)
+
+
 
 	this.game.on('ship/player', this._player, this);
 	this.game.on('tutorial/advance', this.advance, this);
 	this.game.on('tutorial/advance/check', this._advanceCheck, this);
 	this.game.on('ship/secondary', this._rightClick, this)
 
+
+
 	// this._start();
 };
 
 TutorialManager.prototype.constructor = TutorialManager;
+
+TutorialManager.prototype._start = function(){
+	console.log('tutMan start')
+	this.game.emit('tutorial/show');
+	this.looper = this.game.clock.events.loop(1000, this._statCheck, this);
+};
 
 TutorialManager.prototype._rightClick = function(){
 	if(this.objectives[0] && this.objectives[0] === 'incomplete'){
@@ -76,20 +85,21 @@ TutorialManager.prototype._rightClick = function(){
 		this._advanceCheck();
 		this.objectives[0] = 'complete'
 		this.game.removeListener('ship/secondary', this._rightClick);
-	}
+	};
 };
 
 TutorialManager.prototype._statCheck = function(){
 	var message = this.messages[this.counter];
-
+	console.log(this.counter)
 	if(!this.paused){
 		this.paused = true;
 		if(!message.autoAdvance){
-		this.advanceReady = false;
+			this.advanceReady = false;
 		};
 		if(message.gameEvent){
-		this.gameEvent(message.gameEvent)
+			this.gameEvent(message.gameEvent)
 		};
+		console.log('about to emit tutorial message')
 		this.game.emit('tutorial/message', message);
 	};
 };
@@ -132,8 +142,14 @@ TutorialManager.prototype.gameEvent = function(event){
 			// this.game.camera.smooth = true;
 			this.zoomOut.on('complete', function() {
 				this.game.camera.unfollow();
-				this.game.camera.follow(this.stationManager.find('ubadian-station-x01')); 
+				// this.game.camera.follow(this.stationManager.find('ubadian-station-x01')); 
+
 				this.socket.emit('tutorial/finished', {player_uuid: this.player.user})
+				
+				this.game.emit('game/transition', 'transition')
+	
+
+				this.game.switch
 
 				this.zoomIn.start();
 
@@ -198,17 +214,24 @@ TutorialManager.prototype.advance = function(){
 };
 
 TutorialManager.prototype._advanceCheck = function(){
+	console.log('advance check')
 	if(this.advanceReady){
 		this.counter++;
 		this.paused = false;
-	} else {
-	console.log('MUST MEET CONDITION')
-	}
+	};
 };
 
-TutorialManager.prototype._start = function(){
-	this.game.emit('tutorial/show');
-	this.game.clock.events.loop(1000, this._statCheck, this);
+TutorialManager.prototype.destroy = function() {
+  this.looper && this.game.clock.events.remove(this.looper);
+
+  this.game.removeListener('ship/player', this._player, this);
+  this.game.removeListener('tutorial/advance', this.advance, this);
+  this.game.removeListener('tutorial/advance/check', this._advanceCheck, this);
+  this.game.removeListener('ship/secondary', this._rightClick, this)
+
+  this.game = this.socket = this.paused = this.objectManager = this.stationManager = this.objectives = this.counter 
+  = this.advanceReady = this.looper = this.activeMarker = this.startingPosition = this.prox = this.markerPositions = this.messages
+  = undefined;
 };
 
 module.exports = TutorialManager;

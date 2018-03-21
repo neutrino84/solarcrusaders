@@ -116,10 +116,9 @@ BottomPane.prototype.destroy = function(){
   this.squadIndicatorPane.destroy();
   this.enhancementPane.destroy();
   this.squadHotkeyPane.destroy();
+  this.creditsPane.destroy();
   this.removeAll();
   this.squadIndicatorPane = this.squadHotkeyPane = this.enhancementPane = undefined;
-  // this.squadPane = new SquadPane(game);
-  // this.addPanel(this.squadPane);
 };
 
 BottomPane.prototype.stopProcesses = function(){

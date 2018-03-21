@@ -101,24 +101,11 @@ function Shipyard(game) {
     }
   });
 
-  // this.loginPlaceholder = new Pane(this.game, {
-  //   constraint: Layout.CENTER,
-  //   height: 90,
-  //   width: this.game.width/2,
-  //   layout: {
-  //     type: 'stack',
-  //   },
-  //   bg: {
-  //     fillAlpha: 1,
-  //     color: 0xcc11b0
-  //   }
-  // });
   this.loginPlaceholder = new LoginPane(this.game);
   this.loginPlaceholder.create();
 
   this.chooseText = new Pane(this.game, {
     constraint: Layout.TOP,
-    // height: 100,
     height: this.middlePane.psHeight*1/10,
     width: this.game.width/1.5,
     layout: {
@@ -140,7 +127,6 @@ function Shipyard(game) {
     height: this.middlePane.psHeight*5/10,
     width: this.bg.width,
     padding: [0,30,0,0],
-    // margin: [50, 0, 0, 0],
     layout: {
       type: 'list',
       columns: 3,
@@ -724,16 +710,16 @@ Shipyard.prototype._select= function(button){
     containers[i].panels[0].bg.removeListener('inputDown', this._select, this)
   }
 
-  this.tutorialSelected = false;
+  // this.tutorialSelected = false;
 
   this.socket.emit('user/ship', button.parent.id, this.game.auth.socket.id, this.tutorialSelected)
   this.game.emit('shipyard/hover', 'selectionSFX2')
-  // if(this.tutorialSelected){
-  //   this.game.emit('user/shipSelected/tutorial', true)
-  // }else{
-  //   this.game.emit('user/shipSelected')
-  // }
-  this.game.emit('user/shipSelected')
+  if(this.tutorialSelected){
+    this.game.emit('user/shipSelected/tutorial', true)
+  }else{
+    this.game.emit('user/shipSelected')
+  }
+  // this.game.emit('user/shipSelected')
 
   this.selectedSequence1 = this.game.tweens.create(this);
   this.selectedSequence1.to({alpha : 0}, 3000);

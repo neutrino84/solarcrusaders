@@ -31,6 +31,7 @@ UserManager.prototype.init = function() {
 
   // user messaging
   this.game.on('user/add', this.add, this);
+  this.game.on('user/remove', this.remove, this);
   this.game.on('game/over', this.clear, this);
   this.game.on('send_user_data', this.update, this);
   this.game.on('launch_from_tutorial', this.recreatePlayerShip, this);
@@ -84,7 +85,9 @@ UserManager.prototype.ship = function(socket, args) {
       data = args[1],
       station = stationManager.getStation('ubadian-station-x01'),
       startingPosition = station.movement.position, 
-      tutorial = null;
+      tutorial = false;
+    
+    user.tutorial = false;
 
   if(args[3]){
     // ask Ollie why this.game.rnd.pick doesn't really work on the back end (index is always the same)
@@ -98,6 +101,8 @@ UserManager.prototype.ship = function(socket, args) {
     tutorial = [startingPosition.x, startingPosition.y];
 
     user.tutorial = true;
+
+
   };
 
   user && game.emit('ship/create', {
@@ -117,7 +122,6 @@ UserManager.prototype.recreatePlayerShip = function(user_id){
         // data = args[1],
         station = stationManager.getStation('ubadian-station-x01'),
         startingPosition = station.movement.position;
-    console.log('in user manager, user is ', user);
     user && game.emit('ship/create', {
       chassis: cached_chassis,
       x : startingPosition.x,

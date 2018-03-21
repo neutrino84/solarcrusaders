@@ -370,6 +370,18 @@ Squadron.prototype.getHomePosition = function() {
   return this.sensor.random();
 };
 
+Squadron.prototype.destroy = function() {
+  this.disengager && this.game.clock.events.remove(this.disengager);
+  this.attacker && this.game.clock.events.remove(this.attacker);
+
+  this.repairer && this.game.clock.events.remove(this.repairer);
+
+  this.disengager && this.game.clock.events.remove(this.disengager);
+  this.attacker && this.game.clock.events.remove(this.attacker);
+  this.ship = this.game = this.manager = this.offset =
+    this.timer = this.target = this.aim = undefined;
+};
+
 module.exports = Squadron;
 
 
