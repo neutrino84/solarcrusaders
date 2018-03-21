@@ -53,7 +53,6 @@ InTutorialMessage.prototype = Object.create(Pane.prototype);
 InTutorialMessage.prototype.constructor = InTutorialMessage;
 
 InTutorialMessage.prototype.message = function(message) {
-  console.log('message: ', message);
   var events = this.game.clock.events,
       duration = message.duration || 3500;  
 

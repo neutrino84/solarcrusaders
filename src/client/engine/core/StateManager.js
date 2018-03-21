@@ -160,6 +160,7 @@ StateManager.prototype.preUpdate = function() {
     }
     
     if(this.callbackContext.preload) {
+      console.log('about to preload')
       this.game.load.reset(true);
       this.callbackContext.preload();
 

@@ -1,8 +1,9 @@
 
 var engine = require('engine');
 
-function SoundManager(game) {
+function SoundManager(game, sectorState) {
   this.game = game;
+  this.manager = sectorState;
 
   // listen to player
   this.game.on('ship/player', this._player, this);
@@ -114,8 +115,8 @@ SoundManager.prototype.preload = function() {
   load.audio('returningToFormation','sounds/squadCallbacks/returningToFormation.mp3');
   load.audio('standby','sounds/squadCallbacks/standby.mp3');
 
-  load.audio('ShieldMaidenInbound','sounds/squadCallbacks/ShieldMaidenInbound.mp3');
-  load.audio('ShieldMaidenOnline','sounds/squadCallbacks/ShieldMaidenOnline.mp3');
+  // load.audio('ShieldMaidenInbound','sounds/squadCallbacks/ShieldMaidenInbound.mp3');
+  // load.audio('ShieldMaidenOnline','sounds/squadCallbacks/ShieldMaidenOnline.mp3');
 
   //SELECTION
   load.audio('selectionSFX1', 'sounds/misc/selectionSFX1.mp3');
@@ -230,8 +231,8 @@ SoundManager.prototype.create = function() {
   this.game.sound.add('returningToFormation', 1);
   this.game.sound.add('standby', 1);
   this.game.sound.add('headsUpWereTakingFire', 1);
-  this.game.sound.add('ShieldMaidenInbound', 1);
-  this.game.sound.add('ShieldMaidenOnline', 1);
+  // this.game.sound.add('ShieldMaidenInbound', 1);
+  // this.game.sound.add('ShieldMaidenOnline', 1);
 
   // subscribe to events
   this.game.on('ship/enhancement/started', this._enhance, this);
@@ -534,6 +535,8 @@ SoundManager.prototype.generateSquadSound = function(sound){
 };
 
 SoundManager.prototype.generateSpawnSound = function(data){
+  console.log('queen spawned')
+  if(!this.manager.tutorialManager){return}
   this.game.sound.play(data, 0.2, false);
   this.game.camera.shake(5000);
 };

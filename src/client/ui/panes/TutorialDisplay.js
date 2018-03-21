@@ -9,19 +9,15 @@ var engine = require('engine'),
     Asteroid = require('../../objects/sector/misc/Asteroid');
 
 function TutorialDisplay(game){
-
-  // console.log('in tutorialDisplay')
-
   Pane.call(this, game, {
     constraint: Layout.CENTER,
-    padding: [50, 50, 50, 50],
+    // padding: [50, 50, 50, 50],
     layout: {
       type: 'stack',
       ay: Layout.CENTER
     }
   });
   this.bg = new Pane(this.game, {
-    padding: [25],
     layout: {
       type: 'border',
       gap: [5,5]
@@ -50,6 +46,8 @@ function TutorialDisplay(game){
     }
   }); 
 
+  // this.game.on('fade/tutorialDisplay', this.fadeToBlack, this);
+
   this.messageDisplay = new InTutorialMessagePane(game);
 
   this.topPane.addPanel(this.messageDisplay);
@@ -57,10 +55,6 @@ function TutorialDisplay(game){
   this.bg.addPanel(this.topPane);
 
   this.addPanel(this.bg);
-
-
-
-  // this.invalidate();
 };
 
 TutorialDisplay.prototype = Object.create(Pane.prototype);
@@ -69,8 +63,13 @@ TutorialDisplay.prototype.constructor = TutorialDisplay;
 TutorialDisplay.prototype.create = function(){
 };
 
-TutorialDisplay.prototype.hide = function() {
-
+TutorialDisplay.prototype.fadeToBlack = function() {
+  console.log('in tutorial fade to black')
+  // this.bg.fade(1, 1000);
+  // this.bg.invalidate();
+  // this.bg.alpha = 1;
+  // this.alpha = 1;
+  // this.invalidate();
 };
 
 TutorialDisplay.prototype.destroy = function() {

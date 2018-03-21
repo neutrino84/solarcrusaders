@@ -41,11 +41,9 @@ SectorState.prototype.constructor = engine.State;
 SectorState.prototype.init = function(args) {
   this.ui = new UI(this.game);
 
-  this.soundManager = new SoundManager(this.game);
+  this.soundManager = new SoundManager(this.game, this);
 
   this.scrollLock = true;
-//^ does this prevent scrolling
-
   this.game.stage.disableVisibilityChange = true;
 };
 
@@ -72,7 +70,8 @@ SectorState.prototype.preload = function() {
 
   this.planetTexture = this.game.rnd.pick(planets);
   // load background
-  // if(!this.game.states.firstIteration){
+  
+  // adding 'true' as a third parameter should overwrite these if they already exisyt, but it causes errors when audio files try to .match on load (in loader.js)
     this.game.load.image('space', 'imgs/game/space/sector-a.jpg');
     this.game.load.image('nebula', 'imgs/game/space/nebula-a.jpg');
     this.game.load.image('snow', 'imgs/game/space/snow.jpg');
@@ -255,8 +254,8 @@ SectorState.prototype.createManagers = function(first) {
 };
 
 SectorState.prototype.createSnow = function() {
-  this.snow = new Snow(this.game, this.game.width, this.game.height);
-  this.game.world.front.add(this.snow);
+  // this.snow = new Snow(this.game, this.game.width, this.game.height);
+  // this.game.world.front.add(this.snow);
 };
 
 SectorState.prototype.createAsteroids = function() {

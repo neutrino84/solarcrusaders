@@ -74,7 +74,6 @@ function TutorialManager(game, sectorState) {
 TutorialManager.prototype.constructor = TutorialManager;
 
 TutorialManager.prototype._start = function(){
-	console.log('tutMan start')
 	this.game.emit('tutorial/show');
 	this.looper = this.game.clock.events.loop(1000, this._statCheck, this);
 };
@@ -90,7 +89,6 @@ TutorialManager.prototype._rightClick = function(){
 
 TutorialManager.prototype._statCheck = function(){
 	var message = this.messages[this.counter];
-	console.log(this.counter)
 	if(!this.paused){
 		this.paused = true;
 		if(!message.autoAdvance){
@@ -99,7 +97,6 @@ TutorialManager.prototype._statCheck = function(){
 		if(message.gameEvent){
 			this.gameEvent(message.gameEvent)
 		};
-		console.log('about to emit tutorial message')
 		this.game.emit('tutorial/message', message);
 	};
 };
@@ -107,6 +104,7 @@ TutorialManager.prototype.gameEvent = function(event){
 	var objectManager = this.objectManager, num, marker;
 	switch(event){
 		case 'spawn_markers':
+			this.game.emit('fade/tutorialDisplay');
 			objectManager.createMarkers(this.startingPosition)
 		break;
 		case 'right_click':
@@ -127,8 +125,8 @@ TutorialManager.prototype.gameEvent = function(event){
 		break;
 		case 'show_bases':
 			this.zoomOut = this.game.tweens.create(this.game.world.scale);
-			this.zoomOut.to({ x: 0.2, y: 0.2 }, 3000, engine.Easing.Quadratic.InOut);
-			this.zoomOut.delay(100);
+			this.zoomOut.to({ x: 0.2, y: 0.2 }, 5000, engine.Easing.Quadratic.InOut);
+			// this.zoomOut.delay(100);
 			this.zoomOut.start();
 
 			this.zoomIn = this.game.tweens.create(this.game.world.scale);
@@ -138,30 +136,22 @@ TutorialManager.prototype.gameEvent = function(event){
 			this.fadeOut.to({alpha: 0}, 2900, engine.Easing.Quadratic.InOut);
 			this.fadeOut.start();
 
+			this.socket.emit('tutorial/finished', {player_uuid: this.player.user})
+			
+			this.game.emit('game/transition', 'transition')
 
 			// this.game.camera.smooth = true;
 			this.zoomOut.on('complete', function() {
 				this.game.camera.unfollow();
 				// this.game.camera.follow(this.stationManager.find('ubadian-station-x01')); 
 
-				this.socket.emit('tutorial/finished', {player_uuid: this.player.user})
+				// this.socket.emit('tutorial/finished', {player_uuid: this.player.user})
 				
-				this.game.emit('game/transition', 'transition')
+				// this.game.emit('game/transition', 'transition')
 	
-
-				this.game.switch
-
 				this.zoomIn.start();
 
-				
-				// this.zoomIn.delay(100);
-				// this.game.camera.unfollow();
-				// this.game.camera.smooth = true;
-
 				this.zoomIn.on('complete', function() {
-					// this.game.camera.unfollow();
-					// this.game.camera.follow(this.player);
-					// this.socket.emit('tutorial/finished', {player_uuid: this.player.user})
 				}, this);
 			}, this);
 		break;
@@ -214,7 +204,6 @@ TutorialManager.prototype.advance = function(){
 };
 
 TutorialManager.prototype._advanceCheck = function(){
-	console.log('advance check')
 	if(this.advanceReady){
 		this.counter++;
 		this.paused = false;

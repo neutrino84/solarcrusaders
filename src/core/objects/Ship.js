@@ -402,9 +402,8 @@ Ship.prototype.disable = function() {
 
   // disengage ai
   this.ai && this.ai.disengage();
-  //remove from attackStation list
   if(this.ai && this.ai.type == 'pirate' && this.manager.pirateAttackLog[this.ai.faction].indexOf(this.uuid) > -1){
-    var index = this.manager.pirateAttackLog[this.ai.faction].indexOf(this.uuid)
+    var index = this.manager.pirateAttackLog[this.ai.faction].indexOf(this.uuid);
     if(index > -1) {
       this.manager.pirateAttackLog[this.ai.faction].splice(index, 1);
     };

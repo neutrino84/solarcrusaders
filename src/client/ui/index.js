@@ -43,7 +43,10 @@ UI.prototype.create = function() {
       type: 'border',
       gap: [0, 0]
     },
-    bg: false
+    // bg: false
+    bg: { fillAlpha: 0.0,
+      color: 0x000000 },
+    alpha : 0
   });
   
   this.root.addPanel(this.header);
@@ -71,6 +74,8 @@ UI.prototype.create = function() {
 
   this.game.on('connected', this.reconnect, this)
   this.game.on('tutorial/show', this.showTutorial, this)
+    this.game.on('fade/tutorialDisplay', this.fadeToBlack, this);
+
 };
 
 UI.prototype.reconnect = function() {
@@ -94,10 +99,12 @@ UI.prototype.showTutorial = function() {
   this.tutorialDisplay = new TutorialDisplay(this.game); 
   this.root.addPanel(this.tutorialDisplay);
   this.tutorialDisplay.create();
-
   this.root.invalidate();
 };
 
+UI.prototype.fadeToBlack = function(){
+  // this.root.fade(1, 1000);
+};
 
 
 UI.prototype.destroy = function() {

@@ -160,6 +160,9 @@ EventManager.prototype.createTutorialShips = function(socket, args){
 EventManager.prototype.tutorialComplete = function(socket, args){
   var playerId = args[1].player_uuid;
   // this.game.emit('launch_from_tutorial', playerId)
+  console.log(this.game.users[playerId].ship.uuid)
+  // debugger
+  this.game.emit('ship/remove', this.game.users[playerId].ship.uuid)
   this.game.emit('user/remove', this.game.users[playerId])
 
 };
