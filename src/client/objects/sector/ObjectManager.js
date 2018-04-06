@@ -169,17 +169,17 @@ ObjectManager.prototype._player = function(ship){
 
   switch(this.player.x){
     case -17000:
-      this.startingPosition = 'topLeft'
-    break
+      this.startingPosition = 'topLeft';
+    break;
     case 20000:
-      this.startingPosition = 'topRight'
-    break
+      this.startingPosition = 'topRight';
+    break;
     case -18000:
-      this.startingPosition = 'botLeft'
-    break
+      this.startingPosition = 'botLeft';
+    break;
     case 16000:
-      this.startingPosition = 'botRight'
-    break
+      this.startingPosition = 'botRight';
+    break;
   }
 };
 

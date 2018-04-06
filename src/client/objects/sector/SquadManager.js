@@ -71,7 +71,7 @@ SquadManager.prototype.closestHostile = function(){
           hostiles[distance] = ship;
         };
         if(ship.disabled){
-          continue
+          continue;
         };
     };
   }; 
@@ -105,7 +105,7 @@ SquadManager.prototype.detectHostiles = function(){
             t = ship.data.name,
             distance = engine.Point.distance(ship, player); 
         if(ship.disabled){
-          continue
+          continue;
         };
         if(ship.data.friendlies && ship.data.friendlies.indexOf('user') < 0 && distance < 800){
             this.player.unfriendlies[distance] = ship;
@@ -250,13 +250,13 @@ SquadManager.prototype._payment = function() {
       credits = 0;
       for(var s in squad){
         if(!squad[s].disabled){
-          credits -= salaries[squad[s].data.chassis]
+          credits -= salaries[squad[s].data.chassis];
         }
       }
    this.socket.emit('player/credits', {player_uuid: player.uuid, credits : credits});
    this.player.events.add(800, function(){
-    this.game.emit('player/credits')
-    this.player.hud.showCreditLoss(credits*-1)
+    this.game.emit('player/credits');
+    this.player.hud.showCreditLoss(credits*-1);
     }, this);  
 };
 
@@ -269,10 +269,10 @@ SquadManager.prototype.destroy = function() {
 
   this.game.removeListener('squad/payment', this._payment, this);
 
-  this.game.removeListener('squad/closestHostile', this.closestHostile, this)
-  this.game.removeListener('squad/engageTarget', this.engageHostile, this)
-  this.game.removeListener('squad/detectHostiles', this.detectHostiles, this)
-  this.game.removeListener('hotkey/squad/detectHostiles', this.detectHostiles, this)
+  this.game.removeListener('squad/closestHostile', this.closestHostile, this);
+  this.game.removeListener('squad/engageTarget', this.engageHostile, this);
+  this.game.removeListener('squad/detectHostiles', this.detectHostiles, this);
+  this.game.removeListener('hotkey/squad/detectHostiles', this.detectHostiles, this);
 
   this.socket = this.net = this.clock = this.player = this.shipNetManager = undefined;
 };
