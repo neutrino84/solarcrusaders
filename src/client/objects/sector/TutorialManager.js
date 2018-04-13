@@ -12,6 +12,7 @@ function TutorialManager(game, sectorState) {
 	this.activeMarker = null;
 	this.startingPosition = null;
 	this.prox = null;
+	this.spawned = false;
 
 	this.markerPositions = {
 		botRight: [{x: 15971, y: 15332},{x: 16410, y: 15745}, {x: 15541, y: 15745}, {x: 15526, y: 16297}, {x: 16422, y: 16308}],
@@ -121,7 +122,10 @@ TutorialManager.prototype.gameEvent = function(event){
 			num = Math.floor(Math.random()*4);
 			marker = objectManager.objects['marker-x0'+num];
 			this.objectives[2] = this.activeMarker = marker;
-			this.socket.emit('tutorial/createShip', {x: marker.x, y: marker.y, player_uuid: this.player.uuid});
+			if(!this.spawned){
+				this.spawned = true;
+				this.socket.emit('tutorial/createShip', {x: marker.x, y: marker.y, player_uuid: this.player.uuid});
+			}
 		break;
 		case 'show_bases':
 			this.zoomOut = this.game.tweens.create(this.game.world.scale);
