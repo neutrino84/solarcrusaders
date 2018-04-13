@@ -106,6 +106,7 @@ TutorialManager.prototype.gameEvent = function(event){
 	switch(event){
 		case 'spawn_markers':
 			this.game.emit('fade/tutorialDisplay');
+			console.log('about to call Object Manager from tutorial Manager, starting Position is ', this.startingPosition)
 			objectManager.createMarkers(this.startingPosition)
 		break;
 		case 'right_click':
@@ -119,10 +120,12 @@ TutorialManager.prototype.gameEvent = function(event){
 			this.objectiveLoop1 = this.game.clock.events.loop(500, this._proximityCheck, this);
 		break;
 		case 'spawn_pirate':
-			num = Math.floor(Math.random()*4);
+			num = Math.floor(Math.random()*3);
 			marker = objectManager.objects['marker-x0'+num];
 			this.objectives[2] = this.activeMarker = marker;
+			console.log('about to')
 			if(!this.spawned){
+				console.log('do it')
 				this.spawned = true;
 				this.socket.emit('tutorial/createShip', {x: marker.x, y: marker.y, player_uuid: this.player.uuid});
 			}

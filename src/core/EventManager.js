@@ -144,16 +144,6 @@ EventManager.prototype.init = function() {
   };
 };
 EventManager.prototype.createTutorialShips = function(socket, args){
-  this.spawning = true;
-  this.spawnOnTimer && this.game.clock.events.remove(this.spawnOnTimer)
-  this.spawnOnTimer = this.game.clock.events.add(3000, function(){
-    this.spawning = false;
-  }, this)
-
-
-  // this.game.clock.events.add(5000, function () {
-  //   this.shieldmaidenCooldown = false;
-  // }, this);  
   if(!this.spawning){
     this.spawning = true;
     this.spawnOnTimer && this.game.clock.events.remove(this.spawnOnTimer)
