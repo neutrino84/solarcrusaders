@@ -129,9 +129,7 @@ EventManager.prototype.init = function() {
 
   // refresh data interval
  this.updateTimer = this.game.clock.events.loop(1000, this.update, this);
-
-
-
+  this.spawning = false;
   this.stationGen();
   this.scavGen(16);
   //generate ships
@@ -144,17 +142,33 @@ EventManager.prototype.init = function() {
       this.shipGen(this.ships[a], a.toString())
     }
   };
-  
 };
 EventManager.prototype.createTutorialShips = function(socket, args){
-  this.game.emit('ship/create', {
-      chassis: 'pirate-x01',
-      x: args[1].x,
-      y: args[1].y,
-      ai: 'pirate',
-      tutorialTargetID: args[1].player_uuid,
-      faction: 'tutorial'
+  this.spawning = true;
+  this.spawnOnTimer && this.game.clock.events.remove(this.spawnOnTimer)
+  this.spawnOnTimer = this.game.clock.events.add(3000, function(){
+    this.spawning = false;
+  }, this)
+
+
+  // this.game.clock.events.add(5000, function () {
+  //   this.shieldmaidenCooldown = false;
+  // }, this);  
+  if(!this.spawning){
+    this.spawning = true;
+    this.spawnOnTimer && this.game.clock.events.remove(this.spawnOnTimer)
+    this.spawnOnTimer = this.game.clock.events.add(3000, function () {
+      this.spawning = false;
+    }, this);
+    this.game.emit('ship/create', {
+        chassis: 'pirate-x01',
+        x: args[1].x,
+        y: args[1].y,
+        ai: 'pirate',
+        tutorialTargetID: args[1].player_uuid,
+        faction: 'tutorial'
     });
+  };
 };
 
 EventManager.prototype.tutorialComplete = function(socket, args){
