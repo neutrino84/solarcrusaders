@@ -31,9 +31,13 @@ function ObjectManager(game) {
   this.startingPosition = null;
 
   this.markerPositions = {
-    botRight : [{x: 16410, y: 15745}, {x: 15541, y: 15745}, {x: 15526, y: 16297}, {x: 16422, y: 16308}],
+    // botRight: [{x : 16004, y: 15494 },{ x: 15971, y: 15332 },{x: 16410, y: 15745}, {x: 15541, y: 15745}, {x: 15526, y: 16297}, {x: 16422, y: 16308}],
+    botRight: [{ x: 15990, y: 15520 }, { x: 15526, y: 16297 }, { x: 16422, y: 16308 }],
+
     topRight : []
   }
+
+
   // this.objectsGroup = new engine.Group(game);
   // this.fxGroup = new engine.Group(game);
   // this.trajectoryGroup = new engine.Group(game);
@@ -159,7 +163,7 @@ ObjectManager.prototype.createMarkers = function(startingPosition) {
   var game = this.game;
 
   this.startingPosition = startingPosition;
-  for(var i =0; i<4; i++){
+  for(var i =0; i<3; i++){
     this.create({type: 'marker', pos: this.markerPositions[this.startingPosition][i]})
   }
 };

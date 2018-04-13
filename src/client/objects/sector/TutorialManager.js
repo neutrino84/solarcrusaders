@@ -14,7 +14,7 @@ function TutorialManager(game, sectorState) {
 	this.prox = null;
 
 	this.markerPositions = {
-		botRight : [{x: 16410, y: 15745}, {x: 15541, y: 15745}, {x: 15526, y: 16297}, {x: 16422, y: 16308}],
+		botRight: [{x: 15971, y: 15332},{x: 16410, y: 15745}, {x: 15541, y: 15745}, {x: 15526, y: 16297}, {x: 16422, y: 16308}],
 		topRight : []
 	}
 
@@ -111,7 +111,7 @@ TutorialManager.prototype.gameEvent = function(event){
 			this.objectives[0] = 'incomplete';
 		break;
 		case 'yellow_circle':
-			num = Math.floor(Math.random()*4);
+			num = Math.floor(Math.random()*3);
 			marker = objectManager.objects['marker-x0'+num];
 			marker.selector.yellow.alpha = 1;
 			this.objectives[1] = this.activeMarker = marker;

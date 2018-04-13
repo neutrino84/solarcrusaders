@@ -109,6 +109,10 @@ HotkeyManager.prototype.listener = function(hotkey) {
       };
 
       if(key.toLowerCase() === 'c'){
+        console.log('this.player is ', this.player, this.player.movement.position)
+
+        // x : 15971
+        // y : 15332
         this.game.emit('hotkey/squad/closestHostile', 'closestHostile')
       };
       if(key.toLowerCase() === 'e'){
