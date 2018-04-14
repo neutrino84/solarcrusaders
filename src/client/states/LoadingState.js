@@ -18,6 +18,7 @@ LoadingState.prototype.constructor = engine.State;
 LoadingState.prototype.preload = function() {
   this.game.load.image('loading', 'imgs/game/splash.png');
   this.game.load.image('small', 'imgs/game/fonts/small.png');
+  this.game.load.image('full', 'imgs/game/fonts/full.png');
 };
 
 LoadingState.prototype.create = function() {
@@ -34,9 +35,26 @@ LoadingState.prototype.create = function() {
   game.states.add('transition', transitionState);
   game.states.start('sector');
 
+  this.imageContainer  = new Pane(game, {
+    width: 500,
+    height: 200,
+    layout: {
+      type: 'stack'
+    },
+    bg: {
+      borderSize: 1.0,
+      borderColor: 0xff0000,
+      borderAlpha: 0.0
+    },
+  });
+
   this.image = new Image(game, {
     margin: [10],
-    key: 'loading'
+    key: 'loading',
+    bg: {
+      borderColor: 0xff0000,
+      borderAlpha: 1.0
+    },
   });
 
   this.progress = new ProgressBar(game, {
@@ -58,9 +76,32 @@ LoadingState.prototype.create = function() {
   });
 
   this.status = new Label(game, {
+    width: game.width,
     margin: [0],
     string: 'preparing to load game',
     text: { fontName: 'small' }
+  });
+  this.toolTipContainer  = new Pane(game, {
+    width: 800,
+    height: 200,
+    layout: {
+      type: 'flow',
+      ax: Layout.CENTER,
+      ay: Layout.CENTER,
+      direction: Layout.VERTICAL
+    },
+    bg: {
+      borderSize: 1.0,
+      borderColor: 0xcc0aa0,
+      borderAlpha: 0.0
+    },
+  });
+  this.toolTipText = new Label(game, {
+    width: game.width,
+    margin: [40,0,0,0],
+    string: '',
+    text: { fontName: 'full' },
+    color: 0xffff00
   });
 
   this.root = new Pane(game, {
@@ -72,16 +113,35 @@ LoadingState.prototype.create = function() {
       ay: Layout.CENTER,
       direction: Layout.VERTICAL
     },
-    bg: { color: 0x000000 }
+    bg: {
+      color: 0xff0000,
+      fillAlpha: 0.0,
+      borderSize: 1.0,
+      borderColor: 0xff0000,
+      borderAlpha: 0.0
+    },
   });
 
   // add ui elements
-  this.root.addPanel(this.image);
+  this.root.addPanel(this.imageContainer);
+  this.imageContainer.addPanel(this.image);
   this.root.addPanel(this.progress);
   this.root.addPanel(this.status);
+  this.root.addPanel(this.toolTipContainer);
+  this.toolTipContainer.addPanel(this.toolTipText);
 
   // invalidate
   this.root.invalidate();
+
+  this.toolTips = [
+    'The Ubadian empire has maintained a fragile peace in the galaxy for 900 years',
+    'The shield maiden support ship creates a gravitational blur-field to reduce damage',
+    'The recent assassination of the Ubadian emperor has shattered the balance of power in the galaxy',
+    'If you are experiencing slow or choppy game play, you may need to clear your browser cache or restart',
+    'Selecting Tutorial Mode before launching will spawn you in the tutorial zone where you can practice your skills',
+    'The Scavengers were known to roam deep space, lately they have been spotted closer to sector centers',
+    'The repair drone follows and repairs your ship if you fall below 50% health'
+  ];
 
   // add event listeners
   game.load.on('loadstart', this.loadingStart, this);
@@ -92,6 +152,15 @@ LoadingState.prototype.create = function() {
 LoadingState.prototype.loadingStart = function() {
   // add gui to stage
   this.game.stage.addChild(this.root);
+  this.toolTip()
+  this.toolTipTimer = this.game.clock.events.loop(4000, this.toolTip, this)
+};
+
+LoadingState.prototype.toolTip = function () {
+  var num = Math.floor(Math.random() * this.toolTips.length),
+      temp = (this.toolTips.splice(num, 1))[0];
+  this.toolTipText.text = temp;
+  this.root.invalidate();
 };
 
 LoadingState.prototype.loadingProgressBar = function() {
@@ -108,7 +177,10 @@ LoadingState.prototype.loadingComplete = function() {
   // this.image.visible = false;
   // this.progress.visible = false;
   // this.status.visible = false;
-
+  console.log(this.toolTipTimer)
+  this.game.clock.events.remove(this.toolTipTimer)
+  this.toolTipTimer = null;
+  console.log(this.toolTipTimer)
   this.tween = this.game.tweens.create(this.root);
   this.tween.to({ alpha: 0.0 }, 250);
   this.tween.delay(0);
