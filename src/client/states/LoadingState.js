@@ -173,14 +173,8 @@ LoadingState.prototype.loadingProgressBar = function() {
 };
 
 LoadingState.prototype.loadingComplete = function() {
-  // fade out animation
-  // this.image.visible = false;
-  // this.progress.visible = false;
-  // this.status.visible = false;
-  console.log(this.toolTipTimer)
   this.game.clock.events.remove(this.toolTipTimer)
   this.toolTipTimer = null;
-  console.log(this.toolTipTimer)
   this.tween = this.game.tweens.create(this.root);
   this.tween.to({ alpha: 0.0 }, 250);
   this.tween.delay(0);

@@ -30,15 +30,20 @@ function Ship(manager, data, user) {
   if(data.tutorialTargetID){
     this.tutorialTarget = data.tutorialTargetID;
   }
+
+  this.config = client.ShipConfiguration[this.data.chassis];
+
   if(user){
     if(data.tutorial){
       this.tutorial = data.tutorial;
+      this.data.speed = this.config.stats.speed/2;
+      
     }
     this.squadron = data.squadron
     this.docked = true;
   };
 
-  this.config = client.ShipConfiguration[this.data.chassis];
+  
 
   this.data.credits = this.config.stats.size;
   if(this.data.chassis === 'scavenger-x02' || this.data.chassis === 'scavenger-x01'){
@@ -55,7 +60,6 @@ function Ship(manager, data, user) {
   }
   if(data.tutorialTargetID){
     this.data.credits = 15;
-    // this.data.health = this.config.stats.health/10
     this.data.health = 15;
     this.data.speed = this.config.stats.speed/2;
   }

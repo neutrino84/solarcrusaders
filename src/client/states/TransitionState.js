@@ -89,6 +89,8 @@ TransitionState.prototype.create = function() {
     },
     bg: false
   });
+  
+  this.game.world.alpha = 1;
 
   this.transitionMessage.label.typewriter('Go now and defend the sector. May fortune favor you',10)
   this.game.clock.events.add(2000, function(){

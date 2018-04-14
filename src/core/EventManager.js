@@ -163,8 +163,10 @@ EventManager.prototype.createTutorialShips = function(socket, args){
 
 EventManager.prototype.tutorialComplete = function(socket, args){
   var playerId = args[1].player_uuid;
+  this.game.clock.events.add(3000, function(){
+    this.game.emit('user/remove', this.game.users[playerId])
+  }, this);
   this.game.emit('ship/remove', this.game.users[playerId].ship)
-  this.game.emit('user/remove', this.game.users[playerId])
 };
 
 EventManager.prototype.stationGen = function(){

@@ -129,31 +129,34 @@ TutorialManager.prototype.gameEvent = function(event){
 		break;
 		case 'show_bases':
 			this.zoomOut = this.game.tweens.create(this.game.world.scale);
-			this.zoomOut.to({ x: 0.2, y: 0.2 }, 5000, engine.Easing.Quadratic.InOut);
+			this.zoomOut.to({ x: 0.2, y: 0.2 }, 2900, engine.Easing.Quadratic.InOut);
 			// this.zoomOut.delay(100);
 			this.zoomOut.start();
 
 			this.zoomIn = this.game.tweens.create(this.game.world.scale);
 			this.zoomIn.to({ x: 0.6, y: 0.6 }, 3000, engine.Easing.Quadratic.InOut);
-
-			this.fadeOut = this.game.tweens.create(this.player);
-			this.fadeOut.to({alpha: 0}, 2900, engine.Easing.Quadratic.InOut);
-			this.fadeOut.start();
-
-			this.socket.emit('tutorial/finished', {player_uuid: this.player.user})
 			
-			this.game.emit('game/transition', 'transition')
-
+			this.fadeOut = this.game.tweens.create(this.game.world);
+			this.fadeOut.to({ alpha: 0 }, 3000, engine.Easing.Quadratic.InOut);
+			this.fadeOut.start();
+			this.fadeOut.on('complete', function () {
+			}, this);
+			
+			
 			// this.game.camera.smooth = true;
 			this.zoomOut.on('complete', function() {
 				this.game.camera.unfollow();
 				// this.game.camera.follow(this.stationManager.find('ubadian-station-x01')); 
-
+				
 				// this.socket.emit('tutorial/finished', {player_uuid: this.player.user})
 				
 				// this.game.emit('game/transition', 'transition')
-	
-				this.zoomIn.start();
+				
+				this.socket.emit('tutorial/finished', {player_uuid: this.player.user})
+				this.game.emit('game/transition', 'transition')
+
+
+				// this.zoomIn.start();
 
 				this.zoomIn.on('complete', function() {
 				}, this);
