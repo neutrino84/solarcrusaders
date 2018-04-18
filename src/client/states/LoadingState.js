@@ -143,6 +143,8 @@ LoadingState.prototype.create = function() {
     'The repair drone follows and repairs your ship if you fall below 50% health'
   ];
 
+  this.toolTipCache = this.toolTips.slice();
+
   // add event listeners
   game.load.on('loadstart', this.loadingStart, this);
   game.load.on('loadcomplete', this.loadingComplete, this);
@@ -152,11 +154,12 @@ LoadingState.prototype.create = function() {
 LoadingState.prototype.loadingStart = function() {
   // add gui to stage
   this.game.stage.addChild(this.root);
-  this.toolTip()
-  this.toolTipTimer = this.game.clock.events.loop(4000, this.toolTip, this)
+  this.toolTip();
+  this.toolTipTimer = this.game.clock.events.loop(5000, this.toolTip, this)
 };
 
 LoadingState.prototype.toolTip = function () {
+  if(!toolTips.length){this.toolTips = this.toolTipCache};
   var num = Math.floor(Math.random() * this.toolTips.length),
       temp = (this.toolTips.splice(num, 1))[0];
   this.toolTipText.text = temp;
