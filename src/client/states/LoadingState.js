@@ -159,7 +159,7 @@ LoadingState.prototype.loadingStart = function() {
 };
 
 LoadingState.prototype.toolTip = function () {
-  if(!toolTips.length){this.toolTips = this.toolTipCache};
+  if(!this.toolTips.length){this.toolTips = this.toolTipCache};
   var num = Math.floor(Math.random() * this.toolTips.length),
       temp = (this.toolTips.splice(num, 1))[0];
   this.toolTipText.text = temp;
