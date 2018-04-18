@@ -155,11 +155,11 @@ LoadingState.prototype.loadingStart = function() {
   // add gui to stage
   this.game.stage.addChild(this.root);
   this.toolTip();
-  this.toolTipTimer = this.game.clock.events.loop(5000, this.toolTip, this)
+  this.toolTipTimer = this.game.clock.events.loop(7250, this.toolTip, this)
 };
 
 LoadingState.prototype.toolTip = function () {
-  if(!this.toolTips.length){this.toolTips = this.toolTipCache};
+  if(!this.toolTips.length){this.toolTips = this.toolTipCache.slice()};
   var num = Math.floor(Math.random() * this.toolTips.length),
       temp = (this.toolTips.splice(num, 1))[0];
   this.toolTipText.text = temp;
