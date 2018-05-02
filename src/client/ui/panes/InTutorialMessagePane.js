@@ -57,16 +57,16 @@ InTutorialMessage.prototype.message = function(message) {
       duration = message.duration || 3500;  
 
   this.mainText.text = '';
-
-    this.game.clock.events.add(150, function(){
-      this.mainText.label.typewriter(message.msg,10);
-        events.add(duration, function(){
-          this.game.emit('tutorial/advance/check');
-          if(message.autoAdvance){
-            this.mainText.text = '';
-          }
-        }, this);
+  this.invalidate();
+  this.game.clock.events.add(150, function(){
+    this.mainText.label.typewriter(message.msg,10);
+    events.add(duration, function(){
+      this.game.emit('tutorial/advance/check');
+      if(message.autoAdvance){
+        this.mainText.text = '';
+      }
     }, this);
+  }, this);
 };
 
 InTutorialMessage.prototype.destroy = function(){

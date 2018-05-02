@@ -162,11 +162,12 @@ EventManager.prototype.createTutorialShips = function(socket, args){
 };
 
 EventManager.prototype.tutorialComplete = function(socket, args){
-  var playerId = args[1].player_uuid;
-  this.game.clock.events.add(3000, function(){
+  var playerId = args[1];
+  // this.game.clock.events.add(3000, function(){
+    console.log(playerId)
+    // }, this);
+    this.game.emit('ship/remove', this.game.users[playerId].ship)
     this.game.emit('user/remove', this.game.users[playerId])
-  }, this);
-  this.game.emit('ship/remove', this.game.users[playerId].ship)
 };
 
 EventManager.prototype.stationGen = function(){
@@ -193,14 +194,14 @@ EventManager.prototype.stationGen = function(){
   });
 
   this.game.emit('station/create', {
-    chassis: 'tutorial-platform',
+    chassis: 'platform',
     x: 16000,
     y: 16000,
     faction: 'tutorial'
   });
 
   this.game.emit('station/create', {
-    chassis: 'tutorial-platform',
+    chassis: 'platform',
     x: -17000,
     y: -18000,
     faction: 'tutorial'
@@ -214,7 +215,7 @@ EventManager.prototype.stationGen = function(){
   });
 
   this.game.emit('station/create', {
-    chassis: 'tutorial-platform',
+    chassis: 'platform',
     x: 20000,
     y: -14000,
     faction: 'tutorial'
@@ -614,6 +615,7 @@ EventManager.prototype.lossCondition = function(){
 
 EventManager.prototype.restart = function() {
   this.updateTimer && this.game.clock.events.remove(this.updateTimer);
+  this.game.clock.events.clearPendingEvents();
   this.game.removeListener('wave/cycle/complete', this.wavecycleComplete, this);
   this.game.removeListener('station/disabled', this.disabled, this);
   this.game.removeListener('ship/disabled', this.disabled, this);

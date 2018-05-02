@@ -92,6 +92,9 @@ TransitionState.prototype.create = function() {
   
   this.game.world.alpha = 1;
 
+  console.log('uuid is ', this.game.auth.user.uuid)
+  this.game.net.socket.emit('tutorial/finished', this.game.auth.user.uuid)
+
   this.transitionMessage.label.typewriter('Go now and defend the sector. May fortune favor you',10)
   this.game.clock.events.add(2000, function(){
     this.transitionMessage2.text = 'GOOD LUCK'

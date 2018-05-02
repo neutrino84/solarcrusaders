@@ -254,6 +254,7 @@ Ship.prototype.hit = function(attacker, target, slot, target_uuid) {
   if(ratio < 1.0) {
     // // test data
     if(!attacker.ai && this.ai) {
+      console.log(this.uuid)
       sockets.send('ship/test', {
         uuid: this.uuid,
         compensated: compensated,
@@ -406,7 +407,7 @@ Ship.prototype.disable = function() {
 
   // disengage ai
   this.ai && this.ai.disengage();
-  if(this.ai && this.ai.type == 'pirate' && this.manager.pirateAttackLog[this.ai.faction].indexOf(this.uuid) > -1){
+  if(this.ai && this.ai.type == 'pirate' && this.manager.pirateAttackLog[this.ai.faction].includes(this.uuid)){
     var index = this.manager.pirateAttackLog[this.ai.faction].indexOf(this.uuid);
     if(index > -1) {
       this.manager.pirateAttackLog[this.ai.faction].splice(index, 1);

@@ -66,7 +66,7 @@ function ShipManager(game, state, first) {
   this.trajectoryGroup.addChild(this.trajectoryGraphics);
 
   // networking
-  // this.socket.on('ship/test', this._test.bind(this));
+  this.socket.on('ship/test', this._test.bind(this));
 
   // subscribe to messages
   this.game.on('auth/disconnect', this._disconnect, this);
@@ -171,7 +171,7 @@ ShipManager.prototype.create = function(data, sync) {
 
 
   if(ship.data.chassis === 'scavenger-x04'){
-    game.emit('ship/sound/growl', ship);
+    game.emit('ship/queenspawn', ship);
   }
 
   return ship;
@@ -183,7 +183,7 @@ ShipManager.prototype.undock = function() {
 
   // this.socket.emit('player/undock', this.player.uuid)
 
-  this.game.camera.follow(this.player)
+  this.game.camera.follow(this.player);
 };
 
 ShipManager.prototype.remove = function(data) {
@@ -247,6 +247,8 @@ ShipManager.prototype._player = function(ship) {
   this.player.previous;
   this.player.squadron = {};
   this.game.camera.follow(this.player);
+
+  console.log(this.ships)
 };
 
 ShipManager.prototype._player_credits = function() {
@@ -278,10 +280,11 @@ ShipManager.prototype._target = function(uuid) {
 };
 
 ShipManager.prototype._test = function(data) {
+  // if (!this.ships[data.uuid]){
+  // }
   var ship = this.ships[data.uuid],
       position = new engine.Point(ship.position.x, ship.position.y),
       compensated = new engine.Point(data.compensated.x, data.compensated.y);
-
   this.trajectoryGraphics.lineStyle(0);
   this.trajectoryGraphics.beginFill(0x336699, 1.0);
   this.trajectoryGraphics.drawCircle(position.x, position.y, 24);
@@ -319,7 +322,7 @@ ShipManager.prototype._secondary = function(data) {
       socket = this.socket,
       indicator = this.indicator;
 
-      if(!ship.position){
+      if(!ship){
         return
       }
 
@@ -452,6 +455,8 @@ ShipManager.prototype.destroy = function() {
   var game = this.game;
 
   this.mapDataTimer && this.game.clock.events.remove(this.mapDataTimer);
+
+  this.socket.removeListener('ship/test', this._test.bind(this))
 
   game.removeListener('player/credits', this._player_credits);
   game.removeListener('auth/disconect', this._disconnect);

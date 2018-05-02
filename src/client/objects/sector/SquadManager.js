@@ -137,6 +137,10 @@ SquadManager.prototype.detectHostiles = function(){
     player.targetCount = 0
     player.acquired = this.player.unfriendlies[targets.sort(ascending)[player.targetCount]]
   };
+  if (player.acquired && !player.acquired.selector){
+    console.log('acquired lacks selector. acquired is ', player.acquired);
+    return
+  }
   player.acquired && player.acquired.selector.hostileHighlight();
   player.targetCount++
   player.previous = player.acquired; 

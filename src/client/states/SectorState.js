@@ -90,6 +90,12 @@ SectorState.prototype.preload = function() {
     this.game.load.image('tutorial-platform', 'imgs/game/stations/tutorial-platform.png');
     this.game.load.image('tutorial-platform-cap', 'imgs/game/stations/tutorial-platform-cap.png');
 
+    this.game.load.image('platform', 'imgs/game/stations/beacons_and_platforms/platform-base.png');
+    this.game.load.image('platform-cap', 'imgs/game/stations/beacons_and_platforms/platform-cap.png');
+
+    this.game.load.image('beacon', 'imgs/game/stations/beacons_and_platforms/beacon.png');
+    this.game.load.image('beacon-cap', 'imgs/game/stations/beacons_and_platforms/beacon-cap.png');
+
     // load strip graphics
     this.game.load.image('laser-blue', 'imgs/game/fx/laser-blue.png');
     this.game.load.image('laser-blue2', 'imgs/game/fx/laser-blue2.png');
@@ -180,7 +186,11 @@ SectorState.prototype.playerCreated = function(tutorial){
 
     this.createManagers('firstIteration');
 
-    if(tutorial){
+//needs to check 'tutorial on game.auth'
+  console.log('game.auth is ', this.game.auth.user)
+    if(this.game.auth.user.tutorial){
+      console.log('yAY GOT HERE');
+      
       this.game.emit('map/off');
       this.tutorialManager = new TutorialManager(this.game, this);
 
@@ -251,6 +261,7 @@ SectorState.prototype.createManagers = function(first) {
 
   this.squadManager.create(this);
   this.hotkeyManager.create(this);
+
 };
 
 SectorState.prototype.createSnow = function() {

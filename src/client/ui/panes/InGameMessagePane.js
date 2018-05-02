@@ -48,7 +48,7 @@ function InGameMessage(game, settings) {
   this.game.on('ingame/message', this.message, this);
   this.game.on('user/shipSelected', this.introMessage, this);
   this.game.on('wave/complete', this.waveComplete, this);
-
+  this.game.on('queen/spawned', this.queenSpawned, this);
 };
 
 InGameMessage.prototype = Object.create(Pane.prototype);
@@ -57,14 +57,15 @@ InGameMessage.prototype.constructor = InGameMessage;
 InGameMessage.prototype.message = function(message, duration) {
   var events = this.game.clock.events,
       duration = duration || 5000;
-  this.mainText.text = '';
+      
+      this.mainText.text = '';
+    if (this.game.states.states.sector.tutorialManager){return}
     this.game.clock.events.add(250, function(){
       this.mainText.label.typewriter(message,10);
       events.add(duration, function(){
         this.mainText.text = '';
       }, this);
     }, this);
-  // }
 };
 
 InGameMessage.prototype.introMessage = function(){
@@ -90,6 +91,10 @@ InGameMessage.prototype.introMessage = function(){
 
 InGameMessage.prototype.waveComplete = function(){
   this.message('* pirates spawned *')
+};
+
+InGameMessage.prototype.queenSpawned = function () {
+  this.message('* scavenger queen spawned *')
 };
 
 InGameMessage.prototype.destroy = function(){

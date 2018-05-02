@@ -236,7 +236,7 @@ SoundManager.prototype.create = function() {
 
   // subscribe to events
   this.game.on('ship/enhancement/started', this._enhance, this);
-  this.game.on('ship/sound/growl', this.generateQueenGrowl, this);
+  this.game.on('ship/queenspawn', this.generateQueenGrowl, this);
   this.game.on('ship/disabled', this._disabled, this);
   this.game.on('station/disabled/sound', this._disabledStation, this);
   this.game.on('ship/hardpoint/fire', this._fire, this);
@@ -472,7 +472,7 @@ SoundManager.prototype.generateQueenGrowl = function(ship){
   var num = Math.floor((Math.random() * 3)+1),
       player = this.player,
       distance, volume;
-  if(player) {   
+  if(player && ship) {   
     distance = engine.Point.distance(ship, player);    
     volume = global.Math.max(1.4 - (distance / 2000), 0);
   };
@@ -481,10 +481,10 @@ SoundManager.prototype.generateQueenGrowl = function(ship){
     this.game.sound.play('growl'+num, volume, false);
   };
 
-  ship.events.loop(4000, growlTimer = function(){
+  this.queenGrowl = ship.events.loop(4000, growlTimer = function(){
     var num = Math.floor((Math.random() * 3)+1),
         player = this.player;
-    if(player) {   
+    if(player && ship) {   
       distance = engine.Point.distance(ship, player);    
       volume = global.Math.max(1.4 - (distance / 2000), 0);
     };
@@ -535,7 +535,6 @@ SoundManager.prototype.generateSquadSound = function(sound){
 };
 
 SoundManager.prototype.generateSpawnSound = function(data){
-  console.log('queen spawned')
   if(this.manager.tutorialManager){return}
   this.game.sound.play(data, 0.2, false);
   this.game.camera.shake(5000);
@@ -596,7 +595,7 @@ SoundManager.prototype._player = function(ship){
 SoundManager.prototype.destroy = function(){
 
   this.fadeOutAll(); 
-
+  if(this.queenGrowl) this.queenGrowl = undefined;
   this.game.removeListener('shipyard/hover', this._selection, this);
   this.game.removeListener('ship/enhancement/started', this._enhance, this);
   this.game.removeListener('ship/sound/growl', this.generateQueenGrowl, this);

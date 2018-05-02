@@ -104,15 +104,9 @@ HotkeyManager.prototype.listener = function(hotkey) {
         }
   	  };
     //squadron
-      if(key.toLowerCase() === 'q'){
-        console.log(this.player.x, this.player.y)
-      };
-
+      // if(key.toLowerCase() === 'q'){
+      // };
       if(key.toLowerCase() === 'c'){
-        console.log('this.player is ', this.player, this.player.movement.position)
-
-        // x : 15971
-        // y : 15332
         this.game.emit('hotkey/squad/closestHostile', 'closestHostile')
       };
       if(key.toLowerCase() === 'e'){

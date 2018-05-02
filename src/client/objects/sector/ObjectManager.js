@@ -89,7 +89,8 @@ ObjectManager.prototype.create = function(data) {
 
   switch(data.type){
     case 'marker':
-    // data.chassis = 'squad-shield_upright'
+    console.log('creating markers');
+    
     object = new Marker(this, data)
     object.id = 'marker-x0'+this.markerCount;
     this.markerCount++
@@ -159,7 +160,6 @@ ObjectManager.prototype.removeAll = function() {
 };
 
 ObjectManager.prototype.createMarkers = function(startingPosition) {
-  console.log('in create markers, starting position is ', startingPosition)
   var game = this.game;
 
   this.startingPosition = startingPosition;

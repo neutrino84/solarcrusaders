@@ -41,11 +41,19 @@ UserManager.prototype.init = function() {
 };
 
 UserManager.prototype.add = function(user) {
+  console.log('in users, is ', this.game.users);
+  console.log('in user add, uuid is ', user.uuid);
+  
   this.game.users[user.uuid] = user;
 };
 
 UserManager.prototype.remove = function(user) {
+  console.log('removing user ', user);
+  
   delete this.game.users[user.uuid];
+
+  console.log(this.game.users);
+  
 };
 
 UserManager.prototype.connect = function(socket) {
@@ -86,11 +94,10 @@ UserManager.prototype.ship = function(socket, args) {
       station = stationManager.getStation('ubadian-station-x01'),
       startingPosition = station.movement.position, 
       tutorial = false;
-    
-    user.tutorial = false;
-
+  
   if(args[3]){
-    // ask Ollie why this.game.rnd.pick doesn't really work on the back end (index is always the same)
+    user.data.tutorial = true;
+    user.reconnected(socket, true);
     var num = Math.floor(Math.random()*this.tutorialPositions.length),
         temp = (this.tutorialPositions.splice(num, 1))[0];
     if(this.tutorialPositions.length < 1){
@@ -99,10 +106,6 @@ UserManager.prototype.ship = function(socket, args) {
     // startingPosition = new engine.Point(temp[0], temp[1]);
     startingPosition = new engine.Point(16000, 16000);
     tutorial = [startingPosition.x, startingPosition.y];
-
-    user.tutorial = true;
-
-
   };
 
   user && game.emit('ship/create', {
@@ -115,6 +118,7 @@ UserManager.prototype.ship = function(socket, args) {
 };
 
 UserManager.prototype.recreatePlayerShip = function(user_id){
+  console.log('in RECREATE PLAYERS SHIP (USER MANAGER)')
     var game = this.game,
         // session = socket.request.session,
         stationManager = this.sectorManager.stationManager,

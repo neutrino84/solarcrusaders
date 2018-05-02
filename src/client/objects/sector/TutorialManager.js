@@ -90,6 +90,8 @@ TutorialManager.prototype._rightClick = function(){
 
 TutorialManager.prototype._statCheck = function(){
 	var message = this.messages[this.counter];
+
+	if(!message){console.log(this.counter, this.messages)}
 	if(!this.paused){
 		this.paused = true;
 		if(!message.autoAdvance){
@@ -152,8 +154,9 @@ TutorialManager.prototype.gameEvent = function(event){
 				
 				// this.game.emit('game/transition', 'transition')
 				
-				this.socket.emit('tutorial/finished', {player_uuid: this.player.user})
 				this.game.emit('game/transition', 'transition')
+				
+				
 
 
 				// this.zoomIn.start();
@@ -218,6 +221,7 @@ TutorialManager.prototype._advanceCheck = function(){
 };
 
 TutorialManager.prototype.destroy = function() {
+  if(!this.game){return}	
   this.looper && this.game.clock.events.remove(this.looper);
 
   this.game.removeListener('ship/player', this._player, this);

@@ -715,7 +715,7 @@ Shipyard.prototype._select= function(button){
   this.socket.emit('user/ship', button.parent.id, this.game.auth.socket.id, this.tutorialSelected)
   this.game.emit('shipyard/hover', 'selectionSFX2')
   if(this.tutorialSelected){
-    this.game.emit('user/shipSelected/tutorial', true)
+    // this.game.emit('user/shipSelected/tutorial', true)
   }else{
     this.game.emit('user/shipSelected')
   }

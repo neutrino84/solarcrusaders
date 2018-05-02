@@ -28,8 +28,17 @@ Auth.prototype._disconnect = function() {
 };
 
 Auth.prototype._sync = function(user) {
+  console.log('in _sync user, user is ', user)
   this.user = user;
+
+
   this.game.emit('auth/sync', user);
+
+  if(user.tutorial){
+    console.log('auth starting sector state');
+    this.game.emit('user/shipSelected/tutorial')
+    
+  }
 };
 
 module.exports = Auth;

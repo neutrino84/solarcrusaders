@@ -175,7 +175,7 @@ ShipManager.prototype.create = function(data, user) {
     this.ships[data.master].battalion[ship.uuid] = ship;
   };
   
-  if(user && !user.tutorial){
+  if(user && !data.tutorial){
     this.eventManager.squadGen(user.ship.uuid);
   };
 };
@@ -463,7 +463,8 @@ ShipManager.prototype.removeAll = function() {
   this.pirateAttackLog = {
     'temeni' : [],
     'katos_boys' : [],
-    'sappers' : []
+    'sappers' : [],
+    'tutorial': []
   };
 };
 
