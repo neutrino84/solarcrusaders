@@ -64,7 +64,9 @@ SectorState.prototype.preload = function() {
   // ]
 
   var planets = [
-  'arkon'
+  'arkon',
+  'ichor',
+  'talus',
   ]
 
 
@@ -174,7 +176,7 @@ SectorState.prototype.create = function() {
     // this.game.world.scale.set(.6, .6);
 
   // create ui
-
+  this.soundManager.create();
   // shipyard selection SFX
   this.game.sound.add('selectionSFX1', 2);
   this.game.sound.add('selectionSFX2', 1);
@@ -186,15 +188,9 @@ SectorState.prototype.playerCreated = function(tutorial){
 
     this.createManagers('firstIteration');
 
-//needs to check 'tutorial on game.auth'
-  console.log('game.auth is ', this.game.auth.user)
     if(this.game.auth.user.tutorial){
-      console.log('yAY GOT HERE');
-      
       this.game.emit('map/off');
       this.tutorialManager = new TutorialManager(this.game, this);
-
-      
       // this.game.emit('map/off');
       // this.game.emit('blob')
     };

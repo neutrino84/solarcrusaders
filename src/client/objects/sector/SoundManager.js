@@ -135,6 +135,8 @@ SoundManager.prototype.create = function() {
   this.stations = this.stationManager.stations;
   this.config = this.game.cache.getJSON('item-configuration', false);
 
+  console.log('creating sound mnager');
+  
 
   this.game.on('shipyard/hover', this._selection, this);
 
@@ -405,6 +407,8 @@ SoundManager.prototype._fire = function(data) {
 };
 
 SoundManager.prototype.generateSystemSound = function(sound){
+  console.log('IN SYSTEM SOUND');
+  
   var systemSFX = ['reactor-online','sensors-online','weapons-systems-online','repairs-completed'];
   if(sound){
     this.game.sound.play(sound, 0.2, false);

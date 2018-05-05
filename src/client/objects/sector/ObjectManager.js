@@ -57,7 +57,9 @@ function ObjectManager(game) {
 
   // add objects to world
   // this.game.world.add(this.trajectoryGroup);
-  this.game.world.add(this.objGroup);
+  // console.log(this.game.world);
+  
+  this.game.world.addAt(this.objGroup, 0);
   // this.game.world.add(this.objectsGroup);
   // this.game.world.add(this.fxGroup);
   // this.game.world.add(this.fireEmitter);

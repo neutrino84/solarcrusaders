@@ -66,7 +66,7 @@ function ShipManager(game, state, first) {
   this.trajectoryGroup.addChild(this.trajectoryGraphics);
 
   // networking
-  this.socket.on('ship/test', this._test.bind(this));
+  // this.socket.on('ship/test', this._test.bind(this));
 
   // subscribe to messages
   this.game.on('auth/disconnect', this._disconnect, this);
@@ -248,7 +248,6 @@ ShipManager.prototype._player = function(ship) {
   this.player.squadron = {};
   this.game.camera.follow(this.player);
 
-  console.log(this.ships)
 };
 
 ShipManager.prototype._player_credits = function() {

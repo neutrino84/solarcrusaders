@@ -50,38 +50,15 @@ Marker.prototype.boot = function() {
 };
 
 Marker.prototype.update = function () {
-  // if (!this.destination.isZero()) {
     var elapsed = this.game.clock.elapsed;
-  //     d1 = this.destination.distance(this.position),
       var d2 = this.rotation - (this.rotation-0.1);
 
-  //     interpolate1 = (elapsed * (this.speed / 200)) / d1,
       var interpolate2 = (elapsed * (0.1 / 200)) / d2;
-  //     destination = engine.Point.interpolate(this.position, this.destination, interpolate1, this.vector),
       var rotation = engine.Math.linearInterpolation([this.rotation, this.rotation], interpolate2);
-  //   this.direction.set(this.destination.x - destination.x, this.destination.y - destination.y);
-  //   this.position.set(destination.x, destination.y);
-  //   if (!this.disabled) {
+
       this.rotation += 0.01
       this.cap.rotation -= 0.01;
-
-      // console.log(this.cap.rotation);
-      
-  //   } else {
-  //     this.rotation = this.storedRotation;
-  //     this.cap.rotation = this.storedCapRotation;
-  //   }
-
-    this.events.update(this.game.clock.time);
-  // }
-
-  // // update
-  // this.hud.update();
-
-
-  // if (this.disabled) {
-  //   this.explosion.update();
-  // }
+  this.events.update(this.game.clock.time);
   engine.Sprite.prototype.update.call(this);
 };
 
