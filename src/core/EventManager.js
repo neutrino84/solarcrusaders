@@ -94,9 +94,9 @@ function EventManager(game, manager) {
   };
 
   this.spawnSets = {
-    1 : {'katos_boys' : {'pirate-x01' : 3},'temeni' : {'pirate-x01' : 2, 'pirate-x03' : 1}},
-    2 : {'katos_boys' : {'pirate-x01' : 4, 'pirate-x03' : 1},'temeni' : {'pirate-x01' : 3}}, 
-    3 : {'katos_boys' : {'pirate-x01' : 3},'temeni' : {'pirate-x02' : 2}},
+    1 : {'katos_boys' : {'pirate-x01' : 2},'temeni' : {'pirate-x01' : 1, 'pirate-x03' : 1}},
+    2 : {'katos_boys' : {'pirate-x01' : 3, 'pirate-x03' : 1},'temeni' : {'pirate-x01' : 2}}, 
+    3 : {'katos_boys' : {'pirate-x01' : 2},'temeni' : {'pirate-x02' : 2}},
     4 : {'katos_boys' : {'pirate-x01' : 1,'pirate-x02' : 1},'temeni' : {'pirate-x01' : 2,'pirate-x02' : 1}},
     5 : {'katos_boys' : {'pirate-x01' : 3,'pirate-x02' : 1},'temeni' : {'pirate-x03' : 1,'pirate-x02' : 1}}, 
     6 : {'katos_boys' : {'pirate-x02' : 2, 'pirate-x03' : 2},'temeni' : {'pirate-x01' : 4}},

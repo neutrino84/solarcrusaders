@@ -2,14 +2,14 @@
   "ubadian-station-x01": {
     "race": "ubaidian",
     "stats": {
-      "health": 2000,
+      "health": 4000,
       "heal": 2.0,
       "speed": 2.5,
       "size": 756,
       "radius": 900,
       "rotation": 2.0,
       "spin": 0.01,
-      "armor": 0.01
+      "armor": 0.015
     }
   },
   "general-station-x01": {
