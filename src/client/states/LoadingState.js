@@ -53,7 +53,7 @@ LoadingState.prototype.create = function() {
     key: 'loading',
     bg: {
       borderColor: 0xff0000,
-      borderAlpha: 1.0
+      borderAlpha: 0.0
     },
   });
 

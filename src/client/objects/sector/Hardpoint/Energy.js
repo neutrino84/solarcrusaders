@@ -130,7 +130,7 @@ Energy.prototype.update = function() {
       return;
     }
 
-    if(this.ship) {
+    if(this.ship && this.ship.position) {
       this.offset.copyFrom(this.ship.position);
       this.offset.add(this.random.x, this.random.y);
     }

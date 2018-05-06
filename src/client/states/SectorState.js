@@ -241,6 +241,7 @@ SectorState.prototype.createManagers = function(first) {
 
   this.netManager = new NetManager(game, this);
   this.inputManager = new InputManager(game, this);
+  this.objManager = new ObjectManager(game);
   this.hotkeyManager = new HotkeyManager(game, this);
   this.stationManager = new StationManager(game, this);
   if(first){
@@ -248,7 +249,6 @@ SectorState.prototype.createManagers = function(first) {
   } else {
     this.shipManager = new ShipManager(game, this);
   }
-  this.objManager = new ObjectManager(game);
   this.playerManager = new PlayerManager(game);
   this.squadManager = new SquadManager(game, this);
   this.soundManager.create();
