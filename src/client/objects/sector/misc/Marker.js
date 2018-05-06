@@ -4,7 +4,7 @@ var engine = require('engine'),
     MarkerSelector = require('./MarkerSelector');
 
 function Marker(manager, data) {
-
+  
   // engine.Sprite.call(this, manager.game, 'texture-atlas','squad-shield_upright.png')
 
   engine.Sprite.call(this, manager.game, 'beacon-cap')

@@ -80,6 +80,24 @@ Selector.prototype.create = function() {
       red1: 20,
       red2: 23
     },
+    'ubaidian-x02': {
+      ret1: 111.7,
+      ret2: 8.3,
+      red1: 92.3,
+      red2: 83.07
+    },
+    'ubaidian-x03': {
+      ret1: 32,
+      ret2: -13,
+      red1: 12,
+      red2: 17
+    },
+    'ubaidian-x04': {
+      ret1: 32,
+      ret2: -13,
+      red1: 12,
+      red2: 17
+    },
     'squad-attack' : {
       ret1: 38,
       ret2: -14,

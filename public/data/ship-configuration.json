@@ -96,7 +96,7 @@
       "health": 100,
       "heal": 0.5,
       "armor": 0.03,
-      "speed": 30.0,
+      "speed": 26.0,
       "rate": 350,
       "evasion": 0.2,
       "energy": 200,
@@ -226,7 +226,7 @@
       "health": 140,
       "heal": 0.075,
       "armor": 0.25,
-      "speed": 29.0,
+      "speed": 25.0,
       "rate": 950,
       "evasion": 0.2,
       "energy": 140,
@@ -341,7 +341,7 @@
       "health": 120,
       "heal": 1,
       "armor": 0.02,
-      "speed": 31.0,
+      "speed": 27.0,
       "rate": 350,
       "evasion": 0.2,
       "energy": 130,
@@ -443,7 +443,7 @@
       "health": 155,
       "heal": 0.5,
       "armor": 0.01,
-      "speed": 29.0,
+      "speed": 25.0,
       "rate": 350,
       "evasion": 0.2,
       "energy": 280,
@@ -573,7 +573,7 @@
       "health": 110,
       "heal": 0.6,
       "armor": 0.025,
-      "speed": 28.0,
+      "speed": 24.0,
       "rate": 350,
       "evasion": 0.2,
       "energy": 200,
@@ -660,7 +660,7 @@
       "health": 90,
       "heal": 0.4,
       "armor": 0.01,
-      "speed": 34.0,
+      "speed": 30.0,
       "rate": 350,
       "evasion": 0.2,
       "energy": 190,
@@ -759,7 +759,7 @@
       "health": 400,
       "heal": 0.1,
       "armor": 0.3,
-      "speed": 20.0,
+      "speed": 15.0,
       "rate": 256,
       "evasion": 0.02,
       "energy": 200,
@@ -850,6 +850,135 @@
       ]
     }
   },
+  "ubaidian-x03": {
+    "race": "general",
+    "class": "fighter",
+    "stats": {
+      "capacity": 800,
+      "health": 50,
+      "heal": 0.2,
+      "armor": 0.0,
+      "speed": 30.0,
+      "rate": 300,
+      "evasion": 0.1,
+      "energy": 80,
+      "recharge": 1,
+      "size": 64,
+      "durability": 96,
+      "critical": 0.01
+    },
+    "enhancements": [
+      "booster",
+      "shield"
+    ],
+    "engine": {
+      "glows": [
+        {
+          "tint": "0xFFFFFF",
+          "scale": {
+            "startX": 0.06,
+            "endX": 0.08,
+            "startY": 0.2,
+            "endY": 0.22
+          },
+          "position": {
+            "x": 56,
+            "y": 32
+          },
+          "rotation": 0
+        }
+      ]
+    },
+    "targeting": {
+      "hardpoints": [
+        {
+          "pivot": {
+            "x": 17,
+            "y": 16
+          },
+          "position": {
+            "x": 29,
+            "y": 15
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "basic"
+          }
+        },
+        {
+          "pivot": {
+            "x": 17,
+            "y": 16
+          },
+          "position": {
+            "x": 29,
+            "y": 48
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "basic"
+          }
+        }
+      ]
+    }
+  },
+  "ubaidian-x04": {
+    "race": "general",
+    "class": "courier",
+    "stats": {
+      "capacity": 100,
+      "health": 25,
+      "heal": 0.4,
+      "armor": 0.0,
+      "speed": 30.0,
+      "rate": 700,
+      "evasion": 0.1,
+      "energy": 80,
+      "recharge": 1,
+      "size": 64,
+      "durability": 96,
+      "critical": 0.01
+    },
+    "enhancements": [
+      "shield"
+    ],
+    "engine": {
+      "glows": [
+        {
+          "tint": "0xFFFFFF",
+          "scale": {
+            "startX": 0.06,
+            "endX": 0.08,
+            "startY": 0.2,
+            "endY": 0.22
+          },
+          "position": {
+            "x": 54,
+            "y": 31
+          },
+          "rotation": 0
+        }
+      ]
+    },
+    "targeting": {
+      "hardpoints": [
+        {
+          "pivot": {
+            "x": 17,
+            "y": 16
+          },
+          "position": {
+            "x": 17,
+            "y": 19
+          },
+          "default": {
+            "type": "pulse",
+            "subtype": "basic"
+          }
+        }
+      ]
+    }
+  },
   "squad-attack": {
     "race": "ubaidian",
     "class": "fighter",
@@ -858,7 +987,7 @@
       "health": 100,
       "heal": 0.25,
       "armor": 0.1,
-      "speed": 30.0,
+      "speed": 28.0,
       "rate": 300,
       "evasion": 0.3,
       "energy": 200,
@@ -929,7 +1058,7 @@
       "health": 100,
       "heal": 0.35,
       "armor": 0.0,
-      "speed": 30.0,
+      "speed": 28.0,
       "rate": 1500,
       "evasion": 0.3,
       "energy": 200,
@@ -985,7 +1114,7 @@
       "health": 125,
       "heal": 0.35,
       "armor": 0.1,
-      "speed": 30.0,
+      "speed": 28.0,
       "rate": 500,
       "evasion": 0.3,
       "energy": 400,

@@ -29,9 +29,6 @@ World.prototype.boot = function() {
 
   // add world to stage
   this.game.stage.addChild(this);
-
-  console.log('World: ', this.main, this);
-  
 };
 
 World.prototype.size = function(x, y, width, height) {

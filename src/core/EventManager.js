@@ -22,7 +22,7 @@ function EventManager(game, manager) {
 
   this.game.clock.events.loop(1000, this.wavecycle, this);
   this.ships = {
-    basic: 5,
+    basic: 7,
     enforcer: 1,
     pirate: {
       factions : {
@@ -84,7 +84,7 @@ function EventManager(game, manager) {
   // };
 
   this.chassis = {
-    basic : ['ubaidian-x01a','ubaidian-x01b','ubaidian-x01c','ubaidian-x01d','ubaidian-x01e','ubaidian-x01f'],
+    basic: ['ubaidian-x01a', 'ubaidian-x01b', 'ubaidian-x01c', 'ubaidian-x01d', 'ubaidian-x01e', 'ubaidian-x01f', 'ubaidian-x02', 'ubaidian-x03', 'ubaidian-x04'],
     pirate: ['pirate-x01','pirate-x01','pirate-x01','pirate-x02'],
     // pirate: ['pirate-x03'],
     squadron: ['squad-shield','squad-repair','squad-attack','squad-attack','squad-attack','squad-attack'],

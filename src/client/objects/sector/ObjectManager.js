@@ -21,18 +21,12 @@ function ObjectManager(game) {
   // ship cache
   this.objects = {};
 
-  // create indicator
-  // this.indicator = new Indicator(game);
-
   // create containers
   this.objGroup = new engine.Group(game);
   this.markerCount = 0;
 
   this.startingPosition = null;
 
-  // 2solar.js: 6835 x: 15465.129226511459 y: 15511.772735746998
-  // 2solar.js: 6835 x: 16558.001761506857 y: 15527.593819030983
-  // 2solar.js: 6835 x: 15991.851618711315 y: 16598.7901330968
   this.markerPositions = {
     // botRight: [{x : 16004, y: 15494 },{ x: 15971, y: 15332 },{x: 16410, y: 15745}, {x: 15541, y: 15745}, {x: 15526, y: 16297}, {x: 16422, y: 16308}],
     // botRight: [{ x: 15990, y: 15520 }, { x: 15526, y: 16297 }, { x: 16422, y: 16308 }],
@@ -40,48 +34,11 @@ function ObjectManager(game) {
     topRight : []
   }
 
-
-  // this.objectsGroup = new engine.Group(game);
-  // this.fxGroup = new engine.Group(game);
-  // this.trajectoryGroup = new engine.Group(game);
-
-  // create emitters
-  // this.explosionEmitter = new ExplosionEmitter(this.game);
-  // this.flashEmitter = new FlashEmitter(this.game);
-  // this.glowEmitter = new GlowEmitter(this.game);
-  // this.shockwaveEmitter = new ShockwaveEmitter(this.game);
-  // this.fireEmitter = new FireEmitter(this.game);
-
-  // this.game.particles.add(this.explosionEmitter);
-  // this.game.particles.add(this.flashEmitter);
-  // this.game.particles.add(this.glowEmitter);
-  // this.game.particles.add(this.shockwaveEmitter);
-  // this.game.particles.add(this.fireEmitter);
-
-  // add objects to world
-  // this.game.world.add(this.trajectoryGroup);
-  // console.log(this.game.world);
-  
   this.game.world.addAt(this.objGroup, 0);
-  // this.game.world.add(this.objectsGroup);
-  // this.game.world.add(this.fxGroup);
-  // this.game.world.add(this.fireEmitter);
-  // this.game.world.add(this.explosionEmitter);
-  // this.game.world.add(this.flashEmitter);
-  // this.game.world.add(this.shockwaveEmitter);
-  // this.game.world.add(this.glowEmitter);
-  // this.game.world.add(this.indicator);
 
-  // this.trajectoryGraphics = new engine.Graphics(game);
-  // this.trajectoryGroup.addChild(this.trajectoryGraphics);
-
-  // networking
-  // this.socket.on('ship/test', this._test.bind(this));
-
-  // subscribe to messages
-  // this.game.on('sector/sync', this._sync, this);
   this.game.on('ship/player', this._player, this);
-  this.game.on('create/markers', this.createMarkers, this);
+  this.game.on('create/sectorBeacon', this.createSectorBeacon, this);
+  this.game.on('create/markers', this.createTutorialMarkers, this);
 };
 
 ObjectManager.prototype.constructor = ObjectManager;
@@ -90,7 +47,6 @@ ObjectManager.prototype.create = function(data) {
   var game = this.game,
       container = this.objGroup,
       objects = this.objects, object;
-      // object = new Ship(this, data);
 
   switch(data.type){
     case 'marker':
@@ -102,18 +58,7 @@ ObjectManager.prototype.create = function(data) {
     case 'yellow_circle':
     
     break;
-    // object = new Ship(this, data)
-    // object = new engine.Sprite.call(this, null, 'texture-atlas','squad-shield_upright.png')
   };
-
-      // this.detector = new engine.Graphics();
-      // this.detector.lineStyle(1, 0xffff00, 1.0);
-      // this.detector.drawCircle(this.detectorCircle.x, this.detectorCircle.y, this.detectorCircle.radius);
-      // this.detector.pivot.set(halfWidth, halfHeight);
-      // this.detector.position.set(halfWidth + (size/2), halfHeight + (size/2));
-      // this.detector.blendMode = engine.BlendMode.ADD;
-      // this.detector.alpha = 0;
-
 
   if(object){
     // set position
@@ -162,13 +107,22 @@ ObjectManager.prototype.removeAll = function() {
   }
 };
 
-ObjectManager.prototype.createMarkers = function(startingPosition) {
+ObjectManager.prototype.createTutorialMarkers = function(startingPosition) {
   var game = this.game;
 
   this.startingPosition = startingPosition;
   for(var i =0; i<3; i++){
     this.create({type: 'marker', pos: this.markerPositions[this.startingPosition][i]})
   }
+};
+ObjectManager.prototype.createSectorBeacon = function (position) {
+  var game = this.game;
+  
+  this.create({ type: 'marker', pos: { x: 2395, y: 1177 } })
+  // this.startingPosition = startingPosition;
+  // for (var i = 0; i < 3; i++) {
+  //   this.create({ type: 'marker', pos: this.markerPositions[this.startingPosition][i] })
+  // }
 };
 
 ObjectManager.prototype._player = function(ship){

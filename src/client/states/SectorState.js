@@ -252,8 +252,9 @@ SectorState.prototype.createManagers = function(first) {
   this.playerManager = new PlayerManager(game);
   this.squadManager = new SquadManager(game, this);
   this.soundManager.create();
-  this.game.emit('game/backgroundmusic')
-
+  this.game.emit('game/backgroundmusic');
+  this.game.emit('create/sectorBeacon');
+  
   this.squadManager.create(this);
   this.hotkeyManager.create(this);
 
