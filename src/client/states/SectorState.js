@@ -192,7 +192,9 @@ SectorState.prototype.playerCreated = function(tutorial){
       this.tutorialManager = new TutorialManager(this.game, this);
       // this.game.emit('map/off');
       // this.game.emit('blob')
-    };
+    } else {
+      this.game.emit('create/sectorBeacon');
+    }
     this.zoom = this.game.tweens.create(this.game.world.scale);
     this.zoom.to({ x: 0.8, y: 0.8 }, 5000, engine.Easing.Quadratic.InOut);
     this.zoom.delay(1500);
@@ -241,7 +243,6 @@ SectorState.prototype.createManagers = function(first) {
 
   this.netManager = new NetManager(game, this);
   this.inputManager = new InputManager(game, this);
-  this.objManager = new ObjectManager(game);
   this.hotkeyManager = new HotkeyManager(game, this);
   this.stationManager = new StationManager(game, this);
   if(first){
@@ -249,11 +250,11 @@ SectorState.prototype.createManagers = function(first) {
   } else {
     this.shipManager = new ShipManager(game, this);
   }
+  this.objManager = new ObjectManager(game);
   this.playerManager = new PlayerManager(game);
   this.squadManager = new SquadManager(game, this);
   this.soundManager.create();
   this.game.emit('game/backgroundmusic');
-  this.game.emit('create/sectorBeacon');
   
   this.squadManager.create(this);
   this.hotkeyManager.create(this);

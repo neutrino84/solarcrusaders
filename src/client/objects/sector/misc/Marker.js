@@ -4,7 +4,7 @@ var engine = require('engine'),
     MarkerSelector = require('./MarkerSelector');
 
 function Marker(manager, data) {
-  
+
   // engine.Sprite.call(this, manager.game, 'texture-atlas','squad-shield_upright.png')
 
   engine.Sprite.call(this, manager.game, 'beacon-cap')
@@ -14,18 +14,9 @@ function Marker(manager, data) {
   this.data = data;
   this.speed = data.speed;
   this.selector = new MarkerSelector(this);
-  // this.movement = new Movement(this);
   this.rotation = 1;
   this.position.set(this.data.pos.x, this.data.pos.y);
-    // console.log('marker data.rotation is ', this.rotation, 'data is ', data);
-    
-  // this.rotation = this.rot = data.rotation;
-  // this.position.set(this.data.x, this.data.y);
   this.pivot.set(this.width / 2, this.height / 2);
-
-  // timer events
-  
-  // this.position.set(this.data.x, this.data.y);
 
   this.events = new engine.Timer(this.game, false);
 
@@ -36,15 +27,11 @@ Marker.prototype.constructor = Marker;
 
 Marker.prototype.boot = function() {
   this.selector.create();
-
   this.cap = new engine.Sprite(this.game, 'beacon');
   this.cap.pivot.set(this.cap.width / 2, this.cap.height / 2);
   this.cap.position.set(this.width / 2, this.height / 2);
   this.cap.rotation = global.Math.random() * global.Math.PI;
-  // console.log(this)
-
-  // this.explosion.create();
-
+  
   // add cap
   this.addChild(this.cap);
 };

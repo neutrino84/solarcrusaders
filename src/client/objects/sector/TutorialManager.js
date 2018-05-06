@@ -227,10 +227,7 @@ TutorialManager.prototype.destroy = function() {
   this.game.removeListener('ship/player', this._player, this);
   this.game.removeListener('tutorial/advance', this.advance, this);
   this.game.removeListener('tutorial/advance/check', this._advanceCheck, this);
-  this.game.removeListener('ship/secondary', this._rightClick, this)
-
-	console.log('IN TUTMANAGER DESTROY');
-	
+  this.game.removeListener('ship/secondary', this._rightClick, this);
   this.game = this.socket = this.paused = this.objectManager = this.stationManager = this.objectives = this.counter 
   = this.advanceReady = this.looper = this.activeMarker = this.startingPosition = this.prox = this.markerPositions = this.messages
   = undefined;

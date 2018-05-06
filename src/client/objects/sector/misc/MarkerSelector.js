@@ -14,10 +14,7 @@ MarkerSelector.prototype.constructor = MarkerSelector;
 MarkerSelector.prototype.create = function() {
    var halfWidth = this.parent.width/2,
        halfHeight = this.parent.height/2;
-       // console.log(halfHeight, halfWidth, this.parent)
-  // create yellow area
-
-  // create yellow
+       
   this.yellow = new engine.Graphics();
   this.yellowCircle = new engine.Circle(halfWidth, halfHeight, 200);
   this.yellow.lineStyle(1, 0xffff00, 1.0);
@@ -25,7 +22,7 @@ MarkerSelector.prototype.create = function() {
   this.yellow.blendMode = engine.BlendMode.ADD;
   this.yellow.alpha = 0;
 
-  // create yegreenllow
+  
   this.greenCircle = new engine.Circle(halfWidth, halfHeight, 200);
   this.green = new engine.Graphics();
   this.green.lineStyle(1, 0x00ff00, 1.0);
