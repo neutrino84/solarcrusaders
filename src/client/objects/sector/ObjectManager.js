@@ -30,10 +30,13 @@ function ObjectManager(game) {
 
   this.startingPosition = null;
 
+  // 2solar.js: 6835 x: 15465.129226511459 y: 15511.772735746998
+  // 2solar.js: 6835 x: 16558.001761506857 y: 15527.593819030983
+  // 2solar.js: 6835 x: 15991.851618711315 y: 16598.7901330968
   this.markerPositions = {
     // botRight: [{x : 16004, y: 15494 },{ x: 15971, y: 15332 },{x: 16410, y: 15745}, {x: 15541, y: 15745}, {x: 15526, y: 16297}, {x: 16422, y: 16308}],
-    botRight: [{ x: 15990, y: 15520 }, { x: 15526, y: 16297 }, { x: 16422, y: 16308 }],
-
+    // botRight: [{ x: 15990, y: 15520 }, { x: 15526, y: 16297 }, { x: 16422, y: 16308 }],
+    botRight: [{ x: 15465, y: 15511 }, { x: 15991, y: 16598 }, { x: 16558, y: 15527 }],
     topRight : []
   }
 
@@ -91,8 +94,6 @@ ObjectManager.prototype.create = function(data) {
 
   switch(data.type){
     case 'marker':
-    console.log('creating markers');
-    
     object = new Marker(this, data)
     object.id = 'marker-x0'+this.markerCount;
     this.markerCount++

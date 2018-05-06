@@ -41,19 +41,11 @@ UserManager.prototype.init = function() {
 };
 
 UserManager.prototype.add = function(user) {
-  console.log('in users, is ', this.game.users);
-  console.log('in user add, uuid is ', user.uuid);
-  
   this.game.users[user.uuid] = user;
 };
 
 UserManager.prototype.remove = function(user) {
-  console.log('removing user ', user);
-  
   delete this.game.users[user.uuid];
-
-  console.log(this.game.users);
-  
 };
 
 UserManager.prototype.connect = function(socket) {
@@ -118,7 +110,6 @@ UserManager.prototype.ship = function(socket, args) {
 };
 
 UserManager.prototype.recreatePlayerShip = function(user_id){
-  console.log('in RECREATE PLAYERS SHIP (USER MANAGER)')
     var game = this.game,
         // session = socket.request.session,
         stationManager = this.sectorManager.stationManager,

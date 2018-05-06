@@ -176,7 +176,6 @@ SectorState.prototype.create = function() {
     // this.game.world.scale.set(.6, .6);
 
   // create ui
-  this.soundManager.create();
   // shipyard selection SFX
   this.game.sound.add('selectionSFX1', 2);
   this.game.sound.add('selectionSFX2', 1);

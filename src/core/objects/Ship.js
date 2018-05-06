@@ -28,8 +28,8 @@ function Ship(manager, data, user) {
     this.queen = data.queen
   };
   if(data.tutorialTargetID){
-    this.tutorialTarget = data.tutorialTargetID;
-  }
+    this.tutorialTargetID = data.tutorialTargetID;
+  };
 
   this.config = client.ShipConfiguration[this.data.chassis];
 
@@ -254,7 +254,6 @@ Ship.prototype.hit = function(attacker, target, slot, target_uuid) {
   if(ratio < 1.0) {
     // // test data
     if(!attacker.ai && this.ai) {
-      console.log(this.uuid)
       sockets.send('ship/test', {
         uuid: this.uuid,
         compensated: compensated,

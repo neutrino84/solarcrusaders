@@ -279,8 +279,11 @@ ShipManager.prototype._target = function(uuid) {
 };
 
 ShipManager.prototype._test = function(data) {
-  // if (!this.ships[data.uuid]){
-  // }
+  if (!this.ships[data.uuid]){
+    console.log('ship doesnt exist!');
+    return
+    
+  }
   var ship = this.ships[data.uuid],
       position = new engine.Point(ship.position.x, ship.position.y),
       compensated = new engine.Point(data.compensated.x, data.compensated.y);

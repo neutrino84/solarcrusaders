@@ -100,10 +100,8 @@ User.prototype.save = function(callback) {
 User.prototype.reconnected = function(socket) {
   // update socket
   this.socket = socket;
-  console.log('yo this.data is ', this.data)
   var data = this.data.toStreamObject();
   if(this.data.tutorial){data.tutorial = true;}
-  // console.log('yo this.data is ', this.data)
   this.socket.emit('auth/sync', data);
 
   // update latency

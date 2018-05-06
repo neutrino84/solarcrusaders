@@ -642,6 +642,7 @@ Shipyard.prototype._hover = function(button) {
         },
         bg: false
       });
+  
   this.game.emit('shipyard/hover', 'selectionSFX1')
   for(var i = 0; i < ships.length-1; i++){
     if(ships[i].children[1].id !== ship){

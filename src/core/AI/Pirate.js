@@ -5,9 +5,8 @@ function Pirate(ship, faction) {
   Basic.call(this, ship);
 
   this.type = 'pirate';
-
-  if(ship.tutorialTarget){
-  this.tutorialTarget = this.manager.ships[ship.tutorialTarget];
+  if(ship.tutorialTargetID){
+    this.tutorialTargetID = ship.tutorialTargetID;
   }
   this.attackingStation = false; 
   this.settings = client.AIConfiguration[this.type];
@@ -36,7 +35,6 @@ Pirate.prototype.engage = function(target) {
     if(!this.attackingStation){
     this.disengager && this.game.clock.events.remove(this.disengager);
     this.disengager = this.game.clock.events.add(settings.disengage, this.disengage, this);
-    	
     }
   }
 
@@ -115,6 +113,10 @@ Pirate.prototype.scanner = function() {
 
   if(this.attackingStation){return}
   // scan nearby ships
+  if(this.tutorialTargetID){
+    ship = ships[this.tutorialTargetID]
+    this.engage(ship);
+  }
   for(var s in ships) {
     scan = ships[s];
     p2 = scan.movement.position;
@@ -215,10 +217,12 @@ Pirate.prototype.plot = function(){
   	 ship.movement.plot({ x: this.offset.x-p1.x, y: this.offset.y-p1.y }, this.throttle);
   	 // ship.movement.plot({ x: this.offset.x-p1.x, y: this.offset.y-p1.y });
   	}
-  } else if(!this.tutorialTarget && rnd.frac() < 0.65 || this.retreat && !this.tutorialTarget) {
+  } else if(!this.tutorialTargetID && rnd.frac() < 0.65 || this.retreat && !this.tutorialTargetID) {
     p2 = this.getHomePosition();
-    distance = p2.distance(p1);
-    ship.movement.plot({ x: p2.x-p1.x, y: p2.y-p1.y }, distance/8 );
+    if(p2){
+      distance = p2.distance(p1);
+      ship.movement.plot({ x: p2.x-p1.x, y: p2.y-p1.y }, distance/8 );
+    };
   };
 };
 
