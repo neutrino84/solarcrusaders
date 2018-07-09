@@ -52,7 +52,7 @@ SectorState.prototype.preload = function() {
   this.ui.preload();
   this.soundManager.preload();
 
-
+  //select planet
 
   // var planets = [
   // 'daigus',
