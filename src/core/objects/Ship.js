@@ -37,8 +37,11 @@ function Ship(manager, data, user) {
     if(data.tutorial){
       this.tutorial = data.tutorial;
       this.data.speed = this.config.stats.speed/2;
-      
     }
+    this.data.rate = this.config.stats.rate/2
+    console.log('creating user ship, data.squadron is ', data.squadron);
+    console.log('user ship is ',  this);
+    
     this.squadron = data.squadron
     this.docked = true;
   };
