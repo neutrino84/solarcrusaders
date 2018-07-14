@@ -4,7 +4,7 @@
   "version": "0.3.4-alpha.3",
   "description": "Solar Crusaders is a multiplayer top-down strategy game featuring a sandbox universe, base building, and exploration.",
   "author": "Oliver J Dyla",
-  "contributors": [],
+  "contributors": ["Richard Craven"],
   "dependencies": {
     "async": "1.5.x",
     "bcryptjs": "2.4.x",

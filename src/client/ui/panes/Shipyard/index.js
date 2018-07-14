@@ -802,6 +802,8 @@ Shipyard.prototype.show = function() {
 };
 
 Shipyard.prototype._showShips = function() {
+  console.log('in show ships');
+  
   this.loggedIn = true;
   this.middlePane.alpha = 1;
   this.bottomPane.alpha = 1;

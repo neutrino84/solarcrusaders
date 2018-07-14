@@ -361,8 +361,8 @@ LoginPane.prototype.create = function() {
   this.chooseShip.bg.on('inputDown', this._chooseShip, this);
 
   this.addPanel(this.title);
-  this.addPanel(this.content);
-  this.addPanel(this.registration);
+  // this.addPanel(this.content);
+  // this.addPanel(this.registration);
   this.content.addPanel(this.username);
   this.content.addPanel(this.password);
   this.content.addPanel(this.login);
@@ -382,6 +382,11 @@ LoginPane.prototype.create = function() {
   this.registrationInputs['email'] = this.email;
 
   this.registration.alpha = 0;
+
+  //
+  this.game.clock.events.add(100, function(){
+    this.game.emit('ui/showShips'); 
+  }, this);
 };
 
 LoginPane.prototype._hover = function(button) {
