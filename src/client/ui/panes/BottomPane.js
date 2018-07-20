@@ -20,7 +20,14 @@ function BottomPane(game) {
       ay: Layout.BOTTOM,
       direction: Layout.HORIZONTAL, 
       gap: 25
-    }
+    },
+    bg: {
+      color: 0xffccff,
+      fillAlpha: 0.0,
+      borderSize: 1.0,
+      borderColor: 0xff0000,
+      borderAlpha: 0.0
+    }, 
   });
 
   this.bottomLeftContainer = new Pane(this.game, {

@@ -39,6 +39,8 @@ function Ship(manager, data, user) {
       this.data.speed = this.config.stats.speed/2;
     }
     this.data.rate = this.config.stats.rate/2;
+    // console.log('user data is ', this.data);
+    
     this.squadron = data.squadron
     this.docked = true;
   };

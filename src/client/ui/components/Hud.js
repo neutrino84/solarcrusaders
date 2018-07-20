@@ -166,6 +166,33 @@ Hud.prototype.show = function() {
   this.animating.start();
 };
 
+Hud.prototype.showLevelUp = function () {
+  console.log('in show level up');
+  
+  this.levelUp = new Label(this.game, {
+    constraint: Layout.USE_PS_SIZE,
+    align: 'center',
+    text: {
+      fontName: 'full'
+    },
+    bg: false
+  });
+
+  this.levelUp.text = 'Level Up!';
+  
+  this.levelUp.tint = 0x32CD32;
+  this.levelUp.alpha = 1;
+  this.scoreContainer.addPanel(this.levelUp)
+  this.levelUpTween = this.game.tweens.create(this.levelUp);
+  this.levelUpTween.to({ y: -28, alpha: 0 }, 3000, );
+  this.levelUpTween.delay(300);
+  this.levelUpTween.start();
+  this.levelUpTween.on('complete', function () {
+    this.scoreContainer.removePanel(this.levelUp);
+    this.levelUp = null;
+  }, this);
+};
+
 Hud.prototype.showCreditLoss = function(credits) {
   this.visible = true;
   if(this.losses1){
@@ -228,7 +255,8 @@ Hud.prototype.showCreditLoss = function(credits) {
 };
 
 Hud.prototype.showCreditGain = function(credits, uuid) {
-  // this.visible = true;
+  console.log('show credit gain');
+  
   if(this.gains1){
     this.gains2 = new Label(this.game, {
           constraint: Layout.USE_PS_SIZE,
@@ -252,6 +280,8 @@ Hud.prototype.showCreditGain = function(credits, uuid) {
     }, this);
 
   } else {
+    console.log('gains 1');
+    
     this.gains1 = new Label(this.game, {
           constraint: Layout.USE_PS_SIZE,
           align: 'center',
@@ -265,7 +295,6 @@ Hud.prototype.showCreditGain = function(credits, uuid) {
     this.gains1.alpha = 1;
 
     this.scoreContainer.addPanel(this.gains1);
-
     this.gainsTween1 = this.game.tweens.create(this.gains1);
     this.gainsTween1.to({ y: -28, alpha: 0}, 2000, );
     this.gainsTween1.delay(100);

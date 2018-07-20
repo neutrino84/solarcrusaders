@@ -119,7 +119,6 @@ CreditsPane.prototype._payment = function(){
 };
 
 CreditsPane.prototype.updateCredits = function(credits) {
-  // this.creditValue = this.creditValue + credits;
   this.creditsCount.text = Math.floor(credits);
 };
 

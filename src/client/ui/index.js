@@ -7,6 +7,7 @@ var Panel = require('../ui/Panel'),
     pixi = require('pixi'),
     Shipyard = require('../ui/panes/Shipyard'),
     BottomPane = require('../ui/panes/BottomPane'),
+    UpgradePane = require('../ui/panes/UpgradePane'),
     // TutorialDisplay = require('../ui/panes/TutorialDisplay'),
     TutorialDisplay = require('../ui/panes/TutorialDisplay'),
     MiniMapPane = require('../ui/panes/MiniMapPane'),
@@ -28,6 +29,7 @@ UI.prototype.preload = function() {
 
 UI.prototype.create = function() {
   this.bottom = new BottomPane(this.game);
+  this.upgradePane = new UpgradePane(this.game);
   this.header = new HeaderPane(this.game);
   // this.leaderBoard = new LeaderBoardPane(this.game);
 
@@ -51,6 +53,7 @@ UI.prototype.create = function() {
   
   this.root.addPanel(this.header);
   this.root.addPanel(this.bottom);
+  // this.root.addPanel(this.upgradePane);
   this.header.id = 'header';
   this.header.alpha = 0;
 

@@ -251,7 +251,7 @@ SectorState.prototype.createManagers = function(first) {
     this.shipManager = new ShipManager(game, this);
   }
   this.objManager = new ObjectManager(game);
-  this.playerManager = new PlayerManager(game);
+  this.playerManager = new PlayerManager(game, this);
   this.squadManager = new SquadManager(game, this);
   this.soundManager.create();
   this.game.emit('game/backgroundmusic');

@@ -224,7 +224,8 @@ Selector.prototype.create = function() {
   this.ship.addChildAt(this.reticleRed, 0);
   this.ship.addChildAt(this.detector, 0);
 
-   this.outline = new OutlineFilter(1.0, 0x6699FF);
+  //  this.outline = new OutlineFilter(1.0, 0x6699FF);
+  this.outline = new OutlineFilter(1.0, 0x6699FF);
    this.outline.blendMode = engine.BlendMode.ADD;
    this.sprite = new engine.Sprite(this.game, 'texture-atlas', ship.data.chassis + '.png');
    this.sprite.filters = [this.outline];
@@ -234,13 +235,40 @@ Selector.prototype.create = function() {
 
 Selector.prototype.reset = function() {
   this.outline.color = 0x6699FF;
+  
 };
+Selector.prototype.flash = function () {
+  this.outline.color = 0xccc000;
+  this.switch = false;
+  this.game.clock.events.loop(500, flasher = function () {
+    // var outline = this.outline;
+    if (this.switch) {
+      // this.filters = [];
+      this.outline.color = 0x6699FF;
+      // ship.chassis.filters = [];
+      this.switch = !this.switch
+    } else {
+      // let colorMatrix = new pixi.filters.ColorMatrixFilter();
+      // let color = 0xFF0000;
+      // this.filters = [color];
+      this.outline.color = 0Xccc000;
+      this.switch = !this.switch
+    }
+  }, this);
 
+  this.outline.color = 0x6699FF;
+
+};
+// this.outline = new OutlineFilter(1.0, 0x6699FF);
 Selector.prototype.damage = function() {
   this.outline.color = 0xFF6666;
 };
 
 Selector.prototype.detectorHighlight = function() {
+
+  console.log('turning off detector highlight');
+  return
+  
   if(!this.detectorAnimating || (this.detectorAnimating && !this.detectorAnimating.isRunning)){
     this.detectorAnimating = this.game.tweens.create(this.detector);
     this.detectorAnimating.to({ alpha: 1 }, 500);
@@ -252,6 +280,8 @@ Selector.prototype.detectorHighlight = function() {
 };
 
 Selector.prototype.highlight = function() {
+  console.log('turning off  highlight');
+  return
   if(!this.animating || (this.animating && !this.animating.isRunning)) {
     this.animating = this.game.tweens.create(this.graphics);
     this.animating.to({ alpha: 1.0 }, 250);

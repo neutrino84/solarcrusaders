@@ -3,13 +3,17 @@ var engine = require('engine'),
     client = require('client')
     EnhancementManager = require('./EnhancementManager');
 
-function PlayerManager(game) {
+function PlayerManager(game, state) {
   this.game = game;
+  this.state = state;
   this.clock = game.clock;
   this.net = game.net;
   this.socket = game.net.socket;
   this.hud = null;
-
+  this.creditsPane = state.ui.bottom.creditsPane;
+  this.playerCredits = 0;
+  this.playerLevel;
+  
   // this.shipNetManager = game.states.current.shipNetManager;
   // this.enhancementManager = new EnhancementManager(this);
 
@@ -23,10 +27,10 @@ function PlayerManager(game) {
   // this.killpoints = 0;
   // this.credits = 0;
   this.baseRespawnTime = 10;
-  this.upgrade = {
-    1: 400,
-    2: 1000,
-    3: 4000,
+  this.upgradeLevel = {
+    1: 500,
+    2: 800,
+    3: 1000,
     4: 13000,
     5: 60000,
     currentTier : 1
@@ -40,29 +44,39 @@ function PlayerManager(game) {
 
   this.game.on('ship/player', this._player, this);
   this.game.on('player/disabled', this._death, this);
+  this.game.on('player/upgrade', this._upgradeSystem, this);
+  this.game.on('player/credits', this._player_credits, this);
+
+  // this.game.on('player/credits', this.player_credits, this);
+  
+  // this.clock.events.add(2000, function(){
+  //   console.log('yarp');
+  //   this.game.emit('player/upgrade')
+  // }, this)
 };
 
 PlayerManager.prototype.constructor = PlayerManager;
 
-PlayerManager.prototype.playerKillpoints = function(socket, killpoints) {
-  var curTier = this.upgrade.currentTier,
-      threshold = this.upgrade[curTier];
-
-  this.killpoints += killpoints*0.7;
-  // console.log('PLAYERS KILLPOINTS ARE: ', this.killpoints)
+PlayerManager.prototype._player_credits = function () {
+  // console.log('old credits: ', this.playerCredits, 'new credits: ', this.player.data.credits);
   
-  if(this.killpoints > threshold){
-    if(!this.upgradeAvailable) this.game.emit('upgrades/sound/available', {key : 'upgradeAvailable', volume : 0.4});
-    this.upgradeAvailable = true;
-    this.upgradeAvailableFlasherStart();
+  this.creditsPane.updateCredits(this.player.data.credits);
+  if (this.playerCredits < this.upgradeLevel[this.playerLevel] && this.player.data.credits >= this.upgradeLevel[this.playerLevel]) {
+    console.log('just leveled up!')
+    this.playerLevel++
+    this._upgradeSystem();
+    this.player.hud.showLevelUp();
   }
+  // if(this.playerCredits < 1000 && this.player.data.credits >= 1000){
+  //   console.log('just cracked a thousand!')
+  // }
+  this.playerCredits = this.player.data.credits;
 };
+PlayerManager.prototype._upgradeSystem = function(type) {
+  var ship = this.player;
 
-PlayerManager.prototype.upgradeSystem = function(type) {
-  var killpoints = this.killpoints,
-      curTier = this.upgrade.currentTier,
-      threshold = this.upgrade[curTier],
-      ship = this.player;
+  console.log('in upgradeSystem, starting flasher');
+  this.upgradeAvailableFlasherStart();
 
   if(this.upgradeAvailable){
     switch(type) {
@@ -155,20 +169,26 @@ PlayerManager.prototype.upgradeSystem = function(type) {
 };
 
 PlayerManager.prototype.upgradeAvailableFlasherStart = function(){
+  console.log('in flasher start');
+  
   var ship = this.player;
-  ship.events.loop(100, flasher = function(){
-    var ship = this.player;
-    if(this.filters.length){
-      this.filters = [];
-      ship.chassis.filters = [];
-    } else {
-      let colorMatrix = new pixi.filters.ColorMatrixFilter();
-      this.filters = [colorMatrix];
-      ship.chassis.filters = this.filters;
-      colorMatrix.hue(240, false);
-      colorMatrix.grayscale(0.7);
-    }
-  }, this);
+  ship.selector.flash();
+    
+
+  // ship.events.loop(100, flasher = function(){
+  //   var ship = this.player;
+  //   if(this.filters.length){
+  //     this.filters = [];
+  //     ship.selector.outline 
+  //     ship.chassis.filters = [];
+  //   } else {
+  //     let colorMatrix = new pixi.filters.ColorMatrixFilter();
+  //     this.filters = [colorMatrix];
+  //     ship.chassis.filters = this.filters;
+  //     colorMatrix.hue(540, false);
+  //     colorMatrix.grayscale(0.2);
+  //   }
+  // }, this);
   // ship.events.loop(750, flasherOff = function(){
   //   var ship = this.player;
   //   ship.chassis.filters = [];
@@ -200,12 +220,18 @@ PlayerManager.prototype.upgradeAvailableFlasherStop = function(){
 };
 
 PlayerManager.prototype._player = function(ship) {
-  this.playerShip = ship;
+
+  this.player = ship;
   this.hud = ship.hud;
   this.chassis = ship.data.chassis,
   this.stockWeapons = client.ShipConfiguration[this.chassis]['targeting']['hardpoints'],
   ship.chassis.filters = [],
   this.filters = ship.chassis.filters;
+
+  //this needs to check the backend player object for level (to account for reconnects)
+  this.playerLevel = 1;
+
+  this._player_credits();
 };
 
 PlayerManager.prototype._death = function() {

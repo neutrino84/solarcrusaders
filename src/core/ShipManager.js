@@ -178,7 +178,7 @@ ShipManager.prototype.create = function(data, user) {
   //turned off squadron generation on entering game
   //will make it so that squad ships are rewards for leveling up to a certain point
   if(user && !data.tutorial){
-    // this.eventManager.squadGen(user.ship.uuid);
+    this.eventManager.squadGen(user.ship.uuid);
   };
 };
 

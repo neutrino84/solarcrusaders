@@ -276,7 +276,15 @@ EventManager.prototype.squadGen = function(master){
       randomPostion = this.generateRandomPosition(2700),
       randomPostion2 = this.generateRandomPosition(2700),
       rando = this.game.rnd.frac();
-  // return
+
+  this.game.emit('ship/create', {
+    chassis: 'squad-attack',
+    x: randomPostion.x,
+    y: randomPostion.y,
+    ai: 'squadron',
+    master: master
+  });
+  return
   if(chassis1 === 'squad-shield'){
     chassis2 = this.game.rnd.pick(this.chassis['squadron2'])
   } else {
@@ -287,6 +295,7 @@ EventManager.prototype.squadGen = function(master){
   } else {
     chassis3 = this.game.rnd.pick(this.chassis['squadron'])
   }
+
 
   if(rando > 0.5){
     this.game.emit('ship/create', {

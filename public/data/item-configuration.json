@@ -265,7 +265,7 @@
         "cooldown": 0,
         "length": 32,
         "aoe": 1.1,
-        "spawn": 1,
+        "spawn": 3,
         "durability": 1000.0,
         "sound": "pulse-bazuko",
         "volume": 0.6,

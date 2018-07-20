@@ -92,7 +92,9 @@ Ship.prototype.refresh = function(data) {
       targetingComputer = this.targetingComputer;
 
   if(data.killed && this.isPlayer){
+    console.log('SHIP INDEX SENDING CREDIT GAIN to HUD, this.hud is ', this.hud);
     ships[data.killed].hud.showCreditLoss(data.gains);
+    
     this.hud.showCreditGain(data.gains, data.killed)
   }
 

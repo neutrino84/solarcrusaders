@@ -76,8 +76,6 @@ function ShipManager(game, state, first) {
   this.game.on('game/pause', this._pause, this);
   this.game.on('game/resume', this._resume, this);
 
-  this.game.on('player/credits', this._player_credits, this);
-
   this.game.on('ship/player', this._player, this);
   this.game.on('ship/primary', this._primary, this);
   this.game.on('ship/secondary', this._secondary, this);
@@ -236,9 +234,6 @@ ShipManager.prototype._player = function(ship) {
     this.fadeIn.to({alpha: 1}, 6000, engine.Easing.Quadratic.InOut);
     this.fadeIn.start();
   };
-    
-  this._player_credits()
-
   var homeBase = this.state.stationManager.find('ubadian-station-x01')
 
   this.player.unfriendlies = {};
@@ -248,10 +243,6 @@ ShipManager.prototype._player = function(ship) {
   this.player.squadron = {};
   this.game.camera.follow(this.player);
 
-};
-
-ShipManager.prototype._player_credits = function() {
-    this.creditsPane.updateCredits(this.player.data.credits) 
 };
 
 ShipManager.prototype._attack = function(data) {
