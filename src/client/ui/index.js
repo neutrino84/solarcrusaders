@@ -53,7 +53,7 @@ UI.prototype.create = function() {
   
   this.root.addPanel(this.header);
   this.root.addPanel(this.bottom);
-  // this.root.addPanel(this.upgradePane);
+  this.root.addPanel(this.upgradePane);
   this.header.id = 'header';
   this.header.alpha = 0;
 

@@ -1,4 +1,3 @@
-
 var engine = require('engine'),
     client = require('client'),
     Panel = require('../../Panel'),
@@ -319,37 +318,36 @@ SquadHotkeyPane.prototype._squadIcons = function(icon) {
     regroupButton.bg.on('inputOver', this._hover, this);
     regroupButton.bg.on('inputOut', this._unhover, this);
     regroupButton.start();
-
+    
     this.buttons['regroup'] = regroupButton;
-
+    
     containers[0].addPanel(regroupButton)
   }
-  //  figure out how to place the 'regroup' button ONCE
 
   switch(icon) {
-      // case 'regroup':
-      //   regroupButton = this.create('regroup');
-      //   regroupButton.id = 'regroup'
-      //   regroupButton.bg.on('inputUp', this._select, this);
-      //   regroupButton.start();
-
-      //   this.buttons['regroup'] = regroupButton;
-
-      //   containers[0].addPanel(regroupButton)
-      // break
-      case 'attackship':
-        closestHostileButton = this.create('closestHostile');
-        closestHostileButton.id = 'closestHostile';
-        closestHostileButton.bg.on('inputUp', this._select, this);
-        closestHostileButton.bg.on('inputOver', this._hover, this);
-        closestHostileButton.bg.on('inputOut', this._unhover, this);
-        closestHostileButton.start();
-
-        this.buttons['closestHostile'] = closestHostileButton;
-
-        containers[1].addPanel(closestHostileButton)
-
-        engageTargetButton = this.create('engageTarget');
+    case 'regroup':
+      regroupButton = this.create('regroup');
+      regroupButton.id = 'regroup'
+      regroupButton.bg.on('inputUp', this._select, this);
+      regroupButton.start();
+    
+      this.buttons['regroup'] = regroupButton;
+    
+      containers[0].addPanel(regroupButton)
+      break;
+    case 'attackship':
+    closestHostileButton = this.create('closestHostile');
+    closestHostileButton.id = 'closestHostile';
+    closestHostileButton.bg.on('inputUp', this._select, this);
+    closestHostileButton.bg.on('inputOver', this._hover, this);
+    closestHostileButton.bg.on('inputOut', this._unhover, this);
+    closestHostileButton.start();
+    
+    this.buttons['closestHostile'] = closestHostileButton;
+    
+    containers[1].addPanel(closestHostileButton)
+    
+    engageTargetButton = this.create('engageTarget');
         engageTargetButton.id = 'engageTarget'
         engageTargetButton.bg.on('inputUp', this._select, this);
         engageTargetButton.bg.on('inputOver', this._hover, this);

@@ -79,7 +79,6 @@ TextView.prototype.typewriter = function(string, interval) {
 
     if(index > string.length){
       this.game.clock.events.remove(this.typewriterLoop);
-      
     }
   }, this);
 };

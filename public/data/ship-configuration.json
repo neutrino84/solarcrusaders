@@ -93,7 +93,7 @@
     "moniker": "grey-wolf",
     "stats": {
       "capacity": 1000,
-      "health": 100,
+      "health": 50,
       "heal": 0.5,
       "armor": 0.03,
       "speed": 26.0,
@@ -223,7 +223,7 @@
     "moniker": "hammer-head",
     "stats": {
       "capacity": 1100,
-      "health": 140,
+      "health": 70,
       "heal": 0.075,
       "armor": 0.25,
       "speed": 25.0,
@@ -338,7 +338,7 @@
     "moniker": "star-fire",
     "stats": {
       "capacity": 800,
-      "health": 120,
+      "health": 60,
       "heal": 1,
       "armor": 0.02,
       "speed": 27.0,
@@ -440,7 +440,7 @@
     "moniker": "pig-nose",
     "stats": {
       "capacity": 1800,
-      "health": 155,
+      "health": 75,
       "heal": 0.5,
       "armor": 0.01,
       "speed": 25.0,
@@ -570,7 +570,7 @@
     "moniker": "old-lady",
     "stats": {
       "capacity": 1000,
-      "health": 110,
+      "health": 55,
       "heal": 0.6,
       "armor": 0.025,
       "speed": 24.0,
@@ -657,7 +657,7 @@
     "moniker": "blue-hawk",
     "stats": {
       "capacity": 700,
-      "health": 90,
+      "health": 45,
       "heal": 0.4,
       "armor": 0.01,
       "speed": 30.0,
@@ -756,7 +756,7 @@
     "class": "destroyer",
     "stats": {
       "capacity": 1000,
-      "health": 400,
+      "health": 200,
       "heal": 0.1,
       "armor": 0.3,
       "speed": 15.0,
@@ -1153,7 +1153,7 @@
     "class": "fighter",
     "stats": {
       "capacity": 800,
-      "health": 50,
+      "health": 20,
       "heal": 0.2,
       "armor": 0.0,
       "speed": 30.0,
@@ -1236,7 +1236,7 @@
     "class": "invader",
     "stats": {
       "capacity": 3000,
-      "health": 230,
+      "health": 100,
       "heal": 0.25,
       "armor": 0.15,
       "speed": 20.0,
@@ -1559,7 +1559,7 @@
     "class": "fighter",
     "stats": {
       "capacity": 3000,
-      "health": 100,
+      "health": 35,
       "heal": 0.25,
       "armor": 0.0,
       "speed": 30.0,
@@ -1615,7 +1615,7 @@
     "class": "battleship",
     "stats": {
       "capacity": 3000,
-      "health": 300,
+      "health": 140,
       "heal": 0.25,
       "armor": 0.2,
       "speed": 20.0,
@@ -1700,7 +1700,7 @@
     "class": "larva",
     "stats": {
       "capacity": 1000,
-      "health": 90,
+      "health": 20,
       "heal": 0.05,
       "armor": 0.0,
       "speed": 30.0,
@@ -1762,7 +1762,7 @@
     "class": "extractor",
     "stats": {
       "capacity": 1000,
-      "health": 80,
+      "health": 30,
       "heal": 0.05,
       "armor": 0.0,
       "speed": 35.0,

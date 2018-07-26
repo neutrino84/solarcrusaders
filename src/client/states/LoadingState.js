@@ -42,6 +42,7 @@ LoadingState.prototype.create = function() {
       type: 'stack'
     },
     bg: {
+      alpha : 0,
       borderSize: 1.0,
       borderColor: 0xff0000,
       borderAlpha: 0.0
@@ -52,6 +53,7 @@ LoadingState.prototype.create = function() {
     margin: [10],
     key: 'loading',
     bg: {
+      alpha : 0.5,
       borderColor: 0xff0000,
       borderAlpha: 0.0
     },
@@ -91,6 +93,7 @@ LoadingState.prototype.create = function() {
       direction: Layout.VERTICAL
     },
     bg: {
+      // fillAlpha : 0,
       borderSize: 1.0,
       borderColor: 0xcc0aa0,
       borderAlpha: 0.0

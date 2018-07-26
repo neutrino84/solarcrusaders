@@ -71,10 +71,11 @@ function Shipyard(game) {
       color: 0x000000
     }
   }); 
+  // this.game.height * 4 / 10
   this.middlePane = new Pane(this.game, {
     constraint: Layout.CENTER,
     width: this.game.width/2,
-    height: this.game.height*4/10,
+    height: this.game.height * 4 / 10,
     layout: {
       type: 'border',
       gap: [5,5]
@@ -121,10 +122,10 @@ function Shipyard(game) {
     }
   });
 
-
+// this.middlePane.psHeight*5/10
   this.shipPanels = new Pane(this.game, {
-    constraint: Layout.BOTTOM,
-    height: this.middlePane.psHeight*5/10,
+    constraint: Layout.CENTER,
+    height: 100,
     width: this.bg.width,
     padding: [0,30,0,0],
     layout: {
@@ -643,7 +644,7 @@ Shipyard.prototype._hover = function(button) {
         bg: false
       });
   
-  this.game.emit('shipyard/hover', 'selectionSFX1')
+  this.game.emit('SFX/selectionHover', 'selectionSFX1')
   for(var i = 0; i < ships.length-1; i++){
     if(ships[i].children[1].id !== ship){
       // console.log('- ', ships[i])
@@ -714,7 +715,7 @@ Shipyard.prototype._select= function(button){
   // this.tutorialSelected = false;
 
   this.socket.emit('user/ship', button.parent.id, this.game.auth.socket.id, this.tutorialSelected)
-  this.game.emit('shipyard/hover', 'selectionSFX2')
+  this.game.emit('SFX/selectionHover', 'selectionSFX2')
   if(this.tutorialSelected){
     // this.game.emit('user/shipSelected/tutorial', true)
   }else{

@@ -105,7 +105,7 @@ SquadIndicatorPane.prototype._squadConstruct = function(chassis){
   var game = this.game, 
       containers = this.ship_containers,
       ship, ship_negative;
-
+  
   // if(!this.clockStarted){
   //   this.clockStarted = true;
   //   this.game.clock.events.loop(1250, function(){
@@ -120,7 +120,6 @@ SquadIndicatorPane.prototype._squadConstruct = function(chassis){
   //     this._payment()
   //   }, this)
   // }
-
   ship = new Image(game, {
       key: 'texture-atlas',
       frame: chassis + '_upright.png',
@@ -145,12 +144,14 @@ SquadIndicatorPane.prototype._squadConstruct = function(chassis){
   ship.id = chassis;
   ship.visible = false;
 
-  this.ship_containers[this.count].addPanel(ship_negative);
-  this.ship_containers[this.count].addPanel(ship);
-
-  this.count++;
-
-  this._squadEnable(chassis)
+  if(this.count <4){
+    this.ship_containers[this.count].addPanel(ship_negative);
+    this.ship_containers[this.count].addPanel(ship);
+  
+    this.count++;
+  
+    this._squadEnable(chassis)
+  }
 
 };
 

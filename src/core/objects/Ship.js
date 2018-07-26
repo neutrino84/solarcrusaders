@@ -22,7 +22,7 @@ function Ship(manager, data, user) {
   this.parent = this.data.parent;
   this.chassis = this.data.chassis;
   if(data.master){
-    this.master = data.master
+    this.master = data.master;
   };
   if(data.queen){
     this.queen = data.queen
@@ -39,6 +39,7 @@ function Ship(manager, data, user) {
       this.data.speed = this.config.stats.speed/2;
     }
     this.data.rate = this.config.stats.rate/2;
+    this.data.health = this.config.stats.health*2;
     // console.log('user data is ', this.data);
     
     this.squadron = data.squadron
@@ -140,11 +141,10 @@ Ship.prototype.save = function(callback) {
 };
 
 Ship.prototype.createRelationships = function() {
-  // this.user && this.user.ships.push(this);
   if(this.user){
     this.user.ship = this;
     this.user.data.ship = this.uuid; 
-  }
+  };
 };
 
 Ship.prototype.createEnhancements = function() {
@@ -163,7 +163,7 @@ Ship.prototype.createHardpoints = function() {
       harpoints = this.hardpoints,
       serialized = this.serialized,
       config = this.config.targeting.hardpoints;
-
+      
   // create turrets
   for(var i=0; i<config.length; i++) {
     stats = config[i];

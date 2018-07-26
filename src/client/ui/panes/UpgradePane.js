@@ -10,31 +10,32 @@ var engine = require('engine'),
     ProgressBar = require('../components/ProgressBar');
 
 function UpgradePane(game) {
+  this.game = game;
   this.socket = game.net.socket;
   Pane.call(this, game, {
     constraint: Layout.BOTTOM,
-    padding: [0, 10, 0, 0 ],
+    padding: [0, 0, 0, 0 ],
     layout: {
       type: 'flow',
-      ax: Layout.LEFT, 
-      ay: Layout.BOTTOM,
+      ax: Layout.CENTER, 
+      ay: Layout.CENTER,
       direction: Layout.VERTICAL
     },
     bg: {
       color: 0xccffaa,
-      fillAlpha: 0.0,
+      fillAlpha: 0.03,
       borderSize: 0.1,
       borderColor: 0xcccccc,
       borderAlpha: 0.5
     }, 
-    height: 70,
+    height: 80,
   });
 
   this.titleContainer = new Pane(this.game, {
-    width: 250,
+    width: 150,
     height: 10,
-    constraint: Layout.LEFT,
-    padding: [0, 0, 0, 0],
+    constraint: Layout.TOP,
+    padding: [0, 0, 5, 0],
     layout: {
       type: 'flow',
       direction: Layout.VERTICAL,
@@ -42,7 +43,7 @@ function UpgradePane(game) {
     bg: {
       color: 0xff0000,
       fillAlpha: 0,
-      borderSize: 0.0,
+      borderSize: 1.0,
       borderColor: 0xffff00,
       borderAlpha: 0.0
     }
@@ -66,42 +67,21 @@ function UpgradePane(game) {
   //   }
   // });
   this.squadUpgradePane = new SquadUpgradePane(game);
-  // this.enhancementPane = new EnhancementPane(game);
-  // this.squadHotkeyPane = new SquadHotkeyPane(game);
-  
-  // this.addPanel(this.squadIcons);
-  // this.socket.on('player/hasSquadron', this._squadPane, this)
-  // this._squadPane();
-
-  // this.bottomLeftUpper.addPanel(this.creditsPane)
-  // this.bottomLeftUpper.addPanel(this.squadIndicatorPane)
-
-  // this.bottomLeftLower.addPanel(this.waveDisplayPane)
-
-  // this.bottomLeftContainer.addPanel(this.bottomLeftUpper)
-  // this.bottomLeftContainer.addPanel(this.bottomLeftLower)
-
-  // this.bottomLeftRightContainer.addPanel(this.squadUpgradePane);
-
-
-  // this.bottomLeftContainer.addPanel(this.squadIndicatorPane)
-
-  // this.bottomLeftContainer.addPanel(this.bottomLeftLower)
-  // this.bottomLeftContainer.addPanel(this.bottomLeftUpper)
-
-  // this.addPanel(this.creditsPane)
-  // this.addPanel(this.squadIndicatorPane)
   this.addPanel(this.titleContainer);
-  // this.addPanel(this.botLeftContainer);
-  // this.addPanel(this.botRightContainer);
   this.addPanel(this.squadUpgradePane);
-  // this.addPanel(this.enhancementPane);
-  // this.addPanel(this.squadHotkeyPane);
+  this.alpha = 0;
+  this.game.on('ship/player/upgrade', this._show, this);
+  this.game.on('hide/upgrade_pane', this._hide, this);
+};
+UpgradePane.prototype = Object.create(Pane.prototype);
+UpgradePane.prototype.constructor = UpgradePane;
+
+UpgradePane.prototype._show = function(){
+  this.alpha = 1;
 };
 
-UpgradePane.prototype._squadPane = function(){
-  // this.squadPane = new SquadPane(game);
-  // this.addPanel(this.squadPane);
+UpgradePane.prototype._hide = function () {
+  this.alpha = 0;
 };
 
 UpgradePane.prototype.destroy = function(){
@@ -117,8 +97,5 @@ UpgradePane.prototype.stopProcesses = function(){
   this.removePanel(this.creditsPane);
   this.removePanel(this.enhancementPane);
 };
-
-UpgradePane.prototype = Object.create(Pane.prototype);
-UpgradePane.prototype.constructor = UpgradePane;
 
 module.exports = UpgradePane;

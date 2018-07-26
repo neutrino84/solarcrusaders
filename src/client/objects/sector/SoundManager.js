@@ -102,7 +102,8 @@ SoundManager.prototype.preload = function() {
   load.audio('reactor-online', 'sounds/system/reactorOnline.mp3');
   load.audio('repairs-completed', 'sounds/system/repairsCompleted.mp3');
 
-
+  //LEVEL UP
+  load.audio('levelUp', 'sounds/misc/levelUp.mp3');
 
   //SQUAD CALLBACKS
   load.audio('copyThatCommander','sounds/squadCallbacks/copyThatCommander.mp3');
@@ -123,7 +124,7 @@ SoundManager.prototype.preload = function() {
   load.audio('selectionSFX2', 'sounds/misc/selectionSFX2_echo.mp3');
 
 
-  this.game.on('shipyard/hover', this._selection, this);
+  this.game.on('SFX/selectionHover', this._selection, this);
   
 };
 
@@ -145,6 +146,8 @@ SoundManager.prototype.create = function() {
 
   this.game.sound.add('rocket-launch1', 3);
   this.game.sound.add('rocket-launch2', 3);
+
+  this.game.sound.add('levelUp', 2);
 
   // this.game.sound.add('pulse-nucleon', 6);
   // this.game.sound.add('pulse-vulcan', 6);
@@ -243,6 +246,7 @@ SoundManager.prototype.create = function() {
   this.game.on('system/sound', this.generateSystemSound, this);
   this.game.on('ship/secondary', this.generateThrusterSound, this);
   this.game.on('global/sound/spawn', this.generateSpawnSound, this);
+  this.game.on('player/levelUpSFX', this._player_levelup, this);
 
   this.game.on('squad/sound', this.generateSquadSound, this);
   this.game.on('squad/shieldDestination', this.generateSquadSound, this);
@@ -250,7 +254,11 @@ SoundManager.prototype.create = function() {
 };
 
 SoundManager.prototype._selection = function(sound){
-  this.game.sound.play(sound, 0.2, false);
+  if(sound === 'selectionSFX3'){
+    this.game.sound.play('selectionSFX2', 0.05, false);
+  } else {
+    this.game.sound.play(sound, 0.2, false);
+  }
 };
 
 SoundManager.prototype._enhance = function(data) {
@@ -589,6 +597,12 @@ SoundManager.prototype._player = function(ship){
     this.generateBackgroundMusic();
     this.generateSystemSound('systems-online')
   }, this);
+};
+
+SoundManager.prototype._player_levelup = function () {
+  console.log('in level up sound');
+  
+  this.game.sound.play('levelUp', 0.15, false);
 };
 
 SoundManager.prototype.destroy = function(){

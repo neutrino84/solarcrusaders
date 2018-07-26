@@ -167,8 +167,6 @@ Hud.prototype.show = function() {
 };
 
 Hud.prototype.showLevelUp = function () {
-  console.log('in show level up');
-  
   this.levelUp = new Label(this.game, {
     constraint: Layout.USE_PS_SIZE,
     align: 'center',
@@ -255,8 +253,6 @@ Hud.prototype.showCreditLoss = function(credits) {
 };
 
 Hud.prototype.showCreditGain = function(credits, uuid) {
-  console.log('show credit gain');
-  
   if(this.gains1){
     this.gains2 = new Label(this.game, {
           constraint: Layout.USE_PS_SIZE,
@@ -280,8 +276,6 @@ Hud.prototype.showCreditGain = function(credits, uuid) {
     }, this);
 
   } else {
-    console.log('gains 1');
-    
     this.gains1 = new Label(this.game, {
           constraint: Layout.USE_PS_SIZE,
           align: 'center',

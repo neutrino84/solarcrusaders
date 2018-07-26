@@ -99,7 +99,6 @@ ButtonIcon.prototype._inputDown = function() {
 
 ButtonIcon.prototype._inputOver = function() {
   Button.prototype._inputOver.call(this);
-
   this.image.tint = this.settings.icon.tint.over;
   this.image.view.alpha = this.settings.icon.alpha.over;
 

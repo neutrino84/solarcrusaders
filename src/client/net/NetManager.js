@@ -28,6 +28,7 @@ function NetManager(game) {
   this.connect('ship/enhancement/cooled');
   this.connect('station/disabled');
   this.connect('squad/shieldMaidenConnect');
+  this.connect('squad/connect');
   this.connect('squad/shieldUpIn');
   this.connect('global/sound/spawn');
   this.connect('game/win');

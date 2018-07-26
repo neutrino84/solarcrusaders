@@ -22,7 +22,7 @@ function EventManager(game, manager) {
 
   this.game.clock.events.loop(1000, this.wavecycle, this);
   this.ships = {
-    basic: 7,
+    basic: 2,
     enforcer: 1,
     pirate: {
       factions : {
@@ -126,6 +126,8 @@ EventManager.prototype.init = function() {
 
   this.sockets.on('tutorial/createShip', this.createTutorialShips, this);
   this.sockets.on('tutorial/finished', this.tutorialComplete, this);
+  this.sockets.on('player/select/squadship', this.squadGen, this);
+  
 
   // refresh data interval
  this.updateTimer = this.game.clock.events.loop(1000, this.update, this);
@@ -271,126 +273,16 @@ EventManager.prototype.shipGen = function(num, ai, startingPos, faction){
   } 
 };
 
-EventManager.prototype.squadGen = function(master){
-  var chassis3, chassis2, chassis1 = this.game.rnd.pick(this.chassis['squadron']),
-      randomPostion = this.generateRandomPosition(2700),
-      randomPostion2 = this.generateRandomPosition(2700),
-      rando = this.game.rnd.frac();
+EventManager.prototype.squadGen = function(socket, args){
+  var randomPostion = this.generateRandomPosition(2700);
 
   this.game.emit('ship/create', {
-    chassis: 'squad-attack',
+    chassis: args[1].ship,
     x: randomPostion.x,
     y: randomPostion.y,
     ai: 'squadron',
-    master: master
+    master: args[1].uuid
   });
-  return
-  if(chassis1 === 'squad-shield'){
-    chassis2 = this.game.rnd.pick(this.chassis['squadron2'])
-  } else {
-    chassis2 = this.game.rnd.pick(this.chassis['squadron'])
-  };
-  if(chassis2 === 'squad-shield' || chassis1 === 'squad-shield'){
-    chassis3 = this.game.rnd.pick(this.chassis['squadron2'])
-  } else {
-    chassis3 = this.game.rnd.pick(this.chassis['squadron'])
-  }
-
-
-  if(rando > 0.5){
-    this.game.emit('ship/create', {
-      chassis: 'squad-attack',
-      x: randomPostion.x,
-      y: randomPostion.y,
-      ai: 'squadron',
-      master: master
-    });
-      this.game.emit('ship/create', {
-      chassis: 'squad-attack',
-      x: randomPostion.x,
-      y: randomPostion.y,
-      ai: 'squadron',
-      master: master
-    });
-    this.game.emit('ship/create', {
-      chassis: 'squad-shield',
-      x: randomPostion.x,
-      y: randomPostion.y,
-      ai: 'squadron',
-      master: master
-    });
-  } else {
-    this.game.emit('ship/create', {
-      chassis: 'squad-attack',
-      x: randomPostion.x,
-      y: randomPostion.y,
-      ai: 'squadron',
-      master: master
-    });
-      this.game.emit('ship/create', {
-      chassis: 'squad-attack',
-      x: randomPostion.x,
-      y: randomPostion.y,
-      ai: 'squadron',
-      master: master
-    });
-    this.game.emit('ship/create', {
-      chassis: 'squad-repair',
-      x: randomPostion.x,
-      y: randomPostion.y,
-      ai: 'squadron',
-      master: master
-    });
-  }
-return
-  if(rando > 0.6){
-    this.game.emit('ship/create', {
-      chassis: chassis1,
-      x: randomPostion.x,
-      y: randomPostion.y,
-      ai: 'squadron',
-      master: master
-    });
-
-    this.game.emit('ship/create', {
-      chassis: chassis2,
-      x: randomPostion.x,
-      y: randomPostion.y,
-      ai: 'squadron',
-      master: master
-    });
-
-    this.game.emit('ship/create', {
-      chassis: chassis3,
-      x: randomPostion.x,
-      y: randomPostion.y,
-      ai: 'squadron',
-      master: master
-    });
-  } else if(rando > 0.3){
-    this.game.emit('ship/create', {
-      chassis: chassis1,
-      x: randomPostion2.x,
-      y: randomPostion2.y,
-      ai: 'squadron',
-      master: master
-    });
-    this.game.emit('ship/create', {
-      chassis: chassis2,
-      x: randomPostion2.x,
-      y: randomPostion2.y,
-      ai: 'squadron',
-      master: master
-    });
-  } else {
-    this.game.emit('ship/create', {
-      chassis: chassis1,
-      x: randomPostion2.x,
-      y: randomPostion2.y,
-      ai: 'squadron',
-      master: master
-    });
-  }
 };
 
 EventManager.prototype.enforcerGen = function(x, y, master){
