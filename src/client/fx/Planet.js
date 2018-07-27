@@ -18,8 +18,8 @@ function Planet(game, texture) {
   this.atmosphere.cache();
   this.addChild(this.atmosphere);
 
-  this.pivot.set(this.width/2, this.height/2);
-  this.position.set(2048/6, 2048/6);
+  this.pivot.set(this.width/10, this.height/10);
+  this.position.set(2048/4, 2048/4);
 
   this.planetFragFile = '/shaders/planet.frag'
 };

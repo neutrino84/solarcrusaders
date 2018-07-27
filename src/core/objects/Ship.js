@@ -40,8 +40,6 @@ function Ship(manager, data, user) {
     }
     this.data.rate = this.config.stats.rate/2;
     this.data.health = this.config.stats.health*2;
-    // console.log('user data is ', this.data);
-    
     this.squadron = data.squadron
     this.docked = true;
   };
@@ -227,15 +225,11 @@ Ship.prototype.attacked = function(target, slot, target_uuid) {
     for(var s in ships) {
       ship = ships[s];
 
-      //*** shouldn't this check to see if you're in a damageable area before calling hit? 
-        //  right now it's calling hit on all ships
       if(ship.game && ship != this) {
         ship.hit(this, target, slot, target_uuid);
       }
     };
-    // for(var st in stations){
-    //     stations[st].hit(this, target, slot);
-    // };
+
     this.game.emit('ship/attacked', this, target, slot)
   };
 };
@@ -280,7 +274,7 @@ Ship.prototype.hit = function(attacker, target, slot, target_uuid) {
     damage += critical ? damage : 0;
     damage *= piercing ? piercing.damage : 1.0;
     if(this.squadron && this.shieldCheck(this.uuid)){
-        damage = damage*0.55;
+        damage = damage*0.15;
         shielded = true;
     };
     if(attacker.hardpoints[0].subtype === 'repair'){

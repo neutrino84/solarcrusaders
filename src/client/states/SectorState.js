@@ -54,20 +54,20 @@ SectorState.prototype.preload = function() {
 
   //select planet
 
-  // var planets = [
-  // 'daigus',
-  // 'eamon-alpha',
-  // 'modo',
-  // 'ichor',
-  // 'talus',
-  // 'arkon'
-  // ]
-
   var planets = [
-  'arkon',
+  'daigus',
+  'eamon-alpha',
+  'modo',
   'ichor',
   'talus',
+  'arkon'
   ]
+
+  // var planets = [
+  // 'arkon',
+  // 'ichor',
+  // 'talus',
+  // ]
 
 
   this.planetTexture = this.game.rnd.pick(planets);
@@ -228,6 +228,10 @@ SectorState.prototype.createSpace = function() {
   this.neb3 = new NebulaCluster(this.game);
   this.neb3.position.set(528, 528);
   this.neb3.create(4, 0.001, 256, [0.1, 0.3, 1]);
+
+  this.neb4 = new NebulaCluster(this.game);
+  this.neb4.position.set(0, 0);
+  this.neb4.create(4, 0.04, 256, [0.1, 0.1, 1]);
 
   this.game.world.static.add(this.space);
   this.game.world.static.add(this.snow);

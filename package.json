@@ -1,8 +1,8 @@
 {
   "private": true,
-  "name": "solarcrusaders",
+  "name": "mobius dimension",
   "version": "0.3.4-alpha.3",
-  "description": "Solar Crusaders is a multiplayer top-down strategy game featuring a sandbox universe, base building, and exploration.",
+  "description": "Mobius Dimension is a multiplayer top-down strategy game featuring a sandbox universe, base building, and exploration.",
   "author": "Oliver J Dyla",
   "contributors": ["Richard Craven"],
   "dependencies": {

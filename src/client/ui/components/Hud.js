@@ -139,7 +139,9 @@ Hud.prototype.create = function() {
       data = ship.data;
 
   this.ship = ship;
-
+  if(ship.user){
+    stats.health = stats.health*2;
+  }
   this.healthBar.percentage(data.health / stats.health);
   this.energyBar.percentage(data.energy / stats.energy);
 

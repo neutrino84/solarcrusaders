@@ -22,26 +22,26 @@ function EventManager(game, manager) {
 
   this.game.clock.events.loop(1000, this.wavecycle, this);
   this.ships = {
-    basic: 2,
+    basic: 3,
     enforcer: 1,
     pirate: {
       factions : {
         'katos_boys' : {
-          num : 8,
+          num : 9,
           starting_position : {
             x: 6966,
             y: 4249
           }
         },
         'temeni' : {
-          num : 8,
+          num : 9,
           starting_position : {
             x: -3743,
             y: -941
           }
         },
         'sappers' : {
-          num : 8,
+          num : 9,
           starting_position : {
             x: 1501,
             y: 1521
@@ -94,13 +94,13 @@ function EventManager(game, manager) {
   };
 
   this.spawnSets = {
-    1 : {'katos_boys' : {'pirate-x01' : 2},'temeni' : {'pirate-x01' : 1, 'pirate-x03' : 1}},
-    2 : {'katos_boys' : {'pirate-x01' : 3, 'pirate-x03' : 1},'temeni' : {'pirate-x01' : 2}}, 
+    1 : {'katos_boys' : {'pirate-x01' : 2},'temeni' : {'pirate-x01' : 2, 'pirate-x03' : 1}},
+    2 : {'katos_boys' : {'pirate-x01' : 3, 'pirate-x03' : 1},'temeni' : {'pirate-x01' : 3}}, 
     3 : {'katos_boys' : {'pirate-x01' : 2},'temeni' : {'pirate-x02' : 2}},
-    4 : {'katos_boys' : {'pirate-x01' : 1,'pirate-x02' : 1},'temeni' : {'pirate-x01' : 2,'pirate-x02' : 1}},
-    5 : {'katos_boys' : {'pirate-x01' : 3,'pirate-x02' : 1},'temeni' : {'pirate-x03' : 1,'pirate-x02' : 1}}, 
+    4 : {'katos_boys' : {'pirate-x01' : 1,'pirate-x02' : 2},'temeni' : {'pirate-x01' : 2,'pirate-x02' : 1}},
+    5 : {'katos_boys' : {'pirate-x01' : 3,'pirate-x02' : 1},'temeni' : {'pirate-x03' : 1,'pirate-x02' : 2}}, 
     6 : {'katos_boys' : {'pirate-x02' : 2, 'pirate-x03' : 2},'temeni' : {'pirate-x01' : 4}},
-    7 : {'katos_boys' : {'pirate-x03' : 1,'pirate-x04' : 1},'temeni' : {'pirate-x01' : 3,'pirate-x02' : 1}},
+    7 : {'katos_boys' : {'pirate-x03' : 1,'pirate-x04' : 1},'temeni' : {'pirate-x01' : 3,'pirate-x02' : 2}},
     8 : {'katos_boys' : {'pirate-x01' : 2,'pirate-x04' : 1},'temeni' : {'pirate-x01' : 3,'pirate-x04' : 1}},
     9 : {'katos_boys' : {'pirate-x01' : 4,'pirate-x04' : 1},'temeni' : {'pirate-x01' : 4,'pirate-x04' : 1}},
     10 : {'katos_boys' : {'pirate-x01' : 4,'pirate-x02' : 2,'pirate-x04' : 1},'temeni' : {'pirate-x01' : 4,'pirate-x02' : 2,'pirate-x03' : 1}}

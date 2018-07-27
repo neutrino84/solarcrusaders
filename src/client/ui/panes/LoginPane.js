@@ -29,6 +29,7 @@ function LoginPane(game) {
     },
     content: {
       width: game.width/1.6,
+      padding: [0, 50, 0, 0],
       height: 45,
       layout: {
         type: 'flow',
@@ -66,7 +67,7 @@ function LoginPane(game) {
     },
     title: {
       margin: [0,0,10,0],
-      padding: [0],
+      padding: [0 , 10, 0 , 0],
       // margin: [0,0,8,0],
       font: {
         name: 'full'
@@ -261,7 +262,7 @@ LoginPane.prototype.create = function() {
 
   // title label
   this.title = new Label(this.game, this.settings.title);
-  this.title.text = 'NOW ENTERING THE MOBIUS DIMENSION v1.0.5'
+  this.title.text = 'NOW ENTERING THE MOBIUS DIMENSION v1.0.7'
 
   this.errorContainer1 = new Button(this.game, this.settings.errorContainer1);
   this.error1 = new Label(this.game, this.settings.error1);
@@ -328,7 +329,7 @@ LoginPane.prototype.create = function() {
   colorMatrix2.technicolor(9);
   this.registration = new Pane(this.game, this.settings.registration);
 
-  // this.login.bg.alpha = 1
+  this.login.bg.alpha = 1
   // console.log('login bg is ', this.login)
   // this.login.bg.borderColor = 0xff0000;
   // this.login.invalidate();
@@ -361,8 +362,8 @@ LoginPane.prototype.create = function() {
   this.chooseShip.bg.on('inputDown', this._chooseShip, this);
 
   this.addPanel(this.title);
-  // this.addPanel(this.content);
-  // this.addPanel(this.registration);
+  this.addPanel(this.content);
+  this.addPanel(this.registration);
   this.content.addPanel(this.username);
   this.content.addPanel(this.password);
   this.content.addPanel(this.login);

@@ -181,7 +181,9 @@ SquadManager.prototype.shieldUpIn = function(data) {
 
   if(data.active){
     if(ship.selector.shieldBlue && ship.data.chassis == 'squad-shield' && !ship.disabled) {
-      this.game.emit('squad/sound','shieldUp')
+      console.log(' made it to here');
+      
+      this.game.emit('squad/sound','shieldUp');
 
       ship.selector.shieldBlueStart()
     }; 

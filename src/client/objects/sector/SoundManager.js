@@ -255,7 +255,7 @@ SoundManager.prototype.create = function() {
 
 SoundManager.prototype._selection = function(sound){
   if(sound === 'selectionSFX3'){
-    this.game.sound.play('selectionSFX2', 0.05, false);
+    this.game.sound.play('selectionSFX2', 0.1, false);
   } else {
     this.game.sound.play(sound, 0.2, false);
   }
@@ -600,9 +600,7 @@ SoundManager.prototype._player = function(ship){
 };
 
 SoundManager.prototype._player_levelup = function () {
-  console.log('in level up sound');
-  
-  this.game.sound.play('levelUp', 0.15, false);
+  this.game.sound.play('levelUp', 0.1, false);
 };
 
 SoundManager.prototype.destroy = function(){

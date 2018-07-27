@@ -313,6 +313,8 @@ Selector.prototype.hostileEngaged = function() {
   }
 };
 Selector.prototype.shieldBlueStart = function() {
+  console.log('in shield blue start');
+  
     if(this.shieldBlue){
       this.shieldBlue.alpha = 2;
       this.shieldBlueAnimating = this.game.tweens.create(this.shieldBlue);

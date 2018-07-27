@@ -22,10 +22,10 @@ function PlayerManager(game, state) {
 
   this.baseRespawnTime = 10;
   this.upgradeLevel = {
-    1: 200,
-    2: 320,
-    3: 480,
-    4: 600,
+    1: 300,
+    2: 600,
+    3: 880,
+    4: 1000,
     5: 60000,
     currentTier : 1
   };
