@@ -54,7 +54,6 @@ function Shipyard(game) {
     }
   });
   // this.resizeDynamic();
-  console.log('dis shit is ', this.game.height * 3 / 10);
   //370
   
   this.topPane = new Pane(this.game, {
@@ -77,7 +76,7 @@ function Shipyard(game) {
   this.middlePane = new Pane(this.game, {
     constraint: Layout.CENTER,
     width: this.game.width/2,
-    height: this.game.height * 3 / 10,
+    height: this.game.height * 7 / 10,
     layout: {
       type: 'border',
       gap: [5,5]

@@ -182,7 +182,7 @@ PlayerManager.prototype._player = function(ship) {
 
   this.game.emit('ship/player/upgrade');
   this._player_credits();
-  this.player.events.add(3000, this.player.hud.hideUsername, this.player.hud);
+  // this.player.events.add(3000, this.player.hud.hideUsername, this.player.hud);
 };
 
 PlayerManager.prototype._death = function() {

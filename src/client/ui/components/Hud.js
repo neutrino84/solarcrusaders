@@ -192,25 +192,32 @@ Hud.prototype.setUsername = function (data) {
   this.username.x = this.username.x-(newString.length*2)
   this.username.y = this.username.y - 17;
 
-  this.usernameTween = this.game.tweens.create(this.username);
-  this.usernameTween.to({ alpha: 0 }, 3000, );
-  this.usernameTween.delay(6000);
-  this.usernameTween.start();
-  this.usernameTween.on('complete', function () {
-    this.scoreContainer.removePanel(this.username);
-    this.username = null;
-  }, this);
+  // this.usernameTween = this.game.tweens.create(this.username);
+  // this.usernameTween.to({ alpha: 0 }, 3000, );
+  // this.usernameTween.delay(6000);
+  // this.usernameTween.start();
+  // this.usernameTween.on('complete', function () {
+  //   this.scoreContainer.removePanel(this.username);
+  //   this.username = null;
+  // }, this);
 };
 
 Hud.prototype.hideUsername = function(){
-  this.usernameTween = this.game.tweens.create(this.username);
+  // console.log('this is ', this);
+  console.log(this.username);
+  this.scoreContainer.invalidate();
+  
+  this.usernameTween = this.game.tweens.create(this.scoreContainer.children[1].children[0].font);
   this.usernameTween.to({ alpha: 0 }, 3000, );
-  this.usernameTween.delay(6000);
-  this.usernameTween.start();
+  this.usernameTween.delay(3000);
   this.usernameTween.on('complete', function () {
     this.scoreContainer.removePanel(this.username);
     this.username = null;
   }, this);
+
+  // console.log('in hide username');
+  
+  this.usernameTween.start();
 }
 
 Hud.prototype.showLevelUp = function () {

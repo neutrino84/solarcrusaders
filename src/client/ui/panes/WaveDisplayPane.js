@@ -91,7 +91,6 @@ function WaveDisplayPane(game, settings) {
   this.addPanel(this.waveText)
   this.addPanel(this.waveIndicator)
 
-  this.game.on('test/message', this.tester, this);
   this.game.on('wave/response', this.waveResponse, this);
   this.game.on('user/wave/update', this._updateWave, this);
   this.game.on('wave/cycle', this.wavecycle, this);
@@ -116,11 +115,6 @@ WaveDisplayPane.prototype.delayedUpdate = function(){
 
 WaveDisplayPane.prototype.waveResponse = function(response){
   this._updateWave(response[1]);
-};
-
-WaveDisplayPane.prototype.tester = function (response) {
-  console.log('IN TEST MSG, response is ', response);
-  
 };
 
 WaveDisplayPane.prototype._updateIndicator = function(){

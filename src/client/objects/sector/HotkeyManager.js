@@ -113,7 +113,7 @@ HotkeyManager.prototype.listener = function(hotkey) {
         this.game.emit('hotkey/squad/engageTarget', 'engageTarget')
       };
       if(key.toLowerCase() === 'r'){
-        this.game.emit('hotkey/squad/regroup', 'regroup')
+        this.game.emit('hotkey/squad/regroup', 'regroup');
       };
       if(key.toLowerCase() === 's'){
         this.game.emit('hotkey/squad/shieldUp', 'shieldUp')
