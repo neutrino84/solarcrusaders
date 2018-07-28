@@ -18,11 +18,14 @@ function User(game, data, socket, manager) {
   this.wave = 1;
   this.respawnMultiplier = 1;
   this.tutorial = false;
+  this.gamename = 'steve'
   this.cache = {
     wave : 1,
     ship : null
   };
   this.uuid = this.data.uuid;
+  console.log('new user, data is ', data);
+  
 };
 
 User.prototype.constructor = User;
@@ -145,6 +148,26 @@ Object.defineProperty(User.prototype, 'credits', {
     this.data.credits = value;
   }
 });
+
+// Object.defineProperty(User.prototype, 'gamename', {
+//   get: function () {
+//     return this.gamename;
+//   },
+
+//   set: function (value) {
+//     this.gamename = value;
+//   }
+// });
+
+// Object.defineProperty(User.prototype, 'name', {
+//   get: function () {
+//     return this.name;
+//   },
+
+//   set: function (value) {
+//     this.name = value;
+//   }
+// });
 // Object.defineProperty(User.prototype, 'wave', {
 //   get: function() {
 //     return this.cache.wave;

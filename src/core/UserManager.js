@@ -85,7 +85,8 @@ UserManager.prototype.ship = function(socket, args) {
       data = args[1],
       station = stationManager.getStation('ubadian-station-x01'),
       startingPosition = station.movement.position, 
-      tutorial = false;
+      tutorial = false, username;
+  console.log('in usermanager args are ', args, 'user is ', user);
   
   if(args[3]){
     user.data.tutorial = true;
@@ -100,12 +101,19 @@ UserManager.prototype.ship = function(socket, args) {
     tutorial = [startingPosition.x, startingPosition.y];
   };
 
+  if(args[4]){
+    username = args[4]
+  }else{
+    username = 'charlie'
+  }
+
   user && game.emit('ship/create', {
     chassis: args[1],
     x : startingPosition.x,
     y : startingPosition.y,
     squadron : {},
-    tutorial: tutorial
+    tutorial: tutorial,
+    username: username
   }, user);
 };
 

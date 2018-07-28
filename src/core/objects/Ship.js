@@ -14,6 +14,9 @@ function Ship(manager, data, user) {
   this.sockets = manager.sockets;
   this.model = manager.model;
   this.user = user;
+  if(this.user){
+    console.log('THIS.data is ', data);
+  }
   
   this.data = new this.model.Ship(data);
 
@@ -38,10 +41,18 @@ function Ship(manager, data, user) {
       this.tutorial = data.tutorial;
       this.data.speed = this.config.stats.speed/2;
     }
+    if(data.username){
+      console.log('yo what is this');
+      
+      this.data.shipname = data.username;
+    }
     this.data.rate = this.config.stats.rate/2;
     this.data.health = this.config.stats.health*2;
     this.squadron = data.squadron
     this.docked = true;
+
+    console.log('now this.data is ', this.data);
+    
   };
 
   
@@ -688,6 +699,14 @@ Object.defineProperty(Ship.prototype, 'faction', {
 
   set: function(value) {
     this.data.faction = value;
+  }
+});
+
+Object.defineProperty(Ship.prototype, 'shipname', {
+  get: function () {
+    
+      return this.data.shipname
+   
   }
 });
 

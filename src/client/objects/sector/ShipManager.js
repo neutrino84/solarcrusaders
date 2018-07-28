@@ -235,6 +235,9 @@ ShipManager.prototype._player = function(ship) {
     this.fadeIn.start();
   };
   var homeBase = this.state.stationManager.find('ubadian-station-x01')
+  console.log('in shipmanager, setting username ', this.player.data.shipname);
+  
+  this.player.hud.setUsername(this.player.data.shipname)
 
   this.player.unfriendlies = {};
   this.player.targetCount = 0;

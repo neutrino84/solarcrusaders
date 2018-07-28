@@ -17,6 +17,8 @@ function Ship(manager, data) {
   this.manager = manager;
   this.data = data;
   
+
+  
   // config data
   this.config = data.config.ship;
 

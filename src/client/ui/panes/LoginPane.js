@@ -141,6 +141,12 @@ function LoginPane(game) {
         borderColor: 0xffffff,
         borderAlpha: 0.9
       },
+      padding: {
+        left: 0
+      },
+      margin: {
+        left: 0
+      },
       string: '                     '
     },
     password: {
@@ -386,7 +392,7 @@ LoginPane.prototype.create = function() {
 
   //
   this.game.clock.events.add(100, function(){
-    this.game.emit('ui/showShips'); 
+    // this.game.emit('ui/showShips'); 
   }, this);
 };
 
@@ -410,6 +416,9 @@ LoginPane.prototype._chooseShip = function(button) {
   this.regDirty = false;
   let colorMatrix = new pixi.filters.ColorMatrixFilter();
   colorMatrix.technicolor();
+
+  console.log('IN CHOOSE SHIP');
+  
   // colorMatrix.technicolor();
   // container.filters = [colorMatrix];
   // colorMatrix.contrast(2);
@@ -446,9 +455,21 @@ LoginPane.prototype._chooseShip = function(button) {
 };
 
 LoginPane.prototype._playAsGuest = function(button) {
+  // console.log('in play as guest is loginInput username field is ', this.loginInputs['username']);
+  
+  console.log(this.game.input.enabled, this.game.input);
+  let username = this.loginInputs['username'].label.font._text;
+
   this.guestButton.activated = !this.guestButton.activated;
   this.registration.alpha = 0;
-  this.game.emit('ui/showShips'); 
+
+  
+
+  this.game.emit('ui/showShips', username); 
+
+  for (var a in this.inputs) {
+    inputs[a].blur();
+  }
 };
 
 LoginPane.prototype._inputUp = function(){

@@ -183,7 +183,8 @@ PlayerManager.prototype._player = function(ship) {
   this.playerLevel = 1;
 
   this.game.emit('ship/player/upgrade');
-
+  console.log('in player manager, player is ', this.player, 'game.auth.user is ', this.game.auth.user);
+  
   this._player_credits();
 };
 

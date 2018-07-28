@@ -40,8 +40,10 @@ Authentication.prototype.init = function() {
   // create guest user
   this.routes.play.get('/', function(req, res, next) {
     if(!req.session.user) {
+      console.log('ABOUT TO GEN guest name');
+      
       var username = Generator.getGuest(),
-          guest = new self.model.User({ username: username });
+          guest = new self.model.User({ username: 'joe' });
       req.session.user = guest.toStreamObject();
       req.session.save(function() {
         next();
@@ -64,6 +66,8 @@ Authentication.prototype.register = function(req, res, next) {
   }
 
   // create new user
+  console.log('authenticating. user is ', userData);
+  
   user = new this.model.User({
     name: userData.username,
     username: userData.username,

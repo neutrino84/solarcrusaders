@@ -185,12 +185,15 @@ Object.defineProperty(Input.prototype, 'text', {
         };
 
     // update cursor
-    this.cursor.position.x = this.left + offset.cursor;
-    this.cursor.position.y = this.top;
+    if(this.left){
+      this.cursor.position.x = this.left + offset.cursor;
+      this.cursor.position.y = this.top;
+
+      this.label.position.set(this.left + offset.view, this.top);
+    }
 
     // update text and texture
     this.label.font.text = value.toString();
-    this.label.position.set(this.left + offset.view, this.top);
 
     // update preferred size
     this.setPreferredSize(

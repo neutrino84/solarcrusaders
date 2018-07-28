@@ -188,6 +188,9 @@ SectorState.prototype.playerCreated = function(tutorial){
     this.createManagers('firstIteration');
 
     if(this.game.auth.user.tutorial){
+      console.log('in sector state tutorial selected');
+      
+
       this.game.emit('map/off');
       this.tutorialManager = new TutorialManager(this.game, this);
       // this.game.emit('map/off');

@@ -340,6 +340,7 @@ ShipManager.prototype.data = function(uuids) {
         energy: ship.energy,
         recharge: ship.recharge,
         health: ship.health,
+        shipname : ship.data.shipname,
         heal: ship.heal,
         armor: ship.armor,
         rate: ship.rate,

@@ -150,11 +150,12 @@ Hud.prototype.create = function() {
   this.pivot.set(this.cachedWidth/2, this.cachedHeight/2);  
   this.position.set(this.ship.width/2, this.ship.height/2);
 
-  this.visible = false;
+  this.visible = true;
   this.indicatorContainer.alpha = 0;
   this.alpha = 1.0;
 
   this.ship.addChild(this);
+  
 };
 
 Hud.prototype.show = function() {
@@ -166,6 +167,28 @@ Hud.prototype.show = function() {
   this.animating.to({ alpha: 1.0 }, 250);
   this.animating.on('complete', this.update, this);
   this.animating.start();
+};
+
+Hud.prototype.setUsername = function (data) {
+  console.log('in hud setUsername, data is ', data);
+    this.username = new Label(this.game, {
+    constraint: Layout.USE_PS_SIZE,
+    align: 'center',
+    text: {
+      fontName: 'full'
+    },
+    bg: false
+  });
+
+  this.username.text = data;
+
+  this.username.tint = 0x32CD32;
+  this.username.alpha = 1;
+  this.scoreContainer.addPanel(this.username)
+
+  console.log(this.scoreContainer);
+  
+  
 };
 
 Hud.prototype.showLevelUp = function () {

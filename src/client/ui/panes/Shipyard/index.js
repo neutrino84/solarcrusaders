@@ -54,7 +54,9 @@ function Shipyard(game) {
     }
   });
   // this.resizeDynamic();
-
+  console.log('dis shit is ', this.game.height * 3 / 10);
+  //370
+  
   this.topPane = new Pane(this.game, {
     constraint: Layout.TOP,
     width: this.game.width/2,
@@ -75,7 +77,7 @@ function Shipyard(game) {
   this.middlePane = new Pane(this.game, {
     constraint: Layout.CENTER,
     width: this.game.width/2,
-    height: this.game.height * 4 / 10,
+    height: this.game.height * 3 / 10,
     layout: {
       type: 'border',
       gap: [5,5]
@@ -714,12 +716,22 @@ Shipyard.prototype._select= function(button){
 
   // this.tutorialSelected = false;
 
-  this.socket.emit('user/ship', button.parent.id, this.game.auth.socket.id, this.tutorialSelected)
-  this.game.emit('SFX/selectionHover', 'selectionSFX2')
+  //HERE IS WHERE YOU PUT THE LOGIN NAME
+  console.log('in shipyard, tutorial selected is ', this.tutorialSelected);
+  
+  // this.game.input.enabled = false;
+
+  this.socket.emit('user/ship', button.parent.id, this.game.auth.socket.id, this.tutorialSelected, this.username)
+  this.game.emit('SFX/selectionHover', 'selectionSFX2');
   if(this.tutorialSelected){
+    console.log('TUTORIAL SELECTED');
+    
     // this.game.emit('user/shipSelected/tutorial', true)
+    this.game.emit('user/shipSelected')
   }else{
     this.game.emit('user/shipSelected')
+
+    console.log('TUTORIAL NOT SELECTED');
   }
   // this.game.emit('user/shipSelected')
 
@@ -737,7 +749,7 @@ Shipyard.prototype._select= function(button){
   }, this);
 
   // var scope = this;
-  // this.alpha = 0;
+  this.alpha = 0;
 
   // this.game.clock.events.loop(100, fadeInHeader = function(){
   //   scope.parent.panels[0].alpha += 0.025;
@@ -802,9 +814,9 @@ Shipyard.prototype.resizeDynamic = function() {
 Shipyard.prototype.show = function() {
 };
 
-Shipyard.prototype._showShips = function() {
-  console.log('in show ships');
-  
+Shipyard.prototype._showShips = function(username) {
+  console.log('in show ships, username is ', username);
+  this.username = username;
   this.loggedIn = true;
   this.middlePane.alpha = 1;
   this.bottomPane.alpha = 1;
