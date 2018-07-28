@@ -186,13 +186,31 @@ Hud.prototype.setUsername = function (data) {
 
   this.username.tint = 0x32CD32;
   this.username.alpha = 1;
+  console.log('adding username panel', this.username, this);
+  
   this.scoreContainer.addPanel(this.username)
   this.username.x = this.username.x-(newString.length*2)
   this.username.y = this.username.y - 17;
+
+  this.usernameTween = this.game.tweens.create(this.username);
+  this.usernameTween.to({ alpha: 0 }, 3000, );
+  this.usernameTween.delay(6000);
+  this.usernameTween.start();
+  this.usernameTween.on('complete', function () {
+    this.scoreContainer.removePanel(this.username);
+    this.username = null;
+  }, this);
 };
 
 Hud.prototype.hideUsername = function(){
-  if(this.username) this.username.alpha = 0;
+  this.usernameTween = this.game.tweens.create(this.username);
+  this.usernameTween.to({ alpha: 0 }, 3000, );
+  this.usernameTween.delay(6000);
+  this.usernameTween.start();
+  this.usernameTween.on('complete', function () {
+    this.scoreContainer.removePanel(this.username);
+    this.username = null;
+  }, this);
 }
 
 Hud.prototype.showLevelUp = function () {

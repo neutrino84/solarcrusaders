@@ -84,9 +84,7 @@ Ship.prototype.boot = function() {
   }
 
   if(this.user){
-    console.log('ship has user');
     this.hud.setUsername(this.data.shipname);
-    
   }
 };
 
