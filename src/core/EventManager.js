@@ -524,6 +524,11 @@ EventManager.prototype.restart = function() {
   this.game.removeListener('ship/disabled', this.disabled, this);
   this.game.removeListener('squad/create', this.squadGen, this);
   this.game.removeListener('game/over', this.restart, this);
+
+  this.sockets.removeListener('tutorial/createShip', this.createTutorialShips, this);
+  this.sockets.removeListener('tutorial/finished', this.tutorialComplete, this);
+  this.sockets.removeListener('player/select/squadship', this.squadGen, this);
+
   this.init();
 };
 
