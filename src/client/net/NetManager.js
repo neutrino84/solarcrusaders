@@ -34,6 +34,7 @@ function NetManager(game) {
   this.connect('game/win');
   this.connect('wave/cycle');
   this.connect('wave/response');
+  this.connect('test/message');
 };
 
 NetManager.prototype.constructor = NetManager;

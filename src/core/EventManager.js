@@ -275,7 +275,8 @@ EventManager.prototype.shipGen = function(num, ai, startingPos, faction){
 
 EventManager.prototype.squadGen = function(socket, args){
   var randomPostion = this.generateRandomPosition(2700);
-
+  console.log('IN SQUAD GEN, MASTER IS ', args[1].uuid);
+  
   this.game.emit('ship/create', {
     chassis: args[1].ship,
     x: randomPostion.x,
@@ -283,6 +284,8 @@ EventManager.prototype.squadGen = function(socket, args){
     ai: 'squadron',
     master: args[1].uuid
   });
+  
+  this.game.emit('test/squadgen', socket, args)
 };
 
 EventManager.prototype.enforcerGen = function(x, y, master){

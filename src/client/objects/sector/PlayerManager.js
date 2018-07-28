@@ -23,8 +23,8 @@ function PlayerManager(game, state) {
   this.baseRespawnTime = 10;
   this.upgradeLevel = {
     1: 300,
-    2: 600,
-    3: 880,
+    2: 650,
+    3: 1000,
     4: 1000,
     5: 60000,
     currentTier : 1
@@ -49,7 +49,7 @@ PlayerManager.prototype.constructor = PlayerManager;
 
 PlayerManager.prototype._player_credits = function () {
   this.creditsPane.updateCredits(this.player.data.credits);
-  if (this.playerCredits < this.upgradeLevel[this.playerLevel] && this.player.data.credits >= this.upgradeLevel[this.playerLevel]) {
+  if(this.playerCredits < this.upgradeLevel[this.playerLevel] && this.player.data.credits >= this.upgradeLevel[this.playerLevel]) {
     this.playerLevel++
     this._upgradeSystem();
     this.player.hud.showLevelUp();
@@ -59,6 +59,8 @@ PlayerManager.prototype._player_credits = function () {
 
 PlayerManager.prototype._squad_select = function(ship){
   if(this.playerSquadron.length < 4){
+    console.log('play uuid is ', this.player.uuid);
+    
     this.socket.emit('player/select/squadship', {ship: ship, uuid: this.player.uuid});
     this.game.emit('SFX/selectionHover', 'selectionSFX3')
     this.upgradeAvailableFlasherStop();

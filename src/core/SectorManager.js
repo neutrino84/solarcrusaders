@@ -42,6 +42,7 @@ SectorManager.prototype.init = function() {
   this.game.on('station/data', this.queue('stations'), this);
   this.game.on('user/data', this.queue('users'), this);
   this.game.on('wave/response', this.waveResponse, this);
+  this.game.on('test/squadgen', this.testSquadGen, this);
 
   // queue
   this.game.clock.events.loop(50, this.queued, this);
@@ -49,6 +50,9 @@ SectorManager.prototype.init = function() {
 
 SectorManager.prototype.waveResponse = function(socket, args){
   socket.emit('wave/response', args);
+};
+SectorManager.prototype.testSquadGen = function (socket, args) {
+  socket.emit('test/message', args);
 };
 
 SectorManager.prototype.update = function() {
