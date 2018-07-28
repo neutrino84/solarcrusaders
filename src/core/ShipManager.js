@@ -155,6 +155,7 @@ ShipManager.prototype.create = function(data, user) {
   });
 
   if(data.master && squadship.test(chassis)){
+    // this.game.emit('test/squadgen', socket, args)
     this.ships[data.master].squadron[ship.uuid] = ship;
     if(chassis === 'squad-shield'){
       this.sockets.send('squad/shieldMaidenConnect', data.master)
