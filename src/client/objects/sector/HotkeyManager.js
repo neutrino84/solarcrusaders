@@ -42,8 +42,6 @@ HotkeyManager.prototype.init = function() {
 HotkeyManager.prototype.create = function(manager) {
   this.config = this.game.cache.getJSON('item-configuration', false);
   this.squadManager = manager.squadManager;
-  // this.playerManager = manager.playerManager;
-
 };
 
 HotkeyManager.prototype.listener = function(hotkey) {

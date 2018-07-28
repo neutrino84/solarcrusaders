@@ -170,7 +170,10 @@ Hud.prototype.show = function() {
 };
 
 Hud.prototype.setUsername = function (data) {
-  console.log('in hud setUsername, data is ', data);
+  var arr = data.split('')
+  arr.shift();
+  var newString = arr.join('')
+  
     this.username = new Label(this.game, {
     constraint: Layout.USE_PS_SIZE,
     align: 'center',
@@ -179,17 +182,18 @@ Hud.prototype.setUsername = function (data) {
     },
     bg: false
   });
-
-  this.username.text = data;
+  this.username.text = newString;
 
   this.username.tint = 0x32CD32;
   this.username.alpha = 1;
   this.scoreContainer.addPanel(this.username)
-
-  console.log(this.scoreContainer);
-  
-  
+  this.username.x = this.username.x-(newString.length*2)
+  this.username.y = this.username.y - 17;
 };
+
+Hud.prototype.hideUsername = function(){
+  if(this.username) this.username.alpha = 0;
+}
 
 Hud.prototype.showLevelUp = function () {
   this.levelUp = new Label(this.game, {

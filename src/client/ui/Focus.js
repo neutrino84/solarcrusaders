@@ -44,7 +44,7 @@ Focus.prototype.capture = function(focus) {
 };
 
 Focus.prototype.release = function() {
-  // this.capture(this.focusable[0]);
+  this.capture(this.focusable[0]);
 };
 
 module.exports = Focus;

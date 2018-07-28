@@ -24,8 +24,6 @@ function User(game, data, socket, manager) {
     ship : null
   };
   this.uuid = this.data.uuid;
-  console.log('new user, data is ', data);
-  
 };
 
 User.prototype.constructor = User;

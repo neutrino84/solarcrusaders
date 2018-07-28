@@ -716,22 +716,13 @@ Shipyard.prototype._select= function(button){
 
   // this.tutorialSelected = false;
 
-  //HERE IS WHERE YOU PUT THE LOGIN NAME
-  console.log('in shipyard, tutorial selected is ', this.tutorialSelected);
-  
-  // this.game.input.enabled = false;
-
   this.socket.emit('user/ship', button.parent.id, this.game.auth.socket.id, this.tutorialSelected, this.username)
   this.game.emit('SFX/selectionHover', 'selectionSFX2');
   if(this.tutorialSelected){
-    console.log('TUTORIAL SELECTED');
-    
     // this.game.emit('user/shipSelected/tutorial', true)
     this.game.emit('user/shipSelected')
   }else{
     this.game.emit('user/shipSelected')
-
-    console.log('TUTORIAL NOT SELECTED');
   }
   // this.game.emit('user/shipSelected')
 
@@ -815,7 +806,6 @@ Shipyard.prototype.show = function() {
 };
 
 Shipyard.prototype._showShips = function(username) {
-  console.log('in show ships, username is ', username);
   this.username = username;
   this.loggedIn = true;
   this.middlePane.alpha = 1;

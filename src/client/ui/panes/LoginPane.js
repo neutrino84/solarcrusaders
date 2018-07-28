@@ -305,7 +305,7 @@ LoginPane.prototype.create = function() {
 
   this.guestButton = new Button(this.game, this.settings.guestButton);
   this.guestButton.start();
-  this.guestButton.label.text = 'PLAY AS GUEST';
+  this.guestButton.label.text = 'PLAY';
   this.guestButton.bg.on('inputOver', this._hover, this);
   this.guestButton.bg.on('inputOut', this._unhover, this);
   this.guestButton.bg.on('inputDown', this._playAsGuest, this);
@@ -371,11 +371,11 @@ LoginPane.prototype.create = function() {
   this.addPanel(this.content);
   this.addPanel(this.registration);
   this.content.addPanel(this.username);
-  this.content.addPanel(this.password);
-  this.content.addPanel(this.login);
-  this.content.addPanel(this.register);
+  // this.content.addPanel(this.password);
+  // this.content.addPanel(this.login);
+  // this.content.addPanel(this.register);
   this.content.addPanel(this.guestButton);
-  this.content.addPanel(this.tutorialButton);
+  // this.content.addPanel(this.tutorialButton);
 
   this.registration.addPanel(this.email);
   this.registration.addPanel(this.choosePassword);
@@ -455,9 +455,6 @@ LoginPane.prototype._chooseShip = function(button) {
 };
 
 LoginPane.prototype._playAsGuest = function(button) {
-  // console.log('in play as guest is loginInput username field is ', this.loginInputs['username']);
-  
-  console.log(this.game.input.enabled, this.game.input);
   let username = this.loginInputs['username'].label.font._text;
 
   this.guestButton.activated = !this.guestButton.activated;
@@ -467,8 +464,11 @@ LoginPane.prototype._playAsGuest = function(button) {
 
   this.game.emit('ui/showShips', username); 
 
-  for (var a in this.inputs) {
-    inputs[a].blur();
+  for (var a in this.registrationInputs) {
+    this.registrationInputs[a].blur();
+  }
+  for (var a in this.loginInputs) {
+    this.loginInputs[a].blur();
   }
 };
 

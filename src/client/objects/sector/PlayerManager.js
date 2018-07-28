@@ -59,8 +59,6 @@ PlayerManager.prototype._player_credits = function () {
 
 PlayerManager.prototype._squad_select = function(ship){
   if(this.playerSquadron.length < 4){
-    console.log('play uuid is ', this.player.uuid);
-    
     this.socket.emit('player/select/squadship', {ship: ship, uuid: this.player.uuid});
     this.game.emit('SFX/selectionHover', 'selectionSFX3')
     this.upgradeAvailableFlasherStop();
@@ -183,9 +181,8 @@ PlayerManager.prototype._player = function(ship) {
   this.playerLevel = 1;
 
   this.game.emit('ship/player/upgrade');
-  console.log('in player manager, player is ', this.player, 'game.auth.user is ', this.game.auth.user);
-  
   this._player_credits();
+  this.player.hud.hideUsername();
 };
 
 PlayerManager.prototype._death = function() {

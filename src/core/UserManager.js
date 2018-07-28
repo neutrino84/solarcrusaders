@@ -86,7 +86,6 @@ UserManager.prototype.ship = function(socket, args) {
       station = stationManager.getStation('ubadian-station-x01'),
       startingPosition = station.movement.position, 
       tutorial = false, username;
-  console.log('in usermanager args are ', args, 'user is ', user);
   
   if(args[3]){
     user.data.tutorial = true;

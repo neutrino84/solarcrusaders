@@ -87,8 +87,6 @@ Keyboard.prototype = {
     };
 
     this._onKeyPress = function(event) {
-      console.log('key event is ', event);
-      
       return self.processKeyPress(event);
     };
 
@@ -174,15 +172,11 @@ Keyboard.prototype = {
 
   processKeyPress: function(event) {
     this.pressEvent = event;
-    console.log('keypress process event is ', event);
-    
     if(!this.game.input.enabled || !this.enabled) {
       return;
     }
 
     if(this.onPressCallback) {
-      console.log('this.onPressCallback is ', this.onPressCallback);
-      
       this.onPressCallback.call(this.callbackContext, event, global.String.fromCharCode(event.charCode));
     }
   },
