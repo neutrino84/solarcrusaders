@@ -17,8 +17,6 @@ function Ship(manager, data) {
   this.manager = manager;
   this.data = data;
   
-
-  
   // config data
   this.config = data.config.ship;
 
@@ -83,6 +81,12 @@ Ship.prototype.boot = function() {
   // set player
   if(this.isPlayer) {
     this.game.emit('ship/player', this);
+  }
+
+  if(this.user){
+    console.log('ship has user');
+    this.hud.setUsername(this.data.shipname);
+    
   }
 };
 
